@@ -1,10 +1,10 @@
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, doDeepCopy, esObject, esValidArray, esValidObject, getValidDatos, LoginQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
@@ -61,6 +61,10 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
 
   /** Datos de la solicitud en forma de arreglo de programas de reporte */
   solicitudDatos: ProgramasReporte[] = [];
+  /*
+   * Valor del RFC obtenido del estado de login.
+   */
+  public rfcValor: string = '';
 
   /** Configuración de la tabla para mostrar los datos de solicitud */
   solicitudConfiguracionTabla: ConfiguracionColumna<ProgramasReporte>[] = [
@@ -110,7 +114,8 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     public solicitud150102Store: Solicitud150102Store,
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private loginQuery: LoginQuery, 
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -119,6 +124,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
+    this.obtenerProgramasReporte();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -129,8 +135,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
+    //this.obtenerReporteFechas();
   }
 
   /**
@@ -138,6 +143,15 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Configura el formulario y sincroniza los datos iniciales con el estado.
    */
   ngOnInit(): void {
+    // seleccionarSolicitud
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.rfcValor = seccionState.rfc;
+        })
+      )
+      .subscribe();
     this.inicializarEstadoFormulario();
   }
 
@@ -232,14 +246,34 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Actualiza los datos con los resultados obtenidos del servicio.
    */
   obtenerProgramasReporte(): void {
+    // this.rfcValor
+    const RFC = 'AAL0409235E6';
     this.solicitudService
-      .obtenerProgramasReporte()
+      .obtenerProgramasReporte(RFC)
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (respuesta: ProgramasReporte[]) => {
-          this.solicitudDatos = respuesta;
+        next: (respuesta) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
+            this.solicitud150102Store.actualizarInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+            this.solicitud150102Store.actualizarFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
+            this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
+          }
         },
       });
+  }
+
+  public mapProgramasResponse(datos: unknown[]): ProgramasReporte[] {
+    return datos.map((item: unknown) => {
+      const PROGRAMA = item as ProgramasReporte;
+      return {
+        folioPrograma: PROGRAMA.folioPrograma,
+        modalidad: PROGRAMA.modalidad,
+        tipoPrograma: PROGRAMA.tipoPrograma,
+        estatus: PROGRAMA.estatus,
+        idProgramaCompuesto: PROGRAMA.idProgramaCompuesto
+      };
+    }) || [];
   }
 
   /**
@@ -255,10 +289,22 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     this.solicitud150102Store.actualizarModalidad(evento.modalidad);
     this.solicitud150102Store.actualizarTipoPrograma(evento.tipoPrograma);
     this.solicitud150102Store.actualizarEstatus(evento.estatus);
+    this.solicitud150102Store.actualizarIdProgramaCompuesto(evento.idProgramaCompuesto);
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
   }
+
+  private formatDateToMonthYear(dateString: string) {
+    if(getValidDatos(dateString)) {
+        const DATE = new Date(dateString);
+        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+        const YEAR = DATE.getFullYear();
+        return `${MONTH}-${YEAR}`;
+    }
+    return '';
+  }
+
 
   /**
    * @description Método que se ejecuta al destruir el componente.

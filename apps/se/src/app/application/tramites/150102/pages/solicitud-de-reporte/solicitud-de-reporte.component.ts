@@ -1,16 +1,29 @@
 import {
   AlertComponent,
   BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   DatosPasos,
+  doDeepCopy,
+  ERROR_FORMA_ALERT,
+  esValidObject,
+  JSONResponse,
   ListaPasosWizard,
+  PasoFirmaComponent,
   WizardComponent,
+  WizardService,
 } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from '../datos/datos.component';
 import { PAGO_DE_DERECHOS } from '../../constantes/solicitud150102.enum';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
+import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
+import { Solicitud150102Query } from '../../estados/solicitud150102.query';
+import { catchError, from, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud.service';
+import { ToastrService } from 'ngx-toastr';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 /**
  * @description Interfaz que define la estructura y propiedades de una acción asociada a un botón interactivo.
@@ -41,7 +54,7 @@ interface AccionBoton {
     CommonModule,
     WizardComponent,
     DatosComponent,
-    PasoTresComponent,
+    PasoFirmaComponent,
     AlertComponent,
     BtnContinuarComponent,
     AlertComponent,
@@ -49,7 +62,14 @@ interface AccionBoton {
   templateUrl: './solicitud-de-reporte.component.html', // Ruta del archivo de plantilla HTML
   styleUrl: './solicitud-de-reporte.component.scss', // Ruta del archivo de estilos
 })
-export class SolicitudDeReporteComponent {
+export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
+
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  public guardarIdSolicitud: number = 0;
+  /** Estado actual de la solicitud */
+  public solicitud150102State!: Solicitud150102State;
   /**
    * Representa el estado actual del pago de derechos.
    *
@@ -85,6 +105,13 @@ export class SolicitudDeReporteComponent {
   indice: number = 1;
 
   /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Contiene el mensaje de error que se mostrará al usuario.
    *
    * Se actualiza dinámicamente en función de las validaciones del formulario u otras operaciones fallidas.
@@ -98,6 +125,38 @@ export class SolicitudDeReporteComponent {
     txtBtnAnt: 'Anterior', // Texto del botón para retroceder
     txtBtnSig: 'Continuar', // Texto del botón para avanzar
   };
+
+  public consultaState!: ConsultaioState;
+
+  wizardService = inject(WizardService);
+
+  public esFormaValido!: boolean;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  constructor(
+      private tramiteQuery: Solicitud150102Query,
+      private _solicitudSvc: SolicitudService,
+      public tramiteStore: Solicitud150102Store,
+      private toastrService: ToastrService,
+      private consultaQuery: ConsultaioQuery,
+      private servicioDeFormularioService: ServicioDeFormularioService,
+  ) {}
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
+    this.tramiteQuery.seleccionarSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitud150102State = solicitud;
+      });
+  }
 
   /**
    * Genera una cadena HTML con los mensajes de validación del componente de datos anuales.
@@ -126,33 +185,186 @@ export class SolicitudDeReporteComponent {
     return HTML;
   }
 
+
+
+
+  getValorIndice(e: AccionBoton): void {
+      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+      if (!this.consultaState.readonly && e.accion === 'cont') {
+        // if (!this.consultaState.update) {
+        //   this.esFormaValido = this.verificarLaValidezDelFormulario();
+        //   if (!this.esFormaValido) {
+        //     this.indice = e.valor;
+        //     this.datosPasos.indice = e.valor;
+        //     this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
+        //     this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
+        //     this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
+        //     this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+        //     return;
+        //   }
+        // }
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else if (e.accion === 'cont') {
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
+      }
+    }
+}
   /**
    * @description Método que actualiza el índice del paso actual dentro del asistente.
    * Ejecuta una acción dependiendo del valor de `e.accion` ('cont' para continuar, otro para retroceder).
    *
    * @param {AccionBoton} evento Objeto que contiene la acción y el valor del índice.
    */
-  getValorIndice(evento: AccionBoton): void {
-    if (evento.valor > 0 && evento.valor < 5) {
-      if (this.indice === 1 && this.datosComponent.indice === 3) {
-        const SOLICITUD_COMPONENT =
-          this.datosComponent?.datosDeReporteAnnualComponent;
-        this.esValido =
-          SOLICITUD_COMPONENT?.validarTotalExportaciones() ?? false;
+  // getValorIndice(evento: AccionBoton): void {
+  //   if (evento.valor > 0 && evento.valor < 5) {
+  //     if (this.indice === 1 && this.datosComponent.indice === 3) {
+  //       const SOLICITUD_COMPONENT =
+  //         this.datosComponent?.datosDeReporteAnnualComponent;
+  //       this.esValido =
+  //         SOLICITUD_COMPONENT?.validarTotalExportaciones() ?? false;
+  //     }
+
+  //     // if (!this.esValido) {
+  //     //   this.mensajeError = this.generarValidacionHTML();
+  //     //   this.datosPasos.indice = 1;
+  //     //   return;
+  //     // }
+
+  //     this.indice = evento.valor;
+  //     if (evento.accion === 'cont') {
+  //       this.shouldNavigate$().subscribe((shouldNavigate) => {
+  //         if (shouldNavigate) {
+  //          // this.wizardComponent.siguiente();
+  //         }
+  //       });
+  //     } else {
+  //       this.wizardComponent.atras();
+  //     }
+  //   }
+  // }
+
+  public guardar():Promise<JSONResponse> {
+    const SOLICITUDE = this.solicitud150102State;
+    const [OBSERVACIONES, DESCRIPCION] = SOLICITUDE.idProgramaCompuesto.split(",");
+    const PAYLOAD = {
+      "fracciones": [
+          {
+              "cveFraccion": "",
+              "bienesProducidos": {
+                  "descripcionBienProducido": "",
+                  "totalBienesProducidos": 0,
+                  "volumenMercadoNacional": 0,
+                  "olumenExportaciones": 0
+              }
+          }
+      ],
+      "sectores": [
+          {
+              "idConfProgramaSE": 0
+          }
+      ],
+      "reporte_anual": {
+          "saldo": SOLICITUDE.saldo,
+          "porcentaje": SOLICITUDE.porcentajeExportacion,
+          "ventasTotales": SOLICITUDE.ventasTotales,
+          "totalExportaciones": SOLICITUDE.totalExportaciones,
+          "totalImportaciones": SOLICITUDE.totalImportaciones,
+          "totalPersonalAdmin1": 0,
+          "totalPersonalAdmin2": 0,
+          "totalPersonalObrero1": 0,
+          "totalPersonalObrero2": 0
+      },
+      "observaciones": OBSERVACIONES,
+      "descripcion": DESCRIPCION,
+      "id_solcitud": 202846846,
+      "tipoDeSolicitud": "guardar",
+      "solicitante": {
+          "rfc": "AAL0409235E6",
+          "nombre": "Juan Pérez",
+          "es_persona_moral": true,
+          "certificado_serial_number": "1234"
+      },
+      "representacion_federal": {
+          "cve_entidad_federativa": "DGO",
+          "cve_unidad_administrativa": "1016"
+      },
+      "ide_generica_1": SOLICITUDE.inicio,
+      "ide_generica_2": SOLICITUDE.fin,
+      "descripcion_clob_generica_1": SOLICITUDE.modalidad,
+      "descripcion_clob_generica_2": SOLICITUDE.idProgramaCompuesto
       }
 
-      if (!this.esValido) {
-        this.mensajeError = this.generarValidacionHTML();
-        this.datosPasos.indice = 1;
-        return;
-      }
+      return new Promise((resolve, reject) => {
+        this._solicitudSvc.guardar(PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.tramiteStore.actualizarIdSolicitud(RESPONSE?.datos?.id_solicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.id_solicitud ?? 0;
+            //this.wizardComponent.siguiente();
+            resolve(response);
+          }
+        },error=>{
+          reject(error);
+        });
+      });
+  }
 
-      this.indice = evento.valor;
-      if (evento.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+   private shouldNavigate$(): Observable<boolean> {
+    return of(this.solicitud150102State).pipe(
+      take(1),
+      switchMap(() => from(this.guardar())),
+      map(response => {
+        const DATOS = doDeepCopy(response);
+        const OK = DATOS.codigo === '00';
+        if (OK) {
+          this.toastrService.success(DATOS.mensaje);
+        } else {
+          this.toastrService.error(DATOS.mensaje);
+        }
+        return OK;
+      }),
+      catchError((error) => {
+        console.error('Error during save operation:', error);
+        this.toastrService.error(error.message || 'Ocurrió un error al guardar la solicitud.');
+        return of(false);
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

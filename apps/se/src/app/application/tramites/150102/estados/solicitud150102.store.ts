@@ -8,6 +8,7 @@ import { StoreConfig } from '@datorama/akita';
  * Contiene propiedades relacionadas con los datos de reporte anual.
  */
 export interface Solicitud150102State {
+   idSolicitud: number | null;
   /** Fecha de inicio del reporte */
   inicio: string;
   /** Fecha de fin del reporte */
@@ -44,6 +45,8 @@ export interface Solicitud150102State {
    * un bien con sus respectivas características y detalles.
    */
   bienesProducidosDatos: BienesProducidos[];
+  /** Identificador compuesto del programa */
+  idProgramaCompuesto: string;
 }
 
 /**
@@ -55,6 +58,7 @@ export interface Solicitud150102State {
  */
 export function createInitialState(): Solicitud150102State {
   return {
+    idSolicitud: 0,
     inicio: '',
     fin: '',
     folioPrograma: '',
@@ -69,6 +73,7 @@ export function createInitialState(): Solicitud150102State {
     porcentajeExportacion: '0',
     producidosDatos: [],
     bienesProducidosDatos: [],
+    idProgramaCompuesto: '',
   };
 }
 
@@ -93,6 +98,12 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     super(createInitialState());
   }
 
+  actualizarIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   /**
    * @description Actualiza la fecha de fin del reporte.
    * @param fin Fecha de fin como una cadena.
@@ -247,6 +258,17 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     this.update((state) => ({
       ...state,
       bienesProducidosDatos,
+    }));
+  }
+
+  /**
+   * @description Actualiza el identificador compuesto del programa.
+   * @param idProgramaCompuesto Identificador compuesto del programa como una cadena.
+   */
+  actualizarIdProgramaCompuesto(idProgramaCompuesto: string): void {
+    this.update((state) => ({
+      ...state,
+      idProgramaCompuesto,
     }));
   }
 

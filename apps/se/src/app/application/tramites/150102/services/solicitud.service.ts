@@ -2,10 +2,14 @@ import { BienesProducidos } from '../models/programas-reporte.model';
 import { GuardarDatosFormulario } from '../models/programas-reporte.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { ProgramasReporte } from '../models/programas-reporte.model';
 import { ReporteFechas } from '../models/programas-reporte.model';
-import { Solicitud150102Store } from '../estados/solicitud150102.store';
+import { Solicitud150102State, Solicitud150102Store } from '../estados/solicitud150102.store';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
+import { PROC_150102 } from '../servers/api-route';
+import { Solicitud150102Query } from '../estados/solicitud150102.query';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 
 /**
  * @description Servicio encargado de realizar solicitudes HTTP relacionadas con el reporte anual.
@@ -26,7 +30,8 @@ export class SolicitudService {
    */
   constructor(
     private http: HttpClient,
-    private solicitud150102Store: Solicitud150102Store
+    private solicitud150102Store: Solicitud150102Store,
+    private Tramite150102Query: Solicitud150102Query,
   ) {
     // Constructor vacío, inicialización del servicio HttpClient
   }
@@ -35,9 +40,9 @@ export class SolicitudService {
    * @description Obtiene los datos de los programas de reporte desde un archivo JSON.
    * @returns Un observable con un arreglo de objetos ProgramasReporte.
    */
-  obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
-    return this.http.get<ProgramasReporte[]>(
-      'assets/json/150102/programas-reporte.json'
+  obtenerProgramasReporte(rfc: string): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>(
+      PROC_150102.OBTENER(rfc)
     );
   }
 
@@ -96,4 +101,15 @@ export class SolicitudService {
       resp.porcentajeExportacion
     );
   }
+
+
+    guardar(body: Record<string, unknown>): Observable<JSONResponse> {
+      return this.http.post(PROC_150102.GUARDAR, body).pipe(
+        map((response) => response as JSONResponse),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_150102.GUARDAR}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
 }
