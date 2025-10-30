@@ -218,12 +218,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-      if (this.idTipoTRamite === '130118') {
-        this.getDocumentosDesdeSolicitud130118();
-        this.getDocumentosDesdeSolicitud130118Opcionales();
-      } else if (this.idTipoTRamite === '11202') {
-        this.getDocumentosDesdeSolicitud11202();
-        this.getDocumentosDesdeSolicitud11202Opcionales();
+      if (this.idTipoTRamite === '130118' || this.idTipoTRamite === '11202') {
+        this.getDocumentosDesdeSolicitudById();
+        this.getDocumentosDesdeSolicitudOpcionalesById();
       } else {
         this.getListaDocumentoObligatorios();
         this.getListaDocumentoOpcionales();
@@ -242,7 +239,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
-          console.log(response);
           response.datos.documento_tramite.forEach((documento: Documento) => {
             if (documento.tipo_documento) {
               this.catalogoDocumentosObligatorios.push({
@@ -337,14 +333,14 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
     /**
-   * Obtiene los documentos desde la solicitud 11202.
-   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud 11202.
+   * Obtiene los documentos desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud .
    * @returns {void} No retorna nada.
    */
-  getDocumentosDesdeSolicitud11202(): void {
+  getDocumentosDesdeSolicitudById(): void {
     const ESPECIFICO = true;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud11202(ESPECIFICO)
+      .getDocumentosSolicitudById(ESPECIFICO, this.idTipoTRamite)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -358,20 +354,20 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
           this.actualizarEstadoBotonCargarArchivos();
         },
         error: (err) => {
-          console.error('Error obteniendo documentos desde 11202', err);
+          console.error('Error obteniendo documentos desde 130118', err);
         }
       });
   }
 
   /**
-   * Obtiene los documentos opcionales desde la solicitud 11202.
-   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 11202.
+   * Obtiene los documentos opcionales desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 130118.
    * @returns {void} No retorna nada.
    */
-  getDocumentosDesdeSolicitud11202Opcionales(): void {
+  getDocumentosDesdeSolicitudOpcionalesById(): void {
     const ESPECIFICO = false;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud11202(ESPECIFICO)
+      .getDocumentosSolicitudById(ESPECIFICO, this.idTipoTRamite)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -382,7 +378,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
           }));
         },
         error: (err) => {
-          console.error('Error obteniendo documentos desde 11202', err);
+          console.error('Error obteniendo documentos desde 130118', err);
         }
       });
   }
