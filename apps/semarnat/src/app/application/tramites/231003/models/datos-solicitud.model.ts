@@ -1,9 +1,11 @@
-import { ResiduoPeligroso } from '../../231002/models/aviso-catalogo.model';
+import { ResiduoPeligroso } from './../../231002/models/aviso-catalogo.model';
 
 /**
  * Estado que representa los valores del formulario de reciclaje.
  */
 export interface EstadoDatoSolicitud {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   /** Sección de datos de la solicitud */
   solicitudForm: {
     /** Número de registro ambiental */

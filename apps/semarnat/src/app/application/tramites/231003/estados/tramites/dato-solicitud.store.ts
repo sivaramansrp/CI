@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  */
 export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
   return {
+    idSolicitud: null,
     // Datos generales de la solicitud
     solicitudForm: {
       // Número de registro ambiental proporcionado por SEMARNAT
@@ -75,6 +76,18 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    */
   constructor() {
     super(crearEstadoInicialFormularioReciclaje());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**

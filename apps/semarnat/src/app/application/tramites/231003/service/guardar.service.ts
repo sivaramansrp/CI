@@ -4,14 +4,14 @@ import { API_POST_GUARDAR_SOLICITUD } from './../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuardarResponse } from '../models/guardar-solicitud-response';
-import { GuardarSolicitud231002Request } from '../models/guardar-solicitud-request';
+import { GuardarSolicitud231003Request } from '../models/guardar-solicitud-request';
 import { Injectable } from '@angular/core';
-import { TRAMITE_ID } from '../constantes/aviso-retorno.enum';
+import { TRAMITE_ID } from '../constantes/aviso-de-reciclaje.enum';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GuardarServiceT231002 {
+export class GuardarServiceT231003 {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
@@ -24,7 +24,7 @@ export class GuardarServiceT231002 {
    * @returns Observable con la respuesta del servidor.
    */
   postSolicitud(
-    solicitud: GuardarSolicitud231002Request
+    solicitud: GuardarSolicitud231003Request
   ): Observable<BaseResponse<GuardarResponse>> {
     const ENDPOINT = `${this.host}${API_POST_GUARDAR_SOLICITUD(TRAMITE_ID)}`;
 

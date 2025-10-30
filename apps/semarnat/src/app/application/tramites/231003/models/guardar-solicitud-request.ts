@@ -1,3 +1,4 @@
+import { MateriaResiduo } from '../../231002/models/materia-residuo.model';
 import { Solicitante } from './cadena-original-request';
 
 /**
@@ -6,9 +7,9 @@ import { Solicitante } from './cadena-original-request';
  * Contiene información del solicitante, empresa de reciclaje, destinatario,
  * transporte, aduana de salida y la lista de residuos asociados.
  */
-export interface GuardarSolicitud231002Request {
+export interface GuardarSolicitud231003Request {
   /** Identificador único de la solicitud. */
-  id_solicitud: number;
+  id_solicitud: number | null;
   /** Número del programa IMMEX asociado a la solicitud. */
   numero_programa_immex: number;
   /** Valor discriminador para identificar el tipo de solicitud. */
@@ -17,28 +18,28 @@ export interface GuardarSolicitud231002Request {
   cve_rol_capturista: string;
   /** Clave del usuario capturista. */
   cve_usuario_capturista: string;
-  /** Campo booleano genérico para uso general. */
-  boolean_generico: boolean;
+  /** Descripción genérica 1. (Giro del importador) */
+  descripcion_generica1: string;
   /** Número de registro ambiental asociado. */
-  numero_registro_ambiental: number;
-  /** Descripción genérica en formato CLOB 2. */
-  descripcion_clob_generica2: number;
+  numero_registro_ambiental: string;
   /** Descripción genérica en formato CLOB 1. */
   descripcion_clob_generica1: string;
   /** Nombre o razón social de la empresa controladora. */
-  empresa_controladora: number;
+  empresa_controladora: boolean;
   /** Datos del solicitante que realiza la solicitud. */
   solicitante: Solicitante;
   /** Información de la empresa que realizará el reciclaje. */
   empresa_reciclaje: EmpresaReciclaje;
-  /** Información del destinatario de los residuos. */
-  destinatario: Destinatario;
   /** Información del transporte autorizado. */
   transporte: Transporte;
-  /** Información de la aduana de salida. */
-  aduana_salida: AduanaSalida;
   /** Lista de residuos peligrosos a exportar. */
   residuos: Residuos[];
+  /** indica si el reciclaje se hará en las instalaciones de la empresa */
+  empresa_mismo_grupo: boolean;
+  /** Indica el lugar de reciclaje */
+  descripcion_generica2: string;
+  /** Indica el número de autorización de la empresa de reciclaje */
+  descripcion_generica3: string;
 }
 
 /**
@@ -58,20 +59,6 @@ interface EmpresaReciclaje {
 }
 
 /**
- * Información del destinatario de los residuos.
- */
-interface Destinatario {
-  /** Razón social del destinatario. */
-  razon_social: string;
-  /** Nombre del destinatario. */
-  pais: string;
-  /** Número telefónico de contacto del destinatario. */
-  domicilio: string;
-  /** Dirección de correo electrónico del destinatario. */
-  codigo_postal: string;
-}
-
-/**
  * Información del transporte autorizado para los residuos.
  */
 interface Transporte {
@@ -79,14 +66,6 @@ interface Transporte {
   razon_social: string;
   /** Número de autorización SEMARNAT para el transporte de residuos peligrosos. */
   autorizacion_semarnat_transporte: string;
-}
-
-/**
- * Información de la aduana de salida.
- */
-interface AduanaSalida {
-  /** Clave de la aduana de salida según el catálogo oficial. */
-  clave: string;
 }
 
 /**
@@ -106,7 +85,7 @@ interface Residuos {
   /** Unidad de medida del residuo. */
   unidad_medida: string;
   /** Nombre de la unidad de medida. */
-  unidad_medida_name: string;
+  desc_unidad_medida: string;
   /** Capacidad del contenedor o envase. */
   capacidad: string;
   /** Nombre químico del residuo. */
@@ -126,65 +105,37 @@ interface Residuos {
   /** Nombre de la clasificación. */
   nombre_clasificacion: string;
   /** Descripción de la clasificación. */
-  descripcion_clasificacion: string;
+  desc_clasificacion: string;
   /** Descripción de otra clasificación si aplica. */
-  descripcion_otra_clasificacion: string;
+  desc_otra_clasificacion: string;
   /** Código CRETI (Corrosivo, Reactivo, Explosivo, Tóxico, Inflamable). */
   creti: string;
   /** Estado físico del residuo (sólido, líquido, gaseoso). */
   estado_fisico: string;
   /** Descripción de otro estado físico si aplica. */
-  descripcion_otro_estado_fisico: string;
+  desc_otro_estado_fisico: string;
   /** Número de manifiesto de entrega, transporte y recepción. */
   numero_manifiesto: string;
   /** Tipo de contenedor utilizado para el residuo. */
   tipo_contenedor: string;
   /** Descripción de otro tipo de contenedor si aplica. */
-  descripcion_otro_contenedor: string;
+  desc_otro_contenedor: string;
   /** Nombre descriptivo de la fracción arancelaria. */
   fraccion_name: string;
   /** Nombre descriptivo de NICO. */
   nico_name: string;
   /** Descripción de la clave de clasificación. */
-  clave_clasificacion_desc: string;
+  cve_clasificacion_desc: string;
   /** Nombre alternativo de la clasificación. */
   name_clasificacion: string;
-  /** Descripción alternativa de la clasificación. */
-  desc_clasificacion: string;
   /** Descripción del código CRETI. */
-  creti_desc: string;
+  desc_creti: string;
   /** Descripción del estado físico. */
-  estado_fisico_desc: string;
+  desc_estado_fisico: string;
   /** Descripción del tipo de contenedor. */
-  tipo_contenedor_desc: string;
+  desc_tipo_contenedor: string;
   /** Descripción de otros aspectos del residuo. */
-  descripcion_otro: string;
+  desc_otro: string;
   /** Lista de materias primas relacionadas con el residuo. */
-  materias_primas_relacionadas: MateriasPrimasRelacionadas[];
-}
-
-/**
- * Representa una materia prima relacionada con el residuo.
- */
-interface MateriasPrimasRelacionadas {
-  /** Identificador de la mercancía/materia prima. */
-  id_mercancia: number | null;
-  /** Descripción de la mercancía/materia prima. */
-  descripcion_mercancia: string;
-  /** Cantidad numérica de la materia prima. */
-  cantidad: number;
-  /** Cantidad expresada en letra. */
-  cantidad_letra: string;
-  /** Descripción de la unidad de medida comercial. */
-  descripcion_umc: string;
-  /** Clave de la fracción arancelaria. */
-  cve_fraccion_arancelaria: string;
-  /** Número de bitácora asociado. */
-  numeroBitacora: string;
-  /** Clave de la unidad de medida comercial. */
-  unidadMedidaComercial: string;
-  /** Clave de la fracción. */
-  cveFraccion: number;
-  /** Descripción de la fracción arancelaria. */
-  descFraccion: string;
+  materias_primas_relacionadas: MateriaResiduo[];
 }

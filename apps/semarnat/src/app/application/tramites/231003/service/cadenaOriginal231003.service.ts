@@ -1,10 +1,8 @@
-import {
-  API_POST_CADENA_ORIGINAL,
-  ENVIRONMENT,
-} from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_POST_CADENA_ORIGINAL } from '../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { CadenaOriginalRequest } from '../models/cadena-original-request';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TRAMITE_ID } from '../constantes/aviso-de-reciclaje.enum';
@@ -12,11 +10,11 @@ import { TRAMITE_ID } from '../constantes/aviso-de-reciclaje.enum';
 @Injectable({
   providedIn: 'root',
 })
-export class CadenaOriginal231002Service {
+export class CadenaOriginal231003Service {
   /**
    * URL del servidor donde se encuentra la API.
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = ENVIRONMENT.API_HOST + '/api/';
 
   constructor(private http: HttpClient) {}
 
