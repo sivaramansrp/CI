@@ -89,7 +89,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges {
+export class   implements OnInit, AfterViewInit, OnChanges {
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -1084,8 +1084,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       [
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroConDecimalesValidator()
-        
+        this.numeroConDecimalesValidator()
       ],
     ],
     cantidadUmt: [
@@ -1100,7 +1099,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       [
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroUMCDecimalesValidator(),
+        this.numeroUMCDecimalesValidator(),
 
       ],
     ],
@@ -1128,6 +1127,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     especifiqueForma: [
       this.obtenerValor('especifiqueForma')
     ],
+    especifiqueEstado:[this.obtenerValor('especifiqueEstado')]
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1186,7 +1186,7 @@ updateValidation(): void {
 }
 
 
-  static numeroConDecimalesValidator(): ValidatorFn {
+  public numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const VALUE = control.value;
       
@@ -1219,7 +1219,7 @@ public getIdFromDescripcion(
   return descripcion;
 }
 
-  static numeroUMCDecimalesValidator(): ValidatorFn {
+  public numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const VALUE = control.value;
       
