@@ -18,7 +18,7 @@ export class DatosTramiteService {
    * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
    */
   
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = ENVIRONMENT.API_HOST_TEST;
 
   constructor(
     private http: HttpClient
@@ -82,7 +82,7 @@ export class DatosTramiteService {
    * @returns An Observable emitting the response from the server.
    */
   agregarSolicitud(PAYLOAD:any): Observable<any> {
-    const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-itc/validar`
+    const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-tc/validar`
     return this.http.post(ENDPOINT, PAYLOAD);
   }
 
@@ -94,7 +94,7 @@ export class DatosTramiteService {
    * @returns An Observable emitting the server response after file upload and validation.
    */
   fileUpload(PAYLOAD:any): Observable<any> {
-      const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-itc/validar-csv` ;
+      const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-tc/validar-csv` ;
       return this.http.post(ENDPOINT,PAYLOAD);
   }
 

@@ -167,15 +167,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
-    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.iniciales_contenedor, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numero_contenedor, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digito_verificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipo_contenedor, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fecha_ingreso, orden: 5 },
     { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.puede_registrar, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe_en_vucem, orden: 9 }
   ];
 
   /**
@@ -306,6 +306,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
+    this.getDatosGenerales(this.RFC);
     // this.loadDatosTablaData();
   }
 
@@ -390,6 +391,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       return;
     }
     const VALUE = TARGET.value;
+    console.log('VALUE', VALUE);
    
     if (controlName === 'inicialesContenedor') {
       const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
@@ -414,6 +416,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('vigencia')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     }
+
+    console.log('TIPO_BUSQUEDA', this.solicitudForm.get('tipoBusqueda')?.value);
+
   }
   
   /**
@@ -549,16 +554,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
+    const DIGITOCONTROL = this.solicitudForm.value.digitoDeControl || '';
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
-       const API_PAYLOAD = {
-            "rfc": this.rfc_original,
-            "aduana": ADUANA,
-            "fecha_ingreso": convertDate(FECHAINGRESO),
-            "iniciales_contenedor": INICIALESCONTENEDOR,
-            "numero_contenedor": NUMEROCONTENEDOR,
-            "digito_verificador": VIGENCIA,
-            "tipo_contenedor": CONTENEDORES
-        }
+      const API_PAYLOAD = {
+        "rfc": this.rfc_original,
+        "aduana": ADUANA,
+        "iniciales_contenedor": INICIALESCONTENEDOR,
+        "numero_contenedor": NUMEROCONTENEDOR,
+        "digito_verificador": DIGITOCONTROL,
+        "fecha_ingreso": convertDate(FECHAINGRESO),
+        "vigencia": convertDate(VIGENCIA),
+        "tipo_contenedor": CONTENEDORES,
+        "numero_constancia": ""
+      }
+
       this.agregarSolicitud(API_PAYLOAD);
     }
   }
@@ -571,6 +580,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'archivoSeleccionado'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
+    console.log('FILE', FILE_INPUT.files);
     if (FILE) {
       const formData = new FormData();
             formData.append('archivo', FILE);
@@ -582,8 +592,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       (respuesta) => {
      if (respuesta?.codigo === '00') {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
-          this.datosDelCsvArchivo.push(respuesta.datos);
-          (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+          this.datosDelCsvArchivo =  respuesta?.datos.contenedores.map((item: any) => ({
+                            ...item,
+                            vigencia : item.vigencia.split(' ')[0],
+                            fecha_inicio : item.fecha_inicio.split(' ')[0],
+                            existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
+                        }));
         }
       }
     );
@@ -635,13 +649,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   agregarSolicitud(payload: any): void {
       this.datosTramiteService.agregarSolicitud(payload).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
-        if (respuesta?.success) {
+        if (respuesta?.codigo === '00') {
+          respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
+          respuesta.datos.fecha_ingreso = respuesta.datos.fecha_ingreso.split(' ')[0];
+          respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio.split(' ')[0];
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
-          this.solicitudForm.reset();
-          this.solicitudForm.markAsUntouched();
-          this.solicitudForm.markAsPristine();
+          // this.solicitudForm.reset();
+          // this.solicitudForm.markAsUntouched();
+          // this.solicitudForm.markAsPristine();
         }
       }
     );
@@ -653,7 +670,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   cargarCatalogos(): void {
     this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
-        this.contenedores.catalogos = data.data;
+        this.contenedores.catalogos = data.datos;
       },
     );
   }
@@ -737,11 +754,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
      */
 
     solicitudGuardar(): void {
+      console.log(this.solicitudForm.get('tipoBusqueda')?.value)
+      // this.solicitudForm.get('tipoBusqueda')?.value
         const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
+        console.log('TIPO_BUSQUEDA', this.solicitudForm.get('tipoBusqueda')?.value);
         const normalize = (item: any) => ({
             ...item,
             existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
-            vigencia: item.vigencia ? `${item.vigencia} 00:00:00` : item.vigencia,
+            fecha_ingreso: item.fecha_ingreso ? `${item.fecha_ingreso} 00:00:00` : item.fecha_ingreso,
             fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio
         });
 
