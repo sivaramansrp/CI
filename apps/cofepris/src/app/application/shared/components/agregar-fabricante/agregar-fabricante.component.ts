@@ -647,16 +647,16 @@ label: 'Moral',
    */
 private forzarDeshabilitarPais(): void {
   if (this.chequeoValidacionAlGuardar) {
-    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value ){
-  this.agregarFabricanteForm.patchValue({pais: 1});
+    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' ){
+  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
     }
     else{
-      this.agregarFabricanteForm.patchValue({pais: -1});
+      this.agregarFabricanteForm.patchValue({pais: ''});
     }
     this.agregarFabricanteForm.get('pais')?.disable();
   }
   if (
-    this.idProcedimiento === 260912 &&
+    (this.idProcedimiento === 260912 || this.idProcedimiento === 260201) &&
     this.agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     (
       this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
@@ -1064,8 +1064,18 @@ guardarFabricante(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
     const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
     this.disableLabel=[];
-if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
-  this.agregarFabricanteForm.patchValue({pais: 1});
+     if(this.idProcedimiento === 260201 && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+    this.elementosDeshabilitados=[];
+  }
+  else{
+    if(this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' && this.agregarFabricanteForm.get('tipoPersona')?.value ){
+ this.agregarFabricanteForm.patchValue({pais: 'MEX'});
+    }
+     this.elementosDeshabilitados = ['pais'];
+  }
+if((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')){
+ 
+  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
 }
     if (RFC_CONTROL) {
       RFC_CONTROL.setValidators([
@@ -1108,6 +1118,7 @@ if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.
         });
       }
     }
+    this.agregarFabricanteForm.get('pais')?.patchValue('');
     this.agregarFabricanteForm.markAsUntouched();
     this.forzarDeshabilitarPais();
   }
@@ -1163,6 +1174,7 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
+   this.agregarFabricanteForm.get('pais')?.patchValue('');
       this.agregarFabricanteForm.markAsUntouched();
   this.forzarDeshabilitarPais();
 }
