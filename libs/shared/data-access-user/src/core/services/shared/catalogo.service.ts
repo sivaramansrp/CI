@@ -779,6 +779,14 @@ bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de años disponibles.
+ *  
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de años
+ * @see CATALOGO_ANOS
+ */
+
 anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   const ENDPOINT = `${this.host}${CATALOGO_ANOS(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);

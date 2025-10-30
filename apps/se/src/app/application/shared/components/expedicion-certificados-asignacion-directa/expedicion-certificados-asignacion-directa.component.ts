@@ -332,21 +332,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    * Inicializa los catálogos necesarios para el formulario.
    */
   inicializaCatalogos(): void {
-    // const ANIOS_AUTORIZACION$ = this.expedicionCertificadosAsignacionService
-    //   .getAniosAutorizacionCatalogo()
-    //   .pipe(
-    //     map((resp) => {
-    //       this.aniosAutorizacion = resp.data;
-    //     })
-    //   );
-
-    // merge(
-    //   ANIOS_AUTORIZACION$
-    // ).pipe(
-    //   takeUntil(this.destruirNotificador$)
-    // )
-    // .subscribe();
-
       this.expedicionCertificadosAsignacionService.getAniosAutorizacionCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
         this.autorizacion = data as Catalogo[];
       });
