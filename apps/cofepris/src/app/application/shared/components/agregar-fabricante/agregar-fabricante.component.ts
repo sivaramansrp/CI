@@ -727,9 +727,9 @@ guardarFabricante(): void {
     nombreRazonSocial = '';
   }
 
-  const OBTENER_DESCRIPCION_CATALOGO = (catalogArray: Catalogo[], clave: string | number): string => {
-    const ITEM = catalogArray.find(cat => cat.clave?.toString() === clave.toString());
-    return ITEM ? ITEM.descripcion : clave.toString();
+  const OBTENER_DESCRIPCION_CATALOGO = (catalogArray: Catalogo[], id: string | number): string => {
+    const ITEM = catalogArray.find(cat => cat.clave === id.toString());
+    return ITEM ? ITEM.descripcion : id as string;
   };
 
   const NUEVO_FABRICANTE: Fabricante = {
