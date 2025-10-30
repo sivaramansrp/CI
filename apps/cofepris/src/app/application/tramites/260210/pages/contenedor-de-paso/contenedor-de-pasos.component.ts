@@ -1,7 +1,9 @@
 import { MENSAJE_DE_VALIDACION,TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import {AVISO} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import { AccionBoton } from '@ng-mf/data-access-user';
@@ -12,13 +14,16 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import {PasoCargaDocumentoComponent} from '@ng-mf/data-access-user';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { PASOS } from '../../constants/medicos-uso.enum';
-
+import {Tramite260210State} from '../../estados/tramite260210Store.store';
+import { ToastrService } from 'ngx-toastr';
 /**
  * @component ContenedorDePasosComponent
  * @description Componente contenedor principal del flujo tipo "wizard".
@@ -37,6 +42,8 @@ import { PASOS } from '../../constants/medicos-uso.enum';
     BtnContinuarComponent,
     AlertComponent,
     NotificacionesComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
 
   ],
   templateUrl: './contenedor-de-pasos.component.html',
@@ -71,6 +78,20 @@ export class ContenedorDePasosComponent {
    */
   public mostrarAlerta: boolean = false;
 
+  
+    /**
+     * @property {EventEmitter<void>} cargarArchivosEvento
+     * @description
+     * Evento que se emite para iniciar el proceso de carga de archivos. Notifica a
+     * componentes hijos o servicios que deben activar la funcionalidad de carga
+     * de documentos requeridos para el trámite.
+     * 
+     * @event_emission Emisión de evento para carga de documentos
+     * @file_upload_trigger Disparador de funcionalidad de carga
+     * @component_communication Comunicación entre componentes padre-hijo
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+
    /**
  * @property {string} MENSAJE_DE_ERROR
  * @description
@@ -85,6 +106,12 @@ export class ContenedorDePasosComponent {
     * Clase CSS usada para mostrar alertas informativas.
     */
    public infoAlert = 'alert-danger text-center';
+
+    /**
+     * ID del estado de la solicitud.
+     * @type {number | null}
+     */
+    idSolicitudState: number | null = 0;
 
   
     /** Nueva notificación relacionada con el RFC. */
@@ -104,12 +131,82 @@ export class ContenedorDePasosComponent {
  */
 esFormaValido: boolean = false;
 
+    /**
+     * Valor del aviso de privacidad.
+     * @type {string}
+     */
+        AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
   /**
    * Controla la visibilidad del modal de alerta.
    * @property {boolean} mostrarAlerta
    */
 esMostrarAlerta: boolean = false;
 
+ /**
+   * @property {boolean} activarBotonCargaArchivos
+   * @description
+   * Indica si el botón para cargar archivos está habilitado. Controla la
+   * disponibilidad de la funcionalidad de carga de documentos según el
+   * estado actual del proceso.
+   * 
+   * @ui_control Control de habilitación de botón
+   * @file_upload_state Estado de disponibilidad de carga
+   * @default false - Deshabilitado por defecto
+   */
+ activarBotonCargaArchivos: boolean = false;
+
+  /**
+     * @property {boolean} cargaEnProgreso
+     * @description
+     * Indica si hay una operación de carga en progreso. Utilizado para mostrar
+     * indicadores de carga y prevenir acciones concurrentes durante procesos.
+     * 
+     * @loading_indicator Estado de carga en progreso
+     * @ui_feedback Feedback visual para usuario
+     * @concurrent_prevention Prevención de operaciones concurrentes
+     * @default true - Inicia con carga activa
+     */
+  cargaEnProgreso: boolean = true;
+
+  /**
+   * @property {boolean} seccionCargarDocumentos
+   * @description
+   * Indica si la sección de carga de documentos está activa. Controla la
+   * visibilidad y disponibilidad de la interfaz de carga de documentos.
+   * 
+   * @section_visibility Control de visibilidad de sección
+   * @document_upload_ui Estado de interfaz de carga
+   * @default true - Activa al inicio para mostrar sección inicial
+   */
+  seccionCargarDocumentos: boolean = true;
+
+ /**
+     * @property {EventEmitter<void>} regresarSeccionCargarDocumentoEvento
+     * @description
+     * Evento que se emite para regresar a la sección de carga de documentos.
+     * Permite navegación específica de regreso a la sección de documentos desde
+     * otros pasos del proceso.
+     * 
+     * @navigation_event Evento de navegación específica
+     * @document_section_return Regreso a sección de documentos
+     * @workflow_control Control de flujo de trabajo
+     */
+ regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+ 
+ /**
+ * @property {Tramite260210State} solicitudState
+ * @description
+ * Estado completo de la solicitud del trámite 80207 obtenido desde el store Akita.
+ * Contiene toda la información capturada durante el proceso incluyendo datos del
+ * subcontratista, plantas seleccionadas y validaciones.
+ * 
+ * @state_container Contenedor del estado completo del trámite
+ * @akita_integration Integración con store de Akita
+ * @reactive_data Datos reactivos del proceso
+ * @business_data Información de negocio completa
+ */
+public solicitudState: Tramite260210State = {} as Tramite260210State;
 
     /**
     * @property {PasoUnoComponent} pasoUnoComponent
@@ -142,6 +239,10 @@ esMostrarAlerta: boolean = false;
   public seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  
+  constructor(private toastrService: ToastrService,) {}
+
 
   /**
    * @method getValorIndice
@@ -181,15 +282,254 @@ esMostrarAlerta: boolean = false;
       this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-
       this.wizardComponent.siguiente();
-      return;
+      
+        this.idSolicitudState = 202836800;
+       // this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
+      
+      this.toastrService.success("pass hogya");
+ 
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
     }
 
-      this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
+}
 
+/**
+   * @method cargaRealizada
+   * @description
+   * Método para manejar el evento de finalización del proceso de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos basado en el resultado
+   * de la operación de carga.
+   * 
+   * @param {boolean} cargaRealizada - Indica si la carga de documentos se realizó
+   *                                  correctamente (true) o falló (false)
+   * 
+   * @state_management
+   * Actualiza `seccionCargarDocumentos`:
+   * - `false` si la carga fue exitosa (oculta sección)
+   * - `true` si la carga falló (mantiene sección visible)
+   * 
+   * @ui_control
+   * Controla la visibilidad de:
+   * - Sección de carga de documentos
+   * - Botones de acción relacionados
+   * - Indicadores de estado de carga
+   * 
+   * @workflow_progression
+   * Permite progresión del flujo:
+   * - Oculta sección al completar carga exitosa
+   * - Mantiene accesible para retry en caso de fallo
+   * 
+   * @param {boolean} cargaRealizada
+   * @returns {void}
+   * @document_upload_handler
+   */
+cargaRealizada(cargaRealizada: boolean): void {
+  this.seccionCargarDocumentos = cargaRealizada ? false : true;
+}
+
+/**
+* @method manejaEventoCargaDocumentos
+* @description
+* Método para manejar eventos relacionados con el estado de carga de documentos.
+* Actualiza el estado del botón de carga de archivos basado en la disponibilidad
+* o progreso de la funcionalidad de carga.
+* 
+* @param {boolean} carga - Indica si la funcionalidad de carga de documentos
+*                         está activa (true) o inactiva (false)
+* 
+* @button_state_control
+* Actualiza `activarBotonCargaArchivos` para:
+* - Habilitar botón cuando carga está disponible
+* - Deshabilitar durante procesos o cuando no aplique
+* - Proporcionar feedback visual al usuario
+* 
+* @user_interaction
+* Controla la interacción del usuario con:
+* - Botones de carga de archivos
+* - Elementos de UI relacionados con documentos
+* - Estados de habilitación/deshabilitación
+* 
+* @workflow_coordination
+* Coordina el flujo de trabajo:
+* - Habilita carga cuando es apropiado
+* - Previene acciones durante procesos
+* - Sincroniza estado con otros componentes
+* 
+* @param {boolean} carga
+* @returns {void}
+* @ui_state_manager
+*/
+manejaEventoCargaDocumentos(carga: boolean): void {
+  this.activarBotonCargaArchivos = carga;
+}
+
+/**
+ * @method siguiente
+ * @description
+ * Método para navegar programáticamente al siguiente paso del wizard.
+ * Ejecuta la transición forward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_forward
+ * Realiza navegación que:
+ * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+ * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+ * - Actualiza índice local basado en posición del wizard
+ * - Sincroniza datos de pasos con nueva posición
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component
+ * - Datos de configuración de pasos
+ * - Estado visual de la UI
+ * 
+ * @future_validation
+ * Comentario indica que se implementará:
+ * - Validación de documentos cargados
+ * - Verificación de completitud de adjuntos
+ * - Control de calidad de archivos
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @programmatic_navigation
+ */
+siguiente(): void {
+  // Aqui se hara la validacion de los documentos cargdados
+  this.wizardComponent.siguiente();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
+
+/**
+ * @method anterior
+ * @description
+ * Método para navegar programáticamente al paso anterior del wizard.
+ * Ejecuta la transición backward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_backward
+ * Realiza navegación que:
+ * - Retrocede al paso anterior usando `wizardComponent.atras()`
+ * - Actualiza índice local basado en nueva posición del wizard
+ * - Sincroniza datos de pasos con posición actualizada
+ * - Mantiene consistencia de estado durante retroceso
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component  
+ * - Datos de configuración de pasos
+ * - Estado visual de navegación
+ * 
+ * @state_preservation
+ * Durante retroceso:
+ * - Preserva datos capturados en pasos anteriores
+ * - Mantiene validaciones ya realizadas
+ * - Conserva estado de formularios
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Nueva posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @backward_navigation
+ */
+anterior(): void {
+  this.wizardComponent.atras();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
+
+/**
+ * @method onClickCargaArchivos
+ * @description
+ * Método de manejo de eventos para el click en botón de carga de archivos.
+ * Emite evento que notifica a componentes interesados que deben activar
+ * la funcionalidad de carga de documentos.
+ * 
+ * @event_emission
+ * Emite evento:
+ * - `cargarArchivosEvento`: Sin parámetros (void)
+ * - Notifica inicio de proceso de carga
+ * - Activa funcionalidad en componentes suscritos
+ * 
+ * @component_communication
+ * Facilita comunicación:
+ * - Entre componente padre e hijos
+ * - Con servicios de carga de archivos
+ * - Con sistemas de gestión de documentos
+ * 
+ * @user_interaction
+ * Responde a:
+ * - Click en botón de carga
+ * - Acción intencional del usuario
+ * - Iniciación de flujo de documentos
+ * 
+ * @workflow_trigger
+ * Desencadena:
+ * - Apertura de dialogo de archivos
+ * - Activación de componentes de carga
+ * - Inicio de proceso de validación de documentos
+ * 
+ * @void
+ * @event_handler
+ */
+onClickCargaArchivos(): void {
+  this.cargarArchivosEvento.emit();
+}
+
+ /**
+  * @method onCargaEnProgreso
+  * @description
+  * Método para manejar el estado de progreso de carga de archivos.
+  * Actualiza la bandera de carga en progreso para controlar UI y
+  * prevenir acciones concurrentes durante procesos de carga.
+  * 
+  * @param {boolean} carga - Indica si hay una operación de carga en progreso
+  *                         (true) o si ha terminado (false)
+  * 
+  * @loading_state_management
+  * Controla estado de carga para:
+  * - Mostrar/ocultar indicadores de progreso
+  * - Habilitar/deshabilitar botones durante carga
+  * - Prevenir acciones concurrentes
+  * - Proporcionar feedback visual al usuario
+  * 
+  * @ui_feedback
+  * Actualiza `cargaEnProgreso` para:
+  * - Mostrar spinners o barras de progreso
+  * - Deshabilitar botones durante operaciones
+  * - Indicar estado de procesamiento
+  * - Mejorar experiencia de usuario
+  * 
+  * @concurrent_operation_control
+  * Previene:
+  * - Múltiples cargas simultáneas
+  * - Navegación durante procesos
+  * - Acciones conflictivas
+  * - Corrupción de datos
+  * 
+  * @param {boolean} carga
+  * @returns {void}
+  * @loading_indicator_controller
+  */
+ onCargaEnProgreso(carga: boolean): void {
+  this.cargaEnProgreso = carga;
 }
 
   /**

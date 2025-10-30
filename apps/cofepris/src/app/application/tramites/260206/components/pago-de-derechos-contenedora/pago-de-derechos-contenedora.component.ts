@@ -30,6 +30,9 @@ export class PagoDeDerechosContenedoraComponent {
    */
   public pagoDerechos: PagoDerechosFormState;
 
+  idProcedimiento: number = 260206;
+
+
   /**
    * que indica si el formulario está en modo solo lectura.
    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.

@@ -63,6 +63,7 @@ export class AcusePageComponent implements OnInit {
    */
   procedure:number=0;
 
+
   constructor(
     private tramiteQueries: TramiteFolioQueries,
     private router: Router

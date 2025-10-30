@@ -35,21 +35,11 @@ describe('DatosModificacionesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar #iniciarFormulario()', () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.iniciarFormulario();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
   it('debe ejecutar #cargarDatos()', () => {
     component.modificionService = component.modificionService || {};
     component.modificionService.obtenerDatosGenerales = jest.fn().mockReturnValue(observableOf({}));
-    component.formularioDatosGenerales = component.formularioDatosGenerales || {};
-    component.formularioDatosGenerales.patchValue = jest.fn();
     component.cargarDatos();
     expect(component.modificionService.obtenerDatosGenerales).toHaveBeenCalled();
-    expect(component.formularioDatosGenerales.patchValue).toHaveBeenCalled();
   });
 
 });

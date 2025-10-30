@@ -52,7 +52,7 @@
           <label class="form-label" for="rfcSanitario">RFC del responsable sanitario</label>
           <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
           <span class="form-label">:</span>
-          <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario"
+          <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario" (change)="actualizarStore()"
             [ngClass]="esCampoRequerido('rfcSanitario') && isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''" />
           <div
             *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern') && datosSolicitudForm.get('rfcSanitario')?.touched"
@@ -74,7 +74,7 @@
           <label class="form-label municipio-label" for="denominacionRazon">Denominación o razón social</label>
           <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"  [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched ? 'text-danger' : ''" >*</span>
           <span class="form-label municipio-labe">:</span>
-          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
+          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon" (change)="actualizarStore()"
             maxlength="100" [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''" />
           <div class="mensaje-error"
             *ngIf="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched">
@@ -100,7 +100,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="codigoPostal">Código postal<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'codigoPostal') && datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
-          <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal"
+          <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal" (change)="actualizarStore()"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
             " />
@@ -116,7 +116,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado"   [placeholder]="'Selecciona una opción'" (selectionChange)="cambioDeEstado($event)"
+            name="estado"   [placeholder]="'Selecciona una opción'" (selectionChange)="cambioDeEstado($event);actualizarStore()"
             [markTouched]="datosSolicitudForm.get('estado')?.touched ?? false"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
@@ -124,7 +124,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'municipioAlcaldia')&&datosSolicitudForm.get('municipioAlcaldia')?.touched }">*</span>:</label>
-          <input class="form-control" id="municipioAlcaldia" type="text" maxlength="120"
+          <input class="form-control" id="municipioAlcaldia" type="text" maxlength="120" (change)="actualizarStore()"
             formControlName="municipioAlcaldia" [ngClass]="
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
             " />
@@ -143,7 +143,7 @@
           <span class="form-label" *ngIf="esCampoRequerido('localidad')">
             *</span>
           <span class="form-label">:</span>
-          <input class="form-control" id="localidad" type="text" maxlength="120" formControlName="localidad" [ngClass]="
+          <input class="form-control" id="localidad" type="text" maxlength="120" formControlName="localidad" (change)="actualizarStore()" [ngClass]="
               isValid(datosSolicitudForm, 'localidad') ? 'required' : ''
             " />
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('localidad')?.errors?.['required'] 
@@ -152,7 +152,7 @@
           </div>
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('localidad')?.errors?.['pattern'] 
               && datosSolicitudForm.get('localidad')?.touched">
-            El valor capturado no es válido
+              El valor capturado no es válido.
           </div>
         </div>
       </div>
@@ -161,7 +161,7 @@
           <label class="form-label" for="colonia">Colonia</label>
           <span class="form-label" *ngIf="esCampoRequerido('colonia')"> *</span>
           <span class="form-label">:</span>
-          <input class="form-control" id="colonia" type="text" maxlength="120" formControlName="colonia"
+          <input class="form-control" id="colonia" type="text" maxlength="120" formControlName="colonia" (change)="actualizarStore()"
             [ngClass]="isValid(datosSolicitudForm, 'colonia') ? 'required' : ''" />
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('colonia')?.errors?.['required'] 
               && datosSolicitudForm.get('colonia')?.touched">
@@ -177,7 +177,7 @@
               <i class="bi bi-question-circle-fill"></i>
             </span>
           </label>
-          <input class="form-control" id="calleYNumero" type="text" maxlength="100" formControlName="calleYNumero"
+          <input class="form-control" id="calleYNumero" type="text" maxlength="100" formControlName="calleYNumero" (change)="actualizarStore()"
             [ngClass]="
               isValid(datosSolicitudForm, 'calleYNumero') ? 'required' : ''
             " />
@@ -197,7 +197,7 @@
           <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
-          <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle"
+          <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle" (change)="actualizarStore()"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''" />
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('calle')?.errors?.['required'] 
             && datosSolicitudForm.get('calle')?.touched">
@@ -217,7 +217,7 @@
           <span tooltip="ejemplo@dominio.com">
             <i class="bi bi-question-circle-fill"></i>
           </span>
-          <input class="form-control" id="correoElectronico" type="text" maxlength="320"
+          <input class="form-control" id="correoElectronico" type="text" maxlength="320" (change)="actualizarStore()"
             formControlName="correoElectronico" [ngClass]="
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
             " />
@@ -243,7 +243,7 @@
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('rfcSanitario')">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario">RFC del responsable sanitario:</label>
-          <input class="form-control" id="rfcSanitario" type="text" formControlName="rfcSanitario" [ngClass]="
+          <input class="form-control" id="rfcSanitario" type="text" formControlName="rfcSanitario" (change)="actualizarStore()" [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
             " />
           <div class="mensaje-error" *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] 
@@ -260,7 +260,7 @@
       <div class="col-md-1">
         <div class="form-group">
           <label class="form-label" for="lada">Lada:</label>
-          <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" />
+          <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" (change)="actualizarStore()" />
         </div>
         <div *ngIf="datosSolicitudForm.get('lada')?.touched">
           <div *ngIf="datosSolicitudForm.get('lada')?.errors?.['pattern']" class="mensaje-error">
@@ -272,7 +272,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'text-danger':(datosSolicitudForm.get('telefono')?.errors?.['required']||datosSolicitudForm.get('telefono')?.errors?.['pattern'] )&& datosSolicitudForm.get('telefono')?.touched}">*</span>:</label>
-          <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" [ngClass]="
+          <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" (change)="actualizarStore()" [ngClass]="
          ( (datosSolicitudForm.get('telefono')?.errors?.['required']||datosSolicitudForm.get('telefono')?.errors?.['pattern']) && datosSolicitudForm.get('telefono')?.touched) ? 'required' : ''
             " />
           <div class="mensaje-error"
@@ -324,7 +324,7 @@
     <div class="row mt-2">
       <div class="col-md-4 mt-4">
         <div class="form-check mt-4">
-          <input class="form-check-input" type="checkbox" (change)="cambioAviso($event)" id="aviso"
+          <input class="form-check-input" type="checkbox" (change)="cambioAviso($event);actualizarStore()" id="aviso"
             formControlName="aviso" />
           <label class="form-check-label fw-300" for="aviso">Aviso de funcionamiento<span
               *ngIf="esCampoRequerido('aviso')">*</span>:
@@ -340,7 +340,7 @@
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" maxlength="20"
-            (change)="cambioLicenciaSanitaria($event)" />
+            (change)="cambioLicenciaSanitaria($event);actualizarStore();" />
         </div>
       </div>
     </div>
@@ -348,7 +348,7 @@
     <div class="row mt-2">
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
+          <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" (selectionChange)="actualizarStore()" [label]="'Régimen'"
               [placeholder]="'Selecciona una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
@@ -359,7 +359,7 @@
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'"   [placeholder]="'Selecciona una opción'" [required]="true"
+            [label]="'Aduanas de entradas'" (selectionChange)="actualizarStore()"  [placeholder]="'Selecciona una opción'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"
             [markTouched]="datosSolicitudForm.get('adunasDeEntradas')?.touched ?? false"></app-catalogo-select>
         </div>
@@ -368,7 +368,7 @@
       <div class="col-md-8" *ngIf="mostrarCamposDelProcedimiento('regimenLaMercancia')">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenLaMercanciaDatos" formControlName="regimenLaMercancia"
-            [label]="'Régimen al que se destinará la mercancía'" [placeholder]="'Seleccione una opción'"
+            [label]="'Régimen al que se destinará la mercancía'" (selectionChange)="actualizarStore()" [placeholder]="'Seleccione una opción'"
             [required]="true" name="regimenLaMercancia" [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
@@ -378,7 +378,7 @@
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('domicilio-aduana')">
         <div class="form-group">
           <app-catalogo-select [catalogo]="aduanaDatos" formControlName="aduana" [label]="'Aduana'"
-            [placeholder]="'Seleccione una opción'" [required]="true" name="aduanaDatos"
+            [placeholder]="'Seleccione una opción'" (selectionChange)="actualizarStore()" [required]="true" name="aduanaDatos"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -387,7 +387,7 @@
     <div class="row mt-2">
       <div class="col-md-12">
         <div class="form-check pull-right">
-          <input class="form-check-input" type="checkbox" value="" id="aeropuerto" formControlName="aeropuerto" />
+          <input class="form-check-input" type="checkbox" value="" id="aeropuerto" formControlName="aeropuerto" (change)="actualizarStore()" />
           <label class="form-check-label" for="aeropuerto">Aeropuerto Internacional Ciudad de México (AICM)
           </label>
           <span tooltip="Marcar la casilla si requiere usar esta aduana." data-bs-toggle="tooltip">
@@ -400,7 +400,7 @@
     <div class="row mt-2">
       <div class="col-md-12">
         <div class="form-check pull-right">
-          <input class="form-check-input" type="checkbox" value="" id="aeropuerto" formControlName="aeropuertoDoS" />
+          <input class="form-check-input" type="checkbox" value="" id="aeropuerto" formControlName="aeropuertoDoS" (change)="actualizarStore()" />
           <label class="form-check-label" for="aeropuerto">Aeropuerto Internacional Felipe Ángeles (AIFA).
           </label>
           <span tooltip="Marcar la casilla si requiere usar esta aduana." data-bs-toggle="tooltip">
@@ -449,7 +449,7 @@
       <div class="col-md-8" *ngIf="mostrarCamposDelProcedimiento('aduana')">
         <div class="form-group">
           <app-catalogo-select [catalogo]="aduanaDatos" formControlName="aduana" [label]="'Aduana'"
-            [placeholder]="'Seleccione una opción'" [required]="true" name="aduanaDatos"
+            [placeholder]="'Seleccione una opción'" (selectionChange)="actualizarStore()" [required]="true" name="aduanaDatos"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -463,7 +463,7 @@
       <div class="alert alert-info">
         <div class="row align-items-center justify-content-start py-2">
           <div class="col-auto d-flex align-items-start pt-1">
-            <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+            <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" (change)="actualizarStore()" />
             <label class="form-check-label ms-2 mt-2" for="manifesto">
               <span
                 [ngClass]="datosSolicitudForm.get('manifesto')?.invalid && (datosSolicitudForm.get('manifesto')?.touched || datosSolicitudForm.get('manifesto')?.dirty) ? 'mensaje-error font-weight-bold' : ''">*</span>
@@ -486,7 +486,7 @@
         <div class="alert alert-info">
           <div class="row align-items-center justify-content-start py-2">
             <div class="col-auto d-flex align-items-start pt-1">
-              <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+              <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" (change)="actualizarStore()" />
               <label class="form-check-label ms-2 mt-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
                 <span [ngClass]="
                     datosSolicitudForm.get('manifesto')?.invalid &&
@@ -515,7 +515,7 @@
         <label class="form-label">Los datos o anexos pueden contener información confidencial ¿Está de
           acuerdo en hacerlos públicos?<span [ngClass]="{'text-danger':datosSolicitudForm.get('publico')?.touched && (datosSolicitudForm.get('publico')?.value!=='Si' && datosSolicitudForm.get('publico')?.value!=='No') }">*</span>:</label>
         <app-input-radio [radioOptions]="radioBtn" [selectedValue]="predeterminadoSeleccionar"
-          (valueChange)="cambioDeValorIndique($event)" [isRequired]="true" [layout]="'horizontal'" [gap]="'50px'"
+          (valueChange)="cambioDeValorIndique($event);actualizarStore()" [isRequired]="true" [layout]="'horizontal'" [gap]="'50px'"
           formControlName="publico">
         </app-input-radio>
         <span
@@ -606,7 +606,7 @@
           <i class="bi bi-question-circle-fill"></i>
         </span>
         <input class="form-control" id="correoElectronico" type="text" maxlength="320"
-          formControlName="correoElectronico" (change)="cambireCorreoElectronico()" [ngClass]="
+          formControlName="correoElectronico" (change)="cambireCorreoElectronico();actualizarStore()" [ngClass]="
             isValid(datosSolicitudForm, 'correoElectronico') &&
             esCampoRequerido('correoElectronico')
               ? 'required'
@@ -666,6 +666,7 @@
       <div class="modal-body">
         <app-scian-tabla
          *ngIf="scianModalAbierto"
+         [idProcedimiento]="idProcedimiento"
          (cerrarModal)="cerrarScianModal()"
          (scianSeleccionado)="onScianSeleccionado($event)">        
         </app-scian-tabla>

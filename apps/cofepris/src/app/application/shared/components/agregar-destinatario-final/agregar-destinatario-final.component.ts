@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
+  CatalogoServices,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -31,13 +32,14 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
+import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -65,6 +67,10 @@ export class AgregarDestinatarioFinalComponent
   @Output() guardarYSalir = new EventEmitter<void>();
   @Input() destinatarioFinalTablaDatos: Destinatario[] = [];
   @Input() tramiteState: unknown;
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -241,6 +247,10 @@ export class AgregarDestinatarioFinalComponent
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+    /**
+     * Suscripción para manejar observables.
+     */
+    private subscription: Subscription = new Subscription();
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -254,7 +264,8 @@ export class AgregarDestinatarioFinalComponent
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService
+    private datosSolicitudService: DatosSolicitudService,
+     private catalogoServices: CatalogoServices
   ) {
     //constructor necesario para el servicio
   }
@@ -283,37 +294,169 @@ export class AgregarDestinatarioFinalComponent
       }
     }
   }
+/**
+ * Sets up the form in edit mode, loading dependent catalogs as needed
+ */
+private setupEditMode(): void {
+  setTimeout(() => {
+    this.agregarDestinatarioFinal.enable();
+    const VALOR_ESTADO = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    let claveEstado = '';
+    if (VALOR_ESTADO && this.estadosDatos.length > 0) {
+      const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
+        e.descripcion === VALOR_ESTADO || 
+        e.clave?.toString() === VALOR_ESTADO?.toString()
+      );
+      claveEstado = ESTADO_ENCONTRADO ? (ESTADO_ENCONTRADO.clave || '') : '';
+    }
+    
+    const VALOR_MUNICIPIO = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    let claveMunicipio = '';
+    
+    if (claveEstado) {
+      this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, claveEstado).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.municipiosDatos = DATOS;
+        
+        if (VALOR_MUNICIPIO && this.municipiosDatos.length > 0) {
+          const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+            m.descripcion === VALOR_MUNICIPIO || 
+            m.clave?.toString() === VALOR_MUNICIPIO?.toString()
+          );
+          claveMunicipio = MUNICIPIO_ENCONTRADO ? (MUNICIPIO_ENCONTRADO.clave || '') : '';
+        }
+        
+        if (claveMunicipio) {
+          this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((localidadesData) => {
+            const LOCALIDADES_DATOS = localidadesData.datos as Catalogo[];
+            this.localidadesDatos = LOCALIDADES_DATOS;
+          }));
 
-  private setupEditMode(): void {
-    setTimeout(() => {
-      this.agregarDestinatarioFinal.enable();
-      this.agregarDestinatarioFinal.patchValue({
-        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
-        rfc: this.datoSeleccionado?.[0]?.rfc,
-        curp: this.datoSeleccionado?.[0]?.curp,
-        nombres: this.datoSeleccionado?.[0]?.nombres,
-        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
-        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-        denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: this.datoSeleccionado?.[0]?.pais || '2',
-        estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
-        municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
-        localidad: this.datoSeleccionado?.[0]?.localidad,
-        codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
-        colonia: this.datoSeleccionado?.[0]?.colonia,
-        calle: this.datoSeleccionado?.[0]?.calle,
-        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
-        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
-        lada: this.datoSeleccionado?.[0]?.lada,
-        telefono: this.datoSeleccionado?.[0]?.telefono,
-        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
-        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
-      });
-      
-      this.forzarDeshabilitarPais();
-    }, 50);
-  }
+          // Load colonias
+          this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((coloniasData) => {
+            const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
+            this.coloniasDatos = COLONIAS_DATOS;
+            
+            this.aplicarValoresDespuesDeCarga();
+          }));
+        } else {
+          this.aplicarValoresDespuesDeCarga();
+        }
+      }));
+    } else {
+      this.aplicarValoresDespuesDeCarga();
+    }
+  }, 50);
+}
 
+/**
+ * Patches form values after all required catalogs have been loaded
+ */
+private aplicarValoresDespuesDeCarga(): void {
+  setTimeout(() => {
+    // País
+    let valorPais = this.datoSeleccionado?.[0]?.pais;
+    if (valorPais && this.paisesDatos.length > 0) {
+      const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+        p.descripcion === valorPais || 
+        p.clave?.toString() === valorPais?.toString()
+      );
+      valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+    }
+    
+    // Estado
+    let valorEstado = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    if (valorEstado && this.estadosDatos.length > 0) {
+      const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
+        e.descripcion === valorEstado || 
+        e.clave?.toString() === valorEstado?.toString()
+      );
+      valorEstado = ESTADO_ENCONTRADO ? ESTADO_ENCONTRADO.clave : valorEstado;
+    }
+    
+    // Municipio
+    let valorMunicipio = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    if (valorMunicipio && this.municipiosDatos.length > 0) {
+      const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+        m.descripcion === valorMunicipio || 
+        m.clave?.toString() === valorMunicipio?.toString()
+      );
+      valorMunicipio = MUNICIPIO_ENCONTRADO ? MUNICIPIO_ENCONTRADO.clave : valorMunicipio;
+    }
+
+    // Localidad
+    let valorLocalidad = this.datoSeleccionado?.[0]?.localidad;
+    if (valorLocalidad && this.localidadesDatos.length > 0) {
+      const LOCALIDAD_ENCONTRADA = this.localidadesDatos.find(l => 
+        l.descripcion === valorLocalidad || 
+        l.clave?.toString() === valorLocalidad?.toString()
+      );
+      valorLocalidad = LOCALIDAD_ENCONTRADA ? LOCALIDAD_ENCONTRADA.clave : valorLocalidad;
+    }
+
+    // Código Postal
+    let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
+    if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
+      const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
+        cp.descripcion === valorCodigoPostal || 
+        cp.clave?.toString() === valorCodigoPostal?.toString()
+      );
+      valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
+    }
+
+    // Colonia
+    let valorColonia = this.datoSeleccionado?.[0]?.colonia;
+    if (valorColonia && this.coloniasDatos.length > 0) {
+      const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
+        c.descripcion === valorColonia || 
+        c.clave?.toString() === valorColonia?.toString()
+      );
+      valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
+    }
+
+    this.agregarDestinatarioFinal.patchValue({
+      tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+      rfc: this.datoSeleccionado?.[0]?.rfc,
+      curp: this.datoSeleccionado?.[0]?.curp,
+      nombres: this.datoSeleccionado?.[0]?.nombres,
+      primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+      segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+      denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+      pais: valorPais,
+      estado: valorEstado,
+      municipio: valorMunicipio,
+      localidad: valorLocalidad,
+      codigoPostal: valorCodigoPostal,
+      colonia: valorColonia,
+      calle: this.datoSeleccionado?.[0]?.calle,
+      numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+      numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+      lada: this.datoSeleccionado?.[0]?.lada,
+      telefono: this.datoSeleccionado?.[0]?.telefono,
+      correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+      coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+    });
+    
+    this.estaDeshabilitadoDesplegable = false;
+    this.actualizarEstadoHabilitacionDesplegables();
+    
+    if (this.elementosDeshabilitados.includes('pais')) {
+      this.agregarDestinatarioFinal.get('pais')?.disable();
+    }
+    
+    this.forzarDeshabilitarPais();
+   
+  }, 100);
+}
+/**
+ * Sets up the form in add mode (chequeoValidacionAlGuardar === true)
+ */
   private setupAddMode(): void {
     setTimeout(() => {
       if (this.chequeoValidacionAlGuardar) {
@@ -334,36 +477,68 @@ export class AgregarDestinatarioFinalComponent
       }
     }, 50);
   }
+/**
+ * Sets up the form in non-modal mode (chequeoValidacionAlGuardar === false)
+ */
+private setupNonModalMode(): void {
+  setTimeout(() => {
+    if (this.datoSeleccionado?.[0]?.tipoPersona) {
+      this.agregarDestinatarioFinal.enable();
+    }
+    
+    const VALOR_ESTADO = this.datoSeleccionado?.[0]?.estadoLocalidad;
+    let claveEstado = '';
+    if (VALOR_ESTADO && this.estadosDatos.length > 0) {
+      const ESTADO_ENCONTRADO = this.estadosDatos.find(e => 
+        e.descripcion === VALOR_ESTADO || 
+        e.clave?.toString() === VALOR_ESTADO?.toString()
+      );
+      claveEstado = ESTADO_ENCONTRADO ? (ESTADO_ENCONTRADO.clave || '') : '';
+    }
+    
+    const VAOR_MUNICIPIO = this.datoSeleccionado?.[0]?.municipioAlcaldia;
+    let claveMunicipio = '';
+    
+    if (claveEstado) {
+      this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, claveEstado).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.municipiosDatos = DATOS;
+        
+        if (VAOR_MUNICIPIO && this.municipiosDatos.length > 0) {
+          const MUNICIPIO_ENCONTRADO = this.municipiosDatos.find(m => 
+            m.descripcion === VAOR_MUNICIPIO || 
+            m.clave?.toString() === VAOR_MUNICIPIO?.toString()
+          );
+          claveMunicipio = MUNICIPIO_ENCONTRADO ? (MUNICIPIO_ENCONTRADO.clave || '') : '';
+        }
+        
+        if (claveMunicipio) {
+          this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((localidadesData) => {
+            const LOCALIDADES_DATOS = localidadesData.datos as Catalogo[];
+            this.localidadesDatos = LOCALIDADES_DATOS;
+          }));
 
-  private setupNonModalMode(): void {
-    setTimeout(() => {
-      if (this.datoSeleccionado?.[0]?.tipoPersona) {
-        this.agregarDestinatarioFinal.enable();
-      }
-      this.agregarDestinatarioFinal?.patchValue({
-        tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
-        rfc: this.datoSeleccionado?.[0]?.rfc,
-        curp: this.datoSeleccionado?.[0]?.curp,
-        nombres: this.datoSeleccionado?.[0]?.nombres,
-        primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
-        segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-        razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
-        pais: this.datoSeleccionado?.[0]?.pais,
-        estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
-        municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
-        localidad: this.datoSeleccionado?.[0]?.localidad,
-        codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
-        colonia: this.datoSeleccionado?.[0]?.colonia,
-        calle: this.datoSeleccionado?.[0]?.calle,
-        numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
-        numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
-        lada: this.datoSeleccionado?.[0]?.lada,
-        telefono: this.datoSeleccionado?.[0]?.telefono,
-        correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
-        coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
-      });
-    }, 500);
-  }
+          this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, claveMunicipio).pipe(
+            takeUntil(this.unsubscribe$)
+          ).subscribe((coloniasData) => {
+            const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
+            this.coloniasDatos = COLONIAS_DATOS;
+            
+            this.aplicarValoresDespuesDeCarga();
+          }));
+        } else {
+          this.aplicarValoresDespuesDeCarga();
+        }
+      }));
+    } else {
+      this.aplicarValoresDespuesDeCarga();
+    }
+  }, 500);
+}
 
   /**
    * Guarda un nuevo destinatario en el arreglo local `destinatarios`
@@ -391,7 +566,7 @@ export class AgregarDestinatarioFinalComponent
     }
     
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-    const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+    const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
     let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
       ? [...this.destinatarioFinalTablaDatos] 
       : [];
@@ -437,7 +612,7 @@ export class AgregarDestinatarioFinalComponent
   }
   
   const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-  const NUEVO_DESTINATARIO = this.buildDestinatarioObject(VALOR_FORMULARIO);
+  const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
   let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
     ? [...this.destinatarioFinalTablaDatos] 
     : [];
@@ -469,7 +644,7 @@ export class AgregarDestinatarioFinalComponent
 /**
  * Builds destinatario object from form values
  */
-private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
+private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
   let nombreRazonSocial: string;
   if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
     nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
@@ -479,35 +654,46 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     nombreRazonSocial = '';
   }
 
-  const GET_DESCRIPTION_FROM_CATALOG = (catalogArray: Catalogo[], id: string | number): string => {
-    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
-    return ITEM ? ITEM.descripcion : id.toString();
+  const OBTENER_DESCRIPCION_DEL_CATALOGO = (catalogArray: Catalogo[], clave: string | number): string => {
+    if (!catalogArray || catalogArray.length === 0 || !clave) {
+      return clave?.toString() || '';
+    }
+    
+    const ITEM_BY_CLAVE = catalogArray.find(cat => 
+      cat?.clave && cat.clave.toString() === clave.toString()
+    );
+    
+    if (ITEM_BY_CLAVE) {
+      return ITEM_BY_CLAVE.descripcion;
+    }
+    
+    return clave.toString();
   };
   
   return {
-    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string,
+    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string || '',
     tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
     nombreRazonSocial: nombreRazonSocial,
     rfc: VALOR_FORMULARIO['rfc'] as string,
-    curp: '',
-    telefono: `${VALOR_FORMULARIO['lada']} ${VALOR_FORMULARIO['telefono']}`.trim(),
-    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string,
-    calle: VALOR_FORMULARIO['calle'] as string,
-    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string,
+    curp: VALOR_FORMULARIO['curp'] as string || '',
+    telefono: `${VALOR_FORMULARIO['lada'] || ''} ${VALOR_FORMULARIO['telefono'] || ''}`.trim(),
+    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string || '',
+    calle: VALOR_FORMULARIO['calle'] as string || '',
+    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string || '',
     numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
-    pais: GET_DESCRIPTION_FROM_CATALOG(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
-    colonia: GET_DESCRIPTION_FROM_CATALOG(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
-    municipioAlcaldia: GET_DESCRIPTION_FROM_CATALOG(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
-    localidad: GET_DESCRIPTION_FROM_CATALOG(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
+    pais: OBTENER_DESCRIPCION_DEL_CATALOGO(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
+    colonia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
+    municipioAlcaldia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
+    localidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
     entidadFederativa: '',
-    estadoLocalidad: GET_DESCRIPTION_FROM_CATALOG(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
-    codigoPostal: GET_DESCRIPTION_FROM_CATALOG(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
-    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string,
-    nombres: VALOR_FORMULARIO['nombres'] as string,
-    primerApellido: VALOR_FORMULARIO['primerApellido'] as string,
-    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string,
-    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string,
-    lada: VALOR_FORMULARIO['lada'] as string,
+    estadoLocalidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
+    codigoPostal: OBTENER_DESCRIPCION_DEL_CATALOGO(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
+    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string || '',
+    nombres: VALOR_FORMULARIO['nombres'] as string || '',
+    primerApellido: VALOR_FORMULARIO['primerApellido'] as string || '',
+    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string || '',
+    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string || '',
+    lada: VALOR_FORMULARIO['lada'] as string || '',
   };
 }
 
@@ -550,7 +736,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    */
   ngOnInit(): void {
     this.requiedField = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento);
-    this.cargarDatos();
+    this.cargarDatos(this.tramiteID);
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
     this.changeNacionalidad();
@@ -597,7 +783,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
    * destrucción usando `takeUntil(this.unsubscribe$)`.
    */
-  cargarDatos(): void {
+  cargarDatos(tramite: string): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
       .pipe(takeUntil(this.unsubscribe$))
@@ -605,40 +791,20 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
         this.codigosPostalesDatos = data;
       });
 
-    this.datosSolicitudService
-      .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.paisesDatos = data;
-      });
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.paisesDatos = DATOS;
+  }));
+  
+    this.subscription.add(this.catalogoServices.estadosCatalogo(tramite).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.estadosDatos = DATOS;
+  }));
 
-    this.datosSolicitudService
-      .obtenerListaEstados()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.estadosDatos = data;
-      });
-
-    this.datosSolicitudService
-      .obtenerListaMunicipios()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.municipiosTempDatos = data;
-      });
-
-    this.datosSolicitudService
-      .obtenerListaLocalidades()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.localidadesTempDatos = data;
-      });
-
-    this.datosSolicitudService
-      .obtenerListaColonias()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.coloniasTempDatos = data;
-      });
   }
 
   /**
@@ -872,7 +1038,7 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
       case 260201:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
-        this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosRequeridos = [];
         break;
       case 260219:
         this.elementosRequeridos = ['calle', 'numeroExterior'];
@@ -906,6 +1072,11 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
+    this.agregarDestinatarioFinal.markAsUntouched();
+    this.agregarDestinatarioFinal.markAsPristine();
+    this.agregarDestinatarioFinal.disable();
+    this.estaDeshabilitadoDesplegable=true;
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
@@ -940,101 +1111,106 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    *
    * @returns {void} No retorna ningún valor.
    */
-  changeNacionalidad(): void {
-        if (this.chequeoValidacionAlGuardar) {
-          const NOMBRES_CONTROL = this.agregarDestinatarioFinal.get('nombres');
-          if (NOMBRES_CONTROL) {
-            const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-            if (TIPO_PERSONA === this.tipoPersona.FISICA) {
-              NOMBRES_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-            } else {
-              NOMBRES_CONTROL.clearValidators();
-              NOMBRES_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
-            }
-            NOMBRES_CONTROL.updateValueAndValidity();
-          }
-          const PRIMER_APELLIDO_CONTROL = this.agregarDestinatarioFinal.get('primerApellido');
-          if (PRIMER_APELLIDO_CONTROL) {
-            const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-            if (TIPO_PERSONA === this.tipoPersona.FISICA) {
-              PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-            } else {
-              PRIMER_APELLIDO_CONTROL.clearValidators();
-              PRIMER_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
-            }
-            PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
-          }
-          const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
-          if (CURP_CONTROL) {
-            CURP_CONTROL.clearValidators();
-            CURP_CONTROL.updateValueAndValidity();
-          }
-        }
-    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-    if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
-      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
-        (controlName) => {
-          this.agregarDestinatarioFinal.get(controlName)?.disable();
-          if (controlName === 'tipoPersona') {
-            this.agregarDestinatarioFinal.get(controlName)?.enable();
-          }
-        }
-      );
-    } else {
-      if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
-        const RFC_CONTROL = this.agregarDestinatarioFinal.get('rfc');
-        if (RFC_CONTROL) {
-          RFC_CONTROL.setValidators([
-              Validators.required,
-            AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
-          ]);
-          RFC_CONTROL.markAsTouched();
-          RFC_CONTROL.updateValueAndValidity();
-        }
-        if (!this.chequeoValidacionAlGuardar) {
-          const DENOMINACION_RAZON_CONTROL = this.agregarDestinatarioFinal.get('denominacionRazon');
-          if (DENOMINACION_RAZON_CONTROL) {
-            DENOMINACION_RAZON_CONTROL.setValidators([
-              (control: AbstractControl): ValidationErrors | null => {
-                const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-                if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
-                  return { required: true };
-                }
-                return null;
-              },
-              Validators.pattern(REGEX_NOMBRE)
-            ]);
-            DENOMINACION_RAZON_CONTROL.updateValueAndValidity();
-          }
-          const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
-          if (CURP_CONTROL) {
-            CURP_CONTROL.setValidators([Validators.required]);
-            CURP_CONTROL.updateValueAndValidity();
-          }
-        }
-        Object.keys(this.agregarDestinatarioFinal.controls).forEach(
-          (controlName) => {
-            if (
-              controlName !== 'nacionalidad' &&
-              controlName !== 'tipoPersona'
-            ) {
-              this.agregarDestinatarioFinal.get(controlName)?.reset();
-            }
-          }
-        );
+changeNacionalidad(): void {
+  if (this.chequeoValidacionAlGuardar) {
+    const NOMBRES_CONTROL = this.agregarDestinatarioFinal.get('nombres');
+    if (NOMBRES_CONTROL) {
+      const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+      if (TIPO_PERSONA === this.tipoPersona.FISICA) {
+        NOMBRES_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      } else {
+        NOMBRES_CONTROL.clearValidators();
+        NOMBRES_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
       }
-      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
-        (controlName) => {
-          this.agregarDestinatarioFinal.get(controlName)?.enable();
-          this.estaDeshabilitadoDesplegable = false;
-          this.agregarDestinatarioFinal.patchValue({
-            pais: 2
-          });
-        }
-      );
+      NOMBRES_CONTROL.updateValueAndValidity();
     }
-    this.forzarDeshabilitarPais();
+    const PRIMER_APELLIDO_CONTROL = this.agregarDestinatarioFinal.get('primerApellido');
+    if (PRIMER_APELLIDO_CONTROL) {
+      const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+      if (TIPO_PERSONA === this.tipoPersona.FISICA) {
+        PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      } else {
+        PRIMER_APELLIDO_CONTROL.clearValidators();
+        PRIMER_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+      }
+      PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
+    }
+    const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
+    if (CURP_CONTROL) {
+      CURP_CONTROL.clearValidators();
+      CURP_CONTROL.updateValueAndValidity();
+    }
   }
+
+  const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+  const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+
+  if (!TIPO_PERSONA || TIPO_PERSONA === '') {
+    this.estaDeshabilitadoDesplegable = true;
+    Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
+      this.agregarDestinatarioFinal.get(controlName)?.disable();
+      if (controlName === 'tipoPersona') {
+        this.agregarDestinatarioFinal.get(controlName)?.enable();
+      }
+    });
+  } else {
+    if (TIPO_PERSONA) {
+      const RFC_CONTROL = this.agregarDestinatarioFinal.get('rfc');
+      if (RFC_CONTROL) {
+        RFC_CONTROL.setValidators([
+          Validators.required,
+          AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+        ]);
+        
+        RFC_CONTROL.updateValueAndValidity();
+      }
+      
+      if (!this.chequeoValidacionAlGuardar) {
+        const DENOMINACION_RAZON_CONTROL = this.agregarDestinatarioFinal.get('denominacionRazon');
+        if (DENOMINACION_RAZON_CONTROL) {
+          DENOMINACION_RAZON_CONTROL.setValidators([
+            (control: AbstractControl): ValidationErrors | null => {
+              const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+              if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
+                return { required: true };
+              }
+              return null;
+            },
+            Validators.pattern(REGEX_NOMBRE)
+          ]);
+          DENOMINACION_RAZON_CONTROL.updateValueAndValidity();
+        }
+        const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
+        if (CURP_CONTROL) {
+          CURP_CONTROL.setValidators([Validators.required]);
+          CURP_CONTROL.updateValueAndValidity();
+        }
+      }
+
+      this.estaDeshabilitadoDesplegable = false;
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
+          this.agregarDestinatarioFinal.get(controlName)?.enable();
+        }
+      });
+
+      if (!this.isEditMode) {
+        this.agregarDestinatarioFinal.patchValue({
+          pais: 'MEX'
+        });
+      }
+        if(this.idProcedimiento === 260201){
+        this.agregarDestinatarioFinal.get('pais')?.disable();
+      }
+    }
+  }
+  
+  if (this.elementosDeshabilitados.includes('pais')) {
+    this.agregarDestinatarioFinal.get('pais')?.disable();
+  }
+  
+  this.forzarDeshabilitarPais();
+}
 
   /**
    * Carga la lista de estados cuando se selecciona un catálogo válido.
@@ -1046,9 +1222,16 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    *   a la lista principal (`municipiosDatos`).
    */
   cargarEstados(evento: Catalogo): void {
-    if (evento.id > 0) {
-      this.municipiosDatos = this.municipiosTempDatos;
-    }
+    if (evento.clave) {
+    this.subscription.add(this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.municipiosDatos = DATOS;
+    }));
+  } else {
+    this.municipiosDatos = [];
+  }
   }
 
   /**
@@ -1062,10 +1245,24 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
    *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
    */
   cargarMunicipios(evento: Catalogo): void {
-    if (evento.id > 0) {
-      this.localidadesDatos = this.localidadesTempDatos;
-      this.coloniasDatos = this.coloniasTempDatos;
-    }
+    if (evento.clave) {
+    this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.localidadesDatos = DATOS;
+    }));
+
+    this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, evento.clave).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.coloniasDatos = DATOS;
+    }));
+  } else {
+    this.localidadesDatos = [];
+    this.coloniasDatos = [];
+  }
   }
 
   /**
@@ -1143,4 +1340,25 @@ private buildDestinatarioObject(VALOR_FORMULARIO: Record<string, unknown>): Dest
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
+/**
+ * Updates the estaDeshabilitadoDesplegable flag and enables all form controls
+ * This mirrors the logic from fabricante component
+ */
+private actualizarEstadoHabilitacionDesplegables(): void {
+  const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+  
+  if (TIPO_PERSONA) {
+    this.estaDeshabilitadoDesplegable = false;
+    
+    Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
+      if (!this.elementosDeshabilitados.includes(controlName)) {
+        this.agregarDestinatarioFinal.get(controlName)?.enable();
+      }
+    });
+  } else {
+    this.estaDeshabilitadoDesplegable = true;
+  }
+}
 }

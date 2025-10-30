@@ -3,7 +3,10 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Mercancias } from '../models/plantas-consulta.model';
+
+import { GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/peru-certificado.model';
+
+import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../../110223/models/registro.model';
 
 /**
  * @interface Tramite110221State
@@ -12,38 +15,15 @@ import { Mercancias } from '../models/plantas-consulta.model';
  * 
  */
 
-export interface DestinatarioForm {
-  nombre: string;
-  numeroFiscal: string;
-}
 
-export interface DomicilioForm {
-  calle: string;
-  numeroLetra: string;
-  paisDestino: string | null;
-  ciudad: string;
-  correoElectronico: string;
-  lada: string;
-  telefono: string;
-}
-
-export interface RepresentanteLegalForm{
-  nombreRepresentante: string;
-  lugar: string;
-  calle: string;
-  numero: string;
-  pais: string;
-  ciudad: string;
-  cargo: string;
-  empresa: string;
-  numeroRegistroFiscal: string;
-  lada?: string;
-  telefono?: string;
-  fax?: string;
-  correoElectronico: string;
-}
 
 export interface Tramite110221State {
+
+  /** @descripcion
+   * Grupo representativo asociado al trámite.
+   */
+  grupoRepresentativo: GrupoRepresentativo;
+
   /** ID de la solicitud */
   idSolicitud: number | null;
   
@@ -68,7 +48,8 @@ export interface Tramite110221State {
    * @description
    * Lista de bloques de países que se pueden seleccionar en el formulario, representados como objetos `Catalogo`.
    */
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
+ 
   /**
    * @property {Mercancia[]} mercanciaTabla - Tabla de mercancías agregadas.
    * @description
@@ -250,16 +231,38 @@ export interface Tramite110221State {
   altaPlanta: Catalogo[],
    /** Lista de catálogos que representan facturas disponibles. */
   factura: Catalogo[];
-  
+    /** Lista de mercancías asociadas a los productores. */
+  mercanciaProductores: MercanciaTabla[];
     /** Lista de mercancías encontradas o buscadas. */
-    buscarMercancia: Mercancias[];
+    buscarMercancia: Mercancia[];
     
   /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
   umcs: Catalogo[];
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
-}
+ /**
+   * @property {Object} formDatosDelDestinatario - Datos del destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
+   */
+  formDatosDelDestinatario: { [key: string]: unknown };
 
+  /** @property {Object} agregarProductoresExportador - Datos de los productores a agregar.
+   * @description
+   * Contiene información sobre los productores que se desean agregar al exportador.
+   */
+  agregarProductoresExportador: HistoricoColumnas[];
+  /** @property {Object} formDestinatario - Datos del destinatario.
+   */
+  formDestinatario: { [key: string]: unknown };
+  /**
+   * @property {Object} formExportor - Datos del exportador.
+   * @description
+   * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  formExportor: { [key: string]: unknown };}
+  
+ 
 /**
  * asegurando que el estado comience limpio y sin datos previos.
  * @method createInitialState
@@ -288,8 +291,8 @@ export function createInitialState(): Tramite110221State {
       id: -1,
       descripcion: '',
     },
-    paisBloques: [],
-
+     paisBloques: { id: -1, descripcion: '' },
+ mercanciaProductores: [],
     mercanciaTabla: [],
     formDatosCertificado: {
       observacionesDates: '',
@@ -370,6 +373,40 @@ export function createInitialState(): Tramite110221State {
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
+grupoRepresentativo: {
+  lugar: '',
+  nombre: '',
+  empresa: '',
+  cargo: '',
+  registroFiscal: '',
+  telefono: '',
+  fax: '',
+  correo: '',
+},
+   formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+    },
+    formExportor: {
+      lugar: '',
+      nombreEmpresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: ''
+    },
+
    buscarMercancia: [],
    altaPlanta:[],
      mercanciaForm: {
@@ -392,8 +429,11 @@ export function createInitialState(): Tramite110221State {
   },
   factura:[],
   umcs:[],
-  optionsTipoFactura: []
+  optionsTipoFactura: [],
+  agregarProductoresExportador: [],
   };
+
+
 }
 
 /**
@@ -408,6 +448,8 @@ export function createInitialState(): Tramite110221State {
 })
 @StoreConfig({ name: 'Tramite110221Store', resettable: true })
 export class Tramite110221Store extends Store<Tramite110221State> {
+
+ 
   /**
    * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.
@@ -415,6 +457,10 @@ export class Tramite110221Store extends Store<Tramite110221State> {
   constructor() {
     super(createInitialState());
   }
+  /** @descripcion
+   * Observable que selecciona todo el estado del trámite.
+   */
+  selectTramite$ = this._select((state) => state);
 
   /**
    * Guarda el ID de la solicitud en el estado.
@@ -425,6 +471,43 @@ export class Tramite110221Store extends Store<Tramite110221State> {
     this.update((state) => ({
       ...state,
       idSolicitud,
+    }));
+  }
+  /**
+   * Actualiza los datos del formulario de destinatario.
+   * @param values Clave/valor con campos del formulario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza los datos del formulario del exportador.
+   * @param values Clave/valor con campos del formulario.
+   */
+  public setFormExportor(values: { [key: string]: undefined | string }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
+  /**
+   * Actualiza los datos del formulario del destinatario.
+   * @param values Clave/valor con campos del formulario.
+   */
+  public setFormDestinatario(values: { [key: string]: undefined | string }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
     }));
   }
 
@@ -454,7 +537,18 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       },
     }));
   }
-
+  /** @descripcion
+   * Actualiza los datos del formulario de exportador.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setFormExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
   /**
    * @descripcion
    * Actualiza los datos del formulario de productor.
@@ -486,7 +580,7 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    * Actualiza los bloques de países en el almacén.
    * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
    */
-  setBloque(paisBloques: Catalogo[]): void {
+ setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({
       ...state,
       paisBloques,
@@ -806,11 +900,12 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   }
     /**
      * Establece los resultados de mercancía obtenidos por búsqueda.
-     * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+     * @param buscarMercancia Lista de resultados de tipo `Mercancias`.
      */
-    setbuscarMercancia(buscarMercancia: Mercancias[]): void {
-      this.update((state) => ({ ...state, buscarMercancia }));
-    }
+    setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
+
       /**
    * Actualiza los valores del formulario de mercancía.
    * @param values Clave/valor con información sobre la mercancía.
@@ -858,4 +953,70 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       optionsTipoFactura: tipoFactura,
     }));
   }
+  /**
+   * Actualiza los datos del formulario de destinatario.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setformdestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /** @descripcion
+   * Actualiza los datos del formulario de destinatario.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setformDatosDelDestinatario(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /** @descripcion
+   * Actualiza los datos del formulario de exportador.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setformExportor(values: { [key: string]: unknown}): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
+  /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setProductores(productores: HistoricoColumnas[]): void {
+    this.update((state) => ({ ...state, productores }));
+  }
+
+/**
+ * @descripcion
+ * Agrega un productor al arreglo de productores exportadores en el estado.
+ * 
+ * @param productor - Objeto de tipo `HistoricoColumnas` que representa el productor a agregar.
+ * 
+ * @detalle
+ * - Crea una nueva instancia del arreglo `agregarProductoresExportador` con el productor proporcionado.
+ * - Mantiene los productores existentes en el arreglo y agrega el nuevo productor al final.
+ * - Actualiza el estado global del store con el nuevo arreglo de productores exportadores.
+ */
+setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+  this.update((state) => ({
+    ...state,
+    agregarProductoresExportador: [
+      ...state.agregarProductoresExportador,
+      { ...productor },
+    ],
+  }));
+}
 }

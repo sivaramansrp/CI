@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -8,6 +8,7 @@ import {
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user'
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-materias-primas.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202Store } from '../../estados/tramite260202Store.store';
@@ -67,6 +68,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroy$ = new Subject<void>();
+
+  @ViewChild('tercerosRelacionadosVista') tercerosRelacionados!: TercerosRelacionadosComponent;
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @constructor
@@ -158,6 +163,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  validarFormulario(): boolean {
+    return (
+      this.tercerosRelacionados?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

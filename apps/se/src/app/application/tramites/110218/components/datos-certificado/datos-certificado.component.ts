@@ -15,7 +15,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import {ConsultaioQuery } from "@ng-mf/data-access-user";
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
@@ -33,9 +33,14 @@ import { Modal } from 'bootstrap';
 /**
  * Componente para mostrar y manejar los datos del certificado técnico de Japón.
  *
- * Este componente permite a los usuarios interactuar con los datos del certificado,
- * incluyendo la visualización de datos en una tabla dinámica, la selección de filas
- * y la navegación a otras secciones de la aplicación.
+ * Este componente permite a los usuarios:
+ * - Visualizar los datos del certificado en una tabla dinámica.
+ * - Seleccionar y modificar filas de la tabla.
+ * - Navegar a otras secciones relacionadas con el trámite.
+ * - Interactuar con formularios reactivos para capturar información relevante.
+ *
+ * El componente utiliza servicios y stores para mantener el estado sincronizado y
+ * facilitar la comunicación con el backend.
  */
 @Component({
   selector: 'app-datos-certificado',
@@ -49,59 +54,62 @@ import { Modal } from 'bootstrap';
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
-   * Referencia al modal de alerta de selección de mercancía
+   * Referencia al modal de alerta de selección de mercancía.
+   * Permite mostrar u ocultar el modal cuando el usuario realiza acciones de selección.
    */
   @ViewChild('modalSeleccionMercancia') modalSeleccionMercanciaElemento!: ElementRef;
   /**
    * Indica si el formulario está en modo solo lectura.
    * Si es verdadero, el usuario no puede editar los campos del formulario.
+   * Si es falso, el usuario puede modificar los datos.
    */
   esSoloLectura!: boolean;
   /**
-   * Formulario para los datos del certificado.
-   * Contiene campos como lugar y observaciones.
+   * Formulario reactivo para los datos del certificado.
+   * Incluye los campos 'lugar' y 'observaciones', ambos obligatorios.
    */
   datosDelCertificado!: FormGroup;
 
   /**
    * Estado seleccionado del trámite 110218.
-   * Contiene los valores actuales almacenados en el estado global.
+   * Contiene los valores actuales almacenados en el estado global y se actualiza
+   * mediante suscripción al store.
    */
   estadoSeleccionado!: Solicitud110218State;
 
   /**
    * Configuración para la tabla de datos del certificado.
-   * Define las columnas y propiedades de la tabla.
+   * Define las columnas y propiedades que se mostrarán en la tabla dinámica.
    */
   arregloConfiguracionTabla = CERTIFICADO_TABLA;
 
   /**
    * Tipo de selección de la tabla (radio).
-   * Define el tipo de selección que se puede realizar en la tabla.
+   * Permite seleccionar una sola fila a la vez en la tabla.
    */
   radioDeMesa = TablaSeleccion.RADIO;
 
   /**
    * Datos para la tabla.
-   * Contiene un arreglo de objetos de tipo `CompliMentaria`.
+   * Contiene un arreglo de objetos de tipo `CompliMentaria` que representan los registros del certificado.
    */
   datos: CompliMentaria[] = [];
 
   /**
-   * Lista de filas seleccionadas en la tabla.
-   * Contiene todas las filas seleccionadas por el usuario.
+   * Fila seleccionada en la tabla.
+   * Se actualiza cuando el usuario selecciona una fila para modificar o consultar.
    */
   filaSeleccionada!: CompliMentaria;
 
   /**
    * Catálogo para el tipo de factura.
-   * Contiene un arreglo de objetos de tipo `Catalogo`.
+   * Utilizado para poblar opciones en el formulario relacionadas con el tipo de factura.
    */
   tipodeFactura: Catalogo[] = [];
 
   /**
    * Catálogo para la unidad de medida de comercialización.
-   * Contiene un arreglo de objetos de tipo `Catalogo`.
+   * Utilizado para poblar opciones en el formulario relacionadas con la unidad de medida.
    */
   unidaddeMedidadeComercializacion: Catalogo[] = [];
 
@@ -113,11 +121,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * Datos seleccionados previamente en la tabla, obtenidos desde el store.
+   * Permite mantener la selección entre diferentes vistas o acciones.
    */
   tablaSeleccionadaDeLaTienda: CompliMentaria | null = null;
 
   /**
    * Índice utilizado para propósitos internos del componente.
+   * Puede servir para navegación o lógica de presentación.
    */
   indice: number = 5;
 
@@ -125,17 +135,17 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del DOM identificado como 'mercanciasSeleccionadas'.
    * Utilizado para acceder y manipular directamente el elemento desde el componente.
-   * 
    */
   @ViewChild('mercanciasSeleccionadas') mercanciasSeleccionadasElemento!: ElementRef;
 
   /**
    * Constructor del componente.
    *
-   * formBuilder - Constructor de formularios reactivos.
-   * service - Servicio para manejar operaciones relacionadas con certificados.
-   * tramite110218Store - Store para manejar el estado relacionado con el Trámite 110218.
-   * tramite110218Query - Query para recuperar datos relacionados con el Trámite 110218.
+   * @param formBuilder Constructor de formularios reactivos.
+   * @param service Servicio para manejar operaciones relacionadas con certificados.
+   * @param tramite110218Store Store para manejar el estado relacionado con el Trámite 110218.
+   * @param tramite110218Query Query para recuperar datos relacionados con el Trámite 110218.
+   * @param consultaQuery Query para consultar datos adicionales.
    */
   constructor(
     public formBuilder: FormBuilder,
@@ -147,7 +157,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * Crea y configura el formulario para los datos del certificado.
-   * Contiene los controles 'lugar' y 'observaciones' con sus respectivas validaciones.
+   * Inicializa los controles 'lugar' y 'observaciones' con los valores actuales del estado.
+   * Ambos campos son obligatorios.
    */
   inicializarFormulario(): void {
     this.datosDelCertificado = this.formBuilder.group({
@@ -213,7 +224,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Maneja la selección de una fila en la tabla.
    * Actualiza la propiedad `filaSeleccionada` con la fila seleccionada.
    *
-   * fila - Fila seleccionada en la tabla.
+   * @param fila Fila seleccionada en la tabla.
    */
   manejarFilaSeleccionada(fila: CompliMentaria): void {
     this.filaSeleccionada = fila; // Actualiza la fila seleccionada
@@ -236,7 +247,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Nueva función para manejar el click en Modificar, muestra el modal de alerta si no hay selección
+   * Maneja el click en Modificar.
+   * Muestra el modal de alerta si no hay selección de fila.
    */
   onModificarClick(): void {
     if (!this.filaSeleccionada) {
@@ -250,8 +262,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.enModificarFormulario();
   }
 
+  /**
+   * Cierra el modal de selección de mercancía si existe una instancia activa.
+   */
   cerrarSeleccionMercanciaModal(): void {
-    // Usar 'this' para cumplir con la regla de estilo
     const MODAL_ELEMENT = this.modalSeleccionMercanciaElemento?.nativeElement;
     if (MODAL_ELEMENT) {
       const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
@@ -261,9 +275,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     }
   }
     /**
-   * [ES] Cierra el modal asociado al elemento de registro de mercancía, si existe una instancia activa.
-   * Utiliza la instancia del modal obtenida a través del elemento nativo y llama al método `hide()` para ocultarlo.
-   */
+     * Cierra el modal asociado al elemento de registro de mercancía, si existe una instancia activa.
+     * Utiliza la instancia del modal obtenida a través del elemento nativo y llama al método `hide()` para ocultarlo.
+     */
   modalCancelar(): void {
   const ELEMENTO_MODAL = this.mercanciasSeleccionadasElemento;
   if (ELEMENTO_MODAL) {
@@ -286,8 +300,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Actualiza un valor específico en el store del trámite.
    *
-   * FormGroup - Formulario reactivo.
-   * control - Nombre del control cuyo valor se actualizará en el store.
+   * @param FormGroup Formulario reactivo.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
@@ -308,8 +322,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       });
   }
     /**
-   * Maneja los datos modificados recibidos del formulario hijo y actualiza la tabla.
-   */
+     * Maneja los datos modificados recibidos del formulario hijo y actualiza la tabla.
+     * Mezcla los datos existentes de la fila seleccionada con los valores modificados.
+     */
   onDatosModificados(valores: CompliMentaria): void {
     // Mezclar los datos existentes de la fila seleccionada con los valores modificados del formulario
     if (this.filaSeleccionada) {
