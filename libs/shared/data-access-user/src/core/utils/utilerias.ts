@@ -371,7 +371,7 @@ export function formatDateToYYYYMMDD(dateString: string): string {
   * @param nombreArchivo Nombre del archivo a descargar (si aplica).
   * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
   */
-  export function  manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+  export function manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
     // Decodificar el base64
     const BYTE_CHARACTERS = atob(base64);
     const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
