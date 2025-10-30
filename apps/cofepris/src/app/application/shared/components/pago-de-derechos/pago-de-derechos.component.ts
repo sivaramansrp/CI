@@ -241,33 +241,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
+    const NOMULTISPACE = /^(?!.* {2,}).*$/;
+
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.solicitudState?.claveReferencia || '',
-        [Validators.maxLength(9), Validators.required],
+      this.solicitudState?.claveReferencia || '',
+      [
+        Validators.maxLength(9),
+        Validators.required,
+        Validators.pattern(NOMULTISPACE),
+      ],
       ],
       cadenaDependencia: [
-        this.solicitudState?.cadenaDependencia || '',
-        [Validators.maxLength(14), Validators.required],
+      this.solicitudState?.cadenaDependencia || '',
+      [
+        Validators.maxLength(14),
+        Validators.required,
+      ],
       ],
       estado: [this.solicitudState?.estado || '', Validators.required],
       banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.solicitudState?.llavePago || '',
-        [
-          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
-          Validators.maxLength(30),
-          Validators.required,
-        ],
+      this.solicitudState?.llavePago || '',
+      [
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30),
+        Validators.required,
+      ],
       ],
       fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
-        this.solicitudState?.importePago || '',
-        [
-          decimalValidator(2),
-          Validators.maxLength(16),
-          Validators.required,
-        ],
+      this.solicitudState?.importePago || '',
+      [
+        decimalValidator(2),
+        Validators.maxLength(16),
+        Validators.required,
+      ],
       ],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
@@ -466,6 +475,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     
     return false;
   }
+
+  llavePagoCase(): void {
+    const LLAVEPAGOCONTROL = this.pagoDerechosForm.get('llavePago');
+    if (LLAVEPAGOCONTROL && LLAVEPAGOCONTROL.value) {
+      const LLAVE_PAGO = LLAVEPAGOCONTROL.value.toUpperCase();
+      LLAVEPAGOCONTROL.setValue(LLAVE_PAGO);
+      this.setValoresStore(this.pagoDerechosForm, 'llavePago', 'setllavePago');
+    }
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

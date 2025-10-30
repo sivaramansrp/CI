@@ -1,12 +1,14 @@
 import {
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 
 import {
   ConsultaioQuery,
-  ConsultaioState
+  ConsultaioState,
+  SolicitanteComponent
 } from '@ng-mf/data-access-user';
 
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
@@ -17,6 +19,9 @@ import {
   takeUntil
 } from 'rxjs';
 
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
 
@@ -51,6 +56,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
+  @ViewChild('solicitante') solicitante!: SolicitanteComponent
+
+  @ViewChild('contenedorDatos') contenedorDatos!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild('tercerosRelacionados') tercerosRelacionados!: TercerosRelacionadosVistaComponent;
+
+  @ViewChild('pagoDerechos') pagoDerechos!: PagoDeDerechosContenedoraComponent;
 
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
@@ -114,6 +127,45 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.tramite260208Store.updateTabSeleccionado(i);
+  }
+
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.contenedorDatos) {
+      if (!this.contenedorDatos.validarFormularioDatos()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.tercerosRelacionados) {
+      if (!this.tercerosRelacionados.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.pagoDerechos) {
+      if (!this.pagoDerechos.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**
