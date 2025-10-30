@@ -273,3 +273,17 @@ export interface Catalogo {
    */
   descripcion: string;
 }
+
+/**
+ * Representa los datos del grupo representativo.
+ */
+export interface GrupoRepresentativo {
+  lugar: string;
+  nombre: string;
+  empresa: string;
+  cargo: string;
+  registroFiscal: string;
+  correo: string;
+  telefono: string;
+  fax: string;
+}

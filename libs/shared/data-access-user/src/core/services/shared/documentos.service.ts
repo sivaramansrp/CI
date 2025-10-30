@@ -17,7 +17,7 @@ export class DocumentosService {
   /**
    * URL base del servicio
    */
-  private readonly host: string;
+  private host: string;
 
   /**
    * Constructor del servicio DocumentosService
@@ -59,6 +59,7 @@ export class DocumentosService {
     procedure: number
   ): Observable<BaseResponse<DocumentoResponse>> {
     const ENDPOINT =
+    
       `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<DocumentoResponse>>(ENDPOINT, null).pipe(

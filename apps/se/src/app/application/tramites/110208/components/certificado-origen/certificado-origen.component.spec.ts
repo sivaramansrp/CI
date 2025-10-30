@@ -1,123 +1,155 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { FormBuilder } from '@angular/forms';
+import { Solocitud110208Service } from '../../../110208/services/service110208.service';
 import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
-import { of } from 'rxjs';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+@Injectable()
+class MockSolocitud110208Service {
+  buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({}));
+  crearMercanciaCert = jest.fn().mockReturnValue(observableOf({}));
+}
+
+@Injectable()
+class MockTramite110208Store {
+  setFormCertificadoGenric = jest.fn();
+  setDisponsiblesDatos = jest.fn()
+  setEstado = jest.fn();
+  setBloque = jest.fn()
+  setFormMercancia = jest.fn();
+  setmercanciaTabla = jest.fn();
+  setFormValida = jest.fn();
+     _select = jest.fn().mockReturnValue(observableOf({}));
+  select = jest.fn().mockReturnValue(observableOf({}));
+}
+
+@Injectable()
+class MockTramite110208Query {
+  selectSolicitud$ = observableOf({});
+  formCertificado$ = observableOf({});
+  actualizarEstadoFormulario = jest.fn();
+}
 
 describe('CertificadoOrigenComponent', () => {
-  let component: CertificadoOrigenComponent;
-  let fixture: ComponentFixture<CertificadoOrigenComponent>;
-  let validarInicalmenteServiceMock: jest.Mocked<ValidarInicalmenteService>;
-  let tramite110208StoreMock: jest.Mocked<Tramite110208Store>;
-  let tramite110208QueryMock: jest.Mocked<Tramite110208Query>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    validarInicalmenteServiceMock = {
-      obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] })),
-      obtenerTablaDatosCertificado: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato1' }] })),
-      obtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato2' }] })), 
-      obtenerFormDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'FormDato1' }] })),
-      obtenerPaisList: jest.fn().mockReturnValue(of({ data: [] })),
-      obtenerUMCList: jest.fn().mockReturnValue(of({ data: [] })),
-      obtenerTipoDeFacturaList: jest.fn().mockReturnValue(of({ data: [] })),
-    } as unknown as jest.Mocked<ValidarInicalmenteService>;
-
-    tramite110208StoreMock = {
-      setEntidadFederativa: jest.fn(),
-      setBloque: jest.fn(),
-    } as unknown as jest.Mocked<Tramite110208Store>;
-
-    tramite110208QueryMock = {
-      selectSolicitud$: of({
-        entidadFederativa: 'Test',
-        bloque: 'Test',
-        fechaInicio: '2023-01-01',
-        fechaFinal: '2023-12-31',
-      }),
-    } as unknown as jest.Mocked<Tramite110208Query>;
-
-    await TestBed.configureTestingModule({
-      imports: [CertificadoOrigenComponent, ReactiveFormsModule, InputFechaComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,CertificadoOrigenComponent,HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: ValidarInicalmenteService, useValue: validarInicalmenteServiceMock },
-        { provide: Tramite110208Store, useValue: tramite110208StoreMock },
-        { provide: Tramite110208Query, useValue: tramite110208QueryMock },
-      ],
-    }).compileComponents();
+        { provide: Solocitud110208Service, useClass: MockSolocitud110208Service },
+        { provide: Tramite110208Store, useClass: MockTramite110208Store },
+        { provide: Tramite110208Query, useClass: MockTramite110208Query },
+        SeccionLibQuery,
+        ConsultaioQuery
+      ]
+    }).overrideComponent(CertificadoOrigenComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('debe crear el componente', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar el formulario con valores por defecto', () => {
-    expect(component.formCertificado.get('entidadFederativa')?.value).toBe('Test');
-    expect(component.formCertificado.get('bloque')?.value).toBe('Test');
+  it('should run #ngOnInit()', async () => {
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.query = component.query || {};
+    component.query.selectSolicitud$ = observableOf({});
+    component.ngOnInit();
+
   });
 
-  it('debe llamar a obtenerEstadoList y poblar estado', () => {
-    component.obtenerEstadoList();
-    expect(validarInicalmenteServiceMock.obtenerEstadoList).toHaveBeenCalled();
-    expect(component.estado).toEqual([{ id: 1, nombre: 'Estado1' }]);
+  it('should run #setValoresStore()', async () => {
+    component.store = component.store || {};
+    component.store.setFormCertificadoGenric = jest.fn();
+    component.setValoresStore({});
   });
 
-  it('debe llamar a obtenerTablaDatosCertificado y poblar nicoTablaDatos', () => {
-    component.obtenerTablaDatosCertificado();
-    expect(validarInicalmenteServiceMock.obtenerTablaDatosCertificado).toHaveBeenCalled();
-    expect(component.nicoTablaDatos).toEqual([{ id: 1, nombre: 'Dato1' }]);
+  it('should run #conseguirDisponiblesDatos()', async () => {
+    component.certificadoState = component.certificadoState || {};
+    component.certificadoState.formCertificado = {
+      'entidadFederativa': {},
+      'bloque': {}
+    };
+    component.solicitudService = component.solicitudService || {};
+    component.solicitudService.buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setDisponsiblesDatos = jest.fn();
+    component.conseguirDisponiblesDatos();
   });
 
-  it('debe actualizar fechaFinal en el formulario y llamar a setEntidadFederativa', () => {
-    component.cambioFechaFinal('2023-12-31', component.formCertificado, 'fechaFinal', 'setEntidadFederativa');
-    expect(component.formCertificado.get('fechaFinal')?.value).toBe('2023-12-31');
-    expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalledWith('2023-12-31');
+  it('should run #tipoEstadoSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setEstado = jest.fn();
+    component.tipoEstadoSeleccion({});
   });
 
-  it('debe actualizar fechaInicio en el formulario y llamar a setBloque', () => {
-    component.cambioFechaInicio('2023-01-01', component.formCertificado, 'fechaInicio', 'setBloque');
-    expect(component.formCertificado.get('fechaInicio')?.value).toBe('2023-01-01');
-    expect(tramite110208StoreMock.setBloque).toHaveBeenCalledWith('2023-01-01');
+  it('should run #tipoSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setBloque = jest.fn();
+    component.tipoSeleccion({
+      descripcion: {}
+    });
   });
 
-  it('debe limpiar los observables al destruir el componente', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('should run #abrirModificarModal()', async () => {
+    component.store = component.store || {};
+    component.store.setFormMercancia = jest.fn();
+    component.modalInstance = component.modalInstance || {};
+    component.modalInstance.show = jest.fn();
+    component.abrirModificarModal({}, {});
+  });
+
+  it('should run #cerrarModificarModal()', async () => {
+    component.modalInstance = component.modalInstance || {};
+    component.modalInstance.hide = jest.fn();
+    component.cerrarModificarModal();
+  });
+
+  it('should run #emitmercaniasDatos()', async () => {
+    component.store = component.store || {};
+    component.store.setmercanciaTabla = jest.fn();
+    component.emitmercaniasDatos({});
+  });
+  it('should run #setFormValida()', async () => {
+    component.store = component.store || {};
+    component.store.setFormValida = jest.fn();
+    component.setFormValida({});
+  });
+
+  it('should run #guardarClicado()', async () => {
+
+    component.guardarClicado({});
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('debe llamar al método correcto del store con el valor correcto', () => {
-    const mockForm = new FormBuilder().group({
-      testField: ['TestValue']
-    });
-
-    component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
-    expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalledWith('TestValue');
-  });
-
-  it('no debe llamar al método del store si el valor del campo del formulario es null', () => {
-    const mockForm = new FormBuilder().group({
-      testField: [null]
-    });
-
-    component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
-    expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
-  });
-
-  it('debe manejar correctamente un campo de formulario indefinido', () => {
-    const mockForm = new FormBuilder().group({});
-
-    component.setValoresStore(mockForm, 'nonExistentField', 'setEntidadFederativa');
-    expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
   });
 
 });

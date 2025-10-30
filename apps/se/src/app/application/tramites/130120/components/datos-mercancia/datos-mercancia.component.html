@@ -141,7 +141,7 @@
         <div class="form-group">
           <app-catalogo-select [catalogo]="umcOpcion" [label]="'Unidad de medida de comercialización(UMC)'"
             formControlName="umc" [required]="true" name="umc" [isDisabled]="esFormularioSoloLectura"
-            (change)="onUmcChange(datosMercanica, 'umc', 'setUmc')">
+            (change)="onUmcChange(datosMercanica, 'umc', 'setUmc'); configurarComboUMC()">
           </app-catalogo-select>
           <div *ngIf="datosMercanica.get('umc')?.touched && datosMercanica.get('umc')?.invalid">
             <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -160,7 +160,7 @@
             Otro UMC
           </label>
           <input class="form-control" type="text" id="otro_umc" placeholder="" formControlName="otro_umc"
-            (change)="setValoresStore(datosMercanica, 'otro_umc', 'setOtroUmc')" />
+            (change)="setValoresStore(datosMercanica, 'otro_umc', 'setOtroUmc'); configurarComboUMC()" />
         </div>
       </div>
 
@@ -172,7 +172,7 @@
           </label>
           <input class="form-control" type="text" id="cantidad_umc" placeholder="" formControlName="cantidad_umc"
             required="true" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$" [disabled]="esFormularioSoloLectura"
-            (input)="setValoresStore(datosMercanica, 'cantidad_umc', 'setCantidadUmc'); onCantidadUmcOrFactorChange(); " />
+            (input)="setValoresStore(datosMercanica, 'cantidad_umc', 'setCantidadUmc'); calcularUmtPrecioUnitario();" />
           <div *ngIf="datosMercanica.get('cantidad_umc')?.touched && datosMercanica.get('cantidad_umc')?.invalid">
             <small *ngIf="datosMercanica.get('cantidad_umc')?.errors?.['required']"
               class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -194,7 +194,7 @@
           </label>
           <input class="form-control disabled-bg" type="text" id="factor_conversion" placeholder=""
             formControlName="factor_conversion" required="true" maxlength="19" pattern="^\d{1,14}(\.\d{1,4})?$"
-            (change)="setValoresStore(datosMercanica, 'factor_conversion', 'setFactorConversion'); onCantidadUmcOrFactorChange();" />
+            (change)="setValoresStore(datosMercanica, 'factor_conversion', 'setFactorConversion'); calcularUmtPrecioUnitario();" />
           <div
             *ngIf="datosMercanica.get('factor_conversion')?.touched && datosMercanica.get('factor_conversion')?.invalid">
             <small *ngIf="datosMercanica.get('factor_conversion')?.errors?.['required']"
@@ -213,7 +213,8 @@
           </label>
           <input class="form-control disabled-bg" type="text" id="cantidad_umt" placeholder=""
             formControlName="cantidad_umt" required="true" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$"
-            [disabled]="true" (change)="setValoresStore(datosMercanica, 'cantidad_umt', 'setCantidadUmt')" />
+            [disabled]="true"
+            (change)="setValoresStore(datosMercanica, 'cantidad_umt', 'setCantidadUmt'); calcularPrecioUnitarioUSD();" />
           <div *ngIf="datosMercanica.get('cantidad_umt')?.touched && datosMercanica.get('cantidad_umt')?.invalid">
             <small *ngIf="datosMercanica.get('cantidad_umt')?.errors?.['required']"
               class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -235,7 +236,7 @@
           </label>
           <input class="form-control" type="text" id="valor_factura" placeholder="" formControlName="valor_factura"
             required="text" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$" [disabled]="esFormularioSoloLectura"
-            (change)="setMercanciaImportar()" />
+            (change)="setMercanciaImportar(); calcularValoresDolares();" />
           <div *ngIf="datosMercanica.get('valor_factura')?.touched && datosMercanica.get('valor_factura')?.invalid">
             <small *ngIf="datosMercanica.get('valor_factura')?.errors?.['required']"
               class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -251,7 +252,7 @@
           <app-catalogo-select [catalogo]="monedaComercializacionOpcion" [label]="'Moneda de comercialización'"
             [required]="true" name="moneda_comercializacion" [isDisabled]="esFormularioSoloLectura"
             formControlName="moneda_comercializacion"
-            (change)="setValoresStore(datosMercanica, 'moneda_comercializacion', 'setMonedaComercializacion'); setMercanciaImportar()">
+            (change)="setValoresStore(datosMercanica, 'moneda_comercializacion', 'setMonedaComercializacion'); calcularValorMoneda();">
           </app-catalogo-select>
           <div
             *ngIf="datosMercanica.get('moneda_comercializacion')?.touched && datosMercanica.get('moneda_comercializacion')?.invalid">
@@ -341,7 +342,7 @@
           </label>
           <input class="form-control" type="text" id="valor_total_factura" placeholder=""
             formControlName="valor_total_factura" required="true" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$"
-            [disabled]="esFormularioSoloLectura" (change)="setTotalMercanciaImportar()" />
+            [disabled]="esFormularioSoloLectura" (change)="setTotalMercanciaImportar(); calcularValorTotalFacturaUSD();" />
           <div
             *ngIf="datosMercanica.get('valor_total_factura')?.touched && datosMercanica.get('valor_total_factura')?.invalid">
             <small *ngIf="datosMercanica.get('valor_total_factura')?.errors?.['required']"

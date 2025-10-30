@@ -35,6 +35,6 @@ import { TramiteRealizerComponent } from '../tramite_realizer/tramite_realizer.c
   standalone: true,
   imports: [CommonModule, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
   templateUrl: './datos-generales.component.html',
-  styleUrl: './datos-generales.component.css',
+  styleUrl: './datos-generales.component.scss',
 })
 export class DatosGeneralesComponent {}

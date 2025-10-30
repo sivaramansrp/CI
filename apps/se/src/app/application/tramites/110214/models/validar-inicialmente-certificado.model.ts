@@ -165,7 +165,8 @@ export interface GrupoDeDirecciones {
  * Contiene el número de registro fiscal del productor.
  */
 export interface AgregarDatosProductorFormulario {
-  numeroRegistroFiscal: string;
+  numeroRegistroFiscal?: string;
+  fax?: string;
 }
 
 /**
@@ -199,7 +200,7 @@ export interface FormularioMercancia {
  * nombre comercial y fechas de inicio y fin.
  */
 export interface GrupoTratado {
-  tratado: string;
+  tratado: string; 
   pais: string;
   fraccionArancelaria: string;
   numeroRegistro: string;
@@ -296,54 +297,19 @@ export interface ConsultaDatos {
  * 
  */
 export interface MercanciaTabla {
-  /**
-   * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
-   * @description
-   * Código que clasifica la mercancía según el sistema arancelario.
-   */
-  fraccionArancelaria: string;
-  /**
-   * @property {string} tipoFactura - Tipo de factura asociada a la mercancía.
-   * @description
-   * Tipo de documento fiscal que respalda la transacción de la mercancía.
-   */
-  tipoFactura: string;
-  /**
-   * @property {string} cantidad - Cantidad de la mercancía.
-   * @description
-   * Cantidad total de la mercancía registrada en la transacción.
-   */
-  cantidad: string;
-  /**
-   * @property {string} unidadMedida - Unidad de medida de la mercancía.
-   * @description
-   * Unidad en la que se mide la mercancía (por ejemplo, kilogramos, litros).
-   */
-  unidadMedida: string;
-  /**
-   * @property {string} nombreTecnico - Nombre técnico de la mercancía.
-   * @description
-   * Denominación técnica del producto, utilizada para su identificación precisa.
-   */
-  nombreTecnico: string;
-  /**
-   * @property {string} nombreComercial - Nombre comercial de la mercancía.
-   * @description
-   * Denominación comercial del producto, utilizada en el mercado.
-   */
-  nombreComercial: string;
-  /**
-   * @property {string} valorMercancia - Valor de la mercancía.
-   * @description
-   * Valor monetario asignado a la mercancía, utilizado para fines fiscales y comerciales.
-   */
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
   valorMercancia: string;
-  /**
-   * @property {string} rfcProductor - RFC del productor de la mercancía.
-   * @description
-   * Registro Federal de Contribuyentes del productor responsable de la mercancía.
-   */
-  rfcProductor: string;
+  rfcProductor?: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { CommonModule } from '@angular/common';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
@@ -30,7 +30,8 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     DestinatarioComponent,
     TituloComponent,
     PasoUnoComponent,
-    AlertComponent
+    AlertComponent,
+    PasoFirmaComponent
   ],
     providers: [
     ToastrService

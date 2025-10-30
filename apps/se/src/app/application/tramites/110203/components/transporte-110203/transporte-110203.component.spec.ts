@@ -16,7 +16,7 @@ import { of } from 'rxjs';
 import { Transporte110203Component } from './transporte-110203.component';
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('Transporte110203Component', () => {
   let component: Transporte110203Component;
@@ -40,7 +40,7 @@ describe('Transporte110203Component', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, FormsModule,Transporte110203Component],
+      imports: [HttpClientTestingModule,ReactiveFormsModule, FormsModule,Transporte110203Component],
       providers: [
         FormBuilder,
         { provide: Tramite110203Store, useValue: tramite110203StoreMock },

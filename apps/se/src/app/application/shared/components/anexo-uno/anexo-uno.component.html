@@ -32,7 +32,7 @@
           >
           <textarea
             id="descripcion"
-            class="form-control"
+            class="form-control uppercase"
             style="height: 60%; resize: none"
             formControlName="descripcion"
             maxlength="1000"
@@ -70,6 +70,8 @@
         [datos]="anexoUnoTablaLista"
         (filaSeleccionada)="setAnexoUnoLista($event)"
         [disableSeleccionTablaRadio]="formularioDeshabilitado"
+        [showPagination]="true" [mode]="'client'"
+        [totalItems]="anexoUnoTablaLista.length"
       ></app-tabla-dinamica>
     </div>
   </form>
@@ -136,7 +138,7 @@
           >
           <textarea
             id="descripcion"
-            class="form-control"
+            class="form-control uppercase"
             style="height: 60%; resize: none"
             formControlName="descripcion"
             maxlength="1000"
@@ -237,3 +239,10 @@
     </div>
   </div>
 </ng-container>
+@if (notificacionAgregarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicios">
+  </lib-notificaciones>
+</section>
+}

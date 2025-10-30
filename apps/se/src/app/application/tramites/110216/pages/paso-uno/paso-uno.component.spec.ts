@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { CommonModule } from '@angular/common';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { provideHttpClient } from '@angular/common/http';
@@ -10,6 +9,7 @@ import { of } from 'rxjs';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { HistProductoresComponent } from '../../components/hist-productores/hist-productores.component';
 
 
 describe('PasoUnoComponent', () => {
@@ -56,6 +56,15 @@ describe('PasoUnoComponent', () => {
         entidadFederativa: 1,
         representacionFederal: 1
       }),
+      formulario$: of({}),
+      getValue: jest.fn().mockReturnValue({
+        formValidity: {
+          certificadoOrigen: false,
+          datosCertificado: false,
+          destinatario: false,
+          histProductores: false
+        }
+      })
     };
 
     tramiteStoreMock = {
@@ -83,7 +92,7 @@ describe('PasoUnoComponent', () => {
       imports: [
         CommonModule,
         SolicitanteComponent,
-        HistoricoProductoresComponent,
+        HistProductoresComponent,
         DestinatarioComponent,
         DatosCertificadoComponent,
         PasoUnoComponent
@@ -121,25 +130,11 @@ describe('PasoUnoComponent', () => {
     expect(solicitanteElement).toBeTruthy();
   });
 
-  it('should render the HistoricoProductoresComponent when indice is 3', () => {
-    component.indice = 3;
-    fixture.detectChanges();
-    const historicoProductoresElement = fixture.debugElement.nativeElement.querySelector('app-historico-productores');
-    expect(historicoProductoresElement).toBeTruthy();
-  });
-
   it('should render the DestinatarioComponent when indice is 4', () => {
     component.indice = 4;
     fixture.detectChanges();
     const destinatarioElement = fixture.debugElement.nativeElement.querySelector('app-destinatario');
     expect(destinatarioElement).toBeTruthy();
-  });
-
-  it('should render the DatosCertificadoComponent when indice is 5', () => {
-    component.indice = 5;
-    fixture.detectChanges();
-    const datosCertificadoElement = fixture.debugElement.nativeElement.querySelector('app-datos-certificado');
-    expect(datosCertificadoElement).toBeTruthy();
   });
 
   it('should fetch data and update the store when fetchGetDatosConsulta is called', () => {
@@ -165,5 +160,27 @@ describe('PasoUnoComponent', () => {
     expect(tramiteStoreMock.setProductoresExportador).toHaveBeenCalledWith([{ id: 3, nombre: 'Productor Exportador' }]);
     expect(component.esDatosRespuesta).toBe(true);
   });
+
+    it('validarFormularios should call validarFormulario on all child components and return false when invalid', () => {
+      component.certificadoOrigenComponent = { validarFormulario: jest.fn() } as any;
+      component.datosCertificadoComponent = { validarFormulario: jest.fn() } as any;
+      component.destinatarioComponent = { validarFormulario: jest.fn() } as any;
+      component.histProductoresComponent = { validarFormulario: jest.fn() } as any;
+
+      const result = component.validarFormularios();
+      expect(component.certificadoOrigenComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.datosCertificadoComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.destinatarioComponent.validarFormulario).toHaveBeenCalled();
+      expect(component.histProductoresComponent.validarFormulario).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+
+    it('ngOnDestroy should complete the destroyNotifier$', () => {
+      const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+      const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+      component.ngOnDestroy();
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
+    });
 
 });

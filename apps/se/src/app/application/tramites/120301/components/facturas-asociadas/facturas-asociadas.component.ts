@@ -166,13 +166,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   colapsable: boolean = false;
 
   /**
-   * @property {string} labelUnidad - Unidad de medida obtenida del servicio.
-   * Almacena la unidad de medida (kg, lt, etc.) obtenida al consultar los totales de facturas asociadas.
-   * Se utiliza para mostrar la unidad correcta junto a los valores en el formulario.
-   */
-  labelUnidad: string = '';
-
-  /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
    * Formulario secundario que maneja información complementaria relacionada con la constancia del registro.
    * Se utiliza en conjunto con el formulario principal para completar la información requerida.
@@ -272,7 +265,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   asociadastableColumns: ConfiguracionColumna<AsociadasTableColumns>[] = [
     {
-      encabezado: 'Candidad asociada',
+      encabezado: 'Cantidad asociada',
       clave: (fila) => fila.candidadAsociada,
       orden: 1,
     },
@@ -292,7 +285,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       orden: 4,
     },
     {
-      encabezado: 'Fecha de expedición de la factura',
+      encabezado: 'Fecha de emisión/expedición de la factura',
       clave: (fila) => fila.fechaExpedicionFactura,
       orden: 5,
     },
@@ -306,6 +299,16 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       clave: (fila) => fila.cantidadDisponible,
       orden: 7,
     },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (fila) => fila.unidadMedida,
+      orden: 8,
+    },
+    {
+      encabezado: 'Valor en dólares',
+      clave: (fila) => fila.valorDolares,
+      orden: 9,
+    }
   ];
 
   /**
@@ -373,6 +376,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @property {boolean} eliminarFacturaModal - Controla la visibilidad del modal de eliminación de factura.
    */
   eliminarFacturaModal: boolean = false;
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
   /**Variable para mostrar el modal */
   public mostrarModal: boolean = false;
   /** Referencia al modal */
@@ -462,6 +467,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               { id: 1, descripcion: 'Valida' },
             ]);
           }
+          this.validarFormulario = this.formularioAsociacionFactura.valid;
+          this.tramite120301.setValidarFormularioFacturasAsociadas(this.validarFormulario);
         })
       )
       .subscribe();
@@ -517,7 +524,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
             if (this.informacionFacturaAsociadas.resultado_equivalencia) {
               this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.cantidad_factura);
               this.formularioAsociacionFactura.get('metrosCuadradosEquivalentes')?.setValue(this.informacionFacturaAsociadas.resultado_equivalencia.total_equivalente);
-              this.labelUnidad = this.informacionFacturaAsociadas.resultado_equivalencia.unidad_label;
             }
           }
           else {
@@ -651,7 +657,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
         categoria: 'warning',
         modo: 'action',
         titulo: '',
-        mensaje: 'La factura no puede ser asociada, debido a que la unidad de medida es diferente a la asociada a la constancia.',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -737,7 +743,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.codigo === '00' && response.datos) {
-            this.labelUnidad = response.datos.unidad_label;
             this.formularioAsociacionFactura.patchValue({
               cantidadFacturasTotal: response.datos.cantidad_factura,
               metrosCuadradosEquivalentes: response.datos.total_equivalente

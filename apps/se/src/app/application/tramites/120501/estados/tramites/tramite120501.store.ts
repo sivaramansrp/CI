@@ -1,8 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-  
 import { Injectable } from '@angular/core';
-
-
 /**
  * Creacion del estado inicial para la interfaz de tramite 
  * @returns Solicitud120501

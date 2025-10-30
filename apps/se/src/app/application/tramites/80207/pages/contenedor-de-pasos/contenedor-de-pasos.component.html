@@ -3,6 +3,11 @@
       <div class="col-md-12">
         <h1>Registro de solicitud IMMEX modalidad ampliación submanufactureras</h1>
       </div>
+         @if(esFormaValido){
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+      }
   
       <app-wizard [listaPasos]="pasos"></app-wizard>
   

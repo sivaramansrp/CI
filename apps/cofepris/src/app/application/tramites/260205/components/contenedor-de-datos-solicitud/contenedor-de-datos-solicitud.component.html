@@ -1,4 +1,5 @@
 <app-datos-de-la-solicitud [datosSolicitudFormState]="tramiteState.datosSolicitudFormState"
+[mercanciaFormState]="tramiteState.mercanciaForm"
 [scianConfig]="scianConfig" [opcionesColapsableState]="tramiteState.opcionesColapsableState"
 [tablaMercanciasConfig]="tablaMercanciasConfig" [opcionConfig]="opcionConfig"
 (datasolicituActualizar)="datasolicituActualizar($event)"
@@ -9,4 +10,5 @@
 [idProcedimiento]="260205"
 [formularioDeshabilitado]="esFormularioSoloLectura"
 [elementosRequeridos]="elementosRequeridos"
+#DatosDeLaSolicitudComponent
 ></app-datos-de-la-solicitud>

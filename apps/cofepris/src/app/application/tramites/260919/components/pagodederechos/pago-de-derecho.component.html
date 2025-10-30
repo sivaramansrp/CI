@@ -13,11 +13,13 @@
             type="text"
             formControlName="clavedereferencia"
             maxlength="9"
-            [ngClass]="{
-              'is-invalid':
-                pagoDeDerechos.get('clavedereferencia')?.invalid &&
-                pagoDeDerechos.get('clavedereferencia')?.touched
-            }"
+           [ngClass]="{
+      'is-invalid':
+        pagoDeDerechos.get('clavedereferencia')?.invalid &&
+        pagoDeDerechos.get('clavedereferencia')?.touched
+    }"
+    (blur)="pagoDeDerechos.get('clavedereferencia')?.markAsTouched()"
+            
             (change)="
               setValoresStore(
                 pagoDeDerechos,
@@ -27,24 +29,29 @@
             "
             [disabled]="esFormularioSoloLectura"
           />
-          <div
-            *ngIf="
-              pagoDeDerechos.get('clavedereferencia')?.invalid &&
-              pagoDeDerechos.get('clavedereferencia')?.touched
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="pagoDeDerechos.get('clavedereferencia')?.errors?.['required']"
-            >
-              Este campo es obligatorio.
-            </small>
-            <small
-              *ngIf="pagoDeDerechos.get('clavedereferencia')?.errors?.['maxlength']"
-            >
-              Solo se permiten 9 caracteres alfanuméricos.
-            </small>
-          </div>
+         <div
+    *ngIf="
+      pagoDeDerechos.get('clavedereferencia')?.invalid &&
+      pagoDeDerechos.get('clavedereferencia')?.touched
+    "
+    class="text-danger"
+  >
+    <small
+      *ngIf="pagoDeDerechos.get('clavedereferencia')?.errors?.['required']"
+    >
+      Este campo es obligatorio.
+    </small>
+    <small
+      *ngIf="pagoDeDerechos.get('clavedereferencia')?.errors?.['maxlength']"
+    >
+      Solo se permiten 9 caracteres alfanuméricos.
+    </small>
+    <small
+      *ngIf="pagoDeDerechos.get('clavedereferencia')?.errors?.['pattern']"
+    >
+      Solo se permiten caracteres alfanuméricos.
+    </small>
+  </div>
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label" for="cadenadeladependencia"
@@ -57,10 +64,11 @@
             formControlName="cadenadeladependencia"
             maxlength="40"
             [ngClass]="{
-              'is-invalid':
-                pagoDeDerechos.get('cadenadeladependencia')?.invalid &&
-                pagoDeDerechos.get('cadenadeladependencia')?.touched
-            }"
+      'is-invalid':
+        pagoDeDerechos.get('cadenadeladependencia')?.invalid &&
+        pagoDeDerechos.get('cadenadeladependencia')?.touched
+    }"
+    (blur)="pagoDeDerechos.get('cadenadeladependencia')?.markAsTouched()"
             (change)="
               setValoresStore(
                 pagoDeDerechos,
@@ -71,23 +79,28 @@
             [disabled]="esFormularioSoloLectura"
           />
           <div
-            *ngIf="
-              pagoDeDerechos.get('cadenadeladependencia')?.invalid &&
-              pagoDeDerechos.get('cadenadeladependencia')?.touched
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['required']"
-            >
-              Este campo es obligatorio.
-            </small>
-            <small
-              *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['maxlength']"
-            >
-              Solo se permiten 40 caracteres alfanuméricos.
-            </small>
-          </div>
+    *ngIf="
+      pagoDeDerechos.get('cadenadeladependencia')?.invalid &&
+      pagoDeDerechos.get('cadenadeladependencia')?.touched
+    "
+    class="text-danger"
+  >
+    <small
+      *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['required']"
+    >
+      Este campo es obligatorio.
+    </small>
+    <small
+      *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['maxlength']"
+    >
+      Solo se permiten 40 caracteres alfanuméricos.
+    </small>
+    <small
+      *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['pattern']"
+    >
+      Solo se permiten caracteres alfanuméricos.
+    </small>
+  </div>
         </div>
         <div class="col-md-4 mb-3">
           <app-catalogo-select

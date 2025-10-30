@@ -1,15 +1,14 @@
 import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, NO_ERRORS_SCHEMA, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, NO_ERRORS_SCHEMA, OnDestroy, OnInit, Output } from '@angular/core';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
-import { ConsultaioQuery  } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
-
 /**
  * Componente para la expedición de certificados de asignación directa.
  */
@@ -29,7 +28,7 @@ import { Tramite120202Query } from '../../../estados/queries/tramite120202.query
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })
-export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestroy {
+export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit, OnDestroy {
   /**
    * Formulario para la expedición de certificados de asignación.
    */
@@ -38,7 +37,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   /**
    * Catálogo de años de autorización.
    */
-  aniosAutorizacion!: Catalogo[];
+  autorizacion!: Catalogo[];
 
   /**
    * Mostrar detalle de la tabla.
@@ -100,6 +99,14 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    */
   @Output() mostrarNumFolioAsignacionError: EventEmitter<{ mostrarError: boolean, valor: string }> = new EventEmitter<{ mostrarError: boolean, valor: string }>();
 
+   /**
+   * Identificador del procedimiento asociado al componente.
+   *
+   * @type {number}
+   * @remarks
+   * Este identificador se utiliza para enlazar el componente con un procedimiento específico.
+   */
+  @Input() idProcedimiento!: number;
   /**
    * Emisor de eventos para mostrar errores al agregar.
    * @type {EventEmitter<boolean>}
@@ -139,6 +146,18 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
+    /**
+   * Evento que se emite cuando se selecciona un país de destino
+   * @type {EventEmitter<Catalogo>}
+   */
+  @Output() anoSeleccionEvent: EventEmitter<Catalogo> =
+    new EventEmitter<Catalogo>();
+
+  /**
+   * Años de autorización disponibles.
+   * @type {Catalogo[]}
+   */
+  @Input() anoAutorizacion!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -167,8 +186,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
       )
       .subscribe();
 
-    this.inicializaCatalogos();
-
     this.tramite120202Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
@@ -186,6 +203,15 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
     this.aniosAutorizacionSeleccion();
   }
 
+    /**
+   * Método del ciclo de vida ngOnInit. Se ejecuta al inicializar el componente.
+   *
+   * @remarks
+   * Este método se utiliza para inicializar el estado del componente y realizar configuraciones iniciales.
+   */
+  ngOnInit(): void {
+  this.inicializaCatalogos();
+  }
   /**
    * @method inicializarEstadoFormulario
    * @description Inicializa el estado del formulario `expedicionCertificadosAsignacionForm` basado en si el formulario está deshabilitado o no.
@@ -309,20 +335,9 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * Inicializa los catálogos necesarios para el formulario.
    */
   inicializaCatalogos(): void {
-    const ANIOS_AUTORIZACION$ = this.expedicionCertificadosAsignacionService
-      .getAniosAutorizacionCatalogo()
-      .pipe(
-        map((resp) => {
-          this.aniosAutorizacion = resp.data;
-        })
-      );
-
-    merge(
-      ANIOS_AUTORIZACION$
-    ).pipe(
-      takeUntil(this.destruirNotificador$)
-    )
-    .subscribe();
+      this.expedicionCertificadosAsignacionService.getAniosAutorizacionCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+        this.autorizacion = data as Catalogo[];
+      });
   }
 
   /**
@@ -382,6 +397,14 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
     const ANIOS_AUTORIZACION = this.asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.value;
     this.tramite120202Store.setAniosAutorizacion(ANIOS_AUTORIZACION);
   }
+
+    /**
+     * Maneja la selección de un país de destino
+     * @param {Catalogo} estado - El país de destino seleccionado
+     */
+    anoSeleccion(estado: Catalogo): void {
+      this.anoSeleccionEvent.emit(estado);
+    }
 
   /**
    * Método para cambiar la fecha inicio de la asignación.
@@ -673,6 +696,15 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
     (this.tramite120202Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Obtiene los años de autorización disponibles.
+   * @returns {Catalogo[]} - Los años de autorización disponibles.
+   */
+   get aniosAutorizacion(): Catalogo[]{
+    return this.autorizacion?.length
+      ? this.autorizacion
+      : this.anoAutorizacion;
+  }
   /**
    * Se ejecuta al destruir el componente.
    * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.

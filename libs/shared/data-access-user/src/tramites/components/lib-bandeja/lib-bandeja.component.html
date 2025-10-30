@@ -4,6 +4,17 @@
             <h2>{{titulo}}</h2>
         </div>
     </div>
+
+    @if(labelExitoso) {
+         <div class="row mt-2">
+        <div class="col-md-12 text-center text-primary">
+            <h6>
+                Se ha generado una observación al Dictamen exitosamente
+            </h6>
+        </div>
+    </div>
+    }
+   
     <div class="row mt-2">
         <div [ngClass]="{'col-md-5': tieneBandeja, 'col-md-8': !tieneBandeja}">
             <div class="d-flex align-items-baseline">

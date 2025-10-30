@@ -55,6 +55,11 @@ export class AsignciondirectaPageComponent {
    * Propiedad para mostrar/ocultar el mensaje de error de búsqueda
    */
   public showBuscarError = false;
+/**  
+ * Número de trámite actual.  
+ * Identifica y almacena el valor asociado al formulario.  
+ */
+numTramite: string = '';
      /**
    * Contiene los textos que se muestran al usuario cuando ocurre una cancelación.
    * Los textos provienen del archivo de constantes TEXTOS_CANCELACIONS.
@@ -64,11 +69,6 @@ export class AsignciondirectaPageComponent {
    * Clase CSS para la alerta de información.
    */
   infoAlert = 'alert-danger';
-    /**
-   * Controla si se debe mostrar la alerta en pantalla.
-   * Se activa cuando el subíndice del child componente es 3.
-   */
-  mostrarAlerta: boolean = false;
  /**
  * Contiene el texto del aviso de privacidad simplificado.
  * 
@@ -87,9 +87,27 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    *
    * @param {Object} event - El objeto de evento que contiene las propiedades `submitted` e `invalid`.
    */
-  onBuscarIntento(event: {submitted: boolean, invalid: boolean}): void {
+  onBuscarIntento(event: {submitted: boolean, invalid: boolean,numTramite: string}): void {
     this.showBuscarError = event.submitted && event.invalid;
+    this.numTramite = event.numTramite;
   }
+  /**
+ * Genera el contenido HTML para mostrar un mensaje de error
+ * que incluye el número de trámite con estilo personalizado.
+ * Se usa para alertar sobre valores inválidos en el formulario.
+ */
+get alertContent(): string {
+  return `
+    <div style="text-align: center;">
+      <strong style="color: #585051ff"> Corrija los siguientes errores:</strong><br>
+    </div>
+    <div style="text-align: left; margin-top: 5px;">
+      <span style="color: #d1776b">
+        1.<span style="padding-left: 320px;">El valor (<strong>${this.numTramite}</strong>) debe ser un número válido.</span>
+      </span>
+    </div>
+  `;
+}
 
   /**
    * Maneja la acción del botón de navegación en el wizard.

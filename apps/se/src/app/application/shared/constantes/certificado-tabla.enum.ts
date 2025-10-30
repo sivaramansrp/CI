@@ -2,6 +2,7 @@ import {
     HistoricoColumnas,
     MercanciaTabla,
   } from '../models/certificado-origen.model';
+import { Mercancia } from '../models/modificacion.enum';
   
 /**
 * Configuración para los campos de mercancía.
@@ -58,51 +59,51 @@ export const CONFIGURACION_PRODUCTOR_EXPORTADOR = [
  *   console.log(columna.encabezado);
  * });
  */
-export const CONFIGURACION_MERCANCIA = (prioritizeRfcProductor1: boolean): Array<{ encabezado: string; clave: (ele: MercanciaTabla) => string | undefined; orden: number }> => {
+export const CONFIGURACION_MERCANCIA = (prioritizeRfcProductor1: boolean): Array<{ encabezado: string; clave: (ele: Mercancia) => string | undefined; orden: number }> => {
   const BASE_CONFIG = [
     {
       encabezado: 'Fracción arancelaria',
-      clave: (ele: MercanciaTabla): string | undefined => ele.fraccionArancelaria,
+      clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
       orden: 0,
     },
     {
       encabezado: 'Cantidad',
-      clave: (ele: MercanciaTabla): string | undefined => ele.cantidad,
+      clave: (ele: Mercancia): string | undefined => ele.cantidad,
       orden: 1,
     },
     {
       encabezado: 'Unidad de medida',
-      clave: (ele: MercanciaTabla): string | undefined => ele.unidadMedida,
+      clave: (ele: Mercancia): string | undefined => ele.unidadMedidaMasaBruta,
       orden: 2,
     },
     {
       encabezado: 'Valor mercancía',
-      clave: (ele: MercanciaTabla): string | undefined => ele.valorMercancia,
+      clave: (ele: Mercancia): string | undefined => ele.valorMercancia,
       orden: 3,
     },
     {
       encabezado: 'Tipo de factura',
-      clave: (ele: MercanciaTabla): string | undefined => ele.tipoFactura,
+      clave: (ele: Mercancia): string | undefined => ele.tipoFactura,
       orden: 4,
     },
     {
       encabezado: 'Número factura',
-      clave: (ele: MercanciaTabla): string | undefined => ele.numeroFactura,
+      clave: (ele: Mercancia): string | undefined => ele.numeroFactura,
       orden: 6,
     },
     {
       encabezado: 'Complemento descripción',
-      clave: (ele: MercanciaTabla): string | undefined => ele.complementoDescripcion,
+      clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion,
       orden: 7,
     },
     {
       encabezado: 'Fecha factura',
-      clave: (ele: MercanciaTabla): string | undefined => ele.fetchFactura,
+      clave: (ele: Mercancia): string | undefined => ele.fechaFactura,
       orden: 8,
     },
     {
       encabezado: 'RFC productor',
-      clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor1,
+      clave: (ele: Mercancia): string | undefined => ele.rfcProductor1,
       orden: 9,
     },
   ];

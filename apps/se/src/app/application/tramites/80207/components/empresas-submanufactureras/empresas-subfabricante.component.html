@@ -104,6 +104,8 @@
           [isDisabled]="esFormularioSoloLectura"
           formControlName="estado"
           (change)="enEstadoSeleccionado()"
+           [markTouched]="!!(formularioDatosSubcontratista.get('estado')?.touched &&
+              formularioDatosSubcontratista.get('estado')?.invalid)"
         ></app-catalogo-select>       
       </div>
       </div>
@@ -179,3 +181,10 @@
     </button>
   </div>
 </div>
+
+@if(nuevaNotificacion && !deleteMessageExportacion ){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+}
+@if(nuevaNotificacion && deleteMessageExportacion ){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimentoDatoss($event)"></lib-notificaciones>
+}

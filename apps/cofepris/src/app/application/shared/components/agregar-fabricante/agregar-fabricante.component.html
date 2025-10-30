@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="mt-4">
   <ng-titulo
     *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
     titulo="Modificar fabricante"
@@ -10,61 +10,22 @@
   <form [formGroup]="agregarFabricanteForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
-    <div class="row">
+  <div class="row">
       <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad*:</label>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="nacionalidad"
-            [value]="nacionalStr"
-            (change)="changeNacionalidad()"
-          />
-          Nacional
-        </div>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="nacionalidad"
-            value="Extranjero"
-            (change)="changeNacionalidad()"
-          />
-          Extranjero
-        </div>
+        <label class="form-label">Terceros nacionalidad<span [ngClass]="agregarFabricanteForm.controls['nacionalidad'].errors?.['required'] && agregarFabricanteForm.controls['nacionalidad'].touched ? 'text-danger' : ''">*</span>:</label>
+     <app-input-radio  [radioOptions]="losDatos" [selectedValue]="agregarFabricanteForm.get('nacionalidad')?.value" [isRequired]="true"
+        [layout]="'vertical'" formControlName="nacionalidad" (change)="changeNacionalidad()" ></app-input-radio>
           <div *ngIf="chequeoValidacionAlGuardar && esInvalido('nacionalidad')" class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona*:</label>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.FISICA"
-            (change)="changeTipoPersona()"
-             />
-          Física
-          <span
-            tooltip="Una persona física es entendida como toda persona con una actividad específica"
-            ><i class="bi bi-question-circle-fill"></i
-          ></span>
-        </div>
-        <div class="form-check-2">
-          <input
-            type="radio"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.MORAL"
-            (change)="changeTipoPersona()"
-          />
-          Moral
-          <span
-            tooltip="Una persona moral es entendida como una empresa con una actividad específica"
-            ><i class="bi bi-question-circle-fill"></i
-          ></span>
-        </div>
+        <label class="form-label">Tipo persona<span [ngClass]="agregarFabricanteForm.controls['tipoPersona'].errors?.['required'] && agregarFabricanteForm.controls['tipoPersona'].touched ? 'text-danger' : ''">*</span>:</label>
+         <app-input-radio  [radioOptions]="losDatosTipoPersona" [selectedValue]="agregarFabricanteForm.get('tipoPersona')?.value" [isRequired]="true"
+        [layout]="'vertical'" formControlName="tipoPersona" [showTooltip]="true"  [disableLabel]="disableLabel" (change)="changeTipoPersona()"></app-input-radio>
           <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
           <small>Este campo es obligatorio</small>
+        </div>
         </div>
         @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
         habilitarContribuyente === true) {
@@ -79,13 +40,12 @@
         </div>
         }
       </div>
-    </div>
 
     @if( agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr ||
   idProcedimiento === 260904){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C.*: </label>
+        <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
         <span tooltip="Registro Federal de Contribuyente"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -112,12 +72,12 @@
         </div>
       </div>
       @if (
-  !agregarFabricanteForm.get('nacionalidad')?.value &&
+  (!agregarFabricanteForm.get('nacionalidad')?.value ||
   !agregarFabricanteForm.get('tipoPersona')?.value &&
-  chequeoValidacionAlGuardar
+  chequeoValidacionAlGuardar ) && agregarFabricanteForm.get('rfc')?.disabled
 ) {
   <div class="col-md-4">
-    <label class="form-label">C.U.R.P.*:</label>
+    <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
     <input
       type="text"
       class="form-control"
@@ -138,7 +98,7 @@
 }
       @else if (!estaOculto && !chequeoValidacionAlGuardar ) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P.*:</label>
+        <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -246,14 +206,8 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Denominación/razón
-          social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
-          <span class="text-danger">*</span>
-          }
-          @else{
-            <span>*</span>
-          }:</label
-        >
+          >Denominación/razón social<span [ngClass]="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] && agregarFabricanteForm.controls['razonSocial'].touched ? 'text-danger' : ''">*</span>:</label>
+        
         <input
           type="text"
           class="form-control"
@@ -291,12 +245,16 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [placeholder]="'Seleccione una opción'"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="estado">Estado*:</label>
+        <label class="form-label" for="estado">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -325,14 +283,14 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if(idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
           </span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
-          [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
+          [ngClass]="esInvalido('codigoPostal') && agregarFabricanteForm.get('codigoPostal')?.touched ? 'required' : ''"
         />
          <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
       <small
@@ -351,11 +309,25 @@
     <div class="row mt-3">
        @if(
             chequeoValidacionAlGuardar &&
-            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
             agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
             agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)
           ) {
+  
+          <div class="col-md-4">
+            <label class="form-label">Colonia o equivalente:</label>
+            <input
+              type="text"
+              class="form-control"
+              [maxlength]="100"
+              formControlName="coloniaOEquivalente"
+            />
+          </div>
+      }
+    </div>
+    <div class="row mt-3">
+       @if(idProcedimiento === 260202) {
   
           <div class="col-md-4">
             <label class="form-label">Colonia o equivalente:</label>
@@ -424,8 +396,11 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
+          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -515,12 +490,14 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
           "
           [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -530,9 +507,11 @@
           (selectionChange)="cargarEstados($event)"
           [label]="'Estado/localidad'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+         [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('estado')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -542,9 +521,11 @@
           (selectionChange)="cargarMunicipios($event)"
           [label]="'Municipio/alcaldía'"
           [required]="true"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('municipio')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -555,10 +536,12 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
-          [placeholder]="'Selecciona un valor'"
-          [required]="!elementosNoRequeridos.includes('localidad')"
+          [placeholder]="'Seleccione una opción'"
+          [required]="!elementosNoRequeridos.includes('localidad') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -566,10 +549,12 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [placeholder]="'Selecciona un valor'"
+          [placeholder]="'Seleccione una opción'"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('codigoPostal')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -577,10 +562,12 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [placeholder]="'Selecciona un valor'"
-          [required]="!elementosNoRequeridos.includes('colonia')"
+          [required]="!elementosNoRequeridos.includes('colonia') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
+          [placeholder]="'Seleccione una opción'"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
     </div>

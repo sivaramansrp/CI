@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CertificadoOrigenResponse } from '../../models/certificados-disponsible.model';
 
 /**
  * @descripcion
@@ -13,4 +14,10 @@ import { Component } from '@angular/core';
   templateUrl: './certificado-de-origen.component.html',
   standalone: false, // Indica que este componente no es independiente.
 })
-export class CertificadoDeOrigenComponent {}
+export class CertificadoDeOrigenComponent {
+  /**
+   * Datos del certificado de origen.
+   * @type {CertificadoOrigenResponse | null}
+   */
+  @Input() certificadoDatos: CertificadoOrigenResponse | null = null;
+}

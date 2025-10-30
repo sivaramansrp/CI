@@ -66,6 +66,12 @@ export const API_GET_CATALOGO_TIPO_PLANTA = (TRAMITE: string) : string => `sat-t
 export const API_GET_CATALOGO_SUBTIPO_PRESENTACION = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/subtipos-presentacion`;
 
 /**
+ * Servicio que permite consultar una lista de tipos de producto.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/getTipoProductosActivos
+ */
+export const API_GET_CATALOGO_TIPOS_PRODUCTO = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipos-producto`;
+
+/**
  * Servicio que permite consultar los regimenes ACTIVOS ordenados por el nombre ascendente..
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes
  */
@@ -240,3 +246,14 @@ export const API_GET_SOLICITUDES_NICO_DESCRIPCION = (TRAMITE: string, cveFraccio
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-descripcion-umt-fraccion-arancelaria
  */
 export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: string) : string => `sat-t${TRAMITE}/fraccion-arancelaria/${cveFraccion}/unidad-medida`;
+
+
+/**
+ * Genera la ruta de la API para cargar un archivo masivo de mercancía animal en una solicitud específica.
+ *
+ * @param TRAMITE - Identificador del trámite relacionado con la solicitud.
+ * @param archivo - Archivo que se va a cargar en la solicitud.
+ * @returns La ruta de la API como cadena de texto para cargar el archivo masivo de mercancía animal.
+ */
+export const API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL = (TRAMITE: string, archivo: File) : string => `sat-t${TRAMITE}/solicitud/detalle-mercancia-animal/cargar-archivo`;
+

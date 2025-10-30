@@ -1,10 +1,10 @@
 import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
-import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from './components/destinatario-de/destinatario-de.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -15,8 +15,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
   declarations: [
     PasoDosComponent,
     PasoTresComponent,
-    PasoUnoComponent,
-    SolicitudPageComponent],
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -24,16 +23,18 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     FormsModule,
     ReactiveFormsModule,
     SolicitanteComponent,
-    CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
-    DestinatarioComponent,
+    DestinatarioDeComponent,
     FirmaElectronicaComponent,
     TituloComponent,
     AlertComponent,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    CertificadoOrigenComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent
   ],
   schemas: [NO_ERRORS_SCHEMA], 
 })

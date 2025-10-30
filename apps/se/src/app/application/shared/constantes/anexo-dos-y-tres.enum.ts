@@ -79,7 +79,7 @@ Herramientas, equipos y accesorios de investigación, de seguridad industrial y 
  * estructurada sobre los elementos que forman parte del proceso de exportación.
  */
 export const ANEXO_UNO_ALERTA = `<p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Materiales primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Materias primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.
 </p>`;
 
 /**
@@ -138,7 +138,7 @@ export const ANEXO_I_SERVICIO = [
     orden: 6,
   },
   {
-    encabezado: 'Categoria',
+    encabezado: 'Categoría',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoCategoria,
     orden: 7,
   },
@@ -233,32 +233,32 @@ export const ANEXO_IMPORTACION_SERVICIO = [
     orden: 8,
   },
   {
-    encabezado: 'Categoria',
+    encabezado: 'Categoría',
     clave: (ele: AnexoDosEncabezado): string =>
       ele.encabezadoCategoria ?? '',
     orden: 9,
   },
   {
     encabezado: 'Valor en moneda mensual',
-    clave: (ele: AnexoDosEncabezado): number => 
+    clave: (ele: AnexoDosEncabezado): number =>
       ele.encabezadoValorEnMonedaMensual ?? 0,
     orden: 10,
   },
   {
     encabezado: 'Valor en moneda anual',
-    clave: (ele: AnexoDosEncabezado): number => 
+    clave: (ele: AnexoDosEncabezado): number =>
       ele.encabezadoValorEnMonedaAnual ?? 0,
     orden: 11,
   },
   {
     encabezado: 'Volumen mensual',
-    clave: (ele: AnexoDosEncabezado): number => 
+    clave: (ele: AnexoDosEncabezado): number =>
       ele.encabezadoVolumenMensual ?? 0,
     orden: 12,
   },
   {
     encabezado: 'Volumen anual',
-    clave: (ele: AnexoDosEncabezado): number => 
+    clave: (ele: AnexoDosEncabezado): number =>
       ele.encabezadoVolumenAnual ?? 0,
     orden: 13,
   }
@@ -289,35 +289,40 @@ export const ANEXO_IMPORTACION_SERVICIO = [
  */
 export const PROVEEDOR_CLIENTE_TABLA_CONFIG = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: ProveedorClienteTabla): string | undefined => ele.fraccion,
     orden: 1,
   },
   {
-    encabezado: 'Pais de origen',
+    encabezado: 'País de origen',
     clave: (ele: ProveedorClienteTabla): number | undefined => ele.paisDeOrigin,
     orden: 2,
+  },
+  {
+    encabezado: 'Rfc/Tax Id Proveedor',
+    clave: (ele: ProveedorClienteTabla): string => ele.rfcProveedor ?? '',
+    orden: 3,
   },
   {
     encabezado: 'Razón Social Proveedor',
     clave: (ele: ProveedorClienteTabla): string | undefined =>
       ele.razonSocialProveedor,
-    orden: 3,
-  },
-  {
-    encabezado: 'Pais destino',
-    clave: (ele: ProveedorClienteTabla): string => ele.paisDestino,
     orden: 4,
   },
   {
-    encabezado: 'RFC/Tax ID Cliente',
-    clave: (ele: ProveedorClienteTabla): string => ele.rfcClinte,
+    encabezado: 'País destino',
+    clave: (ele: ProveedorClienteTabla): string => ele.paisDestino,
     orden: 5,
+  },
+  {
+    encabezado: 'Rfc/Tax Id Cliente',
+    clave: (ele: ProveedorClienteTabla): string => ele.rfcClinte,
+    orden: 6,
   },
   {
     encabezado: 'Razón Social',
     clave: (ele: ProveedorClienteTabla): string => ele.razonSocial,
-    orden: 6,
+    orden: 7,
   },
 ];
 

@@ -1,4 +1,4 @@
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
 import {EmpresasSubFabricanteComponent} from '../../components/empresas-submanufactureras/empresas-subfabricante.component';
@@ -66,6 +66,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
    @ViewChild('solicitudComponent', { static: false }) solicitudComponent: EmpresasSubFabricanteComponent| undefined;
 
+     /**
+ * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+ *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+ * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+ */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
    /**
 
   /**
@@ -104,17 +111,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * 
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */
- public validarTodosLosFormularios(): boolean {
+public validarTodosLosFormularios(): boolean {
   let allFormsValid = true;
-  if (this.indice >= 2 && this.solicitudComponent) {
-    this.solicitudComponent?.formularioDatosSubcontratista.markAllAsTouched();
-     if (!this.solicitudComponent.formularioDatosSubcontratista.valid ) {
+  
+  if (this.solicitante?.form && this.solicitante) {
+    if (this.solicitante.form.invalid) {
+      this.solicitante.form.markAllAsTouched();
       allFormsValid = false;
     }
-
   }
-  return allFormsValid ;
-
+  else{
+    allFormsValid = false;
+  }
+  
+  if (this.solicitudComponent) {
+    if (!this.solicitudComponent.validarCampos()) {
+      allFormsValid = false;
+    }
+  }
+    else{
+    allFormsValid = false;
+  }
+  
+  
+  return allFormsValid;
 }
   /**
    * Guarda los datos del formulario utilizando el servicio de ampliación de servicios.

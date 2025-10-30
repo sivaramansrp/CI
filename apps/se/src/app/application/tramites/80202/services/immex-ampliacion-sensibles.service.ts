@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -21,9 +20,4 @@ export class ImmexAmpliacionSensiblesService {
     /** Servicio HTTP core para peticiones generales. */
     public httpService: HttpCoreService
   ) { }
-
-  /** Envía los datos de la solicitud mediante POST. */
-  guardarDatosPost(body: any): Observable<any> {
-    return this.httpService.post<any>(PROC_80202.GUARDAR, { body: body });
-  }
 }

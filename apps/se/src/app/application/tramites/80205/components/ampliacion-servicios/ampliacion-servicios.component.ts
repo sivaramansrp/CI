@@ -56,8 +56,8 @@ import {ViewChild} from '@angular/core';
     FormsModule,
     TablaDinamicaComponent,
     NotificacionesComponent,
-    
   ],
+  providers: [NotificacionesService],
   templateUrl: './ampliacion-servicios.component.html',
   styleUrl: './ampliacion-servicios.component.scss',
 })
@@ -533,6 +533,14 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    * @return {void}
    */
+
+  /**
+   * Cierra la notificación de "no hay fila seleccionada".
+   * Establece la propiedad `noRowSelected` en `false` para ocultar la notificación.
+   * 
+   * @method cerrarNoRow
+   * @returns {void} Este método no retorna ningún valor.
+   */
   cerrarNoRow(): void {
     this.noRowSelected=false;
   }
@@ -779,6 +787,15 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method eliminarEmpresasNacionales
    * @return {void}
    */
+
+  /**
+   * Cierra la notificación de "no hay fila seleccionada" para la tabla C.
+   * Establece la propiedad `noRowSelectedTablaC` en `false` para ocultar la notificación
+   * específica de la tabla de empresas nacionales.
+   * 
+   * @method cerrarNoRowTablaC
+   * @returns {void} Este método no retorna ningún valor.
+   */
   cerrarNoRowTablaC(): void {
     this.noRowSelectedTablaC=false;
   }
@@ -829,9 +846,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       modo: 'modal',
       titulo: '',
       mensaje: '¿Esta seguro de eliminar el(los) servicio(s) seleccionado(s)?',
-      cerrar: false,
+      cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
+      alineacionBtonoCerrar: 'justify-content-start flex-row-reverse'
     };
     this.esEliminar = true;}}
   /**
@@ -841,34 +859,53 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    *  
    * */
     doAgregarDos(): void {
-      if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
-        this.nuevaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.ALERTA,
-          modo: 'modal',
-          titulo: '',
-          mensaje: 'Debe seleccionar un Servicio.',
-          cerrar: false,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.rowNotSeleccionada = true;
-      } else{
+      if(this.rfcEmpresa.trim() === ''){
+        this.formularioValidacionModal('Introduzca un RFC válido');
+        return;
+      } else if(this.numeroPrograma.trim() === ''){
+        this.formularioValidacionModal('Introduzca un no. de Programa valido');
+        return;
+      } else if(this.tiempoPrograma.trim() === ''){
+        this.formularioValidacionModal('Introduzca un Año valido');
+        return;
+      }else if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.idServicio===undefined&&this.autorizadosSeleccionados[0]?.idServicio===undefined)){
+        this.formularioValidacionModal('Debe seleccionar un Servicio.');
+        return;
+      }
 
-        this.actualizaGridEmpresasNacionales();
-      // this.nuevaNotificacion = {
-      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      //   categoria: CategoriaMensaje.ALERTA,
-      //   modo: 'modal',
-      //   titulo: '',
-      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
-      //   cerrar: false,
-      //   txtBtnAceptar: 'Aceptar',
-      //   txtBtnCancelar: '',
-      // };
-      // this.esAgregarDos = true;
+      this.actualizaGridEmpresasNacionales();
     }
-    }
+
+/**
+ * Muestra un modal de validación con un mensaje personalizado.
+ * 
+ * Este método configura y muestra una notificación modal de tipo alerta
+ * con el mensaje proporcionado. Establece `rowNotSeleccionada` en `true`
+ * para activar la visualización del modal.
+ * 
+ * @method formularioValidacionModal
+ * @param {string} mensaje - El mensaje que se mostrará en el modal de validación
+ * @returns {void} Este método no retorna ningún valor
+ * 
+ * @example
+ * ```typescript
+ * this.formularioValidacionModal('Debe seleccionar un servicio');
+ * ```
+ */
+formularioValidacionModal(mensaje:string): void {
+  this.rowNotSeleccionada = true;
+  this.nuevaNotificacion = {
+  tipoNotificacion: TipoNotificacionEnum.ALERTA,
+  categoria: CategoriaMensaje.ALERTA,
+  modo: 'modal',
+  titulo: '',
+  mensaje: mensaje,
+  cerrar: false,
+  txtBtnAceptar: 'Aceptar',
+  txtBtnCancelar: '',
+  };
+}
+
     /**
      * Muestra una notificación de confirmación al intentar eliminar un servicio.
      * @method doEliminarDos
@@ -915,7 +952,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     }
 
     // Verificar si se ha seleccionado un servicio
-    if (!this.serviciosImmexServId) {
+    if (!this.serviciosImmexServId || this.serviciosImmexServId === '-1') {
+      this.formularioValidacionModal('Debe elegir en la pestaña de servicios, el servicio que se realizará a las mercancías a capturar');
       return;
     }
 
@@ -986,6 +1024,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           ...this.datosImmex,
           CUERPODATOS,
         ]);
+        
       }
     });
   }
@@ -1030,12 +1069,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
         filter((data: BaseResponse<EmpresasNacionalesResponse>) => data.codigo === '00'),
         map((data: BaseResponse<EmpresasNacionalesResponse>) => {
           if(data?.datos?.empresasNacionales === null) {
+            const ERROR_MSG = data?.datos?.resultado ? data.datos.resultado : data?.mensaje;
             this.notificacionesService.showNotification({
             tipoNotificacion: TipoNotificacionEnum.TOASTR,
             categoria: CategoriaMensaje.ERROR,
             modo: '',
             titulo: 'Error',
-            mensaje: `${data?.mensaje}`,
+            mensaje: `${ERROR_MSG}`,
             cerrar: true,
             txtBtnAceptar: '',
             txtBtnCancelar: ''
@@ -1066,18 +1106,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
           this.rfcEmpresa = '';
           this.numeroPrograma = '';
           this.tiempoPrograma = '';
-        },
-        error: (error) => {
-          this.notificacionesService.showNotification({
-            tipoNotificacion: TipoNotificacionEnum.TOASTR,
-            categoria: CategoriaMensaje.ERROR,
-            modo: '',
-            titulo: 'Error',
-            mensaje: `${error?.error}`,
-            cerrar: true,
-            txtBtnAceptar: '',
-            txtBtnCancelar: ''
-          });
         }
       });  
   }

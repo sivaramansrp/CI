@@ -1,6 +1,6 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosEncabezado, DatosComplimento, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -17,12 +17,13 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
+import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
 import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
-
 
 /**
  * Método que se ejecuta al inicializar el componente.
@@ -100,6 +101,7 @@ import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-im
     ContenedorProveedorClienteComponent,
     ProyectoImmexVistaComponent,
     ProveedorPorArchivoVistaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './anexo-vista-uno.component.html',
   styleUrl: './anexo-vista-uno.component.scss',
@@ -297,6 +299,15 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * en la interfaz de usuario.
    */
   public proveedorClienteDatosTablaDos$!: Observable<ProveedorClienteTabla[]>;
+/**
+ * Referencia al componente hijo ComplementarFraccionComponent.
+ */
+  @ViewChild(ComplementarFraccionComponent)
+complementarFraccionComponent!: ComplementarFraccionComponent;
+/**
+ * Notificación para mostrar mensajes al usuario.
+ */
+public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente AnexoVistaUnoComponent.
@@ -488,6 +499,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
 
   /** Cierra el popup de "Complementar Fracción". Establece mostrarComplementarFraccionPopup en false. */
   cerrarComplementarFraccion(): void {
+ 
     this.mostrarComplementarFraccionPopup = false;
   }
 

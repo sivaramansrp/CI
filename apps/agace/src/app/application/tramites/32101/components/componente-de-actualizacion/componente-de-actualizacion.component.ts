@@ -1,5 +1,5 @@
 import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estados/tramites/tramite32101.store';
-import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent,REGEX_NUMEROS,TituloComponent} from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
@@ -167,6 +167,15 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       formaAdquisicion: [SELECTED_ROW?.formaAdquisicion],
       comprobante: [SELECTED_ROW?.comprobante],
     });
+  }
+
+  /**
+   * Maneja el evento de input para campos numéricos
+   * @param event Evento de input
+   */
+  onNumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(REGEX_NUMEROS, '');
   }
 
   /**

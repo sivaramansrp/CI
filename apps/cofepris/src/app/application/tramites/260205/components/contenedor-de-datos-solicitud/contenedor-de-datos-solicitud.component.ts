@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -22,6 +22,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
+import { ViewChild } from '@angular/core';
 
 
 /**
@@ -143,7 +144,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
    * según los requisitos del sistema.
    */
-   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario'];
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon',  'manifesto'];
   /**
    * Configuración de la tabla de mercancías utilizada en el componente.
    * 
@@ -241,6 +242,23 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
 
+  
+     /**
+         * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+         * @description
+         * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+         * mediante el decorador `@ViewChild`.
+         *
+         * Esta propiedad permite acceder a los métodos públicos y propiedades
+         * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+         *
+         * > Nota: Angular inicializa esta referencia después de que la vista
+         * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+         */
+        @ViewChild(DatosDeLaSolicitudComponent)
+        datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+     
+
 
   /**
    * Propiedad que almacena una lista de configuraciones de la tabla SCIAN seleccionadas.
@@ -320,7 +338,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private Tramite260205Query: Tramite260205Query,
     private Tramite260205Store: Tramite260205Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdRef: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -367,7 +387,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            seccionState.tablaMercanciasConfigDatos;
         })
       )
       .subscribe();
@@ -405,7 +425,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.Tramite260205Store.updateTablaMercanciasConfigDatos(event);
+    this.zone.run(() => {
+    this.Tramite260205Store.updateTablaMercanciasConfigDatos([...event]);
+    this.cdRef.markForCheck();
+    });
   }
 
   /**
@@ -432,6 +455,25 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

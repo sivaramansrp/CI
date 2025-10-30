@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,7 +22,9 @@ import { Tramite110205Query } from '../../estados/tramite110205.query';
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CertificadoOrigenComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -79,7 +83,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Observable para los datos de la tabla.
    */
-  datosTabla$: Observable<Mercancia[]> = of([]);
+  datosTabla$: Mercancia[] = [];
 
   /**
    * @descripcion
@@ -112,22 +116,55 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   private seccionState!: SeccionLibState;
 
   /**
-  * @descripcion
-  * Indica si el formulario se encuentra en modo solo lectura.
-  */
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
-    /**
+  /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
    */
   public idProcedimiento = 110205;
 
   /**
+   * Indica si la información de la mercancía proviene del listado de mercancías disponibles.
+   *
+   * Cuando es `true`, significa que el usuario seleccionó la mercancía desde una lista precargada.
+   * Cuando es `false`, la mercancía fue ingresada manualmente por el usuario.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  fromMercanciasDisponibles: boolean = false;
+
+  /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * @property {CertificadoDeOrigenComponent} certificadoDeOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
+   */
+  @ViewChild('certificadoDeOrigen')certificadoDeOrigen!:CertificadoDeOrigenComponent;
+
+  /**
+   * Indica si la tabla de mercancías disponibles está visible.
+   * Cuando es `true`, la tabla se muestra en la interfaz de usuario.
+   */
+  mercanciasDisponiblesTabla: boolean = false;
+
+  /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
 
   /**
    * @descripcion
@@ -169,10 +206,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       )
       .subscribe();
 
-      this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
@@ -181,91 +218,107 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.query.selectPeru$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.certificadoState = state as Tramite110205State;
+        map((state: Tramite110205State) => {
+          this.certificadoState = state;
+          this.datosTabla$ = state.mercanciaTabla;
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
-    this.datosTabla$ = this.query.selectmercanciaTabla$
-    this.datosTablaUno$=this.query.selectmercanciaTablaUno$;
+    this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
 
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-}
-
-  /**
    * @descripcion
-   * Obtiene la lista de estados disponibles.
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
    */
-  estadoOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('estados.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.estado = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.estado = [];
-      },
-    });
+  setValoresStore(event: {
+    formGroupName: string;
+    campo: string;
+    valor: undefined;
+    storeStateName: string;
+  }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
 
   /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService.obtenerMenuDesplegable('pais.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.pais = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.pais = [];
-      },
-    });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene los datos disponibles relacionados con mercancías.
+   * Inicia el proceso para buscar mercancías disponibles después de un breve retraso.
+   *
+   * Utiliza `setTimeout` para ejecutar el método `processBuscarMercancias` después de 100 milisegundos.
+   * Esto puede ser útil para asegurar que ciertas operaciones previas hayan finalizado antes de realizar la búsqueda.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService.obtenerTablaDatos('disponibles-datos.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (response: Mercancia[]) => {
-        if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response as Mercancia[];
-          this.store.setDisponsiblesDatos(this.disponiblesDatos);
-        }
-        else {
-          this.disponiblesDatos = [];
-        }
+    setTimeout(() => {
+      this.processBuscarMercancias();
+    }, 100);
+  }
+
+  /**
+   * @descripcion
+   * Procesa la búsqueda de mercancías después de asegurar que los componentes estén inicializados.
+   */
+  private processBuscarMercancias(): void {
+    const SELECTED_ESTADO = this.certificadoState?.estado;
+    const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: {
+        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      pais: {
+        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
       },
-    });
+    };
+    this.peruCertificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: any) => {
+          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+            (item: any) => ({
+              id: item.idMercancia,
+              fraccionArancelaria: item.fraccionArancelaria || '',
+              numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+              numeroRegistroProducto: item.numeroRegistroProducto || '',
+              fechaExpedicion: item.fechaExpedicion || '',
+              fechaVencimiento: item.fechaVencimiento || '',
+              nombreTecnico: item.nombreTecnico || '',
+              nombreComercial: item.nombreComercial || '',
+              nombreIngles: item.nombreIngles || '',
+              fraccionNaladi: item.fraccionNaladi || '',
+              fraccionNaladiSa93: item.fraccionNaladiSa93 || '',
+              fraccionNaladiSa96: item.fraccionNaladiSa96 || '',
+              fraccionNaladiSa02: item.fraccionNaladiSa02 || '',
+              criterioParaConferirOrigen: item.criterioOrigen || '',
+              valorDeContenidoRegional: item.valorDeContenidoRegional || '',
+              normaOrigen: item.normaOrigen || '',
+              otrasInstancias: item.otrasInstancias || '',
+              criterioParaTratoPreferencial: item.criterioParaTratoPreferencial || '',
+              cantidad: '',
+              umc: '',
+              tipoFactura: '',
+              valorMercancia: '',
+              fechaFinalInput: '',
+              numeroFactura: '',
+              unidadMedidaMasaBruta: '',
+              complementoClasificacion: '',
+              complementoDescripcion: '',
+              nalad: '',
+              fechaFactura: '',
+              marca: '',
+              numeroDeSerie: '',
+            })
+          );
+          this.datosTablaUno$ = of(MAPPED_DATA || []);
+          this.store.setbuscarMercancia(MAPPED_DATA);
+        },
+        error: () => {
+          // this.toastr.error('Error al buscar Mercancia');
+        },
+      });
+
+    this.mercanciasDisponibles = true;
   }
 
   /**
@@ -283,7 +336,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloque(estado);
   }
 
   /**
@@ -291,8 +344,12 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    * Abre el modal de modificación con los datos seleccionados.
    * @param disponiblesDatos - Los datos seleccionados para modificación.
    */
-  abrirModificarModal(disponiblesDatos: Mercancia): void {
+  abrirModificarModal(
+    disponiblesDatos: Mercancia,
+    fromMercanciasDisponibles: boolean
+  ): void {
     this.datosSeleccionados = disponiblesDatos;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
     this.store.setFormMercancia({ ...disponiblesDatos });
     if (this.modalInstance) {
       this.modalInstance.show();
@@ -308,6 +365,19 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       this.tablaSeleccionEvent = true;
       this.modalInstance.hide();
     }
+  }
+
+  /**
+   * Envía los datos de una mercancía al estado global (store) para su almacenamiento o actualización.
+   *
+   * Este método recibe un objeto de tipo `Mercancia`, lo encapsula dentro de un arreglo
+   * y lo pasa al método `setmercanciaTabla` del store, con el fin de actualizar la lista
+   * de mercancías en el estado de la aplicación.
+   *
+   * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o editada.
+   */
+  emitmercaniasDatos(evento: Mercancia): void {
+    this.store.setmercanciaTabla([evento]);
   }
 
   /**
@@ -330,14 +400,36 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
     this.store.setFormValida({ certificado: valida });
   }
 
-
   /**
    * @descripcion
    * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
-   * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+   * También actualiza el store para mantener la sincronización de datos entre componentes.
+   * @param {Mercancia[]} evento - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
-  guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
+  guardarClicado(evento: Mercancia[]): void {
+    this.datosTabla$ = evento;
+    this.store.setmercanciaTabla(evento);
+  }
+
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**
@@ -348,5 +440,5 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  } 
+  }
 }

@@ -239,36 +239,36 @@
   <ng-titulo titulo="Detalles de transporte" />
   <ng-container formGroupName="grupoDeTransporte">
     <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Puerto de embarque:</label>
-        <input type="text" class="form-control" id="puertoEmbarque" formControlName="puertoEmbarque"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoEmbarque', 'setgrupoDeTransportePuertoEmbarque')" />
-      </div>
-      <div class="col-md-5 mb-3">
-        <label>Puerto de desembarque:</label>
-        <input type="text" class="form-control" id="puertoDesembarque" formControlName="puertoDesembarque"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoDesembarque', 'setgrupoDeTransportePuertoDesembarque')" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Puerto de tránsito:</label>
-        <input type="text" class="form-control" id="puertoTransito" formControlName="puertoTransito"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoTransito', 'setgrupoDeTransportePuertoTransito')" />
-      </div>
-      <div class="col-md-5 mb-3">
-        <label>Nombre de la embarcación:</label>
-        <input type="text" class="form-control" id="nombreEmbarcacion" formControlName="nombreEmbarcacion"
-          (change)="setValoresStore(grupoDeTransporte, 'nombreEmbarcacion', 'setgrupoDeTransporteNombreEmbarcacion')" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Número de vuelo:</label>
-        <input type="text" class="form-control" id="numeroVuelo" formControlName="numeroVuelo"
-          (change)="setValoresStore(grupoDeTransporte, 'numeroVuelo', 'setgrupoDeTransporteNumeroVuelo')" />
-      </div>
-    </div>
+  <div class="col-md-5 mb-3">
+    <label>Puerto de embarque:</label>
+    <input type="text" class="form-control" id="puertoEmbarque" formControlName="puertoEmbarque"
+      (change)="setValoresStore(grupoDeTransporte, 'puertoEmbarque', 'setGrupoDeTransportePuertoEmbarque')" />
+  </div>
+  <div class="col-md-5 mb-3">
+    <label>Puerto de desembarque:</label>
+    <input type="text" class="form-control" id="puertoDesembarque" formControlName="puertoDesembarque"
+      (change)="setValoresStore(grupoDeTransporte, 'puertoDesembarque', 'setGrupoDeTransportePuertoDesembarque')" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5 mb-3">
+    <label>Puerto de tránsito:</label>
+    <input type="text" class="form-control" id="puertoTransito" formControlName="puertoTransito"
+      (change)="setValoresStore(grupoDeTransporte, 'puertoTransito', 'setGrupoDeTransportePuertoTransito')" />
+  </div>
+  <div class="col-md-5 mb-3">
+    <label>Nombre de la embarcación:</label>
+    <input type="text" class="form-control" id="nombreEmbarcacion" formControlName="nombreEmbarcacion"
+      (change)="setValoresStore(grupoDeTransporte, 'nombreEmbarcacion', 'setGrupoDeTransporteNombreEmbarcacion')" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5 mb-3">
+    <label>Número de vuelo:</label>
+    <input type="text" class="form-control" id="numeroVuelo" formControlName="numeroVuelo"
+      (change)="setValoresStore(grupoDeTransporte, 'numeroVuelo', 'setGrupoDeTransporteNumeroVuelo')" />
+  </div>
+</div>
   </ng-container>
 
 </form>

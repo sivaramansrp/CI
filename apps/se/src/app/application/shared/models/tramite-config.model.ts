@@ -10,4 +10,7 @@ export interface TramiteConfig {
 
   /** Bandera que activa o desactiva la sección Anexo 222 SE */
   anexo222se: boolean;
+
+  /** Boton de descargar solicitud */
+  descargaSolicitud?: boolean;
 }

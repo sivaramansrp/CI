@@ -116,7 +116,7 @@ export function obtenerColumnasVehiculo(
 ): ConfiguracionColumna<VehiculoTabla>[] {
   return [
     {
-      encabezado: 'IDENTIFICACIÓN',
+      encabezado: 'ID',
       clave: (item: VehiculoTabla): string => item.idDeVehiculo ? String(item.idDeVehiculo) : '',
       orden: 0,
     },
@@ -136,7 +136,7 @@ export function obtenerColumnasVehiculo(
       orden: 3,
     },
     {
-      encabezado: 'Transpondedor',
+      encabezado: 'Transponder',
       clave: (item: VehiculoTabla): string => item.transponder || '',
       orden: 4,
     },
@@ -146,7 +146,7 @@ export function obtenerColumnasVehiculo(
       orden: 5,
     },
     {
-      encabezado: 'Emisora País',
+      encabezado: 'País emisor',
       clave: (item: VehiculoTabla): string => obtenerDescripcionDeCatalogoVehiculo(item.paisEmisor, paisEmisorCatalogo),
       orden: 6,
     },

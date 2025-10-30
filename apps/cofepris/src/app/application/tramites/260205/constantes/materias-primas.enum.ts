@@ -50,3 +50,45 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * Lista de elementos de datos obligatorios requeridos para completar la solicitud del trámite.
+ * 
+ * @description Arreglo que contiene los nombres de los campos del formulario que son 
+ * indispensables para procesar la solicitud de permiso sanitario. Estos elementos son 
+ * validados en el frontend antes del envío y deben estar presentes para continuar con el proceso.
+ * 
+ * @type {Array<string>}
+ * @constant
+ * @readonly
+ * @since 1.0.0
+ * 
+ * @property {string} denominacionRazon - Denominación o razón social del solicitante
+ * @property {string} correoElectronico - Dirección de correo electrónico para notificaciones
+ * 
+ * @example
+ * // Validación de campos requeridos
+ * const camposCompletos = ELEMENTOS_REQUERIDOS.every(campo => 
+ *   formulario[campo] && formulario[campo].trim() !== ''
+ * );
+ * 
+ * @todo Considerar agregar validación de formato para cada elemento
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  
+  'fabricante'
+];
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+
+export const ID_PROCEDIMIENTO = 260210;
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_PAGE= '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';

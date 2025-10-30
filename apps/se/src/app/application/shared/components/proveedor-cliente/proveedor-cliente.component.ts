@@ -6,9 +6,12 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  UppercaseDirective,
 } from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import {
@@ -40,6 +43,8 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
     CatalogoSelectComponent,
     TituloComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
+    UppercaseDirective
   ],
   templateUrl: './proveedor-cliente.component.html',
   styleUrl: './proveedor-cliente.component.scss',
@@ -120,6 +125,26 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
   public complementarState!: ComplementarState;
 
   /**
+  * Contiene la notificación relacionada con la acción de agregar elementos.
+  * 
+  * Esta notificación puede mostrar mensajes de éxito, advertencia o error
+  * según el resultado del proceso de agregado.
+  */
+  public agregarNotification!: Notificacion;
+
+  /**
+   * Fila seleccionada del tipo AnexoUnoEncabezado.
+   * Se utiliza para almacenar y manipular la fila actualmente activa o seleccionada en la tabla.
+   */
+  private selectedRow: AnexoUnoEncabezado | null = null;
+
+  /**
+   * Fila seleccionada del tipo AnexoDosEncabezado.
+   * Permite gestionar la fila activa o seleccionada dentro de la tabla correspondiente al Anexo Dos.
+   */
+  private selectedDosRow: AnexoDosEncabezado | null = null;
+
+  /**
    * Constructor de la clase ProveedorClienteComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
@@ -129,7 +154,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
     private complimentosService: ComplimentosService,
     private complementarStore: ComplementarStore,
     private complementarQuery: ComplementarQuery) {
-    this.inicializarFormularioProveedorCliente();
+    //
   }
 
   /**
@@ -144,7 +169,14 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
         })
       )
       .subscribe();
-          
+
+    this.complimentosService.anexoUnoFilaSeleccionada$.subscribe(row => {
+      this.selectedRow = row;
+    });
+    this.complimentosService.anexoDosFilaSeleccionada$.subscribe(row => {
+      this.selectedDosRow = row;
+    });
+    this.inicializarFormularioProveedorCliente();
     if (!(this.complementarState.paisOptions.length)) {
       this.obtenerPaisOptions();
     } else {
@@ -154,7 +186,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
 
   /** Obtiene y actualiza las opciones del catálogo de pais desde el servicio. */
   obtenerPaisOptions(): void {
-      this.complimentosService.getPais()
+    this.complimentosService.getPais()
       .pipe(
         takeUntil(this.destroyNotifier$)
       )
@@ -162,7 +194,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
         this.complementarStore.setPaisOptions(res.datos);
         this.paisDestinoCatalog = res.datos;
       });
-    }
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando se detectan cambios en las propiedades de entrada.
@@ -185,7 +217,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    */
   cambioPaisDestino(event: Catalogo): void {
     this.formularioProveedorCliente.patchValue({
-      paisDestino: event.id,
+      paisDestino: event.id || event.clave,
     });
   }
 
@@ -194,13 +226,14 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   inicializarFormularioProveedorCliente(): void {
+    const ROW = this.selectedRow || this.selectedDosRow;
     this.formularioProveedorCliente = this.fb.group({
-      descripcionComercial: ['Test Complementar', Validators.required],
+      descripcionComercial: [{ value: ROW?.encabezadoDescripcionComercial, disabled: true }, Validators.required],
       paisDestino: [0, Validators.required],
       rfc: ['', Validators.required],
       razonSocialCliente: ['', Validators.required],
     });
-    this.formularioProveedorCliente.get('descripcionComercial')?.disable();
+    // this.formularioProveedorCliente.get('descripcionComercial')?.disable();
   }
 
   /**
@@ -230,16 +263,32 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   aggregar(): void {
+    this.agregarNotification = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'La operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+
+
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
       fraccion: this.fraccionTablaDatos?.encabezadoFraccion,
       paisDestino: this.obtenerValorPaisDeDestino(
         this.formularioProveedorCliente.get('paisDestino')?.value
       ),
-      rfcClinte: this.formularioProveedorCliente.get('rfc')?.value,
+      rfcClinte: (this.formularioProveedorCliente.get('rfc')?.value || '').toUpperCase(),
       razonSocial:
         this.formularioProveedorCliente.get('razonSocialCliente')?.value,
     };
     this.proveedorClienteTablsDatos = [...this.proveedorClienteTablsDatos, PROVEEDOR_CLIENTE];
+    this.formularioProveedorCliente.reset();
+    this.formularioProveedorCliente.get('descripcionComercial')?.setValue('Test Complementar');
   }
 
   /**
@@ -247,9 +296,9 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * @param {number} id - El ID del país de destino.
    * @returns {string} La descripción del país de destino.
    */
-  obtenerValorPaisDeDestino(id: number): string {
+  obtenerValorPaisDeDestino(id: string): string {
     const PAIS = this.paisDestinoCatalog.find(
-      (ele) => ele.id === parseInt(id.toString(), 10)
+      (ele) => ele.clave === id
     );
     return PAIS ? PAIS.descripcion : '';
   }

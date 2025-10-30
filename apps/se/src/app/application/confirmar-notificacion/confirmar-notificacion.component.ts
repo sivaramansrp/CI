@@ -74,6 +74,13 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   folio: string = '';
 
   /**
+   * Datos de la resolución que se mostrarán en la tabla.
+   * @type {BodyTablaResolucion[]}
+   * Solo se utiliza si hay resoluciones que mostrar y si el trámite lo requiere.
+   */
+  datosTablaResolucion?: BodyTablaResolucion[] = [];
+
+  /**
   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
   * Se utiliza para completar el observable cuando el componente se destruye.
   */
@@ -122,6 +129,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   */
   datosTabla: BodyTablaResolucion[] = [];
 
+  /**
+   * Arreglo que contiene los números de trámite que requieren documentos de resolución.
+   * Se deberá añadir un número de trámite a este arreglo si es necesario mostrar documentos de resolución para ese trámite.
+   */
+  tramitesDocumentosResolucion = ['130102'];
+
 
   /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
@@ -167,6 +180,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe()
     this.getConfirmarNotificacion();
+    this.obtenerAcusesRecibos();
   }
 
   /**
@@ -224,7 +238,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
+    this.firmaService.postFirma(this.guardarDatos.procedureId,NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<FirmaConfirmarResponse>) => {
@@ -286,12 +300,15 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     this.confirmarNotificacionService.getAcusesRecibidosNotificación(Number(this.guardarDatos.procedureId), this.guardarDatos.folioTramite).subscribe({
     next: (response) => {
         if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
-          this.notificacionAcusesData = [{
-              id: 1,
-              idDocumento: response.datos.documentos_oficiales[0]?.id_documento_oficial ?? '',
-              documento: response.datos.documentos_oficiales[0]?.desc_documento ?? '',
-              urlPdf: response.datos.documentos_oficiales[0]?.documento_minio ?? ''
-            }];
+          const DOCS = response.datos.documentos_oficiales ?? [];
+          if(DOCS.length > 0 ){
+            this.notificacionAcusesData = DOCS.map((doc, index) => ({
+              id: index + 1,
+              idDocumento: doc.id_documento_oficial,
+              documento: doc.desc_documento,
+              urlPdf: doc.documento_minio
+            }));
+          }
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
@@ -437,6 +454,29 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   }
 
 
+    /**
+   * Obtiene los acuses y recibos relacionados con la resolución.
+   */
+  obtenerAcusesRecibos(): void {
+    if (this.tramitesDocumentosResolucion.includes(this.guardarDatos.procedureId)){
+      this.confirmarNotificacionService.getAcusesRecibos(this.guardarDatos.procedureId, this.guardarDatos.folioTramite).subscribe({
+      next: (data) => {
+        if (data?.codigo === "00" && data?.datos) {
+          this.datosTablaResolucion = [{
+            id: 1,
+            idDocumento: data.datos[0].id_documento_oficial + "",
+            documento: data.datos[0].desc_documento,
+            urlPdf: data.datos[0].documento_minio
+          }]
+        }
+      },
+    });
+    }
+    
+  }
+
+
+
   /**
    * @method cerrar
    * @description
@@ -507,7 +547,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         apellido_paterno: 'Hernández'
       }
     };
-    this.cadenaOriginalService.postCadenaOriginal(NUMFOLIO, PAYLOAD).subscribe({
+    this.cadenaOriginalService.postCadenaOriginal(this.guardarDatos.procedureId, NUMFOLIO, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {

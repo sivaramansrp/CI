@@ -9,7 +9,7 @@ import { TEXTOS } from '../../constants/aviso-traslado.enum';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
 import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
 import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -132,6 +132,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * con los datos obtenidos.
    */
   ngOnInit(): void {
+    // Inicializar el estado de los pasos
+    this.updateStepsActiveStatus();
+    
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -161,17 +164,31 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     // Ocultar alerta de validación si se puede continuar
     this.showValidationAlert = false;
 
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+    // Calcular el nuevo índice basado en la acción
+    let newIndex = this.indice;
+    if (e.accion === 'cont' && this.indice < this.pasos.length) {
+      newIndex = this.indice + 1;
+    } else if (e.accion === 'ant' && this.indice > 1) {
+      newIndex = this.indice - 1;
+    }
+
+    // Verifica si el valor está en el rango adecuado
+    if (newIndex > 0 && newIndex <= this.pasos.length) {
+      // Actualiza el índice del paso
+      this.indice = newIndex;
+      
+      // Actualiza datosPasos para sincronizar con el botón
+      this.datosPasos.indice = this.indice;
+      
+      // Actualiza el estado activo de los pasos
+      this.updateStepsActiveStatus();
 
       // Dependiendo de la acción, avanza o retrocede en el wizard
       if (e.accion === 'cont') {
         // Si la acción es 'cont', avanza al siguiente paso
         this.wizardComponent.siguiente();
-      } else {
-        // Si la acción es 'atras', retrocede al paso anterior
+      } else if (e.accion === 'ant') {
+        // Si la acción es 'ant', retrocede al paso anterior
         this.wizardComponent.atras();
       }
 
@@ -226,6 +243,16 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   closeValidationAlert(): void {
     this.showValidationAlert = false;
+  }
+
+  /**
+   * @method updateStepsActiveStatus
+   * @description Actualiza el estado activo de todos los pasos basado en el índice actual.
+   */
+  private updateStepsActiveStatus(): void {
+    this.pasos.forEach(step => {
+      step.activo = step.indice === this.indice;
+    });
   }
 
   /**

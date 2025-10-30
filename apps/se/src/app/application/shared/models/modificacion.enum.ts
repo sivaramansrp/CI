@@ -1,8 +1,10 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
 
 export interface Mercancia {
+  descripcion?(descripcion: any): unknown;
   fraccionArancelaria: string;
-  numeroDeRegistrodeProductos: string;
+  numeroRegistroProducto?: string;
+  numeroDeRegistrodeProductos?: string;
   fechaExpedicion: string;
   fechaVencimiento: string;
   nombreTecnico: string;
@@ -18,12 +20,23 @@ export interface Mercancia {
   unidadMedidaMasaBruta?: string;
   complementoClasificacion?: string;
   complementoDescripcion?: string;
-  fraccionNaladi: string;
-  fraccionNaladiSa93: string;
-  fraccionNaladiSa96: string;
-  fraccionNaladiSa02: string;
+  fraccionNaladi?: string;
+  fraccionNaladiSa93?: string;
+  fraccionNaladiSa96?: string;
+  fraccionNaladiSa02?: string;
   nalad?: string;
   fechaFactura?: string;
+  marca?: string;
+  nombreIngles?: string;
+  otrasInstancias?: string;
+  criterioParaConferirOrigen?: string;
+  criterioParaTratoPreferencial?: string;
+  criterioParaClasificacion?: string;
+  fechaDePago?: string;
+  valorDeContenidoRegional?: string;
+  numeroDeSerie?: string;
+  rfcProductor1?: string; 
+  rfcProductor?: string;
 }
 
 export interface ConfiguracionColumna<T> {

@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
+import { Tramite110203Query } from '../../estados/tramite110203.query';
 
-import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el transporte para el trámite 110203.

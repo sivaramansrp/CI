@@ -8,9 +8,13 @@ import {
   NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
+  SoloNumerosDirective,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -18,15 +22,16 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  forwardRef
 } from '@angular/core';
 import {
   FRACCION_EXPORTACION,
+  FraccionInfo,
   IMMEX_SERVICIO,
+  ImmexRegistroform,
   NICO_TABLA,
+  NicoInfo,
   PermisoImmexGridDatos,
-  fraccionInfo,
-  immexRegistroform,
-  nicoInfo,
 } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -34,7 +39,6 @@ import { CommonModule } from '@angular/common';
 import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
 import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
 import { Modal } from 'bootstrap';
-import { NicoService } from '../../servicios/nico/nico.service';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
@@ -60,15 +64,15 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
  * @property {TablaSeleccion} tablaSeleccionCheckbox - Tipo de selección de la tabla (Checkbox).
  * @property {ConfiguracionColumna<immexInfo>[]} permisoImmexTabla - Configuración de las columnas de la tabla para servicios IMMEX.
  * @property {immexInfo[]} immexTableDatos - Datos de los servicios IMMEX.
- * @property {ConfiguracionColumna<fraccionInfo>[]} fraccionExportacionTabla - Configuración de las columnas de la tabla para fracciones de exportación.
- * @property {fraccionInfo[]} fraccionTablaDatos - Datos de las fracciones arancelarias.
- * @property {ConfiguracionColumna<nicoInfo>[]} nicoTabla - Configuración de las columnas de la tabla para NICO.
- * @property {nicoInfo[]} nicoTablaDatos - Datos de NICO.
+ * @property {ConfiguracionColumna<FraccionInfo>[]} fraccionExportacionTabla - Configuración de las columnas de la tabla para fracciones de exportación.
+ * @property {FraccionInfo[]} fraccionTablaDatos - Datos de las fracciones arancelarias.
+ * @property {ConfiguracionColumna<NicoInfo>[]} nicoTabla - Configuración de las columnas de la tabla para NICO.
+ * @property {NicoInfo[]} nicoTablaDatos - Datos de NICO.
  * @property {string} immexRegistro - Variable de estado para IMMEX Registro.
  * @property {Subject<void>} destroyNotifier$ - Subject para manejar la desuscripción de observables.
  * @property {any[]} permisoImmexDatos - Array de datos permiso immex.
- * @property {fraccionInfo[]} fraccionDatos - Array de datos fracción.
- * @property {nicoInfo[]} nicoDatos - Array de datos NICO.
+ * @property {FraccionInfo[]} fraccionDatos - Array de datos fracción.
+ * @property {NicoInfo[]} nicoDatos - Array de datos NICO.
  * @property {Catalogo[]} nico - Configuración para el select de unidad de medida.
  * @property {boolean} showTableExport - Estado de visibilidad de la tabla de exportación.
  * @property {boolean} showTableImport - Estado de visibilidad de la tabla de importación.
@@ -112,6 +116,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    forwardRef(() => SoloNumerosDirective),
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
@@ -144,7 +149,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @property {immexRegistroform} immexRegitroAnexoState
    * @description Estado del formulario de registro IMMEX.
    */
-  immexRegitroAnexoState!: immexRegistroform;
+  immexRegitroAnexoState!: ImmexRegistroform;
 
   /**
    * @property {TablaSeleccion} tablaSeleccionRadio
@@ -171,35 +176,35 @@ export class Anexo1Component implements OnInit, OnDestroy {
   immexTableDatos: PermisoImmexGridDatos[] = [];
 
   /**
-   * @property {ConfiguracionColumna<fraccionInfo>[]} fraccionExportacionTabla
+   * @property {ConfiguracionColumna<FraccionInfo>[]} fraccionExportacionTabla
    * @description Configuración de las columnas de la tabla para fracciones de exportación.
    */
-  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] =
+  fraccionExportacionTabla: ConfiguracionColumna<FraccionInfo>[] =
     FRACCION_EXPORTACION;
 
   /**
-   * @property {fraccionInfo[]} fraccionTablaDatos
+   * @property {FraccionInfo[]} fraccionTablaDatos
    * @description Datos de las fracciones arancelarias.
    */
-  fraccionTablaDatos: fraccionInfo[] = [];
+  fraccionTablaDatos: FraccionInfo[] = [];
 
   /**
-   * @property {ConfiguracionColumna<nicoInfo>[]} nicoTabla
+   * @property {ConfiguracionColumna<NicoInfo>[]} nicoTabla
    * @description Configuración de las columnas de la tabla para NICO.
    */
-  nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
-   * @property {nicoInfo[]} nicoTablaDatosImportacion
+   * @property {NicoInfo[]} nicoTablaDatosImportacion
    * @description Datos de NICO.
    */
-  nicoTablaDatosImportacion: nicoInfo[] = [];
+  nicoTablaDatosImportacion: NicoInfo[] = [];
 
   /**
-   * @property {nicoInfo[]} nicoTablaDatosExportacion
+   * @property {NicoInfo[]} nicoTablaDatosExportacion
    * @description Datos de NICO.
    */
-  nicoTablaDatosExportacion: nicoInfo[] = [];
+  nicoTablaDatosExportacion: NicoInfo[] = [];
 
   /**
    * @property {string} immexRegistro
@@ -220,22 +225,21 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @description Array que contiene los datos de permisos IMMEX obtenidos del servicio.
    * Almacena la información necesaria para mostrar los permisos disponibles en la tabla.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  permisoImmexDatos: any[] = [];
+  permisoImmexDatos: PermisoImmexGridDatos[] = [];
 
   /**
-   * @property {fraccionInfo[]} fraccionDatos
+   * @property {FraccionInfo[]} fraccionDatos
    * @description Array que contiene los datos de fracciones arancelarias obtenidos del servicio.
    * Estos datos se utilizan para poblar las tablas de fracciones de exportación e importación.
    */
-  fraccionDatos: fraccionInfo[] = [];
+  fraccionDatos: FraccionInfo[] = [];
 
   /**
-   * @property {nicoInfo[]} nicoDatos
+   * @property {NicoInfo[]} nicoDatos
    * @description Array que contiene los datos de NICO (Nomenclatura de Identificación de Commodities)
    * obtenidos del servicio. Se utiliza para mostrar información relacionada con commodities.
    */
-  nicoDatos: nicoInfo[] = [];
+  nicoDatos: NicoInfo[] = [];
 
   /**
    * @property {Catalogo[]} nico
@@ -294,19 +298,18 @@ export class Anexo1Component implements OnInit, OnDestroy {
   espectaculoAlerta: boolean = false;
 
   /**
-   * @property {boolean} espectaculoAlertaAgregar
+   * @property {boolean} eliminarPermisoImmexConfirmacion
    * @description
-   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
-   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   * Indica si se debe mostrar el modal de confirmación para eliminar un permiso IMMEX seleccionado.
    */
-  espectaculoAlertaAgregar: boolean = false;
+  eliminarPermisoImmexConfirmacion: boolean = false;
 
   /**
    * @property {FilaPlantas[]} listSelectedView
    * @description
    * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
    */
-  listSelectedView: nicoInfo[] = [];
+  listSelectedView: NicoInfo[] = [];
 
   /**
    * @private
@@ -325,12 +328,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
   listaFilaSeleccionada: PermisoImmexGridDatos | null = null;
 
   /**
-   * @property {fraccionInfo | null} listaFilaSeleccionadaFraccion
+   * @property {FraccionInfo | null} listaFilaSeleccionadaFraccion
    * @description
    * Almacena la fila seleccionada de la tabla de fracciones arancelarias.
    * Se utiliza para realizar acciones como eliminar o editar la fracción seleccionada.
    */
-  listaFilaSeleccionadaFraccion: fraccionInfo | null = null;
+  listaFilaSeleccionadaFraccion: FraccionInfo | null = null;
 
   /**
    * @property {FormGroup} mercanciaImportacionForm
@@ -371,6 +374,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Se utiliza para mantener el estado de la selección actual en los selects de NICO.
    */
   NICO_SELECCIONADO: Catalogo[] = [];
+  /**
+   * @property {boolean} eliminarNICOAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ningún elemento NICO para eliminar.
+   * Se establece a `true` cuando el usuario intenta eliminar códigos NICO sin haber seleccionado ninguno,
+   * mostrando un mensaje de error que solicita elegir al menos un NICO para eliminar.
+   */
+  eliminarNICOAlerta: boolean = false
 
   /**
    * @constructor
@@ -380,7 +391,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    *
    * @param {FormBuilder} fb - Servicio para la creación y gestión de formularios reactivos.
    * @param {PermisoImmexDatosService} permisoImmexDatosService - Servicio para obtener datos de permiso IMMEX.
-   * @param {NicoService} nicoService - Servicio para obtener datos de NICO.
    * @param {ImmexRegistroQuery} immexRegistroQuery - Query para consultar el estado del registro IMMEX.
    * @param {ImmexRegistroStore} immexRegistroStore - Store para manejar el estado del registro IMMEX.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
@@ -390,7 +400,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     public permisoImmexDatosService: PermisoImmexDatosService,
-    public readonly nicoService: NicoService,
     public immexRegistroQuery: ImmexRegistroQuery,
     public immexRegistroStore: ImmexRegistroStore,
     public seccionQuery: SeccionLibQuery,
@@ -423,6 +432,29 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * @method obtenerConfiguracionDeNotificacion
+   * @description Obtiene la configuración de notificación para mostrar mensajes al usuario.
+   *
+   * @param {string} mensaje - El mensaje a mostrar en la notificación.
+   * @param {string} [titulo=''] - El título de la notificación.
+   * @param {string} [categoria=''] - La categoría de la notificación (ej. 'success', 'error').
+   * @param {string} [txtBtnCancelar=''] - El texto del botón de cancelar.
+   * @returns {Notificacion} La configuración de la notificación.
+   */
+  obtenerConfiguracionDeNotificacion(mensaje: string, titulo: string = '', categoria: string = '', txtBtnCancelar: string = ''): Notificacion {
+    return {
+        tipoNotificacion: 'alert',
+        categoria: categoria,
+        modo: 'action',
+        titulo: titulo,
+        mensaje: mensaje,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: txtBtnCancelar,
+      };
   }
 
   /**
@@ -510,40 +542,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
           this.immexRegitroAnexoState = seccionState.immexRegistro;
           this.immexTableDatos = seccionState.immexTableDatos;
           this.fraccionTablaDatos = seccionState.fraccionTablaDatos;
-          // this.immexRegistroform.patchValue(this.immexRegitroAnexoState);
         })
       )
       .subscribe();
 
     this.creatFormSolicitud();
-
-    // this.immexRegistroform.statusChanges
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     delay(10),
-    //     tap((_value) => {
-    //       const ACTIVE_STATE = {
-    //         ...this.immexRegistroform.value
-    //       };
-    //       this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
-    //     })
-    //   )
-    //   .subscribe();
-
-      // need to check
-    const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-    this.fetchData(PERMISO_VALUE);
-    this.disableFormControls();
-
-    // Para el botón de validación Continuar
-    // this.seccionQuery.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
   }
 
   /**
@@ -585,34 +588,13 @@ export class Anexo1Component implements OnInit, OnDestroy {
             
             this.permisoImmexDatos = RESPONSE_DATA.permisoImmexGridDatos;
             this.fraccionDatos = RESPONSE_DATA.fraccionGridDatos;
-
-            // if (this.permisoImmexDatos.length > 0) {
-            //   // this.immexRegistroform.patchValue({
-            //   //   fraccionArancelariaExportacion:
-            //   //     this.permisoImmexDatos[0].IMMEX_Columna_3,
-            //   // });
-            //   // this.mercanciaImportacionForm?.patchValue({
-            //   //   commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
-            //   //   commodityDescImportacion:
-            //   //     this.permisoImmexDatos[0].IMMEX_Columna_4,
-            //   // });
-            // }
-
-            // if (this.fraccionDatos.length > 0) {
-            //   this.mercanciaExportacionForm?.patchValue({
-            //     productoArancelariaExportacion:
-            //       this.fraccionDatos[0].FRACCION_Columna_2,
-            //     productoDescExportacion: this.fraccionDatos[0].FRACCION_Columna_5
-            //   });
-            // }
           }
         },
       });
   }
 
   /**
-   * @method obtenerIngresoSelectList
-   * @description Obtiene la lista de opciones para el select de unidad de medida NICO.
+   * Obtiene la lista de opciones para el select de unidad de medida NICO.
    * Realiza una llamada al servicio nicoService para obtener el menú desplegable desde
    * el archivo 'nico.json' y asigna los datos obtenidos a la propiedad nico del componente.
    * Esta lista se utiliza para poblar los selects relacionados con códigos NICO.
@@ -620,7 +602,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerIngresoSelectList(tipo: 'importacion' | 'exportacion'): void {
-    const CLAVE_FRACCION = tipo === 'importacion' ? this.listaFilaSeleccionada?.fraccion : this.listaFilaSeleccionadaFraccion?.fraccionPadre;
+    const CLAVE_FRACCION = tipo === 'importacion' ? this.listaFilaSeleccionada?.fraccion : this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.cveFraccion;
     this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION ?? '')
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -683,26 +665,118 @@ export class Anexo1Component implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  showTableExportacion(): void {
-    const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
-    if (!PERMISO_VALUE || PERMISO_VALUE.length === 0 || PERMISO_VALUE === '') {
-      this.espectaculoAlertaAgregar = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Tiene que introducir el permiso immex.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    } else {
-      this.showTableExport = true;
-      this.espectaculoAlertaAgregar = false;
-      this.fetchData(PERMISO_VALUE);
-    }
+ showTableExportacion(): void {
+  const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
+  
+  this.obtenerpermisoImmexDatos(PERMISO_VALUE);
+  
+  this.showTableExport = true;
+  this.showTableFractionExp = true;
+  this.immexRegistroform.get('permisoImmexDatos')?.setValue('');
+}
+
+
+obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
+  if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
+    this.espectaculoAlerta = true;
+    this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Tiene que introducir el permiso immex.');
+    return;
   }
+
+  const PAYLOAD = {
+    "tipoSolicitud": "",
+    "idProyecto": PERMISO_VALUE,
+    "rfcSolicitante": "BRO180601EW5"
+  };
+
+  this.permisoImmexDatosService
+    .getPermisoImmex(PAYLOAD)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          
+          if (API_DATOS.codigo !== "00") {
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion(API_DATOS.error || API_DATOS.mensaje || 'El permiso IMMEX solicitado no existe.', 'Error', 'danger');
+            this.immexTableDatos = [];
+            this.fraccionTablaDatos = [];
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: [],
+              fraccionTablaDatos: []
+            });
+            return;
+          }
+
+          if (esValidObject(API_DATOS.datos)) {
+            let totalRecords = 0;
+            
+            if (esValidArray(API_DATOS.datos.datosConsultaProgramaDtos)) {
+              // this.immexTableDatos = IMMEX_RESPONSE;
+              this.immexTableDatos = API_DATOS.datos.datosConsultaProgramaDtos;
+              totalRecords += API_DATOS.datos.datosConsultaProgramaDtos.length;
+              this.immexTableDatos = this.immexTableDatos.map((item: PermisoImmexGridDatos, index: number) => ({
+                ...item,
+                consecutivo: index + 1
+              }));
+            }
+
+            if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
+              this.fraccionTablaDatos = API_DATOS.datos.productoExportacionDtoList;
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
+              totalRecords += API_DATOS.datos.productoExportacionDtoList.length;
+            }
+
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: this.immexTableDatos,
+              fraccionTablaDatos: this.fraccionTablaDatos
+            });
+            
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'success',
+              categoria: 'success',
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: `Se encontraron ${totalRecords} registro(s) para el permiso IMMEX.`,
+              cerrar: true,
+              tiempoDeEspera: 3000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          } else {
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('No se encontraron datos para el permiso IMMEX especificado.', 'Advertencia', 'warning');
+            this.immexTableDatos = [];
+            this.fraccionTablaDatos = [];
+            this.immexRegistroStore.establecerDatos({ 
+              immexTableDatos: [],
+              fraccionTablaDatos: []
+            });
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener permiso IMMEX:', error);
+        this.espectaculoAlerta = true;
+        this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Error al conectar con el servidor. Intente nuevamente.', 'Error de conexión', 'danger');
+        this.immexTableDatos = [];
+        this.fraccionTablaDatos = [];
+        this.immexRegistroStore.establecerDatos({ 
+          immexTableDatos: [],
+          fraccionTablaDatos: []
+        });
+      }
+    });
+}
+
 
   /**
    * @method mostrarDetalleMercancia
@@ -716,17 +790,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
   mostrarDetalleMercancia(): void {
     if (!this.listaFilaSeleccionada) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Debe seleccionar un permiso immex.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
     } else {
       this.espectaculoAlerta = false;
       this.obtenerIngresoSelectList('importacion');
@@ -751,22 +815,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
   mostrarDetalleMercanciaExportacion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Debe seleccionar un Fracción.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Fracción.');
     } else {
       this.obtenerIngresoSelectList('exportacion');
        this.mercanciaExportacionForm?.patchValue({
-        productoArancelariaExportacion: this.listaFilaSeleccionadaFraccion.clave,
-        productoDescExportacion: this.listaFilaSeleccionadaFraccion.descripcion
+        productoArancelariaExportacion: this.listaFilaSeleccionadaFraccion.fraccionArancelaria.cveFraccion,
+        productoDescExportacion: this.listaFilaSeleccionadaFraccion.fraccionArancelaria.descripcion
       });
       this.espectaculoAlerta = false;
       const MODAL_INSTANCIA = new Modal(
@@ -798,6 +852,73 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   showTableFractionExport(): void {
     this.showTableFractionExp = true;
+    const FRACCION_VALUE = this.immexRegistroform.get('fraccionArancelariaExportacion')?.value;
+    const FRACCION_DESC = this.immexRegistroform.get('FraccionDescExportacion')?.value;
+
+    if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe introducir el número de fracción arancelaria.');
+      return;
+    }
+
+    if (!this.listaFilaSeleccionada) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Permiso.');
+      return;
+    }
+
+    this.espectaculoAlerta = false;
+
+    this.obtenerFraccionDatos(FRACCION_VALUE, FRACCION_DESC); 
+  }
+
+  obtenerFraccionDatos(FRACCION_VALUE:string, FRACCION_DESC:string): void {
+
+    const PAYLOAD = {
+      "fraccion": FRACCION_VALUE,
+      "descFraccion": FRACCION_DESC,
+      "idProductoPadre": this.listaFilaSeleccionada ? this.listaFilaSeleccionada.numeroPrograma : '',
+      "fraccionPadre": this.listaFilaSeleccionada ? this.listaFilaSeleccionada.fraccion : ''
+    };
+
+    this.permisoImmexDatosService
+      .getFraccionArancelaria(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (esValidObject(response)) {
+            const API_DATOS = doDeepCopy(response);
+            
+            if (response.codigo !== "00") {
+              this.espectaculoAlerta = true;
+              this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion(API_DATOS.error || API_DATOS.mensaje || 'El permiso IMMEX solicitado no existe.');
+              return;
+            }
+
+            if (esValidObject(API_DATOS.datos)) {
+              const DATOS = {
+                fraccionArancelaria: {
+                  ...API_DATOS.datos
+                }
+              }
+              this.fraccionTablaDatos.push(DATOS as FraccionInfo);
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
+              this.immexRegistroStore.establecerDatos({
+                fraccionTablaDatos: [
+                  ...this.fraccionTablaDatos
+                ]
+              })
+            }
+
+          }
+        }
+      });
   }
 
   /**
@@ -810,7 +931,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   showTableNicoExport(): void {
     if (this.NICO_SELECCIONADO) {
-      const NUEVO_ELEMENTO: nicoInfo = {
+      const NUEVO_ELEMENTO: NicoInfo = {
         claveNico: this.NICO_SELECCIONADO[0]?.clave ?? '',
         descripcion: this.NICO_SELECCIONADO[0]?.nicoDescription ?? ''
       };
@@ -831,7 +952,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
     const NICO_VALUE = this.mercanciaImportacionForm.get('nico')?.value;
     
     if (NICO_VALUE) {
-      const NUEVO_ELEMENTO: nicoInfo = {
+      const NUEVO_ELEMENTO: NicoInfo = {
         claveNico: this.NICO_SELECCIONADO[0]?.clave ?? '',
         descripcion: this.NICO_SELECCIONADO[0]?.nicoDescription ?? ''
       };
@@ -891,9 +1012,9 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @method seleccionTabla
    * @description
    * Actualiza la lista de plantas seleccionadas en la tabla dinámica y sincroniza el estado en el store.
-   * @param {nicoInfo[]} event - Arreglo de plantas seleccionadas.
+   * @param {NicoInfo[]} event - Arreglo de plantas seleccionadas.
    */
-  seleccionTabla(event: nicoInfo[]): void {
+  seleccionTabla(event: NicoInfo[]): void {
     this.listSelectedView = event;
     this.seccionStore.update((state) => ({
       ...state,
@@ -903,7 +1024,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
 
   eliminarNico(params:string): void {
     if (this.listSelectedView.length === 0) {
-      return;
+      this.eliminarNICOAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe elegir al menos un nico para eliminar.');
     }
     const SELECTED_IDS = new Set(
       this.listSelectedView.map((item) => item.claveNico)
@@ -941,9 +1063,9 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @description
    * Maneja la selección de una fila en la tabla de fracciones arancelarias.
    * Actualiza la propiedad listaFilaSeleccionadaFraccion con el elemento seleccionado.
-   * @param {fraccionInfo} event - Fila seleccionada.
+   * @param {FraccionInfo} event - Fila seleccionada.
    */
-  onFilaSeleccionadaFraccion(event: fraccionInfo): void {
+  onFilaSeleccionadaFraccion(event: FraccionInfo): void {
     this.listaFilaSeleccionadaFraccion = event;
   }
 
@@ -955,44 +1077,30 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Actualiza el estado en el store tras la eliminación.
    */
   eliminarPermisoImmex(): void {
-    this.eliminarPlantasAlerta = true;
+    
     if (!this.listaFilaSeleccionada) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+      this.eliminarPlantasAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
     } else if (this.listaFilaSeleccionada) {
       this.eliminarPlantasConfirmacion = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
-      };
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Al eliminar el permiso también se eliminaran las fracciones relacionadas. ¿Desea eliminar el registro?', '', 'danger', 'Cancelar');
     }
-    if (this.listaFilaSeleccionada) {
-      const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionada].map((item) => item.consecutivo)
-      );
-      this.immexTableDatos = this.immexTableDatos.filter(
-        (item) => !SELECTED_IDS.has(item.consecutivo)
-      );
-      this.listaFilaSeleccionada = null;
-      this.immexRegistroStore.establecerDatos({
-        immexTableDatos: this.immexTableDatos,
-      });
+  }
+
+  eliminarPermisoImmexDatos(event: boolean): void {
+    if (event === true) {
+      if (this.listaFilaSeleccionada) {
+        const SELECTED_IDS = new Set(
+          [this.listaFilaSeleccionada].map((item) => item.consecutivo)
+        );
+        this.immexTableDatos = this.immexTableDatos.filter(
+          (item) => !SELECTED_IDS.has(item.consecutivo)
+        );
+        this.listaFilaSeleccionada = null;
+        this.immexRegistroStore.establecerDatos({
+          immexTableDatos: this.immexTableDatos,
+        });
+      }
     }
   }
 
@@ -1005,45 +1113,25 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   eliminarFraccion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
       this.eliminarPlantasAlerta = true;
     } else if (this.listaFilaSeleccionadaFraccion) {
       this.eliminarPlantasConfirmacion = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
-      };
-    }
-    if (this.listaFilaSeleccionadaFraccion) {
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
+      if (this.listaFilaSeleccionadaFraccion) {
       const SELECTED_IDS = new Set(
         [this.listaFilaSeleccionadaFraccion].map(
-          (item) => item.idFraccion
+          (item) => item.fraccionArancelaria.cveFraccion
         )
       );
       this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
-        (item) => !SELECTED_IDS.has(item.idFraccion)
+        (item) => !SELECTED_IDS.has(item.fraccionArancelaria.cveFraccion)
       );
       this.listaFilaSeleccionadaFraccion = null;
       this.immexRegistroStore.establecerDatos({
         fraccionTablaDatos: this.fraccionTablaDatos,
       });
+    }
     }
   }
 
@@ -1053,7 +1141,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    */
-  // eslint-disable-next-line class-methods-use-this
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.immexRegistroStore.establecerDatos({ [campo]: VALOR });
@@ -1088,16 +1175,89 @@ export class Anexo1Component implements OnInit, OnDestroy {
   }
 
   /**
+   * Cierra el modal de confirmación.
+   */
+  cerrarModal(): void {
+    this.espectaculoAlerta = false;
+  }
+
+  /**
    * Add method to save mercancia exportacion data
    */
   guardarMercanciaExportacion(): void {
     if (this.mercanciaExportacionForm.valid) {
       const VALOR = this.nicoTablaDatosExportacion;
-      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosExportacion']: VALOR });
+
+      if (this.listaFilaSeleccionadaFraccion && this.listaFilaSeleccionadaFraccion.fraccionArancelaria) {
+
+        const SELECTED_FRACCION_ID = this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.cveFraccion;
+        this.fraccionTablaDatos = this.fraccionTablaDatos.map(item => {
+          if (
+            SELECTED_FRACCION_ID !== undefined &&
+            item.fraccionArancelaria &&
+            item.fraccionArancelaria.cveFraccion === SELECTED_FRACCION_ID
+          ) {
+            return {
+              ...item,
+              fraccionArancelaria: {
+                ...item.fraccionArancelaria,
+                nicoDtos: VALOR
+              }
+            };
+          }
+          return item;
+        });
+
+        this.immexRegistroStore.establecerDatos({ fraccionTablaDatos: this.fraccionTablaDatos });
+      }
+      
       this.modalCancelar('Exportacion');
     } else {
       // Handle form validation errors
       this.mercanciaExportacionForm.markAllAsTouched();
     }
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de registro IMMEX verificando múltiples condiciones:
+   * 1. Verifica que existan datos en las tablas de IMMEX y fracciones arancelarias
+   * 2. Si ambas tablas tienen datos, valida el formulario de mercancía de importación
+   * 3. Si las tablas están vacías, marca el formulario principal como tocado y establece errores específicos en el store
+   * 
+   * Establece errores específicos en el store para cada condición no cumplida:
+   * - mercanciaImportacionFormError: cuando el formulario de importación es inválido
+   * - IMMEXTablaError: cuando la tabla de permisos IMMEX está vacía
+   * - fraccionTablaError: cuando la tabla de fracciones arancelarias está vacía
+   * 
+   * @returns {boolean} `true` si todas las validaciones pasan correctamente, `false` en caso contrario
+   */
+  validarFormulario(): boolean {
+      let VALID = true;
+      if (this.immexTableDatos.length > 0 && this.fraccionTablaDatos.length > 0) {
+        if(this.mercanciaImportacionForm.valid){
+          VALID = true;
+        }
+        else{  
+          VALID = false;
+          this.immexRegistroStore.establecerDatos({
+            mercanciaImportacionFormError: true
+          })
+        }
+      } else {
+        this.immexRegistroform.markAllAsTouched();
+        VALID = false;
+        if(this.immexTableDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            IMMEXTablaError: true
+          })
+        }
+        if(this.fraccionTablaDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            fraccionTablaError: true
+          })
+        }
+      }
+      return VALID;
+    }
 }

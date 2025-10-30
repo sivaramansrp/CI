@@ -9,7 +9,8 @@
       </div>
       <div class="col-md-4">
         <label class="form-label" for="cantidad">Cantidad*:</label>
-        <input class="form-control min-hgt" id="cantidad" formControlName="cantidad" type="number" maxlength="11" (input)="onInputMaxLength($event, 11, 'cantidad')"
+        <input class="form-control min-hgt" id="cantidad" formControlName="cantidad" type="number" maxlength="11"
+          (input)="onInputMaxLength($event, 11, 'cantidad')"
           (change)="setValoresStore(montosDeInversionForm, 'cantidad', 'setCantidad')" />
       </div>
     </div>
@@ -25,12 +26,13 @@
       <div class="col-md-4">
         <label class="form-label mnx" for="mnx">Monto de inversión en moneda nacional(mxn)*:</label>
         <input class="form-control" id="mnx" formControlName="mnx" type="number" maxlength="16"
-          (change)="setValoresStore(montosDeInversionForm, 'mnx', 'setMnx')" (input)="onInputMaxLength($event, 16, 'mnx')"/>
+          (change)="setValoresStore(montosDeInversionForm, 'mnx', 'setMnx')"
+          (input)="onInputMaxLength($event, 16, 'mnx')" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-12 d-flex justify-content-between align-items-center">
-        <p class="mb-0">* Campos obligatorios</p>
+        <p class="ml-6px">* Campos obligatorios</p>
         <div>
           <button class="btn btn-default me-2" (click)="limpiarFormulario()">Limpiar</button>
           <button class="btn btn-primary" (click)="agregarMonto()">Agregar</button>
@@ -44,7 +46,8 @@
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica [configuracionTabla]="montosDeInversionEncabezado"
-      [tipoSeleccionTabla]="montosDeInversionTablaSeleccion" [datos]="montosDeInversionDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+      [tipoSeleccionTabla]="montosDeInversionTablaSeleccion" [datos]="montosDeInversionDatos"
+      (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
     <ul class="pagination d-flex justify-content-center">
       <li class="page-item"><a class="page-link" href="#">1</a></li>
     </ul>
@@ -53,7 +56,7 @@
   <div class="row mt-5">
     <div class="col-12 container text-end mt-5">
       <button class="btn btn-danger me-2" (click)="eliminarMonto()">Eliminar</button>
-      <button class="btn btn-primary" >Editar</button>
+      <button class="btn btn-primary" (click)="editarMonto()">Editar</button>
     </div>
   </div>
   <div class="row mt-5">
@@ -68,6 +71,20 @@
 @if (agregarMontoNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="agregarMontoNotificacion">
+  </lib-notificaciones>
+</section>
+}
+
+@if (nuevaNotificacionEditor) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionEditor">
+  </lib-notificaciones>
+</section>
+}
+
+@if (NotificacionEliminarMonto) {
+<section>
+  <lib-notificaciones [notificacionInput]="NotificacionEliminarMonto">
   </lib-notificaciones>
 </section>
 }

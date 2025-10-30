@@ -20,7 +20,7 @@
             @switch (indice) {
             @case (1) {
                 <!-- Caso 1: Mostrar componente "Solicitante" -->
-                <app-solicitante></app-solicitante>
+                <solicitante [tabindex]="1" #solicitante></solicitante>
             }
             @case (2) {
                 @if(esDatosRespuesta){

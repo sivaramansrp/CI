@@ -1,12 +1,13 @@
 <app-certificado-de-origen #certificadoDeOrigen
     [operador]="operador"
     [tratadoAcuerdo]="(estados$ | async) || []"
-    [paisBloqu]="(pais$ | async) || []" 
+    [paisBloqu]="pais || []" 
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
-    (setbuscarMercanciaEvent)="buscarrMercancia()"
+    (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
     [tableData]="(datos1 | async) ||  []"
-    (filaClics)="abrirModificarModal($event)"
+    (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
+    (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
@@ -20,12 +21,12 @@
     (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
     [domicilioTercer]="true"
     (guardarClicadoChange)="guardarClicados($event)" 
-     (seleccionado)="onMercanciaSeleccionada($event)">
+    (seleccionado)="onMercanciaSeleccionada($event)">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancias-modal [esFormularioSoloLectura]="esFormularioSoloLectura"  (guardarClicado)="abrirModificarModal($event)"
-        (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
+    <app-datos-mercancia-model [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" [idProcedimiento]="idProcedimiento" [fromMercanciasDisponibles]="fromMercanciasDisponibles" (guardarClicado)="abrirModificarModal($event, false)"
+        (cerrarClicado)="cerrarModificarModal()" (EMITMERCANIAS)="emitmercaniasDatos($event)"></app-datos-mercancia-model>
 </div>
 <div class="modal fade" #buscarMercanciaModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-carga-por-archivo></app-carga-por-archivo>

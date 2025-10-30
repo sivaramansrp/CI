@@ -1,9 +1,5 @@
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
-
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -180,7 +176,16 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   @Output() cerrar = new EventEmitter<void>();
 
-
+  /**
+   * El número total de registros a mostrar o procesar.
+   * 
+   * @notas
+   * Esta propiedad de entrada permite que el componente padre especifique la cantidad de registros
+   * relevante para el contexto actual, como el número de animales vivos en una contenedora.
+   * 
+   * @valorPorDefecto 0
+   */
+  @Input() cantidadRegistros: number = 0;
   /**
    * @constructor
    * @descripcion
@@ -290,9 +295,13 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         map((estado) => {
           this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
-          if (VALOR) {
-            this.formularioSolicitud = AnimalesVivoContenedoraComponent.createFormularioFromValor(VALOR);
-          }
+          console.warn('VALOR', VALOR);
+          const DATA = estado?.selectedDatos.find(v => v.id === VALOR?.id);
+          
+          if (DATA) {
+            DATA.modificado = true; // Establece modificado a true si hay datos seleccionados
+            this.formularioSolicitud = AnimalesVivoContenedoraComponent.createFormularioFromValor(DATA);
+          }         
         })
       )
       .subscribe();
@@ -369,7 +378,9 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       descripcionFraccion: VALOR.descripcionFraccion || '',
       nico: VALOR.nico || '',
       descripcionNico: VALOR.descripcionNico || '',
-      descripcion: VALOR.descripcion || ''
+      descripcion: VALOR.descripcion || '',
+      sensibles: Array.isArray(VALOR.sensibles) ? VALOR.sensibles : undefined,
+      modificado: VALOR.modificado || false
     };
   }
 
@@ -415,7 +426,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       noPartida: VALOR.noPartida || '',
       tipoDeProducto: VALOR.tipoDeProducto || '',
       numeroDeLote: VALOR.numeroDeLote || '',
-      certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
+      certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
     };
   }
 
@@ -448,6 +459,18 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS = AnimalesVivoContenedoraComponent.createDatosFromFormulario(valor.formulario);
+    // Elimina el valor anterior si existe
+    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+    const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+
     this.updateStoreWithDatos(DATOS);
   }
 
@@ -516,15 +539,24 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
   private static getBasicDataFields(formulario: Partial<FilaSolicitud>): Partial<FilaSolicitud> {
     return {
       id: formulario.id || Math.floor(Math.random() * 1000000),
-      noPartida: '',
+      noPartida: formulario.noPartida || '',
       tipoRequisito: formulario.tipoRequisito || '',
+      descripcionTipoRequisito: formulario.descripcionTipoRequisito || '',
+      descripcionUMT: formulario.descripcionUMT || '',
+      descripcionUMC: formulario.descripcionUMC || '',
+      descripcionEspecie: formulario.descripcionEspecie || '',
+      descripcionPaisDeOrigen: formulario.descripcionPaisDeOrigen || '',
+      descripcionPaisDeProcedencia: formulario.descripcionPaisDeProcedencia || '',
+      descripcionUso: formulario.descripcionUso || '',
       requisito: formulario.requisito || '',
       numeroCertificadoInternacional: formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: formulario.fraccionArancelaria || '',
       descripcionFraccion: formulario.descripcionFraccion || '',
       nico: formulario.nico || '',
       descripcionNico: formulario.descripcionNico || '',
-      descripcion: formulario.descripcion || ''
+      descripcion: formulario.descripcion || '',
+      sensibles: Array.isArray(formulario.sensibles) ? formulario.sensibles : undefined,
+      modificado: formulario.modificado || false
     };
   }
 

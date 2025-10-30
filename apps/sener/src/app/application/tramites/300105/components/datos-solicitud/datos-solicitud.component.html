@@ -45,7 +45,7 @@
    <div *ngIf="tipoOperacionSeleccionado" class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist [fechas]="listaOriginalMovimientos" [fechasSeleccionadas]="listSeleccionadaMovimientos"
-          [botones]="botonesMovimientos"></crosslist>
+          [botones]="botonesMovimientos" [isDisabled]="esFormularioSoloLectura"></crosslist>
       </div>
     </div>
 

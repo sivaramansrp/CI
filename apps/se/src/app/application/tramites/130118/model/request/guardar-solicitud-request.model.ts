@@ -53,7 +53,7 @@ export interface RepresentacionFederal {
 
 export interface Solicitante {
     rfc: string;
-    nombre: string;
+    nombre: string | null;
     es_persona_moral: boolean;
     certificado_serial_number: string
 }

@@ -63,9 +63,6 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="periodoList" [label]="'Periodo'" [required]="true" id="operacion"
         formControlName="periodo"  ></app-catalogo-select>
-        <div *ngIf="periodoForm.get('periodo')?.touched && periodoForm.get('periodo')?.invalid">
-          <small *ngIf="periodoForm.get('periodo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
         </div>
       </div>
       <div class="col-md-12"> <label class="form-label" for="periodoInicial">Fecha sobre el periodo :</label>
@@ -74,8 +71,9 @@
       <div class="col-md-12">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="periodoInicial">Periodo inicial*:</label>
-            <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" (input)="formatPeriodoInicial($event)"/>
+            <label class="form-label" for="periodoInicial">Periodo inicial<span [ngClass]="{ 'text-danger': periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid }">*</span>:</label>
+            <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" (input)="formatPeriodoInicial($event)"
+            [class.is-invalid]="periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid"/>
             <div *ngIf="periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid">
               <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
@@ -85,8 +83,9 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="periodoFinal">Periodo final*:</label>
-              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal"  (input)="formatPeriodoFinal($event)"/>
+              <label class="form-label" for="periodoFinal">Periodo final<span [ngClass]="{ 'text-danger': periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid }">*</span>:</label>
+              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal"  (input)="formatPeriodoFinal($event)"
+              [class.is-invalid]="periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid"/>
               <div *ngIf="periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid">
               <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
