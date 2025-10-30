@@ -1,11 +1,13 @@
 import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable,map } from 'rxjs';
+import { HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Observable,catchError,map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROC_110223 } from '../servers/api-route';
+import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/api-route';
 import { ProductorExportador } from '../models/certificado-origen.model';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -18,7 +20,14 @@ import { ProductorExportador } from '../models/certificado-origen.model';
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
-    url: string = '../../../../../assets/json/110221/';
+    url: string = '../../../../../assets/json/110223/';
+
+    /**
+   * La URL base del servidor al que se realizarán las solicitudes.
+   * Esta propiedad es de solo lectura y se utiliza para construir las rutas de los servicios.
+   */
+  private readonly servidor!: string;
+
   /**
    * Constructor del servicio.
    * 
@@ -63,15 +72,25 @@ export class CertificadosOrigenService {
   }
 
   /**
-   * Obtiene la lista de productores/exportadores disponibles.
-   * 
-   * Este método realiza una solicitud HTTP para obtener los datos de productores/exportadores desde un archivo JSON.
-   * 
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http
-      .get<ProductorExportador>('assets/json/110223/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
+    return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
+  }
+
+  /**
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
+   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   */
+  obtenerProductorNuevo(body: { rfc_solicitante: string }): Observable<any> {
+    return this.httpService.post<any>(PROC_110223.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
   }
 
   /**
@@ -172,9 +191,9 @@ export class CertificadosOrigenService {
          * @method obtenerPaisBloque
          * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
          */
-        obtenerPaisBloque(): Observable<Catalogo[]> {
+        obtenerPaisBloque(): Observable<Catalogo> {
           return this.http
-            .get<{ data: Catalogo[] }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
+            .get<{ data: Catalogo }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
             .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
         }
          /**
@@ -184,10 +203,10 @@ export class CertificadosOrigenService {
            */
           obtenerListaEstado(): Observable<Catalogo[]> {
             return this.http
-              .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json') // Solicita los datos del archivo JSON
+              .get<{ data: Catalogo[] }>('./assets/json/110223/tratado.json') // Solicita los datos del archivo JSON
               .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
           }
-          
+         
             /**
              * Obtiene el catálogo de unidades de medida comercial (UMC).
              * @returns Observable con la respuesta del catálogo de UMC.
@@ -238,4 +257,52 @@ export class CertificadosOrigenService {
       false
     );
   }
+
+  /**
+   * Busca mercancías para el certificado de origen.
+   * @param body Objeto que contiene los parámetros de búsqueda.
+   * @returns Observable con la respuesta de la búsqueda de mercancías.
+   */
+  buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
+    return this.httpService.post<{ [key: string]: unknown }>(PROC_110223.BUSCAR, { body: body });
+  }
+  
+  guardarDatosPost(
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110223.GUARDAR, {
+      body: body,
+    });
+  }
+
+  /**
+   * Guarda la solicitud del trámite 80208.
+   * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postSolicitud(
+    solicitud: unknown
+  ): Observable<BaseResponse<GuadarSolicitudResponse>> {
+    const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
+    return this.http
+      .post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
+  }
+
 }

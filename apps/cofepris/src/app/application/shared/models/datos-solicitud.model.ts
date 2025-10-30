@@ -15,6 +15,7 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string;
+  scianDescription?: string;
 }
 /**
  * Interfaz que representa la respuesta de un catálogo.

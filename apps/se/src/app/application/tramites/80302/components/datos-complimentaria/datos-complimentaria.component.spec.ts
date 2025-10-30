@@ -16,6 +16,9 @@ class MockSolicitudService {
   obtenerComplimentaria = jest.fn().mockReturnValue(observableOf([]));
   obtenerFederetarios = jest.fn().mockReturnValue(observableOf([]));
   obtenerOperacion = jest.fn().mockReturnValue(observableOf([]));
+  obtenerPlanta = jest.fn().mockReturnValue(observableOf([]));
+  obtenerServicios = jest.fn().mockReturnValue(observableOf([]));
+  obtenerEmpresas = jest.fn().mockReturnValue(observableOf([]));
 }
 
 @Directive({ selector: '[myCustom]' })
@@ -89,8 +92,6 @@ describe('DatosComplimentariaComponent', () => {
     component.solicitudService.obtenerComplimentaria = jest.fn().mockReturnValue(observableOf([]));
     component.obtenerComplimentaria();
     expect(component.solicitudService.obtenerComplimentaria).toHaveBeenCalled();
-    // REMOVE this:
-    // expect(component.toastr.error).toHaveBeenCalled();
   });
 
 
@@ -101,8 +102,6 @@ describe('DatosComplimentariaComponent', () => {
   component.obtenerFederetarios();
 
   expect(component.solicitudService.obtenerFederetarios).toHaveBeenCalled();
-  // REMOVE this line:
-  // expect(component.toastr.error).toHaveBeenCalled();
 });
 
 it('should run #obtenerOperacions() successfully', async () => {
@@ -112,8 +111,6 @@ it('should run #obtenerOperacions() successfully', async () => {
   component.obtenerOperacions();
 
   expect(component.solicitudService.obtenerOperacion).toHaveBeenCalled();
-  // REMOVE this line:
-  // expect(component.toastr.error).toHaveBeenCalled();
 });
 
 });

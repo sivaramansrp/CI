@@ -335,7 +335,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
       nombreDeActa: '',
       fechaDeActa: '2025-01-20',
       rfc: '',
-      nombreDeRepresentante: 'Maria Lopez',
+      nombreDeRepresentante: '',
     },
     formaCertificacion: {
       certificada: 'No',
