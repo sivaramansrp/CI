@@ -83,6 +83,10 @@ export class BusquedaFolioComponent implements OnDestroy {
     private fb: FormBuilder,
     private consultaQuery: ConsultaioQuery,
   ) {
+    // Initialize busquedaForm
+    this.busquedaForm = this.fb.group({
+      tramite: ['']
+    });
    
     this.estableDetalleDelPermisoForm();
     this.consultaQuery.selectConsultaioState$
