@@ -5,15 +5,15 @@ import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } f
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionDropdown } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
-import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
-import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
+import { ConfiguracionDropdown } from '@libs/shared/data-access-user/src/core/models/110218/datos-busqueda.model';
+import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/110218/datos-busqueda.model';
+import { TableData } from '@libs/shared/data-access-user/src/core/models/110218/datos-busqueda.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
-import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
-import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
-import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110218/datos-busqueda.json';
+import destinatarioTable from '@libs/shared/theme/assets/json/110218/datos-busqueda-table.json'
+import radioOpciones from '@libs/shared/theme/assets/json/110218/datos-busqueda.json';
 
 import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';

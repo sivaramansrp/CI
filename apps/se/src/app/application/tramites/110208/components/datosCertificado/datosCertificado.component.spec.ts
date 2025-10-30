@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosCertificadoComponent } from './datosCertificado.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // ✅ ADD THIS
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
@@ -24,10 +24,14 @@ describe('DatosCertificadoComponent', () => {
         entidadFederativaCertificado: 'Entidad1',
         representacionFederal: 'Representacion1',
       }),
-    } as jest.Mocked<Tramite110208Query>;
+    } as unknown as jest.Mocked<Tramite110208Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosCertificadoComponent],
+      imports: [
+        ReactiveFormsModule,
+        DatosCertificadoComponent,
+        HttpClientTestingModule, // ✅ REQUIRED FIX
+      ],
       providers: [
         FormBuilder,
         { provide: ValidarInicalmenteService, useValue: mockService },
@@ -40,45 +44,41 @@ describe('DatosCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe llamar a obtenerEstadoList al inicializar', () => {
+  it('should call obtenerEstadoList on init', () => {
     expect(mockService.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual([{ id: 1, name: 'Estado1' }]);
   });
 
-  it('debe actualizar el store cuando se llama setValoresStore', () => {
+  it('should update store when setValoresStore is called', () => {
     const form = component.formDatosCertificado;
     form.get('idioma')?.setValue('EN');
     component.setValoresStore(form, 'idioma', 'setIdioma');
-    // Aquí podrías agregar expect a un mock del store si lo tuvieras
+    // Add store mock expectations if available
   });
 
-  it('debe poblar la lista de estado cuando se llama obtenerEstadoList', () => {
+  it('should populate estado list when obtenerEstadoList is called', () => {
     component.obtenerEstadoList();
     expect(component.estado).toEqual([{ id: 1, name: 'Estado1' }]);
   });
 
-  it('debe limpiar los observables al destruir el componente', () => {
+  it('should clean up observables on destroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyedSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-
     component.ngOnDestroy();
-
     expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyedSpy).toHaveBeenCalled();
   });
 
-  it('debe marcar el formulario como inválido si faltan campos requeridos', () => {
+  it('should mark form invalid if required fields missing', () => {
     component.formDatosCertificado.get('idioma')?.setValue('');
     component.formDatosCertificado.get('entidadFederativa')?.setValue('');
     component.formDatosCertificado.get('representacionFederal')?.setValue('');
     expect(component.formDatosCertificado.valid).toBeFalsy();
   });
 
-  it('debe marcar el formulario como válido si todos los campos requeridos están llenos', () => {
+  it('should mark form valid if required fields are filled', () => {
     component.formDatosCertificado.get('idioma')?.setValue('EN');
     component.formDatosCertificado.get('entidadFederativa')?.setValue('Entidad2');
     component.formDatosCertificado.get('representacionFederal')?.setValue('Representacion2');
