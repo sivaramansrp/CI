@@ -1,14 +1,8 @@
-import {
-  CONFIGURACION_ANEXOS_IMPORTACION,
-  CONFIGURACION_ANEXOS_TABLA,
-} from '../../constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../models/plantas-consulta.model';
-import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
+import { AnexosComponent } from '../../../../shared/components/anexos/anexos.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './datos-anexos.component.html',
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
-  imports: [TablaDinamicaComponent, TituloComponent],
+  imports: [AnexosComponent],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class DatosAnexosComponent implements OnDestroy {
@@ -27,20 +21,6 @@ export class DatosAnexosComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Configuración de las columnas de la tabla para los anexos.
-   * @type {ConfiguracionColumna<Anexo>[]}
-   */
-  configuracionTablaAnexo: ConfiguracionColumna<Anexo>[] =
-    CONFIGURACION_ANEXOS_TABLA;
-
-  /**
-   * Configuración de las columnas de la tabla para los anexos de importación.
-   * @type {ConfiguracionColumna<Anexo>[]}
-   */
-  configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
-    CONFIGURACION_ANEXOS_IMPORTACION;
 
   /**
    * Datos de los anexos obtenidos desde el servicio.
@@ -54,6 +34,11 @@ export class DatosAnexosComponent implements OnDestroy {
    */
   datosImportacion: Anexo[] = [];
 
+  /**
+   * Constructor del componente DatosAnexosComponent.
+   * @param modificionService Servicio para manejar las solicitudes de modificación.
+   * @param toastr Servicio para mostrar notificaciones.
+   */
   constructor(
     public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService 

@@ -1100,7 +1100,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
-      if(this.idProcedimiento===260209){
+      if(this.idProcedimiento===260209||this.idProcedimiento===260205){
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
@@ -1216,8 +1216,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          if (response?.codigo === '00' && response.datos) {
-            this.procesarDatosRepresentante(response.datos);
+          if (response?.codigo === '00' && Array.isArray(response.datos) && response.datos.length > 0) {
+            this.procesarDatosRepresentante(response.datos[0]);
           } else {
             console.warn('Respuesta no válida del servidor:', response);
             this.toastr.warning('No se encontraron datos para el RFC proporcionado', 'Búsqueda de RFC');
@@ -1250,9 +1250,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
-      representanteNombre: NOMBRE_FIELD || this.DATOS_PREDETERMINADOS.representanteNombre,
-      apellidoPaterno: data.apellidoPaterno || this.DATOS_PREDETERMINADOS.apellidoPaterno,
-      apellidoMaterno: data.apellidoMaterno || this.DATOS_PREDETERMINADOS.apellidoMaterno,
+      representanteNombre: NOMBRE_FIELD,
+      apellidoPaterno: data.apellidoPaterno,
+      apellidoMaterno: data.apellidoMaterno,
     };
 
     this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
@@ -1831,7 +1831,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.disable();
       }
     });
-   if(this.idProcedimiento!==260209 && this.idProcedimiento!==260210){
+   if(this.idProcedimiento!==260209 && this.idProcedimiento!==260210&& this.idProcedimiento!==260205){
     this.establecimientoSeleccionado = enable;
   }
   }
@@ -1879,7 +1879,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210||this.idProcedimiento===260205) {
         return;
       }
 
@@ -1887,7 +1887,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.enable();
       }
     });
-    if(this.idProcedimiento===260209|| this.idProcedimiento===260210){
+    if(this.idProcedimiento===260209|| this.idProcedimiento===260210||this.idProcedimiento===260205){
       this.establecimientoSeleccionado = false;
     }
     else{
@@ -1935,7 +1935,8 @@ marcarTodosLosCamposComoTocados(): void {
     'manifiestosCasillaDeVerificacion',
     'regimenLaMercancia',
     'aviso',
-    'licenciaSanitaria'
+    'licenciaSanitaria',
+     'rfcSanitario'
   ];
   if (!this.datosSolicitudForm) {
    
@@ -1987,7 +1988,8 @@ verificarCamposValidosODeshabilitados(): boolean {
     'manifiestosCasillaDeVerificacion',
     'regimenLaMercancia',
     'aviso',
-    'licenciaSanitaria'
+    'licenciaSanitaria',
+    'rfcSanitario'
   ];
 
   const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);

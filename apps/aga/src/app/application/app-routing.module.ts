@@ -461,6 +461,17 @@ const ROUTES: Routes = [
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
   {
+    path: 'autorizar-dictamen',
+    loadComponent: () =>
+      import('./autorizar-dictamen/autorizar-dictamen.component').then((m) => m.AutorizarDictamenComponent
+    ),
+  },
+  {
+    path: 'confirmar-notificacion',
+    loadComponent: () =>
+      import('./confirmar-notificacion/confirmar-notificacion.component').then((m) => m.ConfirmarNotificacionComponent),
+  },
+  {
     path: 'datos-generales-tramite',
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),

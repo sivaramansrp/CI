@@ -47,16 +47,12 @@
       </li>
     </ul>
     <ng-container>
-    <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
-    <app-contenedor-de-datos-solicitud [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
-    <app-terceros-relacionados-vista 
-      [formularioDeshabilitado]="formularioDeshabilitado"
-      [hidden]="indice !== 3">
-    </app-terceros-relacionados-vista>
-    <app-pago-de-derechos-contenedora
-      [formularioDeshabilitado]="formularioDeshabilitado"
-      [hidden]="indice !== 4">
-    </app-pago-de-derechos-contenedora>
+      @if(esDatosRespuesta){
+        <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
+        <app-contenedor-de-datos-solicitud #contenedorDeDatosSolicitudComponent [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
+        <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [hidden]="indice !== 3"></app-terceros-relacionados-vista>
+        <app-pago-de-derechos-contenedora #pagoDeDerechosContenedoraComponent [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
+      }
     </ng-container>
   </div>
 </div>

@@ -1,5 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
+import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
 
@@ -7,6 +9,12 @@ const ROUTES: Routes = [
   {
     path: 'contenedor-de-pasos',
     component: ContenedorDePasosComponent,
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '260201'
+      }
+    },
   },
   {
     path: '',

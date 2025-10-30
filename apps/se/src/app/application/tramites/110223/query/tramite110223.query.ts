@@ -146,6 +146,23 @@ export class Tramite110223Query extends Query<TramiteState> {
     formulario$ = this.select((state) => {
       return state.formulario;
     });
+
+    /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de destinatario.
+   */
+  selectFormDatosDelDestinatario$ = this.select((state) => {
+    return state.formDatosDelDestinatario;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el formulario de destinatario.
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
+
   /**
    * Constructor del servicio TramiteQuery.
    * 

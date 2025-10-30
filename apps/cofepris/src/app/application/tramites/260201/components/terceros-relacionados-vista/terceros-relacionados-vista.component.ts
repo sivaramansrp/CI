@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -9,12 +9,10 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ELEMENTOS_REQUERIDOS } from '../../constants/psicotropicos-poretorno.enum';
 
-import {Subject } from 'rxjs';
+import {Subject, takeUntil } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
-
-import {takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -31,6 +29,14 @@ import {takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description Referencia al componente hijo `TercerosRelacionadosComponent`
+   * que se utiliza para mostrar las tablas de terceros relacionados.
+   */
+  @ViewChild(TercerosRelacionadosComponent) TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -163,18 +169,24 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-  onFabricantesChange(event:any):void{
-    console.log(event,"event fabricantes");
-
-  }
-  onDestinatariosChange(event:any):void{
-    console.log(event,"event destinatarios");
-  }
-  onProveedoresChange(event:any):void{
-    console.log(event,"event proveedores");
-  }
-  onFacturadoresChange(event:any):void{
-    console.log(event,"event facturadores");
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `TercerosRelacionadosComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
    /**
