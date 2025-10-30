@@ -309,6 +309,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.getDatosGenerales(this.RFC);
     // this.loadDatosTablaData();
     this.solicitudForm.get('archivoSeleccionadoName')?.disable();
+    this.datosDelContenedor = this.solicitud11204State.datosDelContenedor || [];
   }
 
   /**
@@ -597,7 +598,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
                             fecha_inicio : item.fecha_inicio.split(' ')[0],
                             fecha_ingreso : item.fecha_ingreso.split(' ')[0],
                             existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
-                        }));
+          }));
+          (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+
+
         }
       }
     );
@@ -657,6 +661,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
+          this.mostrarButtons = true;
+          this.mostrarAgregarTipoContenedor = false;
+          this.solicitudForm.value.inicialesContenedor = '';
+          this.solicitudForm.value.numeroContenedor = '';
+          this.solicitudForm.value.digitoDeControl = '';
           // this.solicitudForm.reset();
           // this.solicitudForm.markAsUntouched();
           // this.solicitudForm.markAsPristine();
