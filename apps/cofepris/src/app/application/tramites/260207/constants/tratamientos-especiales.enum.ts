@@ -33,5 +33,12 @@ export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
   'fabricante',
-  'correoElectronico'
+  'correoElectronico',
+  'DestinatarioFinal'
 ];
+
+/**
+ * @const MENSAJE_DE_VALIDACION
+ * @description Mensaje de validación que se muestra cuando hay errores en el formulario.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';

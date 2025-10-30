@@ -1,15 +1,18 @@
 import {
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 
 import {
   ConsultaioQuery,
   ConsultaioState
 } from '@ng-mf/data-access-user';
-
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 import {
   Subject,
@@ -26,6 +29,33 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
+  /**
+   * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+   * @description
+   * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(ContenedorDeDatosSolicitudComponent)
+  contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  /**
+   * @property {PagoDeDerechosContenedoraComponent} pagoDeDerechosContenedoraComponent
+   * @description
+   * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(PagoDeDerechosContenedoraComponent)
+  pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+  /**
+   * @property {TercerosRelacionadosVistaComponent} tercerosRelacionadosVistaComponent
+   * @description
+   * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(TercerosRelacionadosVistaComponent)
+  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
   /**
    * The index of the currently selected tab.
@@ -117,6 +147,19 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.tramite260207Store.updateTabSeleccionado(i);
+  }
+
+  /**
+   * Valida los datos del paso uno del formulario.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent?.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent?.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+    );
   }
 
   /**

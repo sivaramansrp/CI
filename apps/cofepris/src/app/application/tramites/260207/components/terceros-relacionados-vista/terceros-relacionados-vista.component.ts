@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -29,6 +29,15 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+  /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description
+   * Referencia al componente hijo `TercerosRelacionadosComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(TercerosRelacionadosComponent)
+  TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -151,6 +160,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  /**
+   * @method validarContenedor
+   * @description
+   * Valida el contenedor delegando la validación al componente hijo.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**
