@@ -771,6 +771,7 @@ export const CATALOGO_TIPO_FACTURA = (TRAMITE: string): string => `sat-t${TRAMIT
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/unidad-medida-masa-bruta
  */
 export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medidas`;
+
 /*
  * API para obtener el catálogo de países
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
@@ -809,6 +810,13 @@ export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERD
 
 /*
  * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
+ */
+export const CATALOGO_TRATADO_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/tratados-o-acuerados/${IDETIPOTRATADOACUERDO}`;
+
+
+/*
+ * API para obtener el catálogo de tratados y acuerdos
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
  */
 export const PAIS_DESTINO = (TRAMITE: string, PAYLOAD_DATOS: { cveTratado: string , cvePais: string}): string => `sat-t${TRAMITE}/catalogo/paises-destino/${PAYLOAD_DATOS.cveTratado}/${PAYLOAD_DATOS.cvePais}`;
@@ -842,6 +850,24 @@ export const CLASIFICACION_REGIMEN = (TRAMITE: string, PAYLOAD_DATOS: { tramite:
  * @author Sistema VUCEM
  */
 export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo/${IDETIPOTRATADOACUERDO}/bloque`;
+
+/**
+ * Genera la ruta de la API para obtener el catálogo de países de México según el trámite especificado.
+ *
+ * @param TRAMITE - El identificador del trámite para el cual se requiere el catálogo.
+ * @returns La ruta de la API como una cadena de texto.
+ */
+export const CATALOGO_PAISES_MEXICO = (TRAMITE: string,IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/paises-maxico/${IDETIPOTRATADOACUERDO}`;
+
+/**
+ * Genera la ruta de la API para obtener la descripción de la fracción HTS de EE.UU. 
+ * según el trámite y el tipo de tratado/acuerdo especificados.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param IDETIPOTRATADOACUERDO - Identificador del tipo de tratado o acuerdo.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const FRACCION_HTS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/fraccion-hts-usa/${IDETIPOTRATADOACUERDO}/descripcion`;
 
 /**
  * Construye la ruta para el catálogo de medios de transporte disponibles.

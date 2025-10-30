@@ -61,4 +61,7 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
  */
 export const BUSCAR_CONSULTAR = (TRAMITE: string): string => `sat-t${TRAMITE}/${SOLICITUD}/consultar-cupo/buscar-datos-grid`;
 
-export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}${TRAMITE}/solicitud/guardar`;
+export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}/${TRAMITE}/solicitud/guardar`;
+
+export const BUSCAR_INSTRUMENTOS = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscarInstrumentos`;
+

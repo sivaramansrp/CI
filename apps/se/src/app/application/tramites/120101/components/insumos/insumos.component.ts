@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -58,6 +58,13 @@ export class InsumosComponent implements OnInit, OnDestroy {
    */
   public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
+
+  /**
+   * Identificador único del trámite asociado a la consulta de cupo.
+   * Este valor se utiliza para distinguir el tipo de trámite dentro de la aplicación.
+   */
+  tramiteId: string = '120101';
+
   /**
    * Configuración de las columnas para la tabla de extranjeros.
    */
@@ -107,6 +114,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
     private servicioDeFormularioService: ServicioDeFormularioService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
+    private catalogoServices: CatalogoServices,
   ) {
     // Reservado para futuras inicializaciones o configuraciones.
   }
@@ -116,22 +124,22 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Configura las suscripciones y carga los datos iniciales.
    */
   ngOnInit(): void {
-      const INSUMOS_GUARDADOS = this.solicitudDeRegistroTplService.obtenerTablaInsumos();
+    const INSUMOS_GUARDADOS = this.solicitudDeRegistroTplService.obtenerTablaInsumos();
 
-      if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
-       
-        const INSUMOS_VALIDOS = INSUMOS_GUARDADOS.filter(item => 
-          Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
-        );
-        
-        if (INSUMOS_VALIDOS.length > 0) {
-          this.tablaInsumos = INSUMOS_VALIDOS;
-        } else {
-          this.tablaInsumos = [];
-        }
+    if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
+
+      const INSUMOS_VALIDOS = INSUMOS_GUARDADOS.filter(item =>
+        Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
+      );
+
+      if (INSUMOS_VALIDOS.length > 0) {
+        this.tablaInsumos = INSUMOS_VALIDOS;
+      } else {
+        this.tablaInsumos = [];
       }
+    }
 
-      this.tramite120101Query.selectSolicitudDeRegistroTpl$
+    this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -176,21 +184,15 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
   public obtenerDatosFraccionArancelaria(): void {
-    this.solicitudDeRegistroTplService
-      .obtenerDatosFraccionArancelaria()
+     this.catalogoServices.fraccionHtsCatalogo(this.tramiteId,"6302530020")
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const FRACCION_FIELD = this.insumosFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'descfraccion'
         ) as ModeloDeFormaDinamica;
         if (FRACCION_FIELD && !FRACCION_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            FRACCION_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            FRACCION_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
@@ -201,25 +203,20 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
   public obtenerDatosEstados(): void {
-    this.solicitudDeRegistroTplService
-      .obtenerDatosEstados()
+    this.catalogoServices.paisesBloqueCatalogo(this.tramiteId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const PAIS_FIELD = this.insumosFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'Pais'
         ) as ModeloDeFormaDinamica;
         if (PAIS_FIELD && !PAIS_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            PAIS_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            PAIS_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
   }
+
 
   /**
    * Método que agrega un nuevo insumo a la tabla.

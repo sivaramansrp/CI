@@ -1,4 +1,4 @@
-import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -33,7 +33,7 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   styleUrl: './proceso-productivo.component.scss',
 })
 
-export class ProcesoProductivoComponent implements OnInit , OnDestroy{
+export class ProcesoProductivoComponent implements OnInit, OnDestroy {
 
   /**
   * @property consultaState
@@ -48,7 +48,7 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
  * Representa el formulario reactivo utilizado en el componente `ProcesoProductivoComponent`.
  * @type {FormGroup}
  */
-  public procesoProductivoForm!: FormGroup; 
+  public procesoProductivoForm!: FormGroup;
 
   /**
  * @property destroy$
@@ -65,6 +65,21 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
  * @type {Catalogo[]}
  */
   public paisDeOrigen: Catalogo[] = [];
+
+  /**
+   * Lista de países relacionados con México.
+   * 
+   * Este arreglo almacena objetos de tipo `Catalogo` que representan países
+   * asociados o relevantes para el contexto mexicano dentro del proceso productivo.
+   */
+  public paisesMexico!:Catalogo[];
+
+  /**
+   * Lista de países disponibles, representados como objetos del tipo `Catalogo`.
+   * Esta propiedad se utiliza para almacenar y gestionar el catálogo de países
+   * que pueden ser seleccionados o mostrados en el componente.
+   */
+  public paises!: Catalogo[];
   /**
  * @property opcionesDeRadioIndicar
  * @description
@@ -73,12 +88,14 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
  */
   public opcionesDeRadioIndicar = RADIO_INDICAR;
 
+  tramiteId: string = '120101';
+
   /**
      * Estado de la solicitud de la sección 120101.
      * @type {SolicitudDeRegistroTpl120101State}
      * @memberof BienFinalComponent
      */
-    public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
+  public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
   /**
  * @constructor
@@ -94,6 +111,7 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
     private servicioDeFormularioService: ServicioDeFormularioService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
+    private catalogoServices: CatalogoServices,
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -126,6 +144,8 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
       'procesoProductivoForm',
       this.procesoProductivoForm
     );
+    this.obtenerDatosPaisesMexico();
+    this.obtenerDatosPaises();
   }
 
   /**
@@ -175,10 +195,52 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
     this.solicitudDeRegistroTplService
       .obtenerDatosEstados()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: Catalogo[]) => { 
+      .subscribe((resp: Catalogo[]) => {
         this.paisDeOrigen = resp;
       });
   }
+
+  /**
+   * Obtiene el catálogo de países de México asociados al trámite actual.
+   *
+   * Este método realiza una solicitud al servicio de catálogos para obtener
+   * la lista de países de México relacionados con el trámite identificado por `tramiteId`.
+   * El resultado se almacena en la propiedad `paisesMexico`.
+   *
+   * @remarks
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  obtenerDatosPaisesMexico(): void {
+    this.catalogoServices
+      .paisesMaxicoCatalogo(this.tramiteId, "118")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp): void => {
+        this.paisesMexico = resp.datos as Catalogo[];
+      });
+
+  }
+
+  /**
+   * Obtiene el catálogo de países asociados al trámite actual.
+   * 
+   * Llama al servicio `catalogoServices.paisesCatalogo` utilizando el `tramiteId` actual,
+   * y suscribe a la respuesta para asignar los datos recibidos al arreglo `paisesMexico`.
+   * La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  obtenerDatosPaises(): void {
+    this.catalogoServices
+      .paisesCatalogo(this.tramiteId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp): void => {
+        this.paises = resp.datos as Catalogo[];
+      });
+
+  }
+
 
   /**
    * @method sobreElCambioDeSeleccion
@@ -199,16 +261,16 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
    */
   public sobreElCambioDeSeleccion(event: string | number, campo: string): void {
     this.eliminarControlesDinamicos();
-    if (event==="1") {
+    if (event === "1") {
       this.procesoProductivoForm.addControl('paisDeOrigenDeLaFibra', this.fb.control(this.solicitudDeRegistroState?.['paisDeOrigenDeLaFibra'] ? this.solicitudDeRegistroState?.['paisDeOrigenDeLaFibra'] : '', Validators.required));
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElHilado', this.fb.control(this.solicitudDeRegistroState?.['paisDeOrigenDeLaFibra'] ? this.solicitudDeRegistroState?.['paisDeOrigenDeLaFibra'] : '', Validators.required));
-    } else if (event==="2") {
+    } else if (event === "2") {
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElHilado', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] : '', Validators.required));
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElTejido', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejido'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejido'] : '', Validators.required));
-    } else if (event==="3") {
+    } else if (event === "3") {
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElHilado', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] : '', Validators.required));
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElTejidoAForma', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejidoAForma'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejidoAForma'] : '', Validators.required));
-    } else if (event==="4"){
+    } else if (event === "4") {
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElHilado', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElHilado'] : '', Validators.required));
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElTejido', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejido'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElTejido'] : '', Validators.required))
       this.procesoProductivoForm.addControl('paisEnQueSeRealizoElCorte', this.fb.control(this.solicitudDeRegistroState?.['paisEnQueSeRealizoElCorte'] ? this.solicitudDeRegistroState?.['paisEnQueSeRealizoElCorte'] : '', Validators.required));
@@ -286,8 +348,8 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
       this.establecerValorDeFormulario(campo, VALOR);
     }
   }
-  
-    
+
+
   /**
    * @method ngOnDestroy
    * @description

@@ -1,5 +1,5 @@
+import { BuscarTablaDatos, InstrumentoCupoTPL } from '../models/insumos.model';
 import { Injectable } from '@angular/core';
-import { InstrumentoCupoTPL } from '../models/insumos.model';
 import { SolicitudDeRegistroTpl120101State } from '../../../estados/tramites/tramite120101.store';
 
 
@@ -37,17 +37,35 @@ export class AmpliacionServiciosAdapter {
    */
   convertTodetalleInstrumentoCupoTPL(data: any): any {
     return {
-      idMecanismoAsignacion: data.id ?? null,
-      cveOficialCupo: "",
-      cveFraccionArancelaria: data.fraccionArancelaria ?? "",
-      idCategoriaTextil: data.categoriaTextil ?? null,
-      idFraccionHtsUsa: null,
-      cveUmOficialCupo: data.unidad ?? "",
+      idMecanismo: data.idMecanismo ?? null,
+      idCupo: data.id ?? null,
+      clavefraccionArancelaria: data.clavefraccionArancelaria ?? "",
+      producto: data.productoDescripcion ?? "",
+      tratadoAcuerdo: data.cveTratado ?? "",
+      subproducto: data.subProductoClasificacion ?? "",
+      descripcionMecanismoAsignacion: data.asignacionMecanismo ?? "",
+      categoriaTextil: data.categoriaTextil ?? "",
+      regimen: data.regimen ?? "",
+      descripcionCategoriaTextil: data.categoriaTextilDescripcion ?? "",
+      paisOrigenDestino: data.paisOrigenDestino ?? "",
+      descripcionUnidadMedida: data.unidad ?? "",
+      fechaInicioVigenciaMecanismo: data.fechaInicioVigencia ?? "",
       fechaFinVigenciaMecanismo: data.fechaFinVigencia ?? "",
-      montoDisponible: data.montoDisponible ?? null,
+      cveRegimen: data.cveRegimenClasificacion ?? "",
+      factorConversion: data.conversionFactor ?? null,
+      idCategoriaTextil: data.idCategoriaTextil ?? null,
+      idRegimen: "REG.01" ?? null,
       cvePais: data.cvePaisDestino ?? "",
-      idAsignacion: null,
-      solicitarMercancia: false
+      montoDisponible: data.montoDisponible ?? null,
+      descripcionCupo: data.descripcionCupo ?? "",
+      numFolioAsignacionTpl: data.numFolioAsignacionTpl ?? null,
+      idAsignacion: data.idAsignacion ?? null,
+      solicitarMercancia: data.solicitarMercancia ?? false,
+      cveUmOficialCupo: data.cveUmOficialCupo ?? "",
+      descripcionFraccion: data.descripcionFraccion ?? "",
+      idFraccionHtsUsa: data.idFraccionHtsUsa ?? null,
+      codCategoriaTextil: data.codCategoriaTextil ?? "",
+      cveOficialCupo: data.cveOficialCupo ?? ""
     };
   }
 
@@ -59,27 +77,17 @@ export class AmpliacionServiciosAdapter {
    */
   mapTablaInsumosToListInsumosTPL(tablaInsumos: any[]): any {
     return tablaInsumos.map(item => ({
-      baseInsumoEmpaquePK: {
-        idSolicitud: null,
-        idInsumo: null
+      nombre: item.DescripcionDelInsumo || "",
+      clave_fraccion_arancelaria: "84799018",
+      pais_origen: {
+        clave:  "MX"
       },
-      nombre: "",
-      proveedor: "",
-      fabricanteProductor: "",
-      rfcFabricanteProductor: "",
-      claveFraccionArancelaria: item.FraccionArancelaria || "",
-      idRegimen: "",
-      idFraccionHtsUsa: null,
-      fraccionArancelariaHTSUSAClave: "",
-      importeValor: null,
-      peso: null,
-      volumen: null,
-      paisOrigen: item.PaisDeOrigen !== "undefined" ? item.PaisDeOrigen : "",
-      originario: null,
-      descripcionOriginario: "",
-      nombreInsumo: item.DescripcionDelInsumo || "",
-      unidadMedida: "",
-      originarios: []
+      base_insumo_empaque_pk: {
+        id_solicitud: "",
+        id_insumo: 100
+      },
+      id_regimen: "REG.01",
+      id_fraccion_hts_usa: 1
     }));
   }
 
@@ -91,13 +99,16 @@ export class AmpliacionServiciosAdapter {
    */
   mapPaisOrigenData(DATA: any): any {
     return {
-      paisOrigenCorte: DATA.paisEnQueSeRealizoElCorte || "",
-      paisOrigenEnsamble: DATA.paisEnQueSeRealizoElEnsamble || "",
-      paisOrigenFibra: DATA.paisDeOrigenDeLaFibra || "",
-      paisOrigenHilado: DATA.paisEnQueSeRealizoElHilado || "",
-      paisOrigenHiladoTLCAN: "",
-      paisOrigenTejido: DATA.paisEnQueSeRealizoElTejido || "",
-      paisOrigenTejidoAForma: DATA.paisEnQueSeRealizoElTejidoAForma || ""
+        clasificacion_bien_final: "A",
+        paisOrigenCorte: DATA.paisEnQueSeRealizoElCorte,
+        paisOrigenEnsamble: DATA.paisEnQueSeRealizoElEnsamble,
+        paisOrigenFibra: DATA.paisDeOrigenDeLaFibra,
+        paisOrigenHilado: DATA.paisEnQueSeRealizoElHilado,
+        paisOrigenHiladoTLCAN: "",
+        paisOrigenTejido: DATA.paisEnQueSeRealizoElTejido || "",
+        paisOrigenTejidoAForma: DATA.paisEnQueSeRealizoElTejidoAForma || "",
+        paisOrigenTejidoTLCAN: DATA.paisEnQueSeRealizoElTejidoTLCAN || ""
+
     };
   }
 
@@ -113,37 +124,52 @@ export class AmpliacionServiciosAdapter {
     const MAPPEDDETALLEINSTRUMENTOCUPOTPL = DATA['cuerpoTabla'].map((item: any) => this.convertTodetalleInstrumentoCupoTPL(item));
     const LISTINSUMOSTPL = this.mapTablaInsumosToListInsumosTPL(DATA['tablaInsumos'] || []);
     const PROCESOSPRODUCTIVOS = this.mapPaisOrigenData(DATA);
-
     const PAYLOAD = {
-      "solicitud": {
-
-        "idSolicitud": null,
-
-        "clavePais": "",
-
-        "denominacionExposicion": "",
-
-        "clasificacionBienFinal": "",
-        ...PROCESOSPRODUCTIVOS,
-        "cupoTpl": {
-
-          "detalleInstrumentoCupoTPL": { ...MAPPEDDETALLEINSTRUMENTOCUPOTPL[0] },
-
-          "entidadFederativa": {
-
-            "idFederativa": null,
-
-            "nombreFederativa": ""
-
+      "cve_regimen": "REG.01",
+      "cve_clasificacion_regimen": "01",
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "Juan Pérez",
+        "es_persona_moral": true,
+        "certificado_serial_number": "SN123456789",
+        "domicilio": {
+          "pais": "México",
+          "codigo_postal": "06700",
+          "estado": "Ciudad de México",
+          "municipio_alcaldia": "Cuauhtémoc",
+          "localidad": "Centro",
+          "colonia": "Roma Norte",
+          "calle": "Av. Insurgentes Sur",
+          "numero_exterior": "123",
+          "numero_interior": "Piso 5, Oficina A",
+          "lada": "55",
+          "telefono": "1234567890",
+          "entidad_federativa": {
+            "cveEntidad": "BCS",
+            "nombre": "Ciudad de México",
+            "codEntidadIdc": "CDMX",
+            "cvePais": "MEX",
+            "fechaCaptura": "2025-06-09",
+            "fechaInicioVigencia": "2025-06-01",
+            "fechaFinVigencia": "2025-12-31",
+            "activo": true,
+            "pais": "México",
+            "claveEnIDC": "CDMX09"
           }
-
-        },
-
-        "listInsumosTPL": [...LISTINSUMOSTPL],
-
-        "listProcesosProductivos": [{ ...PROCESOSPRODUCTIVOS }]
-
-      }
+        }
+      },
+      "detalle_instrumento_cupo_tpl":{...MAPPEDDETALLEINSTRUMENTOCUPOTPL[0]},
+      "unidad_administrativa_representacion_federal": {
+        "clave":DATA.representacionFederal || "1016"
+      },
+      "denominacion_exposicion": "Expo Example",
+      "entidad_federativa": {
+        "clave": DATA.estado || ""
+      },
+      "insumos": [
+        ...LISTINSUMOSTPL
+      ],
+      "solicitud": {...PROCESOSPRODUCTIVOS}
     }
 
     return PAYLOAD;
@@ -163,7 +189,7 @@ export class AmpliacionServiciosAdapter {
    * - descripcionFraccion: Descripción de la fracción (string).
    * - idFraccionHtsUsa: Identificador de la fracción HTS USA (string).
    */
-  mappedBuscarDatos(data: any): InstrumentoCupoTPL {
+  mappedBuscarPayloadDatos(data: any): InstrumentoCupoTPL {
 
     return {
       idTratadoAcuerdo: data.tratado ?? "",
@@ -178,58 +204,44 @@ export class AmpliacionServiciosAdapter {
   }
 
   /**
-   * Genera el payload necesario para la búsqueda de una solicitud de registro tipo 120101.
+   * Mapea una lista de objetos de entrada a una nueva estructura de objetos con propiedades específicas.
    *
-   * @param state El estado actual de la solicitud de registro (`SolicitudDeRegistroTpl120101State`).
-   * @returns Un objeto con la estructura requerida para realizar la búsqueda, incluyendo datos del solicitante,
-   *          domicilio, información del trámite y parámetros adicionales.
+   * @param items - Arreglo de objetos de entrada que contienen los datos a transformar.
+   * @returns Un nuevo arreglo de objetos, cada uno con las propiedades mapeadas según la estructura requerida para la tabla de datos.
    */
-  toFormBuscarPayload(state: SolicitudDeRegistroTpl120101State): any {
-    const DATA = state as any;
-    const BUSCARDATOS = this.mappedBuscarDatos(DATA);
-    const PAYLOAD = {
-      "solicitud": {
-        "solicitante": {
-          "domicilio": {
-            "pais": "",
-            "entidadFederativa": "",
-            "delegacionMunicipio": "",
-            "colonia": "",
-            "localidad": "",
-            "codigoPostal": "81210",
-            "calle": "CAMINO VIEJO",
-            "numeroExterior": "1353",
-            "numeroInterior": ""
-          },
-          "rfc": "AAL0409235E6",
-          "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-          "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
-          "correoElectronico": "vucem2021@gmail.com",
-          "telefono": "55-98764532",
-          "cveUsuario": "AAL0409235E6"
-        },
-        "cveRolCapturista": "PersonaMoral",
-        "cveUsuarioCapturista": "AAL0409235E6",
-        ...BUSCARDATOS,
-        "idSolicitud": "",
-        "tramite": {
-          "numFolioTramite": ""
-        }
-      },
-      "puedeCapturarRepresentanteLegalCG": false,
-      "buscarInstrumentos": "Buscar",
-      "idMecanismoAsignacion": 0,
-      "cveFraccionArancelaria": "",
-      "paisOrigenDestino": "",
-      "idCategoriaTextil": "",
-      "descripcionHTSUSA": "Selecciona un valorSelecciona un valor",
-      "idHtsUsa": "",
-      "parametrosBP": {
-        "idSolicitud": ""
-      }
-    }
-    return PAYLOAD;
-
+  mapBuscarTablaDatosList(items: any[]): any[] {
+    return items.map(item => ({
+      idMecanismo: item.idMecanismo,
+      id: item.idCupo,
+      cveTratado: item.tratadoAcuerdo,
+      cveRegimenClasificacion: item.cveRegimen,
+      cvePaisDestino: item.cvePais,
+      fraccionArancelaria: item.clavefraccionArancelaria,
+      categoriaTextilDescripcion: item.descripcionCategoriaTextil,
+      productoDescripcion: item.producto,
+      subProductoClasificacion: item.subproducto,
+      fechaInicioVigencia: item.fechaInicioVigenciaMecanismo,
+      fechaFinVigencia: item.fechaFinVigenciaMecanismo,
+      montoDisponible: item.montoDisponible,
+      categoriaTextil: item.codCategoriaTextil,
+      asignacionMecanismo: item.descripcionMecanismoAsignacion,
+      unidad: item.descripcionUnidadMedida,
+      conversionFactor: item.factorConversion,
+      clavefraccionArancelaria: item.clavefraccionArancelaria,
+      codCategoriaTextil: item.codCategoriaTextil,
+      cveOficialCupo: item.cveOficialCupo,
+      cveUmOficialCupo: item.cveUmOficialCupo,
+      descripcionCupo: item.descripcionCupo,
+      descripcionFraccion: item.descripcionFraccion,
+      idAsignacion: item.idAsignacion,
+      idCategoriaTextil: item.idCategoriaTextil,
+      idFraccionHtsUsa: item.idFraccionHtsUsa,
+      idRegimen: item.idRegimen,
+      numFolioAsignacionTpl: item.numFolioAsignacionTpl,
+      paisOrigenDestino: item.paisOrigenDestino,
+      regimen: item.regimen,
+      solicitarMercancia: item.solicitarMercancia
+    }));
   }
 
 }

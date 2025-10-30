@@ -18,13 +18,14 @@
         <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
       </div>
     }
+     
     <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
   </div>
   <div class="row">
     @switch (indice) { @case (1) {
     <paso-uno [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
     } @case (2) {
-    <paso-dos></paso-dos>
+    <paso-firma [idSolicitud]="idSolicitud" [procedure]="120101" [idMecanismo]="idMecanismo" [procedureUrl]="'solicitud-de-registro-tpl/pantallas'"></paso-firma>
     } }
   </div>
   <btn-continuar

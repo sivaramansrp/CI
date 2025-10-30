@@ -3,7 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { REPRESENTACION_FEDERAL } from '../../constantes/solicitud-de-registro-tpl.enum';
@@ -98,6 +98,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
+  
+  tramiteId:string="120101";
 
   /**
  * @constructor
@@ -119,7 +121,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+     private catalogoServices: CatalogoServices,
   ) {
     //
   }
@@ -176,21 +179,16 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  * // El campo `estado` se actualiza con las opciones obtenidas del servicio.
  */
   public obtenerEstadosDatos(): void {
-    this.solicitudDeRegistroTplService
-      .getEstadosDatos()
+    this.catalogoServices
+      .estadosCatalogo(this.tramiteId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const ESTADO_FIELD = this.representacionFederalFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'estado'
         ) as ModeloDeFormaDinamica;
         if (ESTADO_FIELD && !ESTADO_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            ESTADO_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            ESTADO_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
@@ -213,22 +211,17 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  * // El campo `representacionFederal` se actualiza con las opciones obtenidas del servicio.
  */
   public obtenerRepresentacionFederalDatos(): void {
-    this.solicitudDeRegistroTplService
-      .getRepresentacionFederalDatos()
+    this.catalogoServices
+      .representacionFederalCatalogo(this.tramiteId,"MEX")
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const REPRESENTACION_FIELD = this.representacionFederalFormData.find(
           (datos: ModeloDeFormaDinamica) =>
             datos.campo === 'representacionFederal'
         ) as ModeloDeFormaDinamica;
         if (REPRESENTACION_FIELD && !REPRESENTACION_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            REPRESENTACION_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            REPRESENTACION_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
@@ -258,6 +251,20 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   
     }
   }
+
+// obtenerestadosData(): void {
+//     this.catalogoServices
+//       .estadosCatalogo(this.tramiteId)
+//       .pipe(takeUntil(this.destroy$))
+//       .subscribe((resp): void => {
+//         const TRATADO_FIELD = this.consultarCupoFormData.find(
+//           (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
+//         ) as ModeloDeFormaDinamica;
+//         if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
+//           TRATADO_FIELD.opciones = resp.datos as Catalogo[];
+//         }
+//       });
+//   }
 
    /**
   * @method ngOnDestroy

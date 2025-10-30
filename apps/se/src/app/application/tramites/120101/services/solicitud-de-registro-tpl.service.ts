@@ -1,8 +1,8 @@
 import { Catalogo, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
-import { InsumosTabla, SolicitudTPLCANR } from '../models/insumos.model';
+import { BuscarApiResponse, InsumosTabla, SolicitudTPLCANR } from '../models/insumos.model';
 import { Observable, map } from 'rxjs';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
-import { BUSCAR_CONSULTAR, GUARDAR } from '../../../shared/servers/api-route';
+import { BUSCAR_CONSULTAR, BUSCAR_INSTRUMENTOS, GUARDAR } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
@@ -292,4 +292,9 @@ export class SolicitudDeRegistroTplService {
     return this.httpService.post<JSONResponse>(GUARDAR('sat-t120101'), { body: body });
   }
 
+   getBuscarDatos(body: any): Observable<BuscarApiResponse> {
+    return this.http.post<BuscarApiResponse>(BUSCAR_INSTRUMENTOS("120101"), body).pipe(
+      map((response) => response)
+    );
+  }
 }
