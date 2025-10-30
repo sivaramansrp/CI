@@ -1,12 +1,15 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosService, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { PagoDeDerecho } from '../../models/tercerosrelacionados.model';
 import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
-import { Subject } from 'rxjs';
+
+import { Subject, takeUntil } from 'rxjs';
+
+import { SharedFormService } from '../../../tramites/220201/services/220201/SharedForm.service';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -23,7 +26,7 @@ import { Subject } from 'rxjs';
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,OnChanges {
+export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit, OnChanges {
   /**
     * Configuración predeterminada para el campo de fecha de pago.
     */
@@ -121,7 +124,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    */
   constructor(
     private readonly fb: FormBuilder,
-
+    private sharedService: SharedFormService
   ) {
   }
   /**
@@ -147,23 +150,37 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
       Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
       Validators.maxLength(30)]);
     }
-  }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-  if (changes['pagoDeDerechos'] && changes['pagoDeDerechos'].currentValue) {
-    this.pagoForm.patchValue({
-      exentoPago: this.pagoDeDerechos.exentoPago || 'no',
-      justificacion: this.pagoDeDerechos.justificacion || '',
-      claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
-      cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
-      banco: this.pagoDeDerechos.banco || '',
-      llavePago: this.pagoDeDerechos.llavePago || '',
-      importePago: this.pagoDeDerechos.importePago || '2562',
-      fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
+    this.sharedService.data$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      if (data) {
+        this.pagoForm.patchValue({
+          exentoPago: [""],
+    justificacion: [""],
+    claveReferencia: [""],
+    cadenaDependencia: [""],
+    banco: [""],
+    llavePago: ["", [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+    importePago: [""],
+    fechaPago: [""]
+        });
+      }
     });
-    this.radioChange();
   }
-}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['pagoDeDerechos'] && changes['pagoDeDerechos'].currentValue) {
+      this.pagoForm.patchValue({
+        exentoPago: this.pagoDeDerechos.exentoPago || 'no',
+        justificacion: this.pagoDeDerechos.justificacion || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
+        banco: this.pagoDeDerechos.banco || '',
+        llavePago: this.pagoDeDerechos.llavePago || '',
+        importePago: this.pagoDeDerechos.importePago || '2562',
+        fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
+      });
+      this.radioChange();
+    }
+  }
   /**
    * @inheritdoc
    * @description
@@ -252,24 +269,24 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     if (!fecha) {
       return;
     }
-    
+
     const FECHA_PARTES = fecha.split('/');
     if (FECHA_PARTES.length !== 3) {
       return;
     }
-    
+
     const DIA = parseInt(FECHA_PARTES[0], 10);
     // Los meses en JavaScript son 0-indexed
     const MES = parseInt(FECHA_PARTES[1], 10) - 1;
     const ANIO = parseInt(FECHA_PARTES[2], 10);
-    
+
     const FECHA_SELECCIONADA = new Date(ANIO, MES, DIA);
     const FECHA_ACTUAL = new Date();
-    
+
     // Normalizar las fechas para comparar solo días (sin horas)
     FECHA_SELECCIONADA.setHours(0, 0, 0, 0);
     FECHA_ACTUAL.setHours(0, 0, 0, 0);
-    
+
     const CONTROL = this.pagoForm.get('fechaPago');
     if (CONTROL) {
       if (FECHA_SELECCIONADA > FECHA_ACTUAL) {

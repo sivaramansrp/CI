@@ -16,7 +16,9 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { PrellenadoSolicitud } from '../../models/220201/prellenado-solicitud.model';
+
+import { PrellenadoMovilizacion, PrellenadoSolicitud, PrellenadoTercerosRelacionados } from '../../models/220201/prellenado-solicitud.model';
+
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
@@ -24,6 +26,8 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 import { GuardaSolicitud, Mercancia } from '../../models/220201/guardar-solicitud.model';
 import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/fitosanitario.model';
+
+import { SharedFormService } from '../../services/220201/SharedForm.service';
 
 
 /**
@@ -357,7 +361,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private catalogoService: CatalogosService,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    private sharedService: SharedFormService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -925,11 +930,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           }
         });
 
-      this.catalogoService.obtenSolicitudPrellenado(220201, true, event.id_solicitud ?? '')
+      this.catalogoService.obtenerMovilizacionPrellenado(220201, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (response) => {
-            // Manejar la respuesta exitosa aquí
+            this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
           },
           error: () => {
             this.nuevaNotificacion = {
@@ -946,6 +951,51 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           }
         });
 
+      this.catalogoService.obtenerTerceroRelacionadosPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (response.datos && 'terceros_exportador' in response.datos && 'terceros_destinatario' in response.datos) {
+              this.sharedService.enviarTercerosRelacionadosPrellenado(response.datos as PrellenadoTercerosRelacionados);
+            } else {
+              console.error('Invalid data format for PrellenadoTercerosRelacionados:', response.datos);
+            }
+          },
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+
+      this.catalogoService.obtenerPagoDerechosPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+          },
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
     }
   }
 

@@ -129,3 +129,110 @@ export interface PrellenadoMovilizacion {
     id_punto_verificacion: number,
     razon_social: string
 }
+
+/**
+ * Representa el modelo de prellenado para terceros relacionados en una solicitud.
+ * 
+ * @interface PrellenadoTercerosRelacionados
+ * 
+ * @property terceros_exportador - Lista de exportadores relacionados con la solicitud.
+ *   - `id_solicitud`: Identificador de la solicitud (puede ser nulo).
+ *   - `extranjero`: Indica si es extranjero.
+ *   - `id_persona_sol`: Identificador de la persona (puede ser nulo).
+ *   - `id_direccion_sol`: Identificador de la dirección (puede ser nulo).
+ *   - `tipo_persona_sol`: Tipo de persona (constante "TIPERS.EXP").
+ *   - `persona_moral`: Indica si es persona moral.
+ *   - `nombre`, `apellido_paterno`, `apellido_materno`: Datos personales (pueden ser nulos).
+ *   - `razon_social`: Razón social de la persona moral.
+ *   - `pais`: País de origen.
+ *   - `descripcion_ubicacion`: Descripción de la ubicación.
+ *   - `lada`, `telefonos`, `correo`: Información de contacto.
+ * 
+ * @property terceros_destinatario - Lista de destinatarios relacionados con la solicitud.
+ *   - `id_solicitud`: Identificador de la solicitud (puede ser nulo).
+ *   - `id_persona_sol`: Identificador de la persona (puede ser nulo).
+ *   - `id_direccion_sol`: Identificador de la dirección (puede ser nulo).
+ *   - `tipo_persona_sol`: Tipo de persona.
+ *   - `persona_moral`: Indica si es persona moral.
+ *   - `num_establ_tif`, `nom_establ_tif`: Información del establecimiento TIF (pueden ser nulos).
+ *   - `nombre`, `apellido_paterno`, `apellido_materno`: Datos personales (pueden ser nulos).
+ *   - `razon_social`: Razón social de la persona moral.
+ *   - `pais`: País de origen.
+ *   - `codigo_postal`, `cve_entidad`, `cve_deleg_mun`, `cve_colonia`: Información de ubicación.
+ *   - `calle`, `num_exterior`, `num_interior`: Dirección detallada.
+ *   - `lada`, `telefonos`, `correo`: Información de contacto.
+ */
+export interface PrellenadoTercerosRelacionados {
+    terceros_exportador: [
+        {
+            id_solicitud: number | null,
+            extranjero: boolean,
+            id_persona_sol: number | null,
+            id_direccion_sol: number | null,
+            tipo_persona_sol: string,
+            persona_moral: boolean,
+            nombre: string,
+            apellido_paterno: string,
+            apellido_materno: string,
+            razon_social: string,
+            pais: string,
+            descripcion_ubicacion: string,
+            lada: string,
+            telefonos: string,
+            correo: string
+        }
+    ],
+    terceros_destinatario: [
+        {
+            id_solicitud: number | null,
+            id_persona_sol: number | null,
+            id_direccion_sol: number | null,
+            tipo_persona_sol: string,
+            persona_moral: boolean,
+            num_establ_tif: number | null,
+            nom_establ_tif: number | null,
+            nombre: string,
+            apellido_paterno: string,
+            apellido_materno: string,
+            razon_social: string,
+            pais: string,
+            codigo_postal: string,
+            cve_entidad: string,
+            cve_deleg_mun: string,
+            cve_colonia: string,
+            calle: string,
+            num_exterior: string,
+            num_interior: string,
+            lada: string,
+            telefonos: string,
+            correo: string
+        }
+    ]
+}
+
+/**
+ * Modelo para prellenado de pago de derechos.
+ * 
+ * @property id_solicitud - ID de la solicitud (puede ser nulo).
+ * @property id_pago - ID del pago (puede ser nulo).
+ * @property exento_pago - Indica si está exento de pago.
+ * @property ide_motivo_exento_pago - ID del motivo de exención (puede ser nulo).
+ * @property cve_referencia_bancaria - Clave de referencia bancaria.
+ * @property cadena_pago_dependencia - Cadena de pago de la dependencia.
+ * @property cve_banco - Clave del banco (puede ser nulo).
+ * @property llave_pago - Llave del pago (puede ser nulo).
+ * @property fec_pago - Fecha del pago (puede ser nulo).
+ * @property imp_pago - Importe del pago (puede ser nulo).
+ */
+export interface PrellenadoPagoDerechos {
+    id_solicitud: number | null,
+    id_pago: number | null,
+    exento_pago: false,
+    ide_motivo_exento_pago: number | null,
+    cve_referencia_bancaria: string,
+    cadena_pago_dependencia: string,
+    cve_banco: number | null,
+    llave_pago: number | null,
+    fec_pago: number | null,
+    imp_pago: number | null
+}

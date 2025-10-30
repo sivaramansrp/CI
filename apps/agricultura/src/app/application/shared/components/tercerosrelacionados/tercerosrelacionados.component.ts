@@ -8,7 +8,7 @@
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
@@ -16,7 +16,9 @@ import { CommonModule } from '@angular/common';
 import { DestinatarioForm } from '../../../tramites/220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../modal/modal.component';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
-// import { ToastrModule } from 'ngx-toastr'; // Removed unused import
+import { SharedFormService } from '../../../tramites/220201/services/220201/SharedForm.service';
+
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -39,7 +41,7 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
   ],
   templateUrl: './tercerosrelacionados.component.html',
 })
-export class TercerosrelacionadosComponent {
+export class TercerosrelacionadosComponent implements OnInit {
   /**
    * Clase CSS para el tipo de alerta informativa.
    * @type {string}
@@ -122,8 +124,8 @@ export class TercerosrelacionadosComponent {
    */
   @ViewChild('modalRef', { static: false }) modalRef!: ModalComponent;
 
-  @Input() exportadorRequired:boolean = false;
-  @Input() destinatarioRequired:boolean = false;
+  @Input() exportadorRequired: boolean = false;
+  @Input() destinatarioRequired: boolean = false;
 
 
   /**
@@ -160,7 +162,7 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
   configuracionColumnasExportador: ConfiguracionColumna<DestinatarioForm>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
@@ -180,7 +182,7 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosdestinoTable>[]}
    */
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
@@ -200,8 +202,8 @@ export class TercerosrelacionadosComponent {
   buscarForm!: FormGroup;
 
   tableErrorMeassageDispalyExportador: boolean = false;
-   tableErrorMeassageDispalyDestinatario: boolean = false;
-
+  tableErrorMeassageDispalyDestinatario: boolean = false;
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -212,7 +214,8 @@ export class TercerosrelacionadosComponent {
   constructor(
     public readonly router: Router,
     public route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private sharedService: SharedFormService
   ) {
     this.buscarForm = this.fb.group({
       tipoPersona: ['yes'],
@@ -223,6 +226,49 @@ export class TercerosrelacionadosComponent {
     });
   }
 
+  ngOnInit(): void {
+    // Suscribirse a los datos de prellenado de movilización desde el servicio compartido
+    this.sharedService.dataTerceros$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      if (data) {
+        data.terceros_destinatario.forEach(destinatario => {
+          const MAPPED_DESTINO: TercerosrelacionadosdestinoTable = {
+            codigoPostal: destinatario.codigo_postal,
+            estado: destinatario.cve_entidad,
+            calle: destinatario.calle,
+            numeroExterior: destinatario.num_exterior,
+            tipoMercancia: destinatario.num_interior,
+            nombre: destinatario.nombre,
+            primerApellido: destinatario.apellido_materno,
+            razonSocial: destinatario.razon_social,
+            pais: destinatario.pais,
+            telefono: destinatario.telefonos,
+            correo: destinatario.correo,
+            colonia: destinatario.cve_colonia,
+            municipio: destinatario.cve_deleg_mun,
+            numeroInterior: destinatario.num_interior,
+          };
+          this.cuerpoTablaDestino = [...this.cuerpoTablaDestino, MAPPED_DESTINO];
+        });
+
+        data.terceros_exportador.forEach(tercero => {
+          console.warn('Prellenado Terceros Exportador:', tercero);
+          const MAPPED_EXPORTADOR: DestinatarioForm = {
+            nombre: tercero.nombre,
+            razonSocial: tercero.razon_social,
+            pais: tercero.pais,
+            telefono: tercero.telefonos,
+            correo: tercero.correo,
+            tipoMercancia: tercero.tipo_persona_sol === 'yes' || tercero.tipo_persona_sol === 'no' ? tercero.tipo_persona_sol : 'no',
+            primerApellido: tercero.apellido_paterno || '',
+            segundoApellido: tercero.apellido_materno || '',
+            domicilio: tercero.descripcion_ubicacion || '',
+            lada: tercero.lada || '',
+          };
+          this.cuerpoTablaExportador = [...this.cuerpoTablaExportador, MAPPED_EXPORTADOR];
+        });
+      }
+    });
+  }
   /**
    * Navega a la pantalla para agregar un nuevo destinatario.
    * @method goToAgregarDestinatario
@@ -238,35 +284,35 @@ export class TercerosrelacionadosComponent {
    * @method modificarDestinatario
    */
   modificarDestinatario(): void {
-    if(this.listaDeFilaSeleccionada.length !== 0){
-    if (this.listaDeFilaSeleccionada[0]) {
-      this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
+    if (this.listaDeFilaSeleccionada.length !== 0) {
+      if (this.listaDeFilaSeleccionada[0]) {
+        this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
+      }
+      else {
+        this.abrirModalDestinatario.emit();
+      }
     }
     else {
-      this.abrirModalDestinatario.emit();
+      this.errorMessageExportador();
     }
-  }
-  else{
-    this.errorMessageExportador();
-  }
   }
   /**
  * Navega a la pantalla para modificar un destinatario existente.
  * @method modificarDestinatario
  */
   modificarDestinatarioFinal(): void {
-        if(this.listaDeFilaSeleccionadaFinal.length !== 0){
-    if (this.listaDeFilaSeleccionadaFinal[0]) {
-      this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
+    if (this.listaDeFilaSeleccionadaFinal.length !== 0) {
+      if (this.listaDeFilaSeleccionadaFinal[0]) {
+        this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
+      }
+      else {
+        this.abrirModalExportador.emit();
+      }
     }
     else {
-      this.abrirModalExportador.emit();
+      this.errorMessageExportador();
     }
   }
-  else{
-    this.errorMessageExportador();
-  }
-}
 
 
   /**
@@ -291,23 +337,23 @@ export class TercerosrelacionadosComponent {
    * @method emitEliminar
    */
   emitEliminar(): void {
-   if(this.listaDeFilaSeleccionada.length !== 0){    
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.eliminarDatosTabla = true;
-  }
-  else{
-    this.errorMessageExportador();
-  }
+    if (this.listaDeFilaSeleccionada.length !== 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Confirmar eliminación',
+        mensaje: 'Está seguro que desea eliminar estos datos?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.eliminarDatosTabla = true;
+    }
+    else {
+      this.errorMessageExportador();
+    }
 
   }
   /**
@@ -315,23 +361,23 @@ export class TercerosrelacionadosComponent {
   * @method emitEliminar
   */
   emitEliminarFinal(): void {
-            if(this.listaDeFilaSeleccionadaFinal.length !== 0){
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.eliminarDatoExportador = true;
-  }
-  else{
-    this.errorMessageExportador();
-  }
+    if (this.listaDeFilaSeleccionadaFinal.length !== 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Confirmar eliminación',
+        mensaje: 'Está seguro que desea eliminar estos datos?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.eliminarDatoExportador = true;
+    }
+    else {
+      this.errorMessageExportador();
+    }
   }
 
   /**
@@ -354,7 +400,7 @@ export class TercerosrelacionadosComponent {
       pais: '1',
     });
   }
-  eliminarPedimentoDatos(borrar: boolean):void {
+  eliminarPedimentoDatos(borrar: boolean): void {
     if (borrar) {
       this.eliminarDatosTabla = false;
       this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
@@ -363,7 +409,7 @@ export class TercerosrelacionadosComponent {
     }
 
   }
-  eliminarExportador(borrar: boolean):void {
+  eliminarExportador(borrar: boolean): void {
     if (borrar) {
       this.eliminarDatoExportador = false;
       this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal);
@@ -372,29 +418,29 @@ export class TercerosrelacionadosComponent {
     }
   }
 
-  eliminarErrorMessage():void {
-    this.mostrarMensajeError =false;
+  eliminarErrorMessage(): void {
+    this.mostrarMensajeError = false;
   }
-    validarFormulario(): boolean {
-      let VALIDATE = false;
-     if(this.exportadorRequired) {
-      
-      VALIDATE =this.cuerpoTablaExportador.length > 0;
-      this.tableErrorMeassageDispalyExportador=!VALIDATE;
-     }
-     if(this.destinatarioRequired){
-      VALIDATE = this.cuerpoTablaDestino.length > 0;
-        this.tableErrorMeassageDispalyDestinatario=!VALIDATE;
-     }
-     if(!this.destinatarioRequired && !this.exportadorRequired) {
-       VALIDATE = true;
-     }
-     return VALIDATE;
-    }
+  validarFormulario(): boolean {
+    let VALIDATE = false;
+    if (this.exportadorRequired) {
 
-    errorMessageExportador(): void {
-      if (this.listaDeFilaSeleccionadaFinal.length === 0) {
-        this.nuevaNotificacion = {
+      VALIDATE = this.cuerpoTablaExportador.length > 0;
+      this.tableErrorMeassageDispalyExportador = !VALIDATE;
+    }
+    if (this.destinatarioRequired) {
+      VALIDATE = this.cuerpoTablaDestino.length > 0;
+      this.tableErrorMeassageDispalyDestinatario = !VALIDATE;
+    }
+    if (!this.destinatarioRequired && !this.exportadorRequired) {
+      VALIDATE = true;
+    }
+    return VALIDATE;
+  }
+
+  errorMessageExportador(): void {
+    if (this.listaDeFilaSeleccionadaFinal.length === 0) {
+      this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'info',
@@ -404,9 +450,9 @@ export class TercerosrelacionadosComponent {
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Cancelar',
         txtBtnCancelar: '',
-        };
-      }
-    this.mostrarMensajeError =true;
+      };
     }
-    
+    this.mostrarMensajeError = true;
+  }
+
 }
