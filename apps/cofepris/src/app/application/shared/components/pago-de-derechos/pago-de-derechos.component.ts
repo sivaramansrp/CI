@@ -98,8 +98,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() public campoRequerido: boolean = false;
 
-  @Input() tramiteID: string = '';
-
        /**
          * @property {Subscription} subscription
          * @private
@@ -241,31 +239,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
+    const NOMULTISPACE = /^(?!.* {2,}).*$/;
+
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.solicitudState?.claveReferencia || '',
-        [Validators.maxLength(9)],
+      this.solicitudState?.claveReferencia || '',
+      [
+        Validators.maxLength(9),
+        Validators.required,
+        Validators.pattern(NOMULTISPACE),
+      ],
       ],
       cadenaDependencia: [
-        this.solicitudState?.cadenaDependencia || '',
-        [Validators.maxLength(14)],
+      this.solicitudState?.cadenaDependencia || '',
+      [
+        Validators.maxLength(14),
+        Validators.required,
       ],
-      estado: [this.solicitudState?.estado || '', ],
-      banco: [this.solicitudState?.banco || '', ],
+      ],
+      estado: [this.solicitudState?.estado || '', Validators.required],
+      banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.solicitudState?.llavePago || '',
-        [
-          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
-          Validators.maxLength(30),
-        ],
+      this.solicitudState?.llavePago || '',
+      [
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30),
+        Validators.required,
       ],
-      fechaPago: [this.solicitudState?.fechaPago || '', ],
+      ],
+      fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
-        this.solicitudState?.importePago || '',
-        [
-          decimalValidator(2),
-          Validators.maxLength(16),
-        ],
+      this.solicitudState?.importePago || '',
+      [
+        decimalValidator(2),
+        Validators.maxLength(16),
+        Validators.required,
+      ],
       ],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
@@ -322,7 +331,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   getBancoDatos(): void {
     this.subscription.add(
             this.catalogoService
-            .bancosCatalogo(this.tramiteID)
+            .bancosCatalogo(String(this.idProcedimiento))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((response) => {
               const DATOS = response.datos as Catalogo[];
@@ -464,6 +473,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     
     return false;
   }
+
+  llavePagoCase(): void {
+    const LLAVEPAGOCONTROL = this.pagoDerechosForm.get('llavePago');
+    if (LLAVEPAGOCONTROL && LLAVEPAGOCONTROL.value) {
+      const LLAVE_PAGO = LLAVEPAGOCONTROL.value.toUpperCase();
+      LLAVEPAGOCONTROL.setValue(LLAVE_PAGO);
+      this.setValoresStore(this.pagoDerechosForm, 'llavePago', 'setllavePago');
+    }
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

@@ -239,3 +239,10 @@
     </div>
   </div>
 </ng-container>
+@if (notificacionAgregarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicios">
+  </lib-notificaciones>
+</section>
+}

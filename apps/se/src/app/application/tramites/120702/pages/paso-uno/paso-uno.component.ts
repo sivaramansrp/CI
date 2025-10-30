@@ -65,23 +65,54 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * @returns true si el formulario es válido, false en caso contrario.
    */
   public validarTabActual(): boolean {
-    switch (this.indice) {
-      case 1:
-        // Validar tab de Solicitante (implementar según sea necesario)
-        return true;
+    // Si estamos en el tab 2 (Expedición certificados), validar el formulario
+    if (this.indice === 2 && this.asignacion && this.asignacion.asignacionForm) {
+      // Marcar todos los campos como touched para mostrar errores
+      this.asignacion.asignacionForm.markAllAsTouched();
       
-      case 2:
-        // Validar tab de Expedición certificados asignación directa
-        if (this.asignacion && this.asignacion.asignacionForm) {
-          // Marcar todos los campos como touched para mostrar errores
-          this.asignacion.asignacionForm.markAllAsTouched();
-          return this.asignacion.asignacionForm.valid;
-        }
-        return false;
-      
-      default:
-        return true;
+      // Validar campos específicos requeridos
+      const ANODELOFICIO = this.asignacion.asignacionForm.get('anoDelOficio');
+      const NUMEROOFICIO = this.asignacion.asignacionForm.get('numeroOficio');
+      const MONTOAEXPEDIR = this.asignacion.asignacionForm.get('montoAExpedir');
+
+      return (ANODELOFICIO?.valid || false) &&
+             (NUMEROOFICIO?.valid || false) &&
+             (MONTOAEXPEDIR?.valid || false);
     }
+    
+    // Para otros tabs, retornar true (no hay validación específica)
+    return true;
+  }
+
+  /**
+   * Método público para validar el formulario independientemente del tab actual.
+   * Utilizado por el componente padre para validar antes de continuar al siguiente paso.
+   */
+  public validarFormularioCompleto(): boolean {
+    // Only validate if we're on tab 2 (where the form is visible)
+    if (this.indice === 2) {
+      if (this.asignacion && this.asignacion.asignacionForm) {
+        // Forzar validación usando el método del componente hijo
+        if (this.asignacion.forzarValidacion) {
+          this.asignacion.forzarValidacion();
+        }
+        
+        // Marcar todos los campos como touched
+        this.asignacion.asignacionForm.markAllAsTouched();
+        
+        // Validar solo los campos requeridos específicos
+        const ANODELOFICIO = this.asignacion.asignacionForm.get('anoDelOficio');
+        const NUMEROOFICIO = this.asignacion.asignacionForm.get('numeroOficio');
+        const MONTOAEXPEDIR = this.asignacion.asignacionForm.get('montoAExpedir');
+
+        const ISVALID = (ANODELOFICIO?.valid || false) &&
+                       (NUMEROOFICIO?.valid || false) &&
+                       (MONTOAEXPEDIR?.valid || false);
+              return ISVALID;
+      }
+      return false;
+    }
+    return true;
   }
 
   /**

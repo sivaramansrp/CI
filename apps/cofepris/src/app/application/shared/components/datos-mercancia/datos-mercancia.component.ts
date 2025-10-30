@@ -13,9 +13,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -87,7 +89,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit, AfterViewInit {
+export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges {
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -420,6 +422,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
+  tipoFOFA='FOFA.OTR';
+
   /**
    * @property {Subscription} subscription
    * @description Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
@@ -573,6 +577,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         funcion: (): void => this.crossList.toArray()[2].quitar('t'),
       },
     ];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tipoProducto'] || changes['formaFarmaceutica']) {
+      this.updateValidation();
+    }
   }
 
   /**
@@ -803,6 +813,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           'fechaDeFabricacio',
           'fechaDeCaducidad',
         ];
+        break;
+      case 260202:
+        this.elementosAnadidos = ['especifique','especifiqueForma'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260208:
       case 260209:
@@ -1108,6 +1122,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       this.seleccionadasUsoEspesificoDatos,
       [Validators.required, matrizRequerida]
     ],
+    especifique: [
+      this.obtenerValor('especifique')
+    ],
+    especifiqueForma: [
+      this.obtenerValor('especifiqueForma')
+    ],
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1152,6 +1172,19 @@ this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
     }
   }
 }
+updateValidation(): void {
+  const TIPO_PRODUCTO = this.mercanciaForm.get('tipoProducto')?.value;
+  if (this.elementosAnadidos.includes('especifique') && TIPO_PRODUCTO === this.tipoProductoEspecial) {
+    this.mercanciaForm.get('especifique')?.setValidators([Validators.required]);
+  }
+  const FORMA_FARMACEUTICA = this.mercanciaForm.get('formaFarmaceutica')?.value;
+  if (this.elementosAnadidos.includes('especifiqueForma') && FORMA_FARMACEUTICA === this.tipoProductoEspecial) {
+    this.mercanciaForm.get('especifiqueForma')?.setValidators([Validators.required]);
+  }
+  this.mercanciaForm.get('especifique')?.updateValueAndValidity();
+  this.mercanciaForm.get('especifiqueForma')?.updateValueAndValidity();
+}
+
 
   static numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -1474,7 +1507,7 @@ public convertToStringArray(value: unknown): string[] {
     const FRACCION_ARANCELARIA = this.mercanciaForm.get(
       'fraccionArancelaria'
     )?.value;
-    if (FRACCION_ARANCELARIA.length < 8) {
+    if (FRACCION_ARANCELARIA?.length < 8) {
       this.showLimitError = true;
     } else {
       this.showLimitError = false;

@@ -16,7 +16,7 @@ import { REG_X } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
