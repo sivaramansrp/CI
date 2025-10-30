@@ -669,6 +669,16 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('fax1', new FormControl(''));
     }
 
+    if (this.idProcedimiento === 110205) {
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('correoElectronico', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+    }
+
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
