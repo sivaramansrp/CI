@@ -1,59 +1,47 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
 import {
-  ConfiguracionColumna,
   ConsultaioQuery,
-  ConsultaioState,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent
+  ConsultaioState
 } from '@ng-mf/data-access-user';
-import { Solicitud80301State, Tramite80301Store } from '../../estados/tramite80301.store';
-
-import { CONFIGURACION_IMPORTACION, CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { DatosDelServicios } from '../../models/datos-tramite.model';
+import { DatosModificacion } from '../../../../shared/models/modificacion.model';
+import { EliminacionModificacionComponent } from '../../../../shared/components/modificacion/modificacion.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite80301Query } from '../../estados/tramite80301.query';
 
 @Component({
   selector: 'app-modificacion',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    FormsModule,
-    TituloComponent,
-    TablaDinamicaComponent,
+    EliminacionModificacionComponent,
     ComplementariaImmexComponent,
   ],
   templateUrl: './modificacion.component.html',
-  styleUrl: './modificacion.component.css',
+  styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent implements OnInit, OnDestroy {
+  /**
+   * Constructor del componente ModificacionComponent.
+   * @param solicitudService Servicio para manejar solicitudes relacionadas con el trámite.
+   * @param consultaioQuery Estado de la consulta.
+   */
   constructor(
-    private fb: FormBuilder,
     private solicitudService: SolicitudService,
-    private tramite80301Store: Tramite80301Store,
-    private tramite80301Query: Tramite80301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {}  
 
 
   /**
-* Indica si el formulario se encuentra en modo solo lectura.
-* Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
-*/
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+   */
   esFormularioSoloLectura: boolean = false
 
   /**
- * @property {ConsultaioState} consultaDatos
- * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
- */
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
   consultaDatos!: ConsultaioState;
 
   /**
@@ -61,10 +49,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   soloLectura: boolean = false;
-  /**
-   * Grupo de formulario para el formulario de solicitud.
-   */
-  modificacionForm!: FormGroup;
 
   /**
    * Observable para notificar la destrucción del componente.
@@ -73,132 +57,33 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Estado actual del trámite.
-   * Contiene los datos relacionados con la modificación del trámite.
-   */
-  public derechoState: Solicitud80301State = {} as Solicitud80301State;
-
-  /**
-   * Representa la tabla de selección utilizada en el componente de modificación.
-   * Esta tabla se utiliza para gestionar y mostrar los datos seleccionados
-   * en el contexto de los trámites específicos.
-   */
-  TablaSeleccion = TablaSeleccion;
-
-  /**
-   * Configuración de las columnas de la tabla dinámica.
-   * Define las propiedades de cada columna, como encabezado, clave y orden.
-   */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelServicios>[] = CONFIGURACION_MODIFICACION;
-
-    /**
-   * Configuración de las columnas de la tabla dinámica.
-   * Define las propiedades de cada columna, como encabezado, clave y orden.
-   */
-  public importacionTabla: ConfiguracionColumna<DatosDelServicios>[] = CONFIGURACION_IMPORTACION;
-
-
-  /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
   datosTabla: DatosDelServicios[] = [];
+
+  /**
+   * @property {DatosModificacion} datosModificacion
+   * @description Datos relacionados con la modificación del trámite.
+   */
+  datosModificacion!: DatosModificacion;
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
-    this.tramite80301Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.derechoState = {
-          ...this.derechoState,
-          ...seccionState,
-        };
-      })).subscribe();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario()
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+
     this.loadDatosModificacion();
     this.loadDatosTablaData();
-  }
-
-
-/**
- * Inicializa el formulario de modificación con los datos del donante.
- *
- * Crea el formulario `modificacionForm` con los campos `rfc`, `federal`, `tipo` y `programa`,
- * asignando valores predeterminados desde `derechoState?.datosModificacion` y aplicando
- * validaciones necesarias. Luego, inicializa el estado del formulario llamando a
- * `inicializarEstadoFormulario()`.
- */
-donanteDomicilio(): void {
-  this.modificacionForm = this.fb.group({
-    rfc: [
-      this.derechoState?.datosModificacion.rfc,
-      [Validators.required, Validators.maxLength(20)]
-    ],
-    federal: [
-      this.derechoState?.datosModificacion.federal,
-      [Validators.maxLength(100)]
-    ],
-    tipo: [
-      this.derechoState?.datosModificacion.federal,
-      [Validators.maxLength(100)]
-    ],
-    programa: [
-      this.derechoState?.datosModificacion.federal,
-      [Validators.maxLength(100)]
-    ]
-  });
-  this.inicializarEstadoFormulario();
-}
-
-/**
- * Establece el estado inicial del formulario según el modo de visualización.
- *
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), desactiva los controles
- * llamando a `guardarDatosDelFormulario()`. En caso contrario, desactiva campos específicos con `datosDeAvisoForm()`.
- */
-inicializarEstadoFormulario(): void {
-  if (this.esFormularioSoloLectura) {
-    this.guardarDatosDelFormulario();
-  } else {
-    this.datosDeAvisoForm();
-  }
-}
-
-/**
- * Activa o desactiva todo el formulario de modificación según el modo de lectura.
- *
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), se deshabilita por completo.
- * De lo contrario, se habilita para permitir la edición.
- */
-guardarDatosDelFormulario(): void {
-  if (this.esFormularioSoloLectura) {
-    this.modificacionForm.disable();
-  } else {
-    this.modificacionForm.enable();
-  }
-}
-
-  /**
-   * Inicializa el formulario reactivo con los valores actuales del estado.
-   */
-  inicializarFormulario(): void {
-    this.modificacionForm = this.fb.group({
-      rfc: [this.derechoState?.datosModificacion?.rfc, []],
-      federal: [this.derechoState?.datosModificacion?.federal, []],
-      tipo: [this.derechoState?.datosModificacion?.tipo, []],
-      programa: [this.derechoState?.datosModificacion?.programa, []],
-    });
   }
 
   /**
@@ -206,9 +91,10 @@ guardarDatosDelFormulario(): void {
    * Actualiza el estado del trámite y los valores del formulario.
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      (this.tramite80301Store.setDatosModificacion as (valor: unknown) => void)(datos);
-      this.setFormValues();
+    this.solicitudService.getDatosModificacion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((datos) => {      
+      this.datosModificacion = datos;
     });
   }
 
@@ -224,30 +110,11 @@ guardarDatosDelFormulario(): void {
    * this.loadDatosTablaData();
    */
   loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+    this.solicitudService.getDatosTableData()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data) => {
       this.datosTabla = data;
     });
-  }
-
-  /**
-   * Establece los valores del formulario utilizando los datos de modificación.
-   */
-  setFormValues(): void {
-    this.modificacionForm.get('rfc')?.setValue(this.derechoState?.datosModificacion?.rfc);
-    this.modificacionForm.get('federal')?.setValue(this.derechoState?.datosModificacion?.federal);
-    this.modificacionForm.get('tipo')?.setValue(this.derechoState?.datosModificacion?.tipo);
-    this.modificacionForm.get('programa')?.setValue(this.derechoState?.datosModificacion?.programa);
-  }
-
-  /**
-   * Establecer valores en el store del trámite.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo.
-   * @param metodoNombre Nombre del método en el store.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80301Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite80301Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   /**
@@ -267,29 +134,17 @@ guardarDatosDelFormulario(): void {
    * this.valorDeAlternancia({ row: registro, column: 'desEstatus' });
    * // Ahora, registro.desEstatus será 'Activada'.
    * ```
-   */// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  valorDeAlternancia(event: any): void {
-    const ROW = event.row; // Obtiene el registro de la fila.
+   */
+  valorDeAlternancia(event: {
+    row: unknown;
+    column: string;
+  }): void {
+    const ROW = event.row as DatosDelServicios; // Obtiene el registro de la fila.
     const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id); // Busca el índice del registro en la tabla.
     // Alterna el estado entre 'Baja' y 'Activada'.
     this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
   }
 
-  /**
- * Deshabilita campos del formulario si está en modo solo lectura.
- * 
- * Si el formulario está en modo de solo lectura (`esFormularioSoloLectura`)
- * y existe el formulario de modificación (`modificacionForm`), se deshabilitan 
- * los siguientes campos: RFC, federal, tipo y programa.
- */
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura && this.modificacionForm) {
-      this.modificacionForm.get('rfc')?.disable();
-      this.modificacionForm.get('federal')?.disable();
-      this.modificacionForm.get('tipo')?.disable();
-      this.modificacionForm.get('programa')?.disable();
-    }
-  }
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones activas.
@@ -298,5 +153,4 @@ guardarDatosDelFormulario(): void {
     this.destroyNotifier$.next(); // Notifica la destrucción del componente.
     this.destroyNotifier$.complete(); // Completa el observable para evitar fugas de memoria.
   }
-
 }

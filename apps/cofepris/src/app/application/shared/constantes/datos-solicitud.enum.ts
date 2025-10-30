@@ -1041,7 +1041,7 @@ export enum TIPO_ACTUALIZACION {
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
-export const TIPO_PRODUCTO_ESPECIAL = '3';
+export const TIPO_PRODUCTO_ESPECIAL = '137';
 
 /**
  * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.

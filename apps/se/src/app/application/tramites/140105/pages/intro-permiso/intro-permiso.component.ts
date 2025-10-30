@@ -6,7 +6,7 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, RegistroSolicitudService, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { DesistimientoDePermisoState, DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
 import { ERROR_FORMA_ALERT, PASOS, TODOS_PASOS } from '../../constants/intropermiso.enum';
 import { Observable, Subject, catchError, map, switchMap, take, takeUntil, throwError } from 'rxjs';
@@ -161,9 +161,8 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   constructor(
     private store: DesistimientoStore,
     private query: DesistimientoQuery,
-    private registroSolicitudService: RegistroSolicitudService,
-     private toastrService: ToastrService,
-    private servicioDeMensajes: ServicioDeMensajesService
+    private servicioDeMensajesService: ServicioDeMensajesService,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -218,6 +217,8 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   // }
 
    getValorIndice(e: AccionBoton): void {
+  
+    
     if (this.indice === 1) {
       const FORM_VALIDO = this.pasoUnoComponent?.validarFormularios() ?? false;
       this.esFormaValido = FORM_VALIDO;
@@ -233,7 +234,9 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
       this.onGuardar().pipe(
         takeUntil(this.destroyNotifier$)
       ).subscribe({
-        next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+        next: (respuesta: BaseResponse<unknown>) => {
+        
+          
           if (respuesta.codigo !== '00') {
             const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
             this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
@@ -246,13 +249,27 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
             return;
           }
             this.esFormaValido = true;
-            this.indice = e.valor;
-            this.datosPasos.indice = this.indice;
-            this.wizardComponent.siguiente();
-            if (respuesta.datos?.id_solicitud) {
-              this.idSolicitudState = respuesta.datos.id_solicitud;
-              this.store.setIdSolicitud(respuesta.datos.id_solicitud);
+            const DATOS = respuesta.datos as { id_solicitud?: number } | undefined;
+            if (DATOS?.id_solicitud) {
+              this.idSolicitudState = DATOS.id_solicitud;
+              this.store.setIdSolicitud(DATOS.id_solicitud);
             }
+            if (e.accion === 'cont') {
+              this.indice = this.indice + 1;
+              this.datosPasos.indice = this.indice;
+              this.wizardComponent.siguiente();
+              this.actualizarSeccionCargarDocumentos();
+            } else if (e.accion === 'ant') {
+              this.indice = e.valor;
+              this.datosPasos.indice = this.indice;
+              this.wizardComponent.atras();
+              this.actualizarSeccionCargarDocumentos();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = this.indice;
+              this.actualizarSeccionCargarDocumentos();
+            }
+
             this.toastrService.success(respuesta.mensaje);
         },
         error: (error) => {
@@ -280,24 +297,14 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
    /**
    * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
    * y enviar los datos al servidor.
-   * @returns {Observable<BaseResponse<{ id_solicitud: number }>>}
+   * @returns {Observable<BaseResponse<unknown>>}
    */
-  onGuardar(): Observable<BaseResponse<{ id_solicitud: number }>> {
-    return this.query.selectTramite$.pipe(
+  onGuardar(): Observable<BaseResponse<unknown>> {
+    return this.query.selectTramite140105$.pipe(
       take(1), // Tomar solo el primer valor para evitar loops
       map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
       switchMap(FORM_PAYLOAD => {
-        return (this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD) as Observable<BaseResponse<{ id_solicitud?: number }>>).pipe(
-          map((response: BaseResponse<{ id_solicitud?: number }>) => {
-            // Adapt the response to the expected type
-            return {
-              ...response,
-              datos: {
-                id_solicitud: response.datos?.id_solicitud ?? 0
-              }
-            } as BaseResponse<{ id_solicitud: number }>;
-          })
-        );
+        return this.servicioDeMensajesService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD);
       }),
       catchError(error => {
         console.error('Error al guardar:', error);
@@ -307,7 +314,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza la sección de carga de documentos según el paso actual
+   * Actualiza la sección de cargar documentos basado en el índice actual.
    */
   private actualizarSeccionCargarDocumentos(): void {
     this.seccionCargarDocumentos = this.indice === 2;
@@ -317,6 +324,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
    * Maneja el evento de carga de documentos
    */
   manejaEventoCargaDocumentos(event: boolean): void {
+
     this.activarBotonCargaArchivos = event;
   }
 

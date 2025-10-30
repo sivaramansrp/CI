@@ -2,6 +2,7 @@ import { Anexo, Bitacora, Complimentaria, Federetarios, Operacions } from '../mo
 import { Observable, map } from 'rxjs';
 import { Solicitud80301State, Solicitud80301StateObj, Tramite80301Store } from '../estados/tramite80301.store';
 import { DatosDelModificacion } from '../models/datos-tramite.model';
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
@@ -67,10 +68,10 @@ export class SolicitudService {
   /**
    * Obtiene los datos de modificación desde un archivo JSON local.
    * 
-   * @returns {Observable<RespuestaCatalogos[]>} Observable con los datos de modificación.
+   * @returns {Observable<DatosModificacion>} Observable con los datos de modificación.
    */
-  getDatosModificacion(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(
+  getDatosModificacion(): Observable<DatosModificacion> {
+    return this.http.get<DatosModificacion>(
       'assets/json/80301/modificacion.json'
     );
   }

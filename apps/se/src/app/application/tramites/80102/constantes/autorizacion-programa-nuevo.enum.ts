@@ -83,7 +83,7 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 3,
   },
   {
-    encabezado: 'Numero del programa IMMEX',
+    encabezado: 'Número del programa IMMEX',
     clave: (ele: ServicioInmex): string | undefined => ele.numeroIMMEX,
     orden: 4,
   },

@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="contrato">Contrato de prestación de servicios:</label>
+        <label class="form-label" for="contrato">Contrato de prestación de servicios*:</label>
         <input class="form-control min-hgt" id="contrato" formControlName="contrato" type="text" maxlength="20"
           (change)="setValoresStore(empleadosForm, 'contrato', 'setContrato')" />
         <div
@@ -124,7 +124,7 @@
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label" for="rfcEmpresa">RFC de la empresa prestadora de servicios*:</label>
+        <label class="form-label text-start" for="rfcEmpresa">RFC de la empresa prestadora de servicios*:</label>
         <input class="form-control min-hgt" id="rfcEmpresa" formControlName="rfcEmpresa" type="text" maxlength="13"
           (change)="setValoresStore(empleadosForm, 'rfcEmpresa', 'setRfcEmpresa')" />
         <div

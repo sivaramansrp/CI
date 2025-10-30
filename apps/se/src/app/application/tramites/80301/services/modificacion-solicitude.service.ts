@@ -1,16 +1,17 @@
 import {
   Anexo,
-  Bitacora,
   Complimentaria,
-  DatosModificacion,
   DomicilioInfo,
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
+import { Bitacora } from '../../../shared/models/bitacora.model';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ServiciosImmex } from '../../../shared/models/complementaria.model';
 
 @Injectable({
   providedIn: 'root',
@@ -95,6 +96,16 @@ export class ModificacionSolicitudeService {
   obtenerAnexo(): Observable<Anexo[]> {
     return this.http
       .get<{ data: Anexo[] }>('assets/json/80301/anexo.json')
+      .pipe(map((res) => res.data));
+  }
+
+  /**
+   * Obtiene la lista de servicios Immex desde un archivo JSON.
+   * @returns {Observable<ServiciosImmex[]>} Observable con la lista de servicios Immex.
+   */
+  obtenerServiciosImmex(): Observable<ServiciosImmex[]> {
+    return this.http
+      .get<{ data: ServiciosImmex[] }>('assets/json/80301/servicios-immex.json')
       .pipe(map((res) => res.data));
   }
 }

@@ -6,7 +6,6 @@ import { PasoUnoComponent } from './paso-uno/paso-uno.component';
 import { PasoTresComponent } from './paso-tres/paso-tres.component';
 import { PasoDosComponent } from './paso-dos/paso-dos.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
 import { ToastrModule } from 'ngx-toastr';
 import { of } from 'rxjs';
 

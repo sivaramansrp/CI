@@ -15,6 +15,7 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string;
+  scianDescription?: string;
 }
 /**
  * Interfaz que representa la respuesta de un catálogo.
@@ -261,6 +262,7 @@ export interface TablaMercanciasDatos {
   cantidadUMC: string;
   unidadMedidaTarifa: string;
   cantidadUMT: string;
+  cantidadUmtValor?:string;
   presentacion: string;
   numeroRegistroSanitario: string;
   paisOrigen: string;
@@ -369,6 +371,7 @@ export interface DatosSolicitudFormState {
   aduana?:string
   manifesto?: boolean;
   manifiestosCasillaDeVerificacion?: boolean;
+  rfcRepresentante?:string;
 }
 
 /**
