@@ -78,7 +78,6 @@ export class SolicitudDeReporteComponent {
   constructor() {
     // Constructor vacío, no requiere inicialización adicional.
   }
-
   /**
    * Cambia el índice actual del paso basado en la acción seleccionada.
    * Navega al paso siguiente o anterior utilizando el componente Wizard.

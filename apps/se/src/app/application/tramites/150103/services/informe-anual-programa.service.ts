@@ -1,19 +1,28 @@
 import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
 import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
-
+import { Solicitud150103Query } from '../estados/solicitud150103.query';
+import { PROC_150103 } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
+
 @Injectable({
   providedIn: 'root'
 })
-export class InformeAnualProgramaService {
-
-  /**
+export class InformeAnualProgramaService {  /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
+   * @param solicitud150103Store Store para manejar el estado de la solicitud.
+   * @param solicitud150103Query Query para acceder al estado de la solicitud.
+   * @param httpService Servicio HTTP core para comunicación con el backend.
    */
-  constructor(private http: HttpClient, private solicitud150103Store: Solicitud150103Store) {}
+  constructor(
+    private http: HttpClient, 
+    private solicitud150103Store: Solicitud150103Store,
+    private solicitud150103Query: Solicitud150103Query,
+    private httpService: HttpCoreService
+  ) {}
   actualizarEstadoFormulario(DATOS: Solicitud150103State): void {
     this.solicitud150103Store.actualizarFolioPrograma(DATOS.folioPrograma);
     this.solicitud150103Store.actualizarModalidad(DATOS.modalidad);
@@ -56,4 +65,40 @@ export class InformeAnualProgramaService {
 getRegistroData(): Observable<Solicitud150103State> {
     return this.http.get<Solicitud150103State>('assets/json/150103/registro.json');
 }
+
+  /**
+   * Guarda los datos del reporte anual enviando el payload al backend.
+   * @param payload - Objeto que contiene los datos del reporte anual para guardar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  guardarDatosPost(payload: any): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_150103.GUARDAR, { body: payload });
+  }
+
+  /**
+   * Construye el objeto de datos del reporte basado en el estado actual.
+   * @param data - Estado actual de la solicitud 150103.
+   * @returns Objeto con los datos del reporte estructurados para el API.
+   */
+  buildDatosReporte(data: Solicitud150103State): any {
+    return {
+      fecha_inicio: data.inicio,
+      fecha_fin: data.fin,
+      folio_programa: data.folioPrograma,
+      modalidad: data.modalidad,
+      tipo_programa: data.tipoPrograma,
+      estatus: data.estatus,
+      ventas_totales: parseFloat(data.ventasTotales) || 0,
+      total_exportaciones: parseFloat(data.totalExportaciones) || 0,
+      total_importaciones: parseFloat(data.totalImportaciones) || 0,
+      saldo: parseFloat(data.saldo) || 0,
+      porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
+    };
+  }  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Solicitud150103State> {
+    return this.solicitud150103Query.seleccionarSolicitud$;
+  }
 }

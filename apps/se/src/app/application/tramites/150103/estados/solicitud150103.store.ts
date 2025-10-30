@@ -7,6 +7,9 @@ import { Injectable } from '@angular/core';
  * Contiene los campos requeridos para la gestión del reporte anual.
  */
 export interface Solicitud150103State {
+  /** ID de la solicitud */
+  idSolicitud: number;
+
   /** Fecha de inicio del reporte */
   inicio: string;
 
@@ -51,6 +54,7 @@ export interface Solicitud150103State {
  */
 export function createInitialState(): Solicitud150103State {
   return {
+    idSolicitud: 0,
     inicio: '',
     fin: '',
     folioPrograma: '',
@@ -140,6 +144,11 @@ export class Solicitud150103Store extends Store<Solicitud150103State> {
   /** Actualiza el porcentaje de exportación. */
   actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
     this.update(state => ({ ...state, porcentajeExportacion }));
+  }
+
+  /** Actualiza el ID de la solicitud. */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update(state => ({ ...state, idSolicitud }));
   }
 
   /**
