@@ -1,16 +1,12 @@
 import {
   Anexo,
-  Bitacora,
   Complimentaria,
   DomicilioInfo,
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
-
-import {
-  DatosDelModificacion,
-  DatosDelServicios,
-} from '../models/datos-tramite.model';
+import { Bitacora } from '../../../shared/models/bitacora.model';
+import { DatosDelServicios } from '../models/datos-tramite.model';
 
 /**
  * Representa los pasos de un proceso en una solicitud.
@@ -261,22 +257,22 @@ export const CONFIGURACION_FEDERETARIOS = [
     orden: 1,
   },
   {
-    encabezado: 'Primer apellido',
+    encabezado: 'Apellido Paterno',
     clave: (ele: Federetarios): string | undefined => ele.apellidoPrimer,
     orden: 2,
   },
   {
-    encabezado: 'Segundo apellido',
+    encabezado: 'Apellido Materno',
     clave: (ele: Federetarios): string | undefined => ele.apellidoSegundo,
     orden: 3,
   },
   {
-    encabezado: 'Número acta',
+    encabezado: 'Número Acta',
     clave: (ele: Federetarios): string | undefined => ele.numeroActa,
     orden: 4,
   },
   {
-    encabezado: 'Fecha acta',
+    encabezado: 'Fecha Acta',
     clave: (ele: Federetarios): string | undefined => ele.fetchActa,
     orden: 5,
   },
@@ -357,7 +353,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 6,
   },
   {
-    encabezado: 'Municipio o Delegación',
+    encabezado: 'Municipio o delegación',
     clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
@@ -372,7 +368,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 9,
   },
   {
-    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    encabezado: 'Registro Federal de Contribuyente',
     clave: (ele: Operacions): string | undefined => ele.rfc,
     orden: 10,
   },
@@ -382,7 +378,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 11,
   },
   {
-    encabezado: 'Denominación o razón social',
+    encabezado: 'Razón Social',
     clave: (ele: Operacions): string | undefined => ele.razonSocial,
     orden: 12,
   },
@@ -605,12 +601,12 @@ export const CONFIGURACION_EMPRESAS = [
 export const CONFIGURACION_BITACORA_TABLA = [
   {
     encabezado: 'Tipo modificación',
-    clave: (ele: Bitacora): string | undefined => ele.tipoModificion,
+    clave: (ele: Bitacora): string | undefined => ele.tipoModificacion,
     orden: 1,
   },
   {
     encabezado: 'Fecha modificación',
-    clave: (ele: Bitacora): string | undefined => ele.fetchModificion,
+    clave: (ele: Bitacora): string | undefined => ele.fechaModificacion,
     orden: 2,
   },
   {

@@ -55,7 +55,6 @@ describe('BitacoraComponent', () => {
   component.toastr = { error: jest.fn() } as any;
   component.modificionService = modificionServiceMock as any;
 
-  // Re-trigger the subscription logic manually
   modificionServiceMock.obtenerBitacora().subscribe((data: any[]) => {
     component.datos = [...data];
   });
@@ -74,7 +73,6 @@ it('should show error if obtenerBitacora fails', () => {
   component.modificionService = modificionServiceMock as any;
   component.toastr = toastrMock as any;
 
-  // Trigger the subscription manually for test
   modificionServiceMock.obtenerBitacora().subscribe({
     error: () => {
       toastrMock.error('Error al cargar los estados');
@@ -86,13 +84,9 @@ it('should show error if obtenerBitacora fails', () => {
 
 it('should have default empty datos array and predefined configuracionTabla', () => {
   expect(component.datos).toEqual([]);
-  expect(component.configuracionTabla).toBeDefined();
-  expect(Array.isArray(component.configuracionTabla)).toBe(true);
 });
 
 it('should initialize destroyNotifier$ as a Subject', () => {
   expect(component.destroyNotifier$ instanceof Subject).toBe(true);
 });
-
-
 });

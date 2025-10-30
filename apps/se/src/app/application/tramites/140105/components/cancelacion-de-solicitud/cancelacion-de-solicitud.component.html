@@ -92,7 +92,11 @@
                 #closeModal (click)="cerrarModal()">Cancelar</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                (click)="buscarPermisoCancelacion()">Buscar</button>
+                [disabled]="isLoadingBusquedaPermiso"
+                (click)="buscarPermisoCancelacion()">
+                <span *ngIf="isLoadingBusquedaPermiso" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                {{ isLoadingBusquedaPermiso ? 'Buscando...' : 'Buscar' }}
+            </button>
         </div>
     </div>
     </div>

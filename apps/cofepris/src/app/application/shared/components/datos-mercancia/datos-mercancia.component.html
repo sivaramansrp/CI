@@ -12,6 +12,7 @@
             [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
             [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('clasificacionProducto')?.touched??false"
            (selectionChange)="onCambioClasificacionProducto($event)"
           ></app-catalogo-select>
         </div>
@@ -28,6 +29,7 @@
             [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
               [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('especificarClasificacionProducto')?.touched??false"
           ></app-catalogo-select>
         </div>
       </div>
@@ -222,7 +224,7 @@
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueForma') &&
-    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial &&
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoFOFA &&
     !elementosBelow){
     <div class="row">
       <div class="col-md-10">

@@ -1,11 +1,12 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { AfterViewInit,ElementRef,ViewChild } from '@angular/core';
 import {CategoriaMensaje,TipoNotificacionEnum} from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DesistimientoDePermisoState } from '../../estados/desistimiento-de-permiso.store';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -114,6 +115,11 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy,AfterV
   public datosDePermiso: boolean = false;
 
   /**
+   * Flag to track if we have data from API search to prevent hardcoded data override
+   */
+  private hasApiSearchData: boolean = false;
+
+  /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
@@ -160,6 +166,12 @@ public nuevaNotificacionUno!: Notificacion;
    * Esto puede activar la visualización de un modal de confirmación o habilitar opciones relacionadas con la eliminación.
    * */
   esEliminarDos: boolean = false;
+
+  /**
+   * Indica si se está ejecutando una búsqueda de permiso.
+   * Cuando es `true`, previene múltiples llamadas simultáneas a la API.
+   */
+  public isLoadingBusquedaPermiso: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -198,12 +210,16 @@ public nuevaNotificacionUno!: Notificacion;
     this.cancelacionForm = this.fb.group({
      motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
+
+    this.establecerBusquedaForm();
+    
     this.initializeStoreData();
     this.suscribirseAStoreData();
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
-      if (this.datosDePermiso) {
+      if (this.datosDePermiso && !this.hasApiSearchData) {
+        
         this.cuerpoTablaCancelacion = [formData as Cancelacion];
         this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
         this.desistimientoQuery.selectMotivoCancelacion$ 
@@ -333,16 +349,13 @@ public nuevaNotificacionUno!: Notificacion;
 
   /**
    * Muestra el formulario modal para buscar mercancías.
-   * Inicializa la instancia del modal si no está creada y luego lo muestra.
    * @return void
    * */
   showForm():void{
-    if (this.modalBuscar) {
-      if (!this.modalInstances) {
-        this.modalInstances = new Modal(this.modalBuscar.nativeElement);
-      }
+    
+    if (this.modalInstances) {
+      this.modalInstances.show();
     }
-    this.modalInstances?.show();
   }
 
    /**
@@ -372,6 +385,8 @@ public nuevaNotificacionUno!: Notificacion;
       this.modalInstances.hide();
     }
    
+    // Resetear el estado de loading cuando se cierra el modal
+    this.isLoadingBusquedaPermiso = false;
   }
 
    /**
@@ -380,8 +395,13 @@ public nuevaNotificacionUno!: Notificacion;
    * Inicializa el modal de modificación.
    */
    ngAfterViewInit(): void {
+ 
     if (this.modifyModal) {
       this.modalInstanceDos = new Modal(this.modifyModal.nativeElement);
+    }
+
+    if (this.modalBuscar) {
+      this.modalInstances = new Modal(this.modalBuscar.nativeElement);
     }
   }
 
@@ -446,7 +466,11 @@ public nuevaNotificacionUno!: Notificacion;
    * @method buscarPermisoCancelacion
    */
   buscarPermisoCancelacion(event?: Event): void {
-    // Prevenir la propagación del evento para evitar activar la validación del formulario padre
+ 
+    if (this.isLoadingBusquedaPermiso) {
+      return;
+    }
+
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -486,6 +510,7 @@ public nuevaNotificacionUno!: Notificacion;
       };
       return;
     }
+    
     this.servicioDeMensajesService.actualizarEstadoFormulario({ folioCancelar: TRAMITE_VALUE });
 
     // Validar que tengamos los datos necesarios del store
@@ -504,10 +529,11 @@ public nuevaNotificacionUno!: Notificacion;
       return;
     }
 
+    // Obtener el estado actual del store una sola vez usando take(1) para evitar subscription continua
     this.desistimientoQuery.selectTramite$
       .pipe(
-        takeUntil(this.destroyNotificationSubject$),
-        map((storeState) => ({
+        take(1), // Solo tomar el primer valor, no crear subscription continua
+        map((storeState: DesistimientoDePermisoState) => ({
           id_solicitud: storeState.idSolicitud || this.idTipoTramite,
           rfc_solicitante: storeState.rfc || this.rfcSolicitante,
           clave_entidad_federativa: storeState.claveEntidadFederativa || this.claveEntidadFederativa,
@@ -535,15 +561,59 @@ public nuevaNotificacionUno!: Notificacion;
     id_tipo_tramite: number;
     folio_cancelar: string;
   }): void {
+    // Establecer loading state
+    this.isLoadingBusquedaPermiso = true;
+
     this.servicioDeMensajesService.buscarPermisoCancelacion(PAYLOAD)
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe({
             next: (response) => {
+              this.isLoadingBusquedaPermiso = false;
               if (response.codigo === '00' && response.datos) {
                 this.datosDePermiso = true;
-                this.cuerpoTablaCancelacion = response.datos.datos || [];
+                
+                const API_DATOS = response.datos as unknown as {
+                  numFolioTramite?: string;
+                  tipoSolicitud?: string;
+                  regimen?: string;
+                  clasificacionRegimen?: string;
+                  condicionMercancia?: string;
+                  fraccion?: string;
+                  unidadMedidaUMT?: string;
+                  cantidadSolicitada?: string;
+                  valorSolicitado?: string;
+                  idResolucion?: string;
+                  numeroResolucion?: string;
+                };
+          
+                
+          
+                const MAPPED_DATA: Cancelacion = {
+                  folioTramite: API_DATOS.numFolioTramite || '',
+                  tipoDeSolicitud: API_DATOS.tipoSolicitud || '',
+                  regimen: API_DATOS.regimen || '',
+                  cdr: API_DATOS.clasificacionRegimen || '',
+                  condicionDeLaMercancia: API_DATOS.condicionMercancia || '',
+                  fraccionArancelaria: API_DATOS.fraccion || '',
+                  umt: API_DATOS.unidadMedidaUMT || '',
+                  cantidad: API_DATOS.cantidadSolicitada || '',
+                  usd: API_DATOS.valorSolicitado || '',
+                  idResolucion: API_DATOS.idResolucion || '',
+                  numeroResolucion: API_DATOS.numeroResolucion || '',
+                  clasificacionRegimen: API_DATOS.clasificacionRegimen || '',
+                };
+            
+                
+                this.cuerpoTablaCancelacion = [MAPPED_DATA];
+              
                 this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion);
-                this.cerrarModal();
+                this.datosDePermiso = true;
+                this.hasApiSearchData = true;
+                
+                if (this.modalInstanceDos) {
+                  this.modalInstanceDos.show();
+                }
+                
                 this.nuevaNotificacion = {
                   tipoNotificacion: TipoNotificacionEnum.TOASTR,
                   categoria: CategoriaMensaje.EXITO,
@@ -570,6 +640,7 @@ public nuevaNotificacionUno!: Notificacion;
               }
             },
             error: (error) => {
+              this.isLoadingBusquedaPermiso = false;
               let errorMessage = 'El Folio de Trámite que ingresó no pertenece a PEXIM';
               if (error.status) {
                 switch (error.status) {
