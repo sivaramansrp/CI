@@ -8,6 +8,7 @@ import {
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user'
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-materias-primas.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202Store } from '../../estados/tramite260202Store.store';
@@ -69,6 +70,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   @ViewChild('tercerosRelacionadosVista') tercerosRelacionados!: TercerosRelacionadosComponent;
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @constructor

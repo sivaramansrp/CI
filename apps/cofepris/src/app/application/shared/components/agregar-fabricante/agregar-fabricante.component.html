@@ -366,6 +366,20 @@
           </div>
       }
     </div>
+    <div class="row mt-3">
+       @if(idProcedimiento === 260202) {
+  
+          <div class="col-md-4">
+            <label class="form-label">Colonia o equivalente:</label>
+            <input
+              type="text"
+              class="form-control"
+              [maxlength]="100"
+              formControlName="coloniaOEquivalente"
+            />
+          </div>
+      }
+    </div>
     }
   
 
