@@ -425,6 +425,7 @@ export interface MercanciaForm {
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
   especifiqueObligatorio?:string;
+  especifiqueEstado?:string;
 }
 
 /**

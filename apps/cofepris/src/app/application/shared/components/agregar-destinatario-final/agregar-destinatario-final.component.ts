@@ -1196,7 +1196,7 @@ changeNacionalidad(): void {
 
       if (!this.isEditMode) {
         this.agregarDestinatarioFinal.patchValue({
-          pais: 2
+          pais: 'MEX'
         });
       }
         if(this.idProcedimiento === 260201){

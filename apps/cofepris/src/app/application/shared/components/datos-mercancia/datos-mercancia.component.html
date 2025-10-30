@@ -265,6 +265,7 @@
           formControlName="estadoFisico"
           [label]="'Estado físico'"
           [required]="true"
+            [markUntouched]="mercanciaForm.get('estadoFisico')?.errors?.['required'] && mercanciaForm.get('estadoFisico')?.touched ? true : false"
           name="estadoFisico"
           [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
@@ -567,6 +568,7 @@
           [markUntouched]="mercanciaForm.get('cantidadUmc')?.errors?.['required'] && mercanciaForm.get('cantidadUmc')?.touched? true : false"
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
+           [markTouched]="mercanciaForm.get('cantidadUmc')?.touched??false"
           name="cantidadUmc"
 
 
