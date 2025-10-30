@@ -228,6 +228,8 @@ export class TercerosrelacionadosComponent implements OnInit {
 
   ngOnInit(): void {
     // Suscribirse a los datos de prellenado de movilización desde el servicio compartido
+    this.cuerpoTablaDestino = [];
+    this.cuerpoTablaExportador = [];
     this.sharedService.dataTerceros$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       if (data) {
         data.terceros_destinatario.forEach(destinatario => {
