@@ -1216,8 +1216,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          if (response?.codigo === '00' && response.datos) {
-            this.procesarDatosRepresentante(response.datos);
+          if (response?.codigo === '00' && Array.isArray(response.datos) && response.datos.length > 0) {
+            this.procesarDatosRepresentante(response.datos[0]);
           } else {
             console.warn('Respuesta no válida del servidor:', response);
             this.toastr.warning('No se encontraron datos para el RFC proporcionado', 'Búsqueda de RFC');
@@ -1250,9 +1250,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
-      representanteNombre: NOMBRE_FIELD || this.DATOS_PREDETERMINADOS.representanteNombre,
-      apellidoPaterno: data.apellidoPaterno || this.DATOS_PREDETERMINADOS.apellidoPaterno,
-      apellidoMaterno: data.apellidoMaterno || this.DATOS_PREDETERMINADOS.apellidoMaterno,
+      representanteNombre: NOMBRE_FIELD,
+      apellidoPaterno: data.apellidoPaterno,
+      apellidoMaterno: data.apellidoMaterno,
     };
 
     this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
