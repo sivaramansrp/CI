@@ -988,6 +988,9 @@ return true;
   return false;
    
   }
+  get tramiteIDNumber(): number {
+  return Number(this.tramiteID);
+}
 
   /**
    * Ciclo de vida `OnDestroy`.

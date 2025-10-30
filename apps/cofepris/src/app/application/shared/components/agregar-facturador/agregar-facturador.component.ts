@@ -394,7 +394,11 @@ export class AgregarFacturadorComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.agregarFacturadorForm.markAsUntouched();
+    this.agregarFacturadorForm.disable();
     this.agregarFacturadorForm.reset();
+    this.estaDeshabilitadoDesplegable = true;
+    this.agregarFacturadorForm.get('tipoPersona')?.enable();  
   }
   /**
    * @method cancelar
