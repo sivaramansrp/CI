@@ -5,7 +5,8 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202State } from '../../estados/tramite260202Store.store';
 
@@ -69,6 +70,10 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * @property {DatosPasos} datosPasos
    * @description Objeto que contiene información sobre los pasos del wizard.
@@ -80,6 +85,8 @@ export class ContenedorDePasosComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  esFormaValido!: boolean;
 
   /**
    * @property {Tramite260202State} storeData
@@ -127,16 +134,26 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
+    this.esFormaValido = false
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (this.indice === 1) {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+      }
+      if (this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+    }
+    else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
@@ -160,6 +177,16 @@ export class ContenedorDePasosComponent implements OnInit {
     }
   }
 
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
   /**
    * Emite un evento para cargar archivos.
    * {void} No retorna ningún valor.
