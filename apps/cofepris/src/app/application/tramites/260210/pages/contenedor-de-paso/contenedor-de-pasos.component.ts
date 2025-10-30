@@ -307,7 +307,7 @@ ngOnInit(): void {
   getValorIndice(e: AccionBoton): void {
 
     if (e.accion === 'cont') {
-      let isValid = true;
+        let isValid = true;
 
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
@@ -328,6 +328,7 @@ ngOnInit(): void {
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;
@@ -335,7 +336,7 @@ ngOnInit(): void {
 
       const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
       let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
+      this.registroSolicitudService.postGuardarDatos('260210', PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
         if (!shouldNavigate) {
           const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
@@ -639,14 +640,17 @@ onClickCargaArchivos(): void {
    */
 static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
-<div class="d-flex justify-content-center text-center">
-  <div class="col-md-12 p-3  border-danger  text-danger rounded">
-    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
-
-    <div class="d-flex justify-content-start mb-1">
-      <span class="flex-grow-1 text-center">${mensajes}</span>
-    </div>  
+      <div class="row">
+<div class="col-md-12 justify-content-center text-center">
+  <div class="row">
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <ol>
+    <li>${mensajes}</li>
+    </ol>
+    </div>
   </div>
+</div>
 </div>
 `;
 return ALERTA;

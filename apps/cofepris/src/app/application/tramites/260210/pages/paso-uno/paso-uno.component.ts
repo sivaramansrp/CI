@@ -155,11 +155,11 @@ actualizarEstadoFormulario(DATOS: Tramite260210State): void {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
    validarPasoUno(): boolean {
-    const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-    const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      (esTabValido && esTercerosValido&& esPagoValido)? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO) ? true : false
 
     );
   }
