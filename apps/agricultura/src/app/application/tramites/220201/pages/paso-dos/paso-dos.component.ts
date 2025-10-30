@@ -96,24 +96,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
 
+  // eslint-disable-next-line class-methods-use-this, no-empty-function
   getListaDocumentoOpcionales(): void {
-    this.catalogosServices
-      .getDocumentosSolicitud('220201', true)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef$),
-        map((response) => {
-          response.datos.documento_tramite.forEach((documento: Documento) => {
-            if (documento.tipo_documento) {
-              this.catalogoDocumentosOpcionales.push({
-                ...documento.tipo_documento,
-                adicionales: [],
-                cargado: false,
-              });
-            }
-          });
-        })
-      )
-      .subscribe();
+    console.warn('Cargando documentos opcionales...');
   }
 
   documentosCargados(cargaRealizada: boolean): void {
