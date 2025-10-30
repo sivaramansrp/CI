@@ -1,5 +1,5 @@
 import { of, throwError } from 'rxjs';
-import { CertificadoTecnicoJaponService } from './certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from './certificadotecnicojapon.service';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Solicitud110218State, Tramite110218Store } from '../estados/tramites/tramite110218.store';

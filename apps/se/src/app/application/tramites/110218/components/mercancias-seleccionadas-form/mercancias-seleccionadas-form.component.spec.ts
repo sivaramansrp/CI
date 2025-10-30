@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MercanciasSeleccionadasFormComponent } from './mercancias-seleccionadas-form.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Router } from '@angular/router';

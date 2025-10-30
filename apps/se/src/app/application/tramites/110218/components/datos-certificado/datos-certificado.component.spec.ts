@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosCertificadoComponent } from './datos-certificado.component';
 
 import { FormBuilder } from '@angular/forms';
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';

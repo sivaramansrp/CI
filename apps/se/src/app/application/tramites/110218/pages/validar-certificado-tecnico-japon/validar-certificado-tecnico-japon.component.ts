@@ -14,7 +14,7 @@ import {
   Tramite110218Store,
 } from '../../estados/tramites/tramite110218.store';
 import { Subject, take, takeUntil } from 'rxjs';
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 /**

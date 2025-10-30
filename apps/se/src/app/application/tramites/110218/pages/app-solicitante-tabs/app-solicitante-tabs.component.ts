@@ -4,7 +4,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 
 /**
  * Componente para manejar las pestañas del solicitante.

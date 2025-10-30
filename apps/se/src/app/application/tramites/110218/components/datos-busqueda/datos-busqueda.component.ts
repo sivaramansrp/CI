@@ -15,7 +15,7 @@ import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110218/datos-b
 import destinatarioTable from '@libs/shared/theme/assets/json/110218/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110218/datos-busqueda.json';
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
