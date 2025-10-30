@@ -201,7 +201,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
    */
-  @Input() estaOculto!: boolean;
+  @Input() estaOculto: boolean = false;
 
   /**
    * Indica si el formulario del proveedor debe estar habilitado.
