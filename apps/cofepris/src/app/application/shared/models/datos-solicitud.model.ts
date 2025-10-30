@@ -280,6 +280,7 @@ export interface TablaMercanciasDatos {
   caducidad?:string;
   marcaComercialDenominacion?:string;
   especifique?: string;
+  especifiqueForma?: string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
     paisDeOriginDatos?: string[];
@@ -419,10 +420,12 @@ export interface MercanciaForm {
   usoEspecifico?: string[]
   marca?: string;
   especifique?: string;
+  especifiqueForma?: string;
   claveDeLos?: string;
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
   especifiqueObligatorio?:string;
+  especifiqueEstado?:string;
 }
 
 /**

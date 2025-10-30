@@ -200,17 +200,3 @@ export interface Anexo {
   /** Valores anteriores, si aplica para trazabilidad o auditoría */
   valoresAnteriores?: string;
 }
-
-/**
- * Contiene los datos generales para la modificación de una solicitud IMMEX.
- */
-export interface DatosModificacion {
-  /** Registro Federal de Contribuyentes del solicitante */
-  rfc: string;
-  /** Representación federal (nombre o entidad que representa) */
-  representacionFederal: string;
-  /** Tipo de modalidad IMMEX a modificar */
-  tipoModalidad: string;
-  /** Descripción detallada de la modalidad */
-  descripcionModalidad: string;
-}

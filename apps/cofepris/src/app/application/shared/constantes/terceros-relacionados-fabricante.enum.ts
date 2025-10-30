@@ -63,6 +63,6 @@ export const OTROS_TABLA = [
 ];
 
 
-export const DEFAULT_TABLA_ORDENS = [260201]
+export const DEFAULT_TABLA_ORDENS = [260201];
 
-export const NUMERO_REGISTRO_SANITARIO = [260202]
+export const NUMERO_REGISTRO_SANITARIO = [260202];

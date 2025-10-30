@@ -9,7 +9,6 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputFechaComponent,
-  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
@@ -235,40 +234,48 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Establece la estructura inicial del formulario reactivo de asignación.
    */
   establecerAsignacionFormGroup(): void {
-      /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
-    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
-    this.tramite120702Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud120702State;
-        })
-      )
-      .subscribe();
-
     this.asignacionForm = this.fb.group({
+      // Existing controls
       anoDelOficio: ['', [Validators.required]],
-      numeroOficio: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
-      estado: [{ value: 'CHIHUAHUA', disabled: true }],
-      representacionFederal: [{ value: 'CIUDAD JUAREZ', disabled: true }],
-      montoAsignado: [{ value: '500', disabled: true }],
-      montoExpedido: [{ value: '130', disabled: true }],
-      montoDisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      datosNumeroOficio: [{ value: '2', disabled: true }],
-      fechaInicioVigencia: [{ value: '15/11/2024', disabled: true }],
-      fechaFinVigencia: [{ value: '15/11/2025', disabled: true }],
-      montoADisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      montoAExpedir: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
-      totalAExpedir: [{ value: '', disabled: true }],
+      numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoADisponible: [''],
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+      
+      // Missing controls that are causing errors
+      estado: [''],
+      representacionFederal: [''],
+      montoAsignado: [''],
+      montoExpedido: [''],
+      montoDisponible: [''],
+      datosNumeroOficio: [''],
+      totalAExpedir: ['']
     });
 
-    this.asignacionForm.patchValue({
-      anoDelOficio:this.solicitudState.anoDelOficio,
-      numeroOficio:this.solicitudState.numeroOficio,
-      montoAExpedir:this.solicitudState.montoAExpedir,
-      fechaInicioVigencia:this.solicitudState.fechaInicioVigencia,
-      fechaFinVigencia:this.solicitudState.fechaFinVigencia,
-    })
+}
+
+  /**
+   * Método para forzar la validación de todos los campos del formulario
+   */
+  public forzarValidacion(): void {
+    if (this.asignacionForm) {
+      Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      
+  // Log individual control errors
+      Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL && CONTROL.errors) {
+            // El control tiene errores de validación; manejar o registrar si es necesario
+        }
+      });
+    }
   }
 
   /**

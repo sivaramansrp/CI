@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
+  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -43,7 +44,11 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
+ interface OpcionesPublicacion{
+  label: string;
+  value: string;
+  hint?: string;
+}
 /**
  * Componente para agregar datos de un fabricante.
  * Provee un formulario reactivo y métodos para guardar la información del fabricante.
@@ -60,7 +65,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    InputRadioComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -309,6 +315,30 @@ export class AgregarFabricanteComponent
        * ```
        */
       private subscription: Subscription = new Subscription();
+      disableLabel:string[] =['Física','Moral'];
+    /**
+     * Arreglo que almacena las opciones dinámicas obtenidas desde un archivo JSON.
+     */
+    losDatos: OpcionesPublicacion[] = [{
+      label: 'Nacional',
+      value: 'Nacional'
+    },
+    {
+      label: 'Extranjero',
+      value: 'Extranjero'
+    }];
+    losDatosTipoPersona: OpcionesPublicacion[] = [{
+      label: 'Física',
+      value: 'Fisica',
+      hint:'Una persona física es entendida como toda persona con una actividad específica'
+    },
+    {
+label: 'Moral',
+      value:  'Moral',
+      hint:'Una persona física es entendida como toda persona con una actividad específica'
+    }
+    ];
+
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -617,16 +647,16 @@ export class AgregarFabricanteComponent
    */
 private forzarDeshabilitarPais(): void {
   if (this.chequeoValidacionAlGuardar) {
-    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value ){
-  this.agregarFabricanteForm.patchValue({pais: 1});
+    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' ){
+  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
     }
     else{
-      this.agregarFabricanteForm.patchValue({pais: -1});
+      this.agregarFabricanteForm.patchValue({pais: ''});
     }
     this.agregarFabricanteForm.get('pais')?.disable();
   }
   if (
-    this.idProcedimiento === 260912 &&
+    (this.idProcedimiento === 260912 || this.idProcedimiento === 260201) &&
     this.agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     (
       this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
@@ -698,8 +728,8 @@ guardarFabricante(): void {
   }
 
   const OBTENER_DESCRIPCION_CATALOGO = (catalogArray: Catalogo[], id: string | number): string => {
-    const ITEM = catalogArray.find(cat => cat.id.toString() === id.toString());
-    return ITEM ? ITEM.descripcion : id.toString();
+    const ITEM = catalogArray.find(cat => cat.clave === id.toString());
+    return ITEM ? ITEM.descripcion : id as string;
   };
 
   const NUEVO_FABRICANTE: Fabricante = {
@@ -838,16 +868,14 @@ guardarFabricante(): void {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  limpiarFormulario(): void {
-    if (this.chequeoValidacionAlGuardar) {
-      this.agregarFabricanteForm.reset();
-      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
-        this.agregarFabricanteForm.get(controlName)?.disable();
-      });
+  limpiarFormulario(): void { 
+    this.agregarFabricanteForm.reset();
+    this.agregarFabricanteForm.markAsUntouched();
+
+    if (this.chequeoValidacionAlGuardar) {    
+          this.agregarFabricanteForm.disable(); 
       this.agregarFabricanteForm.get('nacionalidad')?.enable();
       this.estaDeshabilitadoDesplegable = true;
-    } else {
-      this.agregarFabricanteForm.reset();
     }
   }
   /**
@@ -1035,8 +1063,19 @@ guardarFabricante(): void {
   changeNacionalidad(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
     const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
-if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
-  this.agregarFabricanteForm.patchValue({pais: 1});
+    this.disableLabel=[];
+     if(this.idProcedimiento === 260201 && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+    this.elementosDeshabilitados=[];
+  }
+  else{
+    if(this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' && this.agregarFabricanteForm.get('tipoPersona')?.value ){
+ this.agregarFabricanteForm.patchValue({pais: 'MEX'});
+    }
+     this.elementosDeshabilitados = ['pais'];
+  }
+if((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')){
+ 
+  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
 }
     if (RFC_CONTROL) {
       RFC_CONTROL.setValidators([
@@ -1079,6 +1118,8 @@ if(VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.
         });
       }
     }
+    this.agregarFabricanteForm.get('pais')?.patchValue('');
+    this.agregarFabricanteForm.markAsUntouched();
     this.forzarDeshabilitarPais();
   }
 
@@ -1133,7 +1174,8 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
-  
+   this.agregarFabricanteForm.get('pais')?.patchValue('');
+      this.agregarFabricanteForm.markAsUntouched();
   this.forzarDeshabilitarPais();
 }
 

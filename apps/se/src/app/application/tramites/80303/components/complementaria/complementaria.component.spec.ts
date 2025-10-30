@@ -7,13 +7,13 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { ComplementariaComponent } from './complementaria.component';
+import { ComplementarioComponent } from './complementaria.component';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 
 @Injectable()
 class MockModificacionProgramaImmexBajaSubmanufactureraService {
-  obtenerRespuestaPorUrl = function() {};
+  obtenerRespuestaPorUrl = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Injectable()
@@ -28,23 +28,23 @@ class MockTramite80303Query {
   });
 }
 
-describe('ComplementariaComponent', () => {
+describe('ComplementarioComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ ComplementariaComponent, FormsModule, ReactiveFormsModule ],
+      imports: [ ComplementarioComponent, FormsModule, ReactiveFormsModule ],
       declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ModificacionProgramaImmexBajaSubmanufactureraService, useClass: MockModificacionProgramaImmexBajaSubmanufactureraService },
         { provide: Tramite80303Query, useClass: MockTramite80303Query }
       ]
-    }).overrideComponent(ComplementariaComponent, {
+    }).overrideComponent(ComplementarioComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(ComplementariaComponent);
+    fixture = TestBed.createComponent(ComplementarioComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -55,17 +55,16 @@ describe('ComplementariaComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+    expect(component.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl).toHaveBeenCalledTimes(6);
   });
 
-  it('should run #onInputChange()', async () => {
-    component.certificacionSAT$ = component.certificacionSAT$ || {};
-    component.certificacionSAT$.set = jest.fn();
-    component.onInputChange({
-      target: {
-        value: {}
-      }
-    });
-    expect(component.certificacionSAT$.set).toHaveBeenCalled();
+  it('should have proper data arrays initialized', () => {
+    expect(component.accionistasTablaDatos).toEqual({});
+    expect(component.federatariosTablaDatos).toEqual({});
+    expect(component.plantasIMMEXDatos).toEqual({});
+    expect(component.empresasSubmanufacturerasTablaDatos).toEqual({});
+    expect(component.plantasManufacturerasTablaDatos).toEqual({});
+    expect(component.serviciosImmexTablaDatos).toEqual({});
   });
 
   it('should run #ngOnDestroy()', async () => {
