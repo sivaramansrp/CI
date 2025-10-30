@@ -28,7 +28,6 @@ import { modificarTerrestreService } from '../../../services/modificacar-terrest
 })
 export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy {
   isEditando: boolean = false;
-  isLoading: boolean = false;
   indiceEditando: number | null = null;
   @Input() readonly: boolean = false;
   @Input({ required: true }) datosDeChofere!: DatosDelChoferNacional;
@@ -224,12 +223,10 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Obtener datos para el conductor nacional usando CURP y RFC
    */
   ObtenerDatosConductorNacional(): void {
-    this.isLoading = true;
     const CURP_VALUE = this.formChoferes.get('curp')?.value;
     const RFC_VALUE = this.formChoferes.get('rfc')?.value;
     this.modificacarTerrestreService.buscarChoferNacional(CURP_VALUE, RFC_VALUE).subscribe((data: ApiResponseChofer) => {
       if (data && data.datos) {
-        this.isLoading = false;
         this.completarFormularioConDatos(data.datos);
         this.onEstadoChange();
       }

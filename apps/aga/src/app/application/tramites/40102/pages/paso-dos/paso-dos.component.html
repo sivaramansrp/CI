@@ -1,8 +1,3 @@
-@if(isLoading){
-<div *ngIf="isLoading" class="loader-overlay">
-  <span class="loader"></span>
-</div>
-}
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
 
@@ -15,7 +10,7 @@
     [catalogoDocumentos]="catalogoDocumentos"
   ></anexar-documentos> -->
   @if(isSuccessCert){
-  <!-- <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert> -->
+
   <app-acuse-recibo [datosTabla]="acuseDocumentos" [datosTablaAcuseNotificacion]="[]" [guardarDatos]="guardarDatos"
     [banderaVista]="'Acuse'">
   </app-acuse-recibo>

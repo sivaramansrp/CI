@@ -74,7 +74,6 @@ export class modificarTerrestreService {
 
 
   firmaDatos(datos: FirmaDatosRequest): Observable<IniciarResponse> {
-    // const FULL_URL = `/api/sat-t40102/solicitud/renovar/${datos.solicitudId}/firmar`;
     const FULL_URL = `/api/sat-t40102/solicitud/renovar/firmar`;
     return this.http.post<IniciarResponse>(FULL_URL, datos, { headers: modificarTerrestreService.getApiHeaders() });
   }

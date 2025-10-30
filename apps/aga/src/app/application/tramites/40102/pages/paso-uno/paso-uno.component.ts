@@ -128,19 +128,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       .subscribe((data: Choferesnacionales40102State) => {
         this.isShowDirector = data?.isShowDirector;
       });
-    // this.consultaQuery.selectConsultaioState$
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //     map((seccionState) => {
-    //       this.consultaDatos = seccionState;
-    //     })).subscribe();
-
-    // if (this.consultaDatos.update) {
-    //   this.guardarDatosFormulario();
-    // }
-    // else {
+  
     this.esDatosRespuesta = true;
-    // }
+   
   }
 
   /**

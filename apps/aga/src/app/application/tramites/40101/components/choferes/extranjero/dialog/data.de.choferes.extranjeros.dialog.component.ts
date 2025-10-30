@@ -42,7 +42,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   @Input() readonly: boolean = false;
 
-  isLoading: boolean = false
   submitted = false;
   isEditando: boolean = false;
 
@@ -334,7 +333,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   async buscarChoferNacional(numeroDelSeguroSocial: string): Promise<void> {
-    this.isLoading = true;
     if (!numeroDelSeguroSocial) {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -346,7 +344,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      this.isLoading = false;
       return;
     }
     const NSS = this.formChoferes.get('numeroDelSeguroSocial')?.value
@@ -377,7 +374,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
             telefono: response.datos?.domicilio?.telefono ?? '',
           };
           this.completarFormularioConDatos(DATOSTOMAPPED);
-          this.isLoading = false;
         }
       });
   }

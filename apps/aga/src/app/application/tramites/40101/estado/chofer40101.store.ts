@@ -79,10 +79,11 @@ export class Chofer40101Store extends Store<Chofer40101State> {
   }
 
   /**
-     * Updates the data for a specific driver type.
-     * @param type The type of driver ('nacional' or 'extranjero').
-     * @param driverData The partial data of the driver to update.
-     */
+     * Actualiza los datos de un tipo de conductor específico.
+     * @param type El tipo de conductor ('nacional' o 'extranjero').
+     * @param driverData Los datos parciales del conductor que se actualizarán.
+  */
+    
   setDriver(type: DriverType, driverData: Partial<Chofer>): void {
     this.update(state => ({
       ...state,
@@ -94,8 +95,8 @@ export class Chofer40101Store extends Store<Chofer40101State> {
   }
 
   /**
-   * Sets the currently selected driver type.
-   * @param type The driver type to select.
+   * Establece el tipo de controlador seleccionado actualmente.
+   * @param type El tipo de controlador a seleccionar.
    */
   setSelectedDriverType(type: DriverType): void {
     this.update({ selectedDriverType: type });
@@ -105,7 +106,7 @@ export class Chofer40101Store extends Store<Chofer40101State> {
     this.update({ id_solicitud: id });
   }
 
-  // Add driver
+  // Agregar controlador
   addDriver(type: DriverType, driver: DatosDelChoferNacional | ChoferesExtranjeros): void {
     const ARRAYKEY = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
     this.update(state => ({
@@ -113,7 +114,7 @@ export class Chofer40101Store extends Store<Chofer40101State> {
     }));
   }
 
-  // Update existing driver
+  // Actualizar el controlador existente
   updateDriver(type: DriverType, index: number, driver: Partial<DatosDelChoferNacional | ChoferesExtranjeros>): void {
     const ARRAYKEY = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
     this.update(state => {
@@ -129,23 +130,23 @@ export class Chofer40101Store extends Store<Chofer40101State> {
     });
   }
 
-  // Mark driver as deleted (soft delete)
+  // Marcar controlador como eliminado (eliminación lógica)
   deleteDriver(type: DriverType, index: number): void {
     const ARRAYKEYS = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
     this.update(state => {
       const DRIVERS = [...(state[ARRAYKEYS] as ChoferWithMetadata[])];
       if (DRIVERS[index].status === 'new') {
-        // Remove completely if it was never saved
+        // Elimínelo por completo si nunca se guardó.
         DRIVERS.splice(index, 1);
       } else {
-        // Mark as deleted if it exists in backend
+        // Marcar como eliminado si existe en el backend
         DRIVERS[index] = { ...DRIVERS[index], status: 'deleted' };
       }
       return { [ARRAYKEYS]: DRIVERS };
     });
   }
 
-  // Get only drivers that need to be sent to backend
+  // Obtén solo los controladores que deben enviarse al servidor
   getDriversForSubmit(type: DriverType) {
     const STATE = this.getValue();
     const DRIVERS = type === 'nacional' ? STATE.driversNacional : STATE.driversExtranjero;
@@ -157,7 +158,7 @@ export class Chofer40101Store extends Store<Chofer40101State> {
     };
   }
 
-  // Method to load initial drivers
+  //Método para cargar los controladores iniciales
   loadInitialDrivers(type: DriverType, drivers: (DatosDelChoferNacional | ChoferesExtranjeros)[]): void {
     const ARRAYKEY = type === 'nacional' ? 'driversNacional' : 'driversExtranjero';
     const DRIVERSWITHMETADATA: ChoferWithMetadata[] = drivers.map(d => ({

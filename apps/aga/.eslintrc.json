@@ -1,7 +1,7 @@
 {
   "extends": ["../../.eslintrc.json"],
 
-  "ignorePatterns": ["!**/*", "**/*.spec.ts", "**/*.scss"],
+  "ignorePatterns": ["!**/*","**/*.spec.ts", "**/*.scss"],
 
   "overrides": [
     {
@@ -16,7 +16,7 @@
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
         "@typescript-eslint/no-explicit-any": "error",
-        "@angular-eslint/no-empty-lifecycle-method": ["error"],
+        "@angular-eslint/no-empty-lifecycle-method" : ["error"],
         "@angular-eslint/directive-selector": [
           "off",
           {
@@ -33,16 +33,16 @@
             "style": "kebab-case"
           }
         ],
-        // "sort-imports": [
-        //   "error",
-        //   {
-        //     "ignoreCase": false,
-        //     "ignoreDeclarationSort": false,
-        //     "ignoreMemberSort": false,
-        //     // "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-        //     "allowSeparatedGroups": true
-        //   }
-        // ],
+        "sort-imports": [
+          "error",
+          {
+            "ignoreCase": false,
+            "ignoreDeclarationSort": false,
+            "ignoreMemberSort": false,
+            "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+            "allowSeparatedGroups": true
+          }
+        ],
         "@typescript-eslint/consistent-generic-constructors": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "prefer-const": "error",

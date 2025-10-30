@@ -23,7 +23,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Constante que contiene los textos utilizados en el componente.
    */
   TEXTOS: string = '';
-  isLoading: boolean = false;
 
   banderaVista: string = ""
 
@@ -82,32 +81,19 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
-    // this.getTiposDocumentos();
+    
     this.cadenaOriginal = this.chofer40102Query.getValue().cadenaOriginal
   }
 
   /**
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
-  // getTiposDocumentos(): void {
-  //   this.catalogosServices
-  //     .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe({
-  //       next: (resp): void => {
-  //         if (resp.length > 0) {
-  //           this.catalogoDocumentos = resp;
-  //         }
-  //       },
-  //     });
-  // }
-
+ 
 
   /**
    * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getDatosOfFirma(event: Certificado): void {
-    this.isLoading = true
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(event ? event.firma : '');
     this.idSolicitud = Number(this.chofer40102Query.getValue().solicitudeId);
@@ -117,7 +103,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       certificate_serial_number: event ? event.certSerialNumber : '',
       id_solicitud: this.idSolicitud ? this.idSolicitud.toString() : ''
     }).subscribe((res) => {
-      this.isLoading = false
       if (res.codigo !== '00') {
         this.NOTIF.showNotification({
           tipoNotificacion: 'toastr',
@@ -136,8 +121,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
             id: 1,
             idDocumento: res.datos?.cve_folio_caat ?? '',
             documento: res.datos?.documento_detalle?.nombre_archivo ?? '',
-            urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
-            fullBase64: res.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+            urlPdf: res.datos?.documento_detalle?.nombre_archivo ?? '', // para mostrar o descargar nombre
+            fullBase64: res.datos?.documento_detalle?.contenido ?? '' // <--- Base64 del backend aquí
           }
         ];
 

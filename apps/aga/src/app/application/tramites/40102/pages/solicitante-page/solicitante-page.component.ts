@@ -367,21 +367,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    // this.chofer40102Query.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //       if (this.seccion.codigo !== '0') {
-    //         this.isCaat = true
-    //         this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
-    //       } else {
-    //         this.isCaat = false
-    //       }
-
-    //     })
-    //   )
-    //   .subscribe();
+    
 
     this.chofer40102Query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data: Choferesnacionales40102State) => {
       this.isCaat = data.codigo !== '00' ? true : false;
@@ -389,12 +375,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     });
 
     this.asignarSecciones();
-    // if (this.chofer40102Query.getValue().codigo !== '0') {
-    //   this.isCaat = true
-    // } else {
-    //   this.isCaat = false
-    // }
-    // this.catErrorMessage = this.chofer40102Query.getValue().catErrorMessage;
+
   }
 
   /**
@@ -524,7 +505,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
             txtBtnCancelar: 'Cancelar',
           });
         }
-        // this.chofer40101Service.guardarDatosFirma(res.datos);
+    
         (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original ?? '');
         (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(res?.datos?.id_solicitud);
         this.isExtrajero = res?.datos?.is_extranjero ?? false
@@ -534,8 +515,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
             id: 1,
             idDocumento: res?.datos?.cve_folio_caat ?? '',
             documento: res?.datos?.documento_detalle?.nombre_archivo ?? '',
-            urlPdf: res?.datos?.documento_detalle?.nombre_archivo ?? '', // for display or download name
-            fullBase64: res?.datos?.documento_detalle?.contenido ?? '' // <--- backend base64 here
+            urlPdf: res?.datos?.documento_detalle?.nombre_archivo ?? '', // para mostrar o descargar nombre
+            fullBase64: res?.datos?.documento_detalle?.contenido ?? '' // <--- Base64 del backend aquí
           }
         ];
 

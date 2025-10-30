@@ -43,7 +43,7 @@ export class WizardComponent implements OnChanges {
       changes['listaPasos'].currentValue !== null
     ) {
       this.listaPasos = changes['listaPasos'].currentValue;
-      this.lista = []; // ADD THIS LINE - Clear the array before pushing
+      this.lista = []; // AÑADE ESTA LÍNEA: Borra la matriz antes de insertar
       this.listaPasos.forEach((element, index) => {
         this.estadoInicial = index === 0 ? true : false;
         this.lista.push({

@@ -1,6 +1,18 @@
 
 /**
- * Interfaces para tipar la respuesta del API
+ * Representa la estructura de datos para un domicilio.
+ *
+ * @property pais - El país del domicilio.
+ * @property codigo_postal - El código postal del domicilio.
+ * @property estado - El estado o región del domicilio.
+ * @property municipio - El municipio del domicilio (puede ser null si no aplica).
+ * @property localidad - La localidad o ciudad del domicilio (puede ser null si no aplica).
+ * @property colonia - La colonia o barrio del domicilio (puede ser null si no aplica).
+ * @property calle - La calle del domicilio.
+ * @property numero_exterior - El número exterior del domicilio.
+ * @property numero_interior - El número interior del domicilio (puede estar vacío si no aplica).
+ * @property lada - La clave de lada o código de área para el teléfono (puede ser null).
+ * @property telefono - El número de teléfono asociado al domicilio (puede ser null).
  */
 export interface Domicilio {
   pais: string;
@@ -15,7 +27,16 @@ export interface Domicilio {
   lada: string | null;
   telefono: string | null;
 }
-
+/**
+ * Representa la estructura de datos de un solicitante.
+ *
+ * @property id_persona_solicitud - Identificador único de la persona o entidad que realiza la solicitud (puede ser null si no aplica).
+ * @property rfc - Registro Federal de Contribuyentes del solicitante (puede ser null si no aplica).
+ * @property razon_social - Razón social o nombre completo del solicitante (puede ser null si no aplica).
+ * @property correo_electronico - Correo electrónico del solicitante (puede ser null si no aplica).
+ * @property descripcion_giro - Descripción del giro o actividad del solicitante (puede ser null si no aplica).
+ * @property domicilio - Domicilio del solicitante, de tipo `Domicilio`.
+ */
 export interface Solicitante {
   id_persona_solicitud: number | null;
   rfc: string | null;
@@ -24,6 +45,14 @@ export interface Solicitante {
   descripcion_giro: string | null;
   domicilio: Domicilio;
 }
+
+/**
+ * Representa la estructura de la respuesta de la API para un solicitante.
+ *
+ * @property codigo - Código de estatus de la respuesta de la API.
+ * @property mensaje - Mensaje general de la respuesta de la API.
+ * @property datos - Objeto que contiene la información específica de la solicitud.
+ */
 
 export interface ApiResponseSolicitante {
   codigo: string;
@@ -46,7 +75,13 @@ export interface ApiResponseSolicitante {
     mensaje: string
   };
 }
-
+/**
+ * Representa la estructura de la respuesta de la API para un chofer.
+ *
+ * @property codigo - Código de estatus de la respuesta de la API (puede ser null).
+ * @property mensaje - Mensaje general de la respuesta de la API (puede ser null).
+ * @property datos - Objeto que contiene la información específica del chofer.
+ */
 export interface ApiResponseChofer {
   codigo: string | null;
   mensaje: string | null;
@@ -84,8 +119,10 @@ export interface ApiResponseChofer {
 
 
 /**
- * Interfaz que define la configuración de la tabla de unidades de arrastre.
- * Contiene encabezados y datos para la visualización en una tabla.
+ * Representa la configuración de la tabla de unidades de arrastre.
+ *
+ * @property encabezadas - Lista de encabezados de la tabla, cada uno con su texto, función para extraer valor y orden.
+ * @property datos - Lista de datos de unidades de arrastre que se mostrarán en la tabla.
  */
 export interface UnidadTablaConfig {
   /**
@@ -301,9 +338,32 @@ export interface MuestrasMercanciasStore {
   tomaMuestraDespacho: CatalogosSelect;
 }
 
+
+
 /**
- * Interfaz que representa la lista de pagos de derechos.
- * Contiene la información de la línea de captura y el monto correspondiente.
+ * Representa los datos de un chofer nacional.
+ *
+ * @property id - Identificador del chofer (tipo desconocido, puede adaptarse según la implementación).
+ * @property curp - CURP del chofer (opcional).
+ * @property rfc - RFC del chofer (opcional).
+ * @property nombre - Nombre del chofer (opcional).
+ * @property primerApellido - Primer apellido del chofer (opcional).
+ * @property segundoApellido - Segundo apellido del chofer (opcional).
+ * @property numeroDeGafete - Número del gafete del chofer (opcional).
+ * @property vigenciaGafete - Fecha de vigencia del gafete (opcional).
+ * @property calle - Calle del domicilio del chofer (opcional).
+ * @property numeroExterior - Número exterior del domicilio (opcional).
+ * @property numeroInterior - Número interior del domicilio (opcional).
+ * @property pais - País del domicilio (opcional).
+ * @property estado - Estado o región del domicilio (opcional).
+ * @property municipioAlcaldia - Municipio o alcaldía del domicilio (opcional).
+ * @property colonia - Colonia o barrio del domicilio (opcional).
+ * @property paisDeResidencia - País de residencia del chofer (opcional).
+ * @property ciudad - Ciudad del domicilio (opcional).
+ * @property localidad - Localidad del domicilio (opcional).
+ * @property codigoPostal - Código postal del domicilio (opcional).
+ * @property telefono - Teléfono del chofer.
+ * @property correoElectronico - Correo electrónico del chofer.
  */
 export interface DatosDelChoferNacional {
   id: unknown;
@@ -334,6 +394,31 @@ export interface DatosDelChoferNacional {
   correoElectronico: string;
 }
 
+/**
+ * Representa los datos de choferes extranjeros.
+ *
+ * @property nombre - Nombre del chofer (opcional).
+ * @property primerApellido - Primer apellido del chofer (opcional).
+ * @property segundoApellido - Segundo apellido del chofer (opcional).
+ * @property nacionalidad - Nacionalidad del chofer (opcional).
+ * @property numeroDeGafete - Número del gafete del chofer (opcional).
+ * @property vigenciaGafete - Fecha de vigencia del gafete (opcional).
+ * @property numeroDelSeguroSocial - Número de seguro social (opcional).
+ * @property numberDeIdeFiscal - Número de identificación fiscal (opcional).
+ * @property identificadorFiscal - Identificador fiscal del chofer (opcional).
+ * @property pais - País de origen del chofer (opcional).
+ * @property apellidoPaterno - Apellido paterno del chofer (opcional).
+ * @property codigoPostal - Código postal del domicilio del chofer (opcional).
+ * @property estado - Estado o región del domicilio (opcional).
+ * @property calle - Calle del domicilio (opcional).
+ * @property numeroExterior - Número exterior del domicilio (opcional).
+ * @property numeroInterior - Número interior del domicilio (opcional).
+ * @property paisDeResidencia - País de residencia del chofer (opcional).
+ * @property ciudad - Ciudad del domicilio (opcional).
+ * @property correoElectronico - Correo electrónico del chofer (opcional).
+ * @property telefono - Teléfono del chofer (opcional).
+ */
+
 export interface ChoferesExtranjeros {
   /** Línea de captura del pago. */
   nombre?: string;
@@ -363,6 +448,34 @@ export interface ChoferesExtranjeros {
   correoElectronico?: string;
   telefono?: string;
 }
+
+/**
+ * Representa los datos de la lista de pagos de derechos.
+ *
+ * @property numero - Línea de captura del pago (opcional).
+ * @property calle - Calle del domicilio (opcional).
+ * @property estado - Estado o región del domicilio (opcional).
+ * @property pais - País del domicilio (opcional).
+ * @property apellidoPaterno - Apellido paterno de la persona (opcional).
+ * @property apellidoMaterno - Apellido materno de la persona (opcional).
+ * @property rfc - Registro Federal de Contribuyentes (opcional).
+ * @property gafete - Número del gafete (opcional).
+ * @property vigenciaGafete - Fecha de vigencia del gafete (opcional).
+ * @property municipio - Municipio del domicilio (opcional).
+ * @property colonia - Colonia o barrio del domicilio (opcional).
+ * @property paisOrigen - País de origen de la persona (opcional).
+ * @property ciudad - Ciudad del domicilio (opcional).
+ * @property curp - CURP de la persona (opcional).
+ * @property númeroExterior - Número exterior del domicilio (opcional).
+ * @property númeroInterior - Número interior del domicilio (opcional).
+ * @property país - País de residencia de la persona (opcional, puede diferir de `pais`).
+ * @property primerApellido - Primer apellido de la persona (opcional).
+ * @property segundoApellido - Segundo apellido de la persona (opcional).
+ * @property númeroDeGafete - Número del gafete (opcional, puede duplicar `gafete`).
+ * @property fechaFindDeVigencia - Fecha final de vigencia del gafete (opcional).
+ * @property municipioAlcaldía - Municipio o alcaldía del domicilio (opcional).
+ * @property PaísDeResidencia - País de residencia de la persona (opcional, diferente de `pais` y `paisOrigen`).
+ */
 export interface PagoDerechosLista {
   /** Línea de captura del pago. */
   numero?: string;
@@ -390,6 +503,27 @@ export interface PagoDerechosLista {
   PaísDeResidencia?: string;
 }
 
+/**
+ * Representa la información de un vehículo relacionado con una solicitud.
+ *
+ * @property id - Identificador único del vehículo.
+ * @property solicitudVehiculoVin2 - Número de identificación del vehículo (VIN).
+ * @property solicitudVehiculoTipoVehiculo - Tipo de vehículo (por ejemplo, automóvil, camión).
+ * @property solicitudVehiculoNumeroEconomico - Número económico asignado al vehículo.
+ * @property solicitudVehiculoNumeroPlacas - Número de placas del vehículo.
+ * @property solicitudVehiculoPaisEmisor - País que emitió las placas del vehículo.
+ * @property solicitudDomicilioEstado - Estado de registro del vehículo.
+ * @property solicitudVehiculoMarca - Marca del vehículo.
+ * @property solicitudVehiculoModelo - Modelo del vehículo.
+ * @property anioVehiculoVEH - Año del vehículo.
+ * @property solicitudVehiculoTransponder - Número del transponder del vehículo.
+ * @property solicitudVehiculoColor - Color del vehículo.
+ * @property solicitudVehiculoNumero2daPlaca - Número de la segunda placa (opcional).
+ * @property solicitudVehiculoEmisor2daPlaca - Emisor de la segunda placa (opcional).
+ * @property solicitudVehiculoPaisEmisorSegundaPlaca - País emisor de la segunda placa (opcional).
+ * @property solicitudVehiculoDesc - Descripción adicional del vehículo (opcional).
+ */
+
 export interface Vehiculo {
   id: number;
   solicitudVehiculoVin2: string;
@@ -408,6 +542,43 @@ export interface Vehiculo {
   solicitudVehiculoPaisEmisorSegundaPlaca?: string;
   solicitudVehiculoDesc?: string;
 }
+
+/**
+ * Representa la información de un chofer, incluyendo datos personales,
+ * de contacto y fiscales, así como información de gafete y domicilio.
+ *
+ * @property descripcion - Descripción del chofer o su rol.
+ * @property clave - Clave identificadora del chofer.
+ * @property id - Identificador único del chofer.
+ * @property curp - CURP del chofer (opcional).
+ * @property rfc - RFC del chofer (opcional).
+ * @property nombre - Nombre del chofer (opcional).
+ * @property apellidoPaterno - Apellido paterno del chofer (opcional).
+ * @property apellidoMaterno - Apellido materno del chofer (opcional).
+ * @property gafete - Número de gafete del chofer (opcional).
+ * @property vigenciagafete - Fecha de vigencia del gafete (opcional).
+ * @property calle - Calle del domicilio del chofer (opcional).
+ * @property numeroExterior - Número exterior del domicilio (opcional).
+ * @property numeroInterior - Número interior del domicilio (opcional).
+ * @property ciudad - Ciudad del domicilio (opcional).
+ * @property localidad - Localidad del domicilio (opcional).
+ * @property codigoPostal - Código postal del domicilio (opcional).
+ * @property paisChn - País del domicilio en formato CHN (opcional).
+ * @property estado - Estado o región del domicilio (opcional).
+ * @property numerodelsegurosocial - Número de seguro social (opcional).
+ * @property entidadFederativaCHN - Entidad federativa en formato CHN (opcional).
+ * @property delegacionCHN - Delegación en formato CHN (opcional).
+ * @property coloniaCHN - Colonia en formato CHN (opcional).
+ * @property paisOrigenCHN - País de origen en formato CHN (opcional).
+ * @property correo - Correo electrónico del chofer (opcional).
+ * @property telefono - Teléfono del chofer (opcional).
+ * @property nacionalidadCHE - Nacionalidad en formato CHE (opcional).
+ * @property nss - Número de seguro social (opcional, duplicado de numerodelsegurosocial).
+ * @property ideFiscal - Identificador fiscal (opcional).
+ * @property paisCHE - País en formato CHE (opcional).
+ * @property entidadFederativaCHE - Entidad federativa en formato CHE (opcional).
+ * @property paisOrigenCHE - País de origen en formato CHE (opcional).
+ */
 
 export interface Chofer {
   descripcion: string;
@@ -611,7 +782,7 @@ export interface UnidadTabla {
   paisEmisor: string;
   estado: string;
 
-  // 🆕 Added missing fields from your data
+  // Se agregaron los campos que faltaban de sus datos.
   colorVehiculo: string;
   descripcion: string;
   estado2daPlaca: string;

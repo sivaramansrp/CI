@@ -43,7 +43,10 @@
         "customWebpackConfig": {
           "path": "apps/se/webpack.config.ts"
         },
-        "allowedCommonJsDependencies": ["node-forge", "moment"]
+        "allowedCommonJsDependencies": [
+          "node-forge",
+          "moment"
+       ]
       },
       "configurations": {
         "production": {
@@ -122,7 +125,8 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4205
+        "port": 4205,
+        "publicHost": "/"
       },
       "configurations": {
         "production": {
