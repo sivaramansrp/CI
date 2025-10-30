@@ -1,0 +1,101 @@
+<div class="row mt-5">
+  <!-- First column -->
+  <div class="col-md-4 col-sm-4 col-xs-6">
+    <div class="radio">
+      <label>
+        <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.MANIFEST" (ngModelChange)="onSearchTypeChange()"/>
+        Manifiesto
+      </label>
+    </div>
+
+    <div class="radio mt-1">
+      <label>
+        <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.FLIGHT" (ngModelChange)="onSearchTypeChange()"/>
+        No. Vuelo
+      </label>
+    </div>
+  </div>
+
+  <!-- Second column -->
+  <div class="col-md-4 col-sm-4 col-xs-6">
+    <div class="radio">
+      <label>
+        <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.MASTER" (ngModelChange)="onSearchTypeChange()"/>
+        Master
+      </label>
+    </div>
+
+    @if (authInformationService.authInfo.rol2 === 'funcionario') {
+      <div class="radio mt-1">
+        <label>
+          <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.CAAT" (ngModelChange)="onSearchTypeChange()"/>
+          CAAT
+        </label>
+      </div>
+    }
+  </div>
+
+  <!-- Third column -->
+  <div class="col-md-4 col-sm-4 col-xs-6">
+    <div class="radio">
+      <label>
+        <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.HOUSE" (ngModelChange)="onSearchTypeChange()"/>
+        House
+      </label>
+    </div>
+  </div>
+</div>
+
+@if(searchType === searchTypeEnum.MANIFEST) {
+  <app-manifest-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+} @else if(searchType === searchTypeEnum.MASTER) {
+  <app-master-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+} @else if(searchType === searchTypeEnum.HOUSE) {
+  <app-house-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+} @else if(searchType === searchTypeEnum.FLIGHT) {
+  <app-flight-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+} @else if(searchType === searchTypeEnum.CAAT) {
+  <app-caat-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+}
+
+@if (!!searchType) {
+  <div class="row">
+    <div class="col-md-12 mt-3 text-right">
+      <gob-button
+        type="button"
+        className="btn-primary"
+        label="Buscar"
+        (clicked)="submitForm()"
+        class="mr-1">
+      </gob-button>
+      <gob-button
+        type="button"
+        className="btn-default"
+        label="Limpiar"
+        (clicked)="resetForm()"
+      ></gob-button>
+    </div>
+  </div>
+}
+
+@if (displayManifestTable()) {
+  <app-manifest-table />
+}
+@if (displayCaatTable()) {
+   <app-manifest-table />
+}
+
+@if (displayMasterTable()) {
+  <app-master-table/>
+}
+
+@if (displayHouseTable()) {
+  <app-house-table/>
+}
+
+@if (displayFlightTable()) {
+  <app-flight-table/>
+}
+
+
+

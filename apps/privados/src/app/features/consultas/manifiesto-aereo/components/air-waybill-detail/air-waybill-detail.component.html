@@ -1,0 +1,34 @@
+<!-- Detalle de la Guía Aérea -->
+<div class="container-fluid">
+  <h5>Detalle de la Guía Aérea</h5>
+  <hr class="red" />
+  @if (!isManifest()) {
+    <app-table
+      [tableData]="tableShipment"
+      [isLoading]="isLoadingDataShipment"
+      [error]="errorDataShipment"
+      title="Partidas"
+      [borderedStyle]="true"
+    ></app-table>
+    <app-table
+      [tableData]="tableDimensions"
+      [isLoading]="isLoadingDataDimensions"
+      [error]="errorDataDimensions"
+      title="Dimensiones"
+      [borderedStyle]="true">
+    </app-table>
+  }
+
+  @if (isManifest()) {
+    <app-table
+      [tableData]="tableGuides"
+      title="Guías"
+      [isLoading]="isLoadingDataGuides"
+      [hasRedirect]="true"
+      [error]="errorDataGuides"
+      [borderedStyle]="true"
+      (onRowClicked)="navigateToDocumentDetails()"
+    >
+    </app-table>
+  }
+</div>

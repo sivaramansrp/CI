@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-12 mt-3 text-center">
+      @if(!flightSelected()) {
+        <app-table
+          title="Vuelos"
+          [tableData]="tableFlightsData"
+          [borderedStyle]="true"
+          [isLoading]="isLoadingFlightsDataTable"
+          [hiddenData]="hiddenFlightsData"
+          [error]="errorFlightsData"
+          [hasRedirect]="true"
+          (onRowClicked)="getMasterByManifest($event.hiddenData)"
+        />
+      }
+
+      @if(flightSelected()) {
+          <app-table
+            title="Vuelos"
+            [tableData]="tableFlightSelectedData"
+            [borderedStyle]="true"
+            [isLoading]="isLoadingFlightSelectedDataTable"
+            [error]="errorFlightSelectedData"
+          />
+          <app-table
+            title="Guías Master"
+            [tableData]="tableMasterData"
+            [borderedStyle]="true"
+            [isLoading]="isLoadingMasterDataTable"
+            [hiddenData]="hiddenMasterData"
+            [error]="errorMasterData"
+            [hasRedirect]="true"
+            (onRowClicked)="masterSelected($event)"
+          />
+        }
+    </div>
+  </div>
