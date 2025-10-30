@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { ExpedicionCertificadosAsignacion120202State } from '../../../../estados/tramites/tramite120202.store';
 import { NumeroOficioAsignacionDetalleRespquesta } from '../../models/expedicion-certificados-asignacion.model';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para la gestión de la asignación de expedición de certificados.
@@ -25,7 +25,7 @@ export class ExpedicionCertificadosAsignacionService {
    * @description Este servicio se encarga de obtener los catálogos necesarios para el funcionamiento de la aplicación.
    */
   constructor(
-    private http: HttpClient
+    private http: HttpClient, private catalogoServices: CatalogoServices
   ) { 
     // Constructor vacío
 
@@ -36,10 +36,12 @@ export class ExpedicionCertificadosAsignacionService {
    * @returns Un observable que emite la respuesta del catálogo de años de autorización.
    * @description Este método realiza una petición HTTP GET para obtener el catálogo de años de autorización desde un archivo JSON local.
    */
-  getAniosAutorizacionCatalogo(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/120202/anios-autorizacion-catalogo.json');
+  getAniosAutorizacionCatalogo(tramite: string): Observable<Catalogo[]> {
+     return this.catalogoServices.anosCatalogo(tramite).pipe(
+          map(res => res?.datos ?? [])
+        );
   }
-
+  
   /**
    * Obtiene el número de oficio de asignación detalle.
    * @returns Un observable que emite la respuesta del número de oficio de asignación detalle.
