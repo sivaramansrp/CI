@@ -338,7 +338,8 @@ idMecanismo:number=0;
       if (this.subpestanaSeleccionada === 2 && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;
-    } else if(this.subpestanaSeleccionada > 2 && this.esFormaValido){
+    }
+    else if(this.subpestanaSeleccionada > 2 && this.esFormaValido){
  if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
       const NEXT_INDEX =
         e.accion === 'cont' ? e.valor + 1 :

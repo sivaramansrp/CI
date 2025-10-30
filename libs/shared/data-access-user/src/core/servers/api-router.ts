@@ -563,7 +563,7 @@ export const IDTRAMITEFOLIO= '{idTramiteFolio}';
  * API para Consultar detalle  del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Registro-Solicitud/consulta-detalle-by-numFolioTramite
  */
-export const API_GET_TRAMITE_DETALLE = (TRAMITE: string, IDTRAMITEFOLIO: string) : string =>  `sat-t${TRAMITE}/tramite/${IDTRAMITEFOLIO}/detalle`
+export const API_GET_TRAMITE_DETALLE = (TRAMITE: string, IDTRAMITEFOLIO: string) : string => `sat-t${TRAMITE}/tramite/${IDTRAMITEFOLIO}/detalle`
 
 /**
  * Id resolucion que se utilizará en las consultas.
