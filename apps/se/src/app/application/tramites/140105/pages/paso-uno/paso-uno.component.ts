@@ -128,12 +128,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
   }
 
    /**
-   * Valida todos los formularios del paso uno incluyendo solicitante, certificado, datos y destinatario
+   * Valida todos los formularios del paso uno
    * @returns true si todos los formularios son válidos, false en caso contrario
    */
    public validarFormularios(): boolean {
     let isValid = true;
-    if (this.cancelacionComp?.cancelacionForm) {
+    if (!this.cancelacionComp) {
+      isValid = false;
+  
+      return isValid;
+    }
+
+    if (this.cancelacionComp.cancelacionForm) {
       if (this.cancelacionComp.cancelacionForm.invalid) {
         this.cancelacionComp.cancelacionForm.markAllAsTouched();
         isValid = false;
@@ -141,9 +147,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     } else {
       isValid = false;
     }
-
-   
-
     return isValid;
   }
 
@@ -153,7 +156,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  * que se ha cancelado o finalizado la acción relacionada.
  */
   ngOnDestroy(): void {
-    // Notifica a los suscriptores que el componente se está destruyendo
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
     
