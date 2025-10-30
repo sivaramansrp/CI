@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ValidarCertificadoTecnicoJaponComponent } from './validar-certificado-tecnico-japon.component';
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { of } from 'rxjs';

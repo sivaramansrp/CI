@@ -15,7 +15,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import {ConsultaioQuery } from "@ng-mf/data-access-user";
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 

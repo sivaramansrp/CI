@@ -1,9 +1,26 @@
+/**
+ * @fileoverview Componente para el formulario de mercancías seleccionadas.
+ *
+ * Este componente permite a los usuarios ingresar y modificar los detalles de las mercancías seleccionadas,
+ * incluyendo información como nombres, marcas, valores, cantidades y detalles de la factura.
+ *
+ * Características principales:
+ * - Formulario reactivo para edición de datos de mercancía.
+ * - Integración con catálogos de unidades de medida y tipos de factura.
+ * - Emisión de eventos para comunicar modificaciones y cierre de modal.
+ * - Manejo de estado global mediante store y query de trámite 110218.
+ * - Validaciones y marcado de campos obligatorios.
+ * - Prevención de fugas de memoria con Subjects y takeUntil.
+ *
+ * @author Sistema VUCEM
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
 import { REG_X } from '@libs/shared/data-access-user/src';
 
@@ -119,7 +136,6 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
    */
   constructor(
     public formBuilder: FormBuilder,
-    private service: CertificadoTecnicoJaponService,
     private tramite110218Query: Tramite110218Query,
     private tramite110218Store: Tramite110218Store,
     private router: Router,
@@ -247,32 +263,6 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
   }
 
   /**
-   * Obtiene los datos de la unidad de medida desde el servicio.
-   * Actualiza las opciones disponibles en el formulario.
-   */
-  // unidadMedidaData(): void {
-  //   this.service
-  //     .getUnidadMedida()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data: Catalogo[]) => {
-  //       this.unidaddeMedidadeComercializacionOptions = data;
-  //     });
-  // }
-
-  /**
-   * Obtiene los datos del tipo de factura desde el servicio.
-   * Actualiza las opciones disponibles en el formulario.
-   */
-  // tipoDeFactura(): void {
-  //   this.service
-  //     .getTipodeFctura()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data: Catalogo[]) => {
-  //       this.tipodeFacturaOptions = data;
-  //     });
-  // }
-
-  /**
    * Establece los valores de los datos de la tabla en el formulario.
    * Actualiza campos como nombre comercial, nombre en inglés, cantidad y fecha de la factura.
    */
@@ -337,7 +327,15 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
   }
 
   /**
-   * Envía los datos modificados al padre y cierra el modal.
+   * Envía los datos modificados al componente padre y cierra el modal.
+   *
+   * Este método valida el formulario de datos del certificado. Si es válido, combina los datos de la fila seleccionada
+   * con los valores actuales del formulario, emite el objeto resultante mediante el evento `datosModificados` y cierra el modal.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores de validación.
+   *
+   * @returns {void}
+   * @author Sistema VUCEM
+   * @since 1.0.0
    */
   modificarYCerrar(): void {
     if (this.modifydatosdelcertificado.valid) {

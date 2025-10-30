@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppSolicitanteTabsComponent } from './app-solicitante-tabs.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicoJapon.service';
 import { of, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
