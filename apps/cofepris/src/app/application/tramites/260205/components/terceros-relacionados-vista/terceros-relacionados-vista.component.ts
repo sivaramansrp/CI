@@ -12,7 +12,7 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/materias-primas.enum';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -51,6 +51,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Datos de la tabla de facturadores.
    */
   facturadorTablaDatos: Facturador[] = [];
+    @ViewChild(TercerosRelacionadosComponent)
+    tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+       
+  
 
    /**
       * @property {string[]} elementosRequeridos
@@ -168,5 +172,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }
