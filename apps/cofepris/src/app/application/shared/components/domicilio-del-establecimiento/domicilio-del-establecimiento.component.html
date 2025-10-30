@@ -117,7 +117,7 @@ indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-t
         <div class="row" class="mt-5">
             <div class="form-group">
                 <label class="form-label" for="scian">Datos del producto*:</label>
-                <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto"
+                <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto" [styleCenter]="true"
                     [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="datosProducto" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
                 </app-tabla-dinamica>
             </div>
