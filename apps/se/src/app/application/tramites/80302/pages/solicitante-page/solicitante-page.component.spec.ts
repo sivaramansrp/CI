@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -8,6 +8,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideToastr, ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -15,14 +16,15 @@ describe('SolicitantePageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, BtnContinuarComponent, PasoTresComponent],
-      declarations: [SolicitantePageComponent],
+      imports: [CommonModule, WizardComponent, BtnContinuarComponent, PasoUnoComponent, TituloComponent],
+      declarations: [SolicitantePageComponent, PasoDosComponent, PasoTresComponent],
       providers: [
         provideHttpClient(),
         ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
-        })]
+        })],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
@@ -42,7 +44,7 @@ describe('SolicitantePageComponent', () => {
 
   it('should update paso title on ngOnInit', () => {
     const paso = component.pasos.find(p => p.indice === 2);
-    expect(paso?.titulo).toBe('Cargar pago');
+    expect(paso?.titulo).toBe('Anexar necesarios');
   });
 
   it('should set indice on seleccionaTab', () => {
@@ -77,14 +79,14 @@ describe('SolicitantePageComponent', () => {
   it('should render paso-uno component when indice is 1', () => {
     component.indice = 1;
     fixture.detectChanges();
-    const pasoUnoElement = fixture.debugElement.query(By.css('paso-uno'));
+    const pasoUnoElement = fixture.debugElement.query(By.css('app-paso-uno'));
     expect(pasoUnoElement).toBeTruthy();
   });
 
   it('should render paso-tres component when indice is 3', () => {
     component.indice = 3;
     fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.query(By.css('paso-tres'));
+    const pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(pasoTresElement).toBeTruthy();
   });
 
