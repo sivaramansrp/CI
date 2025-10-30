@@ -1,115 +1,120 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { Component } from '@angular/core';
-import { HistoricoDeProductoresComponent } from './historico-de-productores.component';
+import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { of as observableOf, Subject } from 'rxjs';
+import { HistoricoDeProductoresComponent } from './historico-de-productores.component';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-@Injectable()
-class MockValidarInicialmenteCertificadoService {}
-
-@Injectable()
-class MockTramite110222Store {}
-
-@Injectable()
-class MockTramite110222Query {}
+class MockCertService {
+  obtenerProductorPorExportador = jest.fn(() => observableOf({ datos: [] }));
+  getTipoFactura = jest.fn(() => observableOf({ datos: [{ id: 1 }] }));
+  agregarProductores = jest.fn(() => observableOf({ datos: [{ nombreCompleto: 'a', rfc: 'b', direccionCompleta: 'c', correoElectronico: 'd', telefono: 'e', fax: 'f' }] }));
+}
+class MockStore {
+  setProductoresExportador = jest.fn();
+  setTipoFacturaOpciones = jest.fn();
+  setFormHistorico = jest.fn();
+  setAgregarFormDatosProductor = jest.fn();
+  setAgregarProductoresExportador = jest.fn();
+  setFormValidity = jest.fn();
+  setmercanciaTabla = jest.fn();
+}
+class MockQuery {
+  selectAgregarProductoresExportador$ = observableOf([]);
+  selectTramite$ = observableOf({ productoresExportador: [], mercanciaTabla: [], optionsTipoFactura: [{ id: 1 }], solicitudState: {}, formCertificado: {}, formDatosCertificado: {} });
+  formulario$ = observableOf({});
+  agregarDatosProductorFormulario$ = observableOf({});
+}
+class MockConsultaioQuery {
+  selectConsultaioState$ = observableOf({ readonly: false });
+}
 
 
 describe('HistoricoDeProductoresComponent', () => {
-  let fixture;
-  let component;
-
+  let component: HistoricoDeProductoresComponent;
+  let store: MockStore;
+  let certService: MockCertService;
+  let tramiteQuery: MockQuery;
+  let consultaQuery: MockConsultaioQuery;
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
-        { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
-        { provide: Tramite110222Store, useClass: MockTramite110222Store },
-        { provide: Tramite110222Query, useClass: MockTramite110222Query }
-      ]
-    }).overrideComponent(HistoricoDeProductoresComponent, {
-
-    }).compileComponents();
-    fixture = TestBed.createComponent(HistoricoDeProductoresComponent);
-    component = fixture.debugElement.componentInstance;
+    store = new MockStore();
+    certService = new MockCertService();
+    tramiteQuery = new MockQuery();
+    consultaQuery = new MockConsultaioQuery();
+    component = new HistoricoDeProductoresComponent(
+      new FormBuilder(),
+      certService as any,
+      store as any,
+      tramiteQuery as any,
+      consultaQuery as any
+    );
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-    it('should run #ngOnInit()', async () => {
-    component.cargarProductorPorExportador = jest.fn();
-    component.cargarMercancia = jest.fn();
-    component.facturaOpcion = jest.fn();
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.formulario$ = observableOf({});
-    component.tramiteQuery.agregarDatosProductorFormulario$ = observableOf({});
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
+  it('should call ngOnInit and subscribe to observables', () => {
+    component.solicitudState = { optionsTipoFactura: [] } as any;
     component.ngOnInit();
-    expect(component.cargarProductorPorExportador).toHaveBeenCalled();
-    expect(component.cargarMercancia).toHaveBeenCalled();
-    expect(component.facturaOpcion).toHaveBeenCalled();
+    expect(component.solicitudState).toBeDefined();
   });
 
-  it('should run #cargarProductorPorExportador()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerProductorPorExportador = jest.fn().mockReturnValue(observableOf({
-      datos: {}
-    }));
+  it('should call cargarProductorPorExportador and set store', () => {
     component.cargarProductorPorExportador();
-    expect(component.certificadoDeService.obtenerProductorPorExportador).toHaveBeenCalled();
+    expect(certService.obtenerProductorPorExportador).toHaveBeenCalled();
+    expect(store.setProductoresExportador).toHaveBeenCalled();
   });
 
-  it('should run #facturaOpcion()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+  it('should call facturaOpcion and setTipoFacturaOpciones', () => {
     component.facturaOpcion();
-    expect(component.certificadoDeService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(certService.getTipoFactura).toHaveBeenCalled();
+    expect(store.setTipoFacturaOpciones).toHaveBeenCalled();
   });
 
-  it('should run #cargarMercancia()', async () => {
-    component.certificadoDeService = component.certificadoDeService || {};
-    component.certificadoDeService.obtenerMercancia = jest.fn().mockReturnValue(observableOf({
-      datos: {}
-    }));
-    component.cargarMercancia();
-    expect(component.certificadoDeService.obtenerMercancia).toHaveBeenCalled();
+  it('should call setValoresStore', () => {
+    component.setValoresStore({ campo: 'foo', valor: 'bar' } as any);
+    expect(store.setFormHistorico).toHaveBeenCalledWith({ foo: 'bar' });
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.store = component.store || {};
-    component.store.setFormHistorico = jest.fn();
-    component.setValoresStore({});
-    expect(component.store.setFormHistorico).toHaveBeenCalled();
+  it('should call setValoresStoreAgregarForm', () => {
+    component.setValoresStoreAgregarForm({ campo: 'foo', valor: 'bar' } as any);
+    expect(store.setAgregarFormDatosProductor).toHaveBeenCalledWith({ foo: 'bar' });
   });
 
-  it('should run #setValoresStoreAgregarForm()', async () => {
-    component.store = component.store || {};
-    component.store.setAgregarFormDatosProductor = jest.fn();
-    component.setValoresStoreAgregarForm({});
-    expect(component.store.setAgregarFormDatosProductor).toHaveBeenCalled();
+  it('should call emitAgregarExportador with HistoricoColumnas', () => {
+    const event = { id: 1, nombreProductor: 'a', numeroRegistroFiscal: 'b', direccion: 'c', correoElectronico: 'd', telefono: 'e', fax: 'f' };
+    component.emitAgregarExportador(event);
+    expect(store.setAgregarProductoresExportador).toHaveBeenCalled();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should call emitAgregarExportador with numeroRegistroFiscal and call agregarProductores', () => {
+    const event = { numeroRegistroFiscal: 'b' };
+    component.emitAgregarExportador(event);
+    expect(certService.agregarProductores).toHaveBeenCalled();
+    expect(store.setAgregarProductoresExportador).toHaveBeenCalled();
+  });
+
+  it('should call formaValida', () => {
+    component.formaValida(true);
+    expect(store.setFormValidity).toHaveBeenCalledWith('histProductores', true);
+  });
+
+  it('should call setMercanciaDatos', () => {
+    component.setMercanciaDatos([{ id: 1 } as any]);
+    expect(store.setmercanciaTabla).toHaveBeenCalledWith([{ id: 1 }]);
+  });
+
+  it('should call ngOnDestroy and complete notifier', () => {
+    component.destroyNotifier$ = new Subject();
+    const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
-
 });

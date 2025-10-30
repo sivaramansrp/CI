@@ -1,4 +1,5 @@
-import { AnexoExportacion, AnexoImportacion, DatosContribuyente, DatosEmpresaSubmanufacturera, DatosPlantaManufacturera, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServicioImmex } from "../models/complementaria.model";
+import { AnexoExportacion, AnexoImportacion, DatosContribuyente, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServicioImmex } from "../models/complementaria.model";
+import { Empresas, Plantas } from "../../../shared/models/complementaria.model";
 
 /**
  * CONFIGURACION_CONTRIBUYENTES
@@ -203,62 +204,62 @@ export const CONFIGURACION_FEDERATARIOS_DOMICILIO = [
 export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.rfc,
+    clave: (ele: Empresas): string | undefined => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.razonSocial,
+    clave: (ele: Empresas): string | undefined => ele.razonSocial,
     orden: 2,
   },
   {
     encabezado: 'Calle',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.calle,
+    clave: (ele: Empresas): string | undefined => ele.calle,
     orden: 3,
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.numeroInterior,
+    clave: (ele: Empresas): string | undefined => ele.numeroInterior,
     orden: 4,
   },
   {
     encabezado: 'Número exterior',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.numeroExterior,
+    clave: (ele: Empresas): string | undefined => ele.numeroExterior,
     orden: 5,
   },
   {
     encabezado: 'Código postal',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.codigoPostal,
+    clave: (ele: Empresas): string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.colonia,
+    clave: (ele: Empresas): string | undefined => ele.colonia,
     orden: 7,
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.municipioDelegacion,
+    clave: (ele: Empresas): string | undefined => ele.municipioDelegacion,
     orden: 8,
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.entidadFederativa,
+    clave: (ele: Empresas): string | undefined => ele.entidadFederativa,
     orden: 9,
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.pais,
+    clave: (ele: Empresas): string | undefined => ele.pais,
     orden: 10,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.telefono,
+    clave: (ele: Empresas): string | undefined => ele.telefono,
     orden: 11,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.estatus,
+    clave: (ele: Empresas): string | undefined => ele.estatus,
     orden: 12,
   },
 ];
@@ -283,57 +284,57 @@ export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
 export const CONFIGURACION_PLANTAS_MANUFACTURERAS = [
   {
     encabezado: 'Calle',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Calle,
+    clave: (ele: Plantas): string | undefined => ele.calle,
     orden: 1,
   },
   {
     encabezado: 'Número exterior',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.NumeroExterior,
+    clave: (ele: Plantas): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.NumeroInterior,
+    clave: (ele: Plantas): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
     encabezado: 'Código postal',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.CodigoPostal,
+    clave: (ele: Plantas): string | undefined => ele.codigoPostal,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Colonia,
+    clave: (ele: Plantas): string | undefined => ele.colonia,
     orden: 5,
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.MunicipioDelegacion,
+    clave: (ele: Plantas): string | undefined => ele.municipioDelegacion,
     orden: 6,
   },
   {
     encabezado: 'Entidad Federativa',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.EntidadFederativa,
+    clave: (ele: Plantas): string | undefined => ele.estado,
     orden: 7,
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Pais,
+    clave: (ele: Plantas): string | undefined => ele.pais,
     orden: 8,
   },
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.RFC,
+    clave: (ele: Plantas): string | undefined => ele.rfc,
     orden: 9,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.DomicilioFiscal,
+    clave: (ele: Plantas): string | undefined => ele.fiscalSolicitante,
     orden: 10,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Estatus,
+    clave: (ele: Plantas): boolean | undefined => ele.estatus,
     orden: 11,
   },
 ];

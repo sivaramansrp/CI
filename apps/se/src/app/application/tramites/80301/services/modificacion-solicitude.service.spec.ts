@@ -10,12 +10,12 @@ import {
   Anexo,
   Bitacora,
   Complimentaria,
-  DatosModificacion,
   DomicilioInfo,
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
 
 describe('ModificacionSolicitudeService', () => {
   let service: ModificacionSolicitudeService;
@@ -71,7 +71,7 @@ describe('ModificacionSolicitudeService', () => {
   });
 
   it('obtenerDatosGenerales should return datos de modificación', (done) => {
-    const mockData: DatosModificacion = { rfc: '', representacionFederal: 'Modificacion', tipoModalidad:"", descripcionModalidad:"" } as DatosModificacion;
+    const mockData: DatosModificacion = { rfc: '', representacionFederal: 'Modificacion', tipo:"", programa:"" } as DatosModificacion;
     httpClientSpy.get.mockReturnValue(of({ data: mockData }));
     service.obtenerDatosGenerales().subscribe((result) => {
       expect(result).toEqual(mockData);

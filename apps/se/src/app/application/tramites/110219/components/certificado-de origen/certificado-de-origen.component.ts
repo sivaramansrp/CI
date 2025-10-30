@@ -1,6 +1,6 @@
-import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TELEFONO, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CertificadoApiData, ColumnasTabla, FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
@@ -24,11 +24,20 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
 @Component({
   selector: 'app-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, BtnContinuarComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    ReactiveFormsModule,
+    BtnContinuarComponent,
+  ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
-export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+export class CertificadoDeOrigenComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   /**
    * Estado de consulta de datos (readonly, etc).
    */
@@ -60,6 +69,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Evento para indicar si los datos al continuar son válidos.
    */
   @Output() isDataEventContinuar = new EventEmitter<boolean>();
+
+  /**
+   * Datos del certificado seleccionado desde la tabla de cancelación.
+   */
+  @Input() certificadoSeleccionado: ColumnasTabla | null = null;
+
+  /**
+   * Datos completos de la API del certificado seleccionado.
+   */
+  @Input() certificadoApiDataCompleto: CertificadoApiData | null = null;
 
   /**
    * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
@@ -110,36 +129,129 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Encabezados de la tabla de mercancías.
    */
   public encabezadosMercancias: ConfiguracionColumna<MercanciaCertificado>[] = [
-    { encabezado: 'Número de Orden', clave: (ele: MercanciaCertificado) => ele.numeroOrden, orden: 1 },
-    { encabezado: 'Fracción Arancelaria', clave: (ele: MercanciaCertificado) => ele.fraccionArancelaria, orden: 2 },
-    { encabezado: 'Nombre Técnico', clave: (ele: MercanciaCertificado) => ele.nombreTecnico, orden: 3 },
-    { encabezado: 'Nombre Comercial', clave: (ele: MercanciaCertificado) => ele.nombreComercial, orden: 4 },
-    { encabezado: 'Nombre en Inglés', clave: (ele: MercanciaCertificado) => ele.nombreIngles, orden: 5 },
-    { encabezado: 'Complemento de la descripción', clave: (ele: MercanciaCertificado) => ele.complementoDescripcion, orden: 6 },
-    { encabezado: 'Marca', clave: (ele: MercanciaCertificado) => ele.marca, orden: 7 },
-    { encabezado: 'Criterio para conferir origen', clave: (ele: MercanciaCertificado) => ele.criterio, orden: 8 },
-    { encabezado: 'Norma', clave: (ele: MercanciaCertificado) => ele.norma, orden: 9 },
-    { encabezado: 'Cantidad a Exportar', clave: (ele: MercanciaCertificado) => ele.cantidadExportar, orden: 10 },
-    { encabezado: 'Unidad de medida de comercialización (Cantidad a Exportar)', clave: (ele: MercanciaCertificado) => ele.unidad, orden: 11 },
-    { encabezado: 'Masa bruta', clave: (ele: MercanciaCertificado) => ele.masaBruta, orden: 12 },
-    { encabezado: 'Unidad de medida de comercialización (Masa bruta)', clave: (ele: MercanciaCertificado) => ele.comercializacion, orden: 13 },
-    { encabezado: 'Valor de la mercancía', clave: (ele: MercanciaCertificado) => ele.valorMercancia, orden: 14 },
-    { encabezado: 'Número de factura', clave: (ele: MercanciaCertificado) => ele.numeroFactura, orden: 15 },
-    { encabezado: 'Fecha de factura', clave: (ele: MercanciaCertificado) => ele.fechaFactura, orden: 16 },
-    { encabezado: 'Número de Registro de Productos', clave: (ele: MercanciaCertificado) => ele.registroProductos, orden: 17 },
+    {
+      encabezado: 'Número de Orden',
+      clave: (ele: MercanciaCertificado) => ele.numeroOrden,
+      orden: 1,
+    },
+    {
+      encabezado: 'Fracción Arancelaria',
+      clave: (ele: MercanciaCertificado) => ele.fraccionArancelaria,
+      orden: 2,
+    },
+    {
+      encabezado: 'Nombre Técnico',
+      clave: (ele: MercanciaCertificado) => ele.nombreTecnico,
+      orden: 3,
+    },
+    {
+      encabezado: 'Nombre Comercial',
+      clave: (ele: MercanciaCertificado) => ele.nombreComercial,
+      orden: 4,
+    },
+    {
+      encabezado: 'Nombre en Inglés',
+      clave: (ele: MercanciaCertificado) => ele.nombreIngles,
+      orden: 5,
+    },
+    {
+      encabezado: 'Complemento de la descripción',
+      clave: (ele: MercanciaCertificado) => ele.complementoDescripcion,
+      orden: 6,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (ele: MercanciaCertificado) => ele.marca,
+      orden: 7,
+    },
+    {
+      encabezado: 'Criterio para conferir origen',
+      clave: (ele: MercanciaCertificado) => ele.criterio,
+      orden: 8,
+    },
+    {
+      encabezado: 'Norma',
+      clave: (ele: MercanciaCertificado) => ele.norma,
+      orden: 9,
+    },
+    {
+      encabezado: 'Cantidad a Exportar',
+      clave: (ele: MercanciaCertificado) => ele.cantidadExportar,
+      orden: 10,
+    },
+    {
+      encabezado: 'Unidad de medida de comercialización (Cantidad a Exportar)',
+      clave: (ele: MercanciaCertificado) => ele.unidad,
+      orden: 11,
+    },
+    {
+      encabezado: 'Masa bruta',
+      clave: (ele: MercanciaCertificado) => ele.masaBruta,
+      orden: 12,
+    },
+    {
+      encabezado: 'Unidad de medida de comercialización (Masa bruta)',
+      clave: (ele: MercanciaCertificado) => ele.comercializacion,
+      orden: 13,
+    },
+    {
+      encabezado: 'Valor de la mercancía',
+      clave: (ele: MercanciaCertificado) => ele.valorMercancia,
+      orden: 14,
+    },
+    {
+      encabezado: 'Número de factura',
+      clave: (ele: MercanciaCertificado) => ele.numeroFactura,
+      orden: 15,
+    },
+    {
+      encabezado: 'Fecha de factura',
+      clave: (ele: MercanciaCertificado) => ele.fechaFactura,
+      orden: 16,
+    },
+    {
+      encabezado: 'Número de Registro de Productos',
+      clave: (ele: MercanciaCertificado) => ele.registroProductos,
+      orden: 17,
+    },
   ];
 
   /**
    * Encabezados de la tabla de productores asociados.
    */
-  public encabezadosProductores: ConfiguracionColumna<ProductoresAsociados>[] = [
-    { encabezado: 'Nombre del productor', clave: (ele: ProductoresAsociados) => ele.nombreProductor, orden: 1 },
-    { encabezado: 'Número de registro fiscal', clave: (ele: ProductoresAsociados) => ele.numeroRegistroFiscal, orden: 2 },
-    { encabezado: 'Dirección', clave: (ele: ProductoresAsociados) => ele.direccion, orden: 3 },
-    { encabezado: 'Correo Electrónico', clave: (ele: ProductoresAsociados) => ele.correoElectronico, orden: 4 },
-    { encabezado: 'Teléfono', clave: (ele: ProductoresAsociados) => ele.telefono, orden: 5 },
-    { encabezado: 'Fax', clave: (ele: ProductoresAsociados) => ele.fax, orden: 6 },
-  ];
+  public encabezadosProductores: ConfiguracionColumna<ProductoresAsociados>[] =
+    [
+      {
+        encabezado: 'Nombre del productor',
+        clave: (ele: ProductoresAsociados) => ele.nombreProductor,
+        orden: 1,
+      },
+      {
+        encabezado: 'Número de registro fiscal',
+        clave: (ele: ProductoresAsociados) => ele.numeroRegistroFiscal,
+        orden: 2,
+      },
+      {
+        encabezado: 'Dirección',
+        clave: (ele: ProductoresAsociados) => ele.direccion,
+        orden: 3,
+      },
+      {
+        encabezado: 'Correo Electrónico',
+        clave: (ele: ProductoresAsociados) => ele.correoElectronico,
+        orden: 4,
+      },
+      {
+        encabezado: 'Teléfono',
+        clave: (ele: ProductoresAsociados) => ele.telefono,
+        orden: 5,
+      },
+      {
+        encabezado: 'Fax',
+        clave: (ele: ProductoresAsociados) => ele.fax,
+        orden: 6,
+      },
+    ];
 
   /**
    * Lista de pasos del asistente.
@@ -187,7 +299,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -196,23 +308,61 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required),
-      fechaExpedicion: new FormControl(this.solicitudState?.fechaExpedicion, Validators.required),
-      fechaVencimiento: new FormControl(this.solicitudState?.fechaVencimiento, Validators.required),
-      certificadoDeOrigen: new FormControl(this.solicitudState?.certificadoDeOrigen, Validators.required),
-      bloque: new FormControl(this.solicitudState?.bloque, Validators.required),
-      acuerdo: new FormControl(this.solicitudState?.acuerdo, Validators.required),
-      observaciones: new FormControl(this.solicitudState?.observaciones, Validators.required),
-      nombre: new FormControl(this.solicitudState?.nombre, Validators.required),
-      primerApellido: new FormControl(this.solicitudState?.primerApellido, Validators.required),
-      segundoApellido: new FormControl(this.solicitudState?.segundoApellido, Validators.required),
-      registroFiscal: new FormControl(this.solicitudState?.registroFiscal, Validators.required),
-      razonSocial: new FormControl(this.solicitudState?.razonSocial, Validators.required),
-      calle: new FormControl(this.solicitudState?.calle, Validators.required),
-      numeroLetra: new FormControl(this.solicitudState?.numeroLetra, Validators.required),
-      telefono: new FormControl({ value: this.solicitudState?.telefono, disabled: true }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
-      ciudad: new FormControl(this.solicitudState?.ciudad, Validators.required),
-      fax: new FormControl(this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
-      correoElectronico: new FormControl(this.solicitudState?.correoElectronico, [Validators.required, Validators.email]),
+      fechaExpedicion: new FormControl(
+        this.solicitudState?.fechaExpedicion,
+        
+      ),
+      fechaVencimiento: new FormControl(
+        this.solicitudState?.fechaVencimiento,
+        
+      ),
+      certificadoDeOrigen: new FormControl(
+        this.solicitudState?.certificadoDeOrigen,
+        
+      ),
+      bloque: new FormControl(this.solicitudState?.bloque, ),
+      acuerdo: new FormControl(
+        this.solicitudState?.acuerdo,
+        
+      ),
+      observaciones: new FormControl(
+        this.solicitudState?.observaciones,
+        
+      ),
+      nombre: new FormControl(this.solicitudState?.nombre, ),
+      primerApellido: new FormControl(
+        this.solicitudState?.primerApellido,
+        
+      ),
+      segundoApellido: new FormControl(
+        this.solicitudState?.segundoApellido,
+        
+      ),
+      registroFiscal: new FormControl(
+        this.solicitudState?.registroFiscal,
+        
+      ),
+      razonSocial: new FormControl(
+        this.solicitudState?.razonSocial,
+        
+      ),
+      calle: new FormControl(this.solicitudState?.calle, ),
+      numeroLetra: new FormControl(
+        this.solicitudState?.numeroLetra,
+        
+      ),
+      telefono: new FormControl(
+        { value: this.solicitudState?.telefono, disabled: true },
+        [Validators.pattern(TELEFONO)]
+      ),
+      ciudad: new FormControl(this.solicitudState?.ciudad, ),
+      fax: new FormControl(this.solicitudState?.fax, [
+        Validators.pattern(TELEFONO),
+      ]),
+      correoElectronico: new FormControl(
+        this.solicitudState?.correoElectronico,
+        [Validators.email]
+      ),
     });
     this.getMercanciaCertificadoTabla();
     this.inicializarEstadoFormulario();
@@ -225,6 +375,120 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+
+    if (this.certificadoSeleccionado) {
+      this.populateFormWithCertificateData(this.certificadoSeleccionado);
+    }
+  }
+
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   * @param changes Cambios en las propiedades.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['certificadoSeleccionado'] &&
+      changes['certificadoSeleccionado'].currentValue
+    ) {
+      this.populateFormWithCertificateData(
+        changes['certificadoSeleccionado'].currentValue
+      );
+    }
+
+    // Si tenemos datos completos de la API, usarlos para poblar el formulario
+    if (
+      changes['certificadoApiDataCompleto'] &&
+      changes['certificadoApiDataCompleto'].currentValue
+    ) {
+      this.populateFormWithCompleteApiData(
+        changes['certificadoApiDataCompleto'].currentValue
+      );
+    }
+  }
+
+  /**
+   * Pobla el formulario con los datos del certificado seleccionado.
+   * @param certificado Datos del certificado seleccionado.
+   */
+  private populateFormWithCertificateData(certificado: ColumnasTabla): void {
+    if (this.cancelacionForm && certificado) {
+      const VALIDACION_FORM = this.cancelacionForm.get(
+        'validacionForm'
+      ) as FormGroup;
+      if (VALIDACION_FORM) {
+        // Extract only the date part from ISO datetime strings
+        const FECHA_EXPEDICION = this.extractDateFromISO(
+          certificado.fechaExpedicion
+        );
+        const FECHA_VENCIMIENTO = this.extractDateFromISO(
+          certificado.fechaVencimiento
+        );
+
+        VALIDACION_FORM.patchValue({
+          certificadoDeOrigen: certificado.numeroCertificado,
+          fechaExpedicion: FECHA_EXPEDICION,
+          fechaVencimiento: FECHA_VENCIMIENTO,
+          bloque: certificado.pais,
+          acuerdo: certificado.tratado,
+        });
+      }
+    }
+  }
+
+  /**
+   * Pobla el formulario con todos los datos completos de la API del certificado seleccionado.
+   * @param certificadoApiData Datos completos de la API del certificado seleccionado.
+   */
+  private populateFormWithCompleteApiData(
+    certificadoApiData: CertificadoApiData
+  ): void {
+    if (this.cancelacionForm && certificadoApiData) {
+      const VALIDACION_FORM = this.cancelacionForm.get(
+        'validacionForm'
+      ) as FormGroup;
+      if (VALIDACION_FORM) {
+        const FECHA_EXPEDICION = this.extractDateFromISO(
+          certificadoApiData.fechaExpedicion || ''
+        );
+        const FECHA_VENCIMIENTO = this.extractDateFromISO(
+          certificadoApiData.fechaVencimiento || ''
+        );
+
+        VALIDACION_FORM.patchValue({
+          certificadoDeOrigen: certificadoApiData.numeroCertificado || '',
+          fechaExpedicion: FECHA_EXPEDICION,
+          fechaVencimiento: FECHA_VENCIMIENTO,
+          bloque: certificadoApiData.paisAsociado?.nombre || '',
+          acuerdo: certificadoApiData.tratadoAsociado?.nombre || '',
+          nombreRepresentante: certificadoApiData.nombre || '',
+          observaciones: certificadoApiData.observaciones || '',
+          nombre: certificadoApiData.nombreEmbarcacion || '',
+        });
+      }
+    }
+  }
+
+  /**
+   * Extrae solo la fecha de un string ISO datetime.
+   * @param isoString String en formato ISO (ej: "2021-12-14T12:57:50.000-06:00")
+   * @returns Fecha en formato YYYY-MM-DD o el string original si no es válido
+   */
+  private extractDateFromISO(isoString: string): string {
+    if (!isoString) {
+      return '';
+    }
+
+    try {
+      // Si es un string ISO válido, extraer solo la fecha
+      if (isoString.includes('T')) {
+        return isoString.split('T')[0]; // Obtiene la parte antes de 'T'
+      }
+
+      // Si ya es solo fecha, devolverla tal como está
+      return isoString;
+    } catch (error) {
+      return isoString; // Devolver el string original si hay error
+    }
   }
 
   /**
@@ -256,9 +520,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene los datos de la tabla de mercancías del certificado.
    */
   public getMercanciaCertificadoTabla(): void {
-    this.certificadoService.getMercanciaCertificadoTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.mercanciaCertificadoTablaDatos = data;
-    });
+    this.certificadoService
+      .getMercanciaCertificadoTabla()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.mercanciaCertificadoTablaDatos = data;
+      });
   }
 
   /**
@@ -297,33 +564,120 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con los datos del estado de la solicitud.
    */
   donanteDomicilio(): void {
-   this.cancelacionForm = this.fb.group({
-  validacionForm: this.fb.group({
-    motivoCancelacion: [{ value: this.solicitudState?.motivoCancelacion, disabled: this.soloLectura }, [Validators.required]],
-    fechaExpedicion: [{ value: this.solicitudState?.fechaExpedicion, disabled: this.soloLectura }, [Validators.required]],
-    fechaVencimiento: [{ value: this.solicitudState?.fechaVencimiento, disabled: this.soloLectura }, [Validators.required]],
-    certificadoDeOrigen: [{ value: this.solicitudState?.certificadoDeOrigen, disabled: this.soloLectura }, [Validators.required]],
-    bloque: [{ value: this.solicitudState?.bloque, disabled: this.soloLectura }, [Validators.required]],
-    acuerdo: [{ value: this.solicitudState?.acuerdo, disabled: this.soloLectura }, [Validators.required]],
-    observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
-    nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
-    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: this.soloLectura }, [Validators.required]],
-    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: this.soloLectura }, [Validators.required]],
-    registroFiscal: [{ value: this.solicitudState?.registroFiscal, disabled: this.soloLectura }, [Validators.required]],
-    razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
-    calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
-    numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
-    telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-    ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
-    fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-    correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
-    nombreRepresentante: [{ value: '', disabled: true }],
-    empresaRepresentante: [{ value: '', disabled: true }],
-    telefonoRepresentante: [{ value: '', disabled: true }],
-    faxRepresentante: [{ value: '', disabled: true }],
-    correoElectronicoRepresentante: [{ value: '', disabled: true }]
-  })
-});
+    this.cancelacionForm = this.fb.group({
+      validacionForm: this.fb.group({
+        motivoCancelacion: [
+          {
+            value: this.solicitudState?.motivoCancelacion,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        fechaExpedicion: [
+          {
+            value: this.solicitudState?.fechaExpedicion,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        fechaVencimiento: [
+          {
+            value: this.solicitudState?.fechaVencimiento,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        certificadoDeOrigen: [
+          {
+            value: this.solicitudState?.certificadoDeOrigen,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        bloque: [
+          { value: this.solicitudState?.bloque, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        acuerdo: [
+          { value: this.solicitudState?.acuerdo, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        observaciones: [
+          {
+            value: this.solicitudState?.observaciones,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        nombre: [
+          { value: this.solicitudState?.nombre, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        primerApellido: [
+          {
+            value: this.solicitudState?.primerApellido,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        segundoApellido: [
+          {
+            value: this.solicitudState?.segundoApellido,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        registroFiscal: [
+          {
+            value: this.solicitudState?.registroFiscal,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        razonSocial: [
+          {
+            value: this.solicitudState?.razonSocial,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        calle: [
+          { value: this.solicitudState?.calle, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        numeroLetra: [
+          {
+            value: this.solicitudState?.numeroLetra,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        telefono: [
+          { value: this.solicitudState?.telefono, disabled: this.soloLectura },
+          [Validators.required, Validators.pattern(TELEFONO)],
+        ],
+        ciudad: [
+          { value: this.solicitudState?.ciudad, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        fax: [
+          { value: this.solicitudState?.fax, disabled: this.soloLectura },
+          [Validators.required, Validators.pattern(TELEFONO)],
+        ],
+        correoElectronico: [
+          {
+            value: this.solicitudState?.correoElectronico,
+            disabled: this.soloLectura,
+          },
+          [Validators.required, Validators.email],
+        ],
+        nombreRepresentante: [{ value: '', disabled: true }],
+        empresaRepresentante: [{ value: '', disabled: true }],
+        telefonoRepresentante: [{ value: '', disabled: true }],
+        faxRepresentante: [{ value: '', disabled: true }],
+        correoElectronicoRepresentante: [{ value: '', disabled: true }],
+      }),
+    });
   }
 
   /**
@@ -349,5 +703,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+
+  validarFormularios(): boolean {
+    if(
+      this.cancelacionForm.get('validacionForm.motivoCancelacion')?.value !== '' &&
+      this.cancelacionForm.get('validacionForm.motivoCancelacion')?.value !== null
+    ){
+      return true;
+    }
+    this.cancelacionForm.get('validacionForm')?.markAllAsTouched();
+    return false;
   }
 }

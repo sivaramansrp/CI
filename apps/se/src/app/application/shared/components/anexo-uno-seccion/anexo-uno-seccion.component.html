@@ -182,7 +182,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="complementarFuncionModalLabel">
-          Complementar Fracción
         </h5>
         <button
           type="button"
@@ -196,7 +195,7 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
-              <h5 class="form-label text-start">Fracción arancelaria</h5>
+              <h5 class="form-label text-start">Fracción arancelaria:</h5>
               <p class="form-label text-start">
            {{ selectedRowFields['fraccionArancelaria'] }}
         </p>
@@ -204,7 +203,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <h5 class="form-label text-start">Anexo II</h5>
+              <h5 class="form-label text-start">Anexo II:</h5>
               <p class="form-label text-start">
           {{ selectedRowFields['anexoII'] }}
         </p>
@@ -212,7 +211,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <h5 class="form-label text-start">Tipo</h5>
+              <h5 class="form-label text-start">Tipo:</h5>
               <p class="form-label text-start">
           {{ selectedRowFields['tipo'] }}
         </p>
@@ -220,7 +219,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <h5 class="form-label text-start">UMT</h5>
+              <h5 class="form-label text-start">UMT:</h5>
               <p class="form-label text-start">{{ selectedRowFields['umt'] }}</p>
             </div>
           </div>
@@ -272,7 +271,9 @@
                 class="form-control min-hgt"
                 id="monedaNacionalMensual"
                 formControlName="monedaNacionalMensual"
-                type="number"
+                type="text"
+                  pattern="^[0-9]*$"
+  (input)="onSoloDigitosInput($event, 'monedaNacionalMensual')"
               />
             </div>
           </div>
@@ -291,7 +292,10 @@
                 class="form-control min-hgt"
                 id="monedaNacionalDeDosPeriodos"
                 formControlName="monedaNacionalDeDosPeriodos"
-                type="number"
+                type="text"
+                  pattern="^[0-9]*$"
+  (input)="onSoloDigitosInput($event, 'monedaNacionalDeDosPeriodos')"
+                
               />
             </div>
           </div>
@@ -307,7 +311,9 @@
                 class="form-control min-hgt"
                 id="volumenMensual"
                 formControlName="volumenMensual"
-                type="number"
+                type="text"
+                  pattern="^[0-9]*$"
+  (input)="onSoloDigitosInput($event, 'volumenMensual')"
               />
             </div>
           </div>
@@ -324,7 +330,9 @@
                 class="form-control min-hgt"
                 id="twoPeriodVolume"
                 formControlName="twoPeriodVolume"
-                type="number"
+                type="text"
+                  pattern="^[0-9]*$"
+  (input)="onSoloDigitosInput($event, 'twoPeriodVolume')"
               />
             </div>
           </div>
