@@ -4,7 +4,7 @@ import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild } from '
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { CrossListLable } from '@libs/shared/data-access-user/src';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
@@ -31,6 +31,7 @@ import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query'
 import { DatosService } from '../../../shared/services/datos.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TooltipDirective } from "ngx-bootstrap/tooltip";
 
 /**
  * Componente que gestiona el formulario y las interacciones relacionadas con el domicilio del establecimiento.
@@ -46,7 +47,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     TablaDinamicaComponent,
     InputRadioComponent,
     CrosslistComponent,
-  ],
+    TooltipDirective
+],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrls: ['./domicilio-del-establecimiento.component.scss'],
 })
@@ -324,14 +326,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   inicializarFormulario(): void {
     this.domicilioForm = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.maxLength(12)]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS),]],
       estado: [this.solicitudState?.estado, Validators.required],
       municipio: [this.solicitudState?.municipio, Validators.required],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
-      colonia: [this.solicitudState?.colonia, [Validators.maxLength(120)]],
+      localidad: [this.solicitudState?.localidad, [Validators.required]],
+      colonia: [this.solicitudState?.colonia, [Validators.required]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(300)]],
-      lada: [this.solicitudState?.lada, [Validators.maxLength(5)]],
-      telefono: [this.solicitudState?.telefono, [Validators.maxLength(24)]],
+      lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      telefono: [this.solicitudState?.telefono, [Validators.pattern(REGEX_SOLO_NUMEROS), Validators.maxLength(24)]],
       scian: [this.solicitudState?.scian],
       aviso: [this.solicitudState?.aviso],
       noLicenciaSanitaria: [this.solicitudState?.noLicenciaSanitaria, Validators.required],
@@ -498,6 +500,19 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   public datosDelProducto(): void {
     this.modal = 'show';
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.domicilioForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que destruye el componente.
