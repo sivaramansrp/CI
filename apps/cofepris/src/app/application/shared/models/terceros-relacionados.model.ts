@@ -28,12 +28,18 @@ export interface Fabricante {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
+  coloniaObj?: Catalogo | undefined;
   municipioAlcaldia: string;
+  municipioAlcaldiaObj?: Catalogo | undefined;
   localidad: string;
+  localidadObj?: Catalogo | undefined; 
   entidadFederativa: string;
+  entidadFederativaObj?: Catalogo | undefined;
   estadoLocalidad: string;
   codigoPostal: string;
+  codigoPostalObj?: Catalogo | undefined;
   coloniaEquivalente: string;
   nombres?: string;
   primerApellido?: string;
