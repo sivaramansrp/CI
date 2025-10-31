@@ -755,7 +755,6 @@ private patchFormWithCatalogObjects(): void {
    * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
    */
 private forzarDeshabilitarPais(): void {
-  if (this.chequeoValidacionAlGuardar) {
     if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' ){
   this.agregarFabricanteForm.patchValue({pais: 'MEX'});
     }
@@ -763,9 +762,8 @@ private forzarDeshabilitarPais(): void {
       this.agregarFabricanteForm.patchValue({pais: ''});
     }
     this.agregarFabricanteForm.get('pais')?.disable();
-  }
+
   if (
-    (this.idProcedimiento === 260912 || this.idProcedimiento === 260201) &&
     this.agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     (
       this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
@@ -1211,7 +1209,7 @@ guardarFabricante(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
     const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
     this.disableLabel=[];
-     if(this.idProcedimiento === 260201 && VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+     if(VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
     this.elementosDeshabilitados=[];
   }
   else{
