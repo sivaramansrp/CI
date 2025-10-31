@@ -5,7 +5,8 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
-import { PASOS, TITULOMENSAJE } from '../../constants/medicamentos-destinados-uso.enum';
+import { ERROR_FORMA_ALERT, PASOS, TITULOMENSAJE } from '../../constants/medicamentos-destinados-uso.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208State } from '../../estados/tramite260208Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -70,6 +71,12 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   cargaEnProgreso: boolean = true;
 
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+
+  esFormaValido!: boolean;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
     /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -98,7 +105,20 @@ ngOnInit(): void {
    * @param {AccionBoton} e - Objeto con la acción y valor del botón
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    this.esFormaValido = false
+
+    if (this.indice === 1) {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+      }
+      if (this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+    }
+    else{
+       if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
         e.valor
@@ -108,6 +128,7 @@ ngOnInit(): void {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
+      }
       }
     }
   }
@@ -179,5 +200,16 @@ ngOnInit(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 }

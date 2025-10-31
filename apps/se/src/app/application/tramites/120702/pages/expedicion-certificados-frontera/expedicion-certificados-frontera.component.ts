@@ -109,8 +109,11 @@ export class ExpedicionCertificadosFronteraComponent {
   private validarPasoActual(): boolean {
     switch (this.indice) {
       case 1:
-        // Validar paso 1 usando el método del componente hijo
-        return this.pasoUnoComponent?.validarTabActual() || false;
+        // Validar paso 1 - usar el método que valida todo el formulario
+        if (this.pasoUnoComponent) {
+          return this.pasoUnoComponent.validarFormularioCompleto();
+        }
+        return false;
       
       case 2:
         // Validar paso 2 si es necesario

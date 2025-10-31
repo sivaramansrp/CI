@@ -6,8 +6,6 @@
 import type { Cancelacion } from '../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
 
-import { DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO } from '../constants/adapter.constants';
-
 import type { DesistimientoDePermisoState } from '../estados/desistimiento-de-permiso.store';
 
 /**
@@ -83,10 +81,11 @@ export interface AmpliacionServiciosPayload {
 })
 export class AmpliacionServiciosAdapter {
   /**
-   * Creates a numeroFolioTramiteCancelado item from state data with fallback to defaults
-   * @param dato Single Cancelacion item from state
-   * @param idTipoTramite Tramite ID for numFolioTramite fallback
-   * @returns Formatted numeroFolioTramiteCancelado item
+   * Creates a numeroFolioTramiteCancelado item from state data using dynamic data from search API
+   * Similar to 140104 pattern - uses actual data from buscar API response
+   * @param dato Single Cancelacion item from state populated by search API
+   * @param _idTipoTramite Tramite ID (for future use)
+   * @returns Formatted numeroFolioTramiteCancelado item with dynamic data
    */
   private static createNumeroFolioTramiteItem(dato: Partial<Cancelacion>, _idTipoTramite?: number): {
     idResolucion: string;
@@ -106,49 +105,116 @@ export class AmpliacionServiciosAdapter {
     general: string;
   } {
     return {
-      idResolucion: dato.idResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.idResolucion,
-      numeroResolucion: dato.numeroResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numeroResolucion,
-      regimen: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.regimen, // Always use backend expected value
-      clasificacionRegimen: dato.clasificacionRegimen || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.clasificacionRegimen,
-      condicionMercancia: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.condicionMercancia, // Always use backend expected value
-      fraccionArancelaria: dato.fraccionArancelaria ? dato.fraccionArancelaria.split('-')[0] : DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.fraccionArancelaria, // Extract base fraction code
-      unidadMedida: dato.umt || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.unidadMedida,
-      cantidadImportarExportar: dato.cantidadImportarExportar || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportar,
-      vigenciaResolucion: dato.vigenciaResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.vigenciaResolucion,
-      valorAutorizado: dato.valorAutorizado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorAutorizado,
-      inicioResolucion: dato.inicioResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.inicioResolucion,
-      numFolioTramite: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numFolioTramite, // Backend expects "140105"
-      valorSolicitado: dato.valorSolicitado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorSolicitado,
-      cantidadImportarExportarSolicitada: dato.cantidadImportarExportarSolicitada || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportarSolicitada,
-      general: dato.general || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.general
+      // Use dynamic data from search API response instead of hardcoded defaults
+      idResolucion: dato.idResolucion || '',
+      numeroResolucion: dato.numeroResolucion || '',
+      regimen: dato.regimen || '',
+      clasificacionRegimen: dato.clasificacionRegimen || '',
+      condicionMercancia: dato.condicionDeLaMercancia || '',
+      fraccionArancelaria: dato.fraccionArancelaria || '',
+      unidadMedida: dato.umt || '',
+      cantidadImportarExportar: dato.cantidadImportarExportar || '',
+      vigenciaResolucion: dato.vigenciaResolucion || '',
+      valorAutorizado: dato.valorAutorizado || '',
+      inicioResolucion: dato.inicioResolucion || '',
+      numFolioTramite: dato.folioTramite || '',
+      valorSolicitado: dato.valorSolicitado || '',
+      cantidadImportarExportarSolicitada: dato.cantidadImportarExportarSolicitada || '',
+      general: dato.general || ''
     };
   }
 
   /**
    * Convierte del estado de Akita al formato de payload de API según especificación del backend
-   * Matches backend team specification exactly
+   * Similar to 140104 - allows proceeding even with null search response
    * @param state El estado actual de Akita
    * @returns Payload formateado para la API
    */
   static toFormPayload(state: DesistimientoDePermisoState): AmpliacionServiciosPayload {
-    // Map datos array from state to numeroFolioTramiteCancelados format
-    const NUMERO_FOLIO_TRAMITE_CANCELADOS = state.datos && state.datos.length > 0
-      ? state.datos.map(dato => AmpliacionServiciosAdapter.createNumeroFolioTramiteItem(dato, state.idTipoTramite))
-      : [AmpliacionServiciosAdapter.createNumeroFolioTramiteItem({}, state.idTipoTramite)];
+    // Check if we have valid search data, if not, proceed with minimal payload like 140104
+    let NUMERO_FOLIO_TRAMITE_CANCELADOS: Array<{
+      idResolucion: string;
+      numeroResolucion: string;
+      regimen: string;
+      clasificacionRegimen: string;
+      condicionMercancia: string;
+      fraccionArancelaria: string;
+      unidadMedida: string;
+      cantidadImportarExportar: string;
+      vigenciaResolucion: string;
+      valorAutorizado: string;
+      inicioResolucion: string;
+      numFolioTramite: string;
+      valorSolicitado: string;
+      cantidadImportarExportarSolicitada: string;
+      general: string;
+    }> = [];
+    
+    if (state.datos && state.datos.length > 0) {
+      // Validate that we have at least one item with meaningful data
+      const HAS_VALID_DATA = state.datos.some(dato => 
+        dato.folioTramite || dato.idResolucion || dato.regimen || dato.fraccionArancelaria
+      );
+
+      if (HAS_VALID_DATA) {
+        // Use actual search data when available
+        NUMERO_FOLIO_TRAMITE_CANCELADOS = state.datos.map(dato => 
+          AmpliacionServiciosAdapter.createNumeroFolioTramiteItem(dato, state.idTipoTramite)
+        );
+      } else {
+        // Even if datos exists but is empty, create minimal entry to allow proceeding
+        NUMERO_FOLIO_TRAMITE_CANCELADOS = [{
+          idResolucion: '',
+          numeroResolucion: '',
+          regimen: '',
+          clasificacionRegimen: '',
+          condicionMercancia: '',
+          fraccionArancelaria: '',
+          unidadMedida: '',
+          cantidadImportarExportar: '',
+          vigenciaResolucion: '',
+          valorAutorizado: '',
+          inicioResolucion: '',
+          numFolioTramite: '',
+          valorSolicitado: '',
+          cantidadImportarExportarSolicitada: '',
+          general: ''
+        }];
+      }
+    } else {
+      // No search data at all - create minimal payload to allow motivo cancelacion entry
+      NUMERO_FOLIO_TRAMITE_CANCELADOS = [{
+        idResolucion: '',
+        numeroResolucion: '',
+        regimen: '',
+        clasificacionRegimen: '',
+        condicionMercancia: '',
+        fraccionArancelaria: '',
+        unidadMedida: '',
+        cantidadImportarExportar: '',
+        vigenciaResolucion: '',
+        valorAutorizado: '',
+        inicioResolucion: '',
+        numFolioTramite: '',
+        valorSolicitado: '',
+        cantidadImportarExportarSolicitada: '',
+        general: ''
+      }];
+    }
 
     return {
       solicitud: {
         idSolicitud: "", // Backend expects empty string
         discriminatorValue: "140105",
         cveRolCapturista: "PersonaMoral",
-        cveUsuarioCapturista: "AAL0409235E6",
+        cveUsuarioCapturista: state.rfc || "AAL0409235E6",
         solicitante: {
-          cveUsuario: "AAL0409235E6",
-          rfc: "AAL0409235E6",
+          cveUsuario: state.rfc || "AAL0409235E6",
+          rfc: state.rfc || "AAL0409235E6",
           razonSocial: "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
           descripcionGiro: "Siembra, cultivo y cosecha de otros cultivos",
           correoElectronico: "vucem2021@gmail.com",
-          telefono: "55-98764532",
+          telefono: state.telefono || "55-98764532",
           domicilio: {
             pais: {
               clave: "MEX",
@@ -178,9 +244,9 @@ export class AmpliacionServiciosAdapter {
         }
       },
       puedeCapturarRepresentanteLegalCG: false,
-      claveEntidadFederativa: "SIN",
+      claveEntidadFederativa: state.claveEntidadFederativa || "SIN",
       idTramite: "140105",
-      motivoCancelacion: state.motivoCancelacion || "API Test 2",
+      motivoCancelacion: state.motivoCancelacion || "",
       numeroFolioTramiteCancelados: NUMERO_FOLIO_TRAMITE_CANCELADOS
     };
   }

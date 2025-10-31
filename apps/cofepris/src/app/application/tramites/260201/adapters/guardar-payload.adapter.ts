@@ -42,7 +42,7 @@ export class GuardarAdapter_260201 {
           "discriminatorValue": 260201,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "ALTAMIRA",
+          "aduanaAIFA": "",
           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
       },
       "establecimiento": {
@@ -52,7 +52,7 @@ export class GuardarAdapter_260201 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": "09"
+                  "clave": ""
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -106,7 +106,7 @@ export class GuardarAdapter_260201 {
           }
       }),
       "representanteLegal": {
-          "rfc": state.datosSolicitudFormState.rfcRepresentante,
+          "rfc": state.datosSolicitudFormState.representanteRfc,
           "resultadoIDC": "",
           "nombre": state.datosSolicitudFormState.representanteNombre,
           "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
@@ -137,23 +137,23 @@ export class GuardarAdapter_260201 {
                   "numeroExterior": fabricante.numeroExterior,
                   "numeroInterior": fabricante.numeroInterior,
                   "pais": {
-                      "clave": "MEX",
+                      "clave": "",
                       "nombre": fabricante.pais
                   },
                   "colonia": {
-                      "clave": "001",
+                      "clave": "",
                       "nombre": fabricante.colonia
                   },
                   "delegacionMunicipio": {
-                      "clave": "015",
+                      "clave": "",
                       "nombre": fabricante.municipioAlcaldia
                   },
                   "localidad": {
-                      "clave": "001",
+                      "clave": "",
                       "nombre": fabricante.localidad
                   },
                   "entidadFederativa": {
-                      "clave": "09",
+                      "clave": "",
                       "nombre": fabricante.entidadFederativa
                   },
                   "informacionExtra": "",
@@ -167,8 +167,8 @@ export class GuardarAdapter_260201 {
         return {
             "idPersonaSolicitud": "",
             "ideTipoTercero": "TIPERS.FAB",
-            "personaMoral": "1",
-            "booleanExtranjero": "0",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
             "booleanFisicaNoContribuyente": "0",
             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
             "razonSocial": destinatario.razonSocial,
@@ -200,11 +200,11 @@ export class GuardarAdapter_260201 {
                     "nombre": destinatario.municipioAlcaldia
                 },
                 "localidad": {
-                    "clave": "001",
+                    "clave": "",
                     "nombre": destinatario.localidad
                 },
                 "entidadFederativa": {
-                    "clave": "09",
+                    "clave": "",
                     "nombre": "Ciudad de México"
                 },
                 "informacionExtra": "",
