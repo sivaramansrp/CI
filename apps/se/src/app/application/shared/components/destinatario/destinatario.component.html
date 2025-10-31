@@ -51,8 +51,8 @@
           </div>
           <div class="col-md-4 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario" [label]="'País Destino'" [required]="true"
-              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
-              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false" name="estado"
+              formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
           </div>
         </div>
@@ -198,8 +198,11 @@
                     formDestinatario.controls['ciudad'].invalid &&
                     formDestinatario.controls['ciudad'].touched
                 }">*</span>:</label>
-            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-              (change)="setValoresStore('formDestinatario','ciudad','setGrupoDeDireccionesCiudad')" />
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad" [ngClass]="
+                isValid(formDestinatario, 'ciudad')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','ciudad','setGrupoDeDireccionesCiudad')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
             formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['ciudad'].errors?.['required']&&
@@ -215,8 +218,11 @@
                     formDestinatario.controls['calle'].invalid &&
                     formDestinatario.controls['calle'].touched
                 }">*</span>:</label>
-            <input type="text" id="calle" class="form-control" formControlName="calle"
-              (change)="setValoresStore('formDestinatario','calle','setGrupoDeDireccionesCalle')" />
+            <input type="text" id="calle" class="form-control" formControlName="calle" [ngClass]="
+                isValid(formDestinatario, 'calle')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','calle','setGrupoDeDireccionesCalle')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
             formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['calle'].errors?.['required']&& formDestinatario.controls['calle'].touched)
@@ -230,8 +236,11 @@
                     formDestinatario.controls['numeroLetra'].invalid &&
                     formDestinatario.controls['numeroLetra'].touched
                 }">*</span>:</label>
-            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
-              (change)="setValoresStore('formDestinatario','numeroLetra','setGrupoDeDireccionesNumeroLetra')" />
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" [ngClass]="
+                isValid(formDestinatario, 'numeroLetra')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','numeroLetra','setGrupoDeDireccionesNumeroLetra')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
             formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['numeroLetra'].errors?.['required']&&
@@ -278,7 +287,11 @@
                     formDestinatario.controls['correoElectronico'].touched
                 }">*</span>: </label>
               <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
+              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"  [ngClass]="
+                isValid(formDestinatario, 'correoElectronico')
+                  ? 'required'
+                  : ''
+              "
                 (change)="setValoresStore('formDestinatario','correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
             </div> @if (formDestinatario.get('correoElectronico')?.invalid &&
             (formDestinatario.get('correoElectronico')?.touched || formDestinatario.get('correoElectronico')?.dirty)) {
@@ -291,10 +304,10 @@
                 class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
           </div> @if(paisDestino){ <div class="col-md-8 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
-              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
-              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false" name="estado"
+              formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setGrupoDeDireccionesPais')"></app-catalogo-select>
-  
+
           </div> }
         </div>
       </ng-template>
