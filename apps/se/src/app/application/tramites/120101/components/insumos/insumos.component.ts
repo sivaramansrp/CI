@@ -100,6 +100,8 @@ export class InsumosComponent implements OnInit, OnDestroy {
    */
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
+  public isInvalida: boolean = false;
+
   /**
    * Constructor del componente.
    * Inyecta los servicios necesarios para manejar los datos y formularios.
@@ -233,9 +235,17 @@ export class InsumosComponent implements OnInit, OnDestroy {
       };
       this.tablaInsumos.push(NUEVA_FILA);
       this.tablaInsumos = [...this.tablaInsumos];
-
+      this.isInvalida = false;
       this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
       this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+    }
+  }
+
+  validarFormulario(): void {
+    if (this.tablaInsumos.length === 0) {
+      this.isInvalida = true;
+    } else {
+      this.isInvalida = false;
     }
   }
 

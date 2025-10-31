@@ -13,7 +13,7 @@
         <ng-alert [CONTENIDO]="applicacionRegistradaAlerta" [CUSTOMECLASS]="infoAlert"></ng-alert>
       </div>
     }
-    @if (!esFormaValido && esFormaValido !== undefined && !mostrarAplicacionRegistradaAlerta) {
+    @if (!esFormaValido && esFormaValido !== undefined) {
       <div class="col-md-12">
         <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
       </div>
@@ -23,7 +23,7 @@
   </div>
   <div class="row">
     @switch (indice) { @case (1) {
-    <paso-uno [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
+    <paso-uno #pasoUnoRef [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
     } @case (2) {
     <paso-firma [idSolicitud]="idSolicitud" [procedure]="120101" [idMecanismo]="idMecanismo" [procedureUrl]="'solicitud-de-registro-tpl/pantallas'"></paso-firma>
     } }

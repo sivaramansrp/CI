@@ -1,9 +1,9 @@
+import { Catalogo, CatalogoServices, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoServices, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { REPRESENTACION_FEDERAL } from '../../constantes/solicitud-de-registro-tpl.enum';
@@ -265,6 +265,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 //         }
 //       });
 //   }
+
+  validarFormulario(): void {
+    this.forma.markAllAsTouched();
+  }
 
    /**
   * @method ngOnDestroy

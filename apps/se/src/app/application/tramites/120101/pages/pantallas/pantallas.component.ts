@@ -14,6 +14,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { ToastrService } from 'ngx-toastr';
@@ -37,6 +38,12 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './pantallas.component.html',
 })
 export class PantallasComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
   /**
    *
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -334,38 +341,45 @@ idMecanismo:number=0;
    */
   public getValorIndice(e: AccionBoton): void {
     if (!this.consultaState.readonly) {
+      
+      if (this.esBienFinalFormValid && this.esRepresentacionFederalFormValid) {
+        this.mostrarAplicacionRegistradaAlerta = true;
+        this.pestanaDosFormularioValido = true;
+      } 
+
       this.esFormaValido = this.verificarLaValidezDelFormulario();
-      if (this.subpestanaSeleccionada === 2 && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
-      this.mostrarAplicacionRegistradaAlerta = true;
-      this.pestanaDosFormularioValido = true;
-    }
-    else if(this.subpestanaSeleccionada > 2 && this.esFormaValido){
- if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      const NEXT_INDEX =
-        e.accion === 'cont' ? e.valor + 1 :
-        e.accion === 'ant' ? e.valor - 1 :
-        e.valor;
-       if (e.accion === 'cont') {
-        this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-             
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-      } else {
-        this.indice = NEXT_INDEX;
-        this.datosPasos.indice = NEXT_INDEX;
-        this.wizardComponent.atras();
+      if (!this.esFormaValido) {
+        this.pasoUnoComponent.validarFormularios();
+        return;
       }
-     }
-    }
+
+      if (this.esFormaValido) {
+        if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+          const NEXT_INDEX =
+            e.accion === 'cont' ? e.valor + 1 :
+            e.accion === 'ant' ? e.valor - 1 :
+            e.valor;
+          if (e.accion === 'cont') {
+            this.shouldNavigate$()
+              .subscribe((shouldNavigate) => {
+                if (shouldNavigate) {
+                
+                  this.indice = NEXT_INDEX;
+                  this.datosPasos.indice = NEXT_INDEX;
+                  this.wizardService.cambio_indice(NEXT_INDEX);
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.indice = e.valor;
+                  this.datosPasos.indice = e.valor;
+                }
+              });
+          } else {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardComponent.atras();
+          }
+        }
+      }
     }
   }
 

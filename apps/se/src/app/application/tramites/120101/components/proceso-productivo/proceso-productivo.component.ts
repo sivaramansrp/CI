@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoServices, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -112,6 +112,7 @@ export class ProcesoProductivoComponent implements OnInit, OnDestroy {
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
     private catalogoServices: CatalogoServices,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -175,6 +176,11 @@ export class ProcesoProductivoComponent implements OnInit, OnDestroy {
     if (this.consultaState?.readonly) {
       this.procesoProductivoForm.get('indicar')?.disable();
     }
+  }
+
+  validarFormulario(): void {
+    this.procesoProductivoForm.markAllAsTouched();
+    this.changeDetectorRef.detectChanges();
   }
 
   /**

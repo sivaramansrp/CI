@@ -482,6 +482,10 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
   }
 
+  validarFormulario(): void {
+    this.forma.markAllAsTouched();
+  }
+
 
 
 
