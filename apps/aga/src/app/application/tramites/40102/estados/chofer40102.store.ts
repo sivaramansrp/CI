@@ -56,7 +56,11 @@ export interface Choferesnacionales40102State {
    * Campo obligatorio que almacena el nombre o nombres del chofer.
    */
   nombre: string;
-  
+
+  solicitudeId: string;
+  isShowDirector: boolean
+  codigo: string
+
   /**
    * Primer apellido del chofer.
    * 
@@ -64,7 +68,7 @@ export interface Choferesnacionales40102State {
    * Campo obligatorio que almacena el primer apellido del chofer.
    */
   primerApellido: string;
-  
+
   /**
    * Segundo apellido del chofer.
    * 
@@ -72,7 +76,11 @@ export interface Choferesnacionales40102State {
    * Campo que almacena el segundo apellido del chofer cuando aplique.
    */
   segundoApellido: string;
-  
+  catErrorMessage: string
+  isCaat: boolean
+  cadenaOriginal: string
+  IdPersonaSolicitud: string
+
   /**
    * Lista de choferes nacionales para operaciones de alta.
    * 
@@ -80,7 +88,7 @@ export interface Choferesnacionales40102State {
    * Array que contiene la información de choferes nacionales que serán dados de alta.
    */
   datosDelChoferNacionalAlta: DatosDelChoferNacional[];
-  
+
   /**
    * Lista de choferes nacionales para operaciones de modificación.
    * 
@@ -88,7 +96,7 @@ export interface Choferesnacionales40102State {
    * Array que contiene la información de choferes nacionales que serán modificados.
    */
   datosDelChoferNacionalModification: DatosDelChoferNacional[];
-  
+
   /**
    * Lista de choferes nacionales para operaciones de retirada.
    * 
@@ -104,7 +112,7 @@ export interface Choferesnacionales40102State {
    * Array que contiene la información de choferes extranjeros que serán dados de alta.
    */
   datosDelChoferExtranjerosAlta: ChoferesExtranjeros[];
-  
+
   /**
    * Lista de choferes extranjeros para operaciones de modificación.
    * 
@@ -112,7 +120,7 @@ export interface Choferesnacionales40102State {
    * Array que contiene la información de choferes extranjeros que serán modificados.
    */
   datosDelChoferExtranjerosModification: ChoferesExtranjeros[];
-  
+
   /**
    * Lista de choferes extranjeros para operaciones de retirada.
    * 
@@ -145,15 +153,21 @@ export interface Choferesnacionales40102State {
  * @since 1.0.0
  */
 export function createChoferState(): Choferesnacionales40102State {
-  return { 
+  return {
     nombre: '',
     primerApellido: '',
     segundoApellido: '',
-
+    solicitudeId: '',
+    isShowDirector: false,
+    codigo: '00',
+    cadenaOriginal: '',
+    catErrorMessage: '',
+    isCaat: false,
+    IdPersonaSolicitud: "",
     datosDelChoferNacionalAlta: [],
     datosDelChoferNacionalModification: [],
     datosDelChoferNacionalRetirada: [],
-    
+
     datosDelChoferExtranjerosAlta: [],
     datosDelChoferExtranjerosModification: [],
     datosDelChoferExtranjerosRetirada: [],
@@ -278,6 +292,21 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     }));
   }
 
+  public setIdPersonaSolicitud(IdPersonaSolicitud: string): void {
+    this.update((state) => ({
+      ...state,
+      IdPersonaSolicitud,
+    }));
+  }
+
+  public setCadenaOriginal(cadenaOriginal: string): void {
+    this.update((state) => ({
+      ...state,
+      cadenaOriginal,
+    }));
+  }
+
+
   /**
    * Establece el primer apellido del chofer.
    * 
@@ -301,6 +330,13 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     this.update((state) => ({
       ...state,
       primerApellido,
+    }));
+  }
+
+  public setCodigo(codigo: string): void {
+    this.update((state) => ({
+      ...state,
+      codigo,
     }));
   }
 
@@ -353,6 +389,13 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     this.update((state) => ({
       ...state,
       segundoApellido,
+    }));
+  }
+
+  public setIsShowDirector(isShowDirector: boolean): void {
+    this.update((state) => ({
+      ...state,
+      isShowDirector,
     }));
   }
 
@@ -637,6 +680,10 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     this.update((state) => ({ ...state, nombres }));
   }
 
+  public setSolicitudeId(solicitudeId: string): void {
+    this.update((state) => ({ ...state, solicitudeId }));
+  }
+
   /**
    * Establece el nombre del chofer.
    * @param nombre El nombre del chofer.
@@ -706,6 +753,19 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
     }));
   }
 
+  public setIsCaat(isCaat: boolean): void {
+    this.update((state) => ({
+      ...state,
+      isCaat,
+    }));
+  }
+
+  public setCatErrorMessage(catErrorMessage: string): void {
+    this.update((state) => ({
+      ...state,
+      catErrorMessage,
+    }));
+  }
   /**
    * Establece el país emisor de la segunda placa del vehículo.
    * @param PaisEmisor2daPlaca El país emisor de la segunda placa del vehículo.
