@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MercanciasSeleccionadasFormComponent } from './mercancias-seleccionadas-form.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Router } from '@angular/router';
@@ -57,7 +57,17 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Los métodos unidadMedidaData y tipoDeFactura están comentados en el componente, por lo que no se pueden testear.
+  it('debería inicializar unidaddeMedidadeComercializacionOptions al llamar unidadMedidaData', () => {
+    component.unidadMedidaData();
+    expect(mockService.getUnidadMedida).toHaveBeenCalled();
+    expect(component.unidaddeMedidadeComercializacionOptions).toEqual([{ id: 1, descripcion: 'Unidad' }]);
+  });
+
+  it('debería inicializar tipodeFacturaOptions al llamar tipoDeFactura', () => {
+    component.tipoDeFactura();
+    expect(mockService.getTipodeFctura).toHaveBeenCalled();
+    expect(component.tipodeFacturaOptions).toEqual([{ id: 2, descripcion: 'Factura' }]);
+  });
 
   it('debería actualizar los valores del formulario en tableDataValues si selectedRow existe', () => {
     component.inicializarFormulario();

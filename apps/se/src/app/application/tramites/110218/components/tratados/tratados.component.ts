@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 
 import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
 import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
