@@ -55,6 +55,7 @@
   <app-tabla-dinamica 
   [configuracionTabla]="configuracionTabla" 
   [datos]="Cancelacion"
+  (filaClic)="filaClic($event)"
   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
 </app-tabla-dinamica>
   <div text-align ="center" id="paginGridContenedoresITC">

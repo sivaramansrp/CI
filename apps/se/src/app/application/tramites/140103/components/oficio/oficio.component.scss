@@ -19,3 +19,9 @@
 .text-right {
     text-align: right;
 }
+
+input.form-control.text-danger {
+    border-radius: 6px;
+    border-color: red !important;
+    color:red;
+}

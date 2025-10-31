@@ -1,5 +1,7 @@
 <div class="container">
-    <app-cancelacion-de-certificado></app-cancelacion-de-certificado>
-    <app-detalle></app-detalle>
+    <app-cancelacion-de-certificado (buscarIntento)="onBuscarIntento($event)" (selectedCupo)="onSelectedCupo($event)"></app-cancelacion-de-certificado>
+    @if(displayCupos){
+    <app-detalle ></app-detalle>
     <app-oficio></app-oficio>
+    }
 </div>

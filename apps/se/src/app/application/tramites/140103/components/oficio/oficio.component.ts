@@ -301,7 +301,7 @@ onClickSeleccionar(): void {
     this.oficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
     this.oficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
     this.oficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
-    this.oficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
+    this.oficioForm.get('oficioData.cancelar')?.setValue(''); // Asigna un valor predeterminado al campo 'cancelar'
   }
 
   /**
@@ -419,7 +419,19 @@ abrirDevolverFacturas() : void {
    * Resetea la variable `selectedCertificado` a null y oculta el modal.
    */
   closeCapturaMontoModal():void {
+    this.oficioForm.reset();
     this.showCapturaMontoModal = false;
     this.selectedCertificado = null;
+  }
+  agregarMonto():void{
+    if(this.oficioForm.invalid){
+      this.oficioForm.markAllAsTouched();
+    }
+    else{
+    this.showCapturaMontoModal = false;
+    this.selectedCertificado = null;
+    }
+
+
   }
 }

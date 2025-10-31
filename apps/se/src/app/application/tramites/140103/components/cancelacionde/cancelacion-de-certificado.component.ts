@@ -144,6 +144,8 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * @memberof CancelacionDeCertificadoComponent
    */
    @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
+
+      @Output() selectedCupo = new EventEmitter<Cupo>();
   /**
    * Lista de cupos que contiene los datos necesarios para realizar la cancelación de certificados. Esta propiedad se carga
    * a partir de un archivo JSON, lo que permite a la aplicación manejar múltiples cupos con facilidad.
@@ -151,6 +153,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * @type {Cupo[]}
    */
   Cancelacion: Cupo[] = [];
+  selectedCancelacion: Cupo = {} as Cupo;
   cancelacionForm!: FormGroup;
 
   /**
@@ -414,7 +417,6 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   });
 
 if (FORM.invalid) {
-    FORM.markAllAsTouched();
     return;
   }
 
@@ -436,7 +438,7 @@ const NUEVO_CUPO: Cupos = {
     tipoCupo: 'General' 
   };
   
-this.Cancelacion = [...this.Cancelacion, NUEVO_CUPO];
+this.Cancelacion = [NUEVO_CUPO];
 }
 /**
  * Devuelve la descripción de un elemento de catálogo dado su ID.
@@ -449,5 +451,10 @@ obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
   const IDCADENA = String(id);
   const CATALOG_ITEM = catalogo.find(i => String(i.id) === IDCADENA);
   return CATALOG_ITEM?.descripcion ?? '';
+}
+
+filaClic(event:Cupo):void{
+  this.selectedCancelacion=event;
+  this.selectedCupo.emit(this.selectedCancelacion);
 }
 }
