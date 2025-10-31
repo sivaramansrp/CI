@@ -320,7 +320,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tabs!: TabsResponse;
 
   /**
-   * Bandera que indica si se debe mostrar el campo de tipo de requerimiento.
+   * Bandera que indica si se debe mostrar el combo de tipo de requerimiento.
    * @property {boolean} showTipoRequerimiento
    */
   showTipoRequerimiento: boolean = false;
