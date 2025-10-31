@@ -303,6 +303,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
                 modalidad: PROGRAMA.modalidad ?? '',
                 tipoPrograma: PROGRAMA.tipoPrograma ?? '',
                 estatus: PROGRAMA.estatus ?? '',
+                idProgramaCompuesto: PROGRAMA.idProgramaCompuesto ?? 0,
               };
             });
             this.solicitudDatos = PROGRAMAS;
@@ -332,9 +333,10 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
     this.solicitud150101Store.actualizarFolioPrograma(evento.folioPrograma);
-    this.solicitud150101Store.actualizarModalidad(evento.modalidad);
-    this.solicitud150101Store.actualizarTipoPrograma(evento.tipoPrograma);
+    this.solicitud150101Store.actualizarModalidad(evento.modalidad);  
+    this.solicitud150101Store.actualizarTipoPrograma(evento.tipoPrograma);  
     this.solicitud150101Store.actualizarEstatus(evento.estatus);
+    this.solicitud150101Store.setIdProgramaCompuesto(evento.idProgramaCompuesto?.toString() ?? '');
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }

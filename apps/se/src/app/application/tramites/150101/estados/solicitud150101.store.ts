@@ -68,6 +68,9 @@ export interface Solicitud150101State {
 
   /** solicitudDato */
   solicitudDato?: ProgramasReporte[];
+
+  /** idProgramaCompuesto */
+  idProgramaCompuesto?: string;
 }
 
 /**
@@ -136,6 +139,8 @@ export function createInitialState(): Solicitud150101State {
     porcentajeExportacion: 0,
 
     solicitudDato: [],
+
+    idProgramaCompuesto: '',
   };
 }
 
@@ -300,5 +305,9 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
 
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
+  }
+
+  public setIdProgramaCompuesto(idProgramaCompuesto: string): void {
+    this.update((state) => ({ ...state, idProgramaCompuesto }));
   }
 }

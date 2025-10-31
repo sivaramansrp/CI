@@ -134,3 +134,24 @@ export const ERROR_FORMA_ALERT_QUAD= `
  */
 export const VENTAS_TOTALES_MENSAJES =
   "Ventas totales deben ser mayores o iguales a cero.";
+
+  /**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
+export const ERROR_INVALIDA_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong>
+    </div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

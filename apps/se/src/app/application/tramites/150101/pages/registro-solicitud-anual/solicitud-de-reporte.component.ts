@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { DatosPasos, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
-import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
-import { Observable, map, switchMap, take } from 'rxjs';
+import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,ERROR_INVALIDA_FORMA_ALERT,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
+import { OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Solicitud150101State, Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { DatosComponent} from '../datos/datos.component';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PAGO_DE_DERECHOS } from '../../../150102/constantes/solicitud150102.enum';
+import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 import { ToastrService } from 'ngx-toastr';
-import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -50,7 +51,7 @@ interface AccionBoton {
  * @description Este componente gestiona el flujo de pasos para la solicitud de un reporte anual,
  * utilizando un asistente (wizard) para navegar entre los diferentes pasos.
  */
-export class SolicitudDeReporteComponent {
+export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente del asistente (wizard) utilizado en este componente.
    * 
@@ -113,6 +114,11 @@ export class SolicitudDeReporteComponent {
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
   public formErrorAlertQuad = ERROR_FORMA_ALERT_QUAD;
+
+  /**
+    Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+   */
+    public invalidFormErrorAlert = ERROR_INVALIDA_FORMA_ALERT;
   /**
   /**
      * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
@@ -163,6 +169,43 @@ export class SolicitudDeReporteComponent {
    * @type {Solicitud150101Store}
    */
     store = inject(Solicitud150101Store);
+
+    /**
+   * @property query
+   * @description
+   * Inyección del servicio `Solicitud150101Query` para gestionar el estado de la solicitud.
+   * @type {Solicitud150101Query}
+   */
+    query = inject(Solicitud150101Query);
+
+  /**
+   * Estado actual del trámite 110216.
+   *
+   * Esta propiedad mantiene la información de la solicitud en curso y
+   * se sincroniza de manera reactiva con el store correspondiente.
+   * Contiene los datos necesarios para representar y manipular
+   * la solicitud dentro del componente.
+   *
+   * @type {Tramite110216State}
+   * @public
+   */
+  public solicitudState!: Solicitud150101State;
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   *
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  ngOnInit(): void {
+    this.query.seleccionarSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
 
   /**
    * Método que actualiza el índice del paso actual basado en la acción del botón.
@@ -278,8 +321,10 @@ export class SolicitudDeReporteComponent {
      */
     guardar(data: Solicitud150101State): Promise<unknown> {
       const REPORTE_ANUAL = this.solicitudService.buildReporteAnual(data);
+      const ID_PROGRAMA_COMPUESTO = data.idProgramaCompuesto ?? '';
+      const [OBSERVACIONES, DESCRIPCION] = ID_PROGRAMA_COMPUESTO.split(',').map(v => v.trim());
       const PAYLOAD = {
-        "id_solcitud": 202846846,
+        "id_solcitud": 0,
         "tipoDeSolicitud": "guardar",
         "solicitante": {
           "rfc": "AAL0409235E6",
@@ -307,12 +352,12 @@ export class SolicitudDeReporteComponent {
             "idConfProgramaSE": 0
           }
         ],
-        "observaciones": "121681,",
-        "descripcion": "2011-7018",
-        "ide_generica_1": "01-2024",
-        "ide_generica_2": "12-2024",
-        "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
-        "descripcion_clob_generica_2": "121681,2011-7018",
+        "observaciones": OBSERVACIONES,
+        "descripcion": DESCRIPCION,
+        "ide_generica_1": data.reporteAnualFechaInicio,
+        "ide_generica_2": data.reporteAnualFechaFin,
+        "descripcion_clob_generica_1": data.modalidad,
+        "descripcion_clob_generica_2": data.idProgramaCompuesto?.toString(),
         "reporte_anual": REPORTE_ANUAL
       }
       return new Promise((resolve, reject) => {
@@ -339,10 +384,21 @@ export class SolicitudDeReporteComponent {
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.
    */
- alCambiarPestana(): void {
-  this.esFormaValido = false;
-  this.esFormaValidoDos = false;
-  this.esFormaValidoTres = false;
-  this.esFormaValidoCuatro = false;
-}
+  alCambiarPestana(): void {
+    this.esFormaValido = false;
+    this.esFormaValidoDos = false;
+    this.esFormaValidoTres = false;
+    this.esFormaValidoCuatro = false;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
