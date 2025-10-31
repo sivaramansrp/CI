@@ -15,7 +15,7 @@ import { REG_X } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';

@@ -1,5 +1,5 @@
 import { of, throwError } from 'rxjs';
-import { CertificadoTecnicoJaponService } from './certificadotecnicojapon.service';
+import { CertificadoTecnicoJaponService } from '../service/certificadoTecnicoJapon.service';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Solicitud110218State, Tramite110218Store } from '../estados/tramites/tramite110218.store';
@@ -52,7 +52,6 @@ describe('CertificadoTecnicoJaponService', () => {
     ];
 
   const mockSolicitudState: Solicitud110218State = {
-    idSolicitud: 1,
     puertodeEmbarque: '',
     puertodeDesembarque: '',
     puertodeTransito: '',
@@ -86,52 +85,19 @@ describe('CertificadoTecnicoJaponService', () => {
     numeroSolicitud: 'SOL-001',
     fechaSolicitud: '2024-01-01',
     estado: 'pendiente',
-    solicitante: 'Juan Pérez',
-    valorSeleccionado: '',
-    numeroDeCertificado: '',
-    tratadoAcuerdo: '',
-    paisBloque: '',
-    paisdeOrigen: '',
-    paisDestino: '',
-    fechadeExpedicion: '',
-    fechadeVencimiento: '',
-    precisa: '',
-    cvePais: ''
+    solicitante: 'Juan Pérez'
   };
 
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
     
-  // Cast mocks to the correct types
+    // Cast mocks to the correct types
   httpClient = mockHttpClient as unknown as jest.Mocked<HttpClient>;
   tramiteStore = mockTramiteStore as unknown as jest.Mocked<Tramite110218Store>;
-
-    // Create a mock Tramite110218Query object
-    const mockTramiteQuery = {
-      selectTramite110218State$: jest.fn(),
-      valorSeleccionado$: jest.fn(),
-      store: {},
-      __store__: {},
-      selectNumeroSolicitud$: jest.fn(),
-      selectEstado$: jest.fn(),
-      selectSolicitante$: jest.fn(),
-      selectFechaSolicitud$: jest.fn(),
-      selectObservaciones$: jest.fn(),
-      selectValorSeleccionado$: jest.fn(),
-      selectNumeroDeCertificado$: jest.fn(),
-      selectTratadoAcuerdo$: jest.fn(),
-      selectPaisBloque$: jest.fn(),
-      selectPaisdeOrigen$: jest.fn(),
-      selectPaisDestino$: jest.fn(),
-      selectFechadeExpedicion$: jest.fn(),
-      selectFechadeVencimiento$: jest.fn(),
-      selectPrecisa$: jest.fn(),
-      selectCvePais$: jest.fn()
-    } as any;
-
+    
     // Create service instance with mocked dependencies
-    service = new CertificadoTecnicoJaponService(httpClient, tramiteStore, mockTramiteQuery);
+    service = new CertificadoTecnicoJaponService(httpClient, tramiteStore);
   });
 
   afterEach(() => {
@@ -627,7 +593,6 @@ describe('CertificadoTecnicoJaponService', () => {
     it('should call setTramite110218State with provided registro', () => {
       // Arrange
       const testRegistro: Solicitud110218State = {
-        idSolicitud: 2,
         puertodeEmbarque: '',
         puertodeDesembarque: '',
         puertodeTransito: '',
@@ -661,17 +626,7 @@ describe('CertificadoTecnicoJaponService', () => {
         numeroSolicitud: 'TEST-001',
         fechaSolicitud: '2024-02-01',
         estado: 'aprobado',
-        solicitante: 'María García',
-        valorSeleccionado: '',
-        numeroDeCertificado: '',
-        tratadoAcuerdo: '',
-        paisBloque: '',
-        paisdeOrigen: '',
-        paisDestino: '',
-        fechadeExpedicion: '',
-        fechadeVencimiento: '',
-        precisa: '',
-        cvePais: ''
+        solicitante: 'María García'
       };
 
       // Act
@@ -720,7 +675,6 @@ describe('CertificadoTecnicoJaponService', () => {
     it('should handle registro with null properties', () => {
       // Arrange
       const registroWithNulls: Solicitud110218State = {
-        idSolicitud: null,
         puertodeEmbarque: '',
         puertodeDesembarque: '',
         puertodeTransito: '',
@@ -754,17 +708,7 @@ describe('CertificadoTecnicoJaponService', () => {
         numeroSolicitud: null as any,
         fechaSolicitud: '2024-04-01',
         estado: undefined as any,
-        solicitante: 'Ana Martínez',
-        valorSeleccionado: '',
-        numeroDeCertificado: '',
-        tratadoAcuerdo: '',
-        paisBloque: '',
-        paisdeOrigen: '',
-        paisDestino: '',
-        fechadeExpedicion: '',
-        fechadeVencimiento: '',
-        precisa: '',
-        cvePais: ''
+        solicitante: 'Ana Martínez'
       };
 
       // Act
