@@ -6,7 +6,7 @@ import {
   ConfiguracionColumna,
   Notificacion,
   NotificacionesComponent,
-  TablaDinamicaComponent,
+  TablaDinamicaComponent, TablaDinamicaExpandidaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -39,8 +39,12 @@ import { RegistroSolicitudService } from '../../services/220202/registro-solicit
 import { PrellenadoSolicitud } from '../../../220202/models/220202/prellenado-solicitud.model';
 import {
   DetallasDatos,
+  DetalleVidaSilvestre,
   Sensible,
 } from '../../../../shared/models/datos-de-la-solicitue.model';
+import {
+  ColumnConfig
+} from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 
 /**
  * @description Constructor del componente.
@@ -65,6 +69,7 @@ import {
     CommonModule,
     NotificacionesComponent,
     ModalComponent,
+    TablaDinamicaExpandidaComponent,
   ],
 })
 
@@ -234,7 +239,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public eliminarDatosTabla: boolean = false;
 
-    /**
+  /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
    */
@@ -334,17 +339,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
    * @type {ConfiguracionColumna<SolicitudData>[]}
    */
-  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudData>[] =
-    [
-      {
-        encabezado: 'Fecha Creación',
-        clave: (fila) => fila.fecha_creacion,
-        orden: 1,
-      },
-      { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
-      { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
-      { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
-    ];
+  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudData>[] = [
+    {
+      encabezado: 'Fecha Creación',
+      clave: (fila) => fila.fecha_creacion,
+      orden: 1,
+    },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+    { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
+  ];
 
   /**
    * @description Datos de la tabla principal.
@@ -413,12 +417,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarSolicitudTabla: boolean = true;
 
   /**
-     * @description
-     * Cuerpo de la tabla de solicitudes con datos de ejemplo.
-     * Este arreglo contiene objetos que representan las filas de la tabla.
-     * @type {SolicitudData[]}
-     */
-    cuerpoTablaSolicitud: SolicitudData[] = [];
+   * @description
+   * Cuerpo de la tabla de solicitudes con datos de ejemplo.
+   * Este arreglo contiene objetos que representan las filas de la tabla.
+   * @type {SolicitudData[]}
+   */
+  cuerpoTablaSolicitud: SolicitudData[] = [];
 
   // /**
   //  * Arreglo que contiene las filas de la tabla de solicitudes.
@@ -463,6 +467,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   regimen: Catalogo[] = [];
 
+  /** Conjunto de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+
+  /**
+   * Constantes de texto.
+   * @property {string} TEXTOS
+   */
+  mensajeErrorTabla: boolean = false;
+
+  nestedColumns: ColumnConfig[] = [
+    { encabezado: 'Nombre cientifico', clave: 'nombreCientifico', width: '25%' },
+  ];
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
@@ -485,6 +502,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
         this.cuerpoTabla = datos.tablaDatos;
+        console.log('cuerpoTabla:', this.cuerpoTabla);
       });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -493,8 +511,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
           if (
-            seccionState.parameter ===
-            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
+            seccionState.parameter === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
           ) {
             this.mostrarSolicitudTabla = false;
           }
@@ -541,32 +558,40 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       puntoDeInspeccion: ['', Validators.required],
       regimen: ['', Validators.required],
       numeroDeGuia: [''],
-      numeroDeCarro: ['']
+      numeroDeCarro: [''],
     });
     this.forma.setControl('datos', this.datos);
-    this.fitosanitarioQuery.seleccionarDatosForma$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos: DatosForma) => {
-      if (datos) {
-        // carga de catalogos antes de asignar valores
-        const CARGACATALOGOS = async () => {
-          if (datos.aduanaDeIngreso !== undefined && datos.aduanaDeIngreso !== '') {
-            await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
-          }
-          if (datos.oficinaDeInspeccion !== undefined && datos.oficinaDeInspeccion !== '') {
-            await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
-          }
+    this.fitosanitarioQuery.seleccionarDatosForma$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: DatosForma) => {
+        if (datos) {
+          // carga de catalogos antes de asignar valores
+          const CARGACATALOGOS = async () => {
+            if (
+              datos.aduanaDeIngreso !== undefined &&
+              datos.aduanaDeIngreso !== ''
+            ) {
+              await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
+            }
+            if (
+              datos.oficinaDeInspeccion !== undefined &&
+              datos.oficinaDeInspeccion !== ''
+            ) {
+              await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
+            }
+          };
+          CARGACATALOGOS().then(() => {
+            this.datos.patchValue({
+              aduanaDeIngreso: datos.aduanaDeIngreso || '',
+              oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
+              puntoDeInspeccion: datos.puntoDeInspeccion || '',
+              regimen: datos.regimen || '',
+              numeroDeGuia: datos.numeroDeGuia || '',
+              numeroDeCarro: datos.numeroDeCarro || '',
+            });
+          });
         }
-        CARGACATALOGOS().then(() => {
-          this.datos.patchValue({
-            aduanaDeIngreso: datos.aduanaDeIngreso || '',
-            oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
-            puntoDeInspeccion: datos.puntoDeInspeccion || '',
-            regimen: datos.regimen || '',
-            numeroDeGuia: datos.numeroDeGuia || '',
-            numeroDeCarro: datos.numeroDeCarro || ''
-          })
-        })
-      }
-    });
+      });
   }
 
   /**
@@ -576,9 +601,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDatosTablaSolicitud(): void {
-    this.registroSolicitudService.obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.cuerpoTablaSolicitud = data.datos ?? [];
-    });
+    this.registroSolicitudService
+      .obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.cuerpoTablaSolicitud = data.datos ?? [];
+        console.log('cuerpoTablaSolicitud:', this.cuerpoTablaSolicitud);
+      });
   }
 
   /**
@@ -617,7 +646,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   createFromFields(): void {
     this.forma = this.fb.group({
-      datos: this.fb.group({})
+      datos: this.fb.group({}),
     });
     if (this.forma) {
       this.notificationCheck = true;
@@ -721,15 +750,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista(): void {
-    this.catalogosService.obtieneCatalogoAduana(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
+    this.catalogosService
+      .obtieneCatalogoAduana(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
         this.aduanaList = data.datos ?? [];
-      }
-    );
-    
+      });
   }
 
   /**
@@ -811,7 +837,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     (
       this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
     )(VALOR);
-
   }
 
   /**
@@ -837,10 +862,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getRegimenLista
    */
   getRegimenLista(): void {
-
-    this.catalogosService.obtieneCatalogoRegimenesVigentes(220202).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimeList = data.datos ?? [];
-    });
+    this.catalogosService
+      .obtieneCatalogoRegimenesVigentes(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimeList = data.datos ?? [];
+      });
   }
 
   /**
@@ -848,9 +875,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerPuntoInspeccionList
    */
   async obtenerPuntoInspeccionList(valor: string): Promise<void> {
-    await this.catalogosService.obtieneCatalogoPuntoInspeccion(220202, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      this.puntoList = data.datos ?? [];
-    });
+    await this.catalogosService
+      .obtieneCatalogoPuntoInspeccion(220202, valor)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.puntoList = data.datos ?? [];
+      });
   }
 
   /**
@@ -859,30 +889,29 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   async obtenerSanidadAgropecuariaList(cveAduana: string): Promise<void> {
     this.agropecuariaList = [];
-    if(cveAduana && cveAduana !== ''){
-      await this.catalogosService.obtieneCatalogoOficinasInspeccion(220202, cveAduana)
-        .pipe(
-          takeUntil(this.destroyNotifier$)
-        ).subscribe(
-        (data): void => {
+    if (cveAduana && cveAduana !== '') {
+      await this.catalogosService
+        .obtieneCatalogoOficinasInspeccion(220202, cveAduana)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
           this.agropecuariaList = data.datos ?? [];
-        }
-      );
+        });
     }
-
   }
 
   /**
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList(clave_regimen: string=''): void {
-
-    this.catalogosService.obtieneCatalogoRegimenes(220202).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimen = clave_regimen
-        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
-        : data.datos ?? [];
-    });
+  obtenerRegimenList(clave_regimen: string = ''): void {
+    this.catalogosService
+      .obtieneCatalogoRegimenes(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimen = clave_regimen
+          ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
+          : data.datos ?? [];
+      });
   }
 
   /**
@@ -895,21 +924,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
-      this.catalogosService.obtenSolicitudPrellenado(220202, true, '202734947' ?? '')
-      // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
+      this.catalogosService
+        .obtenSolicitudPrellenado(220202, true, '202850466' ?? '')
+        // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: async (datos) => {
             if (datos?.datos) {
-              await this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
-              await this.obtenerPuntoInspeccionList(datos.datos.oficina_inspeccion_sanidad_agropecuaria || '');
+              await this.obtenerSanidadAgropecuariaList(
+                datos.datos.cve_aduana || ''
+              );
+              await this.obtenerPuntoInspeccionList(
+                datos.datos.oficina_inspeccion_sanidad_agropecuaria || ''
+              );
               //Regimen
               // this.getRegimenLista();
               this.obtenerRegimenList(datos.datos?.clave_regimen || '');
               this.datos.patchValue({
                 aduanaDeIngreso: datos.datos.cve_aduana || '',
-                tipoDeMercancia: datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA' ? 'no' : 'yes', //'yes' para animales vivos, 'no' para subproductos
-                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
+                tipoDeMercancia:
+                  datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA'
+                    ? 'no'
+                    : 'yes', //'yes' para animales vivos, 'no' para subproductos
+                oficinaDeInspeccion:
+                  datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 puntoDeInspeccion: datos.datos.punto_inspeccion || '',
                 // claveUCON: datos.datos.clave_UCON || '',
                 // establecimientoTIF: datos.datos.establecimiento_TIF || '',
@@ -922,49 +960,48 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
               this.datos.reset();
             }
             console.warn('Datos de la solicitud prellenada:', datos);
-            const DETALLE_MERCANCIA = datos?.datos as PrellenadoSolicitud || [];
+            const DETALLE_MERCANCIA =
+              (datos?.datos as PrellenadoSolicitud) || [];
             if (DETALLE_MERCANCIA.mercancia.length > 0) {
-
               const FILAS_SOLICITUD: FilaSolicitud[] = [];
               // eslint-disable-next-line complexity
               DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
+                const LISTADETALLEVIDASILVESTRE: DetalleVidaSilvestre[] =
+                  (mercancia.lista_detalle_mercancia?.map((vidaSilvestre) => ({
+                    idDetalleMercancia:
+                      vidaSilvestre.id_detalle_mercancia || '',
+                    idMercanciaGob: vidaSilvestre.id_mercancia_gob || '',
+                    idVidaSilvestre: vidaSilvestre.id_vida_silvestre || '',
+                    nombreCientifico: vidaSilvestre.nombre_cientifico || '',
+                  })) as DetalleVidaSilvestre[]) || [];
 
-                const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia ?.map((producto) => ({
-                  numeroDeLote: producto.numero_lote_detalle || '',
-                  fechaElaboracionEmpaqueProceso: producto.fecha_elaboracion || '',
-                  fechaProduccionSacrificio: producto.fecha_sacrificio_str || '',
-                  fechaFinProduccionSacrificio: producto.fecha_sacrificio_fin || '',
-                  fechaCaducidadProducto: producto.fecha_caducidad_str || '',
-                  fechaFinCaducidadProducto: producto.fecha_caducidad_fin || '',
-                  fechaFinElaboracionEmpaqueProceso: producto.fecha_elaboracion_fin || '',
-                  fechhaInicioProduccionSacrificio: producto.fecha_sacrificio_str || '',
-                  fechaInicioCaducidadProducto: producto.fecha_caducidad_str || '',
-                  fechaCaducidad: producto.fecha_caducidad || '',
-                })) as DetallasDatos[] || [];
-
-                const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
-                  noPartida: mercancia.numero_partida.toString(),
-                  NumeroLote: animal.numero_lote_detalle || '',
-                  ColorPelaje: animal.color_pelaje_detalle || '',
-                  EdadAnimal: animal.edad_animal_detalle || '',
-                  FaseDesarrollo: animal.fase_desarrollo_detalle || '',
-                  FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
-                  NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
-                  Raza: animal.raza_detalle || '',
-                  Sexo: animal.id_sexo_detalle || '',
-                  NombreCientifico: animal.nombre_cientifico_detalle || '',
-                  NombreMercancia: animal.nombre_mercancia_detalle || '',
-                })) as Sensible[] || [];
+                // const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
+                //   noPartida: mercancia.numero_partida.toString(),
+                //   NumeroLote: animal.numero_lote_detalle || '',
+                //   ColorPelaje: animal.color_pelaje_detalle || '',
+                //   EdadAnimal: animal.edad_animal_detalle || '',
+                //   FaseDesarrollo: animal.fase_desarrollo_detalle || '',
+                //   FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
+                //   NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
+                //   Raza: animal.raza_detalle || '',
+                //   Sexo: animal.id_sexo_detalle || '',
+                //   NombreCientifico: animal.nombre_cientifico_detalle || '',
+                //   NombreMercancia: animal.nombre_mercancia_detalle || '',
+                // })) as Sensible[] || [];
 
                 const FILAS: FilaSolicitud = {
                   id: mercancia.id_mercancia_gob || false,
                   noPartida: mercancia.numero_partida.toString(),
-                  descripcionTipoRequisito: mercancia.descripcion_tipo_requisito || '',
+                  descripcionTipoRequisito:
+                    mercancia.descripcion_tipo_requisito || '',
                   tipoRequisito: mercancia.tipo_requisito || '',
                   requisito: mercancia.requisitos || '',
-                  numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
-                  fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
-                  descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
+                  numeroCertificadoInternacional:
+                    String(mercancia.numero_certificado) || '',
+                  fraccionArancelaria:
+                    mercancia.fraccion_arancelaria_corto || '',
+                  descripcionFraccion:
+                    mercancia.descripcion_fracción_arancelaria || '',
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',
@@ -980,15 +1017,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                   // paisDeDestino: mercancia.nombre_pais_procedencia || '',
                   paisDeProcedencia: mercancia.clave_paises_procedencia || '',
                   descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
-                  descripcionPaisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  descripcionPaisDeProcedencia:
+                    mercancia.nombre_pais_procedencia || '',
                   // tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
                   // tipoPlanta: mercancia.descripcion_tipo_planta || '',
                   // plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
-                  certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
+                  certificadoInternacionalElectronico:
+                    String(mercancia.numero_certificado) || '',
                   tipoDeProducto: '',
                   numeroDeLote: mercancia.numero_lote || '',
                   // sensibles: LISTADETALLESENSIBLES,
                   // detalleProductos: LISTADETALLEPRODUCTOS,
+                  detalleVidaSilvestre: LISTADETALLEVIDASILVESTRE,
                   descripcion: mercancia.descripcion_mercancia || '',
                 };
                 FILAS_SOLICITUD.push(FILAS);
@@ -999,21 +1039,54 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             // this.radioBotonSeleccionado()
           },
           error: (error) => {
-            console.error('Error al obtener los datos de la solicitud prellenada:', error);
+            console.error(
+              'Error al obtener los datos de la solicitud prellenada:',
+              error
+            );
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
               titulo: 'Error',
-              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              mensaje:
+                'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
               cerrar: false,
               tiempoDeEspera: 2000,
               txtBtnAceptar: 'Aceptar',
               txtBtnCancelar: '',
             };
-          }
+          },
         });
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  onRowExpanded(row: any): void {
+    // Aquí puedes cargar los datos para la tabla anidada si es necesario
+    console.warn('Fila expandida:', row);
+  }
+
+  /** Método para manejar el cambio de filas seleccionadas. */
+  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[]): void {
+    const FS = filasSeleccionadas
+      .map((row) => row.id)
+      .filter((id): id is number => id !== undefined && id !== null);
+    this.filasSeleccionadas = new Set(FS);
+    if (this.filasSeleccionadas.size > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+    }
+
   }
 
   /**
@@ -1093,45 +1166,43 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarMercancia(): void {
-      const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
-      const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
 
-      // Verificar si no hay registros en la tabla
-      if (!TABLE_DATA || TABLE_DATA.length === 0) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Verificar si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Verificar si no hay registros seleccionados
-      if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Verificar si no hay registros seleccionados
+    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Si hay más de un registro seleccionado, mostrar mensaje de error
-      if (SELECTED_DATA.length > 1) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Si hay más de un registro seleccionado, mostrar mensaje de error
+    if (SELECTED_DATA.length > 1) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Si hay exactamente un registro seleccionado, eliminar directamente
-      if (SELECTED_DATA.length === 1) {
-        const FILTERED_VALOR = TABLE_DATA.filter(
-          (item) => !SELECTED_DATA.includes(item)
-        );
-        this.fitosanitarioStore.update(
-          (state) => ({
-            ...state,
-            tablaDatos: FILTERED_VALOR
-          })
-        );
+    // Si hay exactamente un registro seleccionado, eliminar directamente
+    if (SELECTED_DATA.length === 1) {
+      const FILTERED_VALOR = TABLE_DATA.filter(
+        (item) => !SELECTED_DATA.includes(item)
+      );
+      this.fitosanitarioStore.update((state) => ({
+        ...state,
+        tablaDatos: FILTERED_VALOR,
+      }));
 
-        // Limpiar selección después de eliminar
-        this.seleccionTabla([]);
-      }
+      // Limpiar selección después de eliminar
+      this.seleccionTabla([]);
+    }
   }
 
   /**
@@ -1144,7 +1215,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-    /**
+  /**
    * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
    * @method eliminarPedimento
    * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
@@ -1158,10 +1229,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
-  * @method eliminarPedimentoDatos
-  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
-  */
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   * @method eliminarPedimentoDatos
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   */
   eliminarPedimentoDatos(borrar: boolean): void {
     if (borrar) {
       this.eliminarDatosTabla = false;
@@ -1170,19 +1241,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         return;
       }
       const FILTERED_VALOR = VALOR.filter(
-        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+        (item) =>
+          !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
       );
-      this.fitosanitarioStore.update(
-        (state) => ({
-          ...state,
-          tablaDatos: FILTERED_VALOR
-        })
-      );
+      this.fitosanitarioStore.update((state) => ({
+        ...state,
+        tablaDatos: FILTERED_VALOR,
+      }));
 
       // Limpiar selección después de eliminar
       this.seleccionTabla([]);
-    }
-    else {
+    } else {
       this.eliminarDatosTabla = false;
     }
   }
@@ -1262,5 +1331,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+  }
+
+  /**
+   * @description Valida formulario
+   * @method validarFormulario
+   * @returns {boolean}
+   */
+  validarFormularioJavi(): boolean {
+    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true : false;
+    if (this.forma.valid) {
+      return this.mensajeErrorTabla;
+    }
+
+    this.forma.markAllAsTouched();
+    return false
   }
 }

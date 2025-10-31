@@ -58,31 +58,10 @@ export interface PrellenadoSolicitud {
       numero_lote: string,
       lista_detalle_mercancia: [
         {
-          id_detalle_mercancia: null,
-          id_mercancia_gob: null,
-          numero_lote_detalle: string,
-          color_pelaje_detalle: string,
-          edad_animal_detalle: string,
-          fase_desarrollo_detalle: string,
-          funcion_zootecnica_detalle: string,
-          nombre_mercancia_detalle: string,
-          numeroidentificacion_detalle: string,
-          raza_detalle: string,
-          id_sexo_detalle: string,
-          descripcion_sexo_detalle: string,
-          nombre_cientifico_detalle: string,
-          fecha_sacrificio: string,
-          fecha_elaboracion: string,
-          fecha_caducidad: string,
-          fecha_elaboracion_fin: string,
-          fecha_caducidad_fin: string,
-          fecha_sacrificio_fin: string,
-          fecha_sacrificio_str: string,
-          fecha_elaboracion_str: string,
-          fecha_caducidad_str: string,
-          fecha_elaboracion_str_fin: string,
-          fecha_caducidad_str_fin: string,
-          fecha_sacrificio_str_fin: string
+          id_detalle_mercancia: number,
+          id_mercancia_gob: number,
+          id_vida_silvestre: number,
+          nombre_cientifico: string
         }
       ]
     }
