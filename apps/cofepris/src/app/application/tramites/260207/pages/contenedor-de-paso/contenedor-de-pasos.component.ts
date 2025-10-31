@@ -133,7 +133,6 @@ export class ContenedorDePasosComponent implements OnInit {
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
   set esFormaValido(val: boolean) {
-    // console.log('[DEBUG] esFormaValido set to:', val, 'at', new Date().toISOString());
     this._esFormaValido = val;
   }
   get esFormaValido(): boolean {
@@ -282,7 +281,6 @@ export class ContenedorDePasosComponent implements OnInit {
       if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      // If pasoUnoComponent has pagoDeDerechosContenedoraComponent, validate it
       if (this.pasoUnoComponent && this.pasoUnoComponent.pagoDeDerechosContenedoraComponent &&
           !this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()) {
         this.mostrarAlerta = true;
@@ -302,7 +300,7 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        return;
+       // return;
       }
       const PAYLOAD = GuardarAdapter_260207.toFormPayload(this.storeData);
       let shouldNavigate = false;
