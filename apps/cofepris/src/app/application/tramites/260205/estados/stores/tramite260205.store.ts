@@ -92,6 +92,8 @@ export interface Tramite260205State {
    * Índice utilizado para identificar elementos específicos.
    */
   indice: number;
+
+  idSolicitud?: number | null;
 }
 
 /**
@@ -168,6 +170,7 @@ export interface Tramite260205State {
  */
 export function createInitialState(): Tramite260205State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -231,7 +234,7 @@ export function createInitialState(): Tramite260205State {
       fechaPago: '',
       importePago: '',
     },
-    indice: 1
+    indice: 1,    
   };
 }
 
@@ -465,4 +468,13 @@ export class Tramite260205Store extends Store<Tramite260205State> {
       indice
     }))
   }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  
 }

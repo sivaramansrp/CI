@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit,ViewChild} from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -60,6 +60,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @default []
    */
   proveedorTablaDatos: Proveedor[] = [];
+
+  
+    @ViewChild('TercerosRelacionadosComponent')
+    tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+       
  /**
     * @property {string[]} elementosRequeridos
     * @description
@@ -225,6 +230,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * @method addProveedores
    * @description Método público que permite agregar nuevos proveedores a la tabla de datos del trámite.

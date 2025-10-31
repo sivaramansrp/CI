@@ -83,6 +83,24 @@
           </small>
         </div>
       </div>
+      @if(agregarDestinatarioFinal.get('rfc')?.disabled){
+      <div class="col-md-4">
+    <label class="form-label">
+      C.U.R.P<span>*</span>:
+    </label>
+    <input type="text" class="form-control" [maxlength]="18" formControlName="curp"
+      [ngClass]="esInvalido('curp') ? 'required' : ''" />
+    <div *ngIf="esInvalido('curp')" class="text-danger">
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['required']">
+        Este campo es obligatorio
+      </small>
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['pattern']">
+        Existen datos incorrectos que no cumplen con el formato esperado
+      </small>
+    </div>
+  </div>
+}
+  
     </div>
   }
 
@@ -156,7 +174,7 @@
     <div class="row mt-5">
       <div class="col-md-4 px-5">
         <app-catalogo-select [catalogo]="paisesDatos" formControlName="pais" [label]="'País'"
-          [required]="true"></app-catalogo-select>
+          [required]="true"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
         <label class="form-label">Estado:</label>
@@ -176,7 +194,7 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="paisesDatos" formControlName="pais" [label]="'País'" [required]="true"
-          [placeholder]="'Selecciona un valor'" [isDisabled]="
+          [placeholder]="'Seleccione una opción'" [isDisabled]="
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais') || agregarDestinatarioFinal.get('pais')?.disabled ?? false"
           [markTouched]="agregarDestinatarioFinal.get('pais')?.touched ?? false"
@@ -184,16 +202,20 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="estadosDatos" formControlName="estado" [label]="'Estado/localidad'"
-          [required]="true" [placeholder]="'Selecciona un valor'" (selectionChange)="cargarEstados($event)"
+          [required]="true" [placeholder]="'Seleccione una opción'" (selectionChange)="cargarEstados($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('estado')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="municipiosDatos" formControlName="municipio" [label]="'Municipio/alcaldía'"
-          [required]="true" [placeholder]="'Selecciona un valor'" (selectionChange)="cargarMunicipios($event)"
+          [required]="true" [placeholder]="'Seleccione una opción'" (selectionChange)="cargarMunicipios($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('municipio')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
     </div>
@@ -201,23 +223,29 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'"
-          [required]="!requiedField" [placeholder]="'Selecciona un valor'"
+          [required]="!requiedField" [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('localidad')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="codigosPostalesDatos" formControlName="codigoPostal"
-          [label]="'Código postal o equivalente'" [required]="true" [placeholder]="'Selecciona un valor'"
+          [label]="'Código postal o equivalente'" [required]="true" [placeholder]="'Seleccione una opción'"
           [isDisabled]="estaDeshabilitadoDesplegable" 
           [markTouched]="agregarDestinatarioFinal.get('codigoPostal')?.touched ?? false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
-          [placeholder]="'Selecciona un valor'" [isDisabled]="estaDeshabilitadoDesplegable"
+          [placeholder]="'Seleccione una opción'" [isDisabled]="estaDeshabilitadoDesplegable"
           [required]="idProcedimiento === 260911 || !elementosNoRequeridos.includes('colonia')"
-          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false">
+          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false"
+          [disabledPrimerOption]="false"
+          [hiddenPrimerOption]="false">
         </app-catalogo-select>
       </div>
     </div>
@@ -244,7 +272,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior') && !requiedField ">
+        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior')">
           <!-- <span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''">*</span> -->
           <span *ngIf="esInvalido('numeroExterior')" class="text-danger">*</span>

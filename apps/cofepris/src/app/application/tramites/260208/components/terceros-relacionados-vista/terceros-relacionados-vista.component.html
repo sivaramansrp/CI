@@ -1,4 +1,5 @@
 <app-terceros-relacionados
+#tercerosRelacionados
 [fabricanteTablaDatos]="(tercerosDatos$ | async)?.fabricanteTablaDatos || []"
 [destinatarioFinalTablaDatos]="(tercerosDatos$ | async)?.destinatarioFinalTablaDatos || []"
 [proveedorTablaDatos]="(tercerosDatos$ | async)?.proveedorTablaDatos || []"
@@ -6,4 +7,5 @@
 [formularioDeshabilitado]="esFormularioSoloLectura"
 [elementosRequeridos]="elementosRequeridos"
 (fabricanteEliminar)="eliminarFabricante($event)"
+[tramiteID]="'260208'"
 ></app-terceros-relacionados>

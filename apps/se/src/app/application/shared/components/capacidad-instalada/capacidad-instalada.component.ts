@@ -3,13 +3,13 @@ import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSelecci
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
 import { Location } from '@angular/common';
-import {  Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la capacidad instalada
@@ -170,8 +170,8 @@ export class CapacidadInstaladaComponent implements OnInit {
       .subscribe();
     this.capacidadForm = this.fb.group({
       fraccionArancelariaProductoTerminado: [this.solicitudState.fraccionArancelariaProductoTerminado, Validators.required],
-      umt: [this.solicitudState.umt, Validators.required],
-      descripcionComercialProductoTerminado: [this.solicitudState.descripcionComercialProductoTerminado, Validators.required],
+      umt: [{ value: this.solicitudState.umt, disabled: true }, Validators.required],
+      descripcionComercialProductoTerminado: [{ value: this.solicitudState.descripcionComercialProductoTerminado, disabled: true }, Validators.required],
       turnos: [this.solicitudState.turnos, [Validators.required]],
       horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required]],
       cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required]],
@@ -401,5 +401,20 @@ export class CapacidadInstaladaComponent implements OnInit {
         txtBtnCancelar: '',
       };
     }
+}
+/**
+ * Maneja el cambio en la fracción arancelaria del producto terminado.
+ * 
+ * Actualiza los campos 'umt' y 'descripcionComercialProductoTerminado' en el formulario
+ * `capacidadForm` basándose en la selección realizada.
+ * @param selected 
+ */
+onFraccionArancelariaProductoTerminadoChange(selected: any): void {
+  if (selected) {
+    this.capacidadForm.patchValue({
+      umt: selected.umt || '',
+      descripcionComercialProductoTerminado: selected.descripcionComercialProductoTerminado || ''
+    });
+  }
 }
 }
