@@ -84,6 +84,7 @@ export interface CamState {
   calle: string;
   disponiblesDatos: Mercancia[];
   mercanciaSeleccionadasTablaDatos: Mercancia[];
+  mercanciaSeleccionadasDatos: Mercancia[];
   grupoRepresentativo: GrupoRepresentativo;
 }
 
@@ -97,6 +98,7 @@ export function createInitialState(): CamState {
     calle: '',
     disponiblesDatos: [],
     mercanciaSeleccionadasTablaDatos: [],
+    mercanciaSeleccionadasDatos: [],
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -111,8 +113,14 @@ export function createInitialState(): CamState {
       segundoApellido: '',
       numeroDeRegistroFiscal: '',
       razonSocial: '',
+      pais: '',
       calle: '',
       numeroLetra: '',
+      ciudad: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correo: ''
     },
 
     estado: {
@@ -150,9 +158,9 @@ export function createInitialState(): CamState {
       representacionFederalDates: '',
       presenta: '',
     },
-    idiomaDatosSeleccion: { id: -1, descripcion: '' },
-    entidadFederativaSeleccion: { id: -1, descripcion: '' },
-    representacionFederalSeleccion: { id: -1, descripcion: '' },
+    idiomaDatosSeleccion: { id: -1, clave: '', descripcion: '' },
+    entidadFederativaSeleccion: { id: -1, clave: '', descripcion: '' },
+    representacionFederalSeleccion: { id: -1, clave: '', descripcion: '' },
     formDatosDelDestinatario: {
       nombres: '',
       primerApellido: '',
@@ -200,7 +208,9 @@ export function createInitialState(): CamState {
       nombreExportador: '',
       empresa: '',
       cargo: '',
+      lada: '',
       telefono: '',
+      fax: '',
       correoElectronico: '',
     },
   };
@@ -677,6 +687,18 @@ export class camCertificadoStore extends Store<CamState> {
     this.update((state) => ({
       ...state,
       disponiblesDatos,
+    }));
+  }
+
+
+  /**
+   * @param mercanciaSeleccionadasDatos 
+   * 
+   */
+  setMercanciaSeleccionadasDatos(mercanciaSeleccionadasDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasDatos,
     }));
   }
 

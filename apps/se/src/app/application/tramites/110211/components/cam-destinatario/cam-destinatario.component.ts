@@ -234,6 +234,18 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja los valores del store para el representante legal.
+   * @param event Evento del formulario con estructura específica del representante
+   */
+  setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALOR: unknown; METODO_NOMBRE: string }): void {
+    const { VALOR } = event;
+    const METODO_STORE = this.store[event.METODO_NOMBRE as keyof camCertificadoStore];
+    if (typeof METODO_STORE === 'function') {
+      (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
+    }
+  }
+
+  /**
    * @method ngAfterViewInit
    * @description
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.

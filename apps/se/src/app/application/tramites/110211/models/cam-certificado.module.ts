@@ -55,15 +55,33 @@ export interface Merchandise {
 }
 
 /**
- * @interface GrupoRepresentativo
- * @description
- * Interfaz que representa los datos de un grupo representativo.
+ * Representa los datos del grupo representativo.
+ * 
+ * Esta interfaz define la información del representante legal
+ * o comercial del exportador en las operaciones.
  */
 export interface GrupoRepresentativo {
+  /** Lugar donde se encuentra el representante */
   lugar: string;
+  
+  /** Nombre del exportador representado */
   nombreExportador: string;
+  
+  /** Empresa del representante */
   empresa: string;
+  
+  /** Cargo del representante en la empresa */
   cargo: string;
+  
+  /** Código de área telefónica (LADA) */
+  lada: string;
+  
+  /** Número telefónico del representante */
   telefono: string;
+  
+  /** Número de fax del representante (opcional) */
+  fax: string;
+  
+  /** Dirección de correo electrónico del representante */
   correoElectronico: string;
 }

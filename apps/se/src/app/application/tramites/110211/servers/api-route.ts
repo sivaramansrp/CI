@@ -34,7 +34,7 @@ const PROCEDURE = '/sat-t110211';
 export const PROC_110211 = {
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
-    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar-certificado`,
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };

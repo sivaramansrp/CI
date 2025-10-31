@@ -21,7 +21,7 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
   standalone: true,
   imports:[DatosCertificadoDeComponent,CommonModule]
 })
-export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
+export class CamDatosCertificadoComponent implements OnDestroy {
   /**
    * @descripcion
    * Indica si el idioma predeterminado está seleccionado.
@@ -83,7 +83,7 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
     private query: camCertificadoQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.query.formDatosCertificado$.pipe(
+    this.query.selectFormDatosDelDestinatario$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
         this.formDatosCertificadoValues = estado;
@@ -100,17 +100,6 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @descripcion
-   * Hook del ciclo de vida que se llama después de inicializar el componente.
-   * Obtiene los datos iniciales para el formulario.
-   */
-  ngOnInit(): void {
-    this.idiomOpcion();
-    this.entidadFederativasOpcion();
-    this.representacionFederalOpcion();
-  }
-
-  /**
  * @descripcion
  * Actualiza el almacén con los datos del formulario de certificado.
  * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
@@ -119,64 +108,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   const { campo: CAMPO, valor: VALOR } = event;
   this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
 }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de idiomas disponibles.
-   */
-  idiomOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('idioma.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.idiomaDatos = data as Catalogo[];
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.idiomaDatos = [];
-      },
-    });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de entidades federativas disponibles.
-   */
-  entidadFederativasOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.entidadFederativas = data as Catalogo[];
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.entidadFederativas = [];
-      },
-    });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de representaciones federales disponibles.
-   */
-  representacionFederalOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.representacionFederal = data as Catalogo[];
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.representacionFederal = [];
-      },
-    });
-  }
-
   /**
    * @descripcion
    * Actualiza el almacén con los datos del formulario.

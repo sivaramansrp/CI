@@ -700,7 +700,7 @@ export class CertificadoOrigenComponent
     this.datosSeleccionados = datos1;
     this.fromMercanciasDisponibles = fromMercanciasDisponibles;
     this.store.setFormMercancia({ ...datos1 });
-
+    this.store.setMercanciaSeleccionadasDatos([datos1]);
     if (this.modalInstance) {
       this.modalInstance.show();
     }

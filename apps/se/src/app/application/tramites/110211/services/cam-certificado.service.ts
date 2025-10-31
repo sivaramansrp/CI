@@ -61,7 +61,7 @@ export class CamCertificadoService {
     private readonly http: HttpClient,
     private tramite110211Store: camCertificadoStore,
     public camCertificadoQuery: camCertificadoQuery
-  ) {}
+  ) { }
 
   /**
    * * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`)
@@ -169,11 +169,11 @@ export class CamCertificadoService {
     return this.http.post<JSONResponse>(PROC_110211.BUSCAR, body);
   }
 
-    /**
-   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-   * */
+  /**
+ * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+ * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+ * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+ * */
   buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
     const RESULT: unknown[] = [];
 
@@ -196,20 +196,14 @@ export class CamCertificadoService {
       };
 
       RESULT.push({
-        id: ITEM.id,
-        fraccion_arancelaria: ITEM.fraccionArancelaria,
-        cantidad:ITEM.cantidad,
-        unidad_medida:ITEM.umc,
-        valor_mercancia:ITEM.valorMercancia,
-        nombreTecnico:ITEM.nombreTecnico,
-        nombre_comercial:ITEM.nombreComercial,
-        registro_producto:ITEM.numeroDeRegistrodeProductos,
-        fechaExpedicion:ITEM.fechaExpedicion,
-        fechaVencimiento:ITEM.fechaVencimiento,
-        tipo_factura:ITEM.tipoFactura,
-        num_factura:ITEM.numeroFactura,
-        complemento_descripcion:ITEM.complementoDescripcion,
-        fecha_factura:ITEM.fechaFactura,
+        "fraccionArancelaria": ITEM.fraccionArancelaria,
+        "cantidad": ITEM.cantidad,
+        "unidadDeMedida": ITEM.umc,
+        "valorMercancia": ITEM.valorMercancia,
+        "tipoDeFactura": ITEM.tipoFactura,
+        "numeroFactura": ITEM.numeroFactura,
+        "complementoDescripcion": ITEM.complementoDescripcion,
+        "fechaFactura": ITEM.fechaFactura
       });
     });
 
@@ -222,7 +216,7 @@ export class CamCertificadoService {
      * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
      * @returns Observable con la respuesta de la solicitud POST.
      */
-    guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
-      return this.http.post<JSONResponse>(PROC_110211.GUARDAR, body);
-    }
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_110211.GUARDAR, body);
+  }
 }
