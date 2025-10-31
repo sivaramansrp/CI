@@ -1,4 +1,4 @@
-import { API_GET_INICIAR_ATENDER_REQUERIMIENTO, API_POST_ACUSE_REQUERIMIENTO, API_POST_FIRMAR, API_POST_MOSTRAR_FIRMAR, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/atender-requerimiento/api-constants';
+import { API_GET_INICIAR_ATENDER_REQUERIMIENTO, API_POST_ACUSE_REQUERIMIENTO, API_POST_FIRMAR, API_POST_MOSTRAR_FIRMAR, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';

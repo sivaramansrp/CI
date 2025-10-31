@@ -62,7 +62,7 @@ import { TabsSolicitudServiceTsService } from '../core/services/evaluar-tramite/
 import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/shared/envio-digital-response.model';
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model';
-
+import { formatFecha } from '@ng-mf/data-access-user';
 /**
  * Componente principal para el proceso de requerimiento.
  *
@@ -669,10 +669,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
-        fecha_firma: ProcesoRequerimientoComponent.formatFecha(new Date()),
+        fecha_firma: formatFecha(new Date()),
         clave_rol: 'CapturistaGubernamental',
         sello: FIRMAHEX,
-        fecha_fin_vigencia: ProcesoRequerimientoComponent.formatFecha(this.datosFirmaReales.fechaFin),
+        fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
         documentos_requeridos: []
       },
     };
@@ -728,24 +728,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /**
-   * Convierte un objeto Date o string de fecha a formato 'YYYY-MM-DD HH:mm:ss'.
-   * @param fecha Fecha a formatear.
-   * @returns Cadena con el formato 'YYYY-MM-DD HH:mm:ss'.
-   */
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
 
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
-  }
   /**
    * @method postAcuseRecibo
    * @description Genera y obtiene el oficio
