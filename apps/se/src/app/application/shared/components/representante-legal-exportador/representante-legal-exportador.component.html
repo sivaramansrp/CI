@@ -11,7 +11,11 @@
       </span> } 
     
     
-    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo" class="form-control"
+    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo"  [ngClass]="
+                isValid(form, campo.nombre)
+                  ? (campo.required ? 'required' : null)
+                  : null
+              " class="form-control"
       [formControlName]="campo.nombre" [id]="campo.nombre"
       (change)=" setValoresStore('form', campo.nombre, campo.storeStateName ?? '') "
       [maxlength]="campo.maxlength ?? ''" /> } 
