@@ -6,7 +6,6 @@ import { ID_PROCEDIMIENTO } from '../../../constants/tratamientos-especiales.enu
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260207Store } from '../../../estados/tramite260207Store.store';
-
 /**
  * @component PagoDeDerechosContenedoraComponent
  * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
@@ -36,6 +35,8 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
    */
 
   public pagoDerechos: PagoDerechosFormState;
+      
+    
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260207Store` para gestionar el estado del trámite.

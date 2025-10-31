@@ -8,17 +8,12 @@ import {
   ListaPasosWizard,
   Notificacion,
   RegistroSolicitudService,
-  WizardComponent,
-  esValidObject,
-  getValidDatos
+  WizardComponent
 } from '@ng-mf/data-access-user';
 
-import { GuardarAdapter_260207 } from '../../adapters/guardar-payload.adapter';
-import { MENSAJE_DE_VALIDACION } from '../../constants/tratamientos-especiales.enum';
-import { PASOS } from '../../constants/tratamientos-especiales.enum';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
+import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
 
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207State } from '../../estados/tramite260207Store.store';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
@@ -76,14 +71,6 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  /**
-    * @property {PasoUnoComponent} pasoUnoComponent
-    * @description
-    * Referencia al componente hijo `PasoUnoComponent` mediante
-    * `@ViewChild`. Permite acceder a sus métodos y propiedades
-    * desde este componente padre.
-  */
-  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * Estado del formulario de registro IMMEX.
@@ -107,6 +94,16 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   seccionCargarDocumentos: boolean = true;
 
+ /**
+       * @property {string} MENSAJE_DE_ERROR
+       * @description
+       * Propiedad usada para almacenar el mensaje de error actual.
+       * Se inicializa como cadena vacía y se actualiza en función
+       * de las validaciones o errores capturados en el flujo.
+       */
+   MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+      
+
   /**
    * Indica si la carga de archivos está en progreso.
    */
@@ -128,14 +125,7 @@ export class ContenedorDePasosComponent implements OnInit {
      */
    public formErrorAlert!:string;
 
-  /**
-   * @property {string} MENSAJE_DE_ERROR
-   * @description
-   * Propiedad usada para almacenar el mensaje de error actual.
-   * Se inicializa como cadena vacía y se actualiza en función
-   * de las validaciones o errores capturados en el flujo.
-   */
-   MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+ 
 
    /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
@@ -149,14 +139,6 @@ export class ContenedorDePasosComponent implements OnInit {
   }
   private _esFormaValido: boolean = false;
 
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} mostrarAlerta
-   */
-  public mostrarAlerta: boolean = false;
-
-  /** Nueva notificación relacionada con el RFC. */
-  public seleccionarFilaNotificacion!: Notificacion;
 
   TEXTOS: string = AVISO.Aviso;
 
@@ -171,6 +153,28 @@ export class ContenedorDePasosComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+   /** Nueva notificación relacionada con el RFC. */
+      public seleccionarFilaNotificacion!: Notificacion;
+  
+  
+  /**
+     * Controla la visibilidad del modal de alerta.
+     * @property {boolean} mostrarAlerta
+     */
+  public mostrarAlerta: boolean = false;
+  
+   /**
+        * @property {PasoUnoComponent} pasoUnoComponent
+        * @description
+        * Referencia al componente hijo `PasoUnoComponent` mediante
+        * `@ViewChild`. Permite acceder a sus métodos y propiedades
+        * desde este componente padre.
+        */
+        @ViewChild(PasoUnoComponent)
+        pasoUnoComponent!: PasoUnoComponent;
+
+  
 
   /**
    * Constructor del componente ContenedorDePasosComponent.
@@ -271,70 +275,56 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-
-    if (e.accion === 'cont') {
-      let isValid = true;
-
-      // Always validate all tabs when clicking "Continuar", regardless of current tab
-      if (this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarPasoUno();
+     if (e.accion === 'cont') {
+                  let isValid = true;
+            
+                    if (this.indice === 1 && this.pasoUnoComponent) {
+                    isValid = this.pasoUnoComponent.validarPasoUno();
+                  }
+                  if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+                    this.mostrarAlerta=true;
+                    this.seleccionarFilaNotificacion = {
+                      tipoNotificacion: 'alert',
+                      categoria: 'danger',
+                      modo: 'action',
+                      titulo: '',
+                      mensaje: MENSAJE_DE_PAGE,
+                      cerrar: true,
+                      tiempoDeEspera: 2000,
+                      txtBtnAceptar: 'SI',
+                      txtBtnCancelar: 'NO',
+                    }
+                  }
+                  if (!isValid) {
+                    this.esFormaValido = true;
+                    this.datosPasos.indice = this.indice;
+                    return;
+                  }
+            
+                  this.esFormaValido = false;
+                  this.indice = e.valor;
+                  this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
+                   e.valor
+                 );
+                  this.datosPasos.indice = this.indice;
+                  this.wizardComponent.siguiente();
+                  
+                   
+             
+                } else {
+                  if (e.valor > 0 && e.valor < 5) {
+                    this.indice = e.valor;
+                    this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
+                     e.valor
+                   );
+                    if (e.accion === 'cont') {
+                      this.wizardComponent.siguiente();
+                    } else {
+                      this.wizardComponent.atras();
+                    }
+                  }
+                }
       }
-      
-      if (!isValid) {
-        this.mostrarAlerta = true;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
-        }
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        this.esFormaValido = true;
-        this.datosPasos.indice = this.indice;
-        return;
-      }
-      const PAYLOAD = GuardarAdapter_260207.toFormPayload(this.storeData);
-      let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260207', PAYLOAD).subscribe(response => {
-        shouldNavigate = response.codigo === '00';
-        if (!shouldNavigate) {
-          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
-    this.esFormaValido = true;
-    this.wizardComponent.indiceActual = 1;
-    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-    return;
-        }
-        if(shouldNavigate) {
-          if(esValidObject(response) && esValidObject(response.datos)) {
-            const DATOS = response.datos as { id_solicitud?: number };
-            if(getValidDatos(DATOS.id_solicitud)) {
-              this.tramite260207Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-            } else {
-              this.tramite260207Store.setIdSolicitud(0);
-            }
-          }
-          this.esFormaValido = false;
-          this.mostrarAlerta = false;
-          this.toastrService.success(response.mensaje);
-          this.indice = e.valor + 1;
-          this.datosPasos.indice = this.indice;
-          this.wizardComponent.siguiente();
-        } else {
-          this.toastrService.error(response.mensaje);
-        }
-      });
-    } else {
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
-    }
-  }
 
   /**
    * Emite un evento para cargar archivos.
@@ -368,6 +358,47 @@ export class ContenedorDePasosComponent implements OnInit {
     this.cargaEnProgreso = carga;
   }
 
+
+  /**
+   * @method anterior
+   * @description
+   * Método para navegar programáticamente al paso anterior del wizard.
+   * Ejecuta la transición backward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_backward
+   * Realiza navegación que:
+   * - Retrocede al paso anterior usando `wizardComponent.atras()`
+   * - Actualiza índice local basado en nueva posición del wizard
+   * - Sincroniza datos de pasos con posición actualizada
+   * - Mantiene consistencia de estado durante retroceso
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component  
+   * - Datos de configuración de pasos
+   * - Estado visual de navegación
+   * 
+   * @state_preservation
+   * Durante retroceso:
+   * - Preserva datos capturados en pasos anteriores
+   * - Mantiene validaciones ya realizadas
+   * - Conserva estado de formularios
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Nueva posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @backward_navigation
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
   /**
    * Método para navegar a la siguiente sección del wizard.
    * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
@@ -380,23 +411,12 @@ export class ContenedorDePasosComponent implements OnInit {
   }
 
   /**
-   * Método para navegar a la sección anterior del wizard.
-   * Actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  anterior(): void {
-    this.wizardComponent.atras();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
-
-  /**
    * @method obtenerNombreDelTítulo
    * @description Devuelve el título correspondiente al paso actual.
    * @param {number} valor - Índice del paso.
    * @returns {string} Título del paso.
    */
-  static obtenerNombreDelTítulo(valor: number): string {
+   static obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
         return TITULOMENSAJE;
