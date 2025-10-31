@@ -163,6 +163,7 @@ export class GuardarAdapter_260204 {
               "idSolicitud": "0"
           }
       }),
+      // eslint-disable-next-line complexity
       "gridTerceros_TIPERS_DES": state.destinatarioFinalTablaDatos.map((destinatario) => {
         return {
             "idPersonaSolicitud": "",
@@ -188,28 +189,28 @@ export class GuardarAdapter_260204 {
                 "numeroExterior": destinatario.numeroExterior,
                 "numeroInterior": destinatario.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": destinatario.pais
+                    "clave": destinatario.paisObj?.clave,
+                    "nombre": destinatario.paisObj?.descripcion || destinatario.pais
                 },
                 "colonia": {
-                    "clave": "",
-                    "nombre": destinatario.colonia
+                    "clave": destinatario.coloniaObj?.clave,
+                    "nombre": destinatario.coloniaObj?.descripcion || destinatario.colonia
                 },
                 "delegacionMunicipio": {
-                    "clave": "",
-                    "nombre": destinatario.municipioAlcaldia
+                    "clave": destinatario.municipioObj?.clave,
+                    "nombre": destinatario.municipioObj?.descripcion || destinatario.municipioAlcaldia
                 },
                 "localidad": {
-                    "clave": "001",
-                    "nombre": destinatario.localidad
+                    "clave": destinatario.localidadObj?.clave,
+                    "nombre": destinatario.localidadObj?.descripcion || destinatario.localidad
                 },
                 "entidadFederativa": {
-                    "clave": "09",
-                    "nombre": "Ciudad de México"
+                    "clave": destinatario.estadoObj?.clave,
+                    "nombre": destinatario.estadoObj?.descripcion || destinatario.estadoLocalidad
                 },
                 "informacionExtra": "",
-                "codigoPostal": destinatario.codigoPostal,
-                "descripcionColonia": destinatario.colonia
+                "codigoPostal": destinatario.codigoPostalObj?.descripcion || destinatario.codigoPostal,
+                "descripcionColonia": destinatario.coloniaObj?.descripcion || destinatario.colonia
             },
             "idSolicitud": "0"
           }
