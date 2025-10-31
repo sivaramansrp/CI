@@ -150,9 +150,11 @@
             </div>
             <div class="col-md-4">
             <div class="form-group">
-            <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:<i
-            class="bi bi-question-circle-fill"   title="Número de la autorización
-indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-toggle="tooltip"></i></label>
+            <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:
+                <span tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top">
+                <i class="bi bi-question-circle-fill"></i>
+                </span>
+            </label>
             <input class="form-control" id="noLicenciaSanitaria" formControlName="noLicenciaSanitaria"
             placeholder="" type="text" (change)="setValoresStore(domicilioForm,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')"/>
             </div>
@@ -161,7 +163,7 @@ indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-t
         <div class="row">
             <div class="col-md-4">
             <div class="form-group btn-space">
-                <app-catalogo-select [label]="'Régimen al que se destinará*'"  [placeholder]="'Selecciona una opción'"
+                <app-catalogo-select [label]="'Régimen al que se destinará*'"  [placeholder]="'Selecciona una opción'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'la mercancÍa'"
                 [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>

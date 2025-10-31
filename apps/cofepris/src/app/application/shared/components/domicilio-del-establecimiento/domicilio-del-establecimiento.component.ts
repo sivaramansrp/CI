@@ -114,6 +114,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   clasificacionProducto: Catalogo[] = [];
 
   /**
+   * Indica si el checkbox "Aviso de funcionamiento" está marcado.
+   * Cuando está marcado, el campo "No. de licencia sanitaria" se deshabilita.
+   */
+  public avisoFuncionamientoChecked: boolean = false;
+
+  /**
    * Notificador para destruir observables relacionados con los servicios.
    */
   private destroy$ = new Subject<void>();
@@ -309,11 +315,22 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       // Mantenga siempre habilitados estos campos específicos (independientemente de la selección del establecimiento).
       this.domicilioForm?.get('autorizacionIVAIEPS')?.enable();
       this.domicilioForm?.get('aviso')?.enable();
-      this.domicilioForm?.get('noLicenciaSanitaria')?.enable();
+      
+      // Para noLicenciaSanitaria, verificar el estado del checkbox
+      if (this.avisoFuncionamientoChecked) {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.disable();
+      } else {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.enable();
+      }
     } else {
       this.domicilioForm?.enable();
       this.claveScianForm?.enable();
       this.DatosMercanciaForm?.enable();
+      
+      // Incluso cuando el establecimiento está seleccionado, mantener la lógica del checkbox
+      if (this.avisoFuncionamientoChecked) {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.disable();
+      }
     }
   }
 
@@ -367,6 +384,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
     });
 
+    this.avisoFuncionamientoChecked = Boolean(this.domicilioForm.get('aviso')?.value);
+
     // Apply initial form state based on establishment selection
     this.updateFormState();
   }
@@ -394,12 +413,17 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @param event Evento del checkbox.
    */
   toggleNoLicenciaSanitaria(event: Event): void {
+    this.avisoFuncionamientoChecked = (event.target as HTMLInputElement).checked;
     const NO_LICENCIA_SANITARIA = this.domicilioForm.get('noLicenciaSanitaria');
 
-    if ((event.target as HTMLInputElement).checked) {
+    if (this.avisoFuncionamientoChecked) {
       NO_LICENCIA_SANITARIA?.disable();
+      NO_LICENCIA_SANITARIA?.setValue(''); 
     } else {
-      NO_LICENCIA_SANITARIA?.enable();
+
+      if (!this.esFormularioSoloLectura && (this.establecimientoSeleccionado || !this.establecimientoSeleccionado)) {
+        NO_LICENCIA_SANITARIA?.enable();
+      }
     }
   }
 
