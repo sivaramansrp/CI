@@ -358,10 +358,10 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
     regimen: [null, Validators.required],
     mecanismo: [null, Validators.required],
-    tratado: [null, Validators.required],
-    producto: [null, Validators.required],
-    subproducto: [null, Validators.required],
-    representacion: [null, Validators.required],
+    tratado: [null],
+    producto: [null],
+    subproducto: [null],
+    representacion: [null],
   });
 
 /** Suscribe al estado de solicitud 140103 y lo asigna a `solicitudState`.  

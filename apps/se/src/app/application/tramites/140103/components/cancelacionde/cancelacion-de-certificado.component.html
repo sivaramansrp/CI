@@ -38,7 +38,7 @@
     </div>
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="false"
-        name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura ? true : false"
+        name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura  || cancelacionForm.get('mecanismo')?.value === '2' ? true : false"
         (change)="setValoresStore(cancelacionForm,'representacion', 'setRepresentacion')">
       </app-catalogo-select>
     </div>
@@ -52,7 +52,7 @@
   </div>
   <H6> Cupos disponibles</H6>
   
-   <app-tabla-dinamica 
+  <app-tabla-dinamica 
   [configuracionTabla]="configuracionTabla" 
   [datos]="Cancelacion"
   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">

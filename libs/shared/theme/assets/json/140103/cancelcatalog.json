@@ -1,16 +1,30 @@
 {
 
     "regimen":[
-        { "id": 1, "descripcion": "Exportacion" }
+        { "id": 1, "descripcion": "Exportacion" },
+        { "id": 2, "descripcion": "Importación" }
        
       ],
     "mecanismo": [
-      { "id": 1, "descripcion": "Primero en tiempo primero en der " }
+      { "id": 1, "descripcion": "Asignación directa" },
+      { "id": 2, "descripcion": "Licitación Publica" },
+      { "id": 3, "descripcion": "Primero en tiempo primero en derecho" },
+      { "id": 4, "descripcion": "Prorrateo" }
       
     ],
     "tratado": [
-      { "id": 1, "descripcion": "T-MEC" }
-     
+      { "id": 1, "descripcion": "ACE 55" },
+      { "id": 2, "descripcion": "PAR 4" },
+      { "id": 3, "descripcion": "SGP" },
+      { "id": 4, "descripcion": "TLC JAPON" },
+      { "id": 5, "descripcion": "TLC PERÚ" },
+      { "id": 6, "descripcion": "TLC URUGUAY" },
+      { "id": 7, "descripcion": "CAM" },
+      { "id": 8, "descripcion": "T-MEC" },
+      { "id": 9, "descripcion": "ALADI" },
+      { "id": 10, "descripcion": "TLC MEX-CR" },
+      { "id": 11, "descripcion": "TLC MEX-NIC" },
+      { "id": 12, "descripcion": "OMC" }
     ],
     "producto": [
         { "id": 1, "descripcion": "option1" },
