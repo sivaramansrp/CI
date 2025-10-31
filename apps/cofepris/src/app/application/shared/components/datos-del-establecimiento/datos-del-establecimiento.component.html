@@ -19,10 +19,20 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico:<i
-              class="bi bi-question-circle-fill"></i></label>
-          <input class="form-control" id="correoElectronico" formControlName="correoElectronico" placeholder=""
+          <label class="form-label" for="correoElectronico">Correo electrónico:
+            <span tooltip="ejemplo@dominio.com" placement="top">
+              <i class="bi bi-question-circle-fill"></i>
+            </span>
+          </label>
+          <input class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="320"
             type="text" (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')" [disabled]="!establecimientoSeleccionado || esFormularioSoloLectura">
+          @if(datosDelForm.get('correoElectronico')?.invalid && datosDelForm.get('correoElectronico')?.touched){
+            <div class="text-danger">
+              @if(datosDelForm.get('correoElectronico')?.errors?.['pattern']){
+               <small>El valor ingresado no es una dirección válida de correo electrónico</small>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>

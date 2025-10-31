@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
@@ -203,7 +203,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
 
     this.datosDelForm = this.fb.group({
       denominacion: [this.solicitudState?.denominacion, [Validators.required]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.pattern(REGEX_CORREO_ELECTRONICO),]],
     });
 
     if (!this.establecimientoSeleccionado) {
