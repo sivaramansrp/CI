@@ -8,6 +8,10 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Solicitud150101State {
   /**
+   * idSolicitud
+   */
+  idSolicitud: number | null;
+  /**
    * Fecha de inicio del reporte anual.
    */
   reporteAnualFechaInicio: string;
@@ -72,6 +76,10 @@ export interface Solicitud150101State {
  */
 export function createInitialState(): Solicitud150101State {
   return {
+    /**
+     * idSolicitud
+     */
+    idSolicitud: 0,
     /**
      * Fecha de inicio del reporte anual.
      */
@@ -288,5 +296,9 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
       ...state,
       solicitudDato,
     }));
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({ ...state, idSolicitud }));
   }
 }

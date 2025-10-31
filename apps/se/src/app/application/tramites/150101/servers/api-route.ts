@@ -19,7 +19,7 @@ const PROCEDURE = '/sat-t150101';
  * Rutas de la API para el procedimiento 110223.
  * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
  */
-export const PROC_110216 = {
+export const PROC_150101 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`
 }
 

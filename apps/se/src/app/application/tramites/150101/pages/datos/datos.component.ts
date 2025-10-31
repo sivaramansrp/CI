@@ -131,6 +131,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
               resp.totalExportaciones !== null
                 ? String(resp.totalExportaciones)
                 : '',
+            idSolicitud: 0
           };
           this.solicitud150101Store.setRegistroSolicitudAnualState(
             RESP_WITH_STRING_EXPORTACIONES

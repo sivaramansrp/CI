@@ -1,9 +1,13 @@
+import { Component, inject } from '@angular/core';
+import { DatosPasos, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
-import { Component } from '@angular/core';
+import { Observable, map, switchMap, take } from 'rxjs';
+import { Solicitud150101State, Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { DatosComponent} from '../datos/datos.component';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PAGO_DE_DERECHOS } from '../../../150102/constantes/solicitud150102.enum';
+import { SolicitudService } from '../../services/registro-solicitud-anual.service';
+import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -129,13 +133,48 @@ export class SolicitudDeReporteComponent {
   };
 
   /**
+   * @property wizardService
+   * @description
+   * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+   * @type {WizardService}
+   */
+    wizardService = inject(WizardService);
+
+  /**
+   * @property SolicitudService
+   * @description
+   * Inyección del servicio `SolicitudService` para gestionar la lógica y el estado del componente de solicitud.
+   * @type {SolicitudService}
+   */
+    solicitudService = inject(SolicitudService);
+
+  /**
+   * @property toastrService
+   * @description
+   * Inyección del servicio `ToastrService` para mostrar notificaciones al usuario.
+   * @type {ToastrService}
+   */
+    toastrService = inject(ToastrService);
+
+    /**
+   * @property store
+   * @description
+   * Inyección del servicio `Solicitud150101Store` para gestionar el estado de la solicitud.
+   * @type {Solicitud150101Store}
+   */
+    store = inject(Solicitud150101Store);
+
+  /**
    * Método que actualiza el índice del paso actual basado en la acción del botón.
    * 
    * @param {AccionBoton} e - Objeto que contiene la acción ('cont' para continuar, 'atras' para retroceder) y el valor del índice del paso.
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-  if (e.accion === 'cont') {
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
     let noError=0;
     if (this.indice === 1 ) {
       noError = this.pasoUnoComponent.validarTodosLosFormularios();
@@ -179,17 +218,123 @@ export class SolicitudDeReporteComponent {
       this.esFormaValidoCuatro = false;
       this.datosPasos.indice = this.indice;
       return;
+    } 
+    this.esFormaValido = false;
+    this.esFormaValidoDos = false;
+    this.esFormaValidoTres = false;
+    this.esFormaValidoCuatro = false;
+    if (e.accion === 'cont') {
+      this.shouldNavigate$()
+        .subscribe((shouldNavigate) => {
+          if (shouldNavigate) {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardService.cambio_indice(NEXT_INDEX);
+            this.wizardComponent.siguiente();
+          } else {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+          }
+        });
+    } else {
+      this.indice = NEXT_INDEX;
+      this.datosPasos.indice = NEXT_INDEX;
+      this.wizardComponent.atras();
+    }
+}
+
+/**
+   * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+   *
+   * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+   * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+   * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+   * hacia adelante o atrás según el tipo de acción.
+   *
+   * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+   */
+    private shouldNavigate$(): Observable<boolean> {
+      return this.solicitudService.getAllState().pipe(
+        take(1),
+        switchMap(data => this.guardar(data)),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map((response: any) => {
+          const OK = response.codigo === '00';
+          if (OK) {
+            this.toastrService.success(response.mensaje);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+          return OK;
+        })
+      );
+    }
+
+    /**
+     * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
+     *
+     * @param data - Los datos que se desean guardar y enviar al servidor.
+     * @returns void
+     */
+    guardar(data: Solicitud150101State): Promise<unknown> {
+      const REPORTE_ANUAL = this.solicitudService.buildReporteAnual(data);
+      const PAYLOAD = {
+        "id_solcitud": 202846846,
+        "tipoDeSolicitud": "guardar",
+        "solicitante": {
+          "rfc": "AAL0409235E6",
+          "nombre": "Juan Pérez",
+          "es_persona_moral": true,
+          "certificado_serial_number": "1234"
+        },
+        "representacion_federal": {
+          "cve_entidad_federativa": "DGO",
+          "cve_unidad_administrativa": "1016"
+        },
+        "fracciones": [
+        {
+          "cveFraccion": "",
+          "bienesProducidos": {
+            "descripcionBienProducido": "",
+            "totalBienesProducidos": 0,
+            "volumenMercadoNacional": 0,
+            "olumenExportaciones": 0
+          }
+        }
+        ],
+        "sectores": [
+          {
+            "idConfProgramaSE": 0
+          }
+        ],
+        "observaciones": "121681,",
+        "descripcion": "2011-7018",
+        "ide_generica_1": "01-2024",
+        "ide_generica_2": "12-2024",
+        "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
+        "descripcion_clob_generica_2": "121681,2011-7018",
+        "reporte_anual": REPORTE_ANUAL
+      }
+      return new Promise((resolve, reject) => {
+        this.solicitudService.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            resolve(response);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+        });
     }
     
-      this.esFormaValido = false;
-      this.esFormaValidoDos = false;
-      this.esFormaValidoTres = false;
-      this.esFormaValidoCuatro = false;
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;    
-      this.wizardComponent.siguiente();
-  }
-}
  /**
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.

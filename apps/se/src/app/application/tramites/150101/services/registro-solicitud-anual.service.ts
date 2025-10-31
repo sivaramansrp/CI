@@ -1,10 +1,12 @@
+import { BUSCAR_PROGRAMAS, PROC_150101 } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ProgramasReporte, RegistroSolicitudDatos } from '../models/programas-reporte.model';
+import { RegistroSolicitudDatos } from '../models/programas-reporte.model';
 import { ReporteFechas } from '../models/programas-reporte.model';
-import { BUSCAR_PROGRAMAS } from '../servers/api-route';
+import { Solicitud150101Query } from '../estados/solicitud150101.query';
+import { Solicitud150101State } from '../estados/solicitud150101.store';
 
 
 /**
@@ -30,7 +32,11 @@ export class SolicitudService {
    * @constructor
    * @param http Cliente HTTP utilizado para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private solicitud150101Query: Solicitud150101Query,
+    public httpService: HttpCoreService
+  ) {
     //constructor
   }
 
@@ -58,5 +64,37 @@ export class SolicitudService {
    */
   getRegistroSolicitudDatos(): Observable<RegistroSolicitudDatos> {
     return this.http.get<RegistroSolicitudDatos>('assets/json/150101/registro-solicitud-anual.json');
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Solicitud150101State>} Observable con todos los datos del estado.
+  */
+  getAllState(): Observable<Solicitud150101State> {
+    return this.solicitud150101Query.allStoreData$;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_150101.GUARDAR, { body: body });
+  }
+
+  buildReporteAnual(data: Solicitud150101State): Record<string, unknown> {
+    return { 
+      "saldo": data.saldo,
+      "porcentaje": data.porcentajeExportacion,
+      "ventasTotales": data.ventasTotales,
+      "totalExportaciones": data.totalExportaciones,
+      "totalImportaciones": data.totalImportaciones,
+      "totalPersonalAdmin1": 0,
+      "totalPersonalAdmin2": 0,
+      "totalPersonalObrero1": 0,
+      "totalPersonalObrero2": 0
+    };
   }
 }
