@@ -1995,7 +1995,6 @@ marcarTodosLosCamposComoTocados(): void {
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
   
-  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
 }
 
 /**
