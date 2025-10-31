@@ -115,7 +115,7 @@ export class ContenedorDePasosComponent implements OnInit {
      * ID del estado de la solicitud.
      * @type {number | null}
      */
-    idSolicitudState: number | null = 0;
+    idSolicitudState!: number | null;
 
   
     /** Nueva notificación relacionada con el RFC. */
@@ -336,12 +336,12 @@ ngOnInit(): void {
 
       const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
       let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260210', PAYLOAD).subscribe(response => {
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
         if (!shouldNavigate) {
-          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
           this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
-          this.esFormaValido = false;
+          this.esFormaValido = true;
           this.indice = 1;
           this.datosPasos.indice = 1;
           this.wizardComponent.indiceActual = 1;
@@ -350,17 +350,16 @@ ngOnInit(): void {
         }
         if(shouldNavigate) {
           if(esValidObject(response) && esValidObject(response.datos)) {
+            this.esFormaValido = false;
             const DATOS = response.datos as { id_solicitud?: number };
-            if(getValidDatos(DATOS.id_solicitud)) {
-              this.tramite260210Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-            } else {
-              this.tramite260210Store.setIdSolicitud(0);
-            }
+            const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+            this.idSolicitudState = ID_SOLICITUD;
+            this.tramite260210Store.setIdSolicitud(ID_SOLICITUD);
           }
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = e.valor;
           }
           this.toastrService.success(response.mensaje);
           if (indiceActualizado > 0 && indiceActualizado < 5) {
