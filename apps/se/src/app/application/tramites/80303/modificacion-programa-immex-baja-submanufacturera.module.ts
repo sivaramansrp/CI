@@ -4,7 +4,7 @@ import { AnexoUnoPestanaComponent } from './components/anexo-uno-pestana/anexo-u
 import { BitacoraComponent } from '../80303/components/bitacora/bitacora.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ComplementariaComponent } from './components/complementaria/complementaria.component';
+import { ComplementarioComponent } from './components/complementaria/complementaria.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ModificacionComponent } from '../80303/components/modificacion/modificacion.component';
 import { ModificacionProgramaImmexBajaSubmanufactureraRoutingModule } from './modificacion-programa-immex-baja-submanufacturera-routing.module';
@@ -37,7 +37,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ModificacionComponent,
     BitacoraComponent,
     AnexoUnoPestanaComponent,
-    ComplementariaComponent,
+    ComplementarioComponent,
     MontoYFactorComponent,
   ],
   exports: [

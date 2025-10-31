@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
+import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 
 /**
  * Estado de la tienda para el trámite 260212.
@@ -103,6 +106,34 @@ export interface Tramite260212State {
   segundoApellido: string;
       avisoclave: string;
       noLicenciaSanitaria: string;
+  /**
+   * Lista de proveedores relacionados con el trámite.
+   */
+  proveedorTablaModificaDatos: Proveedor[];
+    /**
+   * Lista de facturadores relacionados con el trámite.
+   */
+  facturadorTablaModificaDatos: Facturador[];
+    /**
+   * Lista de fabricantes relacionados con el trámite.
+   */
+  fabricanteTablaModificaDatos: Fabricante[];
+  /**
+   * Lista de destinatarios finales relacionados con el trámite.
+   */
+  destinatarioFinalTablaModificaDatos: Destinatario[];
+
+  fabricanteTablaDatos: Fabricante[];
+
+  facturadorTablaDatos: Facturador[];
+  destinatarioFinalTablaDatos: Destinatario[];
+  proveedorTablaDatos: Proveedor[];
+  pagoDerechos: PagoDerechosFormState;
+  datosSolicitudFormState: DatosSolicitudFormState;
+  tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+  scianConfigDatos: TablaScianConfig[];
+  opcionConfigDatos: TablaOpcionConfig[];
+  opcionesColapsableState: boolean;
 }
 
 /**
@@ -141,6 +172,28 @@ export function createInitialState(): Tramite260212State {
       segundoApellido: '',
           avisoclave: '',
       noLicenciaSanitaria: '',
+    destinatarioFinalTablaModificaDatos:[],
+    fabricanteTablaModificaDatos:[],
+    facturadorTablaModificaDatos: [],
+    proveedorTablaModificaDatos: [],
+    fabricanteTablaDatos: [],
+    facturadorTablaDatos: [],
+    destinatarioFinalTablaDatos: [],
+    proveedorTablaDatos: [],
+    pagoDerechos: {
+      claveReferencia: '',
+      cadenaDependencia: '',
+      estado: '',
+      llavePago: '',
+      fechaPago: '',
+      importePago: '',
+      banco:''
+    },
+    datosSolicitudFormState: {} as DatosSolicitudFormState,
+    tablaMercanciasConfigDatos: [],
+    scianConfigDatos: [],
+    opcionConfigDatos: [],
+    opcionesColapsableState: false,
   };
 }
 @Injectable({
@@ -469,5 +522,190 @@ public setAvisoclave(avisoclave: string): void {
 public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
   this.update(state => ({ ...state, noLicenciaSanitaria }));
 }
+
+public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+    public destinatarioFinalTablaModificaDatos(
+      tabSeleccionado: Destinatario[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        destinatarioFinalTablaModificaDatos: tabSeleccionado,
+      }));
+    }
+     public proveedorTablaModificaDatos(tabSeleccionado: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+    public facturadorTablaModificaDatos(tabSeleccionado: Facturador[]): void {
+      this.update((state) => ({
+        ...state,
+        facturadorTablaModificaDatos: tabSeleccionado,
+      }));
+    }
+
+  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+      newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        fabricanteTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+
+  public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.facturadorTablaDatos];
+
+      newFacturadores.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        facturadorTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+
+  public updateDestinatarioFinalTablaDatos(
+    newDestinatarios: Destinatario[]
+  ): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.destinatarioFinalTablaDatos];
+
+      newDestinatarios.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.proveedorTablaDatos];
+
+      newProveedores.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        proveedorTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+
+  /**
+   * @method updatePagoDerechos
+   * @description Actualiza el estado del formulario de pago de derechos.
+   * @param {PagoDerechosFormState} nuevoPagoDerechos - Nuevo estado del formulario.
+   */
+  public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechos: nuevoPagoDerechos,
+    }));
+  }
+
+  public updateDatosSolicitudFormState(
+      datosSolicitudFormState: DatosSolicitudFormState
+    ): void {
+      this.update((state) => ({
+        ...state,
+        datosSolicitudFormState,
+      }));
+    }
+
+  public updateTablaMercanciasConfigDatos(
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tablaMercanciasConfigDatos: tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: [],
+    }));
+  }
+
+  public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      scianConfigDatos,
+    }));
+  }
+
+  public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      opcionConfigDatos,
+    }));
+  }
 
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule, forwardRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { AcuseReciboComponent } from '../../shared/components/acuse-recibo/acuse-recibo.component';
 import { ToastrService } from 'ngx-toastr';
 
 import {
@@ -46,7 +46,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     PasoUnoComponent,
     PasoDosComponent,
     DirectorGeneralComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
   ],
   imports: [
     CommonModule,
@@ -58,7 +58,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
-    forwardRef(() => FirmaElectronicaComponent),   
+    forwardRef(() => FirmaElectronicaComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),
@@ -71,6 +71,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     forwardRef(() => NotificacionesComponent),
     ChoferesComponent,
     TablaDinamicaComponent,
+    AcuseReciboComponent,
     VehiculosModule
   ],
   exports: [
@@ -79,4 +80,4 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
   ],
   providers: [ToastrService, CatalogosService, Chofer40103Service],
 })
-export class ModificarCaatTerrestreModule {}
+export class ModificarCaatTerrestreModule { }

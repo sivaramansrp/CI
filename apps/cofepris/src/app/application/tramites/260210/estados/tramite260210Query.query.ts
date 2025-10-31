@@ -1,6 +1,6 @@
 import {
   Tramite260210State,
-  Tramite260214Store,
+  Tramite260210Store,
 } from './tramite260210Store.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
@@ -15,7 +15,7 @@ export class Tramite260210Query extends Query<Tramite260210State> {
    * Constructor que inicializa el query con el store correspondiente.
    * @param store Instancia del store para el Trámite 260210.
    */
-  constructor(protected override store: Tramite260214Store) {
+  constructor(protected override store: Tramite260210Store) {
     super(store);
   }
 

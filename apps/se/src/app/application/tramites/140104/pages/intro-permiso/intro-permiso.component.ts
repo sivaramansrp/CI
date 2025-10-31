@@ -8,7 +8,11 @@ import {
   take,
   takeUntil,
 } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
+import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { DetalleDelAdapter } from '../../adapters/detalle-del-permiso.adapter';
 import { ERROR_FORMA_ALERT } from '../../constants/intropermiso.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
@@ -16,20 +20,14 @@ import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/intropermiso.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
+import { Solicitud140104State } from '../../estados/desistimiento-de-permiso.store';
 import { TODOS_PASOS } from '../../constants/intropermiso.enum';
+import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-
-import { Solicitud140104State } from '../../estados/desistimiento-de-permiso.store';
-
-import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
-import { DetalleDelAdapter } from '../../adapters/detalle-del-permiso.adapter';
-
 import { throwError } from 'rxjs';
 
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-
-import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
 interface AccionBoton {
   /**
    * La acción que se realizará.
@@ -73,7 +71,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
    * Indica si el formulario del paso actual es válido.
    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
    */
-  esFormaValido: boolean = false;
+  esFormaValido: boolean = true;
 
   /**
    * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
@@ -169,7 +167,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   /**
    * Identificador del trámite actual.
    */
-  tramiteId: string = '140104';
+  idTipoTramite: string = '140104';
 
   /**
    * Identificador numérico de la solicitud actual.
@@ -183,6 +181,12 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Clase CSS para mostrar una alerta de error.
+   * @type {string}
+   */
+  infoError = 'alert-danger';
+
+  /**
    * @constructor
    * @param {ServicioDeMensajesService} servicioDeMensajesService
    * Servicio utilizado para la comunicación de mensajes entre componentes.
@@ -190,7 +194,8 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
   constructor(
     private servicioDeMensajesService: ServicioDeMensajesService,
     private query: DesistimientoQuery,
-    private store: DesistimientoStore
+    private store: DesistimientoStore,
+    private toastrService: ToastrService
   ) {}
 
   /**
@@ -269,36 +274,6 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
-  // /**
-  //  * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
-  //  * @param e Acción del botón.
-  //  */
-  // getValorIndice(e: AccionBoton): void {
-  //   if (e.accion === 'cont') {
-  //     let isValid = true;
-
-  //     if (this.indice === 1 && this.pasoUnoComponent) {
-  //       isValid = this.pasoUnoComponent.validarFormularios();
-  //     }
-  //     if (!isValid) {
-  //       this.esFormaValido = true;
-  //       this.datosPasos.indice = this.indice;
-  //       return;
-  //     }
-
-  //     this.esFormaValido = false;
-  //     this.indice = e.valor;
-  //     this.datosPasos.indice = this.indice;
-
-  //     this.wizardComponent.siguiente();
-  //     return;
-  //   }
-
-  //   this.indice = e.valor;
-  //   this.datosPasos.indice = this.indice;
-  //   this.wizardComponent.atras();
-  // }
-
   /**
    * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
    * y enviar los datos al servidor.
@@ -310,7 +285,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
       map((ESTADO_ACTUAL) => DetalleDelAdapter.toFormPayload(ESTADO_ACTUAL)),
       switchMap((FORM_PAYLOAD) => {
         return this.servicioDeMensajesService.postGuardarDatos(
-          this.tramiteId,
+          this.idTipoTramite,
           FORM_PAYLOAD
         );
       }),
@@ -321,59 +296,74 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Maneja el cambio de paso en el wizard según la acción del botón.
+   * Valida el formulario en el primer paso y guarda la solicitud si es válido.
+   * Actualiza el índice y muestra mensajes de error o éxito según corresponda.
+   * 
+   * @param {AccionBoton} e - Objeto que indica la acción ('cont' para continuar, 'ant' para anterior) y el valor del índice de paso.
+   */
   getValorIndice(e: AccionBoton): void {
     if (this.indice === 1) {
-      const FORM_VALIDO = this.pasoUnoComponent?.validarFormularios() ?? false;
+      const FORM_VALIDO =
+        this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
       this.esFormaValido = FORM_VALIDO;
 
-      // if (!this.esFormaValido) {
-      //   this.datosPasos.indice = 1;
-      //   this.formErrorAlert =
-      //     registroSolicitudImmexComponent.generarAlertaDeError(
-      //       ERROR_SERVICIO_ALERT
-      //     );
-      //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-      //   return;
-      // }
+      if (!this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        this.formErrorAlert =
+          ServiciosService.generarAlertaDeError(ERROR_FORMA_ALERT);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
 
       this.onGuardar()
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
-            // if (respuesta.codigo !== '00') {
-            //   const ERROR_MESSAGE =
-            //     respuesta.error || 'Error desconocido en la solicitud';
-            //   this.formErrorAlert =
-            //     registroSolicitudImmexComponent.generarAlertaDeError(
-            //       ERROR_MESSAGE
-            //     );
-            //   this.esFormaValido = false;
-            //   this.indice = 1;
-            //   this.wizardComponent.indiceActual = 1;
-            //   setTimeout(
-            //     () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-            //     0
-            //   );
-            //   return;
-            // }
-            this.esFormaValido = true;
-            this.indice = e.valor;
-            this.datosPasos.indice = this.indice;
-            this.wizardComponent.siguiente();
+            if (respuesta.codigo !== '00') {
+              this.formErrorAlert =
+                ServiciosService.generarAlertaDeError(ERROR_FORMA_ALERT);
+              this.esFormaValido = false;
+              this.indice = 1;
+              this.datosPasos.indice = 1;
+              if (this.wizardComponent) {
+                this.wizardComponent.indiceActual = 0;
+              }
+              setTimeout(
+                () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+                0
+              );
+              return;
+            }
+
             if (respuesta.datos?.id_solicitud) {
               this.idSolicitudState = respuesta.datos.id_solicitud;
               this.store.setIdSolicitud(respuesta.datos.id_solicitud);
             }
+
+            this.esFormaValido = true;
+
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else if (e.accion === 'ant') {
+              this.wizardComponent.atras();
+            }
+
+            this.toastrService.success(respuesta.mensaje);
           },
           error: (error) => {
-            console.error('Error en onGuardar:', error);
-            // this.formErrorAlert =
-            //   registroSolicitudImmexComponent.generarAlertaDeError(
-            //     'Error al procesar la solicitud'
-            //   );
+            this.formErrorAlert = ServiciosService.generarAlertaDeError(
+              error.error || 'Error al procesar la solicitud'
+            );
             this.esFormaValido = false;
             this.indice = 1;
-            this.wizardComponent.indiceActual = 1;
+            if (this.wizardComponent) {
+              this.wizardComponent.indiceActual = 0;
+            }
             setTimeout(
               () => window.scrollTo({ top: 0, behavior: 'smooth' }),
               0
@@ -383,6 +373,8 @@ export class IntroPermisoComponent implements OnInit, OnDestroy {
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+
         if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
         } else {

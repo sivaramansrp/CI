@@ -796,7 +796,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -834,7 +834,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202
 ];
 
 /**
@@ -849,7 +849,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
-  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202
 ];
 
 /**
@@ -1041,7 +1041,7 @@ export enum TIPO_ACTUALIZACION {
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
-export const TIPO_PRODUCTO_ESPECIAL = '3';
+export const TIPO_PRODUCTO_ESPECIAL = '137';
 
 /**
  * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.
@@ -1131,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202];
 
 
 

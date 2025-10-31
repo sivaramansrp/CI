@@ -2,6 +2,7 @@ import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../constantes/materias-primas.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
@@ -21,6 +22,12 @@ import { Tramite260203Store } from '../../estados/stores/tramite260203Store.stor
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
+  
+    /**
+     * @property {number} idProcedimiento
+     * @description Identificador del procedimiento.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.

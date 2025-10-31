@@ -403,7 +403,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * nombres: [this.obtenerValor('nombres'), Validators.required]
    * ```
    */
-  public obtenerValor(field: keyof Otros): string | number | undefined | string[] {
+  public obtenerValor(field: keyof Otros): string | number | undefined | string[] | Catalogo {
     return this.datoSeleccionado?.[field as keyof Otros] ?? '';
   }
 

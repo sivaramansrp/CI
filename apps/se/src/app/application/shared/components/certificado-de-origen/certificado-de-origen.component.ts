@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, PROCEDIMIENTO_EXCLUDED, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -249,7 +249,6 @@ export class CertificadoDeOrigenComponent
    * @type {boolean}
    */
   @Input() mercanciasDisponiblesTabla!: boolean;
-
   /**
    * @property {number} idProcedimiento
    * @description
@@ -569,6 +568,12 @@ export class CertificadoDeOrigenComponent
    * lo que activa validaciones adicionales en ciertos campos del formulario.
    */
   requerida: boolean = false;
+  /**   * @property {number[]} procedimientoExcluded
+   * @description
+   * Arreglo de IDs de procedimientos que están excluidos de ciertas validaciones o funcionalidades.
+   * Utilizado para condicionar el comportamiento del formulario según el tipo de trámite.
+   */
+  procedimientoExcluded = PROCEDIMIENTO_EXCLUDED;
 
   /**
    * @property {boolean} isInvalidaMercanciaSeleccion
@@ -664,6 +669,16 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('fax1', new FormControl(''));
     }
 
+    if (this.idProcedimiento === 110205) {
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('correoElectronico', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+    }
+
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
@@ -679,7 +694,15 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('correo', new FormControl('', [Validators.required])); 
     }
 
-    if (this.idProcedimiento === 110204) {
+    if (this.idProcedimiento === 110204 || this.idProcedimiento === 110212) {
+        this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('ciudad', new FormControl(''));
+      this.formCertificado.addControl('calle', new FormControl(''));
+      this.formCertificado.addControl('numeroLetra', new FormControl(''));
+      this.formCertificado.addControl('lada', new FormControl(''));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+      this.formCertificado.addControl('correo', new FormControl('')); 
       const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
