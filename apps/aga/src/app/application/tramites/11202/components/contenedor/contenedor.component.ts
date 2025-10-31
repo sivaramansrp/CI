@@ -15,6 +15,7 @@ import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json
 import {
     SolicitanteService
 } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 /**
@@ -28,6 +29,7 @@ import {
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
   styleUrl: './contenedor.component.scss',
+
 
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
@@ -239,6 +241,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private solicitanteServicio: SolicitanteService,
     private tramite11202Query: Solicitud11202Query,
     public solicitud11202Store: Solicitud11202Store,
+    private toastrService: ToastrService,
+
     
 
   ) { 
@@ -402,8 +406,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       digito_verificador: this.solicitudForm.value.datosContenedor.digitoDeControl || '',
       tipo_contenedor: TIPOCONTENEDOR,
     };
-    console.log('Agregar contenedor con los siguientes datos:', CONTENEDOR_DATA);
-    if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR ) {
+    if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA ) {
       this.datosTramiteService.agregarSolicitud(CONTENEDOR_DATA).pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.codigo === '00') {
@@ -416,7 +419,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             this.solicitudForm.markAsPristine();
             this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
             this.mostrarCampos();
-            this.mostrarBotonesBuscar = false;
+            // this.mostrarBotonesBuscar = false;
+          }
+          else if(respuesta?.codigo === 'SAT11202-CR02'){
+            this.encontradaModal()
+          }
+          else{
+            this.toastrService.error(respuesta.error);
           }
         }
       );
@@ -630,7 +639,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     } 
 
         const PAYLOAD = {
-            "id_solcitud": this.contenedorState.idSolicitud || null,
+            "id_solcitud": this.solicitudState.idSolicitud || null,
             "solicitante": {
                 "rfc": this.rfc_original,
                 "nombre": "Juan Pérez",
