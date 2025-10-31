@@ -1,7 +1,7 @@
 import { CROSLISTA_DE_DATOS } from '../../constantes/220202/fitosanitario.enums';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 import { DetalleVidaSilvestre } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 
 /**

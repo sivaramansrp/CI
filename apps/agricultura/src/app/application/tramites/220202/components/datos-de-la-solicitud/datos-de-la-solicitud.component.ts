@@ -17,9 +17,14 @@ import {
   DatosForma,
   FilaSolicitud,
   RadioOpcion,
+  SolicitudData,
   SolicitudFilaTabla,
-  SolicitudData
 } from '../../models/220202/fitosanitario.model';
+import {
+  DetallasDatos,
+  DetalleVidaSilvestre,
+  Sensible,
+} from '../../../../shared/models/datos-de-la-solicitue.model';
 import {
   FormBuilder,
   FormGroup,
@@ -30,21 +35,16 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
-import { CommonModule } from '@angular/common';
-import { FitosanitarioStore } from '../../estados/fitosanitario.store';
-import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
-import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
-import { PrellenadoSolicitud } from '../../../220202/models/220202/prellenado-solicitud.model';
-import {
-  DetallasDatos,
-  DetalleVidaSilvestre,
-  Sensible,
-} from '../../../../shared/models/datos-de-la-solicitue.model';
 import {
   ColumnConfig
 } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
+import { CommonModule } from '@angular/common';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { PrellenadoSolicitud } from '../../../220202/models/220202/prellenado-solicitud.model';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 /**
  * @description Constructor del componente.
@@ -502,7 +502,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
         this.cuerpoTabla = datos.tablaDatos;
-        console.log('cuerpoTabla:', this.cuerpoTabla);
       });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -606,7 +605,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.cuerpoTablaSolicitud = data.datos ?? [];
-        console.log('cuerpoTablaSolicitud:', this.cuerpoTablaSolicitud);
       });
   }
 
@@ -619,7 +617,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
     }
   }
 
@@ -956,6 +953,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                 numeroDeGuia: datos.datos.numero_autorizacion || '',
                 numeroDeCarro: datos.datos.numero_carro_ferrocarril || '',
               });
+              const GUARDAR_VALORES: DatosForma = {
+                aduanaDeIngreso: datos.datos.cve_aduana,
+                numeroDeCarro: datos.datos.numero_carro_ferrocarril,
+                numeroDeGuia: datos.datos.numero_autorizacion,
+                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria,
+                puntoDeInspeccion: datos.datos.punto_inspeccion,
+                regimen: datos.datos.clave_regimen
+              };
+              (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(GUARDAR_VALORES);
             } else {
               this.datos.reset();
             }
