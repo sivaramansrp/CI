@@ -126,22 +126,6 @@ export interface Solicitud110218State {
 
   /** **País o bloque económico relacionado con la solicitud** */
   paisBloque: string;
-
-  /** **País de origen relacionado con la solicitud** */
-  paisdeOrigen: string;
-
-  /** **País de destino relacionado con la solicitud** */
-  paisDestino: string;
-
-  /** **Fecha de expedición relacionada con la solicitud** */
-  fechadeExpedicion: string;
-
-  /** **Fecha de vencimiento relacionada con la solicitud** */
-  fechadeVencimiento: string;
-
-  precisa: string;
-
-  cvePais: string;
 }
 
 /**
@@ -192,12 +176,6 @@ export function createInitialState(): Solicitud110218State {
     numeroDeCertificado: '',
     tratadoAcuerdo: '',
     paisBloque: '',
-    paisdeOrigen: '',
-    paisDestino: '',
-    fechadeExpedicion: '',
-    fechadeVencimiento: '',
-    precisa: '',
-    cvePais: '',
   };
 }
 
