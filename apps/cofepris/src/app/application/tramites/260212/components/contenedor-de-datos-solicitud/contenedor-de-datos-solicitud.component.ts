@@ -1,23 +1,26 @@
-import { ADUANAS_DATA, DATOS_ALERT, MANIFIESTOS_ALERT, MERCANCIA_POR_DEFECTO } from '../../constantes/permiso-maquila.enum';
+import { ADUANAS_DATA, DATOS_ALERT, ID_PROCEDIMIENTO, MANIFIESTOS_ALERT, MERCANCIA_POR_DEFECTO } from '../../constantes/permiso-maquila.enum';
 import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { FormularioOperacionComercialComponent } from '../formulario-operacion-comercial/formulario-operacion-comercial.component';
-import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancias-table-form.component';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Modal } from 'bootstrap';
-import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
+
+
+
+
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
@@ -30,26 +33,17 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
  * Este valor se actualiza dinámicamente según el estado de la sección consultada.
  */
 @Component({
-  selector: 'app-datos-de-la-solicitud',
+  selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
   imports: [CommonModule,
     ReactiveFormsModule,
-    TituloComponent,
-    TablaDinamicaComponent,
-    AlertComponent,
-    ClaveScianComponent,
-    FormularioOperacionComercialComponent,
-    MercanciasTableFormComponent,
-    RepresentanteLegalComponent,
-    CatalogoSelectComponent,
-    TablePaginationComponent,
-    TooltipModule
+    DatosDeLaSolicitudComponent
 
   ],
-  templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss',
+  templateUrl: './contenedor-de-datos-solicitud.component.html',
+  styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
    * @type {boolean}
@@ -208,6 +202,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private modalMercanciasInstance: Modal | null = null;
 
+  public tramiteState!: Tramite260212State;
+
+  elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian','manifiestosCasillaDeVerificacion','manifesto'];
+
+  @Input() formularioDeshabilitado: boolean = false;
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  public opcionConfig = {
+    tipoSeleccionTabla: undefined,
+    configuracionTabla: OPCION_TABLA,
+    datos: [] as TablaOpcionConfig[],
+  };
+
+  /**
+   * @property {object} scianConfig
+   * Configuración de la tabla SCIAN.
+   */
+  public scianConfig = {
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
+    configuracionTabla: SCIAN_TABLA,
+    datos: [] as TablaScianConfig[],
+  };
+
+  /**
+   * @property {object} tablaMercanciasConfig
+   * Configuración de la tabla de mercancías.
+   */
+  public tablaMercanciasConfig = {
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
+    configuracionTabla: PRODUCTO_TABLA,
+    datos: [] as TablaMercanciasDatos[],
+  };
+
+  /**
+   * @property {TablaScianConfig[]} scianConfigDatos
+   * Datos seleccionados de la tabla SCIAN.
+   */
+  public scianConfigDatos: TablaScianConfig[] = [];
+
+  /**
+   * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos
+   * Datos seleccionados de la tabla de mercancías.
+   */
+  public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
+
   /**
    * Constructor de la clase DatosDeLaSolicitudComponent.
    * 
@@ -239,6 +279,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((response: ClaveModel[]) => {
         this.claveScianDatas = [...this.claveScianDatas, ...response];
       });
+
+    this.tramite260212Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
+          this.scianConfig.datos = this.tramiteState.scianConfigDatos;
+          this.tablaMercanciasConfig.datos =
+            this.tramiteState.tablaMercanciasConfigDatos;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -743,6 +796,44 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       (item) => !IDS_TO_DELETE.includes(item.clave)
     );
     this.modalInstance?.hide();
+  }
+
+  datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
+    this.tramite260212Store.update((state) => ({
+      ...state,
+      seleccionadoopcionDatos: event.opcionSeleccionados,
+      seleccionadoScianDatos: event.scianSeleccionados,
+      seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
+      opcionesColapsableState: event.opcionesColapsableState,
+    }));
+  }
+
+  mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
+    this.tramite260212Store.updateTablaMercanciasConfigDatos(event);
+  }
+
+  scianSeleccionado(event: TablaScianConfig[]): void {
+    this.tramite260212Store.updateScianConfigDatos(event);
+  }
+
+  /**
+   * @method opcionSeleccionado
+   * Maneja el evento cuando se selecciona una opción en la tabla.
+   *
+   * @param {TablaOpcionConfig[]} event - Opciones seleccionadas en la tabla.
+   */
+  opcionSeleccionado(event: TablaOpcionConfig[]): void {
+    this.tramite260212Store.updateOpcionConfigDatos(event);
+  }
+
+  /**
+   * @method datasolicituActualizar
+   * Actualiza el estado del formulario de datos de la solicitud en el store.
+   *
+   * @param {DatosSolicitudFormState} event - Nuevo estado del formulario de datos de la solicitud.
+   */
+  datasolicituActualizar(event: DatosSolicitudFormState): void {
+    this.tramite260212Store.updateDatosSolicitudFormState(event);
   }
 
   /*
