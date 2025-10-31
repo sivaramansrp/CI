@@ -238,7 +238,34 @@ export class InsumosComponent implements OnInit, OnDestroy {
       this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
     }
   }
-
+  /**
+   * Lista de insumos seleccionados en la tabla.
+   */
+  public seleccionados: InsumosTabla[] = [];
+/**
+ * @param seleccion Lista de insumos seleccionados.
+ */
+onCambioSeleccion(seleccion: InsumosTabla[]): void {
+    this.seleccionados = seleccion;
+  }
+  /**
+   * Método que elimina los insumos seleccionados de la tabla.
+   * Actualiza la tabla y el store después de la eliminación.
+   */
+  eliminarInsumo(): void {
+    if (this.seleccionados.length > 0) {
+      this.seleccionados.forEach(insumoSeleccionado => {
+        const INDEX = this.tablaInsumos.findIndex(insumo => insumo === insumoSeleccionado);
+        if (INDEX !== -1) {
+          this.tablaInsumos.splice(INDEX, 1);
+        }
+      });
+      this.tablaInsumos = [...this.tablaInsumos];
+      this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+      this.seleccionados = [];
+    }
+  }
   /**
    * Método que destruye las suscripciones para evitar fugas de memoria.
    */
