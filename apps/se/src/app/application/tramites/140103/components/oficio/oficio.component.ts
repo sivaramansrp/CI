@@ -9,16 +9,13 @@ import { ConfiguracionItem } from '../../models/detalle';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DevolverComponent } from '../devolver/devolver.component';
 import { HttpClient } from '@angular/common/http';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
-
 import { ModalComponent } from '../model/modal.component';
 import { NUEVO_DATOS_CUPO } from '../../constants/detalle.enum';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite140103Query } from '../../estados/query/tramite140103.query';
 import { Tramite140103Store } from '../../estados/store/tramite140103.store';
-
+import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
