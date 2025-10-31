@@ -9,17 +9,13 @@ import {
   ConsultaioQuery,
   ConsultaioState
 } from '@ng-mf/data-access-user';
-import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
-
 import {
   Subject,
   map,
   takeUntil
 } from 'rxjs';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
@@ -31,40 +27,12 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
-
   /**
-   * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
-   * @description
-   * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
-   * mediante el decorador `@ViewChild`.
-   */
-  @ViewChild(ContenedorDeDatosSolicitudComponent)
-  contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
-
-  /**
-   * @property {PagoDeDerechosContenedoraComponent} pagoDeDerechosContenedoraComponent
-   * @description
-   * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
-   * mediante el decorador `@ViewChild`.
-   */
-  @ViewChild(PagoDeDerechosContenedoraComponent)
-  pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
-
-  /**
-   * @property {TercerosRelacionadosVistaComponent} tercerosRelacionadosVistaComponent
-   * @description
-   * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
-   * mediante el decorador `@ViewChild`.
-   */
-  @ViewChild(TercerosRelacionadosVistaComponent)
-  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
-
-  /**
-   * The index of the currently selected tab.
-   * 
-   * @type {number | undefined}
-   * @default 1
-   */
+     * The index of the currently selected tab.
+     * 
+     * @type {number | undefined}
+     * @default 1
+     */
   indice: number | undefined = 1;
 
   /**
@@ -84,29 +52,36 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-   /**
-            * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
-            * @description
-            * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
-            * mediante el decorador `@ViewChild`.
-            *
-            * Esta propiedad permite invocar métodos públicos del contenedor y acceder
-            * a sus propiedades, por ejemplo para delegar la validación del formulario
-            * interno (`validarContenedor()`).
-            *
-            * > Nota: Angular inicializa esta referencia después de que la vista
-            * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
-            */
-           @ViewChild(ContenedorDeDatosSolicitudComponent)
-           contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
-       
-           @ViewChild(PagoDeDerechosContenedoraComponent)
-           pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
-       
-           @ViewChild(TercerosRelacionadosVistaComponent)
-           tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
-       
-     
+  /**
+    * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+    * @description
+    * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+    * mediante el decorador `@ViewChild`.
+    */
+
+  @ViewChild(ContenedorDeDatosSolicitudComponent)
+  contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  /**
+   * @property {PagoDeDerechosContenedoraComponent} pagoDeDerechosContenedoraComponent
+   * @description
+   * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+
+  @ViewChild(PagoDeDerechosContenedoraComponent)
+  pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+  /**
+   * @property {TercerosRelacionadosVistaComponent} tercerosRelacionadosVistaComponent
+   * @description
+   * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(TercerosRelacionadosVistaComponent)
+  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+
 
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
@@ -174,33 +149,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   seleccionaTab(i: number): void {
     this.tramite260207Store.updateTabSeleccionado(i);
   }
-
-    /**
-   * @description
-   * Método que se encarga de validar el primer paso del flujo.
-   *
-   * Invoca al método `validarContenedor()` del componente hijo
-   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
-   * datos del formulario son correctos.
-   *
-   * En caso de que el componente hijo no esté disponible o
-   * retorne `null/undefined`, se devuelve `false` por defecto.
-   *
-   * @returns {boolean}
-   * - `true`: si el contenedor y su formulario interno son válidos.
-   * - `false`: si el contenedor no es válido o no está disponible.
-   */
-    validarPasoUno(): boolean {
-      const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-      const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-      const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
-      return (
-        (esTabValido && esTercerosValido&& esPagoValido)? true : false
   
-      );
-    }
-  
-
   /**
    * Valida los datos del paso uno del formulario.
    * @returns {boolean} True si la validación es exitosa, false en caso contrario.

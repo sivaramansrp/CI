@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -46,15 +46,6 @@ import { ViewChild } from '@angular/core';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
-  /**
-   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
-   * @description
-   * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
-   * mediante el decorador `@ViewChild`.
-   */
-  @ViewChild(DatosDeLaSolicitudComponent)
-  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
-
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description
@@ -302,17 +293,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     }));
   }
 
-  /**
-   * @method validarContenedor
-   * @description
-   * Valida el contenedor delegando la validación al componente hijo.
-   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
-   */
-  validarContenedor(): boolean {
-    return (
-      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
-    );
-  }
 
   /**
    * @method ngOnDestroy

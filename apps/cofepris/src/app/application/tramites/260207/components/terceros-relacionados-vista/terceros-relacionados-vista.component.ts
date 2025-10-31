@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -167,21 +167,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-  validarContenedor(): boolean {
-    return (
-      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
-    );
-  }
-
   /**
    * @method validarContenedor
    * @description
    * Valida el contenedor delegando la validación al componente hijo.
    * @returns {boolean} True si la validación es exitosa, false en caso contrario.
    */
+
   validarContenedor(): boolean {
     return (
-      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
     );
   }
 
