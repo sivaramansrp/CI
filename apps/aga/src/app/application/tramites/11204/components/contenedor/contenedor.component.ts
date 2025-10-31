@@ -310,6 +310,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     // this.loadDatosTablaData();
     this.solicitudForm.get('archivoSeleccionadoName')?.disable();
     this.datosDelContenedor = this.solicitud11204State.datosDelContenedor || [];
+    this.datosDelCsvArchivo = this.solicitud11204State.datosDelCsvArchivo || [];
   }
 
   /**
@@ -496,6 +497,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarSeccionExcel = false;
     this.mostrarAgregarTipoContenedor = false;
     this.solicitudForm.get('archivoSeleccionado')?.disable();
+    this.datosDelContenedor = [];
+    this.datosDelCsvArchivo = [];
   }
 
   /**
