@@ -9,7 +9,7 @@ import {
 import {
   Solicitud140103State,
   Tramite140103Store,
-} from '../../../130104/estados/store/tramite140103.store';
+} from '../../estados/store/tramite140103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -19,7 +19,7 @@ import { Facturase } from '@libs/shared/data-access-user/src/core/models/140103/
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite140103Query } from '../../../130104/estados/query/tramite140103.query';
+import { Tramite140103Query } from '../../estados/query/tramite140103.query';
 import facturasdata from '@libs/shared/theme/assets/json/140103/fracturastable.json';
 /**
  * Componente para gestionar el proceso de devolución de facturas.

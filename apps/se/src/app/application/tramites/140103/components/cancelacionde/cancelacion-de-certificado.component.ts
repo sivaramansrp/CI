@@ -26,10 +26,10 @@ import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.j
 import {
   Solicitud140103State,
   Tramite140103Store,
-} from '../../../130104/estados/store/tramite140103.store';
+} from '../../estados/store/tramite140103.store';
 import { Cupos } from '../../models/detalle';
 import { NUEVO_CUPOS } from '../../constants/detalle.enum';
-import { Tramite140103Query } from '../../../130104/estados/query/tramite140103.query';
+import { Tramite140103Query } from '../../estados/query/tramite140103.query';
 
 
 
