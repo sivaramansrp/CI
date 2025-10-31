@@ -98,8 +98,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() public campoRequerido: boolean = false;
 
-  @Input() tramiteID: string = '';
-
        /**
          * @property {Subscription} subscription
          * @private
@@ -241,33 +239,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
+    const NOMULTISPACE = /^(?!.* {2,}).*$/;
+
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.solicitudState?.claveReferencia || '',
-        [Validators.maxLength(9), Validators.required],
+      this.solicitudState?.claveReferencia || '',
+      [
+        Validators.maxLength(9),
+        Validators.required,
+        Validators.pattern(NOMULTISPACE),
+      ],
       ],
       cadenaDependencia: [
-        this.solicitudState?.cadenaDependencia || '',
-        [Validators.maxLength(14), Validators.required],
+      this.solicitudState?.cadenaDependencia || '',
+      [
+        Validators.maxLength(14),
+        Validators.required,
+      ],
       ],
       estado: [this.solicitudState?.estado || '', Validators.required],
       banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.solicitudState?.llavePago || '',
-        [
-          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
-          Validators.maxLength(30),
-          Validators.required,
-        ],
+      this.solicitudState?.llavePago || '',
+      [
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30),
+        Validators.required,
+      ],
       ],
       fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
-        this.solicitudState?.importePago || '',
-        [
-          decimalValidator(2),
-          Validators.maxLength(16),
-          Validators.required,
-        ],
+      this.solicitudState?.importePago || '',
+      [
+        decimalValidator(2),
+        Validators.maxLength(16),
+        Validators.required,
+      ],
       ],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
@@ -324,7 +331,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   getBancoDatos(): void {
     this.subscription.add(
             this.catalogoService
-            .bancosCatalogo(this.tramiteID)
+            .bancosCatalogo(String(this.idProcedimiento))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((response) => {
               const DATOS = response.datos as Catalogo[];
@@ -441,31 +448,61 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
 
 
   formularioSolicitudValidacion(): boolean {
-    this.isContinuarButtonClicked = true;
+    this.isContinuarButtonClicked = false;
     
     const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
     const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
     const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
     const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
     const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
+    
+    const ANY_FIELDS_HAVE_VALUE= (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) ||
+    (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) ||
+    (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) ||
+    (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) ||
+    (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null ) ||
+    (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null &&BANCO_PAGO_VALUE !== '-1');
+    
+    if (ANY_FIELDS_HAVE_VALUE) {
+      this.pagoDerechosForm.markAllAsTouched();
+      this.isContinuarButtonClicked = true;
+    }
+  
+    
+    
+    
+    return this.isAllFieldHaveValue();
+  }
+
+  isAllFieldHaveValue(): boolean {
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
     
     const ALL_FIELDS_VALID = (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) && 
                             (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) && 
                             (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) && 
-                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null) && 
-                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null);
-    
-    if (ALL_FIELDS_VALID) {
-      this.isContinuarButtonClicked = false;
-      return true;
-    }
-    
-    this.pagoDerechosForm.markAllAsTouched();
-    
-    
-    
-    return false;
+                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) && 
+                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null )&&
+                            (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null && BANCO_PAGO_VALUE !== '-1');
+    return ALL_FIELDS_VALID;
   }
+
+  llavePagoCase(): void {
+    const LLAVEPAGOCONTROL = this.pagoDerechosForm.get('llavePago');
+    if (LLAVEPAGOCONTROL && LLAVEPAGOCONTROL.value) {
+      const LLAVE_PAGO = LLAVEPAGOCONTROL.value.toUpperCase();
+      LLAVEPAGOCONTROL.setValue(LLAVE_PAGO);
+      this.setValoresStore(this.pagoDerechosForm, 'llavePago', 'setllavePago');
+    }
+  }
+
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

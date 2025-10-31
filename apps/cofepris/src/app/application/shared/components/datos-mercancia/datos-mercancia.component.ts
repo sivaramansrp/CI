@@ -1085,7 +1085,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
         DatosMercanciaComponent.numeroConDecimalesValidator()
-        
       ],
     ],
     cantidadUmt: [
@@ -1128,6 +1127,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     especifiqueForma: [
       this.obtenerValor('especifiqueForma')
     ],
+    especifiqueEstado:[this.obtenerValor('especifiqueEstado')]
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1498,6 +1498,8 @@ public convertToStringArray(value: unknown): string[] {
       }
     }
   }
+
+ 
   /**
    * Valida la longitud de la fracción arancelaria ingresada en el formulario.
    * Si la longitud es menor a 8 caracteres, establece `showLimitError` en true,

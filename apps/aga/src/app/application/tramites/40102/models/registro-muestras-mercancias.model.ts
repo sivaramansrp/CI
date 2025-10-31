@@ -13,6 +13,104 @@
  * @since 1.0.0
  */
 
+
+
+/**
+ * Representa la respuesta de la API para información de un solicitante.
+ *
+ * @property codigo - Código de respuesta de la API (opcional).
+ * @property mensaje - Mensaje general de la API (opcional).
+ * @property datos - Objeto que contiene la información específica de la respuesta.
+ * @property datos.mostrar_director_general - Indica si se debe mostrar la información del director general (opcional).
+ * @property datos.solicitante - Información del solicitante (opcional).
+ * @property datos.director_general - Información del director general asociada al solicitante (opcional).
+ * @property datos.caat_existe - Indica si existe un registro CAAT para el solicitante (opcional).
+ * @property datos.mensaje - Mensaje específico dentro de los datos (opcional).
+ * @property error - Mensaje de error de la API (opcional).
+ * @property mensage - Mensaje adicional de la API (opcional, posible duplicado de `mensaje`).
+ */
+
+export interface ApiResponseSolicitante {
+  codigo: string | null;
+  mensaje: string | null;
+  datos: {
+    mostrar_director_general: boolean | null;
+    solicitante: Solicitante | null;
+    director_general: DirectorGeneral | null
+    caat_existe: boolean | null;
+    mensaje: string | null
+  };
+  error: string | null;
+  mensage: string | null;
+}
+
+/**
+ * Representa la información de un Director General.
+ *
+ * @property nombre - Nombre del Director General (opcional, puede ser null).
+ * @property primer_apellido - Primer apellido del Director General (opcional, puede ser null).
+ * @property segundo_apellido - Segundo apellido del Director General (opcional, puede ser null).
+ */
+
+interface DirectorGeneral {
+  nombre: string | null;
+  primer_apellido: string | null;
+  segundo_apellido: string | null;
+}
+
+
+/**
+ * Representa la información de un solicitante, incluyendo datos fiscales, 
+ * de contacto y su domicilio.
+ *
+ * @property id_persona_solicitud - Identificador único de la persona que realiza la solicitud (opcional, puede ser null).
+ * @property rfc - Registro Federal de Contribuyentes del solicitante (opcional, puede ser null).
+ * @property razon_social - Razón social de la persona o entidad solicitante (opcional, puede ser null).
+ * @property correo_electronico - Correo electrónico del solicitante (opcional, puede ser null).
+ * @property descripcion_giro - Descripción del giro o actividad del solicitante (opcional, puede ser null).
+ * @property domicilio - Información del domicilio del solicitante, de tipo `Domicilio`.
+ */
+
+export interface Solicitante {
+  id_persona_solicitud: number | null;
+  rfc: string | null;
+  razon_social: string | null;
+  correo_electronico: string | null;
+  descripcion_giro: string | null;
+  domicilio: Domicilio;
+}
+
+/**
+ * Representa la información de un domicilio.
+ *
+ * @property pais - País del domicilio.
+ * @property codigo_postal - Código postal del domicilio.
+ * @property estado - Estado o región del domicilio.
+ * @property municipio - Municipio del domicilio (opcional, puede ser null).
+ * @property localidad - Localidad del domicilio (opcional, puede ser null).
+ * @property colonia - Colonia o barrio del domicilio (opcional, puede ser null).
+ * @property calle - Nombre de la calle del domicilio.
+ * @property numero_exterior - Número exterior del domicilio.
+ * @property numero_interior - Número interior del domicilio (opcional, puede ser vacío).
+ * @property lada - Código LADA para llamadas telefónicas (opcional, puede ser null).
+ * @property telefono - Número de teléfono asociado al domicilio (opcional, puede ser null).
+ */
+
+export interface Domicilio {
+  pais: string;
+  codigo_postal: string;
+  estado: string;
+  municipio: string | null;
+  localidad: string | null;
+  colonia: string | null;
+  calle: string;
+  numero_exterior: string;
+  numero_interior: string;
+  lada: string | null;
+  telefono: string | null;
+}
+
+
 /**
  * Interfaz que representa un catálogo importante de selección.
  *
@@ -1642,7 +1740,7 @@ export interface DatosVehiculo {
  * };
  * ```
  */
-export interface DatosUnidad{
+export interface DatosUnidad {
   /**
    * @property {string} vinVehiculo
    * Número de identificación vehicular (VIN) de la unidad.
@@ -1834,7 +1932,7 @@ export interface UnidadTabla {
    * Entidad federativa o división administrativa que emitió el registro vehicular.
    */
   estado: string;
-  
+
 }
 
 /**
