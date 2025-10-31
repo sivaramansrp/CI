@@ -1,4 +1,4 @@
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 /**
  * @const MENSAJE_TABLA_OBLIGATORIA
@@ -28,12 +28,18 @@ export interface Fabricante {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
+  coloniaObj?: Catalogo | undefined;
   municipioAlcaldia: string;
+  municipioAlcaldiaObj?: Catalogo | undefined;
   localidad: string;
+  localidadObj?: Catalogo | undefined; 
   entidadFederativa: string;
+  entidadFederativaObj?: Catalogo | undefined;
   estadoLocalidad: string;
   codigoPostal: string;
+  codigoPostalObj?: Catalogo | undefined;
   coloniaEquivalente: string;
   nombres?: string;
   primerApellido?: string;
@@ -114,12 +120,18 @@ export interface Destinatario {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
+  coloniaObj?: Catalogo | undefined;
   municipioAlcaldia: string;
+  municipioObj?: Catalogo | undefined;
   localidad: string;
+  localidadObj?: Catalogo | undefined;
   entidadFederativa: string;
   estadoLocalidad: string;
+  estadoObj?: Catalogo | undefined;
   codigoPostal: string;
+  codigoPostalObj?: Catalogo | undefined;
   coloniaEquivalente: string;
   nombres?: string;
   primerApellido?: string;
@@ -205,6 +217,7 @@ export interface Proveedor {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
   municipioAlcaldia: string;
   localidad: string;
@@ -291,6 +304,7 @@ export interface Facturador {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
   municipioAlcaldia: string;
   localidad: string;

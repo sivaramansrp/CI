@@ -324,7 +324,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   public obtenerValor(
     field: keyof Otros
-  ): string | number | undefined | string[] {
+  ): string | number | undefined | string[] | Catalogo{
     return this.datoSeleccionado?.[field as keyof Otros] ?? '';
   }
 

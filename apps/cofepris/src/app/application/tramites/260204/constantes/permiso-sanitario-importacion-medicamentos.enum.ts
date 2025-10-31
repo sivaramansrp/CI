@@ -134,3 +134,20 @@ export const PRIVACY_NOTICE_CONTENT = `
     </div>
   </div>
 `;
+
+export const ID_PROCEDIMIENTO = 260204;
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para completar el formulario o proceso.
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  'correoElectronico',
+  'denominacionRazon',
+  'scian'
+];

@@ -890,7 +890,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+         
           Validators.maxLength(120),
         ],
       ],
@@ -913,7 +913,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+         
           Validators.maxLength(12),
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
@@ -923,7 +923,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
           value: this.datosSolicitudFormState.estado,
           disabled: false, // Keep enabled (dropdown is enabled in screenshot)
         },
-        [Validators.required, Validators.minLength(2)],
+        [Validators.required],
       ],
       municipioAlcaldia: [
         {
@@ -932,7 +932,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+          
           Validators.maxLength(120),
         ],
       ],
@@ -1271,8 +1271,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Procesa los datos del representante obtenidos de la API
    */
   private procesarDatosRepresentante(data: RepresentanteData): void {
-    // Determinar el campo de nombre según el procedimiento
-    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    // Usar el mismo campo de nombre para todos los procedimientos
+    const NOMBRE_FIELD = data.nombre;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
@@ -1995,7 +1995,6 @@ marcarTodosLosCamposComoTocados(): void {
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
   
-  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
 }
 
 /**
