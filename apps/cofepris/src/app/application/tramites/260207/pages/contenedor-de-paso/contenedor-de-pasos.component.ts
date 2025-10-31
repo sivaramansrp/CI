@@ -1,14 +1,24 @@
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+
 import {
+  AVISO,
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
+  RegistroSolicitudService,
+  WizardComponent
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
-import { PASOS, TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
+import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
+
+import { GuardarAdapter_260207 } from '../../adapters/guardar-payload.adapter';
+
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207State } from '../../estados/tramite260207Store.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
 /**
  * @component
@@ -63,6 +73,7 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+
   /**
    * Estado del formulario de registro IMMEX.
    */
@@ -85,10 +96,52 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   seccionCargarDocumentos: boolean = true;
 
+ /**
+       * @property {string} MENSAJE_DE_ERROR
+       * @description
+       * Propiedad usada para almacenar el mensaje de error actual.
+       * Se inicializa como cadena vacía y se actualiza en función
+       * de las validaciones o errores capturados en el flujo.
+       */
+   MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+      
+
   /**
    * Indica si la carga de archivos está en progreso.
    */
   cargaEnProgreso: boolean = true;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+ 
+
+   /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  set esFormaValido(val: boolean) {
+    this._esFormaValido = val;
+  }
+  get esFormaValido(): boolean {
+    return this._esFormaValido;
+  }
+  private _esFormaValido: boolean = false;
+
+
+  TEXTOS: string = AVISO.Aviso;
 
   /**
    * @property {DatosPasos} datosPasos
@@ -101,6 +154,28 @@ export class ContenedorDePasosComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+   /** Nueva notificación relacionada con el RFC. */
+      public seleccionarFilaNotificacion!: Notificacion;
+  
+  
+  /**
+     * Controla la visibilidad del modal de alerta.
+     * @property {boolean} mostrarAlerta
+     */
+  public mostrarAlerta: boolean = false;
+  
+   /**
+        * @property {PasoUnoComponent} pasoUnoComponent
+        * @description
+        * Referencia al componente hijo `PasoUnoComponent` mediante
+        * `@ViewChild`. Permite acceder a sus métodos y propiedades
+        * desde este componente padre.
+        */
+        @ViewChild(PasoUnoComponent)
+        pasoUnoComponent!: PasoUnoComponent;
+
+  
 
   /**
    * Constructor del componente ContenedorDePasosComponent.
@@ -129,7 +204,12 @@ export class ContenedorDePasosComponent implements OnInit {
    * @author Equipo COFEPRIS - VUCEM
    * @version 2.0.0
    */
-  constructor(public tramiteQuery: Tramite260207Query) {
+  constructor(
+    private tramiteQuery: Tramite260207Query, 
+    private tramite260207Store: Tramite260207Store, 
+    public registroSolicitudService: RegistroSolicitudService, 
+    private toastrService: ToastrService
+  ) {
     // No se necesita lógica de inicialización adicional.
     // Toda la configuración del estado se maneja en ngOnInit
     // siguiendo las mejores prácticas de Angular para el ciclo de vida de componentes.
@@ -196,19 +276,79 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont') {
+      let isValid = true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
       }
+      if (this.pasoUnoComponent && this.pasoUnoComponent.pagoDeDerechosContenedoraComponent &&
+          !this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()) {
+        this.mostrarAlerta = true;
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
+        };
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+       // return;
+      }
+      const PAYLOAD = GuardarAdapter_260207.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos('260207', PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if (shouldNavigate) {
+          if (response && response.datos) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if (DATOS.id_solicitud && typeof DATOS.id_solicitud === 'number') {
+              this.tramite260207Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            } else {
+              this.tramite260207Store.setIdSolicitud(0);
+            }
+          }
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor + 1;
+          }
+          this.toastrService.success(response.mensaje);
+          // Ajusta el rango según el número de pasos reales (ejemplo: 1 < indiceActualizado < 4)
+          if (indiceActualizado > 0 && indiceActualizado < 4) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            }
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+    } else {
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
-  }
+      }
 
   /**
    * Emite un evento para cargar archivos.
@@ -242,13 +382,65 @@ export class ContenedorDePasosComponent implements OnInit {
     this.cargaEnProgreso = carga;
   }
 
+
+  /**
+   * @method anterior
+   * @description
+   * Método para navegar programáticamente al paso anterior del wizard.
+   * Ejecuta la transición backward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_backward
+   * Realiza navegación que:
+   * - Retrocede al paso anterior usando `wizardComponent.atras()`
+   * - Actualiza índice local basado en nueva posición del wizard
+   * - Sincroniza datos de pasos con posición actualizada
+   * - Mantiene consistencia de estado durante retroceso
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component  
+   * - Datos de configuración de pasos
+   * - Estado visual de navegación
+   * 
+   * @state_preservation
+   * Durante retroceso:
+   * - Preserva datos capturados en pasos anteriores
+   * - Mantiene validaciones ya realizadas
+   * - Conserva estado de formularios
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Nueva posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @backward_navigation
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
   /**
    * @method obtenerNombreDelTítulo
    * @description Devuelve el título correspondiente al paso actual.
    * @param {number} valor - Índice del paso.
    * @returns {string} Título del paso.
    */
-  static obtenerNombreDelTítulo(valor: number): string {
+   static obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
         return TITULOMENSAJE;
@@ -259,5 +451,21 @@ export class ContenedorDePasosComponent implements OnInit {
       default:
         return TITULOMENSAJE;
     }
+  }
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
   }
 }

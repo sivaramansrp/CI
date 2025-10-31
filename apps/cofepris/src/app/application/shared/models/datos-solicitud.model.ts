@@ -250,6 +250,12 @@ export enum TablaSeleccion {
  */
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
+  claveClasificacionProductoObj ?: Catalogo | undefined;
+  especificarClasificacionObj ?: Catalogo | undefined;
+  tipoProductoObj ?: Catalogo | undefined;
+  formaFarmaceuticaObj ?: Catalogo | undefined;
+  estadoFisicoObj ?: Catalogo | undefined;
+  cantidadUMCObj ?: Catalogo | undefined;
   especificarClasificacionProducto: string;
   denominacionEspecificaProducto?: string;
   denominacionDistintiva?: string;

@@ -234,7 +234,7 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
    */
   public obtenerValor(
     field: keyof Destinatario
-  ): string | number | undefined | string[] {
+  ): string | number | undefined | string[] | Catalogo{
     return this.datoSeleccionado?.[field as keyof Destinatario] ?? '';
   }
 

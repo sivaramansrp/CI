@@ -3,11 +3,13 @@
  * Servicio para la gestión de terceros relacionados.
  * Proporciona métodos para obtener datos de terceros.
  */
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
+
 
 /**
  * Servicio que se provee en el ámbito de la aplicación.
@@ -57,4 +59,31 @@ export class TercerosService {
   getEncabezadoDeTabla(): Observable<string[]> {
     return this.http.get<string[]>('assets/json/260212/encabezado-de-tabla.json');
   }
+
+  getFabricanteTablaDatos(): Observable<Fabricante[]> {
+        return this.http.get<Fabricante[]>('assets/json/260214/fabricante.json');
+      }
+      
+    /**
+     * @description
+     * Obtiene la lista de proveedores desde un archivo JSON local.
+     *
+     * @returns {Observable<Proveedor[]>} Un observable que emite un arreglo de proveedores.
+     *
+     * @example
+     * this.miServicio.getProveedorTablaDatos().subscribe((data) => {
+     *   console.log(data);
+     * });
+     */
+    getProveedorTablaDatos(): Observable<Proveedor[]> {
+      return this.http.get<Proveedor[]>('assets/json/260214/proveedor.json');
+    }
+    getDestinatarioTablaDatos(): Observable<Destinatario[]> {
+      return this.http.get<Destinatario[]>(
+        'assets/json/260214/destinatario-final.json'
+      );
+    }
+    getFacturadorTablaDatos(): Observable<Facturador[]> {
+      return this.http.get<Facturador[]>('assets/json/260214/facturador.json');
+    }
 }
