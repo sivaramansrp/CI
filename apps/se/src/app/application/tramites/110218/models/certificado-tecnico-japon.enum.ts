@@ -22,7 +22,7 @@ export interface CompliMentaria {
   nombreTecnico: string;
   nombreComercial: string;
   nombreIngles: string;
-  numeroRegistro: string;
+  númerodeRegistro: string;
   cantidad?: string;
   fechadelaFactura?: string;
 }
@@ -85,7 +85,7 @@ export const CERTIFICADO_TABLA: ColumnaCertificado[] = [
   },
   {
     encabezado: 'Número de registro',
-    clave: (ele: CompliMentaria): string => ele.numeroRegistro,
+    clave: (ele: CompliMentaria): string => ele.númerodeRegistro,
     orden: 6
   }
 ];

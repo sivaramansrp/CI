@@ -581,7 +581,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public obtenerValor(
     field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes
-  ): string | number | undefined | string[] {
+  ): string | number | undefined | string[] | Catalogo | undefined {
     return (
       this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ??
       this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes]

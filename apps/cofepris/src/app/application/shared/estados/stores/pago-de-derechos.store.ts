@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
@@ -43,6 +44,9 @@ export interface PagoDerechosState {
   importePago: string;
 
   estado: string;
+  bancoObject?: Catalogo;
+  estadoObject?: Catalogo;
+
 }
 
 /**
@@ -96,6 +100,8 @@ export function createInitialState(): PagoDerechosState {
     importePago: '',
 
     estado: '',
+    bancoObject: undefined,
+    estadoObject: undefined
   };
 }
 
@@ -144,6 +150,30 @@ export class PagoDerechosStore extends Store<PagoDerechosState> {
       banco,
     }));
   }
+
+
+/**
+ * Actualiza el banco seleccionado como objeto completo.
+ * @param banco - Objeto Catalogo del banco seleccionado.
+ */
+public setBancoObject(banco: Catalogo): void {
+  this.update((state) => ({
+    ...state,
+    bancoObject: banco,
+  }));
+}
+
+/**
+ * Actualiza el estado seleccionado como objeto completo.
+ * @param estado - Objeto Catalogo del estado seleccionado.
+ */
+public setEstadoObject(estado: Catalogo): void {
+  this.update((state) => ({
+    ...state,
+    estadoObject: estado,
+  }));
+}
+
 
   /**
    * Guarda la llave de pago en el estado.
