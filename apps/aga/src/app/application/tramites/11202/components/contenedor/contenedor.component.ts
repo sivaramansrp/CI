@@ -9,6 +9,8 @@ import { Contenedor11202Query } from '../../estados/contenedor11202.query';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
+import { ToastrService } from 'ngx-toastr';
+
 
 /**
  * @component ContenedorComponent
@@ -216,6 +218,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private contenedorStore: Contenedor11202Store,
     private contenedorQuery: Contenedor11202Query,
     private consultaioQuery: ConsultaioQuery,
+    private toastrService: ToastrService,
+
   ) { 
     this.contenedore = {
       catalogos: [],
@@ -343,7 +347,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
     const TIPOCONTENEDOR = this.solicitudForm.value.datosContenedor.tipoContenedor;
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR ) {
+    if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA ) {
       this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.success) {
@@ -355,7 +359,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             this.solicitudForm.markAsPristine();
             this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
             this.mostrarCampos();
-            this.mostrarBotonesBuscar = false;
+            // this.mostrarBotonesBuscar = false;
+          }
+          else if(respuesta?.codigo === 'SAT11202-CR02'){
+            this.encontradaModal()
+          }
+          else{
+            this.toastrService.error(respuesta.error);
           }
         }
       );
