@@ -421,13 +421,18 @@ abrirDevolverFacturas() : void {
   closeCapturaMontoModal():void {
     this.oficioForm.reset();
     this.showCapturaMontoModal = false;
-    this.selectedCertificado = null;
+  this.Certificados = [...this.Certificados];
+  this.selectedCertificado = null;
   }
   agregarMonto():void{
     if(this.oficioForm.invalid){
       this.oficioForm.markAllAsTouched();
     }
     else{
+     if (this.selectedCertificado) {
+       this.Certificados = [...this.Certificados, this.selectedCertificado as ConfiguracionItem];
+       this.selectedCertificado = null;
+     }
     this.showCapturaMontoModal = false;
     this.selectedCertificado = null;
     }
