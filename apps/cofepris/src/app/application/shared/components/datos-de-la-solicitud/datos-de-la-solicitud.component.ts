@@ -1271,8 +1271,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Procesa los datos del representante obtenidos de la API
    */
   private procesarDatosRepresentante(data: RepresentanteData): void {
-    // Determinar el campo de nombre según el procedimiento
-    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    // Usar el mismo campo de nombre para todos los procedimientos
+    const NOMBRE_FIELD = data.nombre;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
