@@ -597,9 +597,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.get('archivoSeleccionadoName')?.setValue(FILE.name);//it not working
           this.datosDelCsvArchivo =  respuesta?.datos.contenedores.map((item: any) => ({
                             ...item,
-                            vigencia : item.vigencia.split(' ')[0],
-                            fecha_inicio : item.fecha_inicio.split(' ')[0],
-                            fecha_ingreso : item.fecha_ingreso.split(' ')[0],
+                            vigencia : item.vigencia ? item.vigencia.split(' ')[0] : '',
+                            fecha_inicio : item.fecha_inicio ? item.fecha_inicio.split(' ')[0] : '',
+                            fecha_ingreso : item.fecha_ingreso ? item.fecha_ingreso.split(' ')[0] : '',
                             existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
           }));
           (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
@@ -658,9 +658,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       (respuesta) => {
         if (respuesta?.codigo === '00') {
           respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
-          respuesta.datos.fecha_ingreso = respuesta.datos.fecha_ingreso.split(' ')[0];
-          respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio.split(' ')[0];
-          respuesta.datos.vigencia = respuesta.datos.vigencia.split(' ')[0];
+          respuesta.datos.fecha_ingreso = respuesta.datos.fecha_ingreso ? respuesta.datos.fecha_ingreso.split(' ')[0] : '';
+          respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio ? respuesta.datos.fecha_inicio.split(' ')[0] : '';
+          respuesta.datos.vigencia = respuesta.datos.vigencia ? respuesta.datos.vigencia.split(' ')[0] : '';
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
