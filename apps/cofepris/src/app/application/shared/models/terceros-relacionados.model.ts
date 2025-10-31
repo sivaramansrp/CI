@@ -391,6 +391,8 @@ export interface PagoDerechosFormState {
   fechaPago: string;
   importePago: string;
   banco?: string;
+  bancoObject?: Catalogo;
+  estadoObject?: Catalogo;
 }
 
 /**
