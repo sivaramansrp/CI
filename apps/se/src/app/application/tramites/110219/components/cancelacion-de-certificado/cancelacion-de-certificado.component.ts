@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { BtnContinuarComponent,CERTIFICATE_OF_ORIGIN_NUMBER,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,DatosPasos,InputFecha,ListaPasosWizard,PASOS,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CertificadoApiData, ColumnasTabla, FECHAI_NICIAL, FECHA_FINAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';

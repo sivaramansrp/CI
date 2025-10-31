@@ -70,3 +70,5 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+export const ID_PROCEDIMIENTO = 260203;
