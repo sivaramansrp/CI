@@ -57,6 +57,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   */
+  establecimientoSeleccionado: boolean = false;
   /**
    * Referencia a los componentes Crosslist.
    */
@@ -205,6 +210,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que inicializa el componente.
    */
   ngOnInit(): void {
+    // Restablecer la selección de establecimiento cuando se inicializa el componente (cambio de pestaña)  
+    this.domicilioStore.resetEstablecimientoSeleccionado();
+    
     this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -229,6 +237,24 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+
+    // Suscríbase al estado de selección de establecimientos
+    this.domicilioquery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((state) => {
+          const PREV_ESTABLECIMIENTO_SELECCIONADO = this.establecimientoSeleccionado;
+          this.establecimientoSeleccionado = state.establecimientoSeleccionado;
+          this.solicitudState = state;
+          
+          // Actualizar el estado del formulario cuando cambie la selección del establecimiento o se inicialicen los formularios.
+          if (PREV_ESTABLECIMIENTO_SELECCIONADO !== this.establecimientoSeleccionado || 
+              (this.domicilioForm && this.claveScianForm && this.DatosMercanciaForm)) {
+            this.updateFormState();
+          }
+        })
+      )
+      .subscribe();
 
     this.cargarEstadoData();
     this.cargarDatosTabla();
@@ -257,15 +283,36 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    this.updateFormState();
+  }
+
+  /**
+   * Actualiza el estado de los formularios basado en las condiciones actuales.
+   */
+  updateFormState(): void {
+    // Gestiona el modo de solo lectura por separado; si es de solo lectura, deshabilita todo.
     if (this.esFormularioSoloLectura) {
-      this.domicilioForm.disable();
-      this.claveScianForm.disable();
-      this.DatosMercanciaForm.disable();
+      this.domicilioForm?.disable();
+      this.claveScianForm?.disable();
+      this.DatosMercanciaForm?.disable();
+      return;
+    }
+
+    // Manejar la lógica de selección de establecimiento
+    if (!this.establecimientoSeleccionado) {
+      this.domicilioForm?.disable();
+      this.claveScianForm?.disable();
+      this.DatosMercanciaForm?.disable();
+      
+      // Mantenga siempre habilitados estos campos específicos (independientemente de la selección del establecimiento).
+      this.domicilioForm?.get('autorizacionIVAIEPS')?.enable();
+      this.domicilioForm?.get('aviso')?.enable();
+      this.domicilioForm?.get('noLicenciaSanitaria')?.enable();
     } else {
-      this.domicilioForm.enable();
-      this.claveScianForm.enable();
-      this.DatosMercanciaForm.enable();
-    } 
+      this.domicilioForm?.enable();
+      this.claveScianForm?.enable();
+      this.DatosMercanciaForm?.enable();
+    }
   }
 
   /**
@@ -317,6 +364,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       paisDestino: [this.solicitudState?.paisDestino, Validators.required],
       paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
     });
+
+    // Apply initial form state based on establishment selection
+    this.updateFormState();
   }
 
   /**
