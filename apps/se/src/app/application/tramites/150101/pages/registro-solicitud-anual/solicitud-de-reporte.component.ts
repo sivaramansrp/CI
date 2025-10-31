@@ -1,6 +1,6 @@
+import { ALERTA_COM, ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,ERROR_INVALIDA_FORMA_ALERT,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Component, inject } from '@angular/core';
 import { DatosPasos, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
-import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,ERROR_INVALIDA_FORMA_ALERT,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Solicitud150101State, Solicitud150101Store } from '../../estados/solicitud150101.store';
@@ -52,6 +52,10 @@ interface AccionBoton {
  * utilizando un asistente (wizard) para navegar entre los diferentes pasos.
  */
 export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
+  /**
+   * Constante que asigna el texto de alerta definido en `ALERTA_COM`.
+   */
+  TEXTOSR = ALERTA_COM;
   /**
    * Referencia al componente del asistente (wizard) utilizado en este componente.
    * 

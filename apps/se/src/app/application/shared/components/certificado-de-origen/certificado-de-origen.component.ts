@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, PROCEDIMIENTO_EXCLUDED, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -249,7 +249,6 @@ export class CertificadoDeOrigenComponent
    * @type {boolean}
    */
   @Input() mercanciasDisponiblesTabla!: boolean;
-
   /**
    * @property {number} idProcedimiento
    * @description
@@ -569,6 +568,12 @@ export class CertificadoDeOrigenComponent
    * lo que activa validaciones adicionales en ciertos campos del formulario.
    */
   requerida: boolean = false;
+  /**   * @property {number[]} procedimientoExcluded
+   * @description
+   * Arreglo de IDs de procedimientos que están excluidos de ciertas validaciones o funcionalidades.
+   * Utilizado para condicionar el comportamiento del formulario según el tipo de trámite.
+   */
+  procedimientoExcluded = PROCEDIMIENTO_EXCLUDED;
 
   /**
    * @property {boolean} isInvalidaMercanciaSeleccion
@@ -626,18 +631,17 @@ export class CertificadoDeOrigenComponent
           [Validators.required, Validators.maxLength(30)],
         ],
         razonSocial: ['', Validators.required],
-        calle: ['', [Validators.required, Validators.maxLength(90)]],
-        numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
+        // calle: ['', [Validators.required, Validators.maxLength(90)]],
+        // numeroLetra: ['', [Validators.required, Validators.maxLength(30)]],
         // numeroLetras: ['', [Validators.required, Validators.maxLength(30)]],
-        pais: [''],
-        ciudad: ['', Validators.required],
-        lada: ['', Validators.required],
-        telefono: ['', Validators.required],
-        fax: [''],
-        correo: ['', Validators.required],
-        correoElectronico: [''],
-        domTercerOperador: [''],
-        mercanciasSeleccionadas: [this.guardarClicado || [], [MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? matrizRequerida : null]],
+        // pais: [''],
+        // ciudad: ['', Validators.required],
+        // lada: ['', Validators.required],
+        // telefono: ['', Validators.required],
+        // fax: [''],
+        // correo: ['', Validators.required],
+        // correoElectronico: [''],
+        // domTercerOperador: [''],
         // Nuevos controles de formulario para el procedimiento 110222
         // calle1: ['', Validators.required],
         // numeroLetra1: ['', Validators.required],
@@ -646,9 +650,14 @@ export class CertificadoDeOrigenComponent
         // correo1: ['', Validators.required],
         // telefono1: [''],
         // fax1: [''],
+        mercanciasSeleccionadas: [this.guardarClicado || [], MERCANCIA_SELECCIONADAS_REQUIRED.includes(this.idProcedimiento) ? [matrizRequerida] : []],
       },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
+
+    if(this.idProcedimiento && MERCANCIA_SELECCIONADAS_REQUIRED?.includes(this.idProcedimiento)){
+      this.formCertificado.get('mercanciasSeleccionadas')?.setValidators(matrizRequerida);
+    }
 
     if (this.idProcedimiento === 110222) {
       this.formCertificado.addControl('calle1', new FormControl('', [Validators.required]));
@@ -660,11 +669,40 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('fax1', new FormControl(''));
     }
 
+    if (this.idProcedimiento === 110205) {
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('correoElectronico', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+    }
+
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
 
-    if (this.idProcedimiento === 110204) {
+    if (this.domicilioTercer) {
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('lada', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('fax', new FormControl(''));
+      this.formCertificado.addControl('correo', new FormControl('', [Validators.required])); 
+    }
+
+    if (this.idProcedimiento === 110204 || this.idProcedimiento === 110212) {
+        this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('ciudad', new FormControl(''));
+      this.formCertificado.addControl('calle', new FormControl(''));
+      this.formCertificado.addControl('numeroLetra', new FormControl(''));
+      this.formCertificado.addControl('lada', new FormControl(''));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+      this.formCertificado.addControl('correo', new FormControl('')); 
       const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
@@ -718,20 +756,14 @@ export class CertificadoDeOrigenComponent
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  /**
-   * method loadComboUnidadMedida
-   * description Carga la lista de derechos desde el servicio.
-   */
-  loadComboUnidadMedida(): void {
-    this.service
-      .getDatos('110222') // Llama al servicio para obtener los datos.
-      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
-      .subscribe((data): void => {
-        // Maneja los datos recibidos.
-        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
-      });
-  }
 
+ /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.formCertificado && this.formularioArchivo) {
+      this.formCertificado.markAllAsTouched();
+      this.formularioArchivo.markAllAsTouched();
+    }
+  }
   /**
    * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
    *
@@ -927,12 +959,9 @@ export class CertificadoDeOrigenComponent
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
-    this.applyTercerOperadorValidation(); // Add validation for procedure 110222
-    this.nuevaNotificacion = {} as Notificacion;
+    this.applyTercerOperadorValidation(); 
+    this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
-    if(this.idProcedimiento === 110222){
-      this.loadComboUnidadMedida();
-    }
     this.getPais();
     this.getTratado();
     if (REQUIREDA.includes(this.idProcedimiento)) {
@@ -1451,10 +1480,9 @@ export class CertificadoDeOrigenComponent
   }
 
   /**
-   * Getter para obtener el catálogo de países o bloques.
+   * Getter para obtener el catálogo de países.
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
-   *
-   * @returns {Catalogo[]} El catálogo de países o bloques.
+   * @returns {Catalogo[]} El catálogo de países.
    */
   get paisGet(): Catalogo[]{
     return this.circulacion?.length

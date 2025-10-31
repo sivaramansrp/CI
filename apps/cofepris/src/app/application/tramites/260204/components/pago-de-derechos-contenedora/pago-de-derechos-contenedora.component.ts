@@ -1,7 +1,8 @@
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
@@ -40,6 +41,19 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
+    /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+  /**
+   * Referencia al componente hijo `PagoDeDerechosComponent`.
+   * Permite acceder a las propiedades y métodos del componente hijo desde este componente contenedor.
+   *
+   */
+   @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
   /**
    * Representa el estado actual del formulario de pago de derechos.
    * Contiene los valores y configuraciones asociados al formulario.
@@ -55,6 +69,12 @@ export class PagoDeDerechosContenedoraComponent {
   * @type {Observable<boolean>}
   */
   esFormularioSoloLectura!: Observable<boolean>;
+
+  /**
+   * @property {number} idProcedimiento
+   * @description Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.
@@ -98,5 +118,13 @@ export class PagoDeDerechosContenedoraComponent {
   updatePagoDerechos(event: PagoDerechosFormState): void{
     this.tramiteStore.updatePagoDerechos(event);
   }
-
+/**
+ *  Valida el formulario de pago de derechos en el componente hijo.
+ *  Retorna `true` si el formulario es válido, de lo contrario `false`.
+ */
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
 }

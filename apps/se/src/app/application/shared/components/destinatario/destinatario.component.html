@@ -11,7 +11,7 @@
                     formDestinatario.controls['calle'].touched
                 }">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
-              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','calle','setGrupoDeDireccionesCalle')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
             formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -25,7 +25,7 @@
                     formDestinatario.controls['numeroLetra'].touched
                 }">*</span>:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
-              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','numeroLetra','setGrupoDeDireccionesNumeroLetra')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
             formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este
@@ -42,7 +42,7 @@
                     formDestinatario.controls['ciudad'].touched
                 }">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','ciudad','setGrupoDeDireccionesCiudad')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
             formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -50,9 +50,9 @@
                 class="mensaje-error"> Por favor, no escribas más de 50 caracteres </span> } </div> }
           </div>
           <div class="col-md-4 form-group">
-            <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
-              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
-              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+            <app-catalogo-select [catalogo]="paisDestinDestinatario" [label]="'País Destino'" [required]="true"
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false" name="estado"
+              formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
           </div>
         </div>
@@ -64,7 +64,7 @@
                     formDestinatario.controls['correoElectronico'].touched
                 }">*</span>:</label>
             <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
-              (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
             @if(formDestinatario.controls['correoElectronico'].invalid &&
             (formDestinatario.controls['correoElectronico'].touched ||
             formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid">
@@ -76,7 +76,7 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono"
-              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','telefono','setGrupoDeDireccionesTelefono')" />
             @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
             formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo
@@ -88,7 +88,7 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
             <input type="text" id="fax" class="form-control" formControlName="fax"
-              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','fax','setGrupoDeDireccionesFax')" />
             @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
             formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -108,7 +108,7 @@
                     formDestinatario.controls['calle'].touched
                 }">*</span>:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle"
-              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','calle','setGrupoDeDireccionesCalle')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
             formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['calle'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -122,7 +122,7 @@
                     formDestinatario.controls['numeroLetra'].touched
                 }">*</span>:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
-              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','numeroLetra','setGrupoDeDireccionesNumeroLetra')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
             formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['numeroLetra'].errors?.['required']) { <span class="mensaje-error">Este
@@ -139,7 +139,7 @@
                     formDestinatario.controls['ciudad'].touched
                 }">*</span>:</label>
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','ciudad','setGrupoDeDireccionesCiudad')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
             formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['ciudad'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -153,7 +153,7 @@
                     formDestinatario.controls['correoElectronico'].touched
                 }">*</span>:</label>
             <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
-              (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
             @if(formDestinatario.controls['correoElectronico'].invalid &&
             (formDestinatario.controls['correoElectronico'].touched ||
             formDestinatario.controls['correoElectronico'].dirty)) { <div class="d-grid">
@@ -167,7 +167,7 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
             <input type="text" id="fax" class="form-control" formControlName="fax"
-              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','fax','setGrupoDeDireccionesFax')" />
             @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
             formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -179,7 +179,7 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono"
-              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','telefono','setGrupoDeDireccionesTelefono')" />
             @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
             formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['telefono'].errors?.['required']) { <span class="mensaje-error">Este campo
@@ -198,8 +198,11 @@
                     formDestinatario.controls['ciudad'].invalid &&
                     formDestinatario.controls['ciudad'].touched
                 }">*</span>:</label>
-            <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-              (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+            <input type="text" id="ciudad" class="form-control" formControlName="ciudad" [ngClass]="
+                isValid(formDestinatario, 'ciudad')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','ciudad','setGrupoDeDireccionesCiudad')" />
             @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched ||
             formDestinatario.controls['ciudad'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['ciudad'].errors?.['required']&&
@@ -215,8 +218,11 @@
                     formDestinatario.controls['calle'].invalid &&
                     formDestinatario.controls['calle'].touched
                 }">*</span>:</label>
-            <input type="text" id="calle" class="form-control" formControlName="calle"
-              (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+            <input type="text" id="calle" class="form-control" formControlName="calle" [ngClass]="
+                isValid(formDestinatario, 'calle')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','calle','setGrupoDeDireccionesCalle')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched ||
             formDestinatario.controls['calle'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['calle'].errors?.['required']&& formDestinatario.controls['calle'].touched)
@@ -230,8 +236,11 @@
                     formDestinatario.controls['numeroLetra'].invalid &&
                     formDestinatario.controls['numeroLetra'].touched
                 }">*</span>:</label>
-            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
-              (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+            <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" [ngClass]="
+                isValid(formDestinatario, 'numeroLetra')
+                  ? 'required'
+                  : ''
+              " (change)="setValoresStore('formDestinatario','numeroLetra','setGrupoDeDireccionesNumeroLetra')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched ||
             formDestinatario.controls['numeroLetra'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['numeroLetra'].errors?.['required']&&
@@ -241,7 +250,7 @@
           </div> @if(!ocultarLada){ <div class="col-md-1 form-group">
             <label class="form-label" for="lada">Lada:</label>
             <input type="text" id="lada" class="form-control" formControlName="lada"
-              (change)="setValoresStore('formDestinatario','lada','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','lada','setGrupoDeDireccionesLada')" />
             @if(formDestinatario.controls['lada'].invalid && (formDestinatario.controls['lada'].touched ||
             formDestinatario.controls['lada'].dirty || formDestinatario.controls['lada'].value)) { <div class="d-grid">
               @if(formDestinatario.controls['lada'].errors?.['pattern']) { <span class="mensaje-error">Por favor,
@@ -250,7 +259,7 @@
           </div> } <div class="col-md-3 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono"
-              (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+              (change)="setValoresStore('formDestinatario','telefono','setGrupoDeDireccionesTelefono')" />
             @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched ||
             formDestinatario.controls['telefono'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['telefono'].errors?.['required']&&
@@ -262,7 +271,7 @@
           </div> @if(!ocultarFax){ <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
             <input type="text" id="fax" class="form-control" formControlName="fax"
-              (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" pattern="^[0-9]*$" />
+              (change)="setValoresStore('formDestinatario','fax','setGrupoDeDireccionesFax')" pattern="^[0-9]*$" />
             @if(formDestinatario.controls['fax'].invalid && (formDestinatario.controls['fax'].touched ||
             formDestinatario.controls['fax'].dirty)) { <div class="d-grid">
               @if(formDestinatario.controls['fax'].errors?.['required']) { <span class="mensaje-error">Este campo es
@@ -278,8 +287,12 @@
                     formDestinatario.controls['correoElectronico'].touched
                 }">*</span>: </label>
               <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
-                (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
+              <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"  [ngClass]="
+                isValid(formDestinatario, 'correoElectronico')
+                  ? 'required'
+                  : ''
+              "
+                (change)="setValoresStore('formDestinatario','correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
             </div> @if (formDestinatario.get('correoElectronico')?.invalid &&
             (formDestinatario.get('correoElectronico')?.touched || formDestinatario.get('correoElectronico')?.dirty)) {
             <div class="d-grid"> @if (formDestinatario.get('correoElectronico')?.errors?.['required'] &&
@@ -291,10 +304,10 @@
                 class="mensaje-error">Por favor, no escribas más de 70 caracteres</span> } </div> }
           </div> @if(paisDestino){ <div class="col-md-8 form-group">
             <app-catalogo-select [catalogo]="paisDestinDestinatario || []" [label]="'País Destino'" [required]="true"
-              [markTouched]="formDestinatario.get('paisDestin')?.touched??false"
-              name="estado" formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
-              (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
-  
+              [markTouched]="formDestinatario.get('paisDestin')?.touched??false" name="estado"
+              formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
+              (change)="setValoresStore('formDestinatario','paisDestin','setGrupoDeDireccionesPais')"></app-catalogo-select>
+
           </div> }
         </div>
       </ng-template>

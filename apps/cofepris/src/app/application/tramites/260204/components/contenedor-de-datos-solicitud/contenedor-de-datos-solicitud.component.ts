@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260204State,Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
@@ -8,6 +8,7 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
+import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 
 /**
  * Decorador de componente de Angular que define las propiedades y configuraciones del componente `ContenedorDeDatosSolicitudComponent`.
@@ -28,6 +29,34 @@ import { Tramite260204Query } from '../../estados/queries/tramite260204Query.que
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+    /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  formularioDeshabilitado: boolean = false;
+
+
+  
+  /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   *
+   * Esta propiedad permite acceder a los métodos públicos y propiedades
+   * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+   *
+   * > Nota: Angular inicializa esta referencia después de que la vista
+   * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
   /**
    * Sujeto utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * Este observable se completa cuando el componente se destruye.
@@ -148,7 +177,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(public tramite260204Query: Tramite260204Query,
     public tramite260204Store: Tramite260204Store,
     public consultaQuery: ConsultaioQuery
-  ) { }
+  ) {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => { 
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
+   }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -255,5 +293,23 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
 }

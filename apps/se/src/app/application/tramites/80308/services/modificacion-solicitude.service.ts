@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Anexo,
-  Bitacora,
   Complimentaria,
   DatosImmex,
-  DatosModificacion,
   DomicilioInfo,
   Federetarios,
-  FracciónArancelaria,
   Operacions,
 } from '../models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
+import { Anexo } from '../../../shared/models/anexos.model';
+import { Bitacora } from '../../../shared/models/bitacora.model';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TramiteState } from '../estados/tramite80308.store';
@@ -121,10 +120,10 @@ export class ModificacionSolicitudeService {
    * Obtiene los datos del anexo desde un archivo JSON local.
    * @returns Observable con arreglo de Anexo.
    */
-  obtenerFraccion(): Observable<FracciónArancelaria[]> {
+  obtenerFraccion(): Observable<Anexo[]> {
     return this.http
-      .get<FracciónArancelaria[]>('assets/json/80308/fraccion.json')
-      .pipe(map((res: any) => res.data));
+      .get<Anexo[]>('assets/json/80308/fraccion.json')
+      .pipe(map((res) => res));
   }
 
   /**

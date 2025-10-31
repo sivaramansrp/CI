@@ -1,12 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Bitacora } from '../../../80308/models/plantas-consulta.model';
-import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
+import { Bitacora } from '../../../../shared/models/bitacora.model';
+import { BitacoraTablaComponent } from '../../../../shared/components/bitacora/bitacora.component';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -15,8 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './bitacora.component.scss',
   standalone: true,
   imports: [
-    TablaDinamicaComponent,
-    TituloComponent,
+    BitacoraTablaComponent,
     ComplementariaImmexComponent,
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
@@ -31,18 +27,16 @@ export class BitacoraComponent implements OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración de las columnas de la tabla que muestra la bitácora.
-   * @type {ConfiguracionColumna<Bitacora>[]}
-   */
-  configuracionTabla: ConfiguracionColumna<Bitacora>[] =
-    CONFIGURACION_BITACORA_TABLA;
-
-  /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Bitacora[]}
    */
   datos: Bitacora[] = [];
 
+  /**
+   * Constructor del componente.
+   * @param modificionService Servicio utilizado para obtener los datos de la bitácora.
+   * @param toastr Servicio utilizado para mostrar notificaciones al usuario.
+   */
   constructor( public modificionService: ModificacionSolicitudeService, public toastr: ToastrService ) {
     this.modificionService
       .obtenerBitacora()

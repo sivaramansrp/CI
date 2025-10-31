@@ -26,6 +26,7 @@ export class TramiteConfigService {
     130118: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
     120301: { habilitarFechas: false, isAntecedentes: false, anexo222se: false },
     110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: true },
+    5701: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: false },
   };
 
   /**

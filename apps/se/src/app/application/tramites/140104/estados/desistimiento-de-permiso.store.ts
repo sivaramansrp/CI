@@ -1,35 +1,73 @@
-import {
-    CuposDisponibles,
-    CuposDisponiblesDatos,
-    createDatosState,
-} from '../models/cancelacion-de-certificados.model';
+import { Store, StoreConfig } from '@datorama/akita';
+import { Cancelacion } from '../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
+
+export interface Solicitud140104State {
+  idSolicitud: number | null;
+  motivoCancelacion: string | null;
+  cuerpoTablaCancelacion: Cancelacion[];
+}
+
+/**
+ * Crea el estado inicial para la solicitud 140104.
+ *
+ * @returns El estado inicial con un arreglo vacío de cancelaciones y el idSolicitud en 0.
+ */
+export function createInitialSolicitudState(): Solicitud140104State {
+  return {
+    idSolicitud: 0,
+    motivoCancelacion: '',
+    cuerpoTablaCancelacion: [],
+  };
+}
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
-
 @StoreConfig({ name: 'desistimiento-de-permiso', resettable: true })
+export class DesistimientoStore extends Store<Solicitud140104State> {
+  /**
+   * Constructor que inicializa la tienda con el estado inicial generado por `createDatosState()`.
+   */
+  constructor() {
+    super(createInitialSolicitudState());
+  }
 
-export class DesistimientoStore extends Store<CuposDisponiblesDatos> {
-    constructor() {
-        super(createDatosState());
-    }
+  /**
+   * Actualiza los datos de la forma de cancelación en el estado.
+   *
+   * @remarks
+   * Este método recibe un arreglo de objetos de tipo `Cancelacion` y reemplaza
+   * los datos actuales en el estado por los nuevos.
+   *
+   * Es útil cuando se modifica la información del formulario o cuando se cargan datos desde una fuente externa.
+   *
+   * @param datos - Arreglo de objetos de tipo `Cancelacion` que se utilizará para actualizar el estado.
+   */
+  public actualizarDatosForma(cuerpoTablaCancelacion: Cancelacion[]): void {
+    this.update((_state) => ({
+      cuerpoTablaCancelacion,
+    }));
+  }
 
-    /**
-     * Método para actualizar los datos de la forma de cancelación en el estado.
-     * Este método recibe un array de objetos de tipo Cancelacion y actualiza 
-     * el estado con la nueva información.
-     * 
-     * @param datos Array de objetos de tipo Cancelacion que se va a actualizar en el estado.
-     */
-    
-    public actualizarDatosForma(datos: CuposDisponibles[]): void {
-        this.update(_state => ({
-            datos
-        }));
-    }
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Solicitud140104State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
+    }));
+  }
 
+  /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
+   */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
 }

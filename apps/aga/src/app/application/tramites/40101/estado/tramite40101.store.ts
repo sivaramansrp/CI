@@ -2,8 +2,12 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 import {
+  ApiResponseSolicitante,
   DatosUnidad,
   DatosVehiculo,
+  DirectorGeneralData,
+  UnidadTabla,
+  VehiculoTabla
 } from '../models/registro-muestras-mercancias.model';
 /**
  * Estado de la store para el trámite 40101.
@@ -13,6 +17,12 @@ import {
 export interface Tramite40101State {
   datosVehiculo: DatosVehiculo;
   datosUnidad: DatosUnidad;
+  directorGeneral: DirectorGeneralData | null;
+  parqueVehicular: VehiculoTabla[];
+  unidadesArrastre: UnidadTabla[];
+  solicitanteDatas: ApiResponseSolicitante['datos'];
+  seccion: boolean[];
+  formaValida: boolean[];
 }
 /**
  * Crea el estado inicial para el trámite 40101.
@@ -52,6 +62,36 @@ export function createInitialState(): Tramite40101State {
       paisEmisor2daPlaca: '',
       descripcion: '',
     },
+    directorGeneral: null,
+    parqueVehicular: [],
+    unidadesArrastre: [],
+    solicitanteDatas: {
+      caat_existe: false,
+      mostrar_director_general: true,
+      mensaje: '',
+      solicitante: {
+        id_persona_solicitud: null,
+        rfc: '',
+        razon_social: '',
+        descripcion_giro: '',
+        correo_electronico: '',
+        domicilio: {
+          pais: '',
+          codigo_postal: '',
+          estado: '',
+          municipio: '',
+          localidad: '',
+          colonia: '',
+          calle: '',
+          numero_exterior: '',
+          numero_interior: '',
+          telefono: '',
+          lada: '',
+        },
+      }
+    },
+    seccion: [],
+    formaValida: [],
   };
 }
 /**
@@ -490,4 +530,23 @@ export class Tramite40101Store extends Store<Tramite40101State> {
     }));
   }
 
+  public establecerSeccion(seccion: boolean[]): void {
+    this.update({ seccion });
+  }
+
+  public establecerFormaValida(formaValida: boolean[]): void {
+    this.update({ formaValida });
+  }
+
+  public setDirectorGeneral(directorGeneral: DirectorGeneralData): void {
+    this.update({ directorGeneral });
+  }
+
+  public setParqueVehicular(parqueVehicular: VehiculoTabla[]): void {
+    this.update({ parqueVehicular });
+  }
+
+  public setUnidadesArrastre(unidadesArrastre: UnidadTabla[]): void {
+    this.update({ unidadesArrastre });
+  }
 }

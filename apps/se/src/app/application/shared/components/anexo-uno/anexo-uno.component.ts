@@ -130,7 +130,12 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
   @Output()
   complimentosDatosDos: EventEmitter<DatosComplimento> =
     new EventEmitter<DatosComplimento>(true);
-
+ /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
 
   /**
    * Datos seleccionados de importación
@@ -386,7 +391,17 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
   agregarAnexoUno(): void {
     if (this.anexoUnoFormGroup.invalid) {
       this.anexoUnoFormGroup.markAllAsTouched();
-      return;
+     this.notificacionAgregarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe elegir en la pestaña de servicios, el servicio que se realizará a las mercancías a capturar',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
     }
     const SERIAL = this.anexoUnoTablaLista.length + 1;
     const OBJECTO_IDX: AnexoUnoEncabezado = {

@@ -1,4 +1,4 @@
-import { AcusePageComponent, IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent, AcuseResolucionPageComponent, IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
@@ -18,6 +18,10 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent,
+  },
+  {
+    path: 'acuse-resolucion',
+    component: AcuseResolucionPageComponent,
   },
    {
     path: '',

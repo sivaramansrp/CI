@@ -2,6 +2,8 @@
 import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
+import { Empresas } from '../../../shared/models/complementaria.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
@@ -24,13 +26,13 @@ export class SolicitudService {
     );
   }
 
-    /**
+  /**
    * Obtener datos del solicitante
    *
-   * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos del solicitante.
+   * @returns {Observable<DatosModificacion>} Un observable con la respuesta de los datos del solicitante.
    */
-  getDatosModificacion(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(
+  getDatosModificacion(): Observable<DatosModificacion> {
+    return this.http.get<DatosModificacion>(
       `assets/json/80302/modificacion.json`
     );
   }
@@ -121,5 +123,15 @@ export class SolicitudService {
     obtenerServicios(): Observable<Operacions[]> {
       return this.http
         .get<{data: Operacions[]}>('assets/json/80302/servicios.json').pipe(map((res: {data: Operacions[]}) => res.data));
+    }
+
+    /**
+     * Obtiene una lista de empresas desde un archivo JSON local.
+     *
+     * @returns {Observable<Empresas[]>} Un observable que emite un arreglo de objetos `Empresas`.
+     */
+    obtenerEmpresas(): Observable<Empresas[]> {
+      return this.http
+        .get<{data: Empresas[]}>('assets/json/80302/empresas.json').pipe(map((res: {data: Empresas[]}) => res.data));
     }
 }
