@@ -250,6 +250,7 @@ export enum TablaSeleccion {
  */
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
+  claveClasificacionProductoObj ?: Catalogo | undefined;
   especificarClasificacionProducto: string;
   denominacionEspecificaProducto?: string;
   denominacionDistintiva?: string;
@@ -425,6 +426,7 @@ export interface MercanciaForm {
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
   especifiqueObligatorio?:string;
+  especifiqueEstado?:string;
 }
 
 /**

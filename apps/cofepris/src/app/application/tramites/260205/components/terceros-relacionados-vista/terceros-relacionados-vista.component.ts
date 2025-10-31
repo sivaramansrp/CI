@@ -8,10 +8,10 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ELEMENTOS_REQUERIDOS } from '../../constantes/materias-primas.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
-import { ELEMENTOS_REQUERIDOS } from '../../constantes/materias-primas.enum';
 import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent

@@ -3,16 +3,15 @@ import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { Injectable } from '@angular/core';
 
 /**
- * Función que crea el estado inicial para el formulario de residuo.
+ * Crea y retorna el estado inicial para el formulario de residuo con valores por defecto.
  *
- * Retorna un objeto con los valores por defecto de los campos del formularioDatos
- * y formularioResiduo, todos inicializados como cadenas vacías.
+ * Los campos del formulario `formularioDatos` y `formularioResiduo` son inicializados como cadenas vacías.
  *
- * @returns EstadoFormularioResiduo - Estado inicial del formulario
+ * @returns {EstadoFormularioResiduo} Estado inicial del formulario de residuo
  */
 export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
   return {
-    formularioMateriaPrima: {
+    formularioDatos: {
       /** Número de identificación del registro de materia prima */
       numero: '',
 
@@ -41,6 +40,17 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Acotación específica del residuo */
       acotacion: '',
 
+      clasificacionDesc:'',
+      unidadMedidaDesc:'',
+      claveResiduoDesc:'',
+      nicoDesc:'',
+      cretiDesc:'',
+      estadoFisicoDesc:'',
+      tipoContenedorDesc:'',
+      otroTipoContenedorDesc:'',
+      fraccionDesc:'',
+      otroEstadoFisicoDesc:'',
+
       /** Indica si el residuo es peligroso */
       residuoPeligroso: '',
 
@@ -68,6 +78,8 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Evaluación CRETI del residuo (Corrosivo, Reactivo, Explosivo, Tóxico, Inflamable) */
       creti: '',
 
+      manifiesto: '',
+
       /** Estado físico del residuo (sólido, líquido, etc.) */
       estadoFisico: '',
 
@@ -77,6 +89,7 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Capacidad del contenedor */
       capacidad: '',
     },
+    residuos: [],
   };
 }
 
@@ -97,10 +110,11 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
 
   /**
    * Actualiza los datos del formulario relacionados con la materia prima.
-   * @param datos - Objeto que contiene los datos de formularioDatos.
+   *
+   * @param {EstadoFormularioResiduo['formularioDatos']} datos - Objeto que contiene los datos de `formularioDatos`.
    */
   actualizarFormularioDatos(
-    datos: EstadoFormularioResiduo['formularioMateriaPrima']
+    datos: EstadoFormularioResiduo['formularioDatos']
   ): void {
     this.update((state) => ({
       ...state,
@@ -110,7 +124,8 @@ export class FormularioResiduoStore extends Store<EstadoFormularioResiduo> {
 
   /**
    * Actualiza los datos del formulario relacionados con el residuo.
-   * @param residuo - Objeto que contiene los datos de formularioResiduo.
+   *
+   * @param {EstadoFormularioResiduo['formularioResiduo']} residuo - Objeto que contiene los datos de `formularioResiduo`.
    */
   actualizarFormularioResiduo(
     residuo: EstadoFormularioResiduo['formularioResiduo']

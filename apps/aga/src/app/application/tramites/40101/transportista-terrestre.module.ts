@@ -27,6 +27,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { AcuseReciboComponent } from '../../shared/components/acuse-recibo/acuse-recibo.component';
 import { forwardRef } from '@angular/core';
 
 @NgModule({
@@ -59,7 +60,8 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
     ChoferesComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    AcuseReciboComponent
 ],
   exports: [
     PasoUnoComponent,

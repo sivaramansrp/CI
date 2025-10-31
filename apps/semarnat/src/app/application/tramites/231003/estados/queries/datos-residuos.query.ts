@@ -12,7 +12,7 @@ export class FormularioResiduoQuery extends Query<EstadoFormularioResiduo> {
    * Obtiene los valores actuales del formulario 'formularioDatos'.
    */
   obtenerFormularioDatos$ = this.select(
-    (state) => state.formularioMateriaPrima
+    (state) => state.formularioDatos
   );
 
   /**

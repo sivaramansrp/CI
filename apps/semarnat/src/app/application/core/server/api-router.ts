@@ -170,7 +170,10 @@ export const IDSOLICITUD = '{idSolicitud}';
 
 /**
  * API para obtener el estado de la solicitud del tramite 231001.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ * @param tramite Identificador del trámite.
+ * @param idSolicitud ID de la solicitud.
+ * @returns Ruta relativa para obtener el estado de la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/estado-solicitud  
  */
 export const API_POST_CADENA_ORIGINAL = (
   tramite: string,
@@ -190,8 +193,11 @@ export const API_POST_GUARDAR_SOLICITUD =(tramite:string):string => `sat-t${tram
 
 
 /**
- * API para firmar la solicitud del tramite 231002.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t231002/swagger-ui/index.html#/Registro-Solicitud/firmar
+ * API para firmar la solicitud del tramite 231003.
+ * @oaram tramite Identificador del trámite.
+ * @oaram idSolicitud ID de la solicitud a firmar.
+ * @returns Ruta relativa para firmar la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231003/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (tramite:string,idSolicitud:string):string => `sat-t${tramite}/solicitud/${idSolicitud}/firmar`;
 
