@@ -75,14 +75,7 @@
             [placeholder]="'Seleccione una opción'"
             [disabledPrimerOption]="false"
             [hiddenPrimerOption]="false"
-            (change)="
-                    setValoresStore(
-                      pagoDerechosForm,
-                      'banco',
-                      'setBanco'
-                    )
-                  "
-            [markTouched]="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || this.pagoDerechosForm.get('banco')?.value===null)&& isContinuarButtonClicked)"
+            (change)="onBancoSeleccionado($event)"            [markTouched]="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || this.pagoDerechosForm.get('banco')?.value===null)&& isContinuarButtonClicked)"
           ></app-catalogo-select>
           <div *ngIf="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || this.pagoDerechosForm.get('banco')?.value===null ||this.pagoDerechosForm.get('banco')?.value==='-1')&& isContinuarButtonClicked)" class="text-danger">
           <small >
@@ -102,14 +95,8 @@
           [placeholder]="'Seleccione una opción'"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false"
-          (change)="
-                    setValoresStore(
-                      pagoDerechosForm,
-                      'estado',
-                      'setEstado'
-                    )
-                  "
-        ></app-catalogo-select>
+          (change)="onEstadoSeleccionado($event)">
+        </app-catalogo-select>
       </div>
       }
       
