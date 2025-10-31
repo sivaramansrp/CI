@@ -114,54 +114,54 @@ export class GuardarAdapter_260204 {
       },
       "gridTerceros_TIPERS_FAB": state.fabricanteTablaDatos.map((fabricante) => {
         return {
-              "idPersonaSolicitud": "",
-              "ideTipoTercero": "",
-              "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
-              "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
-              "booleanFisicaNoContribuyente": "0",
-              "denominacion": fabricante.razonSocial,
-              "razonSocial": fabricante.razonSocial,
-              "rfc": fabricante.rfc,
-              "curp": fabricante.curp,
-              "nombre": fabricante.nombres,
-              "apellidoPaterno": fabricante.primerApellido,
-              "apellidoMaterno": fabricante.segundoApellido,
-              "telefono": fabricante.telefono,
-              "correoElectronico": fabricante.correoElectronico,
-              "actividadProductiva": "",
-              "actividadProductivaDesc": "",
-              "descripcionGiro": "",
-              "numeroRegistro": "",
-              "domicilio": {
-                  "calle": fabricante.calle,
-                  "numeroExterior": fabricante.numeroExterior,
-                  "numeroInterior": fabricante.numeroInterior,
-                  "pais": {
-                      "clave": "MEX",
-                      "nombre": fabricante.pais
-                  },
-                  "colonia": {
-                      "clave": "001",
-                      "nombre": fabricante.colonia
-                  },
-                  "delegacionMunicipio": {
-                      "clave": "015",
-                      "nombre": fabricante.municipioAlcaldia
-                  },
-                  "localidad": {
-                      "clave": "001",
-                      "nombre": fabricante.localidad
-                  },
-                  "entidadFederativa": {
-                      "clave": "09",
-                      "nombre": fabricante.entidadFederativa
-                  },
-                  "informacionExtra": "",
-                  "codigoPostal": fabricante.codigoPostal,
-                  "descripcionColonia": fabricante.colonia
-              },
-              "idSolicitud": "0"
-          }
+            "idPersonaSolicitud": "",
+            "ideTipoTercero": "",
+            "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
+            "booleanFisicaNoContribuyente": "0",
+            "denominacion": fabricante.razonSocial || fabricante.nombreRazonSocial,
+            "razonSocial": fabricante.razonSocial || fabricante.nombreRazonSocial,
+            "rfc": fabricante.rfc,
+            "curp": fabricante.curp,
+            "nombre": fabricante.nombres,
+            "apellidoPaterno": fabricante.primerApellido,
+            "apellidoMaterno": fabricante.segundoApellido,
+            "telefono": fabricante.telefono,
+            "correoElectronico": fabricante.correoElectronico,
+            "actividadProductiva": "",
+            "actividadProductivaDesc": "",
+            "descripcionGiro": "",
+            "numeroRegistro": "",
+            "domicilio": {
+            "calle": fabricante.calle,
+            "numeroExterior": fabricante.numeroExterior,
+            "numeroInterior": fabricante.numeroInterior,
+            "pais": {
+                "clave": fabricante.paisObj?.clave,
+                "nombre": fabricante.paisObj?.descripcion
+            },
+            "colonia": {
+                "clave": fabricante.coloniaObj?.clave,
+                "nombre": fabricante.coloniaObj?.descripcion
+            },
+            "delegacionMunicipio": {
+                "clave": fabricante.municipioAlcaldiaObj?.clave,
+                "nombre": fabricante.municipioAlcaldiaObj?.descripcion
+            },
+            "localidad": {
+                "clave": fabricante.localidadObj?.clave,
+                "nombre": fabricante.localidadObj?.descripcion
+            },
+            "entidadFederativa": {
+                "clave": fabricante.entidadFederativaObj?.clave,
+                "nombre": fabricante.entidadFederativaObj?.descripcion
+            },
+            "informacionExtra": "",
+            "codigoPostal": fabricante.codigoPostalObj?.descripcion,
+            "descripcionColonia": fabricante.coloniaObj?.descripcion
+            },
+            "idSolicitud": "0"
+        }
       }),
       // eslint-disable-next-line complexity
       "gridTerceros_TIPERS_DES": state.destinatarioFinalTablaDatos.map((destinatario) => {
