@@ -34,23 +34,6 @@ import { takeUntil } from 'rxjs';
  *
  * @implements OnInit, OnDestroy
  */
-
-/**
- * @constant FECHA_INDICO
- * @description
- * Constante que define las propiedades de la fecha de pago en el modelo de trámites.
- */
-const FECHA_INCIO = {
-  labelNombre: 'Inicio:',
-  required: false,
-  habilitado: true,
-};
-const FECHA_FIN = {
-  labelNombre: 'Fin:',
-  required: false,
-  habilitado: true,
-};
-
 @Component({
   selector: 'app-programas-reporte-anual',
   templateUrl: './programas-reporte-anual.component.html',
@@ -81,22 +64,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     minMode: 'month', // Solo permite seleccionar mes y año
   };
 
-  /**
-   *
-   *  @property {InputFecha} fechaIncio
-   *  @description
-   *  Esta propiedad define la configuración de la fecha de inicio del reporte anual.
-   */
-  public fechaIncio: InputFecha = FECHA_INCIO;
-
-  /**
-   * @property {InputFecha} fechaFin
-   * @description
-   * Esta propiedad define la configuración de la fecha de fin del reporte anual.
-   * Incluye el nombre de la etiqueta, si es requerida y si está habilitada.
-   */
-
-  public fechaFin: InputFecha = FECHA_FIN;
    /**
        * @public
        * @property {Notificacion} nuevaNotificacion
@@ -239,12 +206,12 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [
         {
-          value: this.solicitud150101State?.reporteAnualFechaInicio,
+          value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true 
         },
       ],
       reporteAnualFechaFin: [
         {
-          value: this.solicitud150101State?.reporteAnualFechaFin,
+          value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true
         },
       ],
       folioPrograma: [
@@ -292,13 +259,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.periodoReporteAnual.disable();
-    } else {
-      this.periodoReporteAnual.enable();
-      // Vuelve a deshabilitar los campos que deben permanecer deshabilitados
-      this.periodoReporteAnual.get('folioPrograma')?.disable();
-      this.periodoReporteAnual.get('modalidad')?.disable();
-      this.periodoReporteAnual.get('tipoPrograma')?.disable();
-      this.periodoReporteAnual.get('estatus')?.disable();
     }
   }
 
@@ -320,18 +280,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
           );
         },
       });
-  }
-  onFechaInicio(fecha: string): void {
-    if (fecha) {
-      this.periodoReporteAnual.patchValue({ reporteAnualFechaInicio: fecha });
-      this.solicitud150101Store.setReporteAnualFechaInicio(fecha);
-    }
-  }
-  onFechaFin(fecha: string): void {
-    if (fecha) {
-      this.periodoReporteAnual.patchValue({ reporteAnualFechaFin: fecha });
-      this.solicitud150101Store.setReporteAnualFechaFin(fecha);
-    }
   }
 
   /**

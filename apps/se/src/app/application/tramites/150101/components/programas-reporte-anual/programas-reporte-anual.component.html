@@ -4,7 +4,7 @@
 
     <div class="row mb-5">
       <div class="col-md-4">
-        <div class="form-group">
+        <!-- <div class="form-group">
           <input-fecha
             (valorCambiado)="onFechaInicio($event)"
             [setFecha]="
@@ -13,16 +13,40 @@
             [datos]="fechaIncio"
             [isDisabled]="true"
           ></input-fecha>
+        </div> -->
+        <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica1">Inicio:</label>
+          <input
+            type="text"
+            class="form-control input-date"
+            formControlName="reporteAnualFechaInicio"
+            id="ideGenerica1"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+          />
+          <span class="bi icon bi-calendar2-fill"></span>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <!-- <div class="form-group">
           <input-fecha
             (valorCambiado)="onFechaFin($event)"
             [setFecha]="periodoReporteAnual.get('reporteAnualFechaFin')?.value"
             [datos]="fechaFin"
             [isDisabled]="true"
           ></input-fecha>
+        </div> -->
+        <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica2">Fin:</label>
+          <input
+            type="text"
+            class="form-control input-date"
+            formControlName="reporteAnualFechaFin"
+            id="ideGenerica2"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+          />
+          <span class="bi icon bi-calendar2-fill"></span>
         </div>
       </div>
       <div class="col-md-4 mb-5"></div>
