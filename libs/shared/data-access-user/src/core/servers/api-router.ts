@@ -1071,3 +1071,9 @@ export const CATALOGO_BANCOS = (TRAMITE: string): string => `sat-t${TRAMITE}/cat
  */
 export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
 
+/*
+ * API para obtener el catálogo de usos específico de mercancía por trámite
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260203/catalogo/tramite/usos-especifico-mercancia/260203
+ */
+export const CATALOGO_USOS_ESPECIFICO_MERCANCIA = (TRAMITE: string, PROCEDIMIENTO: string): string =>
+  `sat-t${TRAMITE}/catalogo/tramite/usos-especifico-mercancia/${PROCEDIMIENTO}`;
