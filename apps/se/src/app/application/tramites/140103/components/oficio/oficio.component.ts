@@ -269,6 +269,11 @@ onClickSeleccionar(): void {
         txtBtnCancelar: '',
       };
     } 
+    else{
+      this.oficio = [...this.oficio, this.selectedCertificados as ConfiguracionItem];
+      this.Certificados = this.Certificados.filter(item => item !== this.selectedCertificados);
+      this.selectedCertificados = null;
+    }
   }
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.
@@ -431,8 +436,10 @@ abrirDevolverFacturas() : void {
     else{
      if (this.selectedCertificado) {
        this.Certificados = [...this.Certificados, this.selectedCertificado as ConfiguracionItem];
+       this.oficio= this.oficio.filter(item => item !== this.selectedCertificado);
        this.selectedCertificado = null;
      }
+     this.oficioForm.reset();
     this.showCapturaMontoModal = false;
     this.selectedCertificado = null;
     }
