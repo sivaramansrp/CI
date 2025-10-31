@@ -110,6 +110,13 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  } 
+
   /**
    * Guarda el país en el estado.
    * @param pais - País a guardar.

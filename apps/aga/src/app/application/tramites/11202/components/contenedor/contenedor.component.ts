@@ -7,6 +7,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil ,tap } from 'rxjs';
 import { Contenedor11202Query } from '../../estados/contenedor11202.query';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+
+import { Solicitud11202State,Solicitud11202Store } from '../../estados/solicitud11202.store';
+import { Solicitud11202Query } from '../../estados/solicitud11202.query';
 import { Modal } from 'bootstrap';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 import {
@@ -153,6 +156,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   mostrarBotonesBuscar: boolean = true;
 
+    /**
+   * Objeto que contiene el estado de la solicitud del trámite.
+   * Este objeto es utilizado para gestionar el estado del trámite en la aplicación.
+   */
+  public solicitudState!: Solicitud11202State;
+
+
   /**
    * Referencia al elemento del modal.
    */
@@ -226,7 +236,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private contenedorStore: Contenedor11202Store,
     private contenedorQuery: Contenedor11202Query,
     private consultaioQuery: ConsultaioQuery,
-    private solicitanteServicio: SolicitanteService
+    private solicitanteServicio: SolicitanteService,
+    private tramite11202Query: Solicitud11202Query,
+    public solicitud11202Store: Solicitud11202Store,
+    
 
   ) { 
     this.contenedore = {
@@ -261,7 +274,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+         // Suscribirse a los cambios en el estado del trámite 11202
+    this.tramite11202Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+
     this.contenedores = this.contenedorState.contenedores;
+    this.datosDelCsvArchivo = this.contenedorState.datosDelCsvArchivo;
     this.cargarCatalogAduanas();
     this.crearFormSolicitud();
     this.cargarCatalogContenedores();
@@ -384,6 +408,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         (respuesta) => {
           if (respuesta?.codigo === '00') {
             respuesta.datos.id = this.contenedores.length + 1;
+            respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
             this.contenedores = [...this.contenedores, respuesta.datos];
             (this.contenedorStore.setContenedores as (valor: GridContenedores[]) => void)(this.contenedores);
             this.solicitudForm.reset();
@@ -421,7 +446,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.destroyNotifier$))
                 .subscribe((respuesta) => {
                     if (respuesta?.codigo === '00') {
-                      this.datosDelCsvArchivo = respuesta.datos.contenedores;
+                       this.datosDelCsvArchivo =  respuesta?.datos.contenedores.map((item: any) => ({
+                            ...item,
+                            existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
+                        }));
+                    (this.contenedorStore.setDelCsv as (valor: GridContenedores[]) => void)(this.datosDelCsvArchivo);
+
                     }
                 });
     } else {
@@ -587,11 +617,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   solicitudGuardar(): void {
       const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
       let contenedores: any[] = [];
+        const normalize = (item: any) => ({
+            ...item,
+            existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+
+        });
 
     if (TIPO_BUSQUEDA === 'Contenedor') {
-      contenedores = this.contenedores;
+      contenedores = this.contenedores.map(normalize);
     } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
-      contenedores = this.datosDelCsvArchivo;
+      contenedores = this.datosDelCsvArchivo.map(normalize);
     } 
 
         const PAYLOAD = {
@@ -613,9 +648,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
                 (respuesta) => {
                     // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
                     if (respuesta?.codigo === '00') {
-                      this.contenedorStore.setIdSolicitud(respuesta.datos.id_solicitud);
+                      this.solicitud11202Store.setIdSolicitud(respuesta.datos.id_solicitud);
                         //this.tramite11201Store.setIdSolicitud(respuesta.datos.id_solicitud);
                         this.continuarEvento.emit('');
+ 
+
 
                     }
                 }
@@ -632,6 +669,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.seccionContenedor = false;
     this.mostrarAgregarTipoContenedor = false;
     this.solicitudForm.get('tipoBusqueda')?.enable();
+    this.contenedores = []
+    this.datosDelCsvArchivo = []
   }
 
 
