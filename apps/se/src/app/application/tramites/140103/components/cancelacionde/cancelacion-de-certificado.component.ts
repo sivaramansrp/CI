@@ -18,7 +18,6 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
 import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
@@ -81,7 +80,6 @@ import { Tramite140103Query } from '../../../130104/estados/query/tramite140103.
   imports: [
     CommonModule,
     TituloComponent,
-    OficioComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     FormsModule,

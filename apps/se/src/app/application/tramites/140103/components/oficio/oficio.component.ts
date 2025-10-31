@@ -1,5 +1,5 @@
-import { BtnContinuarComponent, ConsultaioState, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioState, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConfiguracionItem } from '../../models/detalle';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DetalleComponent } from '../detalle/detalle.component';
 import { DevolverComponent } from '../devolver/devolver.component';
 import { HttpClient } from '@angular/common/http';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -43,11 +42,9 @@ import { Tramite140103Store } from '../../../130104/estados/store/tramite140103.
   standalone: true,
   imports: [
     TablaDinamicaComponent,
-    DetalleComponent,
     FormsModule,
     ReactiveFormsModule,
     TituloComponent,
-    BtnContinuarComponent,
     CommonModule,
     DevolverComponent,
     ModalComponent,
