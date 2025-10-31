@@ -1,10 +1,9 @@
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { ConfiguracionColumna, InputFechaComponent, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { InputFecha } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
@@ -45,7 +44,6 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     BsDatepickerModule,
     TablaDinamicaComponent,
-    InputFechaComponent,
     NotificacionesComponent
   ],
 })
