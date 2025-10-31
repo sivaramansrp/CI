@@ -1,10 +1,8 @@
 import { Component,OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
  /**
@@ -30,8 +28,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   imports: [
     CommonModule,
     TituloComponent,
-    TablaDinamicaComponent,
-    CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule
   ],
