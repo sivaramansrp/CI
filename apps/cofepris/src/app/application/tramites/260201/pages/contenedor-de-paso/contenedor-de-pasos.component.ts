@@ -210,7 +210,7 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        return;
+        // return;
       }
 
       const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
