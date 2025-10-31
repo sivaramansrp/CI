@@ -1,15 +1,12 @@
-import {
-  AccionBoton,
-  DatosPasos,
-  ListaPasosWizard,
-} from '@ng-mf/data-access-user';
+import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-
 import { ERROR_FORMA_ALERT, PASOS, TITULOMENSAJE } from '../../constants/medicamentos-destinados-uso.enum';
+import { Tramite260208State, Tramite260208Store } from '../../estados/tramite260208Store.store';
+import { GuardarAdapter_260208 } from '../../adapters/guardar-payload.adapter';
+import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
-import { Tramite260208State } from '../../estados/tramite260208Store.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-contenedor-de-pasos',
@@ -82,7 +79,12 @@ export class ContenedorDePasosComponent implements OnInit {
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
   cargarArchivosEvento = new EventEmitter<void>();
-    constructor(public tramiteQuery: Tramite260208Query) {
+    constructor(
+    public tramiteQuery: Tramite260208Query,
+    private store : Tramite260208Store,
+    private toastrService: ToastrService,
+    private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService
+    ) {
         // No se necesita lógica de inicialización adicional.
     }
 ngOnInit(): void {
@@ -99,39 +101,100 @@ ngOnInit(): void {
     this.indice = i;
   }
 
-  /**
-   * Obtiene y procesa el valor del índice desde un evento de botón.
-   * @method
-   * @param {AccionBoton} e - Objeto con la acción y valor del botón
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false
 
-    if (this.indice === 1) {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-      if (!ISVALID) {
-        this.esFormaValido = true;
-      }
-      if (this.esFormaValido) {
-        this.datosPasos.indice = 1;
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-      }
-    }
-    else{
-       if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-
+   /**
+     * @method getValorIndice
+     * @description Actualiza el índice y el título del mensaje según la acción del botón.
+     * Navega hacia adelante o hacia atrás en el wizard.
+     * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
+     */
+    getValorIndice(e: AccionBoton): void {
+  
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
+        const IS_VALID = true;
+        if (this.indice === 1) {
+          const ISVALID = this.validarTodosFormulariosPasoUno();
+          if (!ISVALID) {
+            this.esFormaValido = true;
+          }
+          if (this.esFormaValido) {
+            this.datosPasos.indice = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          }
+        }
+        if (!IS_VALID) {
+          this.esFormaValido = true;
+          this.datosPasos.indice = this.indice;
+          return;
+        }
+  
+        const PAYLOAD = GuardarAdapter_260208.toFormPayload(this.storeData);
+        let shouldNavigate = false;
+        this.importacionDestinadosDonacioService.postGuardarDatos('260208', PAYLOAD).subscribe(response => {
+          shouldNavigate = response.codigo === '00';
+          if (!shouldNavigate) {
+            const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          if(shouldNavigate) {
+            if(esValidObject(response) && esValidObject(response.datos)) {
+              const DATOS = response.datos as { id_solicitud?: number };
+              if(getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            // Calcular el nuevo índice basado en la acción
+            let indiceActualizado = e.valor;
+            if (e.accion === 'cont') {
+              indiceActualizado = e.valor + 1;
+            }
+            this.toastrService.success(response.mensaje);
+            if (indiceActualizado > 0 && indiceActualizado < 5) {
+              this.indice = indiceActualizado;
+              this.datosPasos.indice = indiceActualizado;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+        });
+      }else{
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
         this.wizardComponent.atras();
       }
-      }
+    }  
+    /**
+     * Genera una alerta de error en formato HTML para mostrar mensajes de validación.
+     * @param {string} mensajes - Mensaje(s) de error a mostrar.
+     * @returns {string} - Cadena HTML con el formato de alerta.
+     */
+    public static generarAlertaDeError(mensajes: string): string {
+      const ALERTA = `
+        <div class="d-flex justify-content-center text-center">
+          <div class="col-md-12 p-3  border-danger  text-danger rounded">
+            <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+            <div class="d-flex justify-content-start mb-1">
+              <span class="me-2">1.</span>
+              <span class="flex-grow-1 text-center">${mensajes}</span>
+            </div>  
+          </div>
+        </div>
+        `;
+      return ALERTA;
     }
-  }
 
   /**
    * Método estático que obtiene el nombre del título según el valor del paso.
