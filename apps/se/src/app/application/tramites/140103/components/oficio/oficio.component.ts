@@ -16,8 +16,9 @@ import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
 import { ModalComponent } from '../model/modal.component';
 import { NUEVO_DATOS_CUPO } from '../../constants/detalle.enum';
-import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
-import { Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
+
+import { Tramite140103Query } from '../../../130104/estados/query/tramite140103.query';
+import { Tramite140103Store } from '../../../130104/estados/store/tramite140103.store';
 
 
 /**

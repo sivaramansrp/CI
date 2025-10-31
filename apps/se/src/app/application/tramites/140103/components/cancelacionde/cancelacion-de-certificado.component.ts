@@ -20,16 +20,17 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+
 import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
 
 
 import {
   Solicitud140103State,
   Tramite140103Store,
-} from '../../../../estados/tramites/tramite140103.store';
+} from '../../../130104/estados/store/tramite140103.store';
 import { Cupos } from '../../models/detalle';
 import { NUEVO_CUPOS } from '../../constants/detalle.enum';
+import { Tramite140103Query } from '../../../130104/estados/query/tramite140103.query';
 
 
 
