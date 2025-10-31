@@ -4,8 +4,7 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label class="form-label" for="nombre">Nombre(s)*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="nombre"
-          (change)="setValoresStore(directorGeneralForm,'nombre', 'setNombres')" />
+        <input type="text" class="form-control" id="nombre" formControlName="nombre" />
 
         <div class="text-danger">
           @if (directorGeneralForm.get('nombre')?.errors?.['required'] && (directorGeneralForm.get('nombre')?.invalid && (directorGeneralForm.get('nombre')?.touched ||
@@ -16,8 +15,7 @@
       </div>
       <div class="col-md-4 mb-3">
         <label class="form-label" for="primerApellido">Primer apellido*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido"
-          (change)="setValoresStore(directorGeneralForm,'primerApellido', 'setPrimerApellido')" />
+        <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
         @if (directorGeneralForm.get('primerApellido')?.errors?.['required'] &&
         (directorGeneralForm.get('primerApellido')?.touched || directorGeneralForm.get('primerApellido')?.dirty)) {
         <div class="text-danger">
@@ -27,8 +25,7 @@
       </div>
       <div class="col-md-4 mb-3">
         <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido"
-          (change)="setValoresStore(directorGeneralForm,'segundoApellido', 'setSegundoApellido')" />
+        <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
       </div>
     </div>
   </form>

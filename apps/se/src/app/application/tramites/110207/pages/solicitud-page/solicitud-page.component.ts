@@ -211,7 +211,7 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   guardar(item: Solicitud110207State): Promise<JSONResponse> {
     const MERCANCIA_SELECCIONADAS =
-      this.registroService.buildMercanciaSeleccionadas(item.mercanciaTabla);
+      this.registroService.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTabla);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       solicitante: {
@@ -263,7 +263,7 @@ export class SolicitudPageComponent implements OnDestroy {
       },
       datos_del_certificado: {
         observaciones: item.formDatosCertificado['observacionesDates'],
-        precisa: item.formDatosCertificado['precisaDates'],
+        precisa: 'test',
         presenta: item.formDatosCertificado['precisaDates'],
         idioma: item.formDatosCertificado['idiomaDates'],
         representacion_federal: {

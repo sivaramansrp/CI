@@ -11,6 +11,9 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
+            [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('clasificacionProducto')?.touched??false"
+           (selectionChange)="onCambioClasificacionProducto($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -25,6 +28,8 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
+              [placeholder]="'Selecciona una opción'"
+            [markTouched]="mercanciaForm.get('especificarClasificacionProducto')?.touched??false"
           ></app-catalogo-select>
         </div>
       </div>
@@ -169,6 +174,7 @@
           [required]="true"
           [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -213,11 +219,12 @@
           [label]="'Forma farmacéutica'"
           [required]="true"
           name="formaFarmaceutica"
+            [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueForma') &&
-    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial &&
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoFOFA &&
     !elementosBelow){
     <div class="row">
       <div class="col-md-10">
@@ -258,12 +265,14 @@
           formControlName="estadoFisico"
           [label]="'Estado físico'"
           [required]="true"
+            [markUntouched]="mercanciaForm.get('estadoFisico')?.errors?.['required'] && mercanciaForm.get('estadoFisico')?.touched ? true : false"
           name="estadoFisico"
+          [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueEstado') &&
-    mercanciaForm.get('estadoFisico')?.value === tipoProductoEspecial ){
+    mercanciaForm.get('estadoFisico')?.value === 'ESFIMG.OTRE' ){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -338,7 +347,7 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria<span
+            >Fracción arancelaria <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
@@ -395,6 +404,7 @@
             [required]="true"
             [markUntouched]="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched ? true : false"
             name="fraccionArancelaria"
+              [placeholder]="'Selecciona una opción'"
           ></app-catalogo-select>
       </div>
     </div>
@@ -476,7 +486,7 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmt"
-            >UMT<span
+            >UMT <span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
@@ -558,7 +568,10 @@
           [markUntouched]="mercanciaForm.get('cantidadUmc')?.errors?.['required'] && mercanciaForm.get('cantidadUmc')?.touched? true : false"
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
+           [markTouched]="mercanciaForm.get('cantidadUmc')?.touched??false"
           name="cantidadUmc"
+
+
         ></app-catalogo-select>
       </div>
     </div>
@@ -624,7 +637,7 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-md-12 mt-3">
+      <div class="col-md-12">
         <div class="panel-group ficha-collapse mb-0" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(1)">

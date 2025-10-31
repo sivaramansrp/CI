@@ -40,6 +40,17 @@ export function crearEstadoInicialFormularioResiduo(): EstadoFormularioResiduo {
       /** Acotación específica del residuo */
       acotacion: '',
 
+      clasificacionDesc:'',
+      unidadMedidaDesc:'',
+      claveResiduoDesc:'',
+      nicoDesc:'',
+      cretiDesc:'',
+      estadoFisicoDesc:'',
+      tipoContenedorDesc:'',
+      otroTipoContenedorDesc:'',
+      fraccionDesc:'',
+      otroEstadoFisicoDesc:'',
+
       /** Indica si el residuo es peligroso */
       residuoPeligroso: '',
 

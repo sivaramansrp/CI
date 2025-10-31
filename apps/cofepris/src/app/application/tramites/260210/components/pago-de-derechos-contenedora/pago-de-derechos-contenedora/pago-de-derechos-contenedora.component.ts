@@ -2,15 +2,18 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../../estados/tramite260210Store.store';
+import { Tramite260210Store } from '../../../estados/tramite260210Store.store';
+import { ViewChild } from '@angular/core';
+
 
 /**
  * @component PagoDeDerechosContenedoraComponent
  * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
  * para gestionar la funcionalidad relacionada con el pago de derechos.
- * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260210Store`.
  */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -45,6 +48,16 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
+   /**
+     * Identificador único del procedimiento.
+     * Esta propiedad es de solo lectura y se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -61,7 +74,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
   /**
    * @constructor
    * @description Constructor que inyecta las dependencias necesarias para el funcionamiento del componente.
-   * Inicializa el store `Tramite260214Store` para gestionar el estado del trámite y el query `ConsultaioQuery`
+   * Inicializa el store `Tramite260210Store` para gestionar el estado del trámite y el query `ConsultaioQuery`
    * para manejar el estado de consulta. También configura la suscripción para detectar cambios en el modo
    * de solo lectura del formulario y establece el valor inicial del pago de derechos.
    *
@@ -70,7 +83,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * 2. Inicializa la propiedad `pagoDerechos` con el valor actual del store
    * 3. Gestiona la limpieza automática de suscripciones mediante `takeUntil`
    *
-   * @param {Tramite260214Store} tramiteStore - Store que administra el estado del trámite 260214.
+   * @param {Tramite260210Store} tramiteStore - Store que administra el estado del trámite 260214.
    *                                            Proporciona métodos para actualizar y obtener el estado del formulario.
    * @param {ConsultaioQuery} consultaQuery - Query service para manejar el estado de consulta del sistema.
    *                                          Permite detectar si el formulario debe estar en modo de solo lectura.
@@ -78,7 +91,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @memberof PagoDeDerechosContenedoraComponent
    */
   constructor(
-    public tramiteStore: Tramite260214Store,
+    public tramiteStore: Tramite260210Store,
     private consultaQuery: ConsultaioQuery
   ) {
     this.consultaQuery.selectConsultaioState$
@@ -121,6 +134,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

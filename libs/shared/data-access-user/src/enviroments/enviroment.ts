@@ -10,4 +10,5 @@ export const ENVIRONMENT = {
   CATALOGO_URL: '/catalogo',
   SOLICITUD_URL: '/solicitud',
   TRAMITE_URL: '/tramite',
+  RFC: 'AAL0409235E6'
 };

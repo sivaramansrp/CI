@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -78,6 +78,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       * @type {Observable<TercerosRelacionadosDatos>}
       */
     public tercerosDatos$!: Observable<TercerosRelacionadosDatos>;
+
+    @ViewChild ('tercerosRelacionados') tercerosRelacionados!: TercerosRelacionadosComponent;
 
   /**
    * @constructor
@@ -164,6 +166,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  validarFormulario(): boolean {
+    return (
+      this.tercerosRelacionados?.formularioSolicitudValidacion() ?? false
+    );
   }
 
    /**

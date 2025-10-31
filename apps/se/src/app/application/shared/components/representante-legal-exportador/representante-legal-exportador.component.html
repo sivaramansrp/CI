@@ -11,7 +11,11 @@
       </span> } 
     
     
-    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo" class="form-control"
+    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo"  [ngClass]="
+                isValid(form, campo.nombre)
+                  ? (campo.required ? 'required' : null)
+                  : null
+              " class="form-control"
       [formControlName]="campo.nombre" [id]="campo.nombre"
       (change)=" setValoresStore('form', campo.nombre, campo.storeStateName ?? '') "
       [maxlength]="campo.maxlength ?? ''" /> } 
@@ -19,7 +23,7 @@
       @if (campo.tipo === 'dropdown') { 
         <app-catalogo-select
       [catalogo]="paisDestinoCatalog" [label]="campo.label" [required]="campo.required ?? false" name="campo.nombre"
-      formControlName="campo.nombre" (change)="cambioPaisDestino()"></app-catalogo-select> } 
+      [formControlName]="campo.nombre" (change)="cambioPaisDestino()"></app-catalogo-select> } 
       @if
     (form.get(campo.nombre)?.touched && form.get(campo.nombre)?.invalid) {
       

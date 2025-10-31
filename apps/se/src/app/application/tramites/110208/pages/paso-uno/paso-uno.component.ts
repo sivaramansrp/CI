@@ -2,7 +2,9 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datosCertificado/datosCertificado.component';
+import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
 import { Solocitud110208Service } from '../../services/service110208.service';
 
 /**
@@ -14,7 +16,7 @@ import { Solocitud110208Service } from '../../services/service110208.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Índice para manejar la pestaña seleccionada.
@@ -23,7 +25,7 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    * @type {number}
    */
   indice: number = 1;
-  
+
   /**
    * Indica si ya se cargaron los datos de respuesta para mostrar en el formulario.
    */
@@ -45,23 +47,35 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+  /**  * Decorador `ViewChild` para acceder a la instancia del componente `DatosCertificadoComponent`.
+   * Este componente se utiliza para gestionar información relacionada con los datos del certificado.
+   */
   @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
 
-   /**
-   * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
-   * @param consultaQuery Consulta a los datos del store.
-   * @param solocitud31601Service Servicio para carga y actualización de datos del formulario.
+  /**  * Decorador `ViewChild` para acceder a la instancia del componente `DestinatarioDeComponent`.
+   * Este componente se utiliza para gestionar información relacionada con el destinatario.
    */
-   constructor(
+  @ViewChild(DestinatarioDeComponent) destinatarioDe!: DestinatarioDeComponent;
+
+  /**  * Decorador `ViewChild` para acceder a la instancia del componente `CertificadoOrigenComponent`. */
+  @ViewChild(CertificadoOrigenComponent) certificadoOrigen!: CertificadoOrigenComponent;
+
+
+  /**
+  * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
+  * @param consultaQuery Consulta a los datos del store.
+  * @param solocitud31601Service Servicio para carga y actualización de datos del formulario.
+  */
+  constructor(
     private consultaQuery: ConsultaioQuery,
     private solocitud110208Service: Solocitud110208Service,
-  ) {}
+  ) { }
 
-   /**
-   * Hook de inicialización del componente. Verifica el estado de actualización del store
-   * y carga datos en caso necesario.
-   */
-   ngOnInit(): void {
+  /**
+  * Hook de inicialización del componente. Verifica el estado de actualización del store
+  * y carga datos en caso necesario.
+  */
+  ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -74,24 +88,24 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
           }
         })
       )
-      .subscribe();    
+      .subscribe();
   }
 
-    /**
-   * Carga los datos del formulario desde un archivo JSON externo y los actualiza en el store.
-   * También establece la bandera de datos cargados en verdadero.
-   */
-    guardarDatosFormulario(): void {
-      this.solocitud110208Service
-        .getRegistroTomaMuestrasMercanciasData()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((resp) => {
-          if (resp) {
-            this.esDatosRespuesta = true;
-            this.solocitud110208Service.actualizarEstadoFormulario(resp);
-          }
-        });
-    }
+  /**
+ * Carga los datos del formulario desde un archivo JSON externo y los actualiza en el store.
+ * También establece la bandera de datos cargados en verdadero.
+ */
+  guardarDatosFormulario(): void {
+    this.solocitud110208Service
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solocitud110208Service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
@@ -99,13 +113,13 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    */
   ngAfterViewInit(): void {
     // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
-   if (this.solicitante) {
-    setTimeout(() => {
-      if (this.solicitante) {
-        this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-      }
-    }, 50);
-   }
+    if (this.solicitante) {
+      setTimeout(() => {
+        if (this.solicitante) {
+          this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+        }
+      }, 50);
+    }
   }
 
   /**
@@ -118,11 +132,25 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
     this.indice = indice;
   }
 
-    /** Método público para validar todos los formularios del paso uno */
+  /** Método público para validar todos los formularios del paso uno */
   public validateAll(): boolean {
     let isValid = true;
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     if (this.datosCertificadoComponent) {
       if (!this.datosCertificadoComponent.validateAll()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if (this.destinatarioDe) {
+      if (!this.destinatarioDe.validateAll()) {
         isValid = false;
       }
     } else {

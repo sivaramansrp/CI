@@ -18,6 +18,7 @@ import {
   REGEX_PATRON_DECIMAL_2,
   TituloComponent
 } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import {
   Component,
   EventEmitter,
@@ -36,9 +37,8 @@ import {
   PagoDerechosState,
   PagoDerechosStore
 } from '../../estados/stores/pago-de-derechos.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
@@ -97,6 +97,30 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} campoRequerido - Indica si el campo es obligatorio.
    */
   @Input() public campoRequerido: boolean = false;
+
+       /**
+         * @property {Subscription} subscription
+         * @private
+         * @description
+         * Contenedor principal para gestionar suscripciones a observables que requieren
+         * limpieza manual. Se utiliza como alternativa al patrón destroyNotifier$
+         * para casos específicos que necesitan control granular de suscripciones.
+         * 
+         * @pattern Subscription Management
+         * @purpose Agrupa múltiples suscripciones para limpieza eficiente
+         * @cleanup Se desuscribe manualmente en ngOnDestroy()
+         * @use_case Suscripciones que requieren lógica de limpieza personalizada
+         * 
+         * @example
+         * ```typescript
+         * this.subscription.add(
+         *   this.service.getData().subscribe(data => { ... })
+         * );
+         * ```
+         */
+        private subscription: Subscription = new Subscription();
+  
+  
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
    * @description Output property that emits the updated state of the payment form whenever changes occur.
@@ -141,13 +165,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  public estadosDatos: Catalogo[] = ESTADO_CATALOGOS;
+  public estadosDatos: Catalogo[] = [];
 
   /**
    * Arreglo que contiene los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bancoDatos: Catalogo[] = BANCO_CATALOGOS;
+  public bancoDatos: Catalogo[] = [];
   /**
    * Indica si el campo "banco" es obligatorio.
    * @type {boolean}
@@ -159,6 +183,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @type {boolean}
    */
   public esFechaValida: boolean = true;
+
+  public isContinuarButtonClicked: boolean = false; 
 
   /**
    * Estado actual de la solicitud, obtenido del store.
@@ -179,7 +205,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private datosSolicitudService: DatosSolicitudService,
     private pagoDerechosStore: PagoDerechosStore,
     private pagoDerechosQuery: PagoDerechosQuery,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
+    
   ) {
 
     // Inicializa el formulario.
@@ -201,6 +229,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.getBancoDatos();
     this.pagoDerechosQuery.selectSolicitud$
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -210,32 +239,45 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
+    const NOMULTISPACE = /^(?!.* {2,}).*$/;
+
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.solicitudState?.claveReferencia || '',
-        [Validators.maxLength(9)],
+      this.solicitudState?.claveReferencia || '',
+      [
+        Validators.maxLength(9),
+        Validators.required,
+        Validators.pattern(NOMULTISPACE),
+      ],
       ],
       cadenaDependencia: [
-        this.solicitudState?.cadenaDependencia || '',
-        [Validators.maxLength(14)],
+      this.solicitudState?.cadenaDependencia || '',
+      [
+        Validators.maxLength(14),
+        Validators.required,
       ],
-      estado: [this.solicitudState?.estado || '', ],
-      banco: [this.solicitudState?.banco || '', ],
+      ],
+      estado: [this.solicitudState?.estado || '', Validators.required],
+      banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.solicitudState?.llavePago || '',
-        [
-          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
-          Validators.maxLength(30),
-        ],
+      this.solicitudState?.llavePago || '',
+      [
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30),
+        Validators.required,
       ],
-      fechaPago: [this.solicitudState?.fechaPago || '', ],
+      ],
+      fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
-        this.solicitudState?.importePago || '',
-        [
-          decimalValidator(2),
-          Validators.maxLength(16),
-        ],
+      this.solicitudState?.importePago || '',
+      [
+        decimalValidator(2),
+        Validators.maxLength(16),
+        Validators.required,
       ],
+      ],
+      bancoObject: [this.solicitudState?.bancoObject || ''],
+      estadoObject: [this.solicitudState?.estadoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -289,16 +331,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * y los asigna a la propiedad `bancoDatos`.
    */
   getBancoDatos(): void {
-    this.datosSolicitudService
-      .getBancoDatos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.bancoDatos = data;
-        this.pagoDerechosForm.patchValue({
-          banco: this.solicitudState?.banco || '',
-          estado: this.solicitudState?.estado || '',
-        });
-      });
+    this.subscription.add(
+            this.catalogoService
+            .bancosCatalogo(String(this.idProcedimiento))
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((response) => {
+              const DATOS = response.datos as Catalogo[];
+              
+              if (response) {
+                
+                this.bancoDatos = DATOS;
+                this.estadosDatos = DATOS;
+              }
+            })
+          );
   }
 
   /**
@@ -309,6 +355,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm.reset();
   }
 
+  actualizarStore(): void {
+    const VALORES_COMPLETOS = this.pagoDerechosForm.getRawValue();
+    this.updatePagoDerechos.emit(VALORES_COMPLETOS);
+  }
+
+  
   /**
    * @method onFechaCambiada
    * @description Actualiza la fecha de pago en el formulario.
@@ -401,6 +453,135 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       ) => void
     )(VALOR);
   }
+
+/**
+ * Método para manejar la selección de banco.
+ * @param event {any} Evento del select.
+ */
+onBancoSeleccionado(event: any): any {
+  const SELECTEDVALUE = event.targety ? event.target.value : event;
+  const BANCO = this.bancoDatos.find(b => b.clave === SELECTEDVALUE);
+  const BANCOID = this.pagoDerechosForm.get('banco')?.value;
+  const BANCO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.bancoDatos, BANCOID);
+  this.pagoDerechosForm.patchValue({ bancoObject: BANCO_OBJ ? BANCO_OBJ[0] : undefined });
+
+  if (BANCO) {
+    this.pagoDerechosForm.patchValue({ banco: BANCO.clave });
+    this.pagoDerechosForm.get('banco')?.markAsTouched();
+    this.pagoDerechosForm.get('banco')?.markAsDirty();
+    this.setValoresStoreObject(BANCO, 'banco', 'setBancoObject');
+  }
+  return BANCO_OBJ ? BANCO_OBJ[0] : undefined;
+}
+
+/**
+ * Método para manejar la selección de estado.
+ * @param event {any} Evento del select.
+ */
+onEstadoSeleccionado(event: any): any {
+  const SELECTEDVALUE = event.target ? event.target.value : event;
+  const ESTADO = this.estadosDatos.find(e => e.clave === SELECTEDVALUE);
+
+  const ESTADOID = this.pagoDerechosForm.get('estado')?.value;
+  const ESTADO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.estadosDatos, ESTADOID);
+  this.pagoDerechosForm.patchValue({ estadoObject: ESTADO_OBJ ? ESTADO_OBJ[0] : undefined });
+
+
+  if (ESTADO) {
+    this.pagoDerechosForm.patchValue({ estado: ESTADO.clave });
+    this.pagoDerechosForm.get('estado')?.markAsTouched();
+    this.pagoDerechosForm.get('estado')?.markAsDirty();
+    this.setValoresStoreObject(ESTADO, 'estado', 'setEstadoObject');
+  }
+    return ESTADO_OBJ ? ESTADO_OBJ[0] : undefined;
+
+}
+
+/**
+ * Método para actualizar el store con objeto completo.
+ * @param catalogo {Catalogo} Objeto catalogo seleccionado.
+ * @param campo {string} Nombre del campo del formulario.
+ * @param metodoNombre {string} Nombre del método del store.
+ */
+setValoresStoreObject(
+  catalogo: Catalogo,
+  campo: string,
+  metodoNombre: keyof PagoDerechosStore
+): void {
+  // Almacenar el objeto completo en el store
+  (
+    this.pagoDerechosStore[metodoNombre] as (
+      value: Catalogo
+    ) => void
+  )(catalogo);
+}
+
+  /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+    return catalogo.filter(item => item.clave === id);
+  }
+ 
+  formularioSolicitudValidacion(): boolean {
+    this.isContinuarButtonClicked = false;
+    
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
+    
+    const ANY_FIELDS_HAVE_VALUE= (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) ||
+    (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) ||
+    (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) ||
+    (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) ||
+    (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null ) ||
+    (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null &&BANCO_PAGO_VALUE !== '-1');
+    
+    if (ANY_FIELDS_HAVE_VALUE) {
+      this.pagoDerechosForm.markAllAsTouched();
+      this.isContinuarButtonClicked = true;
+    }
+  
+    
+    
+    
+    return this.isAllFieldHaveValue();
+  }
+
+  isAllFieldHaveValue(): boolean {
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
+    
+    const ALL_FIELDS_VALID = (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) && 
+                            (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) && 
+                            (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) && 
+                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) && 
+                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null )&&
+                            (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null && BANCO_PAGO_VALUE !== '-1');
+    return ALL_FIELDS_VALID;
+  }
+
+  llavePagoCase(): void {
+    const LLAVEPAGOCONTROL = this.pagoDerechosForm.get('llavePago');
+    if (LLAVEPAGOCONTROL && LLAVEPAGOCONTROL.value) {
+      const LLAVE_PAGO = LLAVEPAGOCONTROL.value.toUpperCase();
+      LLAVEPAGOCONTROL.setValue(LLAVE_PAGO);
+      this.setValoresStore(this.pagoDerechosForm, 'llavePago', 'setllavePago');
+    }
+  }
+
+
 
   /**
    * Método que se ejecuta al destruir el componente.

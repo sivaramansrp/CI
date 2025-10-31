@@ -99,7 +99,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" [label]="'Estado'" name="estado" [required]="true"
-              formControlName="establecimientoEstados" [isDisabled]="esFormularioSoloLectura"
+              formControlName="establecimientoEstados" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Selecciona una opción'"
               (change)="actualizarValoresStore(datosSolicitudform,'establecimientoEstados', 'setEstablecimientoEstados')">
             </app-catalogo-select>
           </div>
@@ -225,11 +225,13 @@
             [tooltipQuestionCircle]="true" formControlName="regimen"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             [isDisabled]="esFormularioSoloLectura"
+             [placeholder]="'Selecciona una opción'"
             (change)="actualizarValoresStore(datosSolicitudform,'regimen', 'setRegimen')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
             name="aduanasEntradas" formControlName="aduanasEntradas"
+             [placeholder]="'Selecciona una opción'"
             [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
         </div>
@@ -304,7 +306,7 @@
           <div class="row">
             <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'" formControlName="scian"
+                [placeholder]="'Selecciona una opción'" formControlName="scian"
                 [isDisabled]="esFormularioSoloLectura"
                 (change)="actualizarValoresStore(scianForm,'scian', 'setScian')"></app-catalogo-select>
             </div>
@@ -346,7 +348,7 @@
     <form [formGroup]="formMercancias">
       <div class="form-group">
         <app-catalogo-select [catalogo]="classificacionDelProducto" formControlName="clasificacion" [label]="'Clasificación del producto'"
-          [required]="true"
+          [required]="true"  [placeholder]="'Selecciona una opción'"
           name="clasificacion">
         </app-catalogo-select>
         @if (formMercancias.get('clasificacion')?.invalid && (formMercancias.get('clasificacion')?.touched || tieneMercanciaFormaEnviada)) {
@@ -357,7 +359,7 @@
       </div>
       <div class="form-group">
         <app-catalogo-select [catalogo]="especificarClassificacion" formControlName="especificarClasificacionProducto"
-          [label]="'Especificar clasificación del producto'" [required]="true"
+          [label]="'Especificar clasificación del producto'" [required]="true"  [placeholder]="'Selecciona una opción'"
           name="especificarClasificacionProducto">
         </app-catalogo-select>
         @if (formMercancias.get('especificarClasificacionProducto')?.invalid && (formMercancias.get('especificarClasificacionProducto')?.touched || tieneMercanciaFormaEnviada)) {
@@ -399,7 +401,7 @@
       </div>
       <div class="form-group">
         <app-catalogo-select [catalogo]="tipoDeProducto" formControlName="tipoDeProducto" [label]="'Tipo de producto'"
-          [required]="true"
+          [required]="true"  [placeholder]="'Selecciona una opción'"
           name="tipoDeProducto">
         </app-catalogo-select>
         @if (formMercancias.get('tipoDeProducto')?.invalid && (formMercancias.get('tipoDeProducto')?.touched || tieneMercanciaFormaEnviada)) {
@@ -410,7 +412,7 @@
       </div>
       <div class="form-group">
         <app-catalogo-select [catalogo]="estado" formControlName="estadoFisico" [label]="'Estado físico'"
-          [required]="true"
+          [required]="true"  [placeholder]="'Selecciona una opción'"
           name="estadoFisico">
         </app-catalogo-select>
         @if (formMercancias.get('estadoFisico')?.invalid && (formMercancias.get('estadoFisico')?.touched || tieneMercanciaFormaEnviada)) {
@@ -470,7 +472,7 @@
         }
       </div>
       <div class="form-group">
-        <app-catalogo-select [catalogo]="umc" formControlName="UMC" [label]="'UMC'" [required]="true"
+        <app-catalogo-select [catalogo]="umc" formControlName="UMC" [label]="'UMC'" [required]="true"  [placeholder]="'Selecciona una opción'"
          name="UMC">
         </app-catalogo-select>
         @if (formMercancias.get('UMC')?.invalid && (formMercancias.get('UMC')?.touched || tieneMercanciaFormaEnviada)) {

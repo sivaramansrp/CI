@@ -215,8 +215,8 @@ export class ValidacionPosterioriService {
     return {
       "observaciones": data.formDatosCertificado['observacionesDates'] ?? '',
       "idioma": data.formDatosCertificado['idiomaDates'] ?? 0,
-      "presenta": data.formDatosCertificado['presentaDates'] ?? '',
-      "precisa": data.formDatosCertificado['precisaDates'] ?? '',
+      "presenta": data.formDatosCertificado['presentaDates'] ?? 'precisaDates',
+      "precisa": data.formDatosCertificado['precisaDates'] ?? 'precisaDates',
       "representacion_federal": {
         "entidad_federativa": data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
         "representacion_federal": data.formDatosCertificado['representacionFederalDates'] ?? 0
@@ -240,6 +240,16 @@ export class ValidacionPosterioriService {
         segundo_apellido: item.formCertificado['segundoApellido'] || '',
         numero_registro_fiscal: item.formCertificado['numeroDeRegistroFiscal'] || '',
         razon_social: item.formCertificado['razonSocial'] || '',
+      },
+       domicilio_tercer_operador:{
+        pais: item.formCertificado['pais'] || '',
+        calle: item.formCertificado['calle'] || '',
+        Ciudad: item.formCertificado['ciudad'] || '',
+        numero_letra: item.formCertificado['numeroLetra'] || '',
+        lada: item.formCertificado['lada'] || '',
+        telefono: item.formCertificado['telefono'] || '',
+        correo_electronico:item.formCertificado['correo'],
+        fax:item.formCertificado['fax']
       },
       mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaDatos),
     };

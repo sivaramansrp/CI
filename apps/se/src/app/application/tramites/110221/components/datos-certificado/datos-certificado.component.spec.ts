@@ -84,7 +84,12 @@ describe('DatosCertificadoComponent', () => {
     component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.entidadFederativasOpcion();
   });
-
+it('should call setFormValida', () => {
+    const spy = jest.spyOn(store, 'setFormValida');
+    component.store = store;
+    component.setFormValida(true);
+    expect(spy).toHaveBeenCalledWith({ datos: true });
+  });
   it('should run #representacionFederalOpcion()', async () => {
     component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
     component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
@@ -95,6 +100,18 @@ describe('DatosCertificadoComponent', () => {
     component.store = component.store || {};
     component.store.setFormDatosCertificado = jest.fn();
     component.obtenerDatosFormulario({});
+  });
+
+  it('should validateAll true/false and call setFormValida', () => {
+    const spy = jest.spyOn(component, 'setFormValida');
+    component.datosCertificadoDeRef = { validarFormularios: jest.fn(() => true) };
+    expect(component.validateAll()).toBe(true);
+    expect(spy).toHaveBeenCalledWith(true);
+    component.datosCertificadoDeRef = { validarFormularios: jest.fn(() => false) };
+    expect(component.validateAll()).toBe(false);
+    expect(spy).toHaveBeenCalledWith(false);
+    component.datosCertificadoDeRef = undefined;
+    expect(component.validateAll()).toBe(true);
   });
 
   it('should run #idiomaSeleccion()', async () => {
@@ -114,13 +131,6 @@ describe('DatosCertificadoComponent', () => {
     component.store.setRepresentacionFederalDatosSeleccion = jest.fn();
     component.representacionFederalSeleccion({});
   });
-
-  it('should run #setFormValida()', async () => {
-    component.store = component.store || {};
-    component.store.setFormValida = jest.fn();
-    component.setFormValida({});
-  });
-
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
