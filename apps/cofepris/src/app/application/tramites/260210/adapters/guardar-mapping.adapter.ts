@@ -132,32 +132,33 @@ export class GuardarMappingAdapter {
               "descripcionGiro": "",
               "numeroRegistro": "",
               "domicilio": {
-                  "calle": fabricante.calle,
-                  "numeroExterior": fabricante.numeroExterior,
-                  "numeroInterior": fabricante.numeroInterior,
-                  "pais": {
-                      "clave": "MEX",
-                      "nombre": fabricante.pais
-                  },
-                  "colonia": {
-                      "clave": "001",
-                      "nombre": fabricante.colonia
-                  },
-                  "delegacionMunicipio": {
-                      "clave": "015",
-                      "nombre": fabricante.municipioAlcaldia
-                  },
-                  "localidad": {
-                      "clave": "001",
-                      "nombre": fabricante.localidad
-                  },
-                  "entidadFederativa": {
-                      "clave": "09",
-                      "nombre": fabricante.entidadFederativa
-                  },
-                  "informacionExtra": "",
-                  "codigoPostal": fabricante.codigoPostal,
-                  "descripcionColonia": fabricante.colonia
+                  
+            "calle": fabricante.calle,
+            "numeroExterior": fabricante.numeroExterior,
+            "numeroInterior": fabricante.numeroInterior,
+            "pais": {
+                "clave": fabricante.paisObj?.clave,
+                "nombre": fabricante.paisObj?.descripcion
+            },
+            "colonia": {
+                "clave": fabricante.coloniaObj?.clave,
+                "nombre": fabricante.coloniaObj?.descripcion
+            },
+            "delegacionMunicipio": {
+                "clave": fabricante.municipioAlcaldiaObj?.clave,
+                "nombre": fabricante.municipioAlcaldiaObj?.descripcion
+            },
+            "localidad": {
+                "clave": fabricante.localidadObj?.clave,
+                "nombre": fabricante.localidadObj?.descripcion
+            },
+            "entidadFederativa": {
+                "clave": fabricante.entidadFederativaObj?.clave,
+                "nombre": fabricante.entidadFederativaObj?.descripcion
+            },
+            "informacionExtra": "",
+            "codigoPostal": fabricante.codigoPostalObj?.descripcion,
+            "descripcionColonia": fabricante.coloniaObj?.descripcion
               },
               "idSolicitud": "0"
           }
@@ -187,28 +188,28 @@ export class GuardarMappingAdapter {
                 "numeroExterior": destinatario.numeroExterior,
                 "numeroInterior": destinatario.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": destinatario.pais
+                    "clave": destinatario.paisObj?.clave,
+                    "nombre": destinatario.paisObj?.descripcion || destinatario.pais
                 },
                 "colonia": {
-                    "clave": "",
-                    "nombre": destinatario.colonia
+                    "clave": destinatario.coloniaObj?.clave,
+                    "nombre": destinatario.coloniaObj?.descripcion || destinatario.colonia
                 },
                 "delegacionMunicipio": {
-                    "clave": "",
-                    "nombre": destinatario.municipioAlcaldia
+                    "clave": destinatario.municipioObj?.clave,
+                    "nombre": destinatario.municipioObj?.descripcion || destinatario.municipioAlcaldia
                 },
                 "localidad": {
-                    "clave": "001",
-                    "nombre": destinatario.localidad
+                    "clave": destinatario.localidadObj?.clave,
+                    "nombre": destinatario.localidadObj?.descripcion || destinatario.localidad
                 },
                 "entidadFederativa": {
-                    "clave": "09",
-                    "nombre": "Ciudad de México"
+                    "clave": destinatario.estadoObj?.clave,
+                    "nombre": destinatario.estadoObj?.descripcion || destinatario.estadoLocalidad
                 },
                 "informacionExtra": "",
-                "codigoPostal": destinatario.codigoPostal,
-                "descripcionColonia": destinatario.colonia
+                "codigoPostal": destinatario.codigoPostalObj?.descripcion || destinatario.codigoPostal,
+                "descripcionColonia": destinatario.coloniaObj?.descripcion || destinatario.colonia
             },
             "idSolicitud": "0"
           }
@@ -238,8 +239,8 @@ export class GuardarMappingAdapter {
                 "numeroExterior": proveedor.numeroExterior,
                 "numeroInterior": proveedor.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": proveedor.pais
+                    "clave": proveedor.paisObj?.clave,
+                    "nombre": proveedor.paisObj?.descripcion || proveedor.pais
                 },
                 "colonia": {
                     "clave": "",
@@ -289,8 +290,8 @@ export class GuardarMappingAdapter {
               "numeroExterior": facturador.numeroExterior,
               "numeroInterior": facturador.numeroInterior,
               "pais": {
-                  "clave": "",
-                  "nombre": facturador.pais
+                  "clave": facturador.paisObj?.clave || "",
+                  "nombre": facturador.paisObj?.descripcion || facturador.pais
               },
               "colonia": {
                   "clave": "",
