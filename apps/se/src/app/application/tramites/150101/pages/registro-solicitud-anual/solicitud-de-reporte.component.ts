@@ -87,20 +87,20 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
   /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValido: boolean = false;
+  esFormaValido!: boolean;
   /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValidoDos: boolean = false;
+  esFormaValidoDos!: boolean;
 
     /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-    esFormaValidoTres: boolean = false;
+    esFormaValidoTres!: boolean;
       /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-      esFormaValidoCuatro: boolean = false;
+      esFormaValidoCuatro!: boolean;
   /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
@@ -393,6 +393,10 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
     this.esFormaValidoDos = false;
     this.esFormaValidoTres = false;
     this.esFormaValidoCuatro = false;
+  }
+
+  isAllFalse(): boolean {
+    return !this.esFormaValido && !this.esFormaValidoDos && !this.esFormaValidoTres && !this.esFormaValidoCuatro && this.esFormaValido!==undefined && this.esFormaValidoDos!==undefined && this.esFormaValidoTres!==undefined && this.esFormaValidoCuatro!==undefined;
   }
 
   /**

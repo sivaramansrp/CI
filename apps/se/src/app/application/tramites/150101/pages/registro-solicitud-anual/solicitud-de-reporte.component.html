@@ -18,7 +18,7 @@
         <div class="alert alert-info alert-danger" [innerHTML]="formErrorAlertQuad"></div>
         }
 
-        @if (!esFormaValido && !esFormaValidoDos && !esFormaValidoTres && !esFormaValidoCuatro) {
+        @if (isAllFalse()) {
         <div class="alert alert-info alert-danger" [innerHTML]="invalidFormErrorAlert"></div>
         }
 
