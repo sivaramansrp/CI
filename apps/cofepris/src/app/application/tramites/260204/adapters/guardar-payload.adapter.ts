@@ -106,7 +106,7 @@ export class GuardarAdapter_260204 {
           }
       }),
       "representanteLegal": {
-          "rfc": state.datosSolicitudFormState.rfcRepresentante,
+          "rfc": state.datosSolicitudFormState.representanteRfc,
           "resultadoIDC": "",
           "nombre": state.datosSolicitudFormState.representanteNombre,
           "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
