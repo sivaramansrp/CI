@@ -1,13 +1,14 @@
 <div class="container form-container">
  
   <div class="mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros" (listaDeFilaSeleccionada)="onCambioSeleccion($event)"
       [datos]="tablaInsumos" [isInvalida]="isInvalida" [disableSeleccionTablaCheckBox]="consultaState.readonly ? true : false"></app-tabla-dinamica>
   </div>
 
   <div class="text-end mt-5">
     <button type="button" class="btn btn-primary me-2" (click)="eliminarInsumo()">Eliminar</button>
-    <button type="button" class="btn btn-primary me-2">Modificar</button>
+    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+      data-bs-target="#modalAddAgentMercancias">Modificar</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
       data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState.readonly">Agregar</button>
   </div>

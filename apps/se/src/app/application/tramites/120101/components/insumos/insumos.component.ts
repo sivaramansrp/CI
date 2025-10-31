@@ -220,26 +220,34 @@ export class InsumosComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * Método que agrega un nuevo insumo a la tabla.
-   * Valida el formulario antes de agregar los datos.
-   */
-  agregarInsumo(): void {
-    if (this.forma.valid) {
-      const VALORES_NINO = this.ninoFormGroup.value;
+agregarInsumo(): void {
+  if (this.forma.valid) {
+    const VALORES_NINO = this.ninoFormGroup.value;
 
-      const NUEVA_FILA = {
-        DescripcionDelInsumo: VALORES_NINO.descripcionInsumo,
-        FraccionArancelaria: VALORES_NINO.fraccion,
-        PaisDeOrigen: VALORES_NINO.Pais,
-      };
+    const NUEVA_FILA = {
+      DescripcionDelInsumo: VALORES_NINO.descripcionInsumo,
+      FraccionArancelaria: VALORES_NINO.fraccion,
+      PaisDeOrigen: VALORES_NINO.Pais,
+    };
+
+    // Check if tablaInsumos already has any items
+    if (this.tablaInsumos.length > 0) {
+      // Update the first existing row with the new values
+      this.tablaInsumos[0] = NUEVA_FILA;
+    } else {
+      // Add as new row if array is empty
       this.tablaInsumos.push(NUEVA_FILA);
-      this.tablaInsumos = [...this.tablaInsumos];
-      this.isInvalida = false;
-      this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
-      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
     }
+
+    // Refresh array reference for change detection
+    this.tablaInsumos = [...this.tablaInsumos];
+
+    this.isInvalida = false;
+    this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+    this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
   }
+}
+
 
   validarFormulario(): void {
     if (this.tablaInsumos.length === 0) {
@@ -248,7 +256,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
       this.isInvalida = false;
     }
   }
-  /**
+   /**
    * Lista de insumos seleccionados en la tabla.
    */
   public seleccionados: InsumosTabla[] = [];
