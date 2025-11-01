@@ -282,9 +282,7 @@ public mostrarAlerta: boolean = false;
                      if(shouldNavigate) {
                        if(esValidObject(response) && esValidObject(response.datos)) {
                          const DATOS = response.datos as { id_solicitud?: number };
-                         if(getValidDatos(DATOS.id_solicitud)) {
-                          console.log(DATOS.id_solicitud);
-                          
+                         if(getValidDatos(DATOS.id_solicitud)) {                          
                            this.tramiteStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
                          } else {
                            this.tramiteStore.setIdSolicitud(0);
