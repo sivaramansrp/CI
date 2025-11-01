@@ -1,5 +1,5 @@
+import { AlertComponent, DatosPasos, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
 import { Component, EventEmitter } from '@angular/core';
-import {AlertComponent, DatosPasos, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
 import {MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION, PASOS, TITULO_MENSAJE } from '../../constantes/maquila-materias-primas.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
@@ -7,6 +7,7 @@ import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Notificacion} from'@ng-mf/data-access-user';
 import {NotificacionesComponent} from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
@@ -15,7 +16,6 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import {Notificacion} from'@ng-mf/data-access-user';
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación

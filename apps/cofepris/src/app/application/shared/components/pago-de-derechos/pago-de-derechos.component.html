@@ -87,15 +87,15 @@
      <!-- Estado (using <app-catalogo-select>) -->
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="estadosDatos"
-          formControlName="estado"
+          [catalogo]="bancoDatos"
+          formControlName="banco"
           [label]="'Banco'"
           [required]="true"
           [isDisabled]="formularioDeshabilitado"
           [placeholder]="'Seleccione una opción'"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false"
-          (change)="onEstadoSeleccionado($event); actualizarStore()">
+          (change)="onBancoSeleccionado($event); actualizarStore()">
         </app-catalogo-select>
       </div>
       }

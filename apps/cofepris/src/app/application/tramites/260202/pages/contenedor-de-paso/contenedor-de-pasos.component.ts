@@ -1,3 +1,4 @@
+import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
 import {
   AccionBoton,
   DatosPasos,
@@ -5,7 +6,6 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202State } from '../../estados/tramite260202Store.store';
@@ -73,6 +73,11 @@ export class ContenedorDePasosComponent implements OnInit {
   @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
 
   public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+     */
+    TEXTOS = AVISO_PRIVACIDAD;
 
   /**
    * @property {DatosPasos} datosPasos

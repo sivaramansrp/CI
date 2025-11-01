@@ -18,6 +18,11 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * Representa el estado de la solicitud para el trámite 260205.
  */
 export interface Tramite260205State {
+/**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+
   /**
    * Lista de destinatarios finales en la tabla de datos.
    */
@@ -93,7 +98,6 @@ export interface Tramite260205State {
    */
   indice: number;
 
-  idSolicitud?: number | null;
 }
 
 /**
@@ -468,13 +472,15 @@ export class Tramite260205Store extends Store<Tramite260205State> {
       indice
     }))
   }
-
-  setIdSolicitud(idSolicitud: number): void {
+ /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
-      ...state,
-      idSolicitud,
+        ...state,
+        idSolicitud,
     }));
-  }
-
-  
+  }  
 }
