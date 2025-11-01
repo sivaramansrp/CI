@@ -194,80 +194,121 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    */
    getValorIndice(e: AccionBoton): void {
 
-    if (e.accion === 'cont') {
-      let isValid = true;
+    // if (e.accion === 'cont') {
+    //   let isValid = true;
 
-        if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarPasoUno();
-      }
-      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-        this.mostrarAlerta=true;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
-        }
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-      }
-      if (!isValid) {
-        this.esFormaValido = true;
-        this.datosPasos.indice = this.indice;
-        return;
-      }
+    //     if (this.indice === 1 && this.pasoUnoComponent) {
+    //     isValid = this.pasoUnoComponent.validarPasoUno();
+    //   }
+    //   if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+    //     this.mostrarAlerta=true;
+    //     this.seleccionarFilaNotificacion = {
+    //       tipoNotificacion: 'alert',
+    //       categoria: 'danger',
+    //       modo: 'action',
+    //       titulo: '',
+    //       mensaje: MENSAJE_DE_VALIDACION,
+    //       cerrar: true,
+    //       tiempoDeEspera: 2000,
+    //       txtBtnAceptar: 'SI',
+    //       txtBtnCancelar: 'NO',
+    //     }
+    //     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+    //   }
+    //   if (!isValid) {
+    //     this.esFormaValido = true;
+    //     this.datosPasos.indice = this.indice;
+    //     return;
+    //   }
 
-      const PAYLOAD = GuardarAdapter_260204.toFormPayload(this.storeData);
-      let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260204', PAYLOAD).subscribe(response => {
-        shouldNavigate = response.codigo === '00';
-        if (!shouldNavigate) {
-          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-          this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
-          this.esFormaValido = false;
-          this.indice = 1;
-          this.datosPasos.indice = 1;
-          this.wizardComponent.indiceActual = 1;
-          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-          return;
-        }
-        if(shouldNavigate) {
-          if(esValidObject(response) && esValidObject(response.datos)) {
-            const DATOS = response.datos as { id_solicitud?: number };
-            if(getValidDatos(DATOS.id_solicitud)) {
-              this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-            } else {
-              this.store.setIdSolicitud(0);
+    //   const PAYLOAD = GuardarAdapter_260204.toFormPayload(this.storeData);
+    //   let shouldNavigate = false;
+    //   this.registroSolicitudService.postGuardarDatos('260204', PAYLOAD).subscribe(response => {
+    //     shouldNavigate = response.codigo === '00';
+    //     if (!shouldNavigate) {
+    //       const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+    //       this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+    //       this.esFormaValido = false;
+    //       this.indice = 1;
+    //       this.datosPasos.indice = 1;
+    //       this.wizardComponent.indiceActual = 1;
+    //       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+    //       return;
+    //     }
+    //     if(shouldNavigate) {
+    //       if(esValidObject(response) && esValidObject(response.datos)) {
+    //         const DATOS = response.datos as { id_solicitud?: number };
+    //         if(getValidDatos(DATOS.id_solicitud)) {
+    //           this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+    //         } else {
+    //           this.store.setIdSolicitud(0);
+    //         }
+    //       }
+    //       // Calcular el nuevo índice basado en la acción
+    //       let indiceActualizado = e.valor;
+    //       if (e.accion === 'cont') {
+    //         indiceActualizado = e.valor + 1;
+    //       }
+    //       this.toastrService.success(response.mensaje);
+    //       if (indiceActualizado > 0 && indiceActualizado < 5) {
+    //         this.indice = indiceActualizado;
+    //         this.datosPasos.indice = indiceActualizado;
+    //         if (e.accion === 'cont') {
+    //           this.wizardComponent.siguiente();
+    //         } else {
+    //           this.wizardComponent.atras();
+    //         }
+    //       }
+    //     } else {
+    //       this.toastrService.error(response.mensaje);
+    //     }
+    //   });
+    // }else{
+    //   this.indice = e.valor;
+    //   this.datosPasos.indice = this.indice;
+    //   this.wizardComponent.atras();
+    // }
+      if (e.accion === 'cont') {
+        const PAYLOAD = GuardarAdapter_260204.toFormPayload(this.storeData);
+        let shouldNavigate = false;
+        this.registroSolicitudService.postGuardarDatos('260204', PAYLOAD).subscribe(response => {
+          shouldNavigate = response.codigo === '00';
+          if (!shouldNavigate) {
+            const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          if(shouldNavigate) {
+            if(esValidObject(response) && esValidObject(response.datos)) {
+              const DATOS = response.datos as { id_solicitud?: number };
+              if(getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
             }
-          }
-          // Calcular el nuevo índice basado en la acción
-          let indiceActualizado = e.valor;
-          if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
-          }
-          this.toastrService.success(response.mensaje);
-          if (indiceActualizado > 0 && indiceActualizado < 5) {
-            this.indice = indiceActualizado;
-            this.datosPasos.indice = indiceActualizado;
-            if (e.accion === 'cont') {
+            const INDICE_ACTUALIZADO = this.indice + 1; 
+            
+            this.toastrService.success(response.mensaje);
+            if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= 3) { 
+              this.indice = INDICE_ACTUALIZADO;
+              this.datosPasos.indice = INDICE_ACTUALIZADO;
               this.wizardComponent.siguiente();
-            } else {
-              this.wizardComponent.atras();
             }
+          } else {
+            this.toastrService.error(response.mensaje);
           }
-        } else {
-          this.toastrService.error(response.mensaje);
-        }
-      });
-    }else{
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
-    }
+        });
+      } else {
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        this.wizardComponent.atras();
+      }
   }
 
   /**
