@@ -99,6 +99,16 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
   
+  /**
+   * Identificador único del trámite asociado a la representación federal.
+   * 
+   * @remarks
+   * Este valor se utiliza para distinguir el trámite específico dentro del sistema.
+   * 
+   * @example
+   * // Acceso al identificador del trámite
+   * console.log(this.tramiteId); // "120101"
+   */
   tramiteId:string="120101";
 
   /**
@@ -252,19 +262,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     }
   }
 
-// obtenerestadosData(): void {
-//     this.catalogoServices
-//       .estadosCatalogo(this.tramiteId)
-//       .pipe(takeUntil(this.destroy$))
-//       .subscribe((resp): void => {
-//         const TRATADO_FIELD = this.consultarCupoFormData.find(
-//           (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
-//         ) as ModeloDeFormaDinamica;
-//         if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
-//           TRATADO_FIELD.opciones = resp.datos as Catalogo[];
-//         }
-//       });
-//   }
 
   validarFormulario(): void {
     this.forma.markAllAsTouched();

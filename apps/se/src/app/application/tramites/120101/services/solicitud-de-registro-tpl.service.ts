@@ -1,8 +1,8 @@
 import { Catalogo, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
+import { BUSCAR_CONSULTAR, BUSCAR_INSTRUMENTOS, GUARDAR } from '../../../shared/servers/api-route';
 import { BuscarApiResponse, InsumosTabla, SolicitudTPLCANR } from '../models/insumos.model';
 import { Observable, map } from 'rxjs';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
-import { BUSCAR_CONSULTAR, BUSCAR_INSTRUMENTOS, GUARDAR } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
@@ -292,6 +292,12 @@ export class SolicitudDeRegistroTplService {
     return this.httpService.post<JSONResponse>(GUARDAR('sat-t120101'), { body: body });
   }
 
+  /**
+   * Realiza una solicitud POST para buscar datos relacionados con instrumentos del trámite "120101".
+   *
+   * @param body - Objeto que contiene los parámetros de búsqueda requeridos por la API.
+   * @returns Un observable que emite la respuesta de la API con los datos encontrados.
+   */
    getBuscarDatos(body: any): Observable<BuscarApiResponse> {
     return this.http.post<BuscarApiResponse>(BUSCAR_INSTRUMENTOS("120101"), body).pipe(
       map((response) => response)

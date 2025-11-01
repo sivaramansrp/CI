@@ -173,11 +173,31 @@ export class PantallasComponent implements OnInit, OnDestroy {
    */
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
+  /**
+   * Indica si el botón padre está habilitado o visible.
+   * 
+   * @default true
+   */
   padreBtn: boolean = true;
 
+/**
+ * Identificador numérico de la solicitud actual.
+ * 
+ * Este valor se utiliza para referenciar de manera única una solicitud dentro del sistema.
+ * Por defecto, se inicializa en 0 hasta que se asigne un identificador válido.
+ */
 idSolicitud:number=0;
 
+/**
+ * Identificador numérico del mecanismo seleccionado.
+ * 
+ * @remarks
+ * Este valor se utiliza para determinar el mecanismo actual en uso dentro del componente.
+ * 
+ * @defaultValue 0
+ */
 idMecanismo:number=0;
+
   /**
  * @constructor
  * @description
@@ -412,6 +432,15 @@ idMecanismo:number=0;
       );
     }
 
+  /**
+   * Guarda los datos de la solicitud de registro utilizando el adaptador y servicio correspondiente.
+   * 
+   * @param data - Estado actual de la solicitud de registro de tipo `SolicitudDeRegistroTpl120101State`.
+   * @returns Una promesa que se resuelve con la respuesta JSON del API (`JSONResponse`) o se rechaza con un error.
+   * 
+   * El método transforma los datos recibidos en el formato requerido por el backend, realiza la petición de guardado,
+   * y actualiza el store con el identificador de la solicitud retornado por el API.
+   */
   guardar(data: SolicitudDeRegistroTpl120101State): Promise<JSONResponse> {
     const PAYLOAD = this.ampliacionServiciosAdapter.toFormGuardarPayload(data);
     return new Promise((resolve, reject) => {

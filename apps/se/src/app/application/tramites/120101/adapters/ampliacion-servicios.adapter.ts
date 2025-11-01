@@ -1,5 +1,5 @@
-import { BuscarTablaDatos, InstrumentoCupoTPL } from '../models/insumos.model';
 import { Injectable } from '@angular/core';
+import { InstrumentoCupoTPL } from '../models/insumos.model';
 import { SolicitudDeRegistroTpl120101State } from '../../../estados/tramites/tramite120101.store';
 
 
@@ -10,10 +10,6 @@ import { SolicitudDeRegistroTpl120101State } from '../../../estados/tramites/tra
   providedIn: 'root'
 })
 export class AmpliacionServiciosAdapter {
-
-  constructor() {
-    // Constructor vacío
-  }
 
 
   /**

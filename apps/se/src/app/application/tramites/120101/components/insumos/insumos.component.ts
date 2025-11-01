@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoServices, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -100,7 +100,22 @@ export class InsumosComponent implements OnInit, OnDestroy {
    */
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
+  /**
+   * Indica si el estado actual es inválido.
+   * 
+   * @remarks
+   * Esta propiedad se utiliza para determinar si existen condiciones que invalidan el proceso o formulario actual.
+   * 
+   * @defaultValue false
+   */
   public isInvalida: boolean = false;
+
+  @ViewChild('modalAddAgentMercancias') modalElement!: ElementRef;
+
+   /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -186,7 +201,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
   public obtenerDatosFraccionArancelaria(): void {
-     this.catalogoServices.fraccionHtsCatalogo(this.tramiteId,"6302530020")
+    this.catalogoServices.fraccionHtsCatalogo(this.tramiteId, "6302530020")
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         const FRACCION_FIELD = this.insumosFormData.find(
@@ -220,33 +235,49 @@ export class InsumosComponent implements OnInit, OnDestroy {
   }
 
 
-agregarInsumo(): void {
-  if (this.forma.valid) {
-    const VALORES_NINO = this.ninoFormGroup.value;
-
-    const NUEVA_FILA = {
-      DescripcionDelInsumo: VALORES_NINO.descripcionInsumo,
-      FraccionArancelaria: VALORES_NINO.fraccion,
-      PaisDeOrigen: VALORES_NINO.Pais,
-    };
-
-    // Check if tablaInsumos already has any items
-    if (this.tablaInsumos.length > 0) {
-      // Update the first existing row with the new values
-      this.tablaInsumos[0] = NUEVA_FILA;
-    } else {
-      // Add as new row if array is empty
-      this.tablaInsumos.push(NUEVA_FILA);
+  agregarInsumo(): void {
+    if (this.forma.invalid) {
+      this.forma.markAllAsTouched();
+      return;
     }
+    if (this.forma.valid) {
+      const VALORES_NINO = this.ninoFormGroup.value;
 
-    // Refresh array reference for change detection
-    this.tablaInsumos = [...this.tablaInsumos];
+      const NUEVA_FILA = {
+        DescripcionDelInsumo: VALORES_NINO.descripcionInsumo,
+        FraccionArancelaria: VALORES_NINO.fraccion,
+        PaisDeOrigen: VALORES_NINO.Pais,
+      };
 
-    this.isInvalida = false;
-    this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
-    this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+      // Check if tablaInsumos already has any items
+      if (this.tablaInsumos.length > 0) {
+        // Update the first existing row with the new values
+        this.tablaInsumos[0] = NUEVA_FILA;
+      } else {
+        // Add as new row if array is empty
+        this.tablaInsumos.push(NUEVA_FILA);
+      }
+
+      // Refresh array reference for change detection
+      this.tablaInsumos = [...this.tablaInsumos];
+
+      this.isInvalida = false;
+      this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+      this.cerrarModal();
+    }
   }
-}
+
+   /**
+   * Cierra el modal.
+   * 
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
 
 
   validarFormulario(): void {
@@ -256,14 +287,14 @@ agregarInsumo(): void {
       this.isInvalida = false;
     }
   }
-   /**
-   * Lista de insumos seleccionados en la tabla.
-   */
+  /**
+  * Lista de insumos seleccionados en la tabla.
+  */
   public seleccionados: InsumosTabla[] = [];
-/**
- * @param seleccion Lista de insumos seleccionados.
- */
-onCambioSeleccion(seleccion: InsumosTabla[]): void {
+  /**
+   * @param seleccion Lista de insumos seleccionados.
+   */
+  onCambioSeleccion(seleccion: InsumosTabla[]): void {
     this.seleccionados = seleccion;
   }
   /**

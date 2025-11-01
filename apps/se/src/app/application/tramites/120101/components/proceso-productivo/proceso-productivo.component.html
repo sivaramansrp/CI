@@ -11,8 +11,8 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisDeOrigenDeLaFibra')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paises" [label]="'País de origen de la fibra'" [required]="false" [isDisabled]="consultaState.readonly"
-                          name="País de origen de la fibra" formControlName="paisDeOrigenDeLaFibra" (change)="eventoDeCambioDeValor($event, 'paisDeOrigenDeLaFibra')">
+                        <app-catalogo-select [catalogo]="paises" [label]="'País de origen de la fibra'" [required]="true" [isDisabled]="consultaState.readonly"
+                         [markTouched]="procesoProductivoForm.get('paisDeOrigenDeLaFibra')?.touched ?? false" name="País de origen de la fibra" formControlName="paisDeOrigenDeLaFibra" (change)="eventoDeCambioDeValor($event, 'paisDeOrigenDeLaFibra')">
                         </app-catalogo-select>
                     </div>
                 }

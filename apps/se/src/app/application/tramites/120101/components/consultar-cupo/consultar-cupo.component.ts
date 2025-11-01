@@ -489,36 +489,6 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
 
 
 
-  /**
-  * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
-  *
-  * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
-  * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
-  * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
-  * hacia adelante o atrás según el tipo de acción.
-  *
-  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
-  */
-  // private shouldNavigate$(): Observable<boolean> {
-  //   return this.nuevoProgramaIndustrialService.getAllState().pipe(
-  //     take(1),
-  //     switchMap(data => this.guardar(data)),
-  //     map(response => {
-  //       const DATOS = doDeepCopy(response);
-  //       const OK = response.codigo === '00';
-  //       if (OK) {
-  //         this.toastrService.success(DATOS.mensaje);
-  //       } else {
-  //         this.padreBtn = true;
-  //         this.toastrService.error(DATOS.mensaje);
-  //       }
-  //       return OK;
-  //     })
-  //   );
-  // }
-
-
-
 
   /**
   * @method ngOnDestroy
