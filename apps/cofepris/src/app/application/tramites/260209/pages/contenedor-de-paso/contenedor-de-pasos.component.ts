@@ -202,7 +202,6 @@ export class ContenedorDePasosComponent {
         this.datosPasos.indice = this.indice;
         //return;
       }
-      // Guardar API call here
       const STATE = this.tramite260209Query.getValue();
       this.importacionDestinadosDonacioService.guardarTramite(STATE).subscribe({
         next: () => {
