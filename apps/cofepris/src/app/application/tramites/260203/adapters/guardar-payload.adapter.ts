@@ -5,19 +5,19 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Tramite260204State } from '../estados/stores/tramite260204Store.store';
+import { Tramite260203State } from '../estados/stores/tramite260203Store.store';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuardarAdapter_260204 {
+export class GuardarAdapter_260203 {
   /**
    * Convierte del estado de Akita al formato de payload de API usando las mismas claves
    * @param state El estado actual de Akita
    * @returns Payload formateado para la API
    */
-  static toFormPayload(state: Tramite260204State): unknown {
+  static toFormPayload(state: Tramite260203State): unknown {
     return {
       "solicitante": {
         "rfc": "AAL0409235E6",
@@ -39,7 +39,7 @@ export class GuardarAdapter_260204 {
         },
       },
       "solicitud": {
-          "discriminatorValue": 260204,
+          "discriminatorValue": 260203,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
