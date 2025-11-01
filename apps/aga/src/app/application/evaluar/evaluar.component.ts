@@ -188,6 +188,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   opcionesDisponibles: string[] = [];
 
   /**
+   * Tramites en los que se mostrará el combo tipo de requerimiento
+   * @property {string[]} tramitesTipoReq
+   */
+  tramitesTipoReq: string[] = ["5701"];
+
+  /**
    * @property {string} conformidadDictamen
    * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
    */
@@ -314,6 +320,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tabs!: TabsResponse;
 
   /**
+   * Bandera que indica si se debe mostrar el combo de tipo de requerimiento.
+   * @property {boolean} showTipoRequerimiento
+   */
+  showTipoRequerimiento: boolean = false;
+
+  /**
    * @property {Array<{id: number, nombre: string}>} tabsOpcionEvaluacion
    * @description Almacena las opciones de evaluación disponibles para las pestañas.
  */
@@ -388,7 +400,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-
+    this.showTipoRequerimiento = this.tramitesTipoReq.includes(this.tramite.toString());
     this.getEvaluacionTramite();
     this.getTabs();
   }

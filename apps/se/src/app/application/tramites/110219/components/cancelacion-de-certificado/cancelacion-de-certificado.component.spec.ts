@@ -55,6 +55,8 @@ describe('CancelacionDeCertificadoComponent', () => {
     fixture = TestBed.createComponent(CancelacionDeCertificadoComponent);
     component = fixture.componentInstance;
     component.solicitudState = {
+      columnasTabla: [],
+      idSolicitud: 1,
       numeroCertificado: '123',
       tratado: [],
       pais: [],
@@ -119,22 +121,22 @@ describe('CancelacionDeCertificadoComponent', () => {
   });
 
   it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-    component.cancelacionForm = new FormBuilder().group({
-      validacionForm: new FormBuilder().group({})
+    component.validacionForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({}),
     });
     component.soloLectura = true;
-    jest.spyOn(component.cancelacionForm, 'disable');
+    jest.spyOn(component.validacionForm, 'disable');
     jest.spyOn(component, 'donanteDomicilio');
     component.guardarDatosFormulario();
     expect(component.donanteDomicilio).toHaveBeenCalled();
 
     component.soloLectura = false;
-    jest.spyOn(component.cancelacionForm, 'enable');
+    jest.spyOn(component.validacionForm, 'enable');
     component.guardarDatosFormulario();
   });
 
   it('should patch value and call setValoresStore in cambioFechaInicial', () => {
-    component.cancelacionForm = new FormBuilder().group({
+    component.validacionForm = new FormBuilder().group({
       validacionForm: new FormBuilder().group({
         fechaInicial: ['']
       })
@@ -145,7 +147,7 @@ describe('CancelacionDeCertificadoComponent', () => {
   });
 
   it('should patch value and call setValoresStore in cambioFechaFinal', () => {
-    component.cancelacionForm = new FormBuilder().group({
+    component.validacionForm = new FormBuilder().group({
       validacionForm: new FormBuilder().group({
         fechaFinal: ['']
       })
@@ -155,16 +157,16 @@ describe('CancelacionDeCertificadoComponent', () => {
     expect(component.setValoresStore).toHaveBeenCalledWith(component.validacionForm, 'fechaFinal', 'setFechaFinal');
   });
 
-  it('should mark all as touched if cancelacionForm is invalid in validarDestinatarioFormulario', () => {
-    component.cancelacionForm = new FormBuilder().group({
+  it('should mark all as touched if validacionForm is invalid in validarDestinatarioFormulario', () => {
+    component.validacionForm = new FormBuilder().group({
       validacionForm: new FormBuilder().group({
         numeroCertificado: ['', Validators.required]
       })
     });
-    jest.spyOn(component.cancelacionForm, 'markAllAsTouched');
-    component.cancelacionForm.setErrors({ invalid: true });
+    jest.spyOn(component.validacionForm, 'markAllAsTouched');
+    component.validacionForm.setErrors({ invalid: true });
     component.validarDestinatarioFormulario();
-    expect(component.cancelacionForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.validacionForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should set estaBuscando to true in alBuscarClic', () => {
@@ -174,13 +176,13 @@ describe('CancelacionDeCertificadoComponent', () => {
   });
 
   it('should call certificadoService.getTratadoData and set tratadoCatalogo.catalogos in getTratadoData', () => {
-    component.getTratadoData();
+    component.getTratadoData({ clave: '1', descripcion: 'Tratado' });
     expect(certificadoServiceMock.getTratadoData).toHaveBeenCalled();
     expect(component.tratadoCatalogo.catalogos).toBeDefined();
   });
 
   it('should call certificadoService.getTratadoData and set paisCatalogo.catalogos in getPaisdata', () => {
-    component.getPaisdata();
+    component.getPaisdata('1');
     expect(certificadoServiceMock.getTratadoData).toHaveBeenCalled();
     expect(component.paisCatalogo.catalogos).toBeDefined();
   });
@@ -206,7 +208,7 @@ describe('CancelacionDeCertificadoComponent', () => {
   });
 
   it('should return validacionForm', () => {
-    component.cancelacionForm = new FormBuilder().group({
+    component.validacionForm = new FormBuilder().group({
       validacionForm: new FormBuilder().group({})
     });
     expect(component.validacionForm).toBeTruthy();
@@ -214,6 +216,8 @@ describe('CancelacionDeCertificadoComponent', () => {
 
   it('should set up forms in donanteDomicilio', () => {
     component.solicitudState = {
+      columnasTabla: [],
+      idSolicitud: 1,
       numeroCertificado: '123',
       tratado: [],
       pais: [],
@@ -243,7 +247,7 @@ describe('CancelacionDeCertificadoComponent', () => {
       correoElectronico: '',
     };
     component.donanteDomicilio();
-    expect(component.cancelacionForm).toBeTruthy();
+    expect(component.validacionForm).toBeTruthy();
   });
 
   it('should emit dataEvent with 3 in emitirEventoClick', () => {

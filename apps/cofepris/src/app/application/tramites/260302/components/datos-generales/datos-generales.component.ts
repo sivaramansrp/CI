@@ -219,7 +219,7 @@ export class DatosGeneralesComponent implements OnDestroy, OnInit {
      * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
      * @returns {string | number | undefined | string[]} - Valor del campo especificado.
      */
-    public obtenerValor(field: keyof Destinatario): string | number | undefined | string[] {
+    public obtenerValor(field: keyof Destinatario): string | number | undefined | string[] | Catalogo {
       return this.datoSeleccionado?.[field as keyof Destinatario] ?? '';
     }
 

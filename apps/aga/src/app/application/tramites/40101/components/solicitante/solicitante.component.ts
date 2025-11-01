@@ -1,6 +1,10 @@
-import * as mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { ApiResponseSolicitante } from '../../models/registro-muestras-mercancias.model';
+import { Tramite40101Query } from '../../estado/tramite40101.query';
+import { Tramite40101Service } from '../../estado/tramite40101.service';
+import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
 /**
  * Componente para gestionar el formulario del solicitante.
  */
@@ -9,13 +13,21 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit, OnDestroy {
   /**
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
 
-  solicitudData = mockData;
+  /**
+   * Datos del solicitante obtenidos del estado.
+   */
+  solicitudData = {} as ApiResponseSolicitante['datos'];
+
+  /**
+  * Subject para destruir las suscripciones y evitar fugas de memoria de los datos del solicitante.
+  */
+  private destroy$ = new Subject<void>();
 
   /**
    * Constructor para inyectar las dependencias necesarias.
@@ -23,7 +35,7 @@ export class SolicitanteComponent implements OnInit {
    */
   // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService, private tramite40101Service: Tramite40101Service, private tramite40101Query: Tramite40101Query) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -31,7 +43,6 @@ export class SolicitanteComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-
     this.solicitudForm = this.fb.group({
       rfc: [''],
       denominacion: [''],
@@ -49,9 +60,15 @@ export class SolicitanteComponent implements OnInit {
       lada: [''],
       telefono: [''],
     });
-    
-    this.solicitudData = mockData;
-    this.setFormValues();
+
+    this.modificarTerrestreService.obtenerDatosSolicitante().pipe(takeUntil(this.destroy$)).subscribe((data: ApiResponseSolicitante) => {
+      this.tramite40101Service.updateSolicitante(data.datos);
+    });
+
+    this.tramite40101Query.solicitanteData$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      this.solicitudData = data;
+      this.setFormValues();
+    })
   }
 
   /**
@@ -69,19 +86,24 @@ export class SolicitanteComponent implements OnInit {
    */
   setFormValues(): void {
     const RFC = this.solicitudForm.get('rfc');
-    RFC?.setValue(this.solicitudData?.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(this.solicitudData?.denominacion);
-    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.actividadEconomica);
-    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.correoElectronico);
-    this.solicitudForm.get('pais')?.setValue(this.solicitudData?.pais);
-    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData?.codigoPostal);
-    this.solicitudForm.get('estado')?.setValue(this.solicitudData?.estado);
-    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData?.municipioOAlcadia);
-    this.solicitudForm.get('localidad')?.setValue(this.solicitudData?.localidad);
-    this.solicitudForm.get('colonia')?.setValue(this.solicitudData?.colonia);
-    this.solicitudForm.get('calle')?.setValue(this.solicitudData?.calle);
-    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData?.numeroExterior);
-    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData?.numeroInterior);
-    this.solicitudForm.get('telefono')?.setValue(this.solicitudData?.telefono);
+    RFC?.setValue(this.solicitudData.solicitante?.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(this.solicitudData.solicitante?.razon_social);
+    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData?.solicitante?.descripcion_giro);
+    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData?.solicitante?.correo_electronico);
+    this.solicitudForm.get('pais')?.setValue(this.solicitudData?.solicitante?.domicilio?.pais);
+    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData?.solicitante?.domicilio?.codigo_postal);
+    this.solicitudForm.get('estado')?.setValue(this.solicitudData?.solicitante?.domicilio.estado);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData?.solicitante?.domicilio.municipio);
+    this.solicitudForm.get('localidad')?.setValue(this.solicitudData?.solicitante?.domicilio.localidad);
+    this.solicitudForm.get('colonia')?.setValue(this.solicitudData?.solicitante?.domicilio.colonia);
+    this.solicitudForm.get('calle')?.setValue(this.solicitudData?.solicitante?.domicilio.calle);
+    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData?.solicitante?.domicilio.numero_exterior);
+    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData?.solicitante?.domicilio.numero_interior);
+    this.solicitudForm.get('telefono')?.setValue(this.solicitudData?.solicitante?.domicilio.telefono);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

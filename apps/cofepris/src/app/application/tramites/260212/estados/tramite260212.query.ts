@@ -38,7 +38,29 @@ export class Tramite260212Query extends Query<Tramite260212State> {
   selectedLlaveDePago$=this.select((state)=>state.llaveDePago)
   selectedFechaDePago$=this.select((state)=>state.setFechaDePago)
   selectedImporteDePago$ = this.select((state)=>state.importeDePago)
+  public getFabricanteTablaDatos$ = this.select(
+    (state) => state.fabricanteTablaDatos
+  );
+  public getDestinatarioFinalTablaDatos$ = this.select(
+    (state) => state.destinatarioFinalTablaDatos
+  );
+  
+  /**
+   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
+   * Observable que selecciona los datos de la tabla de proveedores.
+   */
+  public getProveedorTablaDatos$ = this.select(
+    (state) => state.proveedorTablaDatos
+  );
+    /**
+   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
+   * Observable que selecciona los datos de la tabla de facturadores.
+   */
+  public getFacturadorTablaDatos$ = this.select(
+    (state) => state.facturadorTablaDatos
+  );
 constructor(private tramiteStore: Tramite260212Store) {
     super(tramiteStore);
   }
+  
 }
