@@ -95,12 +95,14 @@ export class GuardarAdapter_260209 {
       },
       gridTerceros_TIPERS_FAB: state.fabricanteTablaDatos.map((fabricante) => {
         return {
-          idPersonaSolicitud: '',
-          ideTipoTercero: '',
-          personaMoral: fabricante.tipoPersona === 'Moral' ? '1' : '0',
-          booleanExtranjero: fabricante.nacionalidad === 'Extranjero' ? '1' : '0',
-          booleanFisicaNoContribuyente: '0',
-          denominacion: fabricante.razonSocial,
+          idPersonaSolicitud: "",
+          ideTipoTercero: "",
+          personaMoral: fabricante.tipoPersona === "Moral" ? "1" : "0",
+          booleanExtranjero: fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
+          booleanFisicaNoContribuyente: "0",
+          denominacion: fabricante.tipoPersona === "Moral"
+            ? fabricante.razonSocial
+            : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
           razonSocial: fabricante.razonSocial,
           rfc: fabricante.rfc,
           curp: fabricante.curp,
@@ -109,34 +111,49 @@ export class GuardarAdapter_260209 {
           apellidoMaterno: fabricante.segundoApellido,
           telefono: fabricante.telefono,
           correoElectronico: fabricante.correoElectronico,
-          actividadProductiva: '',
-          actividadProductivaDesc: '',
-          descripcionGiro: '',
-          numeroRegistro: '',
+          actividadProductiva: "",
+          actividadProductivaDesc: "",
+          descripcionGiro: "",
+          numeroRegistro: "",
           domicilio: {
             calle: fabricante.calle,
             numeroExterior: fabricante.numeroExterior,
             numeroInterior: fabricante.numeroInterior,
-            pais: { clave: '', nombre: fabricante.pais },
-            colonia: { clave: '', nombre: fabricante.colonia },
-            delegacionMunicipio: { clave: '', nombre: fabricante.municipioAlcaldia },
-            localidad: { clave: '', nombre: fabricante.localidad },
-            entidadFederativa: { clave: '', nombre: fabricante.entidadFederativa },
-            informacionExtra: '',
+            pais: {
+              clave: fabricante.paisObj?.clave,
+              nombre: fabricante.paisObj?.descripcion
+            },
+            colonia: {
+              clave: fabricante.coloniaObj?.clave,
+              nombre: fabricante.coloniaObj?.descripcion
+            },
+            delegacionMunicipio: {
+              clave: fabricante.municipioAlcaldiaObj?.clave,
+              nombre: fabricante.municipioAlcaldiaObj?.descripcion
+            },
+            localidad: {
+              clave: fabricante.localidadObj?.clave,
+              nombre: fabricante.localidadObj?.descripcion
+            },
+            entidadFederativa: {
+              clave: fabricante.entidadFederativaObj?.clave,
+              nombre: fabricante.entidadFederativaObj?.descripcion
+            },
+            informacionExtra: "",
             codigoPostal: fabricante.codigoPostal,
             descripcionColonia: fabricante.colonia
           },
-          idSolicitud: '0'
+          idSolicitud: "0"
         }
       }),
       gridTerceros_TIPERS_DES: state.destinatarioFinalTablaDatos.map((destinatario) => {
         return {
-          idPersonaSolicitud: '',
-          ideTipoTercero: 'TIPERS.FAB',
-          personaMoral: destinatario.tipoPersona === 'Moral' ? '1' : '0',
-          booleanExtranjero: '',
-          booleanFisicaNoContribuyente: '0',
-          denominacion: 'LABORATORIOS PISA S.A. DE C.V.',
+          idPersonaSolicitud: "",
+          ideTipoTercero: "TIPERS.FAB",
+          personaMoral: destinatario.tipoPersona === "Moral" ? "1" : "0",
+          booleanExtranjero: "",
+          booleanFisicaNoContribuyente: "0",
+          denominacion: "LABORATORIOS PISA S.A. DE C.V.",
           razonSocial: destinatario.razonSocial,
           rfc: destinatario.rfc,
           curp: destinatario.curp,
@@ -145,33 +162,48 @@ export class GuardarAdapter_260209 {
           apellidoMaterno: destinatario.segundoApellido,
           telefono: destinatario.telefono,
           correoElectronico: destinatario.correoElectronico,
-          actividadProductiva: '',
-          actividadProductivaDesc: '',
-          descripcionGiro: '',
-          numeroRegistro: '',
+          actividadProductiva: "",
+          actividadProductivaDesc: "",
+          descripcionGiro: "",
+          numeroRegistro: "",
           domicilio: {
             calle: destinatario.calle,
             numeroExterior: destinatario.numeroExterior,
             numeroInterior: destinatario.numeroInterior,
-            pais: { clave: '', nombre: destinatario.pais },
-            colonia: { clave: '', nombre: destinatario.colonia },
-            delegacionMunicipio: { clave: '', nombre: destinatario.municipioAlcaldia },
-            localidad: { clave: '', nombre: destinatario.localidad },
-            entidadFederativa: { clave: '', nombre: 'Ciudad de México' },
-            informacionExtra: '',
+            pais: {
+              clave: destinatario.paisObj?.clave,
+              nombre: destinatario.paisObj?.descripcion
+            },
+            colonia: {
+              clave: destinatario.coloniaObj?.clave,
+              nombre: destinatario.coloniaObj?.descripcion
+            },
+            delegacionMunicipio: {
+              clave: destinatario.municipioObj?.clave,
+              nombre: destinatario.municipioObj?.descripcion
+            },
+            localidad: {
+              clave: destinatario.localidadObj?.clave,
+              nombre: destinatario.localidadObj?.descripcion
+            },
+            entidadFederativa: {
+              clave: "",
+              nombre: ""
+            },
+            informacionExtra: "",
             codigoPostal: destinatario.codigoPostal,
             descripcionColonia: destinatario.colonia
           },
-          idSolicitud: '0'
+          idSolicitud: "0"
         }
       }),
       gridTerceros_TIPERS_PVD: state.proveedorTablaDatos.map((proveedor) => {
         return {
-          idPersonaSolicitud: '',
-          ideTipoTercero: '',
-          personaMoral: proveedor.tipoPersona === 'Moral' ? '1' : '0',
-          booleanExtranjero: '',
-          booleanFisicaNoContribuyente: '',
+          idPersonaSolicitud: "",
+          ideTipoTercero: "",
+          personaMoral: proveedor.tipoPersona === "Moral" ? "1" : "0",
+          booleanExtranjero: "",
+          booleanFisicaNoContribuyente: "",
           denominacion: proveedor.razonSocial,
           razonSocial: proveedor.razonSocial,
           rfc: proveedor.rfc,
@@ -181,33 +213,48 @@ export class GuardarAdapter_260209 {
           apellidoMaterno: proveedor.segundoApellido,
           telefono: proveedor.telefono,
           correoElectronico: proveedor.correoElectronico,
-          actividadProductiva: '',
-          actividadProductivaDesc: '',
-          descripcionGiro: '',
-          numeroRegistro: '',
+          actividadProductiva: "",
+          actividadProductivaDesc: "",
+          descripcionGiro: "",
+          numeroRegistro: "",
           domicilio: {
             calle: proveedor.calle,
             numeroExterior: proveedor.numeroExterior,
             numeroInterior: proveedor.numeroInterior,
-            pais: { clave: '', nombre: proveedor.pais },
-            colonia: { clave: '', nombre: proveedor.colonia },
-            delegacionMunicipio: { clave: '', nombre: proveedor.municipioAlcaldia },
-            localidad: { clave: '', nombre: proveedor.localidad },
-            entidadFederativa: { clave: '', nombre: proveedor.entidadFederativa },
-            informacionExtra: '',
+            pais: {
+              clave: proveedor.paisObj?.clave,
+              nombre: proveedor.paisObj?.descripcion
+            },
+            colonia: {
+              clave: "",
+              nombre: ""
+            },
+            delegacionMunicipio: {
+              clave: "",
+              nombre: ""
+            },
+            localidad: {
+              clave: "",
+              nombre: ""
+            },
+            entidadFederativa: {
+              clave: "",
+              nombre: ""
+            },
+            informacionExtra: "",
             codigoPostal: proveedor.codigoPostal,
             descripcionColonia: proveedor.colonia
           },
-          idSolicitud: '0'
+          idSolicitud: "0"
         }
       }),
       gridTerceros_TIPERS_FAC: state.facturadorTablaDatos.map((facturador) => {
         return {
-          idPersonaSolicitud: '',
-          ideTipoTercero: '',
-          personaMoral: facturador.tipoPersona === 'Moral' ? '1' : '0',
-          booleanExtranjero: '',
-          booleanFisicaNoContribuyente: '',
+          idPersonaSolicitud: "",
+          ideTipoTercero: "",
+          personaMoral: facturador.tipoPersona === "Moral" ? "1" : "0",
+          booleanExtranjero: "",
+          booleanFisicaNoContribuyente: "",
           denominacion: facturador.razonSocial,
           razonSocial: facturador.razonSocial,
           rfc: facturador.rfc,
@@ -217,24 +264,39 @@ export class GuardarAdapter_260209 {
           apellidoMaterno: facturador.segundoApellido,
           telefono: facturador.telefono,
           correoElectronico: facturador.correoElectronico,
-          actividadProductiva: '',
-          actividadProductivaDesc: '',
-          descripcionGiro: '',
-          numeroRegistro: '',
+          actividadProductiva: "",
+          actividadProductivaDesc: "",
+          descripcionGiro: "",
+          numeroRegistro: "",
           domicilio: {
             calle: facturador.calle,
             numeroExterior: facturador.numeroExterior,
             numeroInterior: facturador.numeroInterior,
-            pais: { clave: '', nombre: facturador.pais },
-            colonia: { clave: '', nombre: facturador.colonia },
-            delegacionMunicipio: { clave: '', nombre: facturador.municipioAlcaldia },
-            localidad: { clave: '', nombre: facturador.localidad },
-            entidadFederativa: { clave: '', nombre: facturador.entidadFederativa },
-            informacionExtra: '',
+            pais: {
+              clave: facturador.paisObj?.clave,
+              nombre: facturador.paisObj?.descripcion
+            },
+            colonia: {
+              clave: "",
+              nombre: ""
+            },
+            delegacionMunicipio: {
+              clave: "",
+              nombre: ""
+            },
+            localidad: {
+              clave: "",
+              nombre: ""
+            },
+            entidadFederativa: {
+              clave: "",
+              nombre: ""
+            },
+            informacionExtra: "",
             codigoPostal: facturador.codigoPostal,
             descripcionColonia: facturador.colonia
           },
-          idSolicitud: '0'
+          idSolicitud: "0"
         }
       }),
       pagoDeDerechos: {
