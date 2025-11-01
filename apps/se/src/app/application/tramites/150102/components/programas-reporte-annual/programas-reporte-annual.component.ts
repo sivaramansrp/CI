@@ -1,10 +1,10 @@
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConfiguracionColumna, doDeepCopy, esObject, esValidArray, esValidObject, getValidDatos, LoginQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ENVIRONMENT, LoginQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,doDeepCopy, esValidArray, esValidObject, getValidDatos, } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
@@ -24,6 +24,7 @@ import { SolicitudService } from '../../services/solicitud.service';
     TituloComponent,
     BsDatepickerModule,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './programas-reporte-annual.component.html',
   styleUrl: './programas-reporte-annual.component.scss',
@@ -101,6 +102,13 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Se utiliza para identificar o acceder al programa seleccionado en operaciones de edición o visualización.
    */
   indiceDeRegistroDelPrograma!: number;
+    /**
+        * @public
+        * @property {Notificacion} nuevaNotificacion
+        * @description Representa una nueva notificación que se utilizará en el componente.
+        * @command Este campo debe ser inicializado antes de su uso.
+        */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -247,7 +255,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    */
   obtenerProgramasReporte(): void {
     // this.rfcValor
-    const RFC = 'AAL0409235E6';
+    const RFC = ENVIRONMENT.RFC;
     this.solicitudService
       .obtenerProgramasReporte(RFC)
       .pipe(takeUntil(this.destroyed$))
@@ -303,6 +311,24 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
         return `${MONTH}-${YEAR}`;
     }
     return '';
+  }
+
+    /**
+   * @method showAlert
+   * @description Shows a general alert notification
+   */
+  public showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: 'Programa seleccionado',
+      mensaje: 'Se ha seleccionado un programa correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
 

@@ -1,9 +1,9 @@
 import { AcusePageComponent } from './components/acuse-page/acuse-page.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 import { SolicitudDeReporteComponent } from './pages/solicitud-de-reporte/solicitud-de-reporte.component';
-import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   {

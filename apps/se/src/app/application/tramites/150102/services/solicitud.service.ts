@@ -1,15 +1,14 @@
+import { Observable,catchError, map, throwError } from 'rxjs';
 import { BienesProducidos } from '../models/programas-reporte.model';
 import { GuardarDatosFormulario } from '../models/programas-reporte.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { ProgramasReporte } from '../models/programas-reporte.model';
-import { ReporteFechas } from '../models/programas-reporte.model';
-import { Solicitud150102State, Solicitud150102Store } from '../estados/solicitud150102.store';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { PROC_150102 } from '../servers/api-route';
+import { ReporteFechas } from '../models/programas-reporte.model';
 import { Solicitud150102Query } from '../estados/solicitud150102.query';
-import { API_ROUTES } from '../../../shared/servers/api-route';
+import { Solicitud150102Store } from '../estados/solicitud150102.store';
+
 
 /**
  * @description Servicio encargado de realizar solicitudes HTTP relacionadas con el reporte anual.
@@ -103,13 +102,20 @@ export class SolicitudService {
   }
 
 
-    guardar(body: Record<string, unknown>): Observable<JSONResponse> {
-      return this.http.post(PROC_150102.GUARDAR, body).pipe(
-        map((response) => response as JSONResponse),
-        catchError(() => {
-          const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_150102.GUARDAR}`);
-          return throwError(() => ERROR);
-        })
-      );
-    }
+  /**
+   * Envía una solicitud POST para guardar los datos proporcionados para el trámite actual.
+   *
+   * @param body - La carga útil de la solicitud como un registro de pares clave-valor.
+   * @returns Un Observable que emite el JSONResponse del backend.
+   * @throws Emite un Observable de error si la solicitud HTTP falla.
+   */
+  guardar(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post(PROC_150102.GUARDAR, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_150102.GUARDAR}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
 }

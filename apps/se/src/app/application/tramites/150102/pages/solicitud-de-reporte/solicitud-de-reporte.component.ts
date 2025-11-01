@@ -4,26 +4,27 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   DatosPasos,
-  doDeepCopy,
   ERROR_FORMA_ALERT,
-  esValidObject,
   JSONResponse,
   ListaPasosWizard,
   PasoFirmaComponent,
   WizardComponent,
   WizardService,
+  doDeepCopy,
+  esValidObject
 } from '@libs/shared/data-access-user/src';
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild,inject } from '@angular/core';
+import { ERROR_FORMA_ALERT_DOS, ERROR_FORMA_ALERT_QUAD, ERROR_FORMA_ALERT_TRES } from '../../../150101/enums/registro-solicitud-anual.enum';
+import { Observable,Subject,catchError, from, map, of, switchMap, take, takeUntil } from 'rxjs';
+import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from '../datos/datos.component';
 import { PAGO_DE_DERECHOS } from '../../constantes/solicitud150102.enum';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
-import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
-import { catchError, from, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
-import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 
 /**
  * @description Interfaz que define la estructura y propiedades de una acción asociada a un botón interactivo.
@@ -126,14 +127,55 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
     txtBtnSig: 'Continuar', // Texto del botón para avanzar
   };
 
+  /** Estado de la sección de consulta */
   public consultaState!: ConsultaioState;
-
+  /** Servicio para manejar la lógica del asistente (wizard) */
   wizardService = inject(WizardService);
-
-  public esFormaValido!: boolean;
-
+  /** Estado de validación del formulario */
   public formErrorAlert = ERROR_FORMA_ALERT;
+  // new form validation
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  public esFormaValido: boolean = false;
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValidoDos: boolean = false;
 
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+    esFormaValidoTres: boolean = false;
+      /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+      esFormaValidoCuatro: boolean = false;
+
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertDos = ERROR_FORMA_ALERT_DOS;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertTres = ERROR_FORMA_ALERT_TRES;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertQuad = ERROR_FORMA_ALERT_QUAD;
+
+  
+  /**
+   * Inicializa una nueva instancia del componente.
+   * 
+   * @param tramiteQuery - Servicio de consulta para gestionar y recuperar datos relacionados con el trámite 150102.
+   * @param _solicitudSvc - Servicio para manejar operaciones relacionadas con las solicitudes.
+   * @param tramiteStore - Almacén para gestionar el estado del trámite 150102.
+   * @param toastrService - Servicio para mostrar notificaciones tipo toast al usuario.
+   * @param consultaQuery - Servicio de consulta para recuperar datos de consulta.
+   * @param servicioDeFormularioService - Servicio para gestionar operaciones relacionadas con formularios.
+   */
   constructor(
       private tramiteQuery: Solicitud150102Query,
       private _solicitudSvc: SolicitudService,
@@ -143,6 +185,16 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
       private servicioDeFormularioService: ServicioDeFormularioService,
   ) {}
 
+  
+  /**
+   * Método del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
+   * 
+   * Se suscribe al observable `selectConsultaioState$` de `consultaQuery` para actualizar la propiedad local `consultaState`
+   * cada vez que el estado cambia, y se da de baja automáticamente cuando el componente se destruye.
+   * 
+   * También se suscribe al observable `seleccionarSolicitud$` de `tramiteQuery` para actualizar la propiedad local
+   * `solicitud150102State` con la solicitud actual, y se da de baja al destruirse el componente.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -158,68 +210,73 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
       });
   }
 
+
   /**
-   * Genera una cadena HTML con los mensajes de validación del componente de datos anuales.
+   * Maneja la navegación entre pasos en un componente wizard de varios pasos según la acción proporcionada.
    *
-   * Recorre la lista de mensajes almacenados en `mensajesDeValidacion` y construye
-   * un bloque HTML para ser insertado en la interfaz, normalmente en un componente de alerta.
+   * @param e - Un objeto de tipo `AccionBoton` que contiene el índice del paso actual (`valor`) y la acción de navegación (`accion`), que puede ser 'cont' (continuar) o 'ant' (anterior).
    *
-   * @returns HTML en forma de string con los mensajes de error formateados.
+   * @remarks
+   * - Valida el formulario actual antes de permitir la navegación al siguiente paso si el formulario no está en modo solo lectura o actualización.
+   * - Si el formulario no es válido, marca el formulario como tocado y previene la navegación.
+   * - Utiliza el observable `shouldNavigate$` para determinar si se permite la navegación al siguiente paso.
+   * - Actualiza el índice del paso actual (`indice`) y el estado relacionado (`datosPasos.indice`) según corresponda.
+   * - Llama a los métodos de navegación apropiados del wizard (`siguiente` para avanzar, `atras` para retroceder).
+   *
+   * @example
+   * ```typescript
+   * getValorIndice({ valor: 2, accion: 'cont' });
+   * ```
    */
-  generarValidacionHTML(): string {
-    const SOLICITUD_COMPONENT =
-      this.datosComponent?.datosDeReporteAnnualComponent;
-    const ERRORES_HTML = SOLICITUD_COMPONENT.mensajesDeValidacion
-      .map(
-        (message, index) => `
-        <div class="validation-wrapper">
-          <span class="validation-index">${index + 1}.</span>
-          <span class="validation-message">${message}</span>
-        </div>`
-      )
-      .join('');
-    const HTML = `
-    <div class="validation-title">Corrija los siguientes errores:</div>
-    ${ERRORES_HTML}
-  `;
-    return HTML;
-  }
-
-
-
-
   getValorIndice(e: AccionBoton): void {
       if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
       const NEXT_INDEX =
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
-      if (!this.consultaState.readonly && e.accion === 'cont') {
-        // if (!this.consultaState.update) {
-        //   this.esFormaValido = this.verificarLaValidezDelFormulario();
-        //   if (!this.esFormaValido) {
-        //     this.indice = e.valor;
-        //     this.datosPasos.indice = e.valor;
-        //     this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
-        //     this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
-        //     this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
-        //     this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
-        //     return;
-        //   }
-        // }
-        this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-      } else if (e.accion === 'cont') {
+        let noError=0;
+    if (this.indice === 1 ) {
+      noError = this.datosComponent.validarTodosLosFormularios();
+    }
+    if (noError===1) {
+      this.esFormaValido = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===2) {
+      this.esFormaValidoDos = true;
+      this.esFormaValido = false;
+      this.esFormaValidoTres = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===3) {
+      this.esFormaValidoTres = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===4) {
+      this.esFormaValidoTres = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if(noError===5) {
+      this.esFormaValido = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    } 
+    this.esFormaValido = false;
+    this.esFormaValidoDos = false;
+    this.esFormaValidoTres = false;
+    if (e.accion === 'cont') {
         this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
             if (shouldNavigate) {
@@ -239,40 +296,19 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
       }
     }
 }
+
   /**
-   * @description Método que actualiza el índice del paso actual dentro del asistente.
-   * Ejecuta una acción dependiendo del valor de `e.accion` ('cont' para continuar, otro para retroceder).
+   * Guarda los datos actuales de la solicitud enviando un payload al servicio backend.
    *
-   * @param {AccionBoton} evento Objeto que contiene la acción y el valor del índice.
+   * Construye un objeto payload a partir del estado actual (`solicitud150102State`), incluyendo
+   * información sobre fracciones, sectores, reporte anual, observaciones, descripción y otros
+   * campos relevantes. El método luego llama al método de servicio `_solicitudSvc.guardar` para persistir
+   * los datos. La operación está envuelta en una Promesa, que se resuelve con la respuesta del backend si
+   * es exitosa, o se rechaza con un error si la operación falla.
+   *
+   * @returns {Promise<JSONResponse>} Una promesa que se resuelve con la respuesta del backend (`JSONResponse`)
+   * si la operación de guardado es exitosa, o se rechaza con un error si falla.
    */
-  // getValorIndice(evento: AccionBoton): void {
-  //   if (evento.valor > 0 && evento.valor < 5) {
-  //     if (this.indice === 1 && this.datosComponent.indice === 3) {
-  //       const SOLICITUD_COMPONENT =
-  //         this.datosComponent?.datosDeReporteAnnualComponent;
-  //       this.esValido =
-  //         SOLICITUD_COMPONENT?.validarTotalExportaciones() ?? false;
-  //     }
-
-  //     // if (!this.esValido) {
-  //     //   this.mensajeError = this.generarValidacionHTML();
-  //     //   this.datosPasos.indice = 1;
-  //     //   return;
-  //     // }
-
-  //     this.indice = evento.valor;
-  //     if (evento.accion === 'cont') {
-  //       this.shouldNavigate$().subscribe((shouldNavigate) => {
-  //         if (shouldNavigate) {
-  //          // this.wizardComponent.siguiente();
-  //         }
-  //       });
-  //     } else {
-  //       this.wizardComponent.atras();
-  //     }
-  //   }
-  // }
-
   public guardar():Promise<JSONResponse> {
     const SOLICITUDE = this.solicitud150102State;
     const [OBSERVACIONES, DESCRIPCION] = SOLICITUDE.idProgramaCompuesto.split(",");
@@ -306,7 +342,7 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
       },
       "observaciones": OBSERVACIONES,
       "descripcion": DESCRIPCION,
-      "id_solcitud": 202846846,
+      "id_solcitud": 0,
       "tipoDeSolicitud": "guardar",
       "solicitante": {
           "rfc": "AAL0409235E6",
@@ -332,7 +368,6 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
             const RESPONSE = doDeepCopy(response);
             this.tramiteStore.actualizarIdSolicitud(RESPONSE?.datos?.id_solicitud ?? 0);
             this.guardarIdSolicitud = RESPONSE?.datos?.id_solicitud ?? 0;
-            //this.wizardComponent.siguiente();
             resolve(response);
           }
         },error=>{
@@ -341,6 +376,19 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
       });
   }
 
+  /**
+   * Intenta guardar el estado actual de la solicitud y determina si se debe proceder con la navegación.
+   *
+   * Este método realiza los siguientes pasos:
+   * 1. Emite el estado actual de `solicitud150102State`.
+   * 2. Llama al método asíncrono `guardar()` para persistir el estado.
+   * 3. Procesa la respuesta:
+   *    - Si el código de respuesta es '00', muestra un mensaje de éxito y retorna `true`.
+   *    - De lo contrario, muestra un mensaje de error y retorna `false`.
+   * 4. Maneja cualquier error durante la operación de guardado registrando el error, mostrando un mensaje de error y retornando `false`.
+   *
+   * @returns Un `Observable<boolean>` que emite `true` si la operación de guardado fue exitosa y se debe proceder con la navegación, o `false` en caso contrario.
+   */
    private shouldNavigate$(): Observable<boolean> {
     return of(this.solicitud150102State).pipe(
       take(1),
@@ -363,6 +411,21 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
     );
   }
 
+   /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+  public alCambiarPestana(): void {
+      this.esFormaValido = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+  }
+
+  /**
+   * Método del ciclo de vida que se llama cuando el componente es destruido.
+   * Emite un valor y completa el subject `destroyNotifier$` para notificar a cualquier suscripción
+   * que limpie recursos y prevenga fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
