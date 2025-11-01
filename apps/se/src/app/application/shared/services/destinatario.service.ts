@@ -19,7 +19,7 @@ export class DestinatarioService {
 
   /** Obtiene la lista de países de destino para el trámite especificado */
   getPaisDestino(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.paisesCatalogo(tramite).pipe(
+    return this.catalogoServices.paisesDestinoCatalogo(tramite).pipe(
         map(res => res?.datos ?? [])
       );
   }

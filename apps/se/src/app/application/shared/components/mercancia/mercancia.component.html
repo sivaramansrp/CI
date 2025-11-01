@@ -16,7 +16,7 @@
       <form [formGroup]="mercanciaForm">
         <div class="row mb-3">
           @if(FRACCION_ARANCELARIA.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <label class="form-label" for="fraccionArancelaria"
               >Fracción arancelaria:
             </label>
@@ -28,7 +28,7 @@
             />
           </div>
           } @if(CLASIFICACION_NALADI.includes(idProcedimiento)) {
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label class="form-label" for="rfc">Clasificación NALADI:</label>
             <input
               type="text"
@@ -37,7 +37,7 @@
             />
           </div>
           } @if(CLASIFICACION_NALADISA_1993.includes(idProcedimiento)) {
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="naladisa93">Clasificación NALADISA 1993:</label>
             <input
               type="text"
@@ -55,7 +55,7 @@
             />
           </div>
           } @if(CLASIFICACION_NALADISA_2002.includes(idProcedimiento)) {
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="naladisa2002">Clasificación NALADISA 2002:</label>
             <input
               type="text"
@@ -64,7 +64,7 @@
             />
           </div>
           }
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="nombreComercialMercancia"
               >Nombre comercial de la mercancía (igual que en la
               factura):</label
@@ -76,7 +76,7 @@
             />
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="nombreTecnico">Nombre técnico:</label>
             <input
               type="text"
@@ -86,7 +86,7 @@
           </div>
 
           @if(CRITERIO_PARA_TRATO_PREFERENCIAL.includes(idProcedimiento)) {
-          <div class="col-md-6 mt-2">
+          <div class="col-md-6 col-sm-12 mt-2">
             <label for="criterioParaTratoPreferencial"
               >Criterio para trato preferencial:</label
             >
@@ -97,7 +97,7 @@
             />
           </div>
           } @if(NORMA_ORIGEN.includes(idProcedimiento)) {
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="normaOrigen">Norma origen:</label>
             <input
               type="text"
@@ -106,7 +106,7 @@
             />
           </div>
           } @if(NOMBRE_EN_INGLES.includes(idProcedimiento)) {
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <label for="nombreIngles">Nombre en inglés:</label>
             <input
               type="text"
@@ -115,7 +115,7 @@
             />
           </div>
           } @if(CRITERIO_PARA_CLASIFICATION.includes(idProcedimiento)) {
-          <div class="col-md-6 mt-2">
+          <div class="col-md-6 col-sm-12 mt-2">
             <label for="criterioParaClasificacion"
               >Criterio para clasificación:</label
             >
@@ -127,7 +127,7 @@
           </div>
           } @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) { }
           @if(VALOR_CONTENIDO_REGIONAL.includes(idProcedimiento)) {
-          <div class="col-md-6 mt-2">
+          <div class="col-md-6 col-sm-12 mt-2">
             <label for="valorDeContenidoRegional"
               >Valor de contenido regional:</label
             >
@@ -138,7 +138,7 @@
             />
           </div>
           } @if(OTRAS_INSTANCIAS.includes(idProcedimiento)){
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <label for="otrasInstancias">Otras instancias:</label>
             <input
               type="text"
@@ -147,7 +147,7 @@
             />
           </div>
           } @if(CRITERIO_PARA_CONFERIR_ORIGEN.includes(idProcedimiento)) {
-          <div class="col-md-4 mt-2">
+          <div class="col-md-4 col-sm-12 mt-2">
             <label for="criterioParaConferirOrigen"
               >Criterio para conferir origen:</label
             >
@@ -158,7 +158,7 @@
             />
           </div>
           } @if(MARCA.includes(idProcedimiento)){
-          <div class="col-md-8">
+          <div class="col-md-8 col-sm-12">
             <div class="form-group">
               <label for="marca">Marca:</label>
               <input
@@ -185,7 +185,7 @@
           </div>
           }
 
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <label for="cantidad"
               >Cantidad<span
                 [ngClass]="{
@@ -218,7 +218,7 @@
             }
           </div>
           @if(UNIDAD_MEDIDA_COMERCIALIZACION.includes(idProcedimiento)){
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <app-catalogo-select
               [catalogo]="umcMedida || []"
               [label]="'UMC'"
@@ -229,7 +229,7 @@
             ></app-catalogo-select>
           </div>
           } @if(UMC.includes(idProcedimiento)){
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <app-catalogo-select
               [catalogo]="optionsUMC"
               [label]="'UMC'"
@@ -240,7 +240,7 @@
             ></app-catalogo-select>
           </div>
           } @if(VALOR_MERCANCIA.includes(idProcedimiento)) {
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <label for="valorMercancia"
               >Valor de la mercancía (dólares)<span
                 [ngClass]="{
@@ -273,7 +273,7 @@
             }
           </div>
           }
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <label for="complementoDescripcion"
               >Complemento de la descripción<span
                 [ngClass]="{
@@ -306,7 +306,7 @@
           </div>
 
           @if(FECHA_FACTURA.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <input-fecha
               [datos]="fechaFactura"
               [deshabilitarFuturas]="true"
@@ -323,7 +323,7 @@
             }
           </div>
           } @if(FECHA_DE_PAGO.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <input-fecha
               [datos]="fechaDePago"
               [deshabilitarFuturas]="true"
@@ -339,7 +339,7 @@
             }
           </div>
           } @if(FECHA_FACTURA_REFERENCIA.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <input-fecha
               [datos]="fechaFacturaReferencia"
               [deshabilitarFuturas]="true"
@@ -356,7 +356,7 @@
             }
           </div>
           } @if(N_FACTURA_REFERENCIA.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <label for="numeroFactura">N° factura / Referencia:</label>
             <input
               type="text"
@@ -375,7 +375,7 @@
             }
           </div>
           } @if(N_FACTURA.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <label for="numeroFactura"
               >N° factura<span
                 [ngClass]="{
@@ -403,7 +403,7 @@
             }
           </div>
           } @if(TIPO_DE_FACTURA.includes(idProcedimiento)) {
-          <div class="col-md-4 mr-2">
+          <div class="col-md-4 col-sm-12 mr-2">
             <app-catalogo-select
               [catalogo]="factura || []"
               [label]="'Tipo de factura'"
@@ -414,7 +414,7 @@
             ></app-catalogo-select>
           </div>
           } @if(TIPO_DE_FACTURA_REFERENCIA.includes(idProcedimiento)) {
-          <div class="col-md-4 mr-2">
+          <div class="col-md-4 col-sm-12 mr-2">
             <app-catalogo-select
               [catalogo]="factura || []"
               [label]="'Tipo de factura / Referencia'"
@@ -425,7 +425,7 @@
             ></app-catalogo-select>
           </div>
           } @if(NUMERO_DE_SERIE.includes(idProcedimiento)) {
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-12">
             <label for="numeroDeSerie">Número de serie:</label>
             <input
               type="text"

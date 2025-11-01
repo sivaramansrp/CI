@@ -76,7 +76,7 @@
     class="btn btn-danger col-auto mt-3 me-3 mb-3"
     (click)="regresarPlantas();"
   >
-    Regresar a Plantas
+    Regresar a plantas
   </button>
 
   <button
@@ -87,3 +87,10 @@
     Guardar
   </button>
 </div>
+@if (notificacionAgregarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicios">
+  </lib-notificaciones>
+</section>
+}

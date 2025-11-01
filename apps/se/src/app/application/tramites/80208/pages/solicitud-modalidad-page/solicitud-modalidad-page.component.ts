@@ -7,12 +7,12 @@
  * @import { WizardComponent } from '@ng-mf/data-access-user';
  */
 
+import { AVISO, DatosPasos, Usuario, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import {
   CambioModalidadState,
   CambioModalidadStore,
 } from '../../estados/tramite80208.store';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, Usuario, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import {
   ERROR_FORMA_ALERT,
   ERROR_SERVICIOS_ALERT,
@@ -67,7 +67,7 @@ export class SolicitudModalidadPageComponent implements OnInit {
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del asistente (wizard).
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild("wizardRef") wizardComponent!: WizardComponent;
 
   /**
    * @property {number} indice
@@ -90,6 +90,12 @@ export class SolicitudModalidadPageComponent implements OnInit {
    * URL de la página actual.
    */
   public solicitudState!: CambioModalidadState;
+
+  /**
+     * Valor del aviso de privacidad.
+     * @type {string}
+     */
+      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
 
   /**
    * Referencia al componente del primer paso.

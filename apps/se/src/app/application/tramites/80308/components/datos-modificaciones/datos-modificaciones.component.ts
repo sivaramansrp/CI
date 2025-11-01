@@ -1,13 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosModificacion } from '../../models/plantas-consulta.model';
+import { DatosModificacion } from '../../../../shared/models/modificacion.model';
+import { EliminacionModificacionComponent } from '../../../../shared/components/modificacion/modificacion.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -16,16 +11,12 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './datos-modificaciones.component.html',
   styleUrls: ['./datos-modificaciones.component.scss'],
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [
+    EliminacionModificacionComponent
+  ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class DatosModificacionesComponent implements OnDestroy {
-  /**
-   * Representa el grupo de formularios para los datos generales.
-   * @type {FormGroup}
-   */
-  formularioDatosGenerales!: FormGroup;
-
   /**
    * Un Subject para notificar la limpieza de observables y evitar fugas de memoria.
    * @type {Subject<void>}
@@ -37,7 +28,13 @@ export class DatosModificacionesComponent implements OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  public esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {DatosModificacion} datosModificacion
+   * @description Datos relacionados con la modificación del trámite.
+   */
+  datosModificacion!: DatosModificacion;
 
   /**
    * Constructor del componente.
@@ -55,56 +52,16 @@ export class DatosModificacionesComponent implements OnDestroy {
    *
    * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor, para evitar fugas de memoria.
    */
-  constructor(public fb: FormBuilder, public modificionService: ModificacionSolicitudeService, private toastr: ToastrService, private consultaioQuery: ConsultaioQuery){
+  constructor(public modificionService: ModificacionSolicitudeService, private toastr: ToastrService, private consultaioQuery: ConsultaioQuery){
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.iniciarFormulario();
+        this.esFormularioSoloLectura = seccionState.readonly;
         this.cargarDatos();
-        this.inicializarEstadoFormulario();
       })
     )
     .subscribe();
-  }
-
-
-  /**
-   * Inicializa el formulario con los valores predeterminados y los campos deshabilitados.
-   * 
-   */
-  iniciarFormulario(): void {
-    this.formularioDatosGenerales = this.fb.group({
-      rfc: [{ value: '', disabled: true }],
-      representacionFederal: [{ value: '', disabled: true }],
-      tipoModalidad: [{ value: '', disabled: true }],
-      descripcionModalidad: [{ value: '', disabled: true }],
-    });
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.formularioDatosGenerales.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.formularioDatosGenerales.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
-  }
-
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    }
   }
 
   /**
@@ -118,7 +75,7 @@ export class DatosModificacionesComponent implements OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         (data: DatosModificacion) => {
-          this.formularioDatosGenerales.patchValue(data);
+          this.datosModificacion = data;
         },
         () => {
           this.toastr.error('Error al cargar los estados');

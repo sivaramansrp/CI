@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CAMPO_DE_DESTINATARIO, CAMPO_DE_DESTINATARIOS } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, TituloComponent, VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TituloComponent, VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinatarioService } from '../../services/destinatario.service';
@@ -75,11 +75,6 @@ export class DestinatarioComponent
    * @type {Catalogo[]}
    */
   @Input() paisDestin!: Catalogo[];
-  /**
-   * Propiedad de entrada que recibe los datos de los tratados/acuerdos para el certificado.
-   * @type {Catalogo[]}
-   */
-  paisDestinDestinatario!: Catalogo[];
 
   /**
    * Evento que se emite cuando se selecciona un país de destino
@@ -152,6 +147,7 @@ export class DestinatarioComponent
 
   // Indica si los campos de destinatarios están activos
   camposDestinatarios = false;
+  circulacion?: Catalogo[];
 
   /**
    * Constructor del componente
@@ -159,7 +155,8 @@ export class DestinatarioComponent
    */
   constructor(
     private fb: FormBuilder,
-    public destinatarioService: DestinatarioService
+    public destinatarioService: DestinatarioService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // La función se ejecutará después de un segundo.
     setTimeout(() => {
@@ -184,7 +181,9 @@ export class DestinatarioComponent
     );
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
-    this.getPaisDestino();
+    if (this.paisDestino) {
+      this.getPaisDestino();
+    }
   }
 
   /** Método público para marcar todos los campos como tocados y mostrar errores */
@@ -193,6 +192,17 @@ export class DestinatarioComponent
       this.formDestinatario.markAllAsTouched();
     }
   }
+
+    /**
+     * Valida un campo del formulario.
+     *
+     * @param {FormGroup} form - El formulario reactivo.
+     * @param {string} field - El nombre del campo a validar.
+     * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+     */
+    isValid(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) || false;
+    }
 
   ngAfterViewInit(): void {
     if (this.paisDestino) {
@@ -286,11 +296,15 @@ export class DestinatarioComponent
    * Obtiene la lista de países de destino desde el servicio
    */
   getPaisDestino(): void {
-    this.destinatarioService
-      .getPaisDestino(this.idProcedimiento.toString())
-      .subscribe((data) => {
-        this.paisDestinDestinatario = data as Catalogo[];
-      });
+    this.destinatarioService.getPaisDestino(this.idProcedimiento.toString()).subscribe((data) => {
+      this.circulacion = data as Catalogo[];
+    });
+  }
+
+  get paisDestinDestinatario(): Catalogo[]{
+    return this.circulacion?.length
+      ? this.circulacion
+      : this.paisDestin;
   }
   /**
    * Establece valores en el store y emite eventos relacionados con el formulario.

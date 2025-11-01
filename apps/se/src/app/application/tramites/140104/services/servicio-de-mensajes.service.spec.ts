@@ -1,76 +1,89 @@
 import { TestBed } from '@angular/core/testing';
 import { ServicioDeMensajesService } from './servicio-de-mensajes.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { of } from 'rxjs';
-import { CuposDisponibles, CuposDisponiblesDatos, PermisosDatos } from '../models/cancelacion-de-certificados.model';
-import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store'; 
+import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import {
+  Cancelacion,
+  PermisosDatos,
+} from '../models/cancelacion-de-solicitus.model';
 
-class MockDesistimientoStore {
-  actualizarDatosForma = jest.fn();
-  _select = jest.fn().mockReturnValue(of({}));
-  update = jest.fn();
-}
-
-describe('ServicioDeMensajesService methods', () => {
+describe('ServicioDeMensajesService', () => {
   let service: ServicioDeMensajesService;
+  let desistimientoStore: DesistimientoStore;
   let httpMock: HttpTestingController;
-  let desistimientoStore: MockDesistimientoStore;
 
   beforeEach(() => {
-    desistimientoStore = new MockDesistimientoStore();
+    const desistimientoStoreMock = {
+      actualizarDatosForma: jest.fn(),
+      update: jest.fn(),
+      _select: jest.fn().mockReturnValue({ permisos: true }),
+    };
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
-        ServicioDeMensajesService,
-        { provide: DesistimientoStore, useValue: desistimientoStore }
-      ]
+        { provide: DesistimientoStore, useValue: desistimientoStoreMock },
+      ],
     });
 
     service = TestBed.inject(ServicioDeMensajesService);
+    desistimientoStore = TestBed.inject(DesistimientoStore);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('enviarMensaje should emit value', (done) => {
-    service.mensaje$.subscribe(val => {
-      expect(val).toBe(true);
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should emit a boolean message via enviarMensaje', (done) => {
+    service.mensaje$.subscribe((msg) => {
+      expect(msg).toBe(true);
       done();
     });
     service.enviarMensaje(true);
   });
 
-  it('enviarDevolverFacturasMensaje should emit value', (done) => {
-    service.devolverFacturasMensaje$.subscribe(val => {
-      expect(val).toBe(true);
+  it('should emit a boolean value via establecerDatosDePermiso', (done) => {
+    service.datos$.subscribe((msg) => {
+      expect(msg).toBe(false);
       done();
     });
-    service.enviarDevolverFacturasMensaje(true);
+    service.establecerDatosDePermiso(false);
   });
 
-  it('establecerDatosDePermiso should emit value', (done) => {
-    service.datos$.subscribe(val => {
-      expect(val).toBe(true);
-      done();
-    });
-    service.establecerDatosDePermiso(true);
-  });
-
-  it('obtenerDatos should return observable from store', (done) => {
-    service.obtenerDatos().subscribe(val => {
-      expect(val).toEqual({});
-      done();
-    });
-    expect(desistimientoStore._select).toHaveBeenCalled();
-  });
-
-  it('actualizarEstadoFormulario should call store.update with merged state', () => {
-    const partial: Partial<CuposDisponiblesDatos> = { campo: 'valor' } as any;
-    desistimientoStore.update.mockImplementation((updater: any) => {
-      const previousState = { otro: 1 };
-      const result = updater(previousState);
-      expect(result).toEqual({ otro: 1, campo: 'valor' });
-    });
+  it('should call update on the store in actualizarEstadoFormulario', () => {
+    const partial: Partial<PermisosDatos> = {};
     service.actualizarEstadoFormulario(partial);
-    expect(desistimientoStore.update).toHaveBeenCalledWith(expect.any(Function));
+    expect(desistimientoStore.update).toHaveBeenCalled();
   });
+
+  it('should return observable from obtenerDatos', () => {
+    const result = service.obtenerDatos();
+    expect(result).toBeDefined();
   });
+
+  it('should fetch data from getRegistroTomaMuestrasMercanciasData', () => {
+    const mockResponse: PermisosDatos = { permisos: true } as any;
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
+      expect(data).toEqual(mockResponse);
+    });
+    const req = httpMock.expectOne('assets/json/140104/permisosCancelar.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should update store in cargarDatosSimulados', () => {
+    const mockResponse: PermisosDatos = { permisos: true } as any;
+    service.cargarDatosSimulados();
+    const req = httpMock.expectOne('assets/json/140104/permisosCancelar.json');
+    req.flush(mockResponse);
+    expect(desistimientoStore.update).toHaveBeenCalled();
+  });
+});

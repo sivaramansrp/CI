@@ -11,28 +11,24 @@ import { IntroPermisoComponent } from './intro-permiso.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
 @Injectable()
-class MockServicioDeMensajesService {
-   mensaje$ = observableOf({});
-  devolverFacturasMensaje$ = observableOf({});
-  obtenerMostrarAlerta = jest.fn(() => observableOf(false))
-}
+class MockServicioDeMensajesService { }
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
@@ -43,13 +39,13 @@ describe('IntroPermisoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         IntroPermisoComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: ServicioDeMensajesService, useClass: MockServicioDeMensajesService }
       ]
@@ -61,7 +57,7 @@ describe('IntroPermisoComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () { };
     fixture.destroy();
   });
 
@@ -72,7 +68,6 @@ describe('IntroPermisoComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.servicioDeMensajesService = component.servicioDeMensajesService || {};
     component.servicioDeMensajesService.mensaje$ = observableOf({});
-    component.servicioDeMensajesService.devolverFacturasMensaje$ = observableOf({});
     component.ngOnInit();
 
   });

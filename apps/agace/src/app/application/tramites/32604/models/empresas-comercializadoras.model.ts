@@ -26,6 +26,15 @@ export interface RecibirNotificaciones {
  */
 export interface EnlaceOperativo {
   /**
+   * Ciudad y estado del enlace operativo (de datos externos).
+   */
+  ciudadestado?: string;
+
+  /**
+   * Cargo del enlace operativo (de datos externos).
+   */
+  agregarEnlaceCargo?: string;
+  /**
    * RFC del enlace operativo.
    * Es un identificador único asignado a la persona a nivel fiscal.
    */
@@ -133,6 +142,15 @@ export interface EnlaceOperativo {
  * Este campo es opcional y sirve como identificador único para la persona que realiza la solicitud.
  */
 export interface RepresentanteLegal {
+  /**
+   * Ciudad y estado del representante legal (de datos externos).
+   */
+  ciudadestado?: string;
+
+  /**
+   * Cargo del representante legal (de datos externos).
+   */
+  agregarEnlaceCargo?: string;
   /**
    * ID de la persona solicitante.
    * Este campo es opcional y sirve como identificador único para la persona que realiza la solicitud.
@@ -421,6 +439,10 @@ export interface Domicilios {
    */
   instalacionPerfilMensajeria: string;
 
+    /**
+   * Perfil de la instalación dedicada a mensajería y paquetería.
+   */
+  instalacionPerfilAlmacen: string;
   /**
    * Número exterior del domicilio.
    */
@@ -474,6 +496,19 @@ export interface Inventarios {
    * Hace referencia al Anexo 24 correspondiente en el contexto del inventario.
    */
   anexo24: string;
+}
+
+/**
+ * Interface para el miembro de empresa desde el archivo JSON.
+ */
+export interface MiembroEmpresa {
+  id: number;
+  caracterDe: string;
+  rfc: string;
+  instalacionesPrincipales: string;
+  registroFederalContribuyentes: string;
+  nacionalidad: string;
+  nombreCompleto: string;
 }
 
 /** Identificador del miembro en la empresa */

@@ -43,10 +43,12 @@
       ></app-paso-dos>
       }}
     </div>
+
     <btn-continuar
       [datos]="datosPasos"
       (continuarEvento)="getValorIndice($event)"
     ></btn-continuar>
+    
     @if(1 === indice) {
     <div class="mt-5">
       <div class="mt-5">
