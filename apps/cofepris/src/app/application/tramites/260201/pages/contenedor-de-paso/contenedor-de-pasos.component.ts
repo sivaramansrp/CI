@@ -213,7 +213,20 @@ export class ContenedorDePasosComponent implements OnInit {
         // return;
       }
 
-      const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
+      this.postGuardarDatos(e);
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+    }
+  }
+
+  /**
+   * Método que se ejecuta después de guardar los datos.
+   * Actualmente no realiza ninguna acción.
+   */
+  postGuardarDatos(e: AccionBoton): void {
+    const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
       let shouldNavigate = false;
       this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
@@ -255,11 +268,6 @@ export class ContenedorDePasosComponent implements OnInit {
           this.toastrService.error(response.mensaje);
         }
       });
-    }else{
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
-    }
   }
 
   /**
