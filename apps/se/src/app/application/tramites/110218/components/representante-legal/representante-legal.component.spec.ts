@@ -3,7 +3,7 @@ import { RepresentanteLegalComponent } from './representante-legal.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { CertificadoTecnicoJaponService } from '../../service/certificadotecnicojapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -6,7 +6,6 @@ import { ID_PROCEDIMIENTO } from '../../../constants/tratamientos-especiales.enu
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260207Store } from '../../../estados/tramite260207Store.store';
-import { ViewChild } from '@angular/core';
 /**
  * @component PagoDeDerechosContenedoraComponent
  * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
@@ -22,14 +21,20 @@ import { ViewChild } from '@angular/core';
 })
 export class PagoDeDerechosContenedoraComponent implements OnDestroy{
   /**
+   * @property {PagoDeDerechosComponent} pagoDeDerechosComponent
+   * @description
+   * Referencia al componente hijo `PagoDeDerechosComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
+  /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
 
   public pagoDerechos: PagoDerechosFormState;
-
-  @ViewChild(PagoDeDerechosComponent)
-        pagoDeDerechosComponent!: PagoDeDerechosComponent;
       
     
   /**
@@ -90,6 +95,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
     this.tramiteStore.updatePagoDerechos(event);
   }
 
+  /**
+   * @method validarContenedor
+   * @description
+   * Valida el contenedor delegando la validación al componente hijo.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
   validarContenedor(): boolean {
     return (
       this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false

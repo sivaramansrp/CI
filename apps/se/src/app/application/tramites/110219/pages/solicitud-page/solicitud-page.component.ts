@@ -148,6 +148,28 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
+   * Convierte una cadena de fecha en formato 'DD/MM/YYYY' a formato ISO string con zona horaria.
+   *
+   * @param dateString - Cadena de fecha en formato 'DD/MM/YYYY'.
+   * @returns La fecha convertida en formato ISO string. Si la cadena es inválida o vacía, retorna la fecha actual en formato ISO.
+   */
+  private convertDateToISOString(dateString: string): string {
+    if (!dateString) {
+      return new Date().toISOString();
+    }
+    
+    // Divide la cadena de fecha por '/'
+    const DATEPARTS = dateString.split('/');
+    if (DATEPARTS.length !== 3) {
+      return new Date().toISOString();
+    }
+    
+    const [DAY, MONTH, YEAR] = DATEPARTS;
+    const DATE = new Date(parseInt(YEAR, 10), parseInt(MONTH, 10) - 1, parseInt(DAY, 10));
+    return DATE.toISOString();
+  }
+
+  /**
    * Inicializa el componente y ajusta la lista de pasos del asistente,
    * excluyendo el paso con índice 2 y reasignando el índice del paso 3 a 2.
    */
@@ -311,8 +333,8 @@ export class SolicitudPageComponent implements OnInit {
         medioTransporte: '',
         observaciones: '',
         lugar: '',
-        fechaExpedicion: item.fechaInicial || '',
-        fechaVencimiento: item.fechaFinal || '',
+        fechaExpedicion: this.convertDateToISOString(item.fechaInicial || ''),
+        fechaVencimiento: this.convertDateToISOString(item.fechaFinal || ''),
         fechaCancelacion: '2025-10-21T06:16:22.491Z',
         precisa: '',
         presenta: '',
