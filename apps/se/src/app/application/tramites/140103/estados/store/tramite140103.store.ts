@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { ConfiguracionItem } from '../../tramites/140103/models/detalle';
+import { ConfiguracionItem } from '../../models/detalle';
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { Injectable } from '@angular/core';
 /**
