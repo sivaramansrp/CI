@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MenuItem } from '../../interfaces/menu-item.interface';
-import { CONSULTAS_ROUTES } from '@/routes.constants';
+import { CONSULTAS_ROUTES } from '../../../routes.constants';
 
 @Component({
   selector: 'app-consultas',

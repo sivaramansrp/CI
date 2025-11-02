@@ -13,6 +13,16 @@ sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
   /* mapped paths to share */
 ]);
 
+// Determinar dinámicamente la publicPath para que los chunks se carguen desde el servidor correcto
+// function getPublicPath() {
+//   if (process.env.NODE_ENV === 'production') {
+//     // En producción, usar la URL del servidor de producción
+//     return 'https://privados.v30.ultrasist.net/';
+//   }
+//   // En desarrollo, usar localhost con el puerto asignado
+//   return 'http://localhost:4225/';
+// }
+
 module.exports = {
   output: {
     uniqueName: 'privados',
@@ -37,7 +47,7 @@ module.exports = {
       name: 'privados',
       filename: 'remoteAppEntry.js',
       exposes: {
-        './Routes': 'apps/privados/src/app/remote-entry/entry.routes.ts'
+        './Routes': './apps/privados/src/app/remote-entry/entry.routes.ts'
       },
       shared: share({
         '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },

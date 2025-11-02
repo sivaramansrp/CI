@@ -8,11 +8,11 @@ export const routes: Routes = [
       import('./features/auth/components/login.component').then((c) => c.LoginComponent),
   },
   {
-    path: APP_ROUTES.VUCEM,
-    loadChildren: () => import('./store-front/store-front.routes'),
+    path: '',
+    loadChildren: () => import('./store-front/store-front.routes').then(m => m.storeFrontRoutes),
   },
   {
     path: '**',
-    redirectTo: APP_ROUTES.LOGIN,
+    redirectTo: '',
   },
 ];

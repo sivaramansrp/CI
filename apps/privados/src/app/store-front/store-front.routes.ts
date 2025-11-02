@@ -8,12 +8,17 @@ export const storeFrontRoutes: Routes = [
     component: StoreFrontLayoutTsComponent,
     children: [
       {
+        path: '',
+        redirectTo: STORE_FRONT_ROUTES.HOME,
+        pathMatch: 'full'
+      },
+      {
         path: STORE_FRONT_ROUTES.HOME,
         loadComponent: () => import('./pages/home/home.page').then((c) => c.HomePage),
       },
       {
         path: STORE_FRONT_ROUTES.CONSULTAS,
-        loadChildren: () => import('../features/consultas/consultas.routes'),
+        loadChildren: () => import('../features/consultas/consultas.routes').then((m) => m.consultasRoutes),
       },
       {
         path: '**',
@@ -21,10 +26,6 @@ export const storeFrontRoutes: Routes = [
           import('./pages/not-found/not-found.component').then((c) => c.NotFoundComponent),
       },
     ],
-  },
-  {
-    path: '**',
-    redirectTo: '',
   },
 ];
 

@@ -164,6 +164,15 @@ export const appRoutes: Route[] = [
       }).then((m) => m.AppStpsModule),
   },
   {
+    path: 'privados',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${ENVIRONMENT.REMOTE_APPS.privados}/remoteAppEntry.js`,
+        remoteName: 'privados',
+        exposedModule: './Routes',
+      }).then((m) => m.REMOTE_ROUTES),
+  },
+  {
     path: 'bandeja-de-solicitudes',
     component: BandejaDeSolicitudesComponent,
   },

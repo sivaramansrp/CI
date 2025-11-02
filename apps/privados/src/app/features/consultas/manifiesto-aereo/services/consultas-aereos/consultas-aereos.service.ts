@@ -61,7 +61,7 @@ export class ConsultasAereosService {
           this.sessionStorage.set('isManifest', isManifest);
           this.messages.set(response.datos.consultaMensajeGrids);
         }),
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener mensajes'));
         }),
@@ -82,7 +82,7 @@ export class ConsultasAereosService {
       .post<GenerarReporteCompletoResponse>(`${this.baseUrl}/reportes`, requestBody)
       .pipe(
         map((resp) => ({ success: resp.codigo === '00', msg: resp.datos })),
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo generar el reporte'));
         }),
@@ -106,7 +106,7 @@ export class ConsultasAereosService {
           window.URL.revokeObjectURL(url);
         }),
         map(() => ({ success: true })),
-        catchError((error) => {
+        catchError((error: any) => {
           console.error('Error fetching', error);
           return throwError(() => new Error('No se pudo generar el archivo'));
         }),
@@ -123,7 +123,7 @@ export class ConsultasAereosService {
       })
       .pipe(
         map((resp) => resp.datos),
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener mensajes detalles'));
         }),
@@ -134,7 +134,7 @@ export class ConsultasAereosService {
     return this.http
       .get<ThirdPartyDetailsReponse>(`${this.baseUrl}/mensajes-detalle/${this.idHeader()}/terceros`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener detalles de terceros'));
         }),
@@ -152,7 +152,7 @@ export class ConsultasAereosService {
         },
       )
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener medios de transporte'));
         }),
@@ -163,7 +163,7 @@ export class ConsultasAereosService {
     return this.http
       .get<MovementsResponse>(`${this.baseUrl}/mensajes-detalle/${this.idHeader()}/maniobras`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener maniobras'));
         }),
@@ -176,7 +176,7 @@ export class ConsultasAereosService {
         `${this.baseUrl}/mensajes-detalle/${this.idHeader()}/informacion-complementaria`,
       )
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener información complementaria'));
         }),
@@ -187,7 +187,7 @@ export class ConsultasAereosService {
     return this.http
       .get<DimensionsResponse>(`${this.baseUrl}/mensajes-detalle/${this.idHeader()}/dimensiones`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener dimensiones'));
         }),
@@ -198,7 +198,7 @@ export class ConsultasAereosService {
     return this.http
       .get<ShipmentResponse>(`${this.baseUrl}/mensajes-detalle/${this.idHeader()}/partidas`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener partidas'));
         }),
@@ -209,7 +209,7 @@ export class ConsultasAereosService {
     return this.http
       .get<GuidesResponse>(`${this.baseUrl}/mensajes-detalle/${this.idHeader()}/guias`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener guias'));
         }),
@@ -224,7 +224,7 @@ export class ConsultasAereosService {
         }/mensajes-detalle/${this.idHeader()}/detalle-informacion-documento-transporte`,
       )
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(
             () => new Error('No se pudo obtener detalle información del documento de transporte'),
@@ -237,7 +237,7 @@ export class ConsultasAereosService {
     return this.http
       .get<ContactsResponse>(`${this.baseUrl}/personas-iata/${this.idPerson()}/contactos`)
       .pipe(
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener contactos'));
         }),
@@ -251,7 +251,7 @@ export class ConsultasAereosService {
       )
       .pipe(
         map((response) => response),
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener la empresa transportista CAAT'));
         }),
@@ -265,7 +265,7 @@ export class ConsultasAereosService {
       )
       .pipe(
         map((response) => response),
-        catchError((error) => {
+        catchError((error: any) => {
           console.log('Error fetching ', error);
           return throwError(() => new Error('No se pudo obtener la empresa transportista IATA'));
         }),
