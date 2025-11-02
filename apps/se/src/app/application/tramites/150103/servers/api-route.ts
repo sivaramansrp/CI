@@ -51,3 +51,10 @@ export const PROC_150103 = {
  */
 export const API_POST_SOLICITUD = 'sat-t110223/solicitud/guardar';
 
+/**
+ * Ruta de la API para buscar productores exportador por RFC del solicitante.
+ * @param rfc RFC del solicitante a consultar.
+ * @returns {string} URL para la consulta de productores exportador.
+ */
+export const BUSCAR_PROGRAMAS = (rfc: string): string => `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-programas?rfc=${rfc}`;
+

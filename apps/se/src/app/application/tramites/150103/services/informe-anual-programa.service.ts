@@ -1,7 +1,7 @@
 import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
 import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
 import { Solicitud150103Query } from '../estados/solicitud150103.query';
-import { PROC_150103 } from '../servers/api-route';
+import { BUSCAR_PROGRAMAS, PROC_150103 } from '../servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -32,17 +32,17 @@ export class InformeAnualProgramaService {  /**
     this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
    
   }
-  /**
-   * Obtiene los programas de reporte desde un archivo JSON.
-   * 
-   * Este método realiza una solicitud HTTP para obtener un arreglo de programas de reporte.
-   * @returns Un observable que emite un arreglo de objetos de tipo `ProgramasReporte`.
-   */
-  obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
-    return this.http.get<ProgramasReporte[]>(
-      'assets/json/150103/programas-reporte.json'
-    );
-  }
+  // /**
+  //  * Obtiene los programas de reporte desde un archivo JSON.
+  //  * 
+  //  * Este método realiza una solicitud HTTP para obtener un arreglo de programas de reporte.
+  //  * @returns Un observable que emite un arreglo de objetos de tipo `ProgramasReporte`.
+  //  */
+  // obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
+  //   return this.http.get<ProgramasReporte[]>(
+  //     'assets/json/150103/programas-reporte.json'
+  //   );
+  // }
 
   /**
    * Obtiene las fechas de inicio y fin del reporte desde un archivo JSON.
@@ -127,4 +127,13 @@ getRegistroData(): Observable<Solicitud150103State> {
   getAllState(): Observable<Solicitud150103State> {
     return this.solicitud150103Query.seleccionarSolicitud$;
   }
+
+  /**
+   * Obtiene la lista de programas para el reporte desde un archivo JSON local.
+   * @returns {Observable<Record<string, unknown>>} Observable que emite un arreglo de programas para el reporte.
+   */
+  obtenerProgramasReporte(rfc: string): Observable<Record<string, unknown>> {
+    return this.http.get<Record<string, unknown>>(BUSCAR_PROGRAMAS(rfc));
+  }
+
 }
