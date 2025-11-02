@@ -74,7 +74,6 @@ getRegistroData(): Observable<Solicitud150103State> {
   guardarDatosPost(payload: any): Observable<JSONResponse> {
     return this.httpService.post<JSONResponse>(PROC_150103.GUARDAR, { body: payload });
   }
-
   /**
    * Construye el objeto de datos del reporte basado en el estado actual.
    * @param data - Estado actual de la solicitud 150103.
@@ -82,19 +81,46 @@ getRegistroData(): Observable<Solicitud150103State> {
    */
   buildDatosReporte(data: Solicitud150103State): any {
     return {
-      fecha_inicio: data.inicio,
-      fecha_fin: data.fin,
-      folio_programa: data.folioPrograma,
-      modalidad: data.modalidad,
-      tipo_programa: data.tipoPrograma,
-      estatus: data.estatus,
-      ventas_totales: parseFloat(data.ventasTotales) || 0,
-      total_exportaciones: parseFloat(data.totalExportaciones) || 0,
-      total_importaciones: parseFloat(data.totalImportaciones) || 0,
-      saldo: parseFloat(data.saldo) || 0,
-      porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
+      rfc_solicitante: 'AAL0409235E6', // This should be obtained from user session
+      idSolicitud: data.idSolicitud || 0,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "EMPRESA EJEMPLO S.A. DE C.V.",
+        actividad_economica: "Actividad económica ejemplo",
+        correo_electronico: "contacto@empresa.com",
+        domicilio: {
+          pais: "México",
+          codigo_postal: "06700",
+          estado: "Ciudad de México",
+          municipio_alcaldia: "Cuauhtémoc",
+          localidad: "Centro",
+          colonia: "Roma Norte",
+          calle: "Av. Ejemplo",
+          numero_exterior: "123",
+          numero_interior: "Piso 1",
+          lada: "",
+          telefono: "123456"
+        }
+      },
+      reporte_anual: {
+        fecha_inicio: data.inicio,
+        fecha_fin: data.fin,
+        folio_programa: data.folioPrograma,
+        modalidad: data.modalidad,
+        tipo_programa: data.tipoPrograma,
+        estatus: data.estatus,
+        ventas_totales: parseFloat(data.ventasTotales) || 0,
+        total_exportaciones: parseFloat(data.totalExportaciones) || 0,
+        total_importaciones: parseFloat(data.totalImportaciones) || 0,
+        saldo: parseFloat(data.saldo) || 0,
+        porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
+      },
+      fracciones: [],
+      sectores: []
     };
-  }  /**
+  }
+  
+  /**
    * Obtiene todos los datos del estado almacenado en el store.
    * @returns Observable con todos los datos del estado.
    */
