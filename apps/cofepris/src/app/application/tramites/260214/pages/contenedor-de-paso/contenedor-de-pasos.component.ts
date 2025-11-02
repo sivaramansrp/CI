@@ -241,8 +241,8 @@ export class ContenedorDePasosComponent implements OnInit {
     if (e.accion === 'cont') {
       let isValid = true;
 
-      if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarPasoUno();
+      if (this.indice === 1) {
+        isValid = this.validarTodosFormulariosPasoUno();
       }
 
       if (!isValid) {
@@ -262,6 +262,7 @@ export class ContenedorDePasosComponent implements OnInit {
         };
 
         this.datosPasos.indice = this.indice;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
       const PAYLOAD = GuardarAdapter_260214.toFormPayload(this.storeData);
@@ -306,9 +307,6 @@ export class ContenedorDePasosComponent implements OnInit {
           this.toastrService.error(response.mensaje);
         }
       });
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.siguiente();
     }else{
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
@@ -342,6 +340,17 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarPasoUno();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 
   public static generarAlertaDeError(mensajes:string): string {
