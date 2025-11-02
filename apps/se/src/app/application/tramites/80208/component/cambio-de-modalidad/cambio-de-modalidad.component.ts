@@ -64,6 +64,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     FormsModule,
     NotificacionesComponent,
   ],
+  providers: [NotificacionesService],
 }) 
 
 /**
