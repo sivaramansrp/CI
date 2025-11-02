@@ -14,20 +14,29 @@ import {
   ListaPasosWizard,
   Notificacion,
   NotificacionesComponent,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
+  RegistroSolicitudService,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import {
   MENSAJE_DE_VALIDACION,
   PASOS,
   TITULOMENSAJE,
 } from '../../constants/medicos-uso.enum';
+import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { GuardarAdapter_260214 } from '../../adapters/guardar-payload.adapter';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -71,11 +80,13 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DatosDeLaSolicitudComponent,
     PagoDeDerechosComponent,
     AlertComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
   /**
    * Referencia al componente hijo `DatosDeLaSolicitudComponent`.
    *
@@ -157,6 +168,34 @@ export class ContenedorDePasosComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * @property {Tramite260202State} storeData
+   * @description Estado de la tienda para el trámite 260214.
+   */
+  storeData!: Tramite260214State;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
    * @property {DatosPasos} datosPasos
    * Configuración de los datos del wizard, como el número de pasos y los textos de los botones.
    */
@@ -166,6 +205,21 @@ export class ContenedorDePasosComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+   esFormaValido: boolean = false;
+
+  constructor( private registroSolicitudService: RegistroSolicitudService, private tramite260214Store: Tramite260214Store, private toastrService: ToastrService, private Tramite260214Query: Tramite260214Query) {
+  }
+
+  ngOnInit(): void {
+    this.Tramite260214Query.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+  }
 
   /**
    * @method seleccionaTab
@@ -193,6 +247,7 @@ export class ContenedorDePasosComponent {
 
       if (!isValid) {
         this.mostrarAlerta = true;
+        this.esFormaValido = true;
         this.MENSAJE_DE_ERROR = MENSAJE_DE_VALIDACION;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
@@ -209,15 +264,100 @@ export class ContenedorDePasosComponent {
         this.datosPasos.indice = this.indice;
         return;
       }
+      const PAYLOAD = GuardarAdapter_260214.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if(shouldNavigate) {
+          if(esValidObject(response) && esValidObject(response.datos)) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if(getValidDatos(DATOS.id_solicitud)) {
+              this.tramite260214Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            } else {
+              this.tramite260214Store.setIdSolicitud(0);
+            }
+          }
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor + 1;
+          }
+          this.toastrService.success(response.mensaje);
+          if (indiceActualizado > 0 && indiceActualizado < 5) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
+            }
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
       this.wizardComponent.siguiente();
-      return;
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
+  }
 
-    this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
   }
 
   /**
