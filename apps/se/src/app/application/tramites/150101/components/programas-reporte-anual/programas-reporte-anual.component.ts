@@ -1,7 +1,7 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { ConfiguracionColumna, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ENVIRONMENT, NotificacionesComponent, TablaDinamicaComponent, TituloComponent, doDeepCopy, getValidDatos } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
@@ -158,7 +158,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   ];
 
   // Valor de RFC de ejemplo
-  private loginRfc: string = 'AAL0409235E6';
+  private loginRfc: string = ENVIRONMENT.RFC;
 
   /**
    * @constructor
@@ -207,7 +207,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       )
       .subscribe();
 
-    this.obtenerReporteFechas();
     if (this.solicitud150101Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150101Query.getValue().solicitudDato ?? [];
     } else {
@@ -333,26 +332,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   }
 
   /**
-   * @description Método para obtener las fechas de inicio y fin del reporte.
-   * Actualiza el estado con las fechas obtenidas del servicio.
-   */
-  obtenerReporteFechas(): void {
-    this.solicitudService
-      .obtenerReporteFechas()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (respuesta: ReporteFechas) => {
-          this.solicitud150101Store.setReporteAnualFechaInicio(
-            respuesta.reporteAnualFechaInicio
-          );
-          this.solicitud150101Store.setReporteAnualFechaFin(
-            respuesta.reporteAnualFechaFin
-          );
-        },
-      });
-  }
-
-  /**
    * @method obtenerProgramasReporte
    * @description
    * Método para obtener la lista de programas de reporte anual desde el servicio.
@@ -366,6 +345,9 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (respuesta: Record<string, unknown>) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          this.solicitud150101Store.setReporteAnualFechaInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+          this.solicitud150101Store.setReporteAnualFechaFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
           const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
           if (Array.isArray(DATOS) && DATOS.length) {
             const PROGRAMAS = DATOS.map((item) => {
@@ -388,6 +370,16 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         this.solicitudDatos = [];
       },
       });
+  }
+
+  private formatDateToMonthYear(dateString: string): string {
+    if(getValidDatos(dateString)) {
+      const DATE = new Date(dateString);
+      const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+      const YEAR = DATE.getFullYear();
+      return `${MONTH}-${YEAR}`;
+    }
+    return '';
   }
 
   /**
