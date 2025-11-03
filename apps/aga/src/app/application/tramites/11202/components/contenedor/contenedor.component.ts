@@ -418,6 +418,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             this.solicitudForm.markAsUntouched();
             this.solicitudForm.markAsPristine();
             this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
+            this.solicitudForm.get('aduana')?.setValue(ADUANA);
             this.mostrarCampos();
             // this.mostrarBotonesBuscar = false;
           }
