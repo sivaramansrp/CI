@@ -4,6 +4,8 @@ import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-acce
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../constantes/datos-scian.enum';
 
@@ -103,6 +105,19 @@ export class ScianTablaComponent implements OnInit {
    */
   @Output() cerrarModal = new EventEmitter<void>();
 
+     /**
+   * @property {Subscription} subscription
+   * @description
+   * Administra las suscripciones activas en el componente para evitar fugas de memoria.
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para cancelar suscripciones activas al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente. Inicializa servicios e invoca la carga inicial de la lista SCiAN.
    * 
@@ -116,10 +131,8 @@ export class ScianTablaComponent implements OnInit {
     public datosSolicitudService: DatosSolicitudService,
     @Inject(BsModalService)
     private modalService: BsModalService,
-  ) {
-    // Carga la lista de SCiAN desde un archivo JSON a través del servicio.
-    this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'scianLista', '/cofepris/scianTabla.json');
-  }
+    private catalogoService: CatalogoServices
+  ) {}
 
   /**
    * Método de inicialización del componente.
@@ -127,6 +140,7 @@ export class ScianTablaComponent implements OnInit {
    * con base en el tipo de procedimiento.
    */
   ngOnInit(): void {
+    this.inicializarCatalogo(String(this.idProcedimiento));
     // Inicializa el formulario reactivo con controles y validaciones.
     this.scianForm = this.fb.group({
       clave: [this.obtenerValor('clave'), Validators.required],
@@ -140,6 +154,41 @@ export class ScianTablaComponent implements OnInit {
 
     this.disableDescripcion = this.idProcedimiento === 260201 ? true : false;
   }
+
+  /**
+   * Inicializa el catálogo SCIAN según el trámite proporcionado.
+   * Obtiene la lista de elementos SCIAN desde el servicio y la asigna a `scianLista`.
+   * 
+   * @param tramite - Identificador del trámite para filtrar el catálogo SCIAN.
+   */
+  inicializarCatalogo(tramite: string): void {
+    this.subscription.add(
+      this.catalogoService
+        .scianCatalogo(tramite)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+           map((datos) => {
+            const TRANSFORMED_DATOS = {
+              ...datos,
+              datos: (datos.datos ?? []).map((item: Catalogo) => ({
+                ...item,
+                scianDescription: item.descripcion,
+                descripcion: item.clave
+              }))
+            };
+            return TRANSFORMED_DATOS;
+          })
+        )
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.scianLista = DATOS;
+          }
+        })
+    );
+  }
+
   /**
    * Obtiene el valor de un campo específico en el estado del SCiAN.
    * @param campo - Clave del campo cuyo valor se desea obtener.
@@ -157,23 +206,10 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
    */
   claveSelecionada(selectedValue: Catalogo): void {
   this.restablecerMensaje();
-  this.scianNinoLista = this.scianLista.filter((ele) => ele.id === selectedValue.id);
 
-  if (selectedValue && selectedValue.id) {
-    const SELECTEDSCIAN = this.scianLista.find(item => 
-      item.id === selectedValue.id || item.descripcion === selectedValue.descripcion
-    );
-    
-    if (SELECTEDSCIAN) {
-      this.scianForm.patchValue({
-        scianNino: 'Default description value'
-      });
-    }
-  } else {
-    this.scianForm.patchValue({
-      scianNino: ''
-    });
-  }
+  this.scianForm.patchValue({
+    scianNino: selectedValue.scianDescription
+  });
 }
 
   /**
@@ -203,19 +239,10 @@ obtenerValor(campo: keyof TablaScianConfig): string | null {
     }
     
       const SCIAN_IDX: TablaScianConfig = {
-        clave: this.scianNinoLista[0].descripcion,
+        clave: this.scianForm.get('clave')?.value,
         descripcion: this.scianForm.get('scianNino')?.value
       }
-      if(this.idProcedimiento === 260201){
-        if(this.scianConfigDatos && this.scianConfigDatos.length > 0){
-          this.scianConfigDatos.push(SCIAN_IDX);
-          this.scianSeleccionadoSpecific.emit(this.scianConfigDatos);
-        }else{
-          this.scianSeleccionadoSpecific.emit(SCIAN_IDX);
-        }
-      }else{
-        this.scianSeleccionado.emit(SCIAN_IDX);
-      }
+      this.scianSeleccionado.emit(SCIAN_IDX);
       setTimeout(() => {
     this.cerrarModal.emit();
   }, 100);

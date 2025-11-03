@@ -1,8 +1,16 @@
 <app-terceros-relacionados
+[tramiteID]="'260206'"
 [fabricanteTablaDatos]="fabricanteTablaDatos"
 [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
 [proveedorTablaDatos]="proveedorTablaDatos"
 [facturadorTablaDatos]="facturadorTablaDatos"
+[elementosRequeridos]="elementosRequeridos"
+[formularioDeshabilitado]="esFormularioSoloLectura"
+(updateFabricanteTablaDatos)="addFabricantes($event)"
+(updateDestinatarioFinalTablaDatos)="addDestinatarios($event)"
+(updateProveedorTablaDatos)="addProveedores($event)"
+(updateFacturadorTablaDatos)="addFacturadores($event)"
+[estaOculto]="true"
 (fabricanteEventoModificar)="fabricanteEventoModificar($event)"
 (destinatarioEventoModificar)="destinatarioEventoModificar($event)"
 (proveedorEventoModificar)="proveedorEventoModificar($event)"
@@ -11,6 +19,5 @@
 (destinatarioEliminar)="eliminarDestinatario($event)"
 (proveedorEliminar)="eliminarProveedor($event)"
 (facturadorEliminar)="eliminarFacturador($event)"
-[formularioDeshabilitado]="esFormularioSoloLectura"
-[elementosRequeridos]="elementosRequeridos"
+#TercerosRelacionadosComponent
 ></app-terceros-relacionados>

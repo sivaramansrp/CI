@@ -1,28 +1,31 @@
-import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
-import { DesistimientoStore } from './desistimiento-de-permiso.store';
-import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
+import { Injectable } from '@angular/core';
+
+import { DesistimientoStore, Solicitud140104State } from './desistimiento-de-permiso.store';
+
 /**
- * Consulta (Query) para el manejo del estado relacionado con el trámite 140104.
- * 
- * Esta clase extiende de `Query` y proporciona selectores para acceder al estado
- * gestionado por `DesistimientoStore`. Está decorada con `@Injectable` para su
- * inyección a nivel raíz.
- * 
- * @example
- * // Selecciona el estado completo del trámite
- * DesistimientoQuery.selectTramite$.subscribe(state => { ... });
+ * Consulta para el estado de desistimiento de permiso.
+ * Proporciona selectores para acceder a los datos del estado.
  */
-@Injectable({ providedIn: 'root' })
-export class DesistimientoQuery extends Query<CuposDisponiblesDatos> {
-  // Constructor que inyecta el store correspondiente.
-  constructor(protected override store: DesistimientoStore) {
+@Injectable({
+    providedIn: 'root',
+})
+export class DesistimientoQuery extends Query<Solicitud140104State> {
+
+  /**
+   * Observable que selecciona y emite el estado completo de la solicitud.
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
+  /**
+   * Constructor de la consulta de la solicitud 32610.
+   * @param store - Almacén de estado de la solicitud.
+   */
+  constructor(
+    protected override store: DesistimientoStore) {
     super(store);
   }
-
- /**
-     * Selector para obtener el trámite completo del estado.
-     */
-  selectTramite$ = this.select(state => state);
 }

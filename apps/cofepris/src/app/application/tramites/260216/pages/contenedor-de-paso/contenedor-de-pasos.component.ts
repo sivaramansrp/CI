@@ -28,14 +28,15 @@ import {
   AlertComponent,
   DatosPasos,
   ListaPasosWizard,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { FALTAN_CAMPOS_POR_CAPTURAR, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite260216State } from '../../estados/tramite260216Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -45,15 +46,39 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CommonModule,
     WizardComponent,
     PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     BtnContinuarComponent,
     AlertComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+     /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+    /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+      /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+    /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+   /**
+       * Estado del formulario de registro IMMEX.
+       */
+      storeData!: Tramite260216State;
   /**
    * @property {string | null} tituloMensaje
    * @description Título del mensaje que se muestra en el wizard.
@@ -190,5 +215,54 @@ export class ContenedorDePasosComponent {
       default:
         return TITULOMENSAJE;
     }
+  }
+    /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+    onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+     /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+   /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+    /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
   }
 }

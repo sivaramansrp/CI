@@ -4,6 +4,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -65,6 +66,68 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @default 1
    */
   indice: number = 1;
+
+  /**
+   * @property {SolicitanteComponent} solicitante
+   * @description Referencia al componente hijo `SolicitanteComponent` obtenida mediante ViewChild.
+   * Esta referencia permite al componente padre acceder directamente a los métodos y propiedades 
+   * del formulario de solicitante, especialmente para realizar validaciones y obtener datos del formulario.
+   * 
+   * El template reference `'solicitante'` debe estar definido en el template HTML del componente
+   * para que Angular pueda resolver esta referencia correctamente. Esta propiedad es esencial
+   * para la validación del primer paso del asistente IMMEX.
+   * 
+   * @type {SolicitanteComponent}
+   * @decorator @ViewChild('solicitante')
+   * @memberof PasoUnoComponent
+   * @since 1.0.0
+   * @see {@link SolicitanteComponent} - Componente que maneja los datos del solicitante
+   * @see {@link validarFormularios} - Método que utiliza esta referencia para validación
+   * 
+   * @example
+   * ```typescript
+   * // Validar el formulario del solicitante
+   * if (this.solicitante?.form) {
+   *   if (this.solicitante.form.invalid) {
+   *     this.solicitante.form.markAllAsTouched();
+   *   }
+   * }
+   * ```
+   * 
+   * @throws No lanza excepciones directas, pero puede ser undefined antes de la inicialización
+   */
+  @ViewChild('solicitante') solicitante!: SolicitanteComponent;
+
+  /**
+   * @property {Anexo1Component} anexoComponent
+   * @description Referencia al componente hijo `Anexo1Component` obtenida mediante ViewChild.
+   * Esta referencia permite al componente padre interactuar con el formulario del Anexo I,
+   * que contiene información específica requerida para el trámite IMMEX de registro de solicitud.
+   * 
+   * El template reference `'anexo'` debe estar definido en el template HTML del componente.
+   * Esta propiedad es fundamental para validar que toda la información del Anexo I
+   * esté correctamente completada antes de permitir el avance al siguiente paso.
+   * 
+   * @type {Anexo1Component}
+   * @decorator @ViewChild('anexo')
+   * @memberof PasoUnoComponent
+   * @since 1.0.0
+   * @see {@link Anexo1Component} - Componente que maneja los datos del Anexo I
+   * @see {@link validarFormularios} - Método que utiliza esta referencia para validación
+   * 
+   * @example
+   * ```typescript
+   * // Validar el formulario del anexo
+   * if (this.anexoComponent) {
+   *   if (!this.anexoComponent.validarFormulario()) {
+   *     // Manejar error de validación
+   *   }
+   * }
+   * ```
+   * 
+   * @throws No lanza excepciones directas, pero puede ser undefined antes de la inicialización
+   */
+  @ViewChild('anexo') anexoComponent!: Anexo1Component;
 
   /**
    * Constructor que inicializa el store de la sección.
@@ -161,6 +224,94 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
+
+  /**
+   * @method validarFormularios
+   * @description Método público que valida todos los formularios del primer paso del asistente IMMEX.
+   * Este método es fundamental para asegurar la integridad de los datos antes de permitir el avance
+   * al siguiente paso del proceso de registro de solicitud.
+   * 
+   * El método implementa una validación exhaustiva en dos etapas:
+   * 1. **Validación del Solicitante**: Verifica que el componente `SolicitanteComponent` esté disponible
+   *    y que su formulario sea válido. Si es inválido, marca todos los campos como tocados para
+   *    mostrar los errores de validación al usuario.
+   * 
+   * 2. **Validación del Anexo I**: Verifica que el componente `Anexo1Component` esté disponible
+   *    y ejecuta su método de validación interno para asegurar que todos los campos requeridos
+   *    estén correctamente completados.
+   * 
+   * El método utiliza una estrategia de validación defensiva donde retorna `false` si cualquiera
+   * de los componentes hijo no está disponible o si alguna validación falla. Esto garantiza que
+   * solo se permita avanzar cuando todos los datos estén correctos y completos.
+   * 
+   * @public
+   * @returns {boolean} Resultado de la validación:
+   *                   - `true`: Todos los formularios son válidos y están completos
+   *                   - `false`: Al menos un formulario es inválido, está incompleto o no está disponible
+   * 
+   * @memberof PasoUnoComponent
+   * @since 1.0.0
+   * 
+   * @see {@link SolicitanteComponent.form} - Formulario reactivo del solicitante
+   * @see {@link Anexo1Component.validarFormulario} - Método de validación del Anexo I
+   * @see {@link ImmexRegistroSolicitudModalityComponent.validarTodosFormulariosPasoUno} - Método del componente padre que utiliza esta validación
+   * 
+   * @example
+   * ```typescript
+   * // Validar antes de avanzar al siguiente paso
+   * if (this.pasoUno.validarFormularios()) {
+   *   // Avanzar al siguiente paso
+   *   this.wizard.siguiente();
+   * } else {
+   *   // Mostrar errores y mantener en el paso actual
+   *   this.mostrarErroresValidacion();
+   * }
+   * ```
+   * 
+   * @example
+   * ```typescript
+   * // Uso interno en el componente padre
+   * const ISVALID = this.validarTodosFormulariosPasoUno() ?? false;
+   * this.isValid = ISVALID;
+   * if (!this.isValid) {
+   *   // Manejar errores de validación
+   *   return;
+   * }
+   * ```
+   * 
+   * @throws No lanza excepciones directas, pero puede fallar si los componentes hijos no están inicializados
+   * @complexity O(n) - Donde n es el número de campos en los formularios
+   * 
+   * @workflow
+   * 1. Inicializar isValid como true
+   * 2. Validar componente solicitante y su formulario
+   * 3. Si hay errores, marcar campos como tocados
+   * 4. Validar componente anexo
+   * 5. Retornar resultado final de validación
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.anexoComponent) {
+      if (!this.anexoComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
   /**
    * Limpia las suscripciones y recursos al destruir el componente.
    * @inheritdoc

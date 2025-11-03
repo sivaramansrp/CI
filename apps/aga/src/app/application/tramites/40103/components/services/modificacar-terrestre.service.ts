@@ -1,5 +1,5 @@
-import { CatalogoLista, VehiculoTabla } from '../../models/registro-muestras-mercancias.model';
-import { HttpClient } from '@angular/common/http';
+import { ApiResponseSolicitante, CatalogoLista, VehiculoTabla } from '../../models/registro-muestras-mercancias.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 /**
@@ -14,6 +14,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class modificarTerrestreService {
+  private static getApiHeaders(): HttpHeaders {
+    const CLAVEUSUARIO = localStorage.getItem('ClaveUsuario') || '';
+    const RFC = localStorage.getItem('Rfc') || '';
+    const CVEROLE = localStorage.getItem('CveRole') || '';
+
+    return new HttpHeaders({
+      'ClaveUsuario': CLAVEUSUARIO,
+      'Rfc': RFC,
+      'CveRole': CVEROLE
+    });
+  }
   /**
   * Constructor del servicio.
   * @param http Cliente HTTP para realizar peticiones a recursos locales o remotos.
@@ -68,4 +79,14 @@ export class modificarTerrestreService {
   obtenerPedimentoTabla(): Observable<VehiculoTabla> {
     return this.http.get<VehiculoTabla>(`assets/json/40103/vahiculo-dummy.json`);
   }
+
+  /**
+   * Obtiene los datos del solicitante desde la API.
+   * @returns Observable con los datos del solicitante.
+   */
+  obtenerDatosSolicitante(): Observable<ApiResponseSolicitante> {
+    const FULL_URL = `/api/sat-t40103/solicitud/modificar/iniciar`;
+    return this.http.get<ApiResponseSolicitante>(FULL_URL, { headers: modificarTerrestreService.getApiHeaders() });
+  }
+
 }

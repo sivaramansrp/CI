@@ -24,6 +24,10 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  */
 export interface Tramite260207State {
   /**
+   * ID de la solicitud.
+   */
+  idSolicitud: number;
+  /**
    * Datos de la tabla de destinatarios finales.
    */
   destinatarioFinalTablaDatos: Destinatario[];
@@ -108,6 +112,7 @@ export interface Tramite260207State {
  */
 export function createInitialState(): Tramite260207State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -319,6 +324,18 @@ export class Tramite260207Store extends Store<Tramite260207State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Actualiza el ID de la solicitud en el estado.
+   * @param {number} idSolicitud - Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud: idSolicitud,
     }));
   }
 }

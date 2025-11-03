@@ -1,6 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { AcuseResolucionPageComponent } from '@libs/shared/data-access-user/src';
 import { OctavaTemporalComponent } from './pages/octava-temporal/octava-temporal.component';
 
 const ROUTES: Routes = [
@@ -9,8 +9,8 @@ const ROUTES: Routes = [
       component: OctavaTemporalComponent,
     },
     {
-        path: 'acuse',
-        component: AcusePageComponent,
+        path: 'acuse-resolucion',
+        component: AcuseResolucionPageComponent,
       }
 ];
 

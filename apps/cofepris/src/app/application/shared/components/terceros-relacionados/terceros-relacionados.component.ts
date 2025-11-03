@@ -201,7 +201,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
    */
-  @Input() estaOculto!: boolean;
+  @Input() estaOculto: boolean = false;
 
   /**
    * Indica si el formulario del proveedor debe estar habilitado.
@@ -310,6 +310,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
     public proveedorSeleccionadoParaModificar: Proveedor[] = [];
+    /**
+ * Identificador del trámite asociado.
+ * Se recibe como propiedad de entrada desde el componente padre.
+ */
+@Input() tramiteID: string = '';
   /**
    * Constructor del componente.
    *
@@ -355,6 +360,33 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   @Input() fabricanteTablaDatos: Fabricante[] = [];
 
+  /**
+   * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
+   * Evento que emite la lista actualizada de fabricantes.
+   * Se utiliza para notificar al componente padre que la tabla de fabricantes ha cambiado.
+   */
+  @Output() updateFabricanteTablaDatos: EventEmitter<Fabricante[]> = new EventEmitter<Fabricante[]>();
+
+  /**
+   * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTablaDatos
+   * Evento que emite la lista actualizada de destinatarios finales.
+   * Se utiliza para notificar al componente padre que la tabla de destinatarios ha cambiado.
+   */
+  @Output() updateDestinatarioFinalTablaDatos: EventEmitter<Destinatario[]> = new EventEmitter<Destinatario[]>();
+
+  /**
+   * @property {EventEmitter<Proveedor[]>} updateProveedorTablaDatos
+   * Evento que emite la lista actualizada de proveedores.
+   * Se utiliza para notificar al componente padre que la tabla de proveedores ha cambiado.
+   */
+  @Output() updateProveedorTablaDatos: EventEmitter<Proveedor[]> = new EventEmitter<Proveedor[]>();
+
+  /**
+   * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
+   * Evento que emite la lista actualizada de facturadores.
+   * Se utiliza para notificar al componente padre que la tabla de facturadores ha cambiado.
+   */
+  @Output() updateFacturadorTablaDatos: EventEmitter<Facturador[]> = new EventEmitter<Facturador[]>();
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
    * Datos de la tabla de destinatarios finales.
@@ -622,11 +654,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
  * Handles the fabricante table data update
   */
 onFabricanteUpdated(fabricantes: Fabricante[]): void {
-  
   this.fabricanteTablaDatos = [...fabricantes];
-  
-  this.fabricanteEliminar.emit([...this.fabricanteTablaDatos]);
-  
+  this.updateFabricanteTablaDatos.emit([...this.fabricanteTablaDatos]);
   this.fabricanteSeleccionadoDatos = [];
   this.fabricanteSeleccionadoParaModificar = [];
   
@@ -636,20 +665,20 @@ onFabricanteUpdated(fabricantes: Fabricante[]): void {
  */
 onDestinatarioUpdated(destinatarios: Destinatario[]): void {
   this.destinatarioFinalTablaDatos = [...destinatarios];
-  this.destinatarioEliminar.emit([...this.destinatarioFinalTablaDatos]);
+  this.updateDestinatarioFinalTablaDatos.emit([...this.destinatarioFinalTablaDatos]);
   this.destinatarioSeleccionadoDatos = [];
   this.destinatarioSeleccionadoParaModificar = [];
 }
 onProveedorUpdated(proveedores: Proveedor[]): void {
   this.proveedorTablaDatos = [...proveedores];
-  this.proveedorEliminar.emit([...this.proveedorTablaDatos]);
+  this.updateProveedorTablaDatos.emit([...this.proveedorTablaDatos]);
   this.proveedorSeleccionadoDatos = [];
   this.proveedorSeleccionadoParaModificar = [];
 }
 
 onFacturadorUpdated(facturadores: Facturador[]): void {
   this.facturadorTablaDatos = [...facturadores];
-  this.facturadorEliminar.emit([...this.facturadorTablaDatos]);
+  this.updateFacturadorTablaDatos.emit([...this.facturadorTablaDatos]);
   this.facturadorSeleccionadoDatos = [];
   this.facturadorSeleccionadoParaModificar = [];
 }
@@ -943,18 +972,15 @@ cerrarFacturadorModal(): void {
 
   formularioSolicitudValidacion(): boolean {
     const IS_DESTINATARIO_REQUERIDO = !this.esCampoRequerido('DestinatarioFinal');
-    const IS_FABRICANTE_REQUERIDO = !this.esCampoRequerido('Fabricante');
-    var IS_DESTINATARIO_DATOS = true;
-    var IS_FABRICANTE_DATOS = true;
+    
+    let IS_DESTINATARIO_DATOS = true;
+    
     if(IS_DESTINATARIO_REQUERIDO && this.destinatarioFinalTablaDatos.length === 0){
 
       IS_DESTINATARIO_DATOS = false;
     }
-    if(IS_FABRICANTE_REQUERIDO && this.fabricanteTablaDatos.length === 0){
-
-      IS_FABRICANTE_DATOS = false;
-    }
-    if(IS_DESTINATARIO_DATOS === true && IS_FABRICANTE_DATOS === true && this.proveedorTablaDatos.length>0 && this.facturadorTablaDatos.length>0){
+    
+    if(IS_DESTINATARIO_DATOS === true){
 
 return true;
     }
@@ -962,6 +988,9 @@ return true;
   return false;
    
   }
+  get tramiteIDNumber(): number {
+  return Number(this.tramiteID);
+}
 
   /**
    * Ciclo de vida `OnDestroy`.

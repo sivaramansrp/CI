@@ -247,6 +247,7 @@
               [required]="true"
               [isDisabled]="esFormularioSoloLectura"
               formControlName="establecimientoEstados"
+               [placeholder]="'Selecciona una opción'"
               (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
@@ -454,7 +455,7 @@
         <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
           [tooltipQuestionCircle]="true" tooltipQuestionCircleText = "Régimen al que se destinará la mercancía" formControlName="regimen" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'regimen')
-          "></app-catalogo-select>
+          " [placeholder]="'Selecciona una opción'"></app-catalogo-select>
         <div
           *ngIf="solicitudEstablecimientoForm.get('regimen')?.touched && solicitudEstablecimientoForm.get('regimen')?.errors?.['required']"
           class="text-danger mt-1">
@@ -464,8 +465,8 @@
       <div class="col-md-8">
         <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true" [isDisabled]="esFormularioSoloLectura"
           name="aduanasEntradas" formControlName="aduanasEntradas" (change)="
-            enCambioDeControl('solicitudEstablecimientoForm', 'aduanasEntradas')
-          "></app-catalogo-select>
+            enCambioDeControl('solicitudEstablecimientoForm', 'aduanasEntradas') 
+          " [placeholder]="'Selecciona una opción'"></app-catalogo-select>
         <div
           *ngIf="solicitudEstablecimientoForm.get('aduanasEntradas')?.touched && solicitudEstablecimientoForm.get('aduanasEntradas')?.errors?.['required']"
           class="text-danger mt-1">
@@ -533,14 +534,14 @@
             <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una opción'" formControlName="scian"
-                (change)="enCambioDeControl('scianForm', 'scian')"></app-catalogo-select>
+                (change)="enCambioDeControl('scianForm', 'scian')"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
              <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Descripción del S.C.I.A.N.'"
                 [placeholder]="'Seleccione una opción'" formControlName="descripcionScian"
-                (change)="enCambioDeControl('scianForm', 'descripcionScian')" [isDisabled]="true"></app-catalogo-select>
+                (change)="enCambioDeControl('scianForm', 'descripcionScian')"  [placeholder]="'Selecciona una opción'" [isDisabled]="true"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -576,6 +577,7 @@
               [label]="'Clasificación del producto'"
               [required]="true"
               name="clasificacion"
+               [placeholder]="'Selecciona una opción'"
             ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('clasificacion')">
               {{ getErrorMessage('clasificacion') }}
@@ -588,6 +590,7 @@
               [label]="'Especificar clasificación del producto'"
               [required]="true"
               name="especificarClasificacionProducto"
+               [placeholder]="'Selecciona una opción'"
             ></app-catalogo-select>
             <div
               class="text-danger"
@@ -633,6 +636,7 @@
               [label]="'Tipo de producto'"
               [required]="true"
               name="tipoDeProducto"
+               [placeholder]="'Selecciona una opción'"
             ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('tipoDeProducto')">
               {{ getErrorMessage('tipoDeProducto') }}
@@ -640,7 +644,7 @@
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="estadoFormaFarmaceutica"
-              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"></app-catalogo-select>
+              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('estadoFormaFarmaceutica')">
               {{ getErrorMessage('estadoFormaFarmaceutica') }}
             </div>
@@ -652,6 +656,7 @@
               [label]="'Estado físico'"
               [required]="true"
               name="estadoFisico"
+               [placeholder]="'Selecciona una opción'"
             ></app-catalogo-select>
             <div class="text-danger" *ngIf="getErrorMessage('estadoFisico')">
               {{ getErrorMessage('estadoFisico') }}
@@ -746,6 +751,7 @@
                   [required]="true"
                   name="UMC"
                   [tooltipQuestionCircle]="true"
+                   [placeholder]="'Selecciona una opción'"
                   tooltipQuestionCircleText = "Unidad de medida de comercialización"
                 ></app-catalogo-select>
                 <div class="text-danger" *ngIf="getErrorMessage('UMC')">

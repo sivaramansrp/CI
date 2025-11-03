@@ -10,3 +10,10 @@ export const COMUN_URL = {
   SOLICITUD_URL: '/solicitud',
   TRAMITE_URL: '/tramite',
 };
+
+/**
+ * Endpoint para buscar representante legal por RFC
+ * @param tramite - Número del trámite
+ * @returns string con el endpoint
+ */
+export const API_BUSCAR_REPRESENTANTE = (tramite: string): string => `sat-t${tramite}/solicitud/buscar`;
