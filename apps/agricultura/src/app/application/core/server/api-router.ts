@@ -84,6 +84,12 @@ export const API_GET_CATALOGO_SEXOS_ACTIVOS = (TRAMITE: string) : string => `sat
 export const API_GET_CATALOGO_REGIMENES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/regimenes`;
 
 /**
+ * Servicio que permite consultar vida silvestre.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes
+ */
+export const API_GET_CATALOGO_VIDA_SILVESTRE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tipos-vida-silvestre`;
+
+/**
  * Servicio que permite consultar los régimenes ACTIVOS y VIGENTES.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes_1
  */

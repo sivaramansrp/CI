@@ -15,7 +15,8 @@ import {
   API_GET_CATALOGO_TIPOS_PRODUCTO,
   API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
   API_GET_CATALOGO_USOS_MERCANCIA,
-  API_GET_DATOS_SOLICITUD
+  API_GET_DATOS_SOLICITUD,
+  API_GET_CATALOGO_VIDA_SILVESTRE,
 } from '../../../../../core/server/api-router';
 import { Observable, map } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
@@ -262,6 +263,17 @@ export class CatalogosService {
    */
   obtieneCatalogoRegimenes(tramite: number): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_REGIMENES(tramite.toString())}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+  
+  /**
+   * Obtiene el catálogo de vida-silvestre.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere obtener los regímenes.
+   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
+   */
+  obtieneCatalogoVidaSilvestre(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_VIDA_SILVESTRE(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

@@ -57,6 +57,7 @@
             [isDisabled]="esFormularioSoloLectura"
             name="aduanaDeIngreso"
             (change)="setValoresStore(); catalogoOficinas(forma);"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -69,6 +70,7 @@
                [isDisabled]="esFormularioSoloLectura"
             name="oficinaDeInspeccion"
             (change)="setValoresStore(); obtenerPuntoInspeccion(forma)"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -81,6 +83,7 @@
              [isDisabled]="esFormularioSoloLectura"
             name="puntoDeInspeccion"
             (change)="setValoresStore()"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
 
@@ -111,6 +114,7 @@
             [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             (change)="setValoresStore()"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         </div>

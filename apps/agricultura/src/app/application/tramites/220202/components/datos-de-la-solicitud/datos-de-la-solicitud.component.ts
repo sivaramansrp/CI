@@ -481,6 +481,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ];
 
   /**
+ * bandera para indicar que el formulario fue tocado
+ */
+  markTouched: boolean = false;
+
+  /**
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
@@ -1337,6 +1342,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+  };
+
+  /**
+   * @description Valida todos los campos del formulario y marca los campos como touched
+   * para mostrar los errores de validación en los componentes app-catalogo-select
+   * @method validarFormulario
+   * @returns { valido: boolean; mensaje: string } true si el formulario es válido, false en caso contrario
+   */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    // Marcar los select customizados
+    this.markTouched = true;
+    this.forma.updateValueAndValidity();
+    this.forma.markAllAsTouched();
+
+    // Verificar si hay datos en la tabla
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      return { valido: false, mensaje: 'Debe agregar al menos una mercancía.' };
+    }
+
+    // Retornar si el formulario es válido
+    if (!this.forma.valid) {
+      return { valido: false };
+    }
+
+    return { valido: true };
   }
 
   /**

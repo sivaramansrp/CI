@@ -32,6 +32,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+
   /**
    * Lista de opciones para el selector de justificación.
    */
@@ -47,6 +48,11 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * Esta propiedad controla si el campo de fecha de pago debe ser editable o no.
    */
   public setFecha = true;
+
+  /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
 
 
   /**
@@ -356,6 +362,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   validarFormulario(): boolean {
+    this.markTouched = true;
     if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
       this.pagoForm.get('justificacion')?.setValidators([Validators.required]);
       this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);

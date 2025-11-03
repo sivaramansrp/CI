@@ -1,10 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -27,9 +31,43 @@ import { Subject } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss']
+
 })
 
 export class PasoUnoComponent implements OnInit,OnDestroy {
+
+  /**
+ * @description Referencia al componente DatosDeLaSolicitudComponent.
+ * Esta referencia permite acceder a los métodos y propiedades del componente DatosDeLaSolicitudComponent,
+ * @type {DatosDeLaSolicitudComponent}
+ * @viewChild DatosDeLaSolicitudComponent
+ */
+  @ViewChild(DatosDeLaSolicitudComponent) datosSolicitudRef!: DatosDeLaSolicitudComponent;
+
+  /**
+ * @description Referencia al componente DatosParaMovilizacionNacionalComponent.
+ * Esta referencia permite acceder a los métodos y propiedades del componente DatosParaMovilizacionNacionalComponent,
+ * @type {DatosParaMovilizacionNacionalComponent}
+ * @viewChild DatosParaMovilizacionNacionalComponent
+ */
+  @ViewChild(DatosParaMovilizacionNacionalComponent) datosParaMovilizacionRef!: DatosParaMovilizacionNacionalComponent;
+
+  /**
+* @description Referencia al componente TercerospageComponent.
+* Esta referencia permite acceder a los métodos y propiedades del componente TercerospageComponent,
+* @type {TercerospageComponent}
+* @viewChild TercerospageComponent
+*/
+  @ViewChild(TercerospageComponent) tercerosPageComponentRef!: TercerospageComponent;
+
+  /**
+* @description Referencia al componente PagoDeDerechosComponent.
+* Esta referencia permite acceder a los métodos y propiedades del componente PagoDeDerechosComponent,
+* @type {PagoDeDerechosComponent}
+* @viewChild PagoDeDerechosComponent
+*/
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponentRef!: PagoDeDerechosComponent;
+
 
   /**
    * @description Índice de la pestaña/paso actual.
@@ -157,6 +195,43 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   seleccionaPestana(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * @description Valida todos los formularios del paso uno
+   * @method validarFormularios
+   * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
+   */
+  public validarFormularios(): { valido: boolean; mensaje?: string } {
+
+    const tabsValidadas = [
+      { index: 2, ref: this.datosSolicitudRef },
+      { index: 3, ref: this.datosParaMovilizacionRef },
+      { index: 4, ref: this.tercerosPageComponentRef },
+      { index: 5, ref: this.pagoDeDerechosComponentRef }
+    ];
+
+    let esValido = true;
+
+    for (const tab of tabsValidadas) {
+
+      console.log('tab.index', tab.index);
+      console.log('tabCompleto', tab);
+
+      console.log('tab.ref', tab.ref);
+      var validaPestañas = tab.ref.validarFormulario();
+      if (tab.ref && !validaPestañas.valido) {
+        this.indice = tab.index; // mover a la pestaña con error
+        esValido = false;
+        return { valido: esValido, mensaje: validaPestañas.mensaje! };
+      }
+      console.log('indicePestaña', this.indice);
+
+    }
+    console.log('salee del loop', esValido);
+
+    return { valido: esValido };
+  }
+
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
