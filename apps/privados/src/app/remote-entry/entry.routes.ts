@@ -9,14 +9,14 @@ import { STORE_FRONT_ROUTES } from './../store-front/store-front.routes.constant
  * IMPORTANTE: Estas rutas se cargan bajo /privados en el dashboard
  *
  * ARQUITECTURA:
- * - Se usa un path: '' con component + children para eliminar la doble anidación
- * - Esto es necesario para standalone components con Module Federation
- * - El redirect está dentro de los children para manejar /privados exacto
+ * - path: '' con component (layout wrapper) + children
+ * - El layout proporciona el sidebar y estructura común
+ * - Las rutas hijas se cargan en el <router-outlet> del layout
  *
- * Rutas esperadas:
+ * Rutas resultantes en el dashboard:
  * - /privados → redirect a /privados/home
- * - /privados/home → HomePage
- * - /privados/consultas → ConsultasPage
+ * - /privados/home → HomePage (con layout)
+ * - /privados/consultas → ConsultasPage (con layout y sus sub-rutas)
  * - /privados/consultas/manifiesto-aereo → ManifiestoAereoPage
  * - /privados/consultas/consultar-documento → DescargarDocumentoPage
  * - /privados/consultas/consulta-guias-aereas → ConsultaGuiasAereasPage

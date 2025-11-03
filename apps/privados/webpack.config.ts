@@ -51,7 +51,8 @@ module.exports = {
       name: 'privados',
       filename: 'remoteAppEntry.js',
       exposes: {
-        './Routes': './apps/privados/src/app/remote-entry/entry.routes.ts'
+        './Routes': './apps/privados/src/app/remote-entry/entry.routes.ts',
+        './Module': './apps/privados/src/app/app.module.ts'
       },
       shared: share({
         '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
