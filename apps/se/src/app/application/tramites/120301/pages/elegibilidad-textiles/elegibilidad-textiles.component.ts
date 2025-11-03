@@ -27,7 +27,8 @@ import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { GuardadoService } from '../../services/guardado.service';
 import { GuardarSolicitudCompletaRequest } from '../../models/request/guardar-solicitud-request.model';
@@ -346,10 +347,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private guardadoService: GuardadoService,
     public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
-    private tramiteStore: Tramite120301Store,
     private tramiteQuery: Tramite120301Query,
     private solicitanteQuery: SolicitanteQuery,
-    private textilesState: ElegibilidadDeTextilesStore) {
+  ) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
