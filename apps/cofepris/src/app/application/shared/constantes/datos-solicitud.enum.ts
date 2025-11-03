@@ -795,8 +795,8 @@ export const REPRESENTANTE_LEGAL = [260208];
  * }
  */
 export const BANCO = [
-  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210
+  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260205, 260216,
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -1085,7 +1085,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260201]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912]
 
 /**
  * Constante que representa el código AIFA.

@@ -83,6 +83,24 @@
           </small>
         </div>
       </div>
+      @if(agregarDestinatarioFinal.get('rfc')?.disabled){
+      <div class="col-md-4">
+    <label class="form-label">
+      C.U.R.P<span>*</span>:
+    </label>
+    <input type="text" class="form-control" [maxlength]="18" formControlName="curp"
+      [ngClass]="esInvalido('curp') ? 'required' : ''" />
+    <div *ngIf="esInvalido('curp')" class="text-danger">
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['required']">
+        Este campo es obligatorio
+      </small>
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['pattern']">
+        Existen datos incorrectos que no cumplen con el formato esperado
+      </small>
+    </div>
+  </div>
+}
+  
     </div>
   }
 
@@ -254,7 +272,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior') && !requiedField ">
+        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior')">
           <!-- <span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''">*</span> -->
           <span *ngIf="esInvalido('numeroExterior')" class="text-danger">*</span>

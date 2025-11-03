@@ -10,9 +10,60 @@
  * @since 1.0.0
  * @author Sistema VUCEM
  */
+import {
+  AGREGAR_PRODUCTOR,
+  CATALOGO_ACUERDOS,
+  CATALOGO_ACUERDOS_PAIS,
+  CATALOGO_ADUANAS,
+  CATALOGO_ANOS,
+  CATALOGO_BANCOS,
+  CATALOGO_CLASIFICACION_PRODUCTO,
+  CATALOGO_COLONIAS,
+  CATALOGO_ENTIDADES_FEDERATIVAS,
+  CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO,
+  CATALOGO_ESTADOS,
+  CATALOGO_ESTADO_FISICO_MERCANCIA,
+  CATALOGO_FORMA_FARMACEUTICA,
+  CATALOGO_IDIOMA,
+  CATALOGO_IMMEX,
+  CATALOGO_LOCALIDADES,
+  CATALOGO_MEDIO_TRANSPORTE,
+  CATALOGO_MUNICIPIOS_DELEGACIONES,
+  CATALOGO_NICO,
+  CATALOGO_PAISES,
+  CATALOGO_PAISES_BLOQUE,
+  CATALOGO_PAISES_DESTINO,
+  CATALOGO_PAISES_MEXICO,
+  CATALOGO_PAIS_BLOQUE_CLAVE,
+  CATALOGO_REGIMENES,
+  CATALOGO_REPRESENTACION_FEDERAL,
+  CATALOGO_SCIAN,
+  CATALOGO_SECTORES,
+  CATALOGO_SELECCIONAR_REGLA,
+  CATALOGO_TIPOS_PRODUCTO,
+  CATALOGO_TIPO_FACTURA,
+  CATALOGO_TRATADOS_ACUERDOS,
+  CATALOGO_TRATADO_ACUERDO,
+  CATALOGO_TRATADO_ACUERDOS,
+  CATALOGO_TRATADO_ACUERDOS_PAIS,
+  CATALOGO_TRATADO_ACUERDO_NEW,
+  CATALOGO_TRATADO_ACUERDO_PAIS,
+  CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC,
+  CATALOGO_UNIDAD_DE_MASA_BRUTA,
+  CATALOGO_UNIDAD_MASA_BRUTA,
+  CLASIFICACION_REGIMEN,
+  COMUN_URL,
+  FRACCION_HTS,
+  PAIS_DESTINO,
+  UNIDADES_MEDIDA_COMERCIAL
+} from '../../servers/api-router';
 
-import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_DESTINO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL,CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_ANOS } from '../../servers/api-router';
+// import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_TRATADOS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_MEXICO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
+// import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_DESTINO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CLASIFICACION_REGIMEN, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, FRACCION_HTS, PAIS_DESTINO, UNIDADES_MEDIDA_COMERCIAL,CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_ANOS } from '../../servers/api-router';
+
+
 import { BaseResponse } from '../../models/shared/base-response.model';
+import { CATALOGO_USOS_ESPECIFICO_MERCANCIA } from '../../servers/api-router';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -332,8 +383,56 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+ /*
+ * Obtiene el catálogo de tratados y acuerdos.
+ * @param {string} tramite - El ID del trámite.
+ * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
+ * @returns {Observable<BaseResponse<Catalogo[]>>}
+ */
+tratadosAcuerdoCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, ideTipoTratadoAcuerdo)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene el catálogo de países destino según el trámite y los datos proporcionados.
+ *
+ * @param tramite - Identificador del trámite para el cual se solicita el catálogo.
+ * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
+ * @returns Un observable que emite la respuesta base con el arreglo de catálogos de países destino.
+ */
+paisDestinoCatalogo(tramite: string, payloadDatos: { cveTratado: string , cvePais: string,}): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${PAIS_DESTINO(tramite, payloadDatos)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 
 
+/**
+ * Obtiene el catálogo de fracciones HTS basado en el trámite y los datos proporcionados.
+ *
+ * @param tramite - El identificador del trámite para el cual se solicita el catálogo.
+ * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
+ * @returns Un observable que emite la respuesta base con un arreglo de elementos del catálogo.
+ */
+fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${FRACCION_HTS(tramite,id)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+  /**
+   * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicita el catálogo.
+   * @param payloadDatos - Objeto que contiene información adicional, incluyendo el trámite y el id requerido.
+   * @returns Un observable que emite la respuesta base con el arreglo de elementos del catálogo.
+   */
+  clasificacionRegimenCatalogo(tramite: string,payloadDatos: { tramite: string , id: string}): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CLASIFICACION_REGIMEN(tramite,payloadDatos)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
+
+
+  
   /*
    * Obtiene el catálogo de países (bloques).
    * @param {string} tramite - El ID del trámite.
@@ -575,7 +674,7 @@ export class CatalogoServices {
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    if (tramite === '110214' || tramite === '110216' || tramite === '110205') {
+    if (tramite === '110214' || tramite === '110216') {
       const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
@@ -792,4 +891,30 @@ anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+  /**
+   * Obtiene el catálogo de países de México según el trámite especificado.
+   *
+   * @param tramite - El identificador del trámite para el cual se requiere el catálogo de países.
+   * @returns Un observable que emite la respuesta base con el listado de países en el catálogo.
+   */
+  paisesMaxicoCatalogo(tramite: string,id:string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES_MEXICO(tramite,id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
+
+
+
+
+/**
+ * Obtiene el catálogo de usos específico de mercancía.
+ * 
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de usos específicos de mercancía
+ * @see CATALOGO_USOS_ESPECIFICO_MERCANCIA
+ */
+usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }

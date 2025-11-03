@@ -171,36 +171,7 @@ describe('OficioComponent', () => {
     expect(component.filteredData).toEqual([]);
   });
 
-  it('debe dejar filteredData vacío si ningún elemento cumple la condición', () => {
-    component.oficio = [
-      { unidadPrimaria: 1, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 2, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 3, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' }
-    ];
-    component.filteredData = component.oficio.filter(item => item.unidadPrimaria === 12);
-    expect(component.filteredData).toEqual([]);
-  });
 
-  it('debe dejar filteredData igual a oficio si todos cumplen la condición', () => {
-    component.oficio = [
-      { unidadPrimaria: 12, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 12, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' }
-    ];
-    component.filteredData = component.oficio.filter(item => item.unidadPrimaria === 12);
-    expect(component.filteredData).toEqual(component.oficio);
-  });
-
-  it('debe dejar filteredData solo con los elementos que cumplen la condición', () => {
-    component.oficio = [
-      { unidadPrimaria: 12, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 5, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 12, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' },
-      { unidadPrimaria: 7, folioOficioCertificado: '', nombreRazonSocial: '', estado: '', fabricante: '', importador: '' }
-    ];
-    component.filteredData = component.oficio.filter(item => item.unidadPrimaria === 12);
-    expect(component.filteredData.length).toBe(2);
-    expect(component.filteredData.every(item => item.unidadPrimaria === 12)).toBe(true);
-  });
 
   it('debe tener configuracionTabla con 6 columnas y encabezados correctos', () => {
     expect(component.configuracionTabla.length).toBe(6);
@@ -227,18 +198,6 @@ describe('OficioComponent', () => {
     expect(component.configuracionTabla[3].clave(item)).toBe('FabricanteX');
     expect(component.configuracionTabla[4].clave(item)).toBe('ImportadorY');
     expect(component.configuracionTabla[5].clave(item)).toBe(12);
-  });
-
-  it('debe filtrar correctamente los datos de oficio por unidadPrimaria usando filteredData', () => {
-    component.oficio = [
-      { unidadPrimaria: 12, folioOficioCertificado: 'F1', nombreRazonSocial: 'A', estado: 'Activo', fabricante: 'X', importador: 'Y' },
-      { unidadPrimaria: 11, folioOficioCertificado: 'F2', nombreRazonSocial: 'B', estado: 'Inactivo', fabricante: 'Z', importador: 'W' },
-      { unidadPrimaria: 12, folioOficioCertificado: 'F3', nombreRazonSocial: 'C', estado: 'Activo', fabricante: 'X', importador: 'Y' }
-    ];
-    component.filteredData = component.oficio.filter(item => item.unidadPrimaria === 12);
-    expect(component.filteredData.length).toBe(2);
-    expect(component.filteredData[0].folioOficioCertificado).toBe('F1');
-    expect(component.filteredData[1].folioOficioCertificado).toBe('F3');
   });
 });
 

@@ -1,12 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy } from '@angular/core';
+import { ConsultaioQuery, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
+import { VENTAS_TOTALES_MENSAJES } from '../../enums/registro-solicitud-anual.enum';
 
 /**
  * @component
@@ -15,6 +17,14 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
 @Component({
   selector: 'app-datos-de-reporte-anual',
   templateUrl: './datos-de-reporte-anual.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    NotificacionesComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+    NotificacionesComponent
+  ],
   styleUrl: './datos-de-reporte-anual.component.scss',
 })
 
@@ -23,7 +33,7 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
  * @implements {OnInit, OnDestroy}
  * @description Este componente maneja la lógica del formulario para capturar los datos del reporte anual.
  */
-export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
+export class DatosDeReporteAnnualComponent implements OnDestroy {
   /**
    * @description Formulario reactivo para capturar los datos del reporte anual.
    */
@@ -57,6 +67,16 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
  * @description Representa una nueva notificación que se utilizará en el componente.
  */
   public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   *  Índice del pedimento marcado para eliminación.
+   * */
+  public elementoParaEliminar!: number;
+
+  /**
+   *  Arreglo que contiene los pedimentos registrados.
+   */
+  public pedimentos: Array<Pedimento> = [];
 
   /**
    * @constructor
@@ -150,28 +170,6 @@ this.solicitud150101Query.seleccionarSolicitud$
         })
       )
       .subscribe();
-
-}
-  /**
-   * `
-   * @lifecycle
-   * @description Método del ciclo de vida de Angular llamado al inicializar el componente.
-   * Suscribe a los cambios en los campos del formulario para recalcular el reporte anual.
-   * @param {void}
-   * @return {void}
-   * */
-  ngOnInit(): void {
-    this.formReporteAnnual.get('ventasTotales')?.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => this.calcularReporteAnnual());
-
-    this.formReporteAnnual.get('totalExportaciones')?.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => this.calcularReporteAnnual());
-
-    this.formReporteAnnual.get('totalImportaciones')?.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => this.calcularReporteAnnual());
   }
 
 
@@ -199,6 +197,12 @@ this.solicitud150101Query.seleccionarSolicitud$
    * @param evento - Evento del input para capturar el valor introducido.
    */
   obtenerVentasTotales(evento: Event): void {
+    const VENTAS_TOTALES_CONTROL = this.formReporteAnnual?.get('ventasTotales');
+    if (VENTAS_TOTALES_CONTROL) {
+      if (VENTAS_TOTALES_CONTROL?.invalid && VENTAS_TOTALES_CONTROL?.touched) {
+        this.abrirModal(VENTAS_TOTALES_MENSAJES);
+      }
+    }
     const VALUE = (evento.target as HTMLInputElement).value;
 
     // Validar que sea un entero antes de procesar
@@ -270,6 +274,26 @@ if (VENTAS_TOTALES < TOTAL_EXPORTACIONES && !this.nuevaNotificacion) {
       });
     }
    
+  }
+
+  /**
+   * Abre el modal de confirmación para eliminar un pedimento.
+   *
+   * @param i Índice del elemento a eliminar. Valor predeterminado: 0.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.elementoParaEliminar = i;
   }
 
   /**

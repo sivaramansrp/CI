@@ -21,6 +21,7 @@
             @if (esDatosRespuesta) {
             <app-expedicion-certificados-asignacion-directa [tabindex]="2"
                 #expedicionCertificadosAsignacionDirectaComponent
+                [idProcedimiento]="120201"
                 (mostrarError)="mostrarErrorEvent($event)"
                 (mostrarNumFolioAsignacionError)="mostrarNumFolioAsignacionErrorEvent($event)"
                 (mostrarAgregarError)="mostrarAgregarErrorEvento($event)"></app-expedicion-certificados-asignacion-directa>

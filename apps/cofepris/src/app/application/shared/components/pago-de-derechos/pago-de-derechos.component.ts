@@ -6,17 +6,13 @@ import {
   Validators
 } from '@angular/forms';
 import {
-  BANCO_CATALOGOS,
-  ESTADO_CATALOGOS
-} from '../../constantes/pago-banco.enum';
-import {
+  AlertComponent,
   Catalogo,
   ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   REGEX_LLAVE_DE_PAGO_DE_DERECHO,
-  REGEX_PATRON_DECIMAL_2,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import {
@@ -30,6 +26,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {
+  FECHA_DE_IMPORTACION_PAGO,
   FECHA_DE_PAGO,
   PagoDerechosFormState
 } from '../../models/terceros-relacionados.model';
@@ -59,11 +56,22 @@ import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
     ReactiveFormsModule,
     InputFechaComponent,
     TituloComponent,
+    AlertComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+  messageAlert: string = `
+  <div style="text-align: center;">
+    <strong>¡Precaución!</strong>
+    <span class="fw-normal">
+      Debes capturar todos los campos de pago de derechos.
+    </span>
+  </div>
+`;
+verificarAlerta:number[]=[];
+
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -97,8 +105,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} campoRequerido - Indica si el campo es obligatorio.
    */
   @Input() public campoRequerido: boolean = false;
-
-  @Input() tramiteID: string = '';
 
        /**
          * @property {Subscription} subscription
@@ -211,6 +217,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private catalogoService: CatalogoServices
     
   ) {
+    this.verificarAlerta=FECHA_DE_IMPORTACION_PAGO;
 
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -241,34 +248,44 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
+    const NOMULTISPACE = /^(?!.* {2,}).*$/;
+
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.solicitudState?.claveReferencia || '',
-        [Validators.maxLength(9), Validators.required],
+      this.solicitudState?.claveReferencia || '',
+      [
+        Validators.maxLength(9),
+        Validators.required,
+        Validators.pattern(NOMULTISPACE),
+      ],
       ],
       cadenaDependencia: [
-        this.solicitudState?.cadenaDependencia || '',
-        [Validators.maxLength(14), Validators.required],
+      this.solicitudState?.cadenaDependencia || '',
+      [
+        Validators.maxLength(14),
+        Validators.required,
+      ],
       ],
       estado: [this.solicitudState?.estado || '', Validators.required],
       banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.solicitudState?.llavePago || '',
-        [
-          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
-          Validators.maxLength(30),
-          Validators.required,
-        ],
+      this.solicitudState?.llavePago || '',
+      [
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30),
+        Validators.required,
+      ],
       ],
       fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
-        this.solicitudState?.importePago || '',
-        [
-          decimalValidator(2),
-          Validators.maxLength(16),
-          Validators.required,
-        ],
+      this.solicitudState?.importePago || '',
+      [
+        decimalValidator(2),
+        Validators.maxLength(16),
+        Validators.required,
       ],
+      ],
+      bancoObject: [this.solicitudState?.bancoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -324,15 +341,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   getBancoDatos(): void {
     this.subscription.add(
             this.catalogoService
-            .bancosCatalogo(this.tramiteID)
+            .bancosCatalogo(String(this.idProcedimiento))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((response) => {
               const DATOS = response.datos as Catalogo[];
               
               if (response) {
-                
                 this.bancoDatos = DATOS;
-                this.estadosDatos = DATOS;
               }
             })
           );
@@ -346,6 +361,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm.reset();
   }
 
+  actualizarStore(): void {
+    const VALORES_COMPLETOS = this.pagoDerechosForm.getRawValue();
+    this.updatePagoDerechos.emit(VALORES_COMPLETOS);
+  }
+
+  
   /**
    * @method onFechaCambiada
    * @description Actualiza la fecha de pago en el formulario.
@@ -439,33 +460,113 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     )(VALOR);
   }
 
+/**
+ * Método para manejar la selección de banco.
+ * @param event {any} Evento del select.
+ */
+onBancoSeleccionado(event: any): any {
+  const SELECTEDVALUE = event.targety ? event.target.value : event;
+  const BANCO = this.bancoDatos.find(b => b.clave === SELECTEDVALUE);
+  const BANCOID = this.pagoDerechosForm.get('banco')?.value;
+  const BANCO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.bancoDatos, BANCOID);
+  this.pagoDerechosForm.patchValue({ bancoObject: BANCO_OBJ ? BANCO_OBJ[0] : undefined });
 
+  if (BANCO) {
+    this.pagoDerechosForm.patchValue({ banco: BANCO.clave });
+    this.pagoDerechosForm.get('banco')?.markAsTouched();
+    this.pagoDerechosForm.get('banco')?.markAsDirty();
+    this.setValoresStoreObject(BANCO, 'banco', 'setBancoObject');
+  }
+  return BANCO_OBJ ? BANCO_OBJ[0] : undefined;
+}
+
+
+/**
+ * Método para actualizar el store con objeto completo.
+ * @param catalogo {Catalogo} Objeto catalogo seleccionado.
+ * @param campo {string} Nombre del campo del formulario.
+ * @param metodoNombre {string} Nombre del método del store.
+ */
+setValoresStoreObject(
+  catalogo: Catalogo,
+  campo: string,
+  metodoNombre: keyof PagoDerechosStore
+): void {
+  // Almacenar el objeto completo en el store
+  (
+    this.pagoDerechosStore[metodoNombre] as (
+      value: Catalogo
+    ) => void
+  )(catalogo);
+}
+
+  /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+    return catalogo.filter(item => item.clave === id);
+  }
+ 
   formularioSolicitudValidacion(): boolean {
-    this.isContinuarButtonClicked = true;
+    this.isContinuarButtonClicked = false;
     
     const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
     const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
     const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
     const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
     const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
+    
+    const ANY_FIELDS_HAVE_VALUE= (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) ||
+    (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) ||
+    (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) ||
+    (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) ||
+    (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null ) ||
+    (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null &&BANCO_PAGO_VALUE !== '-1');
+    
+    if (ANY_FIELDS_HAVE_VALUE) {
+      this.pagoDerechosForm.markAllAsTouched();
+      this.isContinuarButtonClicked = true;
+    }
+  
+    
+    
+    
+    return this.isAllFieldHaveValue();
+  }
+
+  isAllFieldHaveValue(): boolean {
+    const CLAVE_REFERENCIA_VALUE = this.pagoDerechosForm.get('claveReferencia')?.value;
+    const CADENA_DEPENDENCIA_VALUE = this.pagoDerechosForm.get('cadenaDependencia')?.value;
+    const LLAVE_PAGO_VALUE = this.pagoDerechosForm.get('llavePago')?.value;
+    const IMPORTE_PAGO_VALUE = this.pagoDerechosForm.get('importePago')?.value;
+    const FECHA_PAGO_VALUE = this.pagoDerechosForm.get('fechaPago')?.value;
+    const BANCO_PAGO_VALUE = this.pagoDerechosForm.get('banco')?.value;
     
     const ALL_FIELDS_VALID = (CLAVE_REFERENCIA_VALUE !== '' && CLAVE_REFERENCIA_VALUE !== null) && 
                             (CADENA_DEPENDENCIA_VALUE !== '' && CADENA_DEPENDENCIA_VALUE !== null) && 
                             (LLAVE_PAGO_VALUE !== '' && LLAVE_PAGO_VALUE !== null) && 
-                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null) && 
-                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null);
-    
-    if (ALL_FIELDS_VALID) {
-      this.isContinuarButtonClicked = false;
-      return true;
-    }
-    
-    this.pagoDerechosForm.markAllAsTouched();
-    
-    
-    
-    return false;
+                            (IMPORTE_PAGO_VALUE !== '' && IMPORTE_PAGO_VALUE !== null ) && 
+                            (FECHA_PAGO_VALUE !== '' && FECHA_PAGO_VALUE !== null )&&
+                            (BANCO_PAGO_VALUE !== '' && BANCO_PAGO_VALUE !== null && BANCO_PAGO_VALUE !== '-1');
+    return ALL_FIELDS_VALID;
   }
+
+  llavePagoCase(): void {
+    const LLAVEPAGOCONTROL = this.pagoDerechosForm.get('llavePago');
+    if (LLAVEPAGOCONTROL && LLAVEPAGOCONTROL.value) {
+      const LLAVE_PAGO = LLAVEPAGOCONTROL.value.toUpperCase();
+      LLAVEPAGOCONTROL.setValue(LLAVE_PAGO);
+      this.setValoresStore(this.pagoDerechosForm, 'llavePago', 'setllavePago');
+    }
+  }
+
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se encarga de liberar las suscripciones para evitar fugas de memoria.

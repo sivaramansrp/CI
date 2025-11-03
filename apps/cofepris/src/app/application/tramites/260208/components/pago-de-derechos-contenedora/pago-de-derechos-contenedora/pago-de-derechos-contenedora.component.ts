@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -54,6 +54,8 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
    */
    private destroyNotifier$: Subject<void> = new Subject();
 
+   @ViewChild ('pagoDeDerechos') pagoDeDerechosComponent!: PagoDeDerechosComponent
+
    /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260208Store` para gestionar el estado del trámite.
@@ -82,6 +84,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarFormulario(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
   
    /**

@@ -202,7 +202,7 @@ export const UNIDAD_MEDIDA_COMERCIALIZACION_IDS = [110221];
  */
 export const UMC_IDS = [
   110201, 110202, 110204, 110205, 110207, 110208, 110210, 110211, 110214,
-  110216, 110217, 110219, 110222, 110223,
+  110216, 110217, 110219, 110222, 110223, 110212
 ];
 
 /* =====================================================
@@ -261,4 +261,4 @@ export const FECHA_DE_PAGO: number[] = [110211];
 /**
  * IDs de procedimientos en los que el campo “Mercancías seleccionadas” es obligatorio.
  */
-export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207];
+export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207,110212];

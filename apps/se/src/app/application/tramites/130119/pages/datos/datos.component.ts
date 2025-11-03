@@ -6,6 +6,8 @@ import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data
 import { AccionBoton } from '../../modelos/aviso-importacion-maquinas.model';
 import { PASOS } from '../../constants/aviso-importacion-maquinas.enum';
 
+import { AVISO_PRIVACIDAD_CONTENIDO } from '../../constants/aviso-importacion-maquinas.enum';
+
 /**
  * Componente DatosComponent.
  *
@@ -43,7 +45,14 @@ export class DatosComponent {
      txtBtnAnt: 'Anterior',
      txtBtnSig: 'Continuar',
    };
- 
+     /**
+    * Contenido del aviso de privacidad utilizado en el componente.
+    * @public
+    * @readonly
+    * @type {string}
+    * @memberof SanidadCertificadoComponent
+    */
+  readonly AVISO_PRIVACIDAD_CONTENIDO: string = AVISO_PRIVACIDAD_CONTENIDO;
    /**
     * Actualiza el valor del índice según el evento del botón de acción.
     * @param e El evento del botón de acción que contiene la acción y el valor.
