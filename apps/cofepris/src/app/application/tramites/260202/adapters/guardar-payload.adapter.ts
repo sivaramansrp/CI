@@ -5,19 +5,19 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Tramite260201State } from '../estados/tramite260201Store.store';
+import { Tramite260202State } from '../estados/tramite260202Store.store';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuardarAdapter_260201 {
+export class GuardarAdapter_260202 {
   /**
    * Convierte del estado de Akita al formato de payload de API usando las mismas claves
    * @param state El estado actual de Akita
    * @returns Payload formateado para la API
    */
-  static toFormPayload(state: Tramite260201State): unknown {
+  static toFormPayload(state: Tramite260202State): unknown {
     return {
       "solicitante": {
         "rfc": "AAL0409235E6",
