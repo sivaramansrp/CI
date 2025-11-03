@@ -24,7 +24,7 @@ export class PagoDerechosComponent {
        */
       public pagoDerechos!: PagoDerechosFormState;
   
-      formularioDeshabilitado: boolean = false;
+      formularioDeshabilitado: boolean = true;
        /**
          * @method updatePagoDerechos
          * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.

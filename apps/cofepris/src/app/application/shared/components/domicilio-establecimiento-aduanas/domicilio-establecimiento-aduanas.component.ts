@@ -413,7 +413,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       colonia: [this.solicitudState?.colonia,[Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100),Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(50)]],
     });
