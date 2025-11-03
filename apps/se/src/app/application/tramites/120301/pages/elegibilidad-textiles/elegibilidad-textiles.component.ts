@@ -20,7 +20,6 @@ import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, ERROR_FORMA_FALTAN, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { GuardadoService } from '../../services/guardado.service';
@@ -30,6 +29,7 @@ import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -341,7 +341,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private seccionStore: SeccionLibStore,
     private guardadoService: GuardadoService,
-    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private tramiteQuery: Tramite120301Query,
     private solicitanteQuery: SolicitanteQuery,
