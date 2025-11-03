@@ -1028,6 +1028,11 @@ export const CATALOGO_ACUERDOS = (TRAMITE: string, IDTRATADO: string) : string =
  */
 export const CATALOGO_ACUERDOS_PAIS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/tratados-acuerdos`;
 
+/**
+ *API para obtener los documentos del tramite generico
+ */
+
+export const API_GET_DOCUMENTOS = (TRAMITE: string, ESPECIFICO: boolean) : string => `sat-t${TRAMITE}/solicitud/documentos?especifico=${ESPECIFICO}`;
 
 /*
  * API para obtener el catálogo de SCIAN
