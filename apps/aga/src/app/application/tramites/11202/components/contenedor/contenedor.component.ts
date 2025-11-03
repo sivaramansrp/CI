@@ -393,6 +393,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Agrega un nuevo contenedor al grid.
    */
   agregarGrid(): void {
+    if (this.solicitudForm.valid) {
+
     const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
@@ -430,6 +432,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           }
         }
       );
+    }
+  } else {
+      this.solicitudForm.markAllAsTouched();
     }
   }
 
