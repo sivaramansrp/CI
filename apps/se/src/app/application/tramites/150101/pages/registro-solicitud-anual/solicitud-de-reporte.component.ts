@@ -198,6 +198,10 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+ * Inicializa el componente y suscribe al estado de la solicitud anual desde el store.
+ * Actualiza la propiedad local `solicitudState` cada vez que cambia el estado.
+ */
   ngOnInit(): void {
     this.query.seleccionarSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))

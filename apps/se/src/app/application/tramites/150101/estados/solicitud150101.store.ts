@@ -138,8 +138,10 @@ export function createInitialState(): Solicitud150101State {
      */
     porcentajeExportacion: 0,
 
+    /** Arreglo que contiene los datos de la solicitud anual del programa. */
     solicitudDato: [],
 
+    /** Identificador compuesto del programa asociado a la solicitud. */
     idProgramaCompuesto: '',
   };
 }
@@ -303,10 +305,18 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
     }));
   }
 
+  /**
+   * Actualiza el identificador de la solicitud en el estado de la tienda.
+   * @param idSolicitud Identificador de la solicitud.
+   */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
 
+  /**
+   * Actualiza el identificador compuesto del programa asociado a la solicitud.
+   * @param idProgramaCompuesto Identificador compuesto del programa.
+   */
   public setIdProgramaCompuesto(idProgramaCompuesto: string): void {
     this.update((state) => ({ ...state, idProgramaCompuesto }));
   }

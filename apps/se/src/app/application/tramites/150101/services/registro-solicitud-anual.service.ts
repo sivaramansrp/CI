@@ -84,6 +84,11 @@ export class SolicitudService {
     return this.httpService.post<Record<string, unknown>>(PROC_150101.GUARDAR, { body: body });
   }
 
+  /**
+ * Construye el objeto con los datos del reporte anual a partir del estado de la solicitud.
+ * @param data Estado actual de la solicitud anual.
+ * @returns Objeto con los datos requeridos para el reporte anual.
+ */
   buildReporteAnual(data: Solicitud150101State): Record<string, unknown> {
     return { 
       "saldo": data.saldo,
