@@ -1,4 +1,4 @@
-import { Solicitud140103State, Tramite140103Store } from './../../../estados/tramites/tramite140103.store';
+import { Solicitud140103State, Tramite140103Store } from '../estados/store/tramite140103.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

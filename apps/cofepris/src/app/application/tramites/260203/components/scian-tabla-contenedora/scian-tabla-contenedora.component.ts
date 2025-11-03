@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constantes/materias-primas.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
@@ -27,6 +28,13 @@ import { Tramite260203Store } from '../../estados/stores/tramite260203Store.stor
 })
 export class ScianTablaContenedoraComponent {
 
+  
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor de la clase `ScianTablaContenedoraComponent`.
    * 
@@ -49,17 +57,18 @@ export class ScianTablaContenedoraComponent {
    * 
    * @type {TablaScianConfig}
    */
-  public scianSeleccionado!: TablaScianConfig;
+  public scianSeleccionado!: TablaScianConfig[];
 
   /**
    * Método que actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
    * 
    * @param event - Objeto de tipo `TablaScianConfig` que contiene los datos seleccionados de la tabla.
    */
-  obtenerSeleccionado(event: TablaScianConfig): void {
+  obtenerSeleccionado(event: TablaScianConfig | TablaScianConfig[]): void {
+    const DATOS = Array.isArray(event) ? event : [event];
      this.tramite260203Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event]
+      scianConfigDatos: DATOS
     }))
   }
 }

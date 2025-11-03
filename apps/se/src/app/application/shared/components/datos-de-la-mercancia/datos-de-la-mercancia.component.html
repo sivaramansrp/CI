@@ -45,6 +45,7 @@
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
         [isDisabled]="esFormularioSoloLectura"
+        [markTouched]="form.get('fraccion')?.touched ?? false"
       ></app-catalogo-select>
     </div>
     <div class="row">
@@ -116,6 +117,7 @@
           [tooltipQuestionCircleText]="'Unidad de medida tarifa'"
           (change)="setValoresStore(form, 'unidadMedida')"
           [isDisabled]="esFormularioSoloLectura"
+          [markTouched]="form.get('unidadMedida')?.touched ?? false"
         ></app-catalogo-select>
         
       </div>

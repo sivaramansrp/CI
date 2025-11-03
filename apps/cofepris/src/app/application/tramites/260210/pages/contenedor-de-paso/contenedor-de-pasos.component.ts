@@ -1,7 +1,9 @@
+import { AVISO, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { MENSAJE_DE_VALIDACION,TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { CommonModule } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
 import { AccionBoton } from '@ng-mf/data-access-user';
@@ -11,14 +13,21 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@ng-mf/data-access-user';
+import {PasoCargaDocumentoComponent} from '@ng-mf/data-access-user';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
+import { Observable, Subject, catchError, map, switchMap, take, takeUntil, throwError } from 'rxjs';
+import {Tramite260210State, Tramite260210Store} from '../../estados/tramite260210Store.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { PASOS } from '../../constants/medicos-uso.enum';
-
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 /**
  * @component ContenedorDePasosComponent
  * @description Componente contenedor principal del flujo tipo "wizard".
@@ -37,12 +46,14 @@ import { PASOS } from '../../constants/medicos-uso.enum';
     BtnContinuarComponent,
     AlertComponent,
     NotificacionesComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
 
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
   /**
    * @property tituloMensaje
    * @description Título dinámico que se muestra en la parte superior del componente wizard.
@@ -71,6 +82,20 @@ export class ContenedorDePasosComponent {
    */
   public mostrarAlerta: boolean = false;
 
+  
+    /**
+     * @property {EventEmitter<void>} cargarArchivosEvento
+     * @description
+     * Evento que se emite para iniciar el proceso de carga de archivos. Notifica a
+     * componentes hijos o servicios que deben activar la funcionalidad de carga
+     * de documentos requeridos para el trámite.
+     * 
+     * @event_emission Emisión de evento para carga de documentos
+     * @file_upload_trigger Disparador de funcionalidad de carga
+     * @component_communication Comunicación entre componentes padre-hijo
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+
    /**
  * @property {string} MENSAJE_DE_ERROR
  * @description
@@ -86,6 +111,12 @@ export class ContenedorDePasosComponent {
     */
    public infoAlert = 'alert-danger text-center';
 
+    /**
+     * ID del estado de la solicitud.
+     * @type {number | null}
+     */
+    idSolicitudState!: number | null;
+
   
     /** Nueva notificación relacionada con el RFC. */
     public seleccionarFilaNotificacion!: Notificacion;
@@ -95,7 +126,7 @@ export class ContenedorDePasosComponent {
    * @description Referencia al componente `WizardComponent`, permite manipular métodos como `siguiente()` o `atras()`.
    * @type {WizardComponent}
    */
-  @ViewChild(WizardComponent)
+  @ViewChild('WizardComponent')
   public wizardComponent!: WizardComponent;
 
   /**
@@ -104,12 +135,82 @@ export class ContenedorDePasosComponent {
  */
 esFormaValido: boolean = false;
 
+    /**
+     * Valor del aviso de privacidad.
+     * @type {string}
+     */
+        AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
   /**
    * Controla la visibilidad del modal de alerta.
    * @property {boolean} mostrarAlerta
    */
 esMostrarAlerta: boolean = false;
 
+ /**
+   * @property {boolean} activarBotonCargaArchivos
+   * @description
+   * Indica si el botón para cargar archivos está habilitado. Controla la
+   * disponibilidad de la funcionalidad de carga de documentos según el
+   * estado actual del proceso.
+   * 
+   * @ui_control Control de habilitación de botón
+   * @file_upload_state Estado de disponibilidad de carga
+   * @default false - Deshabilitado por defecto
+   */
+ activarBotonCargaArchivos: boolean = false;
+
+  /**
+     * @property {boolean} cargaEnProgreso
+     * @description
+     * Indica si hay una operación de carga en progreso. Utilizado para mostrar
+     * indicadores de carga y prevenir acciones concurrentes durante procesos.
+     * 
+     * @loading_indicator Estado de carga en progreso
+     * @ui_feedback Feedback visual para usuario
+     * @concurrent_prevention Prevención de operaciones concurrentes
+     * @default true - Inicia con carga activa
+     */
+  cargaEnProgreso: boolean = true;
+
+  /**
+   * @property {boolean} seccionCargarDocumentos
+   * @description
+   * Indica si la sección de carga de documentos está activa. Controla la
+   * visibilidad y disponibilidad de la interfaz de carga de documentos.
+   * 
+   * @section_visibility Control de visibilidad de sección
+   * @document_upload_ui Estado de interfaz de carga
+   * @default true - Activa al inicio para mostrar sección inicial
+   */
+  seccionCargarDocumentos: boolean = true;
+
+ /**
+     * @property {EventEmitter<void>} regresarSeccionCargarDocumentoEvento
+     * @description
+     * Evento que se emite para regresar a la sección de carga de documentos.
+     * Permite navegación específica de regreso a la sección de documentos desde
+     * otros pasos del proceso.
+     * 
+     * @navigation_event Evento de navegación específica
+     * @document_section_return Regreso a sección de documentos
+     * @workflow_control Control de flujo de trabajo
+     */
+ regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+ 
+ /**
+ * @property {Tramite260210State} solicitudState
+ * @description
+ * Estado completo de la solicitud del trámite 80207 obtenido desde el store Akita.
+ * Contiene toda la información capturada durante el proceso incluyendo datos del
+ * subcontratista, plantas seleccionadas y validaciones.
+ * 
+ * @state_container Contenedor del estado completo del trámite
+ * @akita_integration Integración con store de Akita
+ * @reactive_data Datos reactivos del proceso
+ * @business_data Información de negocio completa
+ */
+public solicitudState: Tramite260210State = {} as Tramite260210State;
 
     /**
     * @property {PasoUnoComponent} pasoUnoComponent
@@ -143,22 +244,75 @@ esMostrarAlerta: boolean = false;
     this.indice = i;
   }
 
+  
   /**
-   * @method getValorIndice
-   * @description Recibe una acción desde el botón de navegación del wizard y actualiza el paso y el título.
-   * Llama al método correspondiente en el wizard para avanzar o retroceder.
-   * @param {AccionBoton} e - Objeto con el valor del paso y la acción a ejecutar (`cont` o `atras`).
-   * @returns {void}
+   * Subject utilizado para notificar la destrucción del componente.
+   * Se utiliza con el operador `takeUntil` para cancelar automáticamente
+   * las suscripciones activas cuando el componente es destruido, 
+   * evitando así posibles fugas de memoria.
+   * 
+   * @type {Subject<void>}
+   * @example
+   * ```typescript
+   * // Uso típico con takeUntil
+   * this.someObservable$.pipe(
+   *   takeUntil(this.destroyNotifier$)
+   * ).subscribe();
+   * ```
    */
-  public getValorIndice(e: AccionBoton): void {
+  destroyNotifier$: Subject<void> = new Subject();
 
-    if (e.accion === 'cont') {
-      let isValid = true;
+    /**
+   * Identificador del tipo de trámite.
+   * @type {string}
+   */
+  idTipoTramite: string = '260210';
+
+  /**
+   * @property {Tramite260201State} storeData
+   * @description Estado de la tienda para el trámite 260210.
+   */
+  storeData!: Tramite260210State;
+
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+  
+  constructor(
+    private toastrService: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService,
+    public tramiteQuery: Tramite260210Query,
+    public tramite260210Store: Tramite260210Store
+  ) {}
+
+ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+}
+
+
+/**
+   * @method getValorIndice
+   * @description Actualiza el índice y el título del mensaje según la acción del botón.
+   * Navega hacia adelante o hacia atrás en el wizard.
+   * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
+   */
+  getValorIndice(e: AccionBoton): void {
+
+      if (e.accion === 'cont') {
+        let isValid = true;
 
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if(this.esFormaValido===false){
+      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
         this.mostrarAlerta=true;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
@@ -171,25 +325,291 @@ esMostrarAlerta: boolean = false;
           txtBtnAceptar: 'SI',
           txtBtnCancelar: 'NO',
         }
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;
       }
 
-      this.esFormaValido = false;
+      const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = true;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if(shouldNavigate) {
+          if(esValidObject(response) && esValidObject(response.datos)) {
+            this.esFormaValido = false;
+            const DATOS = response.datos as { id_solicitud?: number };
+            const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+            this.idSolicitudState = ID_SOLICITUD;
+            this.tramite260210Store.setIdSolicitud(ID_SOLICITUD);
+          }
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor;
+          }
+          this.toastrService.success(response.mensaje);
+          if (indiceActualizado > 0 && indiceActualizado < 5) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
+            }
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+    }else{
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-
-      this.wizardComponent.siguiente();
-      return;
+      this.wizardComponent.atras();
     }
+  }
 
-      this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
+/**
+   * @method cargaRealizada
+   * @description
+   * Método para manejar el evento de finalización del proceso de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos basado en el resultado
+   * de la operación de carga.
+   * 
+   * @param {boolean} cargaRealizada - Indica si la carga de documentos se realizó
+   *                                  correctamente (true) o falló (false)
+   * 
+   * @state_management
+   * Actualiza `seccionCargarDocumentos`:
+   * - `false` si la carga fue exitosa (oculta sección)
+   * - `true` si la carga falló (mantiene sección visible)
+   * 
+   * @ui_control
+   * Controla la visibilidad de:
+   * - Sección de carga de documentos
+   * - Botones de acción relacionados
+   * - Indicadores de estado de carga
+   * 
+   * @workflow_progression
+   * Permite progresión del flujo:
+   * - Oculta sección al completar carga exitosa
+   * - Mantiene accesible para retry en caso de fallo
+   * 
+   * @param {boolean} cargaRealizada
+   * @returns {void}
+   * @document_upload_handler
+   */
+cargaRealizada(cargaRealizada: boolean): void {
+  this.seccionCargarDocumentos = cargaRealizada ? false : true;
+}
 
+/**
+* @method manejaEventoCargaDocumentos
+* @description
+* Método para manejar eventos relacionados con el estado de carga de documentos.
+* Actualiza el estado del botón de carga de archivos basado en la disponibilidad
+* o progreso de la funcionalidad de carga.
+* 
+* @param {boolean} carga - Indica si la funcionalidad de carga de documentos
+*                         está activa (true) o inactiva (false)
+* 
+* @button_state_control
+* Actualiza `activarBotonCargaArchivos` para:
+* - Habilitar botón cuando carga está disponible
+* - Deshabilitar durante procesos o cuando no aplique
+* - Proporcionar feedback visual al usuario
+* 
+* @user_interaction
+* Controla la interacción del usuario con:
+* - Botones de carga de archivos
+* - Elementos de UI relacionados con documentos
+* - Estados de habilitación/deshabilitación
+* 
+* @workflow_coordination
+* Coordina el flujo de trabajo:
+* - Habilita carga cuando es apropiado
+* - Previene acciones durante procesos
+* - Sincroniza estado con otros componentes
+* 
+* @param {boolean} carga
+* @returns {void}
+* @ui_state_manager
+*/
+manejaEventoCargaDocumentos(carga: boolean): void {
+  this.activarBotonCargaArchivos = carga;
+}
+
+/**
+ * @method siguiente
+ * @description
+ * Método para navegar programáticamente al siguiente paso del wizard.
+ * Ejecuta la transición forward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_forward
+ * Realiza navegación que:
+ * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+ * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+ * - Actualiza índice local basado en posición del wizard
+ * - Sincroniza datos de pasos con nueva posición
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component
+ * - Datos de configuración de pasos
+ * - Estado visual de la UI
+ * 
+ * @future_validation
+ * Comentario indica que se implementará:
+ * - Validación de documentos cargados
+ * - Verificación de completitud de adjuntos
+ * - Control de calidad de archivos
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @programmatic_navigation
+ */
+siguiente(): void {
+  // Aqui se hara la validacion de los documentos cargdados
+  this.wizardComponent.siguiente();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
+
+/**
+ * @method anterior
+ * @description
+ * Método para navegar programáticamente al paso anterior del wizard.
+ * Ejecuta la transición backward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_backward
+ * Realiza navegación que:
+ * - Retrocede al paso anterior usando `wizardComponent.atras()`
+ * - Actualiza índice local basado en nueva posición del wizard
+ * - Sincroniza datos de pasos con posición actualizada
+ * - Mantiene consistencia de estado durante retroceso
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component  
+ * - Datos de configuración de pasos
+ * - Estado visual de navegación
+ * 
+ * @state_preservation
+ * Durante retroceso:
+ * - Preserva datos capturados en pasos anteriores
+ * - Mantiene validaciones ya realizadas
+ * - Conserva estado de formularios
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Nueva posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @backward_navigation
+ */
+anterior(): void {
+  this.wizardComponent.atras();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
+
+/**
+ * @method onClickCargaArchivos
+ * @description
+ * Método de manejo de eventos para el click en botón de carga de archivos.
+ * Emite evento que notifica a componentes interesados que deben activar
+ * la funcionalidad de carga de documentos.
+ * 
+ * @event_emission
+ * Emite evento:
+ * - `cargarArchivosEvento`: Sin parámetros (void)
+ * - Notifica inicio de proceso de carga
+ * - Activa funcionalidad en componentes suscritos
+ * 
+ * @component_communication
+ * Facilita comunicación:
+ * - Entre componente padre e hijos
+ * - Con servicios de carga de archivos
+ * - Con sistemas de gestión de documentos
+ * 
+ * @user_interaction
+ * Responde a:
+ * - Click en botón de carga
+ * - Acción intencional del usuario
+ * - Iniciación de flujo de documentos
+ * 
+ * @workflow_trigger
+ * Desencadena:
+ * - Apertura de dialogo de archivos
+ * - Activación de componentes de carga
+ * - Inicio de proceso de validación de documentos
+ * 
+ * @void
+ * @event_handler
+ */
+onClickCargaArchivos(): void {
+  this.cargarArchivosEvento.emit();
+}
+
+ /**
+  * @method onCargaEnProgreso
+  * @description
+  * Método para manejar el estado de progreso de carga de archivos.
+  * Actualiza la bandera de carga en progreso para controlar UI y
+  * prevenir acciones concurrentes durante procesos de carga.
+  * 
+  * @param {boolean} carga - Indica si hay una operación de carga en progreso
+  *                         (true) o si ha terminado (false)
+  * 
+  * @loading_state_management
+  * Controla estado de carga para:
+  * - Mostrar/ocultar indicadores de progreso
+  * - Habilitar/deshabilitar botones durante carga
+  * - Prevenir acciones concurrentes
+  * - Proporcionar feedback visual al usuario
+  * 
+  * @ui_feedback
+  * Actualiza `cargaEnProgreso` para:
+  * - Mostrar spinners o barras de progreso
+  * - Deshabilitar botones durante operaciones
+  * - Indicar estado de procesamiento
+  * - Mejorar experiencia de usuario
+  * 
+  * @concurrent_operation_control
+  * Previene:
+  * - Múltiples cargas simultáneas
+  * - Navegación durante procesos
+  * - Acciones conflictivas
+  * - Corrupción de datos
+  * 
+  * @param {boolean} carga
+  * @returns {void}
+  * @loading_indicator_controller
+  */
+ onCargaEnProgreso(carga: boolean): void {
+  this.cargaEnProgreso = carga;
 }
 
   /**
@@ -209,5 +629,29 @@ esMostrarAlerta: boolean = false;
       default:
         return TITULOMENSAJE;
     }
+  }
+
+
+        /**
+   * Genera una alerta de error con los mensajes proporcionados.
+   * @param mensajes Mensajes de error a mostrar en la alerta.
+   * @returns HTML de la alerta de error.
+   */
+static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="row">
+<div class="col-md-12 justify-content-center text-center">
+  <div class="row">
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <ol>
+    <li>${mensajes}</li>
+    </ol>
+    </div>
+  </div>
+</div>
+</div>
+`;
+return ALERTA;
   }
 }

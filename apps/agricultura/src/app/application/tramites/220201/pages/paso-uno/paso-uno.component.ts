@@ -34,6 +34,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
     DatosParaMovilizacionNacionalComponent, PagoDeDerechosComponent, TercerospageComponent, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  @ViewChild(DatosDeLaSolicitudComponent) solicitud!: DatosDeLaSolicitudComponent;
   /**
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
    * @property {Subject<void>} destroyNotifier$
@@ -84,13 +85,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
 */
   @ViewChild('padoDeRef') pagoDeDerechosComponent!: PagoDeDerechosComponent;
-    /**
-     * Referencia al componente hijo TercerospageComponent para manejar los terceros relacionados.
-     * @public
-     * @type {TercerospageComponent}
-     * @memberof PasoUnoComponent
-     */
-    @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
+  /**
+   * Referencia al componente hijo TercerospageComponent para manejar los terceros relacionados.
+   * @public
+   * @type {TercerospageComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
 
 
   /**
@@ -182,7 +183,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     if (this.datosDelaSolicitu) {
       if (!this.datosDelaSolicitu.validarFormulario()) {
+        this.seleccionaTab(2);
         isValid = false;
+        return isValid;
       }
     } else {
       isValid = false;
@@ -190,32 +193,54 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     if (this.datosParaMovilizacionNacional) {
       if (!this.datosParaMovilizacionNacional.validarFormulario()) {
+        this.seleccionaTab(3);
         isValid = false;
+        return isValid;
       }
     } else {
       isValid = false;
     }
 
-    if (this.pagoDeDerechosComponent) {
-      if (!this.pagoDeDerechosComponent.validarFormulario()) {
+    if (this.tercerospage) {
+      if (!this.tercerospage.validarFormulario()) {
+        this.seleccionaTab(4);
         isValid = false;
+        return isValid;
       }
-    } else {
+    }
+    else {
       isValid = false;
     }
-      if(this.tercerospage){
-      if(!this.tercerospage.validarFormulario()){
+    if (this.pagoDeDerechosComponent) {
+      if (!this.pagoDeDerechosComponent.validarFormulario()) {
+        this.seleccionaTab(5);
         isValid = false;
+        return isValid;
       }
-    }
-    else{
+    } else {
       isValid = false;
     }
 
     return isValid;
   }
 
+  /**
+   * Guarda el estado actual de la solicitud de manera parcial.
+   * Este método invoca la función `guardarParcial` en el objeto `solicitud`,
+   * permitiendo al usuario guardar el progreso sin completar todo el proceso.
+   */
+  guardaSolicitudParcial(): void {
+    this.solicitud.guardarParcial();
+  }
 
+
+  /**
+   * Guarda la solicitud completa.
+   * Llama al método `guardarTotal` de la solicitud para realizar el guardado total.
+   */
+  guardadoTotal(): void {
+    this.solicitud.guardarTotal();
+  }
 
 
 

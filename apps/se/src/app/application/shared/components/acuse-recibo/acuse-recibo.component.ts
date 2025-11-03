@@ -36,6 +36,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './acuse-recibo.component.scss',
 })
 export class AcuseReciboComponent implements OnInit, OnDestroy {
+  
   /**
    * @property unsubscribe$
    * @description
@@ -92,6 +93,11 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   public alertaNotificacion: string = '';
 
   /**
+   * Datos de la tabla de resoluciones.Indica si se deben mostrar docs de resoluciones. Opcional ejemplo en trámite 130102.
+   */
+  @Input() datosTablaResolucion?: BodyTablaResolucion[] = [];
+
+  /**
    * Datos de la tabla de resoluciones.
    * Contiene los registros que se mostrarán en la tabla de resoluciones.
    * @type {BodyTablaResolucion[]}
@@ -122,7 +128,7 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @type {HeaderTablaResolucion[]}
   */
   readonly encabezadoTablaResolucion: HeaderTablaResolucion[] = CONSULTA_RESOLUCIONES.encabezadoTablaResolucion;
-
+  
   /**
    * @constructor
    * @param {ConfirmarNotificacionService} confirmarNotificacionService - Servicio para obtener datos de Acuse de Recibo.
@@ -148,8 +154,10 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+
       if(this.banderaVista === "Resolucion"){
        this.alertaNotificacion = GENERARMENSAJERESOLUCION(this.guardarDatos.folioTramite);
+
       }else{
         this.alertaNotificacion = GENERARMENSAJENOTIFICACION(this.guardarDatos.folioTramite);
       }

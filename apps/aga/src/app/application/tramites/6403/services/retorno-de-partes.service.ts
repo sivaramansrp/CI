@@ -81,6 +81,7 @@ export class RetornoDePartesService {
   this.tramite6403Store.setFechaDescruccionDestino(DATOS.solicitudFormulario.fechaDescruccionDestino);
   this.tramite6403Store.setEstadoTipoDocumentoDestino(DATOS.solicitudFormulario.estadoTipoDocumentoDestino);
   this.tramite6403Store.setAutoridadPresentoAvisoDestruccion(DATOS.solicitudFormulario.autoridadPresentoAvisoDestruccion);
+  this.tramite6403Store.setTablaPartesReemplazadasDatos(DATOS.tablaPartesReemplazadasDatos || []);
 
   // mercanciaFormulario
   this.tramite6403Store.setModalDescMercancia(DATOS.mercanciaFormulario.modalDescMercancia);

@@ -38,7 +38,7 @@ describe('DatosAnexosComponent', () => {
         { provide: ToastrService, useValue: toastrService },
         {
           provide: '_HttpClient',
-          useValue: {} // Mock implementation of _HttpClient
+          useValue: {}
         }
       ],
     }).compileComponents();
@@ -55,7 +55,7 @@ describe('DatosAnexosComponent', () => {
   it('should call obtenerAnexo and populate datosAnexo and datosImportacion', () => {
     mockSolicitudService.obtenerAnexo.mockReturnValue(of(dummyAnexos));
     
-    fixture.detectChanges(); // triggers ngOnInit, which calls obteneComplimentaria
+    fixture.detectChanges();
 
     expect(mockSolicitudService.obtenerAnexo).toHaveBeenCalled();
     expect(component.datosAnexo).toEqual(dummyAnexos);
@@ -65,7 +65,7 @@ describe('DatosAnexosComponent', () => {
   it('should handle error when obtenerAnexo fails', () => {
     mockSolicitudService.obtenerAnexo.mockReturnValue(throwError(() => new Error('Error')));
     
-    fixture.detectChanges(); // triggers ngOnInit, which calls obteneComplimentaria
+    fixture.detectChanges();
 
     expect(mockSolicitudService.obtenerAnexo).toHaveBeenCalled();
     expect(toastrService.error).toHaveBeenCalledWith('Error al cargar los anexos');

@@ -120,11 +120,11 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   ngOnInit(): void {
     this.destinatarioForm = this.fb.group({
-       tipoMercancia: ['yes', Validators.required], 
+      tipoMercancia: ['yes', Validators.required],
       nombre: ['', []],
-      primerApellido: ['', []], 
+      primerApellido: ['', []],
       segundoApellido: [''],
-      razonSocial: ['', []], 
+      razonSocial: ['', []],
       pais: ['', Validators.required],
       domicilio: ['', Validators.required],
       lada: ['', [Validators.maxLength(5)]],
@@ -138,12 +138,12 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
         const DESTINATARIO = data.seletedExdora;
         if (DESTINATARIO) {
           this.destinatarioForm.patchValue({
-         tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
+            tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
             nombre: DESTINATARIO.nombre || '',
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
-            pais: DESTINATARIO.pais || '1',
+            pais: DESTINATARIO.pais || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
             correo: DESTINATARIO.correo || '',
@@ -172,6 +172,7 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
   pairsCatalogChange(): void {
 
     this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      console.warn('Paises', data);
       this.pairsCatalog = data.datos ?? [];
     });
   }
@@ -182,7 +183,7 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   estadoCatalogChange(): void {
 
-    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201, 'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.estadoCatalog = data.datos ?? [];
     });
   }
@@ -272,5 +273,13 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
       this.destinatarioForm.get('primerApellido')?.clearValidators();
       this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
     }
+  }
+
+  /**
+   * Actualiza los datos almacenados en el store.
+   * @method setValoresStore
+   */
+  setValoresStore(): void {
+    const VALOR = this.destinatarioForm.value;
   }
 }

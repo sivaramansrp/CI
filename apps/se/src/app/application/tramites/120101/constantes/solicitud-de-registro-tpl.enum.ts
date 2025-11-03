@@ -367,9 +367,8 @@ export const CONSULTAR_CUPO = [
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: 'Selecciona un valor',
-    valorPredeterminado: '1',
+    valorPredeterminado: '',
     marginTop: 0,
-    opciones: [{ id: 1, descripcion: 'TMEC' }],
   },
   {
     id: 'clasificacion',
@@ -383,6 +382,7 @@ export const CONSULTAR_CUPO = [
     marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
+    
   },
   {
     id: '',

@@ -1,11 +1,13 @@
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_POST_CADENA_ORIGINAL} from '../../../constantes/231001/api-constants';
+import { API_POST_CADENA_ORIGINAL } from './../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { CadenaOriginalRequest } from '../models/cadena-original-request';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import {
+  ENVIRONMENT
+} from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-import { IDSOLICITUD } from '../../../constantes/230301/api-constants';
 import { Injectable } from '@angular/core';
+import { TRAMITE_ID } from '../enum/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,7 @@ export class CadenaOriginal230301Service {
   /**
    * URL del servidor donde se encuentra la API.
    */
-  urlServer = ENVIRONMENT.API_HOST;
+  urlServer = ENVIRONMENT.API_HOST + '/api/';
 
   constructor(private http: HttpClient) {}
 
@@ -27,9 +29,10 @@ export class CadenaOriginal230301Service {
     idSolicitud: string,
     body: CadenaOriginalRequest
   ): Observable<BaseResponse<T>> {
-    const ENDPOINT =
-      `${this.urlServer}/api/` +
-      API_POST_CADENA_ORIGINAL.replace(IDSOLICITUD, idSolicitud);
+    const ENDPOINT = `${this.urlServer}${API_POST_CADENA_ORIGINAL(
+      TRAMITE_ID,
+      Number(idSolicitud)
+    )}`;
 
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
       map((response) => response),

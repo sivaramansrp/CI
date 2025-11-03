@@ -996,7 +996,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   public obtenerValor(
     field: keyof TablaMercanciasDatos | keyof MercanciaForm
-  ): string | number | undefined | string[] {
+  ): string | number | undefined | string[] | Catalogo | undefined {
     if (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm] !== undefined) {
       return this.mercanciaFormState[field as keyof MercanciaForm];
     }

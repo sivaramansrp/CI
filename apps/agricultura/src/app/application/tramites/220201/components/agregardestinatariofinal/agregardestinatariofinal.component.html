@@ -82,35 +82,34 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true" name="pais"
-                            formControlName="pais"></app-catalogo-select>
+                        <app-catalogo-select [catalogo]="pairsCatalog" formControlName="pais" [label]="'País'"
+                            [required]="true" name="pais"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="row">
-                    
-         <div class="col-md-8">
-              <div class="form-group">
-                <label class="form-label" for="estado">Domicilio*:</label>
-            <textarea class="form-control" id="domicilio" placeholder="Domicilio" type="text"
-                formControlName="domicilio" rows="8" ></textarea>
-                <div *ngIf="destinatarioForm.get('domicilio')?.hasError('required') && destinatarioForm.get('domicilio')?.touched"
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="estado">Domicilio*:</label>
+                            <textarea class="form-control" id="domicilio" maxlength="4000" formControlName="domicilio"
+                                rows="5"></textarea>
+                            <div *ngIf="destinatarioForm.get('domicilio')?.hasError('required') && destinatarioForm.get('domicilio')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
                             </div>
-                
+
+                        </div>
+                    </div>
                 </div>
-         </div>
-                </div>
-              
+
                 <div class="row">
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="form-label" for="lada">Lada: </label>
                             <input class="form-control" id="lada" placeholder="" type="text" libUppercase
-                                formControlName="lada" />
+                                formControlName="lada" maxlength="4"/>
                             <div *ngIf="destinatarioForm.get('lada')?.hasError('maxLength') && destinatarioForm.get('lada')?.touched"
                                 class="text-danger">
-                                <small>No escribas más de 5 caracteres.</small>
+                                <small>No escribas más de 4 caracteres.</small>
                             </div>
                         </div>
                     </div>
@@ -118,7 +117,7 @@
                         <div class="form-group">
                             <label class="form-label" for="telefono">Teléfono: </label>
                             <input class="form-control" id="telefono" placeholder="" type="text" libUppercase
-                                formControlName="telefono" />
+                                formControlName="telefono" maxlength="30" />
                             <div *ngIf="destinatarioForm.get('telefono')?.hasError('maxLength') && destinatarioForm.get('telefono')?.touched"
                                 class="text-danger">
                                 <small>No escribas más de 30 caracteres.</small>

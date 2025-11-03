@@ -1,4 +1,4 @@
-import { ENVIRONMENT, HttpCoreService, JSONResponse } from '@ng-mf/data-access-user';
+import { ENVIRONMENT, HttpCoreService, JSONResponse, REGEX_REEMPLAZAR_VACIO } from '@ng-mf/data-access-user';
 import { Solicitud110207State,Tramite110207Store,} from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -166,9 +166,9 @@ export class RegistroService {
       RESULT.push({
         id: ITEM.id,
         fraccion_arancelaria: ITEM.fraccionArancelaria,
-        cantidad:ITEM.cantidad,
+        cantidad: ITEM.cantidad ? ITEM.cantidad.replace(REGEX_REEMPLAZAR_VACIO, '') : '',
         unidad_medida:ITEM.umc,
-        valor_mercancia:ITEM.valorMercancia,
+        valor_mercancia: ITEM.valorMercancia ? ITEM.valorMercancia.replace(REGEX_REEMPLAZAR_VACIO, '') : '',
         nombreTecnico:ITEM.nombreTecnico,
         nombre_comercial:ITEM.nombreComercial,
         registro_producto:ITEM.numeroDeRegistrodeProductos,

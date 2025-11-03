@@ -6,7 +6,7 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
-  Notificacion, 
+  Notificacion,
   NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -124,12 +124,12 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    */
   public complementarState!: ComplementarState;
 
-   /**
-   * Contiene la notificación relacionada con la acción de agregar elementos.
-   * 
-   * Esta notificación puede mostrar mensajes de éxito, advertencia o error
-   * según el resultado del proceso de agregado.
-   */
+  /**
+  * Contiene la notificación relacionada con la acción de agregar elementos.
+  * 
+  * Esta notificación puede mostrar mensajes de éxito, advertencia o error
+  * según el resultado del proceso de agregado.
+  */
   public agregarNotification!: Notificacion;
 
   /**
@@ -186,7 +186,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
 
   /** Obtiene y actualiza las opciones del catálogo de pais desde el servicio. */
   obtenerPaisOptions(): void {
-      this.complimentosService.getPais()
+    this.complimentosService.getPais()
       .pipe(
         takeUntil(this.destroyNotifier$)
       )
@@ -194,7 +194,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
         this.complementarStore.setPaisOptions(res.datos);
         this.paisDestinoCatalog = res.datos;
       });
-    }
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando se detectan cambios en las propiedades de entrada.
@@ -228,7 +228,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
   inicializarFormularioProveedorCliente(): void {
     const ROW = this.selectedRow || this.selectedDosRow;
     this.formularioProveedorCliente = this.fb.group({
-      descripcionComercial: [{value: ROW?.encabezadoDescripcionComercial, disabled: true}, Validators.required],
+      descripcionComercial: [{ value: ROW?.encabezadoDescripcionComercial, disabled: true }, Validators.required],
       paisDestino: [0, Validators.required],
       rfc: ['', Validators.required],
       razonSocialCliente: ['', Validators.required],
@@ -263,8 +263,8 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
    * @returns {void}
    */
   aggregar(): void {
-  this.agregarNotification = {
-    tipoNotificacion: 'alert',
+    this.agregarNotification = {
+      tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
@@ -274,7 +274,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-  }
+    }
 
 
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
@@ -282,7 +282,7 @@ export class ProveedorClienteComponent implements OnChanges, OnInit {
       paisDestino: this.obtenerValorPaisDeDestino(
         this.formularioProveedorCliente.get('paisDestino')?.value
       ),
-      rfcClinte: this.formularioProveedorCliente.get('rfc')?.value,
+      rfcClinte: (this.formularioProveedorCliente.get('rfc')?.value || '').toUpperCase(),
       razonSocial:
         this.formularioProveedorCliente.get('razonSocialCliente')?.value,
     };

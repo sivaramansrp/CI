@@ -13,7 +13,7 @@ import { ELEMENTOS_REQUERIDOS } from '../../constants/tratamientos-especiales.en
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -30,6 +30,15 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description
+   * Referencia al componente hijo `TercerosRelacionadosComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   */
+  @ViewChild(TercerosRelacionadosComponent)
+  TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+  /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
    */
@@ -40,6 +49,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Datos de la tabla de destinatarios finales.
    */
   destinatarioFinalTablaDatos: Destinatario[] = [];
+
+  
+   @ViewChild(TercerosRelacionadosComponent)
+        tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+           
 
 
   /**
@@ -151,6 +165,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  /**
+   * @method validarContenedor
+   * @description
+   * Valida el contenedor delegando la validación al componente hijo.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
+
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**
