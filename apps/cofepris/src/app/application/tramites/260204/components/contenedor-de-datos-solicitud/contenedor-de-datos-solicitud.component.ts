@@ -6,9 +6,9 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { Subject } from 'rxjs';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
-import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 
 /**
  * Decorador de componente de Angular que define las propiedades y configuraciones del componente `ContenedorDeDatosSolicitudComponent`.
