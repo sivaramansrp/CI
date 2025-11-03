@@ -102,6 +102,12 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   formDatosDelDestinatarioValues!: FormValues;
 
   /**
+   * @property {CamState['grupoRepresentativo']} grupoRepresentativo
+   * @description Estado actual del grupo representativo.
+   */
+  grupoRepresentativo!: CamState['grupoRepresentativo'];
+
+  /**
    * @property {Subject<void>} destroyNotifier$
    * @description Notificador para gestionar la destrucción de suscripciones.
    * @private
@@ -173,6 +179,11 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
         this.formDestinatarioValues = estado;
       });
 
+    this.query.selectGrupoRepresentativo$?.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.grupoRepresentativo = estado;
+      });
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -218,7 +229,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   setValoresStore1(event: {
     formGroupName: string;
     campo: string;
-    VALOR: undefined;
+    VALOR: string;
     METODO_NOMBRE: string;
   }): void {
     const { VALOR, METODO_NOMBRE } = event;
@@ -255,7 +266,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   setValoresStoreDatos(event: {
     formGroupName: string;
     campo: string;
-    valor: undefined;
+    valor: any;
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
@@ -271,7 +282,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   setValoresStoreDe(event: {
     formGroupName: string;
     campo: string;
-    valor: undefined;
+    valor: any;
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;

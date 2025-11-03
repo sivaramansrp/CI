@@ -99,14 +99,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se suscribe a los cambios en el estado de la consulta y guarda los datos del formulario si es necesario.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState?.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      })
+    ).subscribe();
   }
 
   /**

@@ -64,46 +64,6 @@ export class CamCertificadoService {
   ) { }
 
   /**
-   * * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`)
-   * y realiza una solicitud HTTP GET para recuperar los datos.
-   * @description Obtiene un array de objetos `Catalogo` desde un archivo JSON ubicado en la URL especificada.
-   * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
-   * @returns Un `Observable` que emite un array de objetos `Catalogo`.
-   * @method obtenerMenuDesplegable
-   * @memberof CamCertificadoService
-   * @usageNotes
-   *
-   * Ejemplo:
-   * ```typescript
-   * this.camCertificadoService.obtenerMenuDesplegable('menu.json').subscribe(menu => {
-   *   console.log(menu);
-   * });
-   * ```
-   * @compodoc
-   */
-  obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
-    const BASE_URL = this.url + fileName;
-    return this.http
-      .get<RespuestaCatalogos>(BASE_URL)
-      .pipe(map((response) => response.data));
-  }
-
-  /**
-   * @method obtenerTablaDatos
-   * @description
-   * Obtiene un array de objetos `Mercancia` desde un archivo JSON ubicado en la URL especificada.
-   * @param {string} fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
-   * @returns {Observable<Mercancia[]>} Un observable que emite un array de objetos `Mercancia`.
-   * @usageNotes
-   * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`)
-   * y realiza una solicitud HTTP GET para recuperar los datos.
-   */
-  obtenerTablaDatos(fileName: string): Observable<Mercancia[]> {
-    const JSON_URL = this.url + fileName;
-    return this.http.get<Mercancia[]>(JSON_URL);
-  }
-
-  /**
    * @description Obtiene todos los datos del certificado CAM desde un archivo JSON ubicado en la URL especificada.
    * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
    * @returns Un `Observable` que emite un objeto `CamState`.

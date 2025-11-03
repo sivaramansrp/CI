@@ -499,9 +499,6 @@ export class CertificadoOrigenComponent
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -517,42 +514,6 @@ export class CertificadoOrigenComponent
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.camCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (_error: HttpErrorResponse) => {
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.camCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (_error: HttpErrorResponse) => {
-          this.pais = [];
-        },
-      });
   }
 
   /**
