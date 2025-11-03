@@ -289,6 +289,7 @@ export class DestinatarioComponent
     });
   }
 
+  /** Obtiene la lista de medios de transporte desde el servicio */
   get paisDestinDestinatario(): Catalogo[]{
     return this.circulacion?.length
       ? this.circulacion
