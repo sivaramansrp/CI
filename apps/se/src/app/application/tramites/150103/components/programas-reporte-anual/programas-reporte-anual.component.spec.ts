@@ -21,7 +21,9 @@ class MockSolicitud150103Store {
 }
 
 @Injectable()
-class MockSolicitud150103Query {}
+class MockSolicitud150103Query {
+  getValue = jest.fn().mockReturnValue({});
+}
 
 @Injectable()
 class MockInformeAnualProgramaService {

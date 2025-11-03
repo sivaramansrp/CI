@@ -7,8 +7,8 @@ import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
-import { take } from 'rxjs/operators';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { take } from 'rxjs/operators';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.

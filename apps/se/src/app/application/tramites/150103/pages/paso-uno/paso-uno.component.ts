@@ -142,7 +142,9 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
   if (evento) {
     this.estaHabilitado = evento;
   }
-}  /**
+}  
+
+  /**
    * Valida todos los formularios del componente.
    * @returns true si todos los formularios son válidos, false en caso contrario.
    */
@@ -154,14 +156,6 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
     // Por ahora retornamos true ya que el componente SolicitanteComponent
     // maneja su propia validación internamente
     return true;
-  }
-
-  /**
-   * Marca todos los campos como tocados para mostrar errores de validación.
-   */
-  markAllFieldsTouched(): void {
-    // El componente SolicitanteComponent maneja su propia validación
-    console.log('Validating forms in paso-uno component');
   }
 
 ngOnDestroy(): void {
