@@ -253,7 +253,6 @@ export class TercerosrelacionadosComponent implements OnInit {
         });
 
         data.terceros_exportador.forEach(tercero => {
-          console.warn('Prellenado Terceros Exportador:', tercero);
           const MAPPED_EXPORTADOR: DestinatarioForm = {
             nombre: tercero.nombre,
             razonSocial: tercero.razon_social,

@@ -34,6 +34,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 })
 export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
+  @ViewChild(PasoUnoComponent) guardadoTotal!: PasoUnoComponent;
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -79,7 +80,7 @@ export class ZoosanitarioPageComponent implements OnInit {
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
@@ -134,7 +135,6 @@ export class ZoosanitarioPageComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
@@ -160,6 +160,7 @@ export class ZoosanitarioPageComponent implements OnInit {
       this.datosPasos.indice = indiceActualizado;
 
       if (e.accion === 'cont') {
+        this.guardadoTotalSolicitud();
         this.wizardComponent.siguiente();
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
@@ -200,6 +201,7 @@ export class ZoosanitarioPageComponent implements OnInit {
    * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
    */
   private validarTodosFormulariosPasoUno(): boolean {
+    this.pasoUnoComponent.validarFormularios()
     if (!this.pasoUnoComponent) {
       return true;
     }
@@ -230,6 +232,10 @@ export class ZoosanitarioPageComponent implements OnInit {
    */
   guardadoParcialSolicitud(): void {
     this.guardadoParcial.guardaSolicitudParcial();
+  }
+
+  guardadoTotalSolicitud(): void {
+    this.guardadoTotal.guardadoTotal();
   }
 
   ngOnInit(): void {

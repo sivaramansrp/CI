@@ -28,6 +28,7 @@
 export interface GuardaSolicitud {
     id_solicitud: number | null,
     datos_solicitud: {
+        clave_regimen: string,
         cve_aduana: string,
         oficina_inspeccion_sanidad_agropecuaria: string,
         punto_inspeccion: string,
@@ -35,7 +36,6 @@ export interface GuardaSolicitud {
         establecimiento_TIF: string,
         nombre_veterinario: string,
         numero_autorizacion: string,
-        clave_regimen: string,
         mercancia: Mercancia[]
     },
     transporte: DatosMovilizacion,
@@ -45,7 +45,8 @@ export interface GuardaSolicitud {
         rfc: string,
         nombre: string,
         es_persona_moral: true,
-        certificado_serial_number: string
+        certificado_serial_number: string,
+        rol_capturista: string
     },
     representacion_federal: {
         cve_entidad_federativa: "DGO",
@@ -156,7 +157,7 @@ export interface DatosMovilizacion {
     coordenadas: string,
     ide_medio_transporte: string,
     identificacion_transporte: string,
-    id_punto_verificacion: string,
+    id_punto_verificacion: number,
     razon_social: string
 }
 

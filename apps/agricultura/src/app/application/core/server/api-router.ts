@@ -307,3 +307,20 @@ export const API_GET_SOLICITUDES_TERCEROS_RELACIONADOS = (TRAMITE: string, esPre
 export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/pago-derechos`;
 
 
+/**
+ * API para obtener el estado de la solicitud del tramite 220201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/generar-cadena-original`;
+
+
+/**
+ * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
+
+
+
