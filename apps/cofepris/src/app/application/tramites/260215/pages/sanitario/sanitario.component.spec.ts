@@ -42,7 +42,7 @@ describe('SanitarioComponent', () => {
     component.indice = 1;
 
     // Mock the guardarDatosAPI method to return a successful response
-    jest.spyOn(component, 'guardarDatosAPI').mockReturnValue(of({ success: true, message: 'Success', data: {} }));
+    // jest.spyOn(component, 'guardarDatosAPI').mockReturnValue(of({ success: true, message: 'Success', data: {} }));
 
     component.getValorIndice({ accion: 'cont', valor: 2 });
 

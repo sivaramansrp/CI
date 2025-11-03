@@ -21,6 +21,10 @@ interface AccionBoton {
   templateUrl: './sanitario.component.html',
 })
 export class SanitarioComponent {
+  /**
+   * Alerta de error para mostrar mensajes en el formulario
+   */
+  formErrorAlert: { tipo: string; mensaje: string } | null = null;
    /**
    * ID del tipo de trámite.
    */
@@ -119,15 +123,49 @@ export class SanitarioComponent {
   // }
 
     getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.query.selectTramiteState$.pipe(
+          take(1),
+          map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
+          switchMap(FORM_PAYLOAD => this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD)),
+          catchError(error => {
+            console.error('Error al guardar:', error);
+            this.formErrorAlert = {
+              tipo: 'danger',
+              mensaje: 'Error al guardar: ' + (error?.message || 'Error desconocido'),
+            };
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return throwError(() => error);
+          })
+        ).subscribe(response => {
+          const SHOULD_NAVIGATE = response.codigo === '00';
+          if (!SHOULD_NAVIGATE) {
+            const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = {
+              tipo: 'danger',
+              mensaje: ERROR_MESSAGE,
+            };
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          // Si éxito, navega al siguiente paso
+          if (e.valor > 0 && e.valor < 5) {
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            if (this.wizardComponent) {
+              this.wizardComponent.siguiente();
+            }
+          }
+        });
       } else {
-        this.wizardComponent.atras();
+        if (e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (this.wizardComponent) {
+            this.wizardComponent.atras();
+          }
+        }
       }
     }
-  }
 
   /**
    * Guarda los datos del formulario utilizando el servicio estándar compartido.
@@ -186,13 +224,42 @@ export class SanitarioComponent {
  /**
    * Botón siguiente para paso 2
    */
-  siguiente(): void {
-    this.indice = 3;
-    this.datosPasos.indice = this.indice;
-    this.actualizarSeccionCargarDocumentos();
-    if (this.wizardComponent) {
-      this.wizardComponent.siguiente();
-    }
+  /**
+   * Maneja el click en 'Continuar': guarda datos y navega si éxito, muestra error si falla
+   */
+  continuarConGuardado(): void {
+    this.query.selectTramiteState$.pipe(
+      take(1),
+      map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
+      switchMap(FORM_PAYLOAD => this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD)),
+      catchError(error => {
+        console.error('Error al guardar:', error);
+        this.formErrorAlert = {
+          tipo: 'danger',
+          mensaje: 'Error al guardar: ' + (error?.message || 'Error desconocido'),
+        };
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return throwError(() => error);
+      })
+    ).subscribe(response => {
+  const SHOULD_NAVIGATE = response.codigo === '00';
+  if (!SHOULD_NAVIGATE) {
+        const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+        this.formErrorAlert = {
+          tipo: 'danger',
+          mensaje: ERROR_MESSAGE,
+        };
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+      // Si éxito, navega al siguiente paso
+      this.indice = 3;
+      this.datosPasos.indice = this.indice;
+      this.actualizarSeccionCargarDocumentos();
+      if (this.wizardComponent) {
+        this.wizardComponent.siguiente();
+      }
+    });
   }
  /**
    * Botón anterior para paso 2

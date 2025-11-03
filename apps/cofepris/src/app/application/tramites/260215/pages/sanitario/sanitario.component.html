@@ -51,7 +51,7 @@
             <button
               class="btn btn-primary ms-3"
               (click)="
-                seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+                seccionCargarDocumentos ? onClickCargaArchivos() : continuarConGuardado()
               "
               [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
             >

@@ -1,229 +1,234 @@
-/**
- * @fileoverview
- * This file contains the adapter service for converting between Akita state and API payload formats
- * for the trámite 260215 - Permiso Sanitario de Importación.
- */
-import { Cancelacion } from '../models/cancelacion-de-solicitus.model';
+/* eslint-disable complexity */
 import { Injectable } from '@angular/core';
-
-import { DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO } from '../constants/adapter.constants';
 import { Solicitud260215State } from '../estados/tramites/tramite260215.store';
 
-// import { Solicitud260215State } from '../estados/tramites/sanitario260215.store';
-
-/**
- * Interface representing the API payload structure for trámite 260215
- * Based on backend team specification
- */
-export interface AmpliacionServiciosPayload {
-  solicitud: {
-    idSolicitud: string;
-    discriminatorValue: string;
-    cveRolCapturista: string;
-    cveUsuarioCapturista: string;
-    solicitante: {
-      cveUsuario: string;
-      rfc: string;
-      razonSocial: string;
-      descripcionGiro: string;
-      correoElectronico: string;
-      telefono: string;
-      domicilio: {
-        pais: {
-          clave: string;
-          nombre: string;
-        };
-        entidadFederativa: {
-          clave: string;
-          nombre: string;
-        };
-        delegacionMunicipio: {
-          clave: string;
-          nombre: string;
-        };
-        colonia: {
-          clave: string;
-          nombre: string;
-        };
-        localidad: {
-          clave: string;
-          nombre: string;
-        };
-        codigoPostal: string;
-        calle: string;
-        numeroExterior: string;
-        numeroInterior: string;
-      };
-    };
-  };
-  puedeCapturarRepresentanteLegalCG: boolean;
-  claveEntidadFederativa: string;
-  idTramite: string;
-  motivoCancelacion: string;
-  numeroFolioTramiteCancelados: Array<{
-    idResolucion: string;
-    numeroResolucion: string;
-    regimen: string;
-    clasificacionRegimen: string;
-    condicionMercancia: string;
-    fraccionArancelaria: string;
-    unidadMedida: string;
-    cantidadImportarExportar: string;
-    vigenciaResolucion: string;
-    valorAutorizado: string;
-    inicioResolucion: string;
-    numFolioTramite: string;
-    valorSolicitado: string;
-    cantidadImportarExportarSolicitada: string;
-    general: string;
-  }>;
-}
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AmpliacionServiciosAdapter {
-  /**
-   * Creates a numeroFolioTramiteCancelado item from state data with fallback to defaults
-   * @param dato Single Cancelacion item from state
-   * @param idTipoTramite Tramite ID for numFolioTramite fallback
-   * @returns Formatted numeroFolioTramiteCancelado item
-   */
-  private static createNumeroFolioTramiteItem(dato: Partial<Cancelacion>, _idTipoTramite?: number): {
-    idResolucion: string;
-    numeroResolucion: string;
-    regimen: string;
-    clasificacionRegimen: string;
-    condicionMercancia: string;
-    fraccionArancelaria: string;
-    unidadMedida: string;
-    cantidadImportarExportar: string;
-    vigenciaResolucion: string;
-    valorAutorizado: string;
-    inicioResolucion: string;
-    numFolioTramite: string;
-    valorSolicitado: string;
-    cantidadImportarExportarSolicitada: string;
-    general: string;
-  } {
-    return {
-      idResolucion: dato.idResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.idResolucion,
-      numeroResolucion: dato.numeroResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numeroResolucion,
-      regimen: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.regimen, // Always use backend expected value
-      clasificacionRegimen: dato.clasificacionRegimen || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.clasificacionRegimen,
-      condicionMercancia: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.condicionMercancia, // Always use backend expected value
-      fraccionArancelaria: dato.fraccionArancelaria ? dato.fraccionArancelaria.split('-')[0] : DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.fraccionArancelaria, // Extract base fraction code
-      unidadMedida: dato.umt || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.unidadMedida,
-      cantidadImportarExportar: dato.cantidadImportarExportar || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportar,
-      vigenciaResolucion: dato.vigenciaResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.vigenciaResolucion,
-      valorAutorizado: dato.valorAutorizado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorAutorizado,
-      inicioResolucion: dato.inicioResolucion || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.inicioResolucion,
-      numFolioTramite: DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.numFolioTramite, // Backend expects "260215"
-      valorSolicitado: dato.valorSolicitado || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.valorSolicitado,
-      cantidadImportarExportarSolicitada: dato.cantidadImportarExportarSolicitada || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.cantidadImportarExportarSolicitada,
-      general: dato.general || DEFAULT_NUMERO_FOLIO_TRAMITE_CANCELADO.general
-    };
-  }
-
-  /**
-   * Convierte del estado de Akita al formato de payload de API según especificación del backend
-   * Matches backend team specification exactly
-   * @param state El estado actual de Akita
-   * @returns Payload formateado para la API
-   */
-  static toFormPayload(state: Solicitud260215State): AmpliacionServiciosPayload {
-    // Map datos array from state to numeroFolioTramiteCancelados format
-    const NUMERO_FOLIO_TRAMITE_CANCELADOS = state.datos && state.datos.length > 0
-      ? state.datos.map(dato => AmpliacionServiciosAdapter.createNumeroFolioTramiteItem(dato, state.idTipoTramite))
-      : [AmpliacionServiciosAdapter.createNumeroFolioTramiteItem({}, state.idTipoTramite)];
-
-    return {
-      solicitud: {
-        idSolicitud: "", // Backend expects empty string
-        discriminatorValue: "260215",
-        cveRolCapturista: "PersonaMoral",
-        cveUsuarioCapturista: "AAL0409235E6",
-        solicitante: {
-          cveUsuario: "AAL0409235E6",
-          rfc: "AAL0409235E6",
-          razonSocial: "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-          descripcionGiro: "Siembra, cultivo y cosecha de otros cultivos",
-          correoElectronico: "vucem2021@gmail.com",
-          telefono: "55-98764532",
-          domicilio: {
-            pais: {
-              clave: "MEX",
-              nombre: "ESTADOS UNIDOS MEXICANOS"
+      static toFormPayload(state: Solicitud260215State): unknown {
+        return {
+          solicitante: {
+            rfc: state.rfcDel || '',
+            nombre: state.denominacion || '',
+            actividadEconomica: '',
+            correoElectronico: state.correo || '',
+            domicilio: {
+              pais: state.estado || '',
+              codigoPostal: state.codigoPostal || '',
+              estado: state.estado || '',
+              municipioAlcaldia: state.muncipio || '',
+              localidad: state.localidad || '',
+              colonia: state.colonia || '',
+              calle: state.calle || '',
+              numeroExterior: '',
+              numeroInterior: '',
+              lada: state.lada || '',
+              telefono: state.telefono || ''
             },
-            entidadFederativa: {
-              clave: "SIN",
-              nombre: "SINALOA"
+          },
+          solicitud: {
+            discriminatorValue: 260215,
+            declaracionesSeleccionadas: state.datosSolicitudFormState?.manifesto ?? '',
+            regimen: state.datosSolicitudFormState?.regimen ?? '',
+            informacionConfidencial: state.datosSolicitudFormState?.publico === 'si' ? true : false
+          },
+          establecimiento: {
+            rfcResponsableSanitario: state.datosSolicitudFormState?.rfcSanitario ?? '',
+            razonSocial: state.datosSolicitudFormState?.denominacionRazon ?? '',
+            correoElectronico: state.datosSolicitudFormState?.correoElectronico ?? '',
+            domicilio: {
+              codigoPostal: state.datosSolicitudFormState?.codigoPostal ?? '',
+              entidadFederativa: { clave: '' },
+              descripcionMunicipio: state.datosSolicitudFormState?.municipioAlcaldia ?? '',
+              informacionExtra: state.datosSolicitudFormState?.localidad ?? '',
+              descripcionColonia: state.datosSolicitudFormState?.colonia ?? '',
+              calle: state.datosSolicitudFormState?.calle ?? '',
             },
-            delegacionMunicipio: {
-              clave: "25001",
-              nombre: "AHOME"
+            original: '',
+            avisoFuncionamiento: state.datosSolicitudFormState?.aviso ?? '',
+            numeroLicencia: state.datosSolicitudFormState?.licenciaSanitaria ?? '',
+            aduanas: (state.datosSolicitudFormState?.adunasDeEntradas ?? '').toString(),
+          },
+  datosSCIAN: (state.scianConfigDatos ?? []).map((datos) => ({
+            cveScian: datos.clave,
+            descripcion: datos.descripcion
+          })),
+  mercancias: (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => ({
+            idMercancia: '',
+            idClasificacionProducto: '',
+            nombreClasificacionProducto: mercancia.clasificacionProducto ?? '',
+            ideSubClasificacionProducto: '',
+            nombreSubClasificacionProducto: mercancia.especificarClasificacionProducto ?? '',
+            descDenominacionEspecifica: mercancia.denominacionEspecificaProducto ?? '',
+            descDenominacionDistintiva: mercancia.denominacionDistintiva ?? '',
+            descripcionMercancia: '',
+            formaFarmaceuticaDescripcionOtros: mercancia.formaFarmaceutica ?? '',
+            estadoFisicoDescripcionOtros: mercancia.estadoFisico ?? '',
+            fraccionArancelaria: { clave: mercancia.fraccionArancelaria ?? '', descripcion: '' },
+            unidadMedidaComercial: { descripcion: mercancia.unidadMedidaComercializacion ?? '' },
+            cantidadUMCConComas: mercancia.cantidadUMC ?? '',
+            unidadMedidaTarifa: { descripcion: mercancia.cantidadUMT ?? '' },
+            cantidadUMTConComas: mercancia.cantidadUmtValor ?? '',
+            presentacion: mercancia.presentacion ?? '',
+            registroSanitarioConComas: mercancia.numeroRegistroSanitario ?? '',
+            nombreCortoPaisOrigen: mercancia.paisDeOriginDatos?.toString() ?? '',
+            nombreCortoPaisProcedencia: mercancia.paisDeProcedenciaDatos?.toString() ?? '',
+            tipoProductoDescripcionOtros: mercancia.tipoProducto ?? '',
+            nombreCortoUsoEspecifico: mercancia.usoEspecifico?.toString() ?? '',
+            fechaCaducidadStr: mercancia.fechaCaducidad ?? ''
+          })),
+          representanteLegal: {
+            rfc: state.datosSolicitudFormState?.representanteRfc || '',
+            resultadoIDC: '',
+            nombre: state.datosSolicitudFormState?.representanteNombre || '',
+            apellidoPaterno: state.datosSolicitudFormState?.apellidoPaterno || '',
+            apellidoMaterno: state.datosSolicitudFormState?.apellidoMaterno || ''
+          },
+  gridTerceros_TIPERS_FAB: (state.fabricanteTablaDatos ?? []).map((fabricante) => ({
+            idPersonaSolicitud: '',
+            ideTipoTercero: '',
+            personaMoral: fabricante.tipoPersona === 'Moral' ? '1' : '0',
+            booleanExtranjero: fabricante.nacionalidad === 'Extranjero' ? '1' : '0',
+            booleanFisicaNoContribuyente: '0',
+            denominacion: fabricante.razonSocial ?? '',
+            razonSocial: fabricante.razonSocial ?? '',
+            rfc: fabricante.rfc ?? '',
+            curp: fabricante.curp ?? '',
+            nombre: fabricante.nombres ?? '',
+            apellidoPaterno: fabricante.primerApellido ?? '',
+            apellidoMaterno: fabricante.segundoApellido ?? '',
+            telefono: fabricante.telefono ?? '',
+            correoElectronico: fabricante.correoElectronico ?? '',
+            actividadProductiva: '',
+            actividadProductivaDesc: '',
+            descripcionGiro: '',
+            numeroRegistro: '',
+            domicilio: {
+              calle: fabricante.calle ?? '',
+              numeroExterior: fabricante.numeroExterior ?? '',
+              numeroInterior: fabricante.numeroInterior ?? '',
+              pais: { clave: '', nombre: fabricante.pais ?? '' },
+              colonia: { clave: '', nombre: fabricante.colonia ?? '' },
+              delegacionMunicipio: { clave: '', nombre: fabricante.municipioAlcaldia ?? '' },
+              localidad: { clave: '', nombre: fabricante.localidad ?? '' },
+              entidadFederativa: { clave: '', nombre: fabricante.entidadFederativa ?? '' },
+              informacionExtra: '',
+              codigoPostal: fabricante.codigoPostal ?? '',
+              descripcionColonia: fabricante.colonia ?? ''
             },
-            colonia: {
-              clave: "00181210001",
-              nombre: "MIGUEL HIDALGO"
+            idSolicitud: '0'
+          })),
+  gridTerceros_TIPERS_DES: (state.destinatarioFinalTablaDatos ?? []).map((destinatario) => ({
+            idPersonaSolicitud: '',
+            ideTipoTercero: 'TIPERS.FAB',
+            personaMoral: destinatario.tipoPersona === 'Moral' ? '1' : '0',
+            booleanExtranjero: '',
+            booleanFisicaNoContribuyente: '0',
+            denominacion: 'LABORATORIOS PISA S.A. DE C.V.',
+            razonSocial: destinatario.razonSocial ?? '',
+            rfc: destinatario.rfc ?? '',
+            curp: destinatario.curp ?? '',
+            nombre: destinatario.nombres ?? '',
+            apellidoPaterno: destinatario.primerApellido ?? '',
+            apellidoMaterno: destinatario.segundoApellido ?? '',
+            telefono: destinatario.telefono ?? '',
+            correoElectronico: destinatario.correoElectronico ?? '',
+            actividadProductiva: '',
+            actividadProductivaDesc: '',
+            descripcionGiro: '',
+            numeroRegistro: '',
+            domicilio: {
+              calle: destinatario.calle ?? '',
+              numeroExterior: destinatario.numeroExterior ?? '',
+              numeroInterior: destinatario.numeroInterior ?? '',
+              pais: { clave: '', nombre: destinatario.pais ?? '' },
+              colonia: { clave: '', nombre: destinatario.colonia ?? '' },
+              delegacionMunicipio: { clave: '', nombre: destinatario.municipioAlcaldia ?? '' },
+              localidad: { clave: '', nombre: destinatario.localidad ?? '' },
+              entidadFederativa: { clave: '', nombre: 'Ciudad de México' },
+              informacionExtra: '',
+              codigoPostal: destinatario.codigoPostal ?? '',
+              descripcionColonia: destinatario.colonia ?? ''
             },
-            localidad: {
-              clave: "00181210008",
-              nombre: "LOS MOCHIS"
+            idSolicitud: '0'
+          })),
+  gridTerceros_TIPERS_PVD: (state.proveedorTablaDatos ?? []).map((proveedor) => ({
+            idPersonaSolicitud: '',
+            ideTipoTercero: '',
+            personaMoral: proveedor.tipoPersona === 'Moral' ? '1' : '0',
+            booleanExtranjero: '',
+            booleanFisicaNoContribuyente: '',
+            denominacion: proveedor.razonSocial ?? '',
+            razonSocial: proveedor.razonSocial ?? '',
+            rfc: proveedor.rfc ?? '',
+            curp: proveedor.curp ?? '',
+            nombre: proveedor.nombres ?? '',
+            apellidoPaterno: proveedor.primerApellido ?? '',
+            apellidoMaterno: proveedor.segundoApellido ?? '',
+            telefono: proveedor.telefono ?? '',
+            correoElectronico: proveedor.correoElectronico ?? '',
+            actividadProductiva: '',
+            actividadProductivaDesc: '',
+            descripcionGiro: '',
+            numeroRegistro: '',
+            domicilio: {
+              calle: proveedor.calle ?? '',
+              numeroExterior: proveedor.numeroExterior ?? '',
+              numeroInterior: proveedor.numeroInterior ?? '',
+              pais: { clave: '', nombre: proveedor.pais ?? '' },
+              colonia: { clave: '', nombre: proveedor.colonia ?? '' },
+              delegacionMunicipio: { clave: '', nombre: proveedor.municipioAlcaldia ?? '' },
+              localidad: { clave: '', nombre: proveedor.localidad ?? '' },
+              entidadFederativa: { clave: '', nombre: proveedor.entidadFederativa ?? '' },
+              informacionExtra: '',
+              codigoPostal: proveedor.codigoPostal ?? '',
+              descripcionColonia: proveedor.colonia ?? ''
             },
-            codigoPostal: "81210",
-            calle: "CAMINO VIEJO",
-            numeroExterior: "1353",
-            numeroInterior: ""
+            idSolicitud: '0'
+          })),
+  gridTerceros_TIPERS_FAC: (state.facturadorTablaDatos ?? []).map((facturador) => ({
+            idPersonaSolicitud: '',
+            ideTipoTercero: '',
+            personaMoral: facturador.tipoPersona === 'Moral' ? '1' : '0',
+            booleanExtranjero: '',
+            booleanFisicaNoContribuyente: '',
+            denominacion: facturador.razonSocial ?? '',
+            razonSocial: facturador.razonSocial ?? '',
+            rfc: facturador.rfc ?? '',
+            curp: facturador.curp ?? '',
+            nombre: facturador.nombres ?? '',
+            apellidoPaterno: facturador.primerApellido ?? '',
+            apellidoMaterno: facturador.segundoApellido ?? '',
+            telefono: facturador.telefono ?? '',
+            correoElectronico: facturador.correoElectronico ?? '',
+            actividadProductiva: '',
+            actividadProductivaDesc: '',
+            descripcionGiro: '',
+            numeroRegistro: '',
+            domicilio: {
+              calle: facturador.calle ?? '',
+              numeroExterior: facturador.numeroExterior ?? '',
+              numeroInterior: facturador.numeroInterior ?? '',
+              pais: { clave: '', nombre: facturador.pais ?? '' },
+              colonia: { clave: '', nombre: facturador.colonia ?? '' },
+              delegacionMunicipio: { clave: '', nombre: facturador.municipioAlcaldia ?? '' },
+              localidad: { clave: '', nombre: facturador.localidad ?? '' },
+              entidadFederativa: { clave: '', nombre: facturador.entidadFederativa ?? '' },
+              informacionExtra: '',
+              codigoPostal: facturador.codigoPostal ?? '',
+              descripcionColonia: facturador.colonia ?? ''
+            },
+            idSolicitud: '0'
+          })),
+          pagoDeDerechos: {
+            claveDeReferencia: state.claveDeReferencia || '',
+            cadenaPagoDependencia: state.cadenaDependencia || '',
+            banco: { clave: state.banco || '', descripcion: '' },
+            llaveDePago: state.llaveDePago || '',
+            fecPago: state.fechaPago || '',
+            impPago: state.importePago || ''
           }
-        }
-      },
-      puedeCapturarRepresentanteLegalCG: false,
-      claveEntidadFederativa: "SIN",
-      idTramite: "260215",
-      motivoCancelacion: state.motivoCancelacion || "API Test 2",
-      numeroFolioTramiteCancelados: NUMERO_FOLIO_TRAMITE_CANCELADOS
-    };
+        };
+      }
   }
-
-  /**
-   * Mapea la respuesta de la API de vuelta al formato de estado de Akita
-   * Following 80205 pattern exactly
-   * @param payload El payload de respuesta de la API
-   * @returns Objeto de estado formateado
-   */
-  static toState(payload: AmpliacionServiciosPayload): Partial<Solicitud260215State> {
-    // Map numeroFolioTramiteCancelados back to datos array for store
-    const DATOS = payload.numeroFolioTramiteCancelados.map(item => ({
-      folioTramite: item.numFolioTramite,
-      tipoDeSolicitud: "",
-      regimen: item.regimen,
-      cdr: "",
-      condicionDeLaMercancia: item.condicionMercancia,
-      fraccionArancelaria: item.fraccionArancelaria,
-      umt: item.unidadMedida,
-      cantidad: item.cantidadImportarExportar,
-      usd: item.valorAutorizado,
-      idResolucion: item.idResolucion,
-      numeroResolucion: item.numeroResolucion,
-      clasificacionRegimen: item.clasificacionRegimen,
-      vigenciaResolucion: item.vigenciaResolucion,
-      valorAutorizado: item.valorAutorizado,
-      inicioResolucion: item.inicioResolucion,
-      valorSolicitado: item.valorSolicitado,
-      cantidadImportarExportarSolicitada: item.cantidadImportarExportarSolicitada,
-      cantidadImportarExportar: item.cantidadImportarExportar,
-      general: item.general
-    }));
-
-    return {
-      idSolicitud: payload.solicitud.idSolicitud ? parseInt(payload.solicitud.idSolicitud, 10) : null,
-      rfc: payload.solicitud.solicitante.rfc,
-      telefono: payload.solicitud.solicitante.telefono,
-      claveEntidadFederativa: payload.claveEntidadFederativa,
-      motivoCancelacion: payload.motivoCancelacion,
-      idTipoTramite: parseInt(payload.idTramite, 10),
-      datos: DATOS,
-    };
-  }
-}
