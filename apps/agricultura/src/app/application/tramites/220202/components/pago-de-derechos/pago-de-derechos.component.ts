@@ -1,5 +1,5 @@
-import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
+import { Catalogo, ConsultaioQuery, Notificacion, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
@@ -65,6 +65,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     bancoSelector: [],
     justificacionSelector: [],
   };
+
+  /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+* @description Referencia al componente PagoDeDerechoComponent.
+* Esta referencia permite acceder a los métodos y propiedades del componente PagoDeDerechoComponent,
+* @type {PagoDeDerechoComponent}
+* @viewChild PagoDeDerechosComponent
+*/
+  @ViewChild(PagoDeDerechoComponent) pagoDeDerechoComponentRef!: PagoDeDerechoComponent;
 
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
@@ -144,6 +158,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onPagoChanged(event: PagoDeDerechos): void {
     this.agriculturaApiService.updatePagoDeDerechos(event as PagoDeDerechos);
+  }
+
+  /**
+  * @description Valida todos los campos del formulario y marca los campos como touched
+  * para mostrar los errores de validación en los componentes app-catalogo-select
+  * @method validarFormulario
+  * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
+  */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    // Marcar todos los campos como touched
+    if (!this.pagoDeDerechoComponentRef.validarFormulario()) {
+      return { valido: false };
+    }
+    return { valido: true };
   }
 
   /**

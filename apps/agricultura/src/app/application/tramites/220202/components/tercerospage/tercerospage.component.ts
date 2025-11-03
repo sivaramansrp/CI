@@ -15,7 +15,7 @@ import { AgregarExportadorComponent } from '../agregar-exportador/agregar-export
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -85,6 +85,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {modalRef}
    */
   @ViewChild('modalRef') modalRef!: ModalComponent;
+
+  /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -212,6 +218,30 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.fitosanitarioStore.actualizarSelectedTerceros(data);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+
+  /**
+  * @description Valida todos los campos del formulario y marca los campos como touched
+  * para mostrar los errores de validación en los componentes app-catalogo-select
+  * @method validarFormulario
+  * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
+  */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+
+    // Verificar si hay datos en la tabla
+    const TABLE_DATA = this.fitosanitarioStore.getValue().personas;
+    const TABLE_EXPORTADOR = this.fitosanitarioStore.getValue().datosForma;
+
+    if (!TABLE_EXPORTADOR || TABLE_EXPORTADOR.length === 0) {
+
+      return { valido: false, mensaje: 'Debe agregar al menos un Exportador.' };
+    }
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+
+      return { valido: false, mensaje: 'Debe agregar al menos un Exportador.' };
+    }
+
+    return { valido: true };
   }
 
 }
