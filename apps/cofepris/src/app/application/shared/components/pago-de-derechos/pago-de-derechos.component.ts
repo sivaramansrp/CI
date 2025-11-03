@@ -276,6 +276,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         Validators.required,
       ],
       ],
+      bancoObject: [this.solicitudState?.bancoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -337,9 +338,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
               const DATOS = response.datos as Catalogo[];
               
               if (response) {
-                
                 this.bancoDatos = DATOS;
-                this.estadosDatos = DATOS;
               }
             })
           );
@@ -353,6 +352,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm.reset();
   }
 
+  actualizarStore(): void {
+    const VALORES_COMPLETOS = this.pagoDerechosForm.getRawValue();
+    this.updatePagoDerechos.emit(VALORES_COMPLETOS);
+  }
+
+  
   /**
    * @method onFechaCambiada
    * @description Actualiza la fecha de pago en el formulario.
@@ -450,33 +455,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
  * Método para manejar la selección de banco.
  * @param event {any} Evento del select.
  */
-onBancoSeleccionado(event: any): void {
-  const SELECTEDVALUE = event.target ? event.target.value : event;
-  const BANCO = this.bancoDatos.find(b => b.id === SELECTEDVALUE);
-  
+onBancoSeleccionado(event: any): any {
+  const SELECTEDVALUE = event.targety ? event.target.value : event;
+  const BANCO = this.bancoDatos.find(b => b.clave === SELECTEDVALUE);
+  const BANCOID = this.pagoDerechosForm.get('banco')?.value;
+  const BANCO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.bancoDatos, BANCOID);
+  this.pagoDerechosForm.patchValue({ bancoObject: BANCO_OBJ ? BANCO_OBJ[0] : undefined });
+
   if (BANCO) {
-    this.pagoDerechosForm.patchValue({ banco: BANCO.id });
+    this.pagoDerechosForm.patchValue({ banco: BANCO.clave });
     this.pagoDerechosForm.get('banco')?.markAsTouched();
     this.pagoDerechosForm.get('banco')?.markAsDirty();
     this.setValoresStoreObject(BANCO, 'banco', 'setBancoObject');
   }
+  return BANCO_OBJ ? BANCO_OBJ[0] : undefined;
 }
 
-/**
- * Método para manejar la selección de estado.
- * @param event {any} Evento del select.
- */
-onEstadoSeleccionado(event: any): void {
-  const SELECTEDVALUE = event.target ? event.target.value : event;
-  const ESTADO = this.estadosDatos.find(e => e.id === SELECTEDVALUE);
-
-  if (ESTADO) {
-    this.pagoDerechosForm.patchValue({ estado: ESTADO.id });
-    this.pagoDerechosForm.get('estado')?.markAsTouched();
-    this.pagoDerechosForm.get('estado')?.markAsDirty();
-    this.setValoresStoreObject(ESTADO, 'estado', 'setEstadoObject');
-  }
-}
 
 /**
  * Método para actualizar el store con objeto completo.
@@ -497,6 +491,17 @@ setValoresStoreObject(
   )(catalogo);
 }
 
+  /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+    return catalogo.filter(item => item.clave === id);
+  }
+ 
   formularioSolicitudValidacion(): boolean {
     this.isContinuarButtonClicked = false;
     
