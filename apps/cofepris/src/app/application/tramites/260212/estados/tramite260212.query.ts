@@ -1,66 +1,58 @@
+import { Tramite260212State, Tramite260212Store } from '../estados/tramite260212.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { Tramite260212State, Tramite260212Store } from './tramite260212.store';
-
-
-
-
-
+/**
+ * Servicio que permite consultar (leer) el estado del Trámite 260212
+ * usando el patrón de Akita para manejo de estado.
+ */
 @Injectable({ providedIn: 'root' })
 export class Tramite260212Query extends Query<Tramite260212State> {
-   /**
-   * Selecciona el estado completo de la solicitud
+  /**
+   * Constructor que inicializa el query con el store correspondiente.
+   * @param store Instancia del store para el Trámite 260212.
    */
-  selectSolicitud$ = this.select((state) => {
+  constructor(protected override store: Tramite260212Store) {
+    super(store);
+  }
+
+  /**
+   * Observable que emite el estado completo de la solicitud.
+   */
+  public selectTramiteState$ = this.select((state) => {
     return state;
   });
-  selectedEstado$ = this.select((state) => state.estado);
-  selectedClave$ = this.select((state) => state.selectedClave);
-  selectedDescripcion$ = this.select((state) => state.selectedDescripcion);
-  selecteDespecificarClasificacion$ = this.select((state) => state.selecteDespecificarClasificacion);
-  selectedBanco$ = this.select((state) => state.banco);
-  selectedRfcDelResponsableSanitario$ = this.select((state) => state.rfcDelResponsableSanitario);
-  selectedDenominacionRazonSocial$ = this.select((state) => state.denominacionRazonSocial);
-  selectedCorreoElectronico$ = this.select((state) => state.correoElectronico);
-  selectedMunicipio$ = this.select((state) => state.municipio);
-  selectedLocalidad$ =this.select((state) => state.localidad);
-  selectedColonia$ =this.select((state) => state.colonia);
-  selectedCalle$ =this.select((state) => state.calle);
-  selectedLada$ =this.select((state) => state.lada);
-  SelectedTelefono$=this.select((state) => state.teléfono);
-  SelectedCodigoPostal$=this.select((state) => state.codigoPostal)
-  selectedRegimen$=this.select((state) => state.regimen);
-  selectedEntradas$=this.select((state) => state.entradas);
-  // selecteDespecificarClasificacion$ = this.select((state) => state.setDespecificarClasificacion);
-  selectedClaveDeReferncia$ = this.select((state)=>state.ClaveDeReferncia)
-  selectedCadenaDeLaDependencia$ = this.select((state)=>state.CadenaDeLaDependencia)
-  selectedLlaveDePago$=this.select((state)=>state.llaveDePago)
-  selectedFechaDePago$=this.select((state)=>state.setFechaDePago)
-  selectedImporteDePago$ = this.select((state)=>state.importeDePago)
+
+  /**
+   * Observable que emite los datos de la tabla de fabricantes.
+   */
   public getFabricanteTablaDatos$ = this.select(
     (state) => state.fabricanteTablaDatos
   );
+
+  /**
+   * Observable que emite los datos de la tabla de destinatarios finales.
+   */
   public getDestinatarioFinalTablaDatos$ = this.select(
     (state) => state.destinatarioFinalTablaDatos
   );
-  
+
   /**
-   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
-   * Observable que selecciona los datos de la tabla de proveedores.
+   * Observable que emite los datos de la tabla de proveedores.
    */
   public getProveedorTablaDatos$ = this.select(
     (state) => state.proveedorTablaDatos
   );
-    /**
-   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
-   * Observable que selecciona los datos de la tabla de facturadores.
+
+  /**
+   * Observable que emite los datos de la tabla de facturadores.
    */
   public getFacturadorTablaDatos$ = this.select(
     (state) => state.facturadorTablaDatos
   );
-constructor(private tramiteStore: Tramite260212Store) {
-    super(tramiteStore);
-  }
-  
+
+  /**
+   * Observable que emite la pestaña actualmente seleccionada.
+   */
+  public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
 }
