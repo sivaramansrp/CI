@@ -35,9 +35,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * @descripcion
+   * Referencia al componente de solicitud obtenida mediante ViewChild.
+   * Se utiliza para acceder a los métodos de validación y manipulación del formulario de solicitud.
+   * @type {SolicitudComponent | undefined}
+   */
   @ViewChild('solicitud', { static: false })
   solicitudComponent: SolicitudComponent | undefined;
-
 
   /**
    * @descripcion
