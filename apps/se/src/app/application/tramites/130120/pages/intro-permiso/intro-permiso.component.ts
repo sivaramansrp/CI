@@ -1,4 +1,4 @@
-import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState } from "@ng-mf/data-access-user";
+import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, formatFecha } from "@ng-mf/data-access-user";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_FALTAN } from "../../constants/permiso-importacion-modification.enum";
 import { Subject, map, takeUntil } from "rxjs";
@@ -233,8 +233,8 @@ export class IntroPermisoComponent implements OnInit {
    */
   buildPayload(): GuardarSolicitudRequest {
     const DATOS_GENERALES = this.realizarState;
-    const FECHA_FACTURA = this.formatearFecha(DATOS_GENERALES.datosMercanica.factura_fecha);
-    const FECHA_DOCUMENTO = this.formatearFecha(DATOS_GENERALES.datosExporta.fecha_documento);
+    const FECHA_FACTURA = formatFecha(DATOS_GENERALES.datosMercanica.factura_fecha);
+    const FECHA_DOCUMENTO = formatFecha(DATOS_GENERALES.datosExporta.fecha_documento);
     return {
       //TODOcve_entidad_federativa se debe obtener del estado del solicitante ejemplo "SIN" representa SINALOA o cualquier otro estado
       cve_entidad_federativa: DATOS_GENERALES.datosFederal.descripcion_representacion_federal,
@@ -296,37 +296,5 @@ export class IntroPermisoComponent implements OnInit {
       cve_unidad_administrativa: DATOS_GENERALES.datosFederal.representacion_federal,
       rfc: this.solicitante.rfc_original,
     }
-  }
-
-  /**
-  * Convierte una fecha de formato "dd/MM/yyyy" a "yyyy-MM-dd HH:mm:ss"
-  * @param fechaStr Fecha en formato "dd/MM/yyyy"
-  * @returns Fecha formateada en "yyyy-MM-dd HH:mm:ss"
-  */
-  private formatearFecha(fechaStr: string): string {
-    if (!fechaStr) {
-      return '';
-    }
-    const PARTES = fechaStr.split('/');
-    if (PARTES.length !== 3) {
-      return '';
-    }
-
-    const [DIA, MES, ANIO] = PARTES;
-    const FECHA = new Date(Number(ANIO), Number(MES) - 1, Number(DIA));
-
-    // Puedes usar hora fija o actual. Aquí dejo fija 18:44:00
-    const HORAS = 18;
-    const MINUTOS = 44;
-    const SEGUNDOS = 0;
-    FECHA.setHours(HORAS, MINUTOS, SEGUNDOS);
-
-    const YYYY = FECHA.getFullYear();
-    const MM = String(FECHA.getMonth() + 1).padStart(2, '0');
-    const DD = String(FECHA.getDate()).padStart(2, '0');
-    const HH = String(FECHA.getHours()).padStart(2, '0');
-    const MI = String(FECHA.getMinutes()).padStart(2, '0');
-    const SS = String(FECHA.getSeconds()).padStart(2, '0');
-    return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}`;
   }
 }
