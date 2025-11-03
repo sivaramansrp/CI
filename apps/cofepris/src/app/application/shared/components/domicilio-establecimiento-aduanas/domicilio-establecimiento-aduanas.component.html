@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="codigoPostal">Código postal*:</label>
+        <label class="form-label" for="codigoPostal">Código postal<span  [ngClass]="{'tiene-error': domicilio.get('codigoPostal')?.invalid && domicilio.get('codigoPostal')?.touched}">*</span>:</label>
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12" size="29"
           [ngClass]="{'tiene-invalido': domicilio.get('codigoPostal')?.invalid && domicilio.get('codigoPostal')?.touched}"
           formControlName="codigoPostal" (change)="setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')" />

@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
+          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social<span [ngClass]="{'tiene-error': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched}">*</span>:</label>
           <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
             [ngClass]="{'tiene-invalido': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched}"
         formControlName="denominacionRazonSocial"
@@ -48,7 +48,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="correoElectronico">Correo electrónico <span [ngClass]="{'tiene-error': datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched}">*</span> :
+        <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="{'tiene-error': datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched}">*</span>:
             <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
         </label>
         <input class="form-control" id="correoElectronico" maxlength="320" size="29"
