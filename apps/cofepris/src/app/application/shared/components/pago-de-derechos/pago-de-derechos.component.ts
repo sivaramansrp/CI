@@ -3,7 +3,8 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
+  ValidationErrors
 } from '@angular/forms';
 import {
   AlertComponent,
@@ -39,6 +40,31 @@ import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
+
+export function importePagoValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+
+  // Allow empty — required validator will handle emptiness
+  if (value === null || value === '') {
+    return null;
+  }
+
+  // ✅ 1. Check if value is numeric
+  const numericRegex = /^[0-9.]+$/;
+  if (!numericRegex.test(value)) {
+    return { nonNumeric: true };
+  }
+
+  // ✅ 2. Check for valid format (max 15 digits and up to 2 decimals)
+  const decimalRegex = /^\d{1,15}(\.\d{1,2})?$/;
+  if (!decimalRegex.test(value)) {
+    return { invalidDecimal: true };
+  }
+
+  // ✅ All good
+  return null;
+}
+
 
 
 /**
@@ -280,7 +306,7 @@ verificarAlerta:number[]=[];
       importePago: [
       this.solicitudState?.importePago || '',
       [
-        decimalValidator(2),
+        importePagoValidator,
         Validators.maxLength(16),
         Validators.required,
       ],
