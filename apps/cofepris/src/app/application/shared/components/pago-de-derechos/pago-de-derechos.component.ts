@@ -6,17 +6,13 @@ import {
   Validators
 } from '@angular/forms';
 import {
-  BANCO_CATALOGOS,
-  ESTADO_CATALOGOS
-} from '../../constantes/pago-banco.enum';
-import {
+  AlertComponent,
   Catalogo,
   ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   REGEX_LLAVE_DE_PAGO_DE_DERECHO,
-  REGEX_PATRON_DECIMAL_2,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import {
@@ -30,6 +26,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {
+  FECHA_DE_IMPORTACION_PAGO,
   FECHA_DE_PAGO,
   PagoDerechosFormState
 } from '../../models/terceros-relacionados.model';
@@ -59,11 +56,22 @@ import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
     ReactiveFormsModule,
     InputFechaComponent,
     TituloComponent,
+    AlertComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+  messageAlert: string = `
+  <div style="text-align: center;">
+    <strong>¡Precaución!</strong>
+    <span class="fw-normal">
+      Debes capturar todos los campos de pago de derechos.
+    </span>
+  </div>
+`;
+verificarAlerta:number[]=[];
+
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -209,6 +217,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private catalogoService: CatalogoServices
     
   ) {
+    this.verificarAlerta=FECHA_DE_IMPORTACION_PAGO;
 
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$

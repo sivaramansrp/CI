@@ -1,6 +1,8 @@
 <div class="container">
   <ng-titulo titulo="Pago de derechos" />
-
+  <div class="row" *ngIf="verificarAlerta.includes(idProcedimiento)">
+      <ng-alert [CONTENIDO]="messageAlert" [CUSTOMECLASS]="'alert-warning'"></ng-alert>
+  </div>
   <form [formGroup]="pagoDerechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->
