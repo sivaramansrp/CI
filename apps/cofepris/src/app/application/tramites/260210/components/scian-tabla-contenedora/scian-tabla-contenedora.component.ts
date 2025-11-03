@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 
 /**
  * Componente contenedor para la tabla SCIAN (Sistema de Clasificación Industrial de América del Norte).
@@ -24,16 +25,22 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+
+    /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+     */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *
    * Inicializa el componente inyectando las dependencias necesarias para
    * la gestión del estado del trámite 260214.
    *
-   * @param tramite260214Store - Store que maneja el estado global del trámite 260214,
+   * @param Tramite260210Store - Store que maneja el estado global del trámite 260214,
    *                            utilizado para actualizar la configuración SCIAN seleccionada
    */
-  constructor(private tramite260214Store: Tramite260214Store) {}
+  constructor(private Tramite260210Store: Tramite260210Store) {}
 
   /**
    * Configuración SCIAN actualmente seleccionada.
@@ -81,12 +88,12 @@ export class ScianTablaContenedoraComponent {
    * ```
    *
    * @see {@link TablaScianConfig} - Para más detalles sobre la estructura del objeto
-   * @see {@link Tramite260214Store} - Para información sobre el store utilizado
+   * @see {@link Tramite260210Store} - Para información sobre el store utilizado
    *
    * @since 1.0.0
    * @public
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
-    this.tramite260214Store.updateScianConfigDatos([event]);
+    this.Tramite260210Store.updateScianConfigDatos([event]);
   }
 }

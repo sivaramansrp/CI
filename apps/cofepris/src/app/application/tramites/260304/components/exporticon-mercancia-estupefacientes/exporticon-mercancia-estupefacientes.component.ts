@@ -363,7 +363,7 @@ obtenerMensajeError(controlName: string): string {
     * @param {keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes} field - Nombre del campo a obtener.
     * @returns {string | number | undefined | string[]} - Valor del campo especificado.
     */
-  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes): string | number | undefined | string[] {
+  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaFormEstupefacientes): string | number | undefined | string[] | Catalogo | undefined {
     return this.detalleMercanciaDatosSeleccionados?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaFormEstupefacientes];
   }
     /**

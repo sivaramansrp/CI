@@ -2,10 +2,10 @@
  * Componente encargado de gestionar el primer paso del trámite.
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
+
+import { Subject, takeUntil } from 'rxjs';
 import { Tramite130119State } from '../../estados/store/tramite130119.store';
 /**
  * Componente encargado de gestionar el primer paso del trámite.

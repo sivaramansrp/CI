@@ -2,7 +2,8 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 
 /**
  * @class AgregarDestinatarioFinalContenedoraComponent
@@ -12,11 +13,10 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
  * Este componente actúa como una capa contenedora que encapsula el componente reutilizable
  * `AgregarDestinatarioFinalComponent` y proporciona la lógica específica para el trámite 260210.
  * Se encarga de la comunicación bidireccional entre la interfaz de usuario y el estado
- * centralizado del trámite a través del store `Tramite260214Store`.
- * 
- * 
+ * centralizado del trámite a través del store `Tramite260210Store`.
+ *
  * @see {@link AgregarDestinatarioFinalComponent} - Componente hijo para la gestión de destinatarios
- * @see {@link Tramite260214Store} - Store para la gestión del estado del trámite
+ * @see {@link Tramite260210Store} - Store para la gestión del estado del trámite
  * @see {@link Destinatario} - Modelo de datos para destinatarios
  */
 
@@ -66,8 +66,14 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 export class AgregarDestinatarioFinalContenedoraComponent {
   
   /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
    * @property tramiteStore
-   * @type {Tramite260214Store}
+   * @type {Tramite260210Store}
    * @access public
    * @description Store inyectado que administra el estado centralizado del trámite 260210.
    * Proporciona acceso a los métodos y propiedades reactivas para la gestión de datos
@@ -85,7 +91,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * de Angular para obtener una instancia del store del trámite. Se ejecuta automáticamente
    * durante la inicialización del componente y configura las dependencias necesarias.
    *
-   * @param {Tramite260214Store} tramiteStore - Instancia del store que administra el estado
+   * @param {Tramite260210Store} tramiteStore - Instancia del store que administra el estado
    * del trámite 260214. Proporciona métodos reactivos para la gestión de destinatarios finales,
    * incluyendo operaciones CRUD y sincronización con el backend.
    * 
@@ -93,7 +99,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * // El constructor se invoca automáticamente por Angular
    * const component = new AgregarDestinatarioFinalContenedoraComponent(tramiteStore);
    */
-  constructor(public tramiteStore: Tramite260214Store) {}
+  constructor(public tramiteStore: Tramite260210Store) {}
 
   /**
    * @method updateDestinatarioFinalTablaDatos
