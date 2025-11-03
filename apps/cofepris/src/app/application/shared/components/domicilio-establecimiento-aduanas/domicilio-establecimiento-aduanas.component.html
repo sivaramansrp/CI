@@ -54,6 +54,21 @@
         <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad" maxlength="120"
           (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
+        <div class="d-grid">
+            <div
+    *ngIf="
+      domicilio.get('localidad')?.invalid &&
+      domicilio.get('localidad')?.touched
+    "
+  >
+    <small
+      class="mensaje-error"
+      *ngIf="domicilio.get('localidad')?.hasError('pattern')"
+    >
+      El valor capturado no es válido.
+    </small>
+  </div>
+        </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
