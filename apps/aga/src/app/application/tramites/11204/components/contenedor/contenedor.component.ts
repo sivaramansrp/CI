@@ -16,6 +16,7 @@ import moment from 'moment';
 import {
     SolicitanteService
 } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 /**
@@ -255,7 +256,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
-    private solicitanteServicio: SolicitanteService
+    private solicitanteServicio: SolicitanteService,
+    private toastrService: ToastrService,
+
 
   ) {
     this.aduana = {
@@ -558,7 +561,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
     const DIGITOCONTROL = this.solicitudForm.value.digitoDeControl || '';
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
       const API_PAYLOAD = {
         "rfc": this.rfc_original,
         "aduana": ADUANA,
@@ -672,6 +675,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           // this.solicitudForm.reset();
           // this.solicitudForm.markAsUntouched();
           // this.solicitudForm.markAsPristine();
+        }
+        else if(respuesta?.codigo === 'SAT11202-CR02'){
+            this.datosCapturaModal()
+          }
+        else{
+          this.toastrService.error(respuesta.error);
         }
       }
     );
