@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { TableComponent } from '@/shared/components/table/table.component';
 import { catchError, of, take, tap } from 'rxjs';
 import { AirWaybillService } from '../../../services/air-waybill.service';
@@ -14,7 +15,7 @@ import { SessionStorageService } from '@/shared/services/session-storage.service
 @Component({
   selector: 'app-manifest-table',
   standalone: true,
-  imports: [TableComponent],
+  imports: [TableComponent, NgIf],
   templateUrl: './manifest-table.component.html',
 })
 export class ManifestTableComponent implements OnInit {

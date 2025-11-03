@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { BsDatepickerConfig, BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { FormUtils } from '@shared/utils/formUtils';
 import { formatDateIso } from '@shared/utils/serviceUtils';
@@ -22,7 +22,7 @@ import { MANIFIESTO_AEREO_ROUTES } from '../../services/manifiesto-aereo.routes.
 @Component({
   selector: 'app-manifiesto-form-aereo',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, BsDatepickerModule, ButtonComponent, DatePickerComponent],
+  imports: [ReactiveFormsModule, NgClass, NgFor, NgIf, BsDatepickerModule, ButtonComponent, DatePickerComponent],
   templateUrl: './manifiesto-aereo-form.component.html',
   styleUrls: ['./manifiesto-aereo-form.component.scss'],
 })

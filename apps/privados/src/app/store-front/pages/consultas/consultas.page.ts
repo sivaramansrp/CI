@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgFor, NgIf } from '@angular/common';
 import { MenuItem } from '../../interfaces/menu-item.interface';
 import { CONSULTAS_ROUTES } from '../../../routes.constants';
 
 @Component({
   selector: 'app-consultas',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgFor, NgIf],
   templateUrl: './consultas.page.html',
   styleUrls: ['./consultas.page.scss'],
 })

@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '../../../shared/utils/formUtils';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { RoutingService } from '../../../core/services/routing.service';
 import { APP_ROUTES } from '../../../routes.constants';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

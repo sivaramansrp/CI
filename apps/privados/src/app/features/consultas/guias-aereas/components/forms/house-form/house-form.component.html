@@ -8,11 +8,9 @@
           formControlName="broadcastDate"
           [hasError]="formUtils.formHasError(houseForm, 'broadcastDateRequired', 'broadcastDate')">
         </date-picker>
-        @if (formUtils.formHasError(houseForm, 'broadcastDateRequired', 'broadcastDate')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(houseForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(houseForm, 'broadcastDateRequired', 'broadcastDate')">
+          {{ formUtils.getTextError(houseForm.errors) }}
+        </small>
       </div>
     </div>
 
@@ -30,11 +28,9 @@
             'form-control-error': formUtils.formHasError(houseForm, 'houseRequired', 'house')
           }"
         />
-        @if (formUtils.formHasError(houseForm, 'houseRequired', 'house')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(houseForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(houseForm, 'houseRequired', 'house')">
+          {{ formUtils.getTextError(houseForm.errors) }}
+        </small>
       </div>
     </div>
 
@@ -50,17 +46,13 @@
           }"
         >
           <option value="">Seleccione un valor</option>
-            @for(custom of customs; track $index) {
-              <option [value]="custom.idClave">
-                {{ custom.aduanaNombre }}
-              </option>
-            }
+          <option *ngFor="let custom of customs; let i = index" [value]="custom.idClave">
+            {{ custom.aduanaNombre }}
+          </option>
         </select>
-        @if (formUtils.formHasError(houseForm, 'customRequired', 'custom')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(houseForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(houseForm, 'customRequired', 'custom')">
+          {{ formUtils.getTextError(houseForm.errors) }}
+        </small>
       </div>
     </div>
   </div>

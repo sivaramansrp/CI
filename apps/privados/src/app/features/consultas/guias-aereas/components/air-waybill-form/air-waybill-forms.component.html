@@ -25,14 +25,12 @@
       </label>
     </div>
 
-    @if (authInformationService.authInfo.rol2 === 'funcionario') {
-      <div class="radio mt-1">
-        <label>
-          <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.CAAT" (ngModelChange)="onSearchTypeChange()"/>
-          CAAT
-        </label>
-      </div>
-    }
+    <div class="radio mt-1" *ngIf="authInformationService.authInfo.rol2 === 'funcionario'">
+      <label>
+        <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.CAAT" (ngModelChange)="onSearchTypeChange()"/>
+        CAAT
+      </label>
+    </div>
   </div>
 
   <!-- Third column -->
@@ -46,56 +44,35 @@
   </div>
 </div>
 
-@if(searchType === searchTypeEnum.MANIFEST) {
-  <app-manifest-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
-} @else if(searchType === searchTypeEnum.MASTER) {
-  <app-master-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
-} @else if(searchType === searchTypeEnum.HOUSE) {
-  <app-house-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
-} @else if(searchType === searchTypeEnum.FLIGHT) {
-  <app-flight-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
-} @else if(searchType === searchTypeEnum.CAAT) {
-  <app-caat-form [customs]="customs" (onSubmitForm)="displayTable($event)"/>
-}
+<app-manifest-form *ngIf="searchType === searchTypeEnum.MANIFEST" [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+<app-master-form *ngIf="searchType === searchTypeEnum.MASTER" [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+<app-house-form *ngIf="searchType === searchTypeEnum.HOUSE" [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+<app-flight-form *ngIf="searchType === searchTypeEnum.FLIGHT" [customs]="customs" (onSubmitForm)="displayTable($event)"/>
+<app-caat-form *ngIf="searchType === searchTypeEnum.CAAT" [customs]="customs" (onSubmitForm)="displayTable($event)"/>
 
-@if (!!searchType) {
-  <div class="row">
-    <div class="col-md-12 mt-3 text-right">
-      <gob-button
-        type="button"
-        className="btn-primary"
-        label="Buscar"
-        (clicked)="submitForm()"
-        class="mr-1">
-      </gob-button>
-      <gob-button
-        type="button"
-        className="btn-default"
-        label="Limpiar"
-        (clicked)="resetForm()"
-      ></gob-button>
-    </div>
+<div class="row" *ngIf="!!searchType">
+  <div class="col-md-12 mt-3 text-right">
+    <gob-button
+      type="button"
+      className="btn-primary"
+      label="Buscar"
+      (clicked)="submitForm()"
+      class="mr-1">
+    </gob-button>
+    <gob-button
+      type="button"
+      className="btn-default"
+      label="Limpiar"
+      (clicked)="resetForm()"
+    ></gob-button>
   </div>
-}
+</div>
 
-@if (displayManifestTable()) {
-  <app-manifest-table />
-}
-@if (displayCaatTable()) {
-   <app-manifest-table />
-}
-
-@if (displayMasterTable()) {
-  <app-master-table/>
-}
-
-@if (displayHouseTable()) {
-  <app-house-table/>
-}
-
-@if (displayFlightTable()) {
-  <app-flight-table/>
-}
+<app-manifest-table *ngIf="displayManifestTable()" />
+<app-manifest-table *ngIf="displayCaatTable()" />
+<app-master-table *ngIf="displayMasterTable()"/>
+<app-house-table *ngIf="displayHouseTable()"/>
+<app-flight-table *ngIf="displayFlightTable()"/>
 
 
 

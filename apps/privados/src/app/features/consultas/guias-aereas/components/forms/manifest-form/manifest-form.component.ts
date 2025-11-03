@@ -1,6 +1,6 @@
 import { DatePickerComponent } from '@/shared/components/date-picker/date-picker.component';
 import { FormUtils } from '@/shared/utils/formUtils';
-import { formatDate, JsonPipe, NgClass } from '@angular/common';
+import { formatDate, JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   effect,
@@ -37,7 +37,7 @@ import { SessionStorageService } from '@/shared/services/session-storage.service
 @Component({
   selector: 'app-manifest-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, DatePickerComponent, BsDatepickerModule],
+  imports: [ReactiveFormsModule, NgClass, NgFor, NgIf, DatePickerComponent, BsDatepickerModule],
   templateUrl: './manifest-form.component.html',
 })
 export class ManifestFormComponent implements OnInit, OnDestroy {

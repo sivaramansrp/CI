@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { TableComponent } from '@/shared/components/table/table.component';
 import { PaginationInfo, TableBodyData, TableData } from '@/shared/interfaces/table.interface';
 import { APP_ROUTES, STORE_FRONT_ROUTES } from '../../../../../routes.constants';
@@ -13,7 +14,7 @@ import { AirConsultsResponse, SearchBy } from '../../interfaces/consultas-aereos
 @Component({
   selector: 'app-manifiesto-aereo-results',
   standalone: true,
-  imports: [TableComponent, FormsModule, ButtonComponent],
+  imports: [TableComponent, FormsModule, NgIf, ButtonComponent],
   templateUrl: './manifiesto-aereo-results.component.html',
 })
 export class ManifiestoAereoResultsComponent implements OnInit {

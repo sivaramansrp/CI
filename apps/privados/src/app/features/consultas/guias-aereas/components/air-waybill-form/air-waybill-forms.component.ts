@@ -2,6 +2,7 @@ import { ButtonComponent } from '@/shared/components/button/button.component';
 import { FormUtils } from '@/shared/utils/formUtils';
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 import { TypeSearch } from '../../interfaces/air-waybill-forms.interface';
 import { ManifestFormComponent } from '../forms/manifest-form/manifest-form.component';
 import { MasterFormComponent } from '../forms/master-form/master-form.component';
@@ -25,6 +26,7 @@ import { AuthInformationService } from '@/features/auth/services/auth-informatio
   imports: [
     ButtonComponent,
     FormsModule,
+    NgIf,
     ManifestFormComponent,
     MasterFormComponent,
     HouseFormComponent,

@@ -1,21 +1,15 @@
-@if (displayAlertFullReport()) {
-  <div class="alert alert-danger">
-    Debe seleccionar por lo menos una Guía Aerea para generar el reporte completo
-  </div>
-}
+<div class="alert alert-danger" *ngIf="displayAlertFullReport()">
+  Debe seleccionar por lo menos una Guía Aerea para generar el reporte completo
+</div>
 
-@if (displayAlertFullReportGenerated()) {
-  <div class="alert alert-info">
-    {{ folioMessage() }}
-  </div>
-}
+<div class="alert alert-info" *ngIf="displayAlertFullReportGenerated()">
+  {{ folioMessage() }}
+</div>
 
-@if(displayFilterByManifest()) {
-  <label class="text-normal">
-    <input type="checkbox" [(ngModel)]="filterByManifest" (change)="onFilterByManifestChange()" />
+<label class="text-normal" *ngIf="displayFilterByManifest()">
+  <input type="checkbox" [(ngModel)]="filterByManifest" (change)="onFilterByManifestChange()" />
   Filtrar por Manifiesto
-  </label>
-}
+</label>
 
 <div class="alert alert-warning">
   Solo se podrá generar Reporte Completo de gulas que se encuentran en estado "Aceptado"

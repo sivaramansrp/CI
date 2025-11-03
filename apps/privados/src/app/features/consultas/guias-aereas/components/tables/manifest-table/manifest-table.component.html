@@ -1,19 +1,18 @@
 <div class="row">
     <div class="col-md-12 mt-3 text-center">
-        @if(!manifestSelected()) {
-           <app-table
-              title="Manifiestos"
-              [tableData]="tableManifestData"
-              [borderedStyle]="true"
-              [isLoading]="isLoadingManifestDataTable"
-              [hiddenData]="hiddenManifestData"
-              [error]="errorManifestsData"
-              [hasRedirect]="true"
-              (onRowClicked)="onMasterSelected($event.hiddenData)"
-            />
-        }
+        <app-table
+          *ngIf="!manifestSelected()"
+          title="Manifiestos"
+          [tableData]="tableManifestData"
+          [borderedStyle]="true"
+          [isLoading]="isLoadingManifestDataTable"
+          [hiddenData]="hiddenManifestData"
+          [error]="errorManifestsData"
+          [hasRedirect]="true"
+          (onRowClicked)="onMasterSelected($event.hiddenData)"
+        />
 
-        @if(manifestSelected()) {
+        <ng-container *ngIf="manifestSelected()">
           <app-table
             title="Manifiesto"
             [tableData]="tableManifestSelectedData"
@@ -30,7 +29,7 @@
             [error]="errorMasterData"
             [hasRedirect]="true"
             (onRowClicked)="masterSelected($event)"
-            />
-        }
+          />
+        </ng-container>
       </div>
   </div>

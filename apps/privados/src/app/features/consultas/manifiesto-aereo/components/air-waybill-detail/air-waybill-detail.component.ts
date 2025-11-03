@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { TableData } from '../../../../../shared/interfaces/table.interface';
 import { APP_ROUTES } from '../../../../../app.routes.constants';
@@ -13,7 +14,7 @@ import { RoutingService } from '@/core/services/routing.service';
 @Component({
   selector: 'app-air-waybill-detail',
   standalone: true,
-  imports: [TableComponent],
+  imports: [TableComponent, NgIf],
   templateUrl: './air-waybill-detail.component.html',
 })
 export class AirWaybillDetailComponent implements OnInit {

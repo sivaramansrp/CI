@@ -16,13 +16,13 @@ import {
   TableDataConverted,
 } from '../../interfaces/table.interface';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [FormsModule, NgClass, ButtonComponent],
+  imports: [FormsModule, NgClass, NgFor, NgIf, ButtonComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })

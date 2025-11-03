@@ -34,6 +34,10 @@ module.exports = {
   },
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, 'src/app'),
+      '@app': path.resolve(__dirname, 'src/app'),
+      '@shared': path.resolve(__dirname, 'src/app/shared'),
+      '@core': path.resolve(__dirname, 'src/app/core'),
       ...sharedMappings.getAliases()
     }
   },

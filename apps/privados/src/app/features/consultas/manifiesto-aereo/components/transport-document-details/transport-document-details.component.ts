@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { TableBodyData, TableData } from '../../../../../shared/interfaces/table.interface';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { APP_ROUTES } from '../../../../../app.routes.constants';
@@ -19,7 +20,7 @@ import { MANIFIESTO_AEREO_ROUTES } from '../../services/manifiesto-aereo.routes.
 @Component({
   selector: 'app-transport-document-details',
   standalone: true,
-  imports: [TableComponent],
+  imports: [TableComponent, NgIf],
   templateUrl: './transport-document-details.component.html',
 })
 export class TransportDocumentDetailsComponent implements OnInit {

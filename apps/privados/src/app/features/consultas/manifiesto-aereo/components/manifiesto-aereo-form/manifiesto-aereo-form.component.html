@@ -24,17 +24,14 @@
           >
         </div>
 
-        @if (formUtils.isValidField(myForm, 'searchType')) {
-        <small class="form-text form-text-error">
+        <small class="form-text form-text-error" *ngIf="formUtils.isValidField(myForm, 'searchType')">
           {{ formUtils.getFieldError(myForm, 'searchType') }}
         </small>
-        }
       </div>
     </div>
   </div>
 
-  @if (formUtils.valueSelected(myForm, 'searchType', 'document')) {
-  <div class="row">
+  <div class="row" *ngIf="formUtils.valueSelected(myForm, 'searchType', 'document')">
     <div class="col-md-12">
       <div class="form-group">
         <h5>
@@ -61,17 +58,15 @@
           >
         </div>
         <div class="col-md-12">
-          @if (formUtils.formHasError(myForm, 'typeDocumentRequired', 'typeDocument')) {
-          <small class="form-text form-text-error">
+          <small class="form-text form-text-error" *ngIf="formUtils.formHasError(myForm, 'typeDocumentRequired', 'typeDocument')">
             {{ formUtils.getFieldError(myForm, 'typeDocument') }}
           </small>
-          }
         </div>
       </div>
     </div>
   </div>
-  } @if(formUtils.valueSelected(myForm, 'searchType', searchBy.date)) {
-  <div class="row">
+
+  <div class="row" *ngIf="formUtils.valueSelected(myForm, 'searchType', searchBy.date)">
     <div class="col-md-12">
       <div class="form-group">
         <h5>
@@ -85,16 +80,14 @@
             formControlName="date"
             [hasError]="formUtils.formHasError(myForm, 'dateRequired', searchBy.date)">
           </date-picker>
-          @if (formUtils.formHasError(myForm, 'dateRequired', searchBy.date)) {
-            <small class="form-text form-text-error">
-              {{ formUtils.getFieldError(myForm, 'date') }}
-            </small>
-          }
+          <small class="form-text form-text-error" *ngIf="formUtils.formHasError(myForm, 'dateRequired', searchBy.date)">
+            {{ formUtils.getFieldError(myForm, 'date') }}
+          </small>
         </div>
       </div>
     </div>
   </div>
-  }
+
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
@@ -114,11 +107,9 @@
         </div>
         <div class="mt-5">
           <div class="col-md-12">
-            @if (!formUtils.valueSelected(myForm, 'transportCompany', 'IATA')) {
-            <div class="form-group">
+            <div class="form-group" *ngIf="!formUtils.valueSelected(myForm, 'transportCompany', 'IATA')">
               <label
-                >CAAT @if (formUtils.valueSelected(myForm, 'transportCompany', 'CAAT')) {
-                <span class="form-text form-text-error">*</span>}
+                >CAAT <span class="form-text form-text-error" *ngIf="formUtils.valueSelected(myForm, 'transportCompany', 'CAAT')">*</span>
               </label>
               <input
                 type="text"
@@ -128,17 +119,13 @@
                   'form-control-error': formUtils.formHasError(myForm, 'caatRequired', 'caat')
                 }"
               />
-              @if (formUtils.formHasError(myForm, 'caatRequired', 'caat')) {
-              <small class="form-text form-text-error">
+              <small class="form-text form-text-error" *ngIf="formUtils.formHasError(myForm, 'caatRequired', 'caat')">
                 {{ formUtils.getFieldError(myForm, 'caat') }}
               </small>
-              }
             </div>
-            } @else {
-            <div class="form-group">
+            <div class="form-group" *ngIf="formUtils.valueSelected(myForm, 'transportCompany', 'IATA')">
               <label
-                >IATA @if (formUtils.valueSelected(myForm, 'transportCompany', 'IATA')) {
-                <span class="form-text form-text-error">*</span>}</label
+                >IATA <span class="form-text form-text-error" *ngIf="formUtils.valueSelected(myForm, 'transportCompany', 'IATA')">*</span></label
               >
               <input
                 type="text"
@@ -148,13 +135,10 @@
                   'form-control-error': formUtils.formHasError(myForm, 'iataRequired', 'iata')
                 }"
               />
-              @if (formUtils.formHasError(myForm, 'iataRequired', 'iata')) {
-              <small class="form-text form-text-error">
+              <small class="form-text form-text-error" *ngIf="formUtils.formHasError(myForm, 'iataRequired', 'iata')">
                 {{ formUtils.getFieldError(myForm, 'iata') }}
               </small>
-              }
             </div>
-            }
           </div>
           <div class="col-md-6">
             <div class="form-group">
@@ -165,11 +149,8 @@
           <div class="col-md-6">
 
               <div class="form-group">
-                @if(formUtils.valueSelected(myForm, 'transportCompany', 'IATA')) {
-                  <label>Código CAAT</label>
-                } @else {
-                  <label>Código IATA</label>
-                }
+                <label *ngIf="formUtils.valueSelected(myForm, 'transportCompany', 'IATA')">Código CAAT</label>
+                <label *ngIf="!formUtils.valueSelected(myForm, 'transportCompany', 'IATA')">Código IATA</label>
                 <input type="text" class="form-control" formControlName="otherCode"/>
             </div>
 
@@ -187,11 +168,9 @@
           <label>Aduana de despacho</label>
           <select formControlName="customClearance" class="form-control">
             <option value="">Seleccione un valor</option>
-             @for(aduana of aduanas; track $index) {
-              <option [value]="aduana.idClave">
-                {{ aduana.aduanaNombre }}
-              </option>
-            }
+            <option *ngFor="let aduana of aduanas; let i = index" [value]="aduana.idClave">
+              {{ aduana.aduanaNombre }}
+            </option>
           </select>
         </div>
       </div>
@@ -200,11 +179,9 @@
           <label>Aduana de Transbordo</label>
           <select formControlName="customsTransshipment" class="form-control">
             <option value="">Seleccione un valor</option>
-            @for(aduana of aduanas; track $index) {
-              <option [value]="aduana.idClave">
-                {{ aduana.aduanaNombre }}
-              </option>
-            }
+            <option *ngFor="let aduana of aduanas; let i = index" [value]="aduana.idClave">
+              {{ aduana.aduanaNombre }}
+            </option>
           </select>
         </div>
       </div>
@@ -217,8 +194,7 @@
         <hr class="red" />
         <div class="col-md-6">
           <label
-            >Número de manifiesto / Guía @if (formUtils.valueSelected(myForm, 'searchType',
-            'document')) { <span class="form-text form-text-error">*</span> }</label
+            >Número de manifiesto / Guía <span class="form-text form-text-error" *ngIf="formUtils.valueSelected(myForm, 'searchType', 'document')">*</span></label
           >
           <input
             type="text"
@@ -232,11 +208,9 @@
               )
             }"
           />
-          @if (formUtils.formHasError(myForm, 'guideNumberRequired', 'guideNumber')) {
-          <small class="form-text form-text-error">
+          <small class="form-text form-text-error" *ngIf="formUtils.formHasError(myForm, 'guideNumberRequired', 'guideNumber')">
             {{ formUtils.getFieldError(myForm, 'guideNumber') }}
           </small>
-          }
         </div>
       </div>
     </div>
@@ -250,11 +224,9 @@
           <label>Guía</label>
           <select formControlName="guideSelect" class="form-control">
             <option value="">Seleccione un valor</option>
-            @for(estadoDocumento of estadoDocumentos; track $index) {
-              <option [value]="estadoDocumento.idClave">
-                {{ estadoDocumento.cveNumeracion }}
-              </option>
-            }
+            <option *ngFor="let estadoDocumento of estadoDocumentos; let i = index" [value]="estadoDocumento.idClave">
+              {{ estadoDocumento.cveNumeracion }}
+            </option>
           </select>
         </div>
       </div>

@@ -3,7 +3,7 @@
   <h5>Detalle del documento de transporte</h5>
   <hr class="red" />
 
-  @if (!isManifest()) {
+  <ng-container *ngIf="!isManifest()">
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
@@ -46,21 +46,20 @@
         </div>
       </div>
     </div>
-  }
+  </ng-container>
 
 
-  @if (!isManifest()) {
-    <app-table
-      [tableData]="tableDataThirdPartyDetails"
-      [hiddenData]="hiddenDataThirdPartyDetail"
-      title="Detalles de Terceros Relacionados"
-      [isLoading]="isLoadingDataThirdPartyDetail"
-      [error]="errorThirdPartyDetailData"
-      [borderedStyle]="true"
-      (onRowClicked)="navigateToContacts($event)"
-      [hasRedirect]="true"
-    ></app-table>
-  }
+  <app-table
+    *ngIf="!isManifest()"
+    [tableData]="tableDataThirdPartyDetails"
+    [hiddenData]="hiddenDataThirdPartyDetail"
+    title="Detalles de Terceros Relacionados"
+    [isLoading]="isLoadingDataThirdPartyDetail"
+    [error]="errorThirdPartyDetailData"
+    [borderedStyle]="true"
+    (onRowClicked)="navigateToContacts($event)"
+    [hasRedirect]="true"
+  ></app-table>
 
  <app-table
     [tableData]="tableDataTransportDetails"
@@ -70,7 +69,7 @@
     [borderedStyle]="true"
   ></app-table>
 
-  @if (!isManifest()) {
+  <ng-container *ngIf="!isManifest()">
     <div class="row">
       <div class="col-sm-6">
         <app-table
@@ -107,5 +106,5 @@
         </div>
       </div>
     </div>
-  }
+  </ng-container>
 </div>

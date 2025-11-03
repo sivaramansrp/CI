@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { GeneralDataMasterComponent } from '../../components/details/general-data/general-data-master.component';
 import { HouseComponent } from '../../components/details/house/house.component';
 import { ButtonComponent } from '@/shared/components/button/button.component';
@@ -18,6 +19,7 @@ import { GUIAS_AEREAS_ROUTES } from '../../guias-aereas.routes.constants';
   selector: 'app-guia-aerea-detalles',
   standalone: true,
   imports: [
+    NgIf,
     GeneralDataMasterComponent,
     HouseComponent,
     ButtonComponent,

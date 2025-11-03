@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { AirWaybillService } from '../../../services/air-waybill.service';
 import { catchError, of, take, tap } from 'rxjs';
 import {
@@ -14,7 +15,7 @@ import { SessionStorageService } from '@/shared/services/session-storage.service
 @Component({
   selector: 'app-flight-table',
   standalone: true,
-  imports: [TableComponent],
+  imports: [TableComponent, NgIf],
   templateUrl: './flight-table.component.html',
 })
 export class FlightTableComponent implements OnInit {

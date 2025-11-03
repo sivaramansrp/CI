@@ -12,11 +12,9 @@
           type="file"
           formControlName="certificate"
         />
-        @if (formUtils.isValidField(loginForm, 'certificate')) {
-        <small class="form-text form-text-error">
+        <small class="form-text form-text-error" *ngIf="formUtils.isValidField(loginForm, 'certificate')">
           {{ formUtils.getFieldError(loginForm, 'certificate') }}
         </small>
-        }
       </div>
       <div class="form-group">
         <label class="control-label"> Clave privada (key)</label>
@@ -27,11 +25,9 @@
           type="file"
           formControlName="key"
         />
-        @if (formUtils.isValidField(loginForm, 'key')) {
-        <small class="form-text form-text-error">
+        <small class="form-text form-text-error" *ngIf="formUtils.isValidField(loginForm, 'key')">
           {{ formUtils.getFieldError(loginForm, 'key') }}
         </small>
-        }
       </div>
       <div class="form-group">
         <label class="control-label">Contraseña de clave privada</label>
@@ -42,11 +38,9 @@
           type="password"
           formControlName="password"
         />
-        @if (formUtils.isValidField(loginForm, 'password')) {
-        <small class="form-text form-text-error">
+        <small class="form-text form-text-error" *ngIf="formUtils.isValidField(loginForm, 'password')">
           {{ formUtils.getFieldError(loginForm, 'password') }}
         </small>
-        }
       </div>
       <button class="btn btn-primary" type="submit">Ingresar</button>
     </form>

@@ -4,21 +4,16 @@
       <h2>Datos Generales</h2>
     </div>
     <div class="col-md-12">
-      @if (isHouseSelected()) {
-        <app-general-data-house/>
-      } @else {
+      <app-general-data-house *ngIf="isHouseSelected(); else masterData"/>
+      <ng-template #masterData>
         <app-general-data-master/>
-      }
+      </ng-template>
     </div>
-    <div class="col-md-12">
-      @if (!isHouseSelected()) {
-        <app-house (houseClicked)="houseClicked($event)"></app-house>
-      }
+    <div class="col-md-12" *ngIf="!isHouseSelected()">
+      <app-house (houseClicked)="houseClicked($event)"></app-house>
     </div>
-    <div class="col-md-12">
-      @if (dataLoaded()) {
-        <app-people-merchandise></app-people-merchandise>
-      }
+    <div class="col-md-12" *ngIf="dataLoaded()">
+      <app-people-merchandise></app-people-merchandise>
     </div>
     <div class="col-md-12 mt-5 text-right">
       <gob-button

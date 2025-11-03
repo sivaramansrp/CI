@@ -2,7 +2,7 @@ import { Custom } from '@/features/consultas/manifiesto-aereo/interfaces/catalog
 import { DatePickerComponent } from '@/shared/components/date-picker/date-picker.component';
 import { FormUtils } from '@/shared/utils/formUtils';
 import { formatDateIso } from '@/shared/utils/serviceUtils';
-import { formatDate, NgClass } from '@angular/common';
+import { formatDate, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   effect,
@@ -25,7 +25,7 @@ import { SessionStorageService } from '@/shared/services/session-storage.service
 @Component({
   selector: 'app-caat-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, DatePickerComponent, BsDatepickerModule],
+  imports: [ReactiveFormsModule, NgClass, NgFor, NgIf, DatePickerComponent, BsDatepickerModule],
   templateUrl: './caat-form.component.html',
 })
 export class CaatFormComponent implements OnInit, OnDestroy {

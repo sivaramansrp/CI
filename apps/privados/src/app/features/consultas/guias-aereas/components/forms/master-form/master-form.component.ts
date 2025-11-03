@@ -2,7 +2,7 @@ import { Custom } from '@/features/consultas/manifiesto-aereo/interfaces/catalog
 import { DatePickerComponent } from '@/shared/components/date-picker/date-picker.component';
 import { FormUtils } from '@/shared/utils/formUtils';
 import { formatDateIso } from '@/shared/utils/serviceUtils';
-import { formatDate, JsonPipe, NgClass } from '@angular/common';
+import { formatDate, JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   effect,
@@ -25,7 +25,7 @@ import { SessionStorageService } from '@/shared/services/session-storage.service
 @Component({
   selector: 'app-master-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, DatePickerComponent, BsDatepickerModule],
+  imports: [ReactiveFormsModule, NgClass, NgFor, NgIf, DatePickerComponent, BsDatepickerModule],
   templateUrl: './master-form.component.html',
 })
 export class MasterFormComponent implements OnInit, OnDestroy {

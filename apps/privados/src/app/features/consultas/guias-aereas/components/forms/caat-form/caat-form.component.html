@@ -8,11 +8,9 @@
           formControlName="startDate"
           [hasError]="formUtils.formHasError(caatForm, 'startDateRequired', 'startDate')">
         </date-picker>
-        @if (formUtils.formHasError(caatForm, 'startDateRequired', 'startDate')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(caatForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(caatForm, 'startDateRequired', 'startDate')">
+          {{ formUtils.getTextError(caatForm.errors) }}
+        </small>
       </div>
       <div class="form-group">
         <label>Aduana/sección aduanera</label>
@@ -24,17 +22,13 @@
           }"
         >
           <option value="">Seleccione un valor</option>
-            @for(custom of customs; track $index) {
-              <option [value]="custom.idClave">
-                {{ custom.aduanaNombre }}
-              </option>
-            }
+          <option *ngFor="let custom of customs; let i = index" [value]="custom.idClave">
+            {{ custom.aduanaNombre }}
+          </option>
         </select>
-        @if (formUtils.formHasError(caatForm, 'customRequired', 'custom')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(caatForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(caatForm, 'customRequired', 'custom')">
+          {{ formUtils.getTextError(caatForm.errors) }}
+        </small>
       </div>
     </div>
 
@@ -49,11 +43,9 @@
           [isDisable]="isEndDateDisabled"
           [hasError]="formUtils.formHasError(caatForm, 'endDateRequired', 'endDate')">
         </date-picker>
-        @if (formUtils.formHasError(caatForm, 'endDateRequired', 'endDate')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(caatForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(caatForm, 'endDateRequired', 'endDate')">
+          {{ formUtils.getTextError(caatForm.errors) }}
+        </small>
       </div>
     </div>
 
@@ -71,11 +63,9 @@
             'form-control-error': formUtils.formHasError(caatForm, 'caatRequired', 'caat')
           }"
         />
-        @if (formUtils.formHasError(caatForm, 'caatRequired', 'caat')) {
-          <small class="form-text form-text-error">
-            {{ formUtils.getTextError(caatForm.errors) }}
-          </small>
-        }
+        <small class="form-text form-text-error" *ngIf="formUtils.formHasError(caatForm, 'caatRequired', 'caat')">
+          {{ formUtils.getTextError(caatForm.errors) }}
+        </small>
       </div>
     </div>
   </div>
