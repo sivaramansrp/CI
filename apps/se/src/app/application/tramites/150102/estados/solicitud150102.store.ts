@@ -98,6 +98,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     super(createInitialState());
   }
 
+  /**
+   * @description Actualiza el identificador de la solicitud.
+   * @param idSolicitud Identificador de la solicitud como un número.
+   */
   actualizarIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
       ...state,

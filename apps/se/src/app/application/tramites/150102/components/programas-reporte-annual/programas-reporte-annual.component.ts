@@ -142,8 +142,6 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    //this.obtenerReporteFechas();
   }
 
   /**

@@ -19,6 +19,9 @@ const API_VERSION = ENVIRONMENT.API_VERSION;
  */
 const PROCEDURE = '/sat-t150102';
 
+/**
+ * Rutas de la API para el procedimiento 150102.
+ */
 export const PROC_150102 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     OBTENER: (rfc: string) => `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-programas?rfc=${rfc}`,
