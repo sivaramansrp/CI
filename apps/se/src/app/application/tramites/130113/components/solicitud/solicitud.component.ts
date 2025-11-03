@@ -1,31 +1,46 @@
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+/**
+ * Componente para gestionar la solicitud de mercancías en el trámite 130113.
+ * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
+ * Proporciona funcionalidades para capturar, modificar y validar la solicitud, así como mostrar notificaciones y manejar datos asociados.
+ * @export
+ * @class SolicitudComponent
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
-import { REG_X } from '@ng-mf/data-access-user';
-
-import { REGEX_PATRON_DECIMAL_2 } from '@ng-mf/data-access-user';
-import { REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
-
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  Notificacion,
+  REGEX_NUMERO_DECIMAL_ENTERO,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_NUMEROS,
+  REG_X,
+} from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
+
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130113/solicitud-select.json';
+import unidadOptions from '@libs/shared/theme/assets/json/130113/unidad_da.json';
+
+import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
+
 import {
   Tramite130113State,
   Tramite130113Store,
 } from '../../estados/tramites/tramites130113.store';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
-import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
-import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
-
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130113/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130113/unidad_da.json';
 
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * Componente para gestionar la solicitud de mercancías.
@@ -34,22 +49,34 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
-  styleUrl: './solicitud.component.scss',
+  styleUrl: './solicitud.component.scss'
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * form
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
+  /**
+   * Formulario reactivo principal para capturar los datos de la solicitud.
+   * @type {FormGroup}
+   */
   partidasDelaMercanciaForm!: FormGroup;
 
   /**
    *  Formulario reactivo para los datos del trámite.
    */
+  /**
+   * Formulario reactivo para los datos del trámite.
+   * @type {FormGroup}
+   */
   formDelTramite!: FormGroup;
 
   /**
    *  Formulario reactivo para los detalles de la mercancía.
+   */
+  /**
+   * Formulario reactivo para los detalles de la mercancía.
+   * @type {FormGroup}
    */
   mercanciaForm!: FormGroup;
 
@@ -57,28 +84,60 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * formForTotalCount
    * Formulario reactivo para capturar los totales de las partidas.
    */
+  /**
+   * Formulario reactivo para capturar los totales de las partidas.
+   * @type {FormGroup}
+   */
   formForTotalCount!: FormGroup;
 
   /**
    * Formulario reactivo para la selección de países.
+   */
+  /**
+   * Formulario reactivo para la selección de países.
+   * @type {FormGroup}
    */
   paisForm!: FormGroup;
 
   /**
    * Formulario reactivo para la representación.
    */
+  /**
+   * Formulario reactivo para la representación.
+   * @type {FormGroup}
+   */
   frmRepresentacionForm!: FormGroup;
+
+  /**
+   * Notificación de alerta para mostrar mensajes de éxito.
+   * 
+   * @public
+   * @property {Notificacion} alertaNotificacion
+   */
+
+  /**
+   * Notificación de alerta para mostrar mensajes de éxito o advertencia.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
 
   /**
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
-    PARTIDASDELAMERCANCIA_TABLA;
+  /**
+   * Configuración de las columnas de la tabla dinámica.
+   * @type {ConfiguracionColumna<PartidasDeLaMercanciaModelo>[]}
+   */
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   */
+  /**
+   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   * @type {PartidasDeLaMercanciaModelo[]}
    */
   tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
@@ -86,11 +145,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
+  /**
+   * Bandera para mostrar u ocultar la tabla dinámica.
+   * @type {boolean}
+   */
   mostrarTabla = false;
 
   /**
    * CHECKBOX
    * Tipo de selección de la tabla dinámica (checkbox).
+   */
+  /**
+   * Tipo de selección de la tabla dinámica (checkbox).
+   * @type {TablaSeleccion}
    */
   checkBox = TablaSeleccion.CHECKBOX;
 
@@ -98,21 +165,37 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * getEstablecimientoTableData
    * Datos de configuración de la tabla obtenidos de un archivo JSON.
    */
+  /**
+   * Datos de configuración de la tabla obtenidos de un archivo JSON.
+   * @type {any}
+   */
   public getEstablecimientoTableData = PartidasdelaTable;
 
   /**
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
+  /**
+   * Fila seleccionada en la tabla dinámica.
+   * @type {PartidasDeLaMercanciaModelo[]}
+   */
   filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    *  Opciones para el campo "producto".
    */
+  /**
+   * Opciones para el campo "producto".
+   * @type {ProductoOpción[]}
+   */
   productoOpciones: ProductoOpción[] = [];
 
   /**
    *  Opciones para el campo "fraccionDescription".
+   */
+  /**
+   * Opciones para el campo "fraccionDescription".
+   * @type {Catalogo[]}
    */
   fraccionDescription: Catalogo[] = [];
 
@@ -120,10 +203,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  Catálogo con valores de fracción arancelaria.
    */
 
+  /**
+   * Catálogo con valores de fracción arancelaria.
+   * @type {Catalogo[]}
+   */
   fraccionCatalogo: Catalogo[] = fractionValues;
 
   /**
    *  Catálogo con opciones de unidad de medida.
+   */
+  /**
+   * Catálogo con opciones de unidad de medida.
+   * @type {Catalogo[]}
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
 
@@ -429,16 +520,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
 
   obtenerTablaDatos(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getTablaDatos()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.tableBodyData = data;
-        this.formForTotalCount.patchValue({
-          cantidadTotal: data[0].cantidad,
-          valorTotalUSD: data[0].totalUSD,
-        });
-      });
+    // No complete tableBodyData en el inicio, manténgalo vacío de forma predeterminada
+    this.tableBodyData = [];
+    this.formForTotalCount.patchValue({
+      cantidadTotal: '',
+      valorTotalUSD: '',
+    });
   }
 
   /**
@@ -482,14 +569,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   manejarlaFilaSeleccionada(
     filasSeleccionadas: PartidasDeLaMercanciaModelo[]
   ): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? [filasSeleccionadas[0]]
-      : [];
-    if (this.filaSeleccionada) {
-      this.tramite130113Store.actualizarEstado({
-        filaSeleccionada: this.filaSeleccionada,
-      });
-    }
+    // Actualiza la fila seleccionada
+    this.filaSeleccionada = filasSeleccionadas;
+    this.tramite130113Store.actualizarEstado({
+      filaSeleccionada: this.filaSeleccionada,
+    });
   }
 
   /**
@@ -497,13 +581,58 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
       this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-      this.tramite130113Store.actualizarEstado({ mostrarTabla: true });
+      this.mostrarTabla = false;
+      return;
     }
+    // Validar que todos los campos obligatorios estén llenos antes de agregar la fila
+    const CAMPOS_OBLIGATORIOS = [
+      'cantidadPartidasDeLaMercancia',
+      'fraccionTigiePartidasDeLaMercancia',
+      'fraccionDescripcionPartidasDeLaMercancia',
+      'descripcionPartidasDeLaMercancia',
+      'valorPartidaUSDPartidasDeLaMercancia'
+    ];
+    const VALOR_FORMULARIO = this.partidasDelaMercanciaForm.value;
+    const TODOS_CAMPOS_LLENO = CAMPOS_OBLIGATORIOS.every(
+      campo => VALOR_FORMULARIO[campo] !== null && VALOR_FORMULARIO[campo] !== undefined && VALOR_FORMULARIO[campo] !== ''
+    );
+    if (!TODOS_CAMPOS_LLENO) {
+      this.mostrarTabla = false;
+      return;
+    }
+    // Calcular el total USD para la fila
+    const CANTIDAD = Number(VALOR_FORMULARIO.cantidadPartidasDeLaMercancia);
+    const PRECIO_UNITARIO_USD = Number(VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia);
+    const TOTAL_USD = (CANTIDAD && PRECIO_UNITARIO_USD) ? (CANTIDAD * PRECIO_UNITARIO_USD).toFixed(2) : '';
+    // Crear la fila mapeada para la tabla
+    const FILA_MAPEADA = {
+      id: (Date.now()).toString(), // Identificador único para cada fila
+      cantidad: VALOR_FORMULARIO.cantidadPartidasDeLaMercancia,
+      unidadDeMedida: '', // Completar desde catálogo o formulario si está disponible
+      fraccionFrancelaria: VALOR_FORMULARIO.fraccionTigiePartidasDeLaMercancia,
+      descripcion: VALOR_FORMULARIO.descripcionPartidasDeLaMercancia,
+      precioUnitarioUSD: VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia,
+      totalUSD: TOTAL_USD,
+      fraccionTigiePartidasDeLaMercancia: VALOR_FORMULARIO.fraccionTigiePartidasDeLaMercancia,
+      fraccionDescripcionPartidasDeLaMercancia: VALOR_FORMULARIO.fraccionDescripcionPartidasDeLaMercancia
+    };
+    // Agregar la fila mapeada al arreglo de datos de la tabla
+    this.tableBodyData = [
+      ...this.tableBodyData,
+      FILA_MAPEADA
+    ];
+    // Actualizar los totales en el formulario de totales
+    const SUMA_CANTIDAD = this.tableBodyData.reduce((sum, row) => sum + Number(row.cantidad || 0), 0);
+    const SUMA_TOTAL_USD = this.tableBodyData.reduce((sum, row) => sum + Number(row.totalUSD || 0), 0);
+    this.formForTotalCount.patchValue({
+      cantidadTotal: SUMA_CANTIDAD,
+      valorTotalUSD: Number(SUMA_TOTAL_USD).toFixed(2)
+    });
+    this.mostrarTabla = true;
+    this.tramite130113Store.actualizarEstado({ mostrarTabla: true });
+    this.partidasDelaMercanciaForm.reset();
   }
 
   /**
@@ -511,12 +640,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Navega para modificar una partida específica y actualiza el estado global.
    */
   navegarParaModificarPartida(): void {
-    if (this.filaSeleccionada) {
-      this.tramite130113Store.actualizarEstado({ mostrarTabla: true });
-      this.tramite130113Store.actualizarEstado({
-        filaSeleccionada: this.filaSeleccionada,
-      });
-    }
+    // Aquí se abriría el modal de modificar (el template debe manejarlo)
+    this.tramite130113Store.actualizarEstado({ mostrarTabla: true });
+    this.tramite130113Store.actualizarEstado({
+      filaSeleccionada: this.filaSeleccionada,
+    });
   }
   /**
    * Método para obtener la lista de entidades federativas.
@@ -599,7 +727,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130113Store.actualizarEstado({ unidadMedida: '1' });
     }
   }
-
   /**
    *  Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */
