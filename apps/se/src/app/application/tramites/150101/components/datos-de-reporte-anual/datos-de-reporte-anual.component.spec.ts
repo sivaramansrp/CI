@@ -56,9 +56,8 @@ describe('DatosDeReporteAnnualComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, DatosDeReporteAnnualComponent],
       declarations: [
-        DatosDeReporteAnnualComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -79,8 +78,12 @@ describe('DatosDeReporteAnnualComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function () { };
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = function () {};
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
