@@ -358,14 +358,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Inicializa el modal.
    */
   encontradaModal(): void {
-    if (this.solicitudForm.valid) {
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
       }
-    } else {
-      this.solicitudForm.markAllAsTouched();
-    }
   }
 
   /**
@@ -393,8 +389,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Agrega un nuevo contenedor al grid.
    */
   agregarGrid(): void {
-    if (this.solicitudForm.valid) {
-
     const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
@@ -416,13 +410,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
             this.contenedores = [...this.contenedores, respuesta.datos];
             (this.contenedorStore.setContenedores as (valor: GridContenedores[]) => void)(this.contenedores);
+            // this.solicitudForm.get('datosContenedor.tipoContenedor').markAsUntouched();
             this.solicitudForm.reset();
             this.solicitudForm.markAsUntouched();
             this.solicitudForm.markAsPristine();
             this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
             this.solicitudForm.get('aduana')?.setValue(ADUANA);
             this.mostrarCampos();
-            // this.mostrarBotonesBuscar = false;
+            this.archivoSeleccionado = '';
+            this.mostrarAgregarTipoContenedor = false;
           }
           else if(respuesta?.codigo === 'SAT11202-CR02'){
             this.encontradaModal()
@@ -432,9 +428,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           }
         }
       );
-    }
-  } else {
-      this.solicitudForm.markAllAsTouched();
     }
   }
 
