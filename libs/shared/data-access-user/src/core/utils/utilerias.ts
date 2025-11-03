@@ -363,3 +363,20 @@ export function formatDateToYYYYMMDD(dateString: string): string {
   const DATE = new Date(dateString);
   return DATE.toISOString().split('T')[0];
 }
+
+/**  
+ * **Formatea una fecha en formato DD/MM/YYYY.**  
+ * Convierte una cadena de fecha válida en una representación legible con día, mes y año.  
+ *  
+ * @param fechaStr - Cadena de fecha a formatear (por ejemplo, `"2025-11-03"`).  
+ * @returns La fecha formateada en formato `"DD/MM/YYYY"`.  
+ */
+export function formatFechaDDMMYYYY(fechaStr: string): string {
+  const FECHA = new Date(fechaStr);
+
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const YEAR = FECHA.getFullYear();
+
+  return `${DAY}/${MONTH}/${YEAR}`;
+}

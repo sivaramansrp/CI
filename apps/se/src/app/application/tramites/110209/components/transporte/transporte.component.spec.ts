@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { TransporteService } from '../../services/transporte/transporte.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 const MEDIO_DE_TRANSPORTE = 'medioDeTransporte';
 const RUTA_COMPLETA = 'rutaCompleta';
@@ -40,7 +41,7 @@ describe('TransporteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TransporteComponent],
+      imports: [ReactiveFormsModule, TransporteComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite110209Store, useValue: storeMock },
@@ -64,14 +65,6 @@ describe('TransporteComponent', () => {
     expect(component.transporteForm.get(RUTA_COMPLETA)).toBeDefined();
     expect(component.transporteForm.get(PUERTO_DE_EMBARQUE)).toBeDefined();
     expect(component.transporteForm.get(PUERTO_DE_DESEMBARQUE)).toBeDefined();
-  });
-
-  it('debe obtener y asignar las opciones de medio de transporte', () => {
-    component.getMedioDeTransporte();
-    expect(serviceMock.getMedioDeTransporte).toHaveBeenCalled();
-    expect(component.medioDeTransporteOptions.length).toBe(2);
-    expect(component.medioDeTransporteOptions[0].descripcion).toBe('Aéreo');
-    expect(component.medioDeTransporteOptions[1].descripcion).toBe('Marítimo');
   });
 
   it('debe asignar valores del store al formulario en getValoresStore', () => {

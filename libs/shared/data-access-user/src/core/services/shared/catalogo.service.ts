@@ -589,8 +589,8 @@ export class CatalogoServices {
  * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
  * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
  */
-  tratadosAcuerdosCatalogoDatosNew(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite, ideTipoTratadoAcuerdo)}`;
+  tratadosAcuerdosCatalogoDatosNew(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

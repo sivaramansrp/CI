@@ -932,7 +932,7 @@ export const CATALOGO_PAIS_BLOQUE_CLAVE = (TRAMITE: string, CLAVEBLOQUE: string)
  * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
  * Devuelve un string con la ruta completa del recurso en el backend.
  */
-export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
 
 /**
  * Genera la URL del endpoint para obtener la lista de países asociados a un tratado específico.
