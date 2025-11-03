@@ -37,7 +37,13 @@
             }
             @case (4) {
             @if(esDatosRespuesta){
-            <app-shared-pago-derechos [mostrarNotificacionAlerta]="true"></app-shared-pago-derechos>
+          <app-pago-de-derechos 
+    #pagoDeDerechosComponent
+    [idProcedimiento]="idProcedimiento"
+    [pagoDerechoFormState]="pagoDerechos"
+    (updatePagoDerechos)="updatePagoDerechos($event)"
+    [formularioDeshabilitado]="formularioDeshabilitado" 
+></app-pago-de-derechos>
             }
             }
             }
