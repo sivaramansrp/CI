@@ -13,6 +13,7 @@
 
 import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_DESTINO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL,CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_ANOS } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
+import { CATALOGO_USOS_ESPECIFICO_MERCANCIA } from '../../servers/api-router';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -792,4 +793,15 @@ anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de usos específico de mercancía.
+ * 
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de usos específicos de mercancía
+ * @see CATALOGO_USOS_ESPECIFICO_MERCANCIA
+ */
+usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }

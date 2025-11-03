@@ -189,3 +189,5 @@ export const TABLA_ROWDATA: FabricanteDatos[] = [
     coloniaEquivalente: "Centro histórico"
   }
 ];
+
+export const ID_PROCEDIMIENTO = 260212;

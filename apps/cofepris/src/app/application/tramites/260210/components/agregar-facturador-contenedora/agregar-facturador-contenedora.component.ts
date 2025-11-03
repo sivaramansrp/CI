@@ -2,13 +2,14 @@ import { AgregarFacturadorComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 
 /**
  * @component AgregarFacturadorContenedoraComponent
  * @description Componente contenedor que utiliza el componente `AgregarFacturadorComponent`
  * para gestionar la funcionalidad relacionada con los facturadores.
- * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260210Store`.
  */
 
 @Component({
@@ -20,18 +21,24 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 })
 export class AgregarFacturadorContenedoraComponent {
   
+    /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+     */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
+     
   /**
-   * @property tramite260214Store
+   * @property Tramite260210Store
    * @description Store público que gestiona el estado completo del trámite 260214.
    * Proporciona acceso a las propiedades y métodos necesarios para administrar
    * la información de facturadores y otros datos relacionados con el trámite.
    * 
-   * @type {Tramite260214Store}
+   * @type {Tramite260210Store}
    * @public
    * @readonly
    * @since 1.0.0
    */
-  public tramite260214Store: Tramite260214Store;
+  public Tramite260210Store: Tramite260210Store;
 
   /**
    * @constructor
@@ -39,7 +46,7 @@ export class AgregarFacturadorContenedoraComponent {
    * Se encarga de configurar el store del trámite 260214 que será utilizado para gestionar
    * el estado de los facturadores y toda la información relacionada con el trámite.
    * 
-   * @param {Tramite260214Store} tramite260214Store - Instancia del store que administra el estado del trámite 260214.
+   * @param {Tramite260210Store} Tramite260210Store - Instancia del store que administra el estado del trámite 260214.
    *                                                   Contiene los métodos y propiedades para manipular
    *                                                   los datos de facturadores, validaciones y estado general.
    * 
@@ -52,8 +59,8 @@ export class AgregarFacturadorContenedoraComponent {
    * @since 1.0.0
    * @memberof AgregarFacturadorContenedoraComponent
    */
-  constructor(tramite260214Store: Tramite260214Store) {
-    this.tramite260214Store = tramite260214Store;
+  constructor(Tramite260210Store: Tramite260210Store) {
+    this.Tramite260210Store = Tramite260210Store;
   }
 
   /**
@@ -97,13 +104,13 @@ export class AgregarFacturadorContenedoraComponent {
    * ```
    * 
    * @see {@link Facturador} - Modelo de datos para facturadores
-   * @see {@link Tramite260214Store} - Store que gestiona el estado del trámite
+   * @see {@link Tramite260210Store} - Store que gestiona el estado del trámite
    * 
    * @since 1.0.0
    * @memberof AgregarFacturadorContenedoraComponent
    * @public
    */
   updateFacturadorTablaDatos(event: Facturador[]): void {
-    this.tramite260214Store.updateFacturadorTablaDatos(event);
+    this.Tramite260210Store.updateFacturadorTablaDatos(event);
   }
 }

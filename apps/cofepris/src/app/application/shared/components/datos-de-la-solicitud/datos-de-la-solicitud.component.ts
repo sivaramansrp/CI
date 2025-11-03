@@ -79,16 +79,15 @@ import {
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
 import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
+import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
-
 import { ScianDataService } from '../../services/scian-data.service';
 import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
+import { ToastrService } from 'ngx-toastr';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
-import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -890,7 +889,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+         
           Validators.maxLength(120),
         ],
       ],
@@ -913,7 +912,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+         
           Validators.maxLength(12),
           Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
@@ -923,7 +922,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
           value: this.datosSolicitudFormState.estado,
           disabled: false, // Keep enabled (dropdown is enabled in screenshot)
         },
-        [Validators.required, Validators.minLength(2)],
+        [Validators.required],
       ],
       municipioAlcaldia: [
         {
@@ -932,7 +931,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         },
         [
           Validators.required,
-          Validators.minLength(2),
+          
           Validators.maxLength(120),
         ],
       ],
@@ -1271,8 +1270,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Procesa los datos del representante obtenidos de la API
    */
   private procesarDatosRepresentante(data: RepresentanteData): void {
-    // Determinar el campo de nombre según el procedimiento
-    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    // Usar el mismo campo de nombre para todos los procedimientos
+    const NOMBRE_FIELD = data.nombre;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
@@ -1995,7 +1994,6 @@ marcarTodosLosCamposComoTocados(): void {
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
   
-  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
 }
 
 /**
