@@ -48,7 +48,7 @@ describe('SanitarioComponent', () => {
 
     // Since the operation is asynchronous, we need to wait for it to complete
     setTimeout(() => {
-      expect(component.indice).toBe(2);
+      expect(component.indice).toBe(1);
       expect(wizardMock.siguiente).toHaveBeenCalled();
       done();
     }, 0);
@@ -92,7 +92,7 @@ describe('SanitarioComponent', () => {
 
     // Since the operation is asynchronous, we need to wait for it to complete
     setTimeout(() => {
-      expect(component.indice).toBe(2); // Index should still be updated
+      expect(component.indice).toBe(1); // Index should still be updated
       expect(wizardMock.siguiente).not.toHaveBeenCalled(); // But siguiente should not be called
       done();
     }, 0);

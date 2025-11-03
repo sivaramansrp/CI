@@ -95,32 +95,6 @@ export class SanitarioComponent {
   ) {
 
   }
-  // getValorIndice(e: AccionBoton): void {
-  //   if (e.valor > 0 && e.valor < 5) {
-  //     this.indice = e.valor;
-  //     if (e.accion === 'cont') {
-        
-      
-  //         this.guardarDatosAPI().subscribe({
-  //           next: (response: BaseResponse<unknown>) => {
-  //             // eslint-disable-next-line no-console
-  //             console.log('Datos guardados exitosamente:', response);
-  //             this.wizardComponent.siguiente();
-  //           },
-  //           error: (error: unknown) => {
-  //             // eslint-disable-next-line no-console
-  //             console.error('Error al guardar datos:', error);
-  //             // You can add user notification here
-  //           }
-  //         });
-       
-         
-  //         this.wizardComponent.siguiente();
-       
-  //       this.wizardComponent.atras();
-  //     }
-  //   }
-  // }
 
     getValorIndice(e: AccionBoton): void {
       if (e.accion === 'cont') {
