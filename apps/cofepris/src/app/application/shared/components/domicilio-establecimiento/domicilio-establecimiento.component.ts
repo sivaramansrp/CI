@@ -286,11 +286,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [this.solicitudState?.estado, Validators.required],
       muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
+      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+      colonia: [this.solicitudState?.colonia, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       calle: [this.solicitudState?.calle, Validators.required],
       lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.requiredTrue],
       licenciaSanitaria: [
         { value: this.solicitudState?.licenciaSanitaria, disabled: false }, Validators.required
@@ -1026,7 +1026,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.colapsableTress = !this.colapsableTress;
     this.paisProcedenciaDelColapsable = !this.paisProcedenciaDelColapsable;
   }
-
   /**
    * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
    * If the control does not exist, no action is taken.
