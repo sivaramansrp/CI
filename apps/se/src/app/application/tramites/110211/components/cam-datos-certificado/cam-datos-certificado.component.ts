@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {Subject,map, takeUntil } from 'rxjs';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
@@ -106,7 +105,7 @@ export class CamDatosCertificadoComponent implements OnDestroy {
  */
 setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
   const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  this.store.setFormDatosCertificadoGenric({ [CAMPO]: VALOR });
 }
   /**
    * @descripcion

@@ -90,12 +90,6 @@ interface FormValues {
 })
 export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**
-   * @property {FormGroup} exportadorForm
-   * @description Formulario para capturar los datos del exportador.
-   */
-  // exportadorForm!: FormGroup;
-
-  /**
    * @property {FormValues} formDestinatarioValues
    * @description Valores actuales del formulario de destinatario.
    */
@@ -239,68 +233,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
    */
   setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALOR: unknown; METODO_NOMBRE: string }): void {
     const { VALOR } = event;
-    const METODO_STORE = this.store[event.METODO_NOMBRE as keyof camCertificadoStore];
-    if (typeof METODO_STORE === 'function') {
-      (METODO_STORE as (value: unknown) => void).call(this.store, VALOR);
-    }
+    this.store.setGrupoRepresentativoNombreExportador({ [event.campo]: VALOR });
   }
-
-  /**
-   * @method ngAfterViewInit
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `exportadorForm`.
-   * En caso contrario, habilita el formulario para permitir la edición.
-   */
-  // ngAfterViewInit(): void {
-  // if (this.esFormularioSoloLectura) {
-  //   this.exportadorForm.disable();
-  // } else {
-  //   this.exportadorForm.enable();
-  // }
-  // }
-
-  /**
-   * @method initActionFormBuild
-   * @description
-   * Inicializa el formulario de exportador con los valores actuales del estado.
-   */
-  // initActionFormBuild(): void {
-  //   this.exportadorForm = this.fb.group({
-  //     lugar: [
-  //     this.exportadoState.lugar,
-  //     [Validators.required]
-  //     ],
-  //     exportador: [
-  //     this.exportadoState.exportador,
-  //     [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-  //     ],
-  //     empresa: [
-  //     this.exportadoState.empresa,
-  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
-  //     ],
-  //     cargo: [
-  //     this.exportadoState.cargo,
-  //     [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-  //     ],
-  //     lada: [
-  //     this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
-  //     ],
-  //     telfono: [
-  //     this.exportadoState.telfono,
-  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-  //     ],
-  //     fax: [
-  //     this.exportadoState.fax,
-  //     [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-  //     ],
-  //     correo: [
-  //     this.exportadoState.correo,
-  //     [Validators.required, Validators.email, Validators.maxLength(100)]
-  //     ]
-  //   });
-
-  // }
 
   /**
    * @method datosDelDestinatarioFunc

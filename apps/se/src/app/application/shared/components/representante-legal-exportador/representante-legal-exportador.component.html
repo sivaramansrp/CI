@@ -4,8 +4,8 @@
   @for(campo of campos; track $index) {
   <div [ngClass]="campo.columna" class="form-group">
 
-    <label [for]="campo.nombre"> {{ campo.label }}
-      @if (campo.required) {<span for="asterisk" [ngClass]="{'text-danger': form.get(campo.nombre)?.invalid && form.get(campo.nombre)?.touched}">*</span>}
+    <label [for]="campo.nombre">{{ campo.label }}
+      @if (campo.required) {<span for="asterisk" [ngClass]="{'text-danger': form.get(campo.nombre)?.invalid && form.get(campo.nombre)?.touched}">*:</span>}
       @if (campo.tooltip) { <span [tooltip]="campo.tooltip" placement="top">
         <i class="bi bi-question-circle-fill mx-2"></i>
       </span> } 

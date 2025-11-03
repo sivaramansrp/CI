@@ -233,7 +233,6 @@ export class CamCertificadoComponent {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: CamState): Promise<JSONResponse> {
-    console.log(item)
     const MERCANCIA_SELECCIONADAS = this.camCertificadoService.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasDatos);
     const PAYLOAD = {
       "rfcSolicitante": "AAL0409235E6",
@@ -299,9 +298,9 @@ export class CamCertificadoComponent {
         }
       ],
       "unidadAdministrativaRepresentacionFederal": {
-        "cveEntidad": 'CHIS'
+        "cveEntidad": item.formDatosCertificado['representacionFederalDates']
       },
-      "clavePaisSeleccionado": item.paisBloques[0].clave,
+      "clavePaisSeleccionado": 'P-' + item.paisBloques[0].clave,
       "solicitante": {
         "rfc": "AAL0409235E6",
         "cveUsuario": "AAL0409235E6",
@@ -336,9 +335,9 @@ export class CamCertificadoComponent {
           }
         }
       },
-      "listaMercanciasSeleccionadas": [MERCANCIA_SELECCIONADAS],
+      "listaMercanciasSeleccionadas": MERCANCIA_SELECCIONADAS,
       "tratadoAcuerdo": {
-        "idTratadoAcuerdoSeleccionado": item.estado.clave
+        "idTratadoAcuerdoSeleccionado": Number(item.estado.clave)
       },
       "blnAnexoJapon": false,
       "idCupoAsociado": 0,
@@ -467,8 +466,8 @@ export class CamCertificadoComponent {
             esValidObject(API_RESPONSE) &&
             esValidObject(API_RESPONSE.datos)
           ) {
-            if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-              this.store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+            if (getValidDatos(API_RESPONSE.datos.idSolicitud)) {
+              this.store.setIdSolicitud(API_RESPONSE.datos.idSolicitud);
               this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             } else {
               this.store.setIdSolicitud(0);

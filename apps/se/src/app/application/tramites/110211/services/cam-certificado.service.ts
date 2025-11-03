@@ -181,8 +181,8 @@ export class CamCertificadoService {
       const ITEM = arr as {
         id?: number;
         fraccionArancelaria: string;
-        cantidad?: string;
-        valorMercancia?: string;
+        cantidad?: number;
+        valorMercancia?: number;
         nombreTecnico: string;
         nombreComercial: string;
         numeroDeRegistrodeProductos: string;
@@ -197,9 +197,9 @@ export class CamCertificadoService {
 
       RESULT.push({
         "fraccionArancelaria": ITEM.fraccionArancelaria,
-        "cantidad": ITEM.cantidad,
+        "cantidad": Number(ITEM.cantidad),
         "unidadDeMedida": ITEM.umc,
-        "valorMercancia": ITEM.valorMercancia,
+        "valorMercancia": Number(ITEM.valorMercancia),
         "tipoDeFactura": ITEM.tipoFactura,
         "numeroFactura": ITEM.numeroFactura,
         "complementoDescripcion": ITEM.complementoDescripcion,

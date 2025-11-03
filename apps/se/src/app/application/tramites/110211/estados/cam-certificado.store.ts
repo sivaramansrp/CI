@@ -49,42 +49,79 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @command Este estado se utiliza para gestionar los datos y formularios relacionados con el certificado CAM.
  */
 export interface CamState {
+  /** Identificador de la solicitud */
   idSolicitud: number | null;
+  /** Datos del formulario del certificado */
   formCertificado: { [key: string]: unknown };
+  /** Estado seleccionado */
   estado: Catalogo;
+  /** Bloques de países disponibles */
   paisBloques: Catalogo[];
+  /** Datos del formulario de mercancías */
   mercanciaForm: { [key: string]: unknown };
+  /** Tabla de mercancías */
   mercanciaTabla: Mercancia[];
+  /** Datos del formulario del certificado */
   formDatosCertificado: { [key: string]: unknown };
+  /** Idioma seleccionado */
   idiomaDatosSeleccion: Catalogo;
+  /** Entidad federativa seleccionada */
   entidadFederativaSeleccion: Catalogo;
+  /** Representación federal seleccionada */
   representacionFederalSeleccion: Catalogo;
+  /** Datos del formulario del destinatario */
   formDatosDelDestinatario: { [key: string]: unknown };
+  /** Fracción arancelaria */
   fraccionArancelaria: string;
+  /** Nombre comercial de la mercancía */
   nombreComercialMercancia: string;
+  /** Nombre técnico de la mercancía */
   nombreTecnico: string;
+  /** Nombre en inglés de la mercancía */
   nombreIngles: string;
+  /** Criterio de clasificación de la mercancía */
   criterioClasificacion: string;
+  /** Cantidad de la mercancía */
   cantidad: string;
+  /** Unidades de medida comercial */
   umc: Catalogo[];
+  /** Valor de la mercancía */
   valorMercancia: string;
+  /** Complemento de clasificación de la mercancía */
   complementoClasificacion: string;
+  /** Número de la factura */
   numeroFactura: string;
+  /** Tipos de factura */
   tipoFactura: Catalogo[];
+  /** Lugar relacionado con el certificado */
   lugar: string;
+  /** Nombre del exportador */
   exportador: string;
+  /** Nombre de la empresa */
   empresa: string;
+  /** Cargo del representante */
   cargo: string;
+  /** Código de área telefónica */
   lada: string;
+  /** Número de teléfono */
   telfono: string;
+  /** Número de fax */
   fax: string;
+  /** Dirección de correo electrónico */
   correo: string;
+  /** Validez de los formularios */
   formaValida: { [key: string]: boolean };
+  /** Datos del formulario del destinatario */
   formDestinatario: { [key: string]: unknown };
+  /** Calle */
   calle: string;
+  /** Mercancías disponibles */
   disponiblesDatos: Mercancia[];
+  /** Mercancías seleccionadas en la tabla */
   mercanciaSeleccionadasTablaDatos: Mercancia[];
+  /** Mercancías seleccionadas */
   mercanciaSeleccionadasDatos: Mercancia[];
+  /** Datos del grupo representativo */
   grupoRepresentativo: GrupoRepresentativo;
 }
 
@@ -633,6 +670,35 @@ export class camCertificadoStore extends Store<CamState> {
       },
     }));
   }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormDatosCertificadoGenric(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setGrupoRepresentativoNombreExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      grupoRepresentativo: {
+        ...state.grupoRepresentativo,
+        ...values,
+      },
+    }));
+  }
+
   /**
    * @descripcion
    * Actualiza completamente el estado con los valores proporcionados.
