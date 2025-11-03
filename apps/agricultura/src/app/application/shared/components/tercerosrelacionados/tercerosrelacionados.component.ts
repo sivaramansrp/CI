@@ -162,10 +162,10 @@ export class TercerosrelacionadosComponent implements OnInit {
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
   configuracionColumnasExportador: ConfiguracionColumna<DestinatarioForm>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial + ' ' + fila.nombre, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
-    { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
+    { encabezado: 'Domicilio', clave: (fila) => fila.domicilio, orden: 4 },
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
   /**
@@ -182,7 +182,7 @@ export class TercerosrelacionadosComponent implements OnInit {
    * @type {ConfiguracionColumna<TercerosrelacionadosdestinoTable>[]}
    */
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial + ' ' + fila.nombre, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
@@ -239,9 +239,9 @@ export class TercerosrelacionadosComponent implements OnInit {
             calle: destinatario.calle,
             numeroExterior: destinatario.num_exterior,
             tipoMercancia: destinatario.num_interior,
-            nombre: destinatario.nombre,
+            nombre: destinatario.nombre + ' ' + destinatario.razon_social,
             primerApellido: destinatario.apellido_materno,
-            razonSocial: destinatario.razon_social,
+            razonSocial: destinatario.razon_social + ' ' + destinatario.nombre,
             pais: destinatario.pais,
             telefono: destinatario.telefonos,
             correo: destinatario.correo,
@@ -255,7 +255,7 @@ export class TercerosrelacionadosComponent implements OnInit {
         data.terceros_exportador.forEach(tercero => {
           const MAPPED_EXPORTADOR: DestinatarioForm = {
             nombre: tercero.nombre,
-            razonSocial: tercero.razon_social,
+            razonSocial: tercero.razon_social + ' ' + tercero.nombre,
             pais: tercero.pais,
             telefono: tercero.telefonos,
             correo: tercero.correo,
