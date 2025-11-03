@@ -1,4 +1,4 @@
-import { ALERTA_COM, ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,ERROR_INVALIDA_FORMA_ALERT,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
+import { ALERTA_COM, ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Component, inject } from '@angular/core';
 import { DatosPasos, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
@@ -87,20 +87,20 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
   /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValido!: boolean;
+  esFormaValido: boolean = false;
   /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValidoDos!: boolean;
+  esFormaValidoDos: boolean = false;
 
     /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-    esFormaValidoTres!: boolean;
+  esFormaValidoTres: boolean = false;
       /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-      esFormaValidoCuatro!: boolean;
+      esFormaValidoCuatro: boolean = false;
   /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
@@ -118,11 +118,6 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
   public formErrorAlertQuad = ERROR_FORMA_ALERT_QUAD;
-
-  /**
-    Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
-   */
-    public invalidFormErrorAlert = ERROR_INVALIDA_FORMA_ALERT;
   /**
   /**
      * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
@@ -393,10 +388,6 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
     this.esFormaValidoDos = false;
     this.esFormaValidoTres = false;
     this.esFormaValidoCuatro = false;
-  }
-
-  isAllFalse(): boolean {
-    return !this.esFormaValido && !this.esFormaValidoDos && !this.esFormaValidoTres && !this.esFormaValidoCuatro && this.esFormaValido!==undefined && this.esFormaValidoDos!==undefined && this.esFormaValidoTres!==undefined && this.esFormaValidoCuatro!==undefined;
   }
 
   /**

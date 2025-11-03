@@ -250,14 +250,16 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       totalExportaciones: ['', [Validators.required, integerValidator]]
     });
 
+    // Commented now for future validation use
     // Add value change listeners for validation
-    this.periodoReporteAnual.get('ventasTotales')?.valueChanges.subscribe(value => {
-      this.validateIntegerField('ventasTotales', value, 'Ventas totales (a):');
-    });
+    // this.periodoReporteAnual.get('ventasTotales')?.valueChanges.subscribe(value => {
+    //   this.validateIntegerField('ventasTotales', value, 'Ventas totales (a):');
+    // });
 
-    this.periodoReporteAnual.get('totalExportaciones')?.valueChanges.subscribe(value => {
-      this.validateIntegerField('totalExportaciones', value, 'Total exportaciones (b):');
-    });
+    // Commented now for future validation use
+    // this.periodoReporteAnual.get('totalExportaciones')?.valueChanges.subscribe(value => {
+    //   this.validateIntegerField('totalExportaciones', value, 'Total exportaciones (b):');
+    // });
   }
 
   /**

@@ -14,8 +14,7 @@
           id="ventasTotales"
           class="form-control"
           formControlName="ventasTotales"
-          (blur)="obtenerVentasTotales($event)"
-          (input)="limitarLongitud($event, 16)"
+          (change)="obtenerVentasTotales($event)"
           pattern="[0-9]*"
           maxlength="16"
         />
