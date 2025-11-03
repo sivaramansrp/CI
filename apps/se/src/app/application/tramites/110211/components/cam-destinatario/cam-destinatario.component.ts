@@ -140,12 +140,24 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
    */
   idProcedimiento: number = 110211;
 
+  /**
+   * @property {DatosDelDestinatarioComponent} datosDelDestinatarioComponent
+   * @description Referencia al componente hijo `DatosDelDestinatarioComponent` para acceder a sus métodos y propiedades.
+   */
   @ViewChild('datosDelDestinatarioComponent', { static: false })
   datosDelDestinatarioComponent!: DatosDelDestinatarioComponent;
 
+  /**
+   * @property {DestinatarioComponent} destinatarioComponent
+   * @description Referencia al componente hijo `DestinatarioComponent` para acceder a sus métodos y propiedades.
+   */
   @ViewChild('destinatarioRef', { static: false })
   destinatarioComponent!: DestinatarioComponent;
 
+  /**
+   * @property {RepresentanteLegalExportadorComponent} representanteLegalExportadorComponent
+   * @description Referencia al componente hijo `RepresentanteLegalExportadorComponent` para acceder a sus métodos y propiedades.
+   */
   @ViewChild('representanteLegalExportadorComponent', { static: false })
   representanteLegalExportadorComponent!: RepresentanteLegalExportadorComponent;
 
@@ -214,7 +226,6 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
-          // this.initActionFormBuild();
         })
       )
       .subscribe();

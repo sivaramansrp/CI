@@ -53,7 +53,9 @@ export class CamCertificadoService {
   url: string = '../../../../../assets/json/110211/';
 
   /**
-   * URL base del servidor de catálogos auxiliares.
+   * @description URL del servidor para obtener catálogos.
+   * @type {string}
+   * @memberof CamCertificadoService
    */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
