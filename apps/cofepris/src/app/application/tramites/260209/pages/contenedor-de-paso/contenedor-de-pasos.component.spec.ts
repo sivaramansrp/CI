@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContenedorDePasosComponent } from './contenedor-de-pasos.component';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { PASOS, TITULO_MENSAJE } from '../../constants/destinados-donacio.enum';
+import { TOAST_CONFIG } from 'ngx-toastr';
 
 
 describe('ContenedorDePasosComponent', () => {
@@ -16,11 +17,16 @@ describe('ContenedorDePasosComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ContenedorDePasosComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: []
+      providers: [ { provide: TOAST_CONFIG, useValue: {} }]
     }).compileComponents();
-    
+
     fixture = TestBed.createComponent(ContenedorDePasosComponent);
     component = fixture.componentInstance;
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+      iconClasses: []
+    } as any;
     fixture.detectChanges();
   });
 
@@ -53,6 +59,7 @@ describe('ContenedorDePasosComponent', () => {
       component.wizardComponent = {
         siguiente: jest.fn(),
         atras: jest.fn(),
+        iconClasses: []
       } as any;
     });
 
@@ -153,7 +160,6 @@ describe('ContenedorDePasosComponent', () => {
 
     it('should update datosPasos when indice changes', () => {
       component.indice = 3;
-      // Simulate component re-initialization or manual update if needed
       component.datosPasos = {
         nroPasos: component.pasos.length,
         indice: component.indice,

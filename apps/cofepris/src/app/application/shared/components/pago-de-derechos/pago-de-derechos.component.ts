@@ -277,7 +277,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       ],
       ],
       bancoObject: [this.solicitudState?.bancoObject || ''],
-      estadoObject: [this.solicitudState?.estadoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -339,9 +338,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
               const DATOS = response.datos as Catalogo[];
               
               if (response) {
-                
                 this.bancoDatos = DATOS;
-                this.estadosDatos = DATOS;
               }
             })
           );
@@ -474,28 +471,6 @@ onBancoSeleccionado(event: any): any {
   return BANCO_OBJ ? BANCO_OBJ[0] : undefined;
 }
 
-/**
- * Método para manejar la selección de estado.
- * @param event {any} Evento del select.
- */
-onEstadoSeleccionado(event: any): any {
-  const SELECTEDVALUE = event.target ? event.target.value : event;
-  const ESTADO = this.estadosDatos.find(e => e.clave === SELECTEDVALUE);
-
-  const ESTADOID = this.pagoDerechosForm.get('estado')?.value;
-  const ESTADO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.estadosDatos, ESTADOID);
-  this.pagoDerechosForm.patchValue({ estadoObject: ESTADO_OBJ ? ESTADO_OBJ[0] : undefined });
-
-
-  if (ESTADO) {
-    this.pagoDerechosForm.patchValue({ estado: ESTADO.clave });
-    this.pagoDerechosForm.get('estado')?.markAsTouched();
-    this.pagoDerechosForm.get('estado')?.markAsDirty();
-    this.setValoresStoreObject(ESTADO, 'estado', 'setEstadoObject');
-  }
-    return ESTADO_OBJ ? ESTADO_OBJ[0] : undefined;
-
-}
 
 /**
  * Método para actualizar el store con objeto completo.
