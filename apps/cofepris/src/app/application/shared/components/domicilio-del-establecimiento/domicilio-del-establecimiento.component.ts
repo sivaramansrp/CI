@@ -386,7 +386,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
     this.avisoFuncionamientoChecked = Boolean(this.domicilioForm.get('aviso')?.value);
 
-    // Apply initial form state based on establishment selection
+
     this.updateFormState();
   }
 
