@@ -19,7 +19,7 @@
         
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElHilado')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paises" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly"
+                        <app-catalogo-select [catalogo]="paisesMexico" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly"
                         [markTouched]="procesoProductivoForm.get('paisEnQueSeRealizoElHilado')?.touched ?? false" [required]="true" name="País en que se realizó el hilado" formControlName="paisEnQueSeRealizoElHilado" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElHilado')">
                         </app-catalogo-select>
                     </div>
