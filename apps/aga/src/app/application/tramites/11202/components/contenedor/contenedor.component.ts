@@ -623,6 +623,30 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudGuardar();
   }
 
+  /**
+   * Guarda la solicitud actual enviando un payload al servicio de trámite.
+   *
+   * Comportamiento:
+   * - Lee el tipo de búsqueda desde el formulario (this.solicitudForm.get('tipoBusqueda')).
+   * - Selecciona la fuente de contenedores según el tipo:
+   *   - 'Contenedor'  -> this.contenedores
+   *   - 'Archivo CSV' -> this.datosDelCsvArchivo
+   * - Normaliza cada elemento de contenedores convirtiendo la propiedad
+   *   `existe_en_vucem` desde la cadena 'Sí' a boolean true (cualquier otro valor se interpreta como false),
+   *   y preservando el resto de propiedades mediante spread.
+   * - Construye el payload con:
+   *   - id_solcitud: this.solicitudState.idSolicitud || null
+   *   - solicitante: objeto que incluye this.rfc_original y valores estáticos para otros campos
+   *   - contenedores: array normalizado
+   * - Llama a this.datosTramiteService.solicitudGuardar(PAYLOAD), aplica takeUntil(this.destroyNotifier$)
+   *   para gestionar la desuscripción y se subscribe al resultado.
+   * - Al recibir una respuesta con respuesta?.codigo === '00':
+   *   - actualiza el id de solicitud en this.solicitud11202Store.setIdSolicitud(...)
+   *   - emite el evento this.continuarEvento.emit('')
+   *
+   *
+   * @returns void
+   */
   solicitudGuardar(): void {
       const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
       let contenedores: any[] = [];
@@ -658,11 +682,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
                     // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
                     if (respuesta?.codigo === '00') {
                       this.solicitud11202Store.setIdSolicitud(respuesta.datos.id_solicitud);
-                        //this.tramite11201Store.setIdSolicitud(respuesta.datos.id_solicitud);
                         this.continuarEvento.emit('');
- 
-
-
                     }
                 }
             );
