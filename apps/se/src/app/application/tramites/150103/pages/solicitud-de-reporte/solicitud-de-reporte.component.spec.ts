@@ -11,7 +11,6 @@ import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { provideHttpClient } from '@angular/common/http';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
 
-// Mock Data
 const mockSolicitudState: Solicitud150103State = {
   idSolicitud: 0,
   inicio: '01-2024',
@@ -97,7 +96,7 @@ describe('SolicitudDeReporteComponent', () => {
   afterEach(() => {
     fixture.destroy();
   });
-  
+
   it('should create component', () => {
     expect(component).toBeTruthy();
   });
