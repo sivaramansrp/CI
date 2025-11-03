@@ -118,3 +118,5 @@ export const PAIS_DE_ORIGEN_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
   }
+
+export const FUNCIONAMIENTO_LIST: number[] = [260512];

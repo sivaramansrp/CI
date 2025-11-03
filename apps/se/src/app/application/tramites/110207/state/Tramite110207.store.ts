@@ -145,10 +145,16 @@ export interface Solicitud110207State {
    */
   mercanciaTabla: Mercancia[];
 
+  /** Lista de mercancías seleccionadas en la tabla. */
+  mercanciaSeleccionadasTabla: Mercancia[];
+
+  /** Datos del destinatario. */
   formDatosDelDestinatario: { [key: string]: unknown };
 
+  /** Datos del destinatario en formulario dinámico */
   formDestinatario: { [key: string]: unknown };
-
+  
+  /** Información del grupo representativo */
   grupoRepresentativo: GrupoRepresentativo;
 
   /** Datos generales del destinatario en formulario dinámico */
@@ -296,6 +302,7 @@ export function createInitialState(): Solicitud110207State {
     paisBloques: [],
     disponiblesDatos: [],
     mercanciaTabla: [],
+    mercanciaSeleccionadasTabla: [],
     /** Lista de medios de transporte */
     medioDeTransporte: [],
     /** Formulario adicional para el destinatario */
@@ -878,6 +885,19 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
       );
       return { ...STATE, mercanciaTabla: UPDATEDLIST };
     });
+  }
+
+  /**
+   * @method mercanciaSeleccionadasTabla
+   * @description
+   * Actualiza las mercancías seleccionadas en la tabla del almacén.
+   * @param mercanciaSeleccionadasTabla Array de objetos `Mercancia` que representa las mercancías seleccionadas.
+   */
+  mercanciaSeleccionadasTabla(mercanciaSeleccionadasTabla: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTabla,
+    }));
   }
 
   /**

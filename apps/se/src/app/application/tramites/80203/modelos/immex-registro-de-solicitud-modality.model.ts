@@ -238,7 +238,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número secuencial del registro
      */
-    clave: (ele: PermisoImmexGridDatos): string => ele.consecutivo,
+    clave: (ele: PermisoImmexGridDatos): number => ele.consecutivo,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -250,7 +250,7 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna del número de permiso IMMEX
      * @type {string}
      */
-    encabezado: 'Número permiso',
+    encabezado: 'Número Permiso',
     /**
      * @description Función extractora para obtener el número oficial del permiso IMMEX
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
@@ -411,9 +411,9 @@ export const FRACCION_EXPORTACION = [
     /**
      * @description Función extractora para obtener el número secuencial de la fracción
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Número secuencial del registro de fracción
+     * @returns {number} Número secuencial del registro de fracción
      */
-    clave: (ele: FraccionInfo): string => ele.fraccionArancelaria.idFraccion,
+    clave: (ele: FraccionInfo): number => ele.fraccionArancelaria.consecutivo,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -546,6 +546,7 @@ export interface FraccionInfo {
 }
 
 export interface FraccionArancelaria {
+  consecutivo: number;
   unidadMedida: string;
   testado: string;
   subPartida: string;
@@ -736,7 +737,7 @@ export interface PermisoImmexGridDatos {
    * @example "001"
    * @required
    */
-  consecutivo: string;
+  consecutivo: number;
 
   idProducto: string;
 

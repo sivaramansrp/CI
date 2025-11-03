@@ -18,15 +18,15 @@ import {
   Tramite110208Store,
 } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { BuscarMercanciasResponse } from '../../constants/validacion-posteriori.enum';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
-import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
+import { Solocitud110208Service } from '../../../110208/services/service110208.service';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 /**
@@ -164,7 +164,12 @@ export class CertificadoOrigenComponent
    * @default false
    */
   fromMercanciasDisponibles: boolean = false;
-
+  /**
+   * Referencia al componente hijo CertificadoDeOrigenComponent
+   * Permite acceder al formulario y métodos del componente hijo
+   */
+  @ViewChild(CertificadoDeOrigenComponent)
+  certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
   /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
@@ -175,7 +180,7 @@ export class CertificadoOrigenComponent
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
-   * @param peruCertificadoService - Servicio para obtener datos relacionados con el certificado.
+   * @param solicitudService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    * @param query - Consulta para obtener el estado del formulario.
    * @param seccionStore - Almacén para gestionar el estado de la sección.
@@ -183,7 +188,7 @@ export class CertificadoOrigenComponent
    */
   constructor(
     private readonly fb: FormBuilder,
-    private peruCertificadoService: PeruCertificadoService,
+    private solicitudService: Solocitud110208Service,
     private store: Tramite110208Store,
     private query: Tramite110208Query,
     private seccionQuery: SeccionLibQuery,
@@ -224,9 +229,6 @@ export class CertificadoOrigenComponent
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -246,65 +248,41 @@ export class CertificadoOrigenComponent
 
   /**
    * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-            this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
-  }
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || '105' },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] || "ARG" },
+    };
 
+ this.solicitudService
+   .buscarMercanciasCert(PAYLOAD)
+   .pipe(takeUntil(this.destroyNotifier$))
+   .subscribe({
+     next: (res) => {
+       const RESPONSE = res as unknown as BuscarMercanciasResponse;
+ 
+       const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+         id: item.idMercancia,
+         fraccionArancelaria: item.fraccionArancelaria || '',
+         numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+         fechaExpedicion: item.fechaExpedicion || '',
+         fechaVencimiento: item.fechaVencimiento || '',
+         nombreTecnico: item.nombreTecnico || '',
+         nombreComercial: item.nombreComercial || '',
+         criterioParaConferirOrigen: item.criterioOrigen || '',
+         valorDeContenidoRegional: item.valorContenidoRegional || '',
+         normaOrigen: item.normaOrigen || '',
+         nombreIngles: item.nombreIngles || '',
+       }));
+ 
+       this.disponiblesDatos = MAPPED_DATA;
+       this.store.setDisponsiblesDatos(MAPPED_DATA);
+     },
+   });
+   }
   /**
    * @descripcion
    * Actualiza el almacén con el estado seleccionado.
@@ -392,7 +370,27 @@ export class CertificadoOrigenComponent
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
   }
+  /**
+   * Método público para validar todos los formularios del componente datos-certificado.
+   * Valida el formulario del componente hijo DatosCertificadoDeComponent y actualiza el estado.
+   * @returns boolean indicando si todos los formularios son válidos
+   */
+  public validateAll(): boolean {
+    let valid = true;
 
+    // Validar el componente hijo datos-certificado-de
+    if (this.certificadoDeOrigenComponent) {
+      // Usar el método validarFormularios del componente hijo que marca los campos como touched
+      const IS_CHILD_FORM_VALID = this.certificadoDeOrigenComponent.validarFormularios();
+      if (!IS_CHILD_FORM_VALID) {
+        valid = false;
+      }
+      // Actualizar el estado de validez en el store
+      this.setFormValida(IS_CHILD_FORM_VALID);
+    }
+
+    return valid;
+  }
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

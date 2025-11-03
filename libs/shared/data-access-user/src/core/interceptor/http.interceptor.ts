@@ -44,10 +44,10 @@ export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
         Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.
       }
     });
-  
+
     return next(REQ).pipe(
       catchError((error) => {
-       // Note : reemplazar con el objeto necesario para modificar el cuadro de diálogo de mensaje de error
+        // Note : reemplazar con el objeto necesario para modificar el cuadro de diálogo de mensaje de error
         NOTIF.showNotification({
           tipoNotificacion: 'toastr',
           categoria: 'danger',
@@ -58,11 +58,11 @@ export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: 'Cancelar',
         });
-  
+
         // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
         return throwError(() => error);
       })
     );
   });
- 
+
 };

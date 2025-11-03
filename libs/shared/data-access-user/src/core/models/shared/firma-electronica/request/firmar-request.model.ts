@@ -68,6 +68,7 @@ export interface FirmarRequest {
   documentos_requeridos: DocumentoRequeridoFirmar[];
   rfcSolicitante?: string;
   rfc_solicitante?: string;
+  id_mecanismo?:number;
 }
 
 /**

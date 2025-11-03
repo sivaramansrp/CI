@@ -1,6 +1,7 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
+  CatalogoServices,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
@@ -25,11 +26,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
-import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
@@ -130,6 +131,15 @@ export class AgregarFacturadorComponent
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
+     
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
+  /**
+   * Suscripción para manejar observables.
+   */
+  private subscription: Subscription = new Subscription();
   /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
@@ -142,7 +152,8 @@ export class AgregarFacturadorComponent
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoServices: CatalogoServices,
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -151,7 +162,7 @@ export class AgregarFacturadorComponent
    * Hook de inicialización del componente. Carga los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.cargarDatos();
+    this.obtenerListaPaises(this.tramiteID);
     this.crearAgregarFormularioFacturador();
     this.changeNacionalidad();
      this.chequeoValidacionAlGuardar =
@@ -159,7 +170,17 @@ export class AgregarFacturadorComponent
         ? true
         :false;
   }
-
+  /**
+   * Obtiene la lista de países según el trámite especificado.
+   */
+ obtenerListaPaises(tramite: string): void {
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.paisesDatos = DATOS;
+    }));
+}
   /**
    * Método que inicializa el formulario reactivo y valida los elementos según el procedimiento.
    * @returns {void}
@@ -236,12 +257,20 @@ export class AgregarFacturadorComponent
         if (this.datoSeleccionado?.[0]?.tipoPersona) {
           this.agregarFacturadorForm?.enable();
         }
+        let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
         this.agregarFacturadorForm.patchValue({
           tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
           nombres: this.datoSeleccionado?.[0]?.nombres,
           primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
           segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-          pais: this.datoSeleccionado?.[0]?.pais,
+          pais: valorPais,
           estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
           codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
           colonia: this.datoSeleccionado?.[0]?.colonia,
@@ -262,7 +291,7 @@ export class AgregarFacturadorComponent
    * @param {keyof Facturador } field - Nombre del campo a obtener.
    * @returns {string | number | undefined | string[]} - Valor del campo especificado.
    */
-  public obtenerValor(field: keyof Facturador): string | number | undefined {
+  public obtenerValor(field: keyof Facturador): string | number | undefined | Catalogo {
     return this.datoSeleccionado?.[0]?.[field as keyof Facturador] ?? '';
   }
 
@@ -277,73 +306,101 @@ export class AgregarFacturadorComponent
         this.paisesDatos = data;
       });
   }
-
   /**
-   * Construye un objeto `Facturador` a partir del formulario,
-   * lo agrega al arreglo `facturadores` y actualiza el store.
-   * Después, limpia el formulario y regresa a la vista anterior.
-   */
-  guardarFacturador(): void {
-    if(this.chequeoValidacionAlGuardar){
-      if (this.agregarFacturadorForm.invalid) {
-            // Marca todos los controles como tocados para mostrar errores de validación
-          Object.values(this.agregarFacturadorForm.controls).forEach(control => {
-            control.markAsTouched();
-            control.updateValueAndValidity();
-          });
-            // NO redirigir ni emitir nada si el formulario es inválido
-          return;
-        }
+ * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+ *
+ * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+ * @param {string} id - Identificador para filtrar los objetos del catálogo.
+ * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+ */
+static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+  return catalogo.filter(item => item.clave === id);
+}
+ 
+/**
+ * Construye un objeto `Facturador` a partir del formulario,
+ * lo agrega al arreglo `facturadores` y actualiza el store.
+ * Después, limpia el formulario y regresa a la vista anterior.
+ */
+// eslint-disable-next-line complexity
+guardarFacturador(): void {
+  if(this.chequeoValidacionAlGuardar){
+    if (this.agregarFacturadorForm.invalid) {
+      // Marca todos los controles como tocados para mostrar errores de validación
+      Object.values(this.agregarFacturadorForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      // NO redirigir ni emitir nada si el formulario es inválido
+      return;
     }
-    const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
-
-    let nombreRazonSocial: string;
-
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
-    } else {
-      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
-    }
-    const NUEVO_FACTURADOR: Facturador = {
-      nacionalidad: VALOR_FORMULARIO.nacionalidad,
-      tipoPersona: VALOR_FORMULARIO.tipoPersona,
-      nombreRazonSocial: nombreRazonSocial,
-      rfc: '',
-      curp: '',
-      telefono: VALOR_FORMULARIO.telefono || '',
-      correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
-      calle: VALOR_FORMULARIO.calle || '',
-      numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
-      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-      pais: VALOR_FORMULARIO.pais || '',
-      colonia: VALOR_FORMULARIO.colonia || '',
-      municipioAlcaldia: '',
-      localidad: '',
-      entidadFederativa: '',
-      estadoLocalidad: VALOR_FORMULARIO.estado || '',
-      codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
-      coloniaEquivalente: '',
-      nombres: VALOR_FORMULARIO.nombres,
-      primerApellido: VALOR_FORMULARIO.primerApellido,
-      segundoApellido: VALOR_FORMULARIO.segundoApellido,
-      razonSocial: VALOR_FORMULARIO.razonSocial,
-      lada: VALOR_FORMULARIO.lada,
-    };
-
-    if (this.datoSeleccionado?.[0]?.id) {
-      NUEVO_FACTURADOR.id = this.datoSeleccionado[0].id;
-    }
-
-    this.facturadores.push(NUEVO_FACTURADOR);
-    this.updateFacturadorTablaDatos.emit(this.facturadores);
-    this.agregarFacturadorForm.reset();
-   // this.ubicaccion.back();
-    this.guardarYSalir.emit();
   }
+
+  const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
+  
+  const NUEVO_FACTURADOR: Facturador = VALOR_FORMULARIO as Facturador;
+  
+  const PAIS_ID = this.agregarFacturadorForm.get('pais')?.value;
+  const PAIS_OBJ = AgregarFacturadorComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
+  
+  NUEVO_FACTURADOR.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+  NUEVO_FACTURADOR.paisObj = PAIS_OBJ?.[0] ?? undefined;
+  
+  NUEVO_FACTURADOR.colonia = this.agregarFacturadorForm.get('colonia')?.value || '';
+  NUEVO_FACTURADOR.municipioAlcaldia = '';
+  NUEVO_FACTURADOR.localidad = '';
+  NUEVO_FACTURADOR.entidadFederativa = '';
+  NUEVO_FACTURADOR.estadoLocalidad = this.agregarFacturadorForm.get('estado')?.value || '';
+  NUEVO_FACTURADOR.codigoPostal = this.agregarFacturadorForm.get('codigoPostal')?.value || '';
+  NUEVO_FACTURADOR.coloniaEquivalente = '';
+
+  let nombreRazonSocial: string;
+  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+  } else {
+    nombreRazonSocial = '';
+  }
+  NUEVO_FACTURADOR.nombreRazonSocial = nombreRazonSocial;
+
+  NUEVO_FACTURADOR.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
+  NUEVO_FACTURADOR.tipoPersona = VALOR_FORMULARIO.tipoPersona;
+  NUEVO_FACTURADOR.rfc = '';
+  NUEVO_FACTURADOR.curp = '';
+  NUEVO_FACTURADOR.telefono = VALOR_FORMULARIO.telefono || '';
+  NUEVO_FACTURADOR.correoElectronico = VALOR_FORMULARIO.correoElectronico || '';
+  NUEVO_FACTURADOR.calle = VALOR_FORMULARIO.calle || '';
+  NUEVO_FACTURADOR.numeroExterior = VALOR_FORMULARIO.numeroExterior || '';
+  NUEVO_FACTURADOR.numeroInterior = VALOR_FORMULARIO.numeroInterior || '';
+  NUEVO_FACTURADOR.nombres = VALOR_FORMULARIO.nombres;
+  NUEVO_FACTURADOR.primerApellido = VALOR_FORMULARIO.primerApellido;
+  NUEVO_FACTURADOR.segundoApellido = VALOR_FORMULARIO.segundoApellido;
+  NUEVO_FACTURADOR.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
+  NUEVO_FACTURADOR.lada = VALOR_FORMULARIO.lada;
+
+  let UPDATED_FACTURADORES: Facturador[] = Array.isArray(this.facturadoresTablaDatos) 
+    ? [...this.facturadoresTablaDatos] 
+    : [];
+
+  if (this.datoSeleccionado?.[0]?.id) {
+    NUEVO_FACTURADOR.id = this.datoSeleccionado[0].id;
+    UPDATED_FACTURADORES = UPDATED_FACTURADORES.map(f => 
+      f.id === NUEVO_FACTURADOR.id ? NUEVO_FACTURADOR : f
+    );
+  } else {
+    const NEXT_ID = UPDATED_FACTURADORES.length > 0 
+      ? Math.max(...UPDATED_FACTURADORES.map(f => f.id || 0)) + 1 
+      : 1;
+    NUEVO_FACTURADOR.id = NEXT_ID;
+    UPDATED_FACTURADORES.push(NUEVO_FACTURADOR);
+  }
+
+  this.updateFacturadorTablaDatos.emit(UPDATED_FACTURADORES);
+  this.agregarFacturadorForm.reset();
+  this.datoSeleccionado = [];
+  this.guardarYSalir.emit();
+}
   /**
    * @method limpiarFormulario
    * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
@@ -351,7 +408,11 @@ export class AgregarFacturadorComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.agregarFacturadorForm.markAsUntouched();
+    this.agregarFacturadorForm.disable();
     this.agregarFacturadorForm.reset();
+    this.estaDeshabilitadoDesplegable = true;
+    this.agregarFacturadorForm.get('tipoPersona')?.enable();  
   }
   /**
    * @method cancelar

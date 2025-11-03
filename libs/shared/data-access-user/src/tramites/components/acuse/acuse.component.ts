@@ -27,6 +27,7 @@ import { DocumentosT2310Service } from '../../../core/services/shared/documentos
 import { Router } from '@angular/router';
 
 import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
+import { DocumentosTramiteResolucionService } from '../../../core/services/shared/detalleTramite.service';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -41,6 +42,11 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Generalmente representa el nombre del trámite o sección.
    */
   @Input() titulo!: string;
+
+  /**
+   * Título opcional para la sección de resoluciones.
+   */
+  @Input() tituloResoluciones?: string;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
@@ -114,6 +120,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Datos que se muestran en la tabla de acuse.
    */
   datosTablaAcuse: BodyTablaAcuse[] = [];
+  datosTablaResoluciones: BodyTablaAcuse[] = [];
+  idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
   constructor(
@@ -124,7 +132,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private documentosService2310: DocumentosT2310Service,
     private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
-    private aviso230301: DocumentosT230301Service
+    private aviso230301: DocumentosT230301Service,
+    private documentosResolucinService: DocumentosTramiteResolucionService
   ) {}
 
   /**
@@ -148,6 +157,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     }
   }
 
+
+
   /**
    * Método que genera y muestra los documentos necesarios para el acuse.
    *
@@ -159,9 +170,12 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
+        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
+        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223, 120101,130102,
+        5701, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102, 140101,140102,
         80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204,
         110205, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217,
-        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102,
+        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102, 150101, 150102
       ].includes(this.procedure)
     ) {
       this.documentosService130118

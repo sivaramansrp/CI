@@ -9,7 +9,19 @@
 .row-spacing {
     padding-bottom: 20px;
 }
+.custom-textarea {
+  height: 120px;
+  resize: none;            
+  overflow: auto;        
+  border-radius: 6px;
+}
 
 .text-right {
     text-align: right;
+}
+
+input.form-control.text-danger {
+    border-radius: 6px;
+    border-color: red !important;
+    color:red;
 }

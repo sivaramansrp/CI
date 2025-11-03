@@ -240,7 +240,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="derechosList" [label]="'País'" name="pais1" formControlName="pais1"
+              <app-catalogo-select [catalogo]="paisGet" [label]="'País'" name="pais1" formControlName="pais1"
                 (change)="
                   setValoresStore(
                     'formCertificado',
@@ -887,17 +887,18 @@
     </div>
     } @if (mercanciasDisponibles) {
     <div class="row">
+
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
-        [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
-      <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas
+        [datos]="guardarClicado || []"  [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
+        [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>      <span class="mensaje-error" 
+    *ngIf="tableErrorMensajeError && guardarClicado.length === 0 && !procedimientoExcluded.includes(idProcedimiento)">
+      Por favor, necesitas
         agregar un valor en la tabla dinámica</span>
     </div>
-
     } @else {
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTablaMercancia"
-        [datos]="guardarClicado || []" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+        [datos]="guardarClicado || []" [isInvalida]="formCertificado.controls['mercanciasSeleccionadas'].invalid && (formCertificado.controls['mercanciasSeleccionadas'].touched || formCertificado.controls['mercanciasSeleccionadas'].dirty)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
     </div>
     }
 

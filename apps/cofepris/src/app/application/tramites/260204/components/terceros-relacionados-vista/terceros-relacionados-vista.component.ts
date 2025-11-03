@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -8,6 +8,7 @@ import {
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ELEMENTOS_REQUERIDOS } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
@@ -27,6 +28,25 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+    /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
+    /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description Referencia al componente hijo `TercerosRelacionadosComponent`
+   * que se utiliza para mostrar las tablas de terceros relacionados.
+   */
+  @ViewChild(TercerosRelacionadosComponent) TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
    /**
     * @property {Fabricante[]} fabricanteTablaDatos
     * Datos de la tabla de fabricantes.
@@ -185,6 +205,25 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `TercerosRelacionadosComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
    * 

@@ -3,10 +3,10 @@ import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vist
 import { of, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { ImportacionDispositivosMedicosUsoService } from '../../services/importacion-dispositivos-medicos-uso.service';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
-import { Tramite260214Query } from '../../estados/tramite260214Query.query';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import {
   Fabricante,
   Destinatario,
@@ -19,9 +19,9 @@ import { ActivatedRoute } from '@angular/router';
 describe('TercerosRelacionadosVistaComponent', () => {
   let component: TercerosRelacionadosVistaComponent;
   let fixture: ComponentFixture<TercerosRelacionadosVistaComponent>;
-  let tramiteStore: jest.Mocked<Tramite260214Store>;
-  let tramiteQuery: jest.Mocked<Tramite260214Query>;
-  let importacionService: jest.Mocked<ImportacionDispositivosMedicosUsoService>;
+  let tramiteStore: jest.Mocked<Tramite260215Store>;
+  let tramiteQuery: jest.Mocked<Tramite260215Query>;
+  let importacionService: jest.Mocked<ServiciosPermisoSanitarioService>;
 
   const mockFabricantes: Fabricante[] = [];
   const mockDestinatarios: Destinatario[] = [];
@@ -63,11 +63,11 @@ describe('TercerosRelacionadosVistaComponent', () => {
       ],
       declarations: [],
       providers: [
-        { provide: Tramite260214Store, useValue: tramiteStore },
-        { provide: Tramite260214Query, useValue: tramiteQuery },
+        { provide: Tramite260215Store, useValue: tramiteStore },
+        { provide: Tramite260215Query, useValue: tramiteQuery },
         { provide: TercerosRelacionadosFebService, useValue: importacionService },
         {
-          provide: ImportacionDispositivosMedicosUsoService,
+          provide: ServiciosPermisoSanitarioService,
           useValue: importacionService,
         },
         {

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import {
   Tramite260210State,
-  Tramite260214Store,
+  Tramite260210Store,
 } from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
@@ -25,6 +26,14 @@ import { Tramite260210Query } from '../../estados/tramite260210Query.query';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+
+
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+    
   /**
    * @property {TablaMercanciasDatos} SeleccionadoDatos
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
@@ -49,11 +58,11 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
    *
    * @param Tramite260210Query - Servicio para observar el estado actual del trámite.
-   * @param tramite260214Store - Store que permite actualizar el estado del trámite.
+   * @param Tramite260210Store - Store que permite actualizar el estado del trámite.
    */
   constructor(
     private Tramite260210Query: Tramite260210Query,
-    private tramite260214Store: Tramite260214Store
+    private Tramite260210Store: Tramite260210Store
   ) {}
 
   /**
@@ -129,7 +138,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       ];
     }
 
-    this.tramite260214Store.update((state) => ({
+    this.Tramite260210Store.update((state) => ({
       ...state,
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
       tablaMercanciasConfigDatos: datosActivos,
