@@ -4,7 +4,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="codigoPostal">Código postal<span  [ngClass]="{'tiene-error': domicilio.get('codigoPostal')?.invalid && domicilio.get('codigoPostal')?.touched}">*</span>:</label>
-        <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12" size="29"
+        <input class="form-control" id="codigoPostal" placeholder="" type="text" [maxlength]="12" size="29"
           [ngClass]="{'tiene-invalido': domicilio.get('codigoPostal')?.invalid && domicilio.get('codigoPostal')?.touched}"
           formControlName="codigoPostal" (change)="setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')" />
         <div class="d-grid">
@@ -14,6 +14,9 @@
             </small>
             <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('maxlength')">
               El código postal no puede exceder los 12 caracteres.
+            </small>
+              <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('pattern')">
+               Por favor, escribe un número entero válido
             </small>
           </div>
         </div>
@@ -32,15 +35,18 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
-        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" maxlength="120"
-          [ngClass]="{'tiene-invalido': domicilio.get('muncipio')?.invalid && domicilio.get('muncipio')?.touched}"
-          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
+            <div class="form-group">
+        <label class="form-label" for="muncipio">Municipio y alcaldía<span [ngClass]="{'tiene-error': domicilio.get('muncipio')?.invalid && domicilio.get('muncipio')?.touched}">*</span>:</label>
+        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" [maxlength]="120"
+          [ngClass]="{'tiene-invalido': domicilio.get('muncipio')?.invalid && domicilio.get('muncipio')?.touched || domicilio.get('muncipio')?.hasError('pattern') }"
+             (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
         <div class="d-grid">
-          <div *ngIf="domicilio.get('muncipio')?.touched">
-            <small class="mensaje-error" *ngIf="domicilio.get('muncipio')?.hasError('required')">
-              Este campo es obligatorio.
+          <div *ngIf=" domicilio.get('muncipio')?.invalid && domicilio.get('muncipio')?.touched">
+               <small class="mensaje-error" *ngIf="domicilio.get('muncipio')?.hasError('required')">
+            Este campo es obligatorio.
+          </small>
+              <small class="mensaje-error" *ngIf="domicilio.get('muncipio')?.hasError('pattern')">
+              Este campo solo puede contener letras y espacios.
             </small>
           </div>
         </div>
@@ -51,7 +57,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="localidad">Localidad:</label>
-        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad" maxlength="120"
+        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad" [maxlength]="120"
           (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
         <div class="d-grid">
@@ -73,24 +79,42 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="colonia">Colonia:</label>
-        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" maxlength="120"
+        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" [maxlength]="120"
           (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
       </div>
+      <div class="d-grid">
+            <div
+    *ngIf="
+      domicilio.get('colonia')?.invalid &&
+      domicilio.get('colonia')?.touched
+    "
+  >
+    <small
+      class="mensaje-error"
+      *ngIf="domicilio.get('colonia')?.hasError('pattern')"
+    >
+      El valor capturado no es válido.
+    </small>
+  </div>
+        </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*: 
+        <label class="form-label" for="calle">Calle<span [ngClass]="{'tiene-error': domicilio.get('calle')?.invalid && domicilio.get('calle')?.touched}">*</span>: 
             <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
         </label>
-<input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" maxlength="100"
+<input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" [maxlength]="100"
           [ngClass]="{'tiene-invalido': domicilio.get('calle')?.invalid && domicilio.get('calle')?.touched}"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('calle')?.touched">
             <small class="mensaje-error" *ngIf="domicilio.get('calle')?.hasError('required')">
               Este campo es obligatorio.
+            </small>
+             <small class="mensaje-error" *ngIf="domicilio.get('calle')?.hasError('pattern')">
+             El Calle solo puede contener números.
             </small>
           </div>
         </div>
@@ -101,7 +125,7 @@
     <div class="col-md-1">
       <div class="form-group">
         <label class="form-label" for="lada">Lada:</label>
-        <input class="form-control" id="lada" placeholder="" type="text" maxlength="5" formControlName="lada"
+        <input class="form-control" id="lada" placeholder="" type="text" [maxlength]="5" formControlName="lada"
           (change)="setValoresStore(domicilio, 'lada', 'setLada')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('lada')?.touched">
@@ -114,8 +138,8 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label class="form-label" for="telefono">Teléfono*:</label>
-        <input class="form-control" id="telefono" placeholder="" type="text" maxlength="30" size="29"
+        <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'tiene-error': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched}">*</span>:</label>
+        <input class="form-control" id="telefono" placeholder="" type="text" [maxlength]="30" size="29"
           [ngClass]="{'tiene-invalido': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched}"
           formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
         <div class="d-grid">
@@ -136,14 +160,13 @@
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h4>S.C.I.A.N.*:</h4>
+      <h4>S.C.I.A.N.<span >*</span>:</h4>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
       (listaDeFilaSeleccionada)="onScianSeleccionChange($event)"
-      [isInvalida]="domicilio.invalid && domicilio.touched && nicoTablaDatos.length === 0"
       [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     </div>
     <div class="col-md-12 text-end mt-5">
@@ -157,7 +180,7 @@
       </button>
     </div>
   </div>
-    <div class="row align-item-center">
+    <div class="row align-item-center" *ngIf="!funcionamientoList.includes(idProcedimiento)">
       <div class="col-md-4 mt-5">
         <lib-input-check
           [label]="'Aviso de funcionamiento*'"
@@ -175,10 +198,11 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria">{{licenseLabel}}
+          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria<span [ngClass]="{'tiene-error': domicilio.get('licenciaSanitaria')?.invalid && domicilio.get('licenciaSanitaria')?.touched}">*</span>
             <span class="bi bi-question-circle-fill" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top"></span>
           </label>
           <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+          [maxLength]="50"  
             formControlName="licenciaSanitaria" 
             [ngClass]="{'tiene-invalido': domicilio.controls['licenciaSanitaria']?.invalid && domicilio.controls['licenciaSanitaria']?.touched }"
             (change)="setValoresStore(domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria')" 
@@ -199,7 +223,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h5>Datos de la mercancía*:</h5>
+      <h5>Datos de la mercancía<span >*</span>:</h5>
     </div>
   </div>
   <div class="row mt-5">
@@ -236,7 +260,7 @@
         <form [formGroup]="formAgente">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
-              [required]="true" name="claveScianModal" [isDisabled]="esFormularioSoloLectura ? true : false"
+              [required]="true" name="claveScianModal" [isDisabled]="esFormularioSoloLectura || formAgente.get('claveScianModal')?.disabled ? true : false"
               (change)="onClaveScianChange($event);setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')" ></app-catalogo-select>
           </div>
           <div class="form-group">
@@ -280,8 +304,8 @@
         <form [formGroup]="formMercancias">
          <ng-titulo titulo="Identificación del producto"></ng-titulo> 
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial*:</label>
-            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" maxlength="1000"
+            <label for="nombreComercial">Nombre comercial<span [ngClass]="{'tiene-error': formMercancias.get('nombreComercial')?.invalid && formMercancias.get('nombreComercial')?.touched}">*</span>:</label>
+            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" [maxlength]="1000"
               (change)="setValoresStore(formMercancias, 'nombreComercial', 'setNombreComercial')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComercial')?.touched">
@@ -292,8 +316,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreComun">Nombre común*:</label>
-            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" maxlength="256"
+            <label for="nombreComun">Nombre común<span [ngClass]="{'tiene-error': formMercancias.get('nombreComun')?.invalid && formMercancias.get('nombreComun')?.touched}">*</span>:</label>
+            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" [maxlength]="256"
               [ngClass]="{'tiene-invalido': formMercancias.get('nombreComun')?.invalid && formMercancias.get('nombreComun')?.touched}"
               (change)="setValoresStore(formMercancias, 'nombreComun', 'setNombreComun')" />
             <div class="d-grid">
@@ -305,8 +329,11 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreCientifico">Nombre científico*:</label>
-            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" maxlength="256"
+            <label *ngIf="idProcedimiento !== 260512; else nombreCientificoAlt" for="nombreCientifico">Nombre científico*:</label>
+            <ng-template #nombreCientificoAlt>
+              <label for="nombreCientifico">Nombre químico o científico <span [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:</label>
+            </ng-template>
+            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" [maxlength]="256"
               [ngClass]="{'tiene-invalido': formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}"
               (change)="setValoresStore(formMercancias, 'nombreCientifico', 'setNombreCientifico')" />
             <div class="d-grid">
@@ -318,8 +345,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="usoEspecifico" class="form-label text-start">Uso específico*:</label>
-            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico" maxlength="5000"
+            <label for="usoEspecifico" class="form-label text-start">Uso específico<span [ngClass]="{'tiene-error': formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:</label>
+            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico" [maxlength]="5000"
               [ngClass]="{'tiene-invalido': formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}"
               (change)="setValoresStore(formMercancias, 'usoEspecifico', 'setUsoEspecifico')"></textarea>
             <div class="d-grid">
@@ -338,10 +365,10 @@
           </div>
 
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:
+            <label for="fraccionArancelaria">Fracción arancelaria<span [ngClass]="{'tiene-error': formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
               <span class="bi bi-question-circle-fill mx-2" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado" placement="top"></span>
             </label>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" maxlength="8"
+            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" [maxlength]="8"  [ngClass]="{'tiene-invalido': formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}"
               (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria'); obtenerFormaControlDatos('fraccionArancelaria')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
@@ -352,7 +379,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">Descripción de la fracción*:</label>
+            <label for="descripcionFraccion">Descripción de la fracción arancelaria<span [ngClass]="{'text-error': formMercancias.get('descripcionFraccion')?.invalid && formMercancias.get('descripcionFraccion')?.touched}">*</span>:</label>
             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control"
               (change)="setValoresStore(formMercancias, 'descripcionFraccion', 'setDescripcionFraccion')" />
             <div class="d-grid">
@@ -365,7 +392,7 @@
           </div>
           <div class="form-group row">
             <div class="col-md-6">
-              <label for="cantidadUMT">Cantidad UMT*:</label>
+              <label for="cantidadUMT">Cantidad UMT<span [ngClass]="{'tiene-error': formMercancias.get('cantidadUMT')?.invalid && formMercancias.get('cantidadUMT')?.touched}">*</span>:</label>
               <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control"
                 (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT'); obtenerFormaControlDatos('cantidadUMT')" />
               <div class="d-grid">
@@ -377,7 +404,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="UMT">UMT*:
+              <label for="UMT">UMT<span [ngClass]="{'tiene-error': formMercancias.get('UMT')?.invalid && formMercancias.get('UMT')?.touched}">*</span>:
                 <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa" placement="top"></span>
               </label>
               <input type="text" id="UMT" formControlName="UMT" class="form-control"
@@ -394,8 +421,8 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:</label>
-                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" maxlength="20"
+                <label for="cantidadUMC">Cantidad UMC<span [ngClass]="{'tiene-error': formMercancias.get('cantidadUMC')?.invalid && formMercancias.get('cantidadUMC')?.touched}">*</span>:</label>
+                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" [maxlength]="20"
                   (change)="setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')" />
                 <div class="d-grid">
                   <div *ngIf="formMercancias.get('cantidadUMC')?.touched">
@@ -415,8 +442,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="numerocas">Número CAS*:</label>
-            <input type="text" id="numerocas" formControlName="numerocas" class="form-control" maxlength="20"
+            <label for="numerocas">Número CAS<span [ngClass]="{'tiene-error': formMercancias.get('numerocas')?.invalid && formMercancias.get('numerocas')?.touched}">*</span>:</label>
+            <input type="text" id="numerocas" formControlName="numerocas" class="form-control" [maxlength]="20"
               (change)="setValoresStore(formMercancias, 'numerocas', 'setNumerocas')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('numerocas')?.touched">
@@ -427,9 +454,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="porcentajeConcentracion">Porcentaje de concentración*:</label>
+            <label for="porcentajeConcentracion">Porcentaje de concentración<span [ngClass]="{'tiene-error': formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:</label>
             <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
-              class="form-control" maxlength="100"
+              class="form-control" [maxlength]="100"
               (change)="setValoresStore(formMercancias, 'porcentajeConcentracion', 'setPorcentajeConcentracion')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('porcentajeConcentracion')?.touched">
@@ -464,7 +491,7 @@
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
-                  <p class="panel-title">País de procedencia/país de último puerto de embarque</p>
+                  <p class="panel-title">País de procedencia/País del último puerto de embarque</p>
                   <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableDuos }"></button>
                 </div>
                 @if(colapsableDuos){
