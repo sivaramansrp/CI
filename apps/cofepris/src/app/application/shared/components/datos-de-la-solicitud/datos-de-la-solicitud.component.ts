@@ -1930,6 +1930,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    *                Puede ser una cadena o un número.
    */
   public cambioDeValorIndique(value: string | number): void {
+    this.datosSolicitudForm.get('publico')?.setValue(value);
+    this.datosSolicitudForm.get('publico')?.markAsTouched();
+    this.datosSolicitudForm.get('publico')?.updateValueAndValidity();
     this.predeterminadoSeleccionar = value;
   }
 
