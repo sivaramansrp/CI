@@ -1,15 +1,15 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
-import { Solicitud150103Store, Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
-import { take, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
  * @property accion - Define la acción a realizar, como avanzar ('cont') o retroceder.
@@ -68,11 +68,13 @@ export class SolicitudDeReporteComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-     * 
-     * Una cadena que representa la clase CSS para una alerta de información.
-     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-     */
-    public infoAlert = 'alert-info';  /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';  
+  
+  /**
    * Estado actual de la solicitud 150103.
    *
    * Esta propiedad mantiene la información de la solicitud en curso y
@@ -168,8 +170,6 @@ export class SolicitudDeReporteComponent {
             "idConfProgramaSE": 0
           }
         ],
-        "observaciones": "121681,",
-        "descripcion": "2011-7018",
         "ide_generica_1": "01-2024",
         "ide_generica_2": "12-2024",
         "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
@@ -188,7 +188,13 @@ export class SolicitudDeReporteComponent {
             this.store.setIdSolicitud(0);
           }
         }
-        resolve(response);
+        const JSON_RESP: JSONResponse = {
+          id: API_RESPONSE.id ?? API_RESPONSE.datos?.id_solicitud ?? API_RESPONSE.datos?.idSolicitud ?? 0,
+          descripcion: API_RESPONSE.descripcion ?? '',
+          codigo: API_RESPONSE.codigo ?? '',
+          data: API_RESPONSE.datos ?? {}
+        };
+        resolve(JSON_RESP);
       }, error => {
         reject(error);
       });

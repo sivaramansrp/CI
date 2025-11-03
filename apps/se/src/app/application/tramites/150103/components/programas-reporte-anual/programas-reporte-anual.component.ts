@@ -46,6 +46,8 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     dateInputFormat: 'MM-YYYY', // Formato de entrada: mes-año
     minMode: 'month', // Solo permite seleccionar mes y año
   };
+
+  /** Estado de la consulta que se obtiene del store. */
   consultaDatos!: ConsultaioState;
 
   /**
@@ -95,7 +97,6 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) {
     this.obtenerReporteFechas();
-    // this.obtenerProgramasReporte();
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
@@ -167,21 +168,6 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
         },
       });
   }
-
-  // /**
-  //  * @description Método para obtener los datos de programas de reporte.
-  //  * Actualiza los datos con los resultados obtenidos del servicio.
-  //  */
-  // obtenerProgramasReporte(): void {
-  //   this.informaAnualPrograma
-  //     .obtenerProgramasReporte()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe({
-  //       next: (respuesta: ProgramasReporte[]) => {
-  //         this.solicitudDatos = respuesta;
-  //       },
-  //     });
-  // }
 
   /**
    * @method obtenerProgramasReporte

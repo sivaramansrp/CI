@@ -1,16 +1,17 @@
-import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
-import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
-import { Solicitud150103Query } from '../estados/solicitud150103.query';
 import { BUSCAR_PROGRAMAS, PROC_150103 } from '../servers/api-route';
+import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
+import { ReporteFechas } from '../models/programas-reporte.model';
+import { Solicitud150103Query } from '../estados/solicitud150103.query';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InformeAnualProgramaService {  /**
+export class InformeAnualProgramaService {  
+  /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
    * @param solicitud150103Store Store para manejar el estado de la solicitud.
@@ -32,17 +33,6 @@ export class InformeAnualProgramaService {  /**
     this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
    
   }
-  // /**
-  //  * Obtiene los programas de reporte desde un archivo JSON.
-  //  * 
-  //  * Este método realiza una solicitud HTTP para obtener un arreglo de programas de reporte.
-  //  * @returns Un observable que emite un arreglo de objetos de tipo `ProgramasReporte`.
-  //  */
-  // obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
-  //   return this.http.get<ProgramasReporte[]>(
-  //     'assets/json/150103/programas-reporte.json'
-  //   );
-  // }
 
   /**
    * Obtiene las fechas de inicio y fin del reporte desde un archivo JSON.
@@ -67,19 +57,21 @@ getRegistroData(): Observable<Solicitud150103State> {
 }
 
   /**
-   * Guarda los datos del reporte anual enviando el payload al backend.
-   * @param payload - Objeto que contiene los datos del reporte anual para guardar.
-   * @returns Observable con la respuesta del servidor.
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(payload: any): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(PROC_150103.GUARDAR, { body: payload });
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_150103.GUARDAR, { body: body });
   }
+
   /**
    * Construye el objeto de datos del reporte basado en el estado actual.
    * @param data - Estado actual de la solicitud 150103.
    * @returns Objeto con los datos del reporte estructurados para el API.
    */
-  buildDatosReporte(data: Solicitud150103State): any {
+  buildDatosReporte(data: Solicitud150103State): Record<string, unknown> {
     return {
       rfc_solicitante: 'AAL0409235E6', // This should be obtained from user session
       idSolicitud: data.idSolicitud || 0,
@@ -109,8 +101,6 @@ getRegistroData(): Observable<Solicitud150103State> {
         modalidad: data.modalidad,
         tipo_programa: data.tipoPrograma,
         estatus: data.estatus,
-        ventas_totales: parseFloat(data.ventasTotales) || 0,
-        total_exportaciones: parseFloat(data.totalExportaciones) || 0,
         total_importaciones: parseFloat(data.totalImportaciones) || 0,
         saldo: parseFloat(data.saldo) || 0,
         porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
