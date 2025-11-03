@@ -1,9 +1,9 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ENVIRONMENT, NotificacionesComponent, TablaDinamicaComponent, TituloComponent, doDeepCopy, getValidDatos } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { InputFecha } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
@@ -34,26 +34,41 @@ import { takeUntil } from 'rxjs';
  * @implements OnInit, OnDestroy
  */
 
+import { ValidationErrors } from '@angular/forms';
+
 /**
- * @constant FECHA_INDICO
- * @description
- * Constante que define las propiedades de la fecha de pago en el modelo de trámites.
+ * 
+ * @param control 
+ * @returns 
  */
-const FECHA_INCIO = {
-  labelNombre: 'Inicio:',
-  required: false,
-  habilitado: true,
-};
-const FECHA_FIN = {
-  labelNombre: 'Fin:',
-  required: false,
-  habilitado: true,
-};
+
+function integerValidator(control: AbstractControl): ValidationErrors | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === '' || VALUE === undefined) {
+    return null;
+  }
+
+  const NUMVALUE = Number(VALUE);
+  if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
+    return { 'notInteger': { value: control.value } };
+  }
+
+  return null;
+}
 
 @Component({
   selector: 'app-programas-reporte-anual',
   templateUrl: './programas-reporte-anual.component.html',
   styleUrl: './programas-reporte-anual.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    BsDatepickerModule,
+    TablaDinamicaComponent,
+    NotificacionesComponent
+  ],
 })
 export class ProgramasReporteAnnualComponent implements OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
@@ -71,28 +86,12 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   };
 
   /**
-   *
-   *  @property {InputFecha} fechaIncio
-   *  @description
-   *  Esta propiedad define la configuración de la fecha de inicio del reporte anual.
-   */
-  public fechaIncio: InputFecha = FECHA_INCIO;
-
-  /**
-   * @property {InputFecha} fechaFin
-   * @description
-   * Esta propiedad define la configuración de la fecha de fin del reporte anual.
-   * Incluye el nombre de la etiqueta, si es requerida y si está habilitada.
-   */
-
-  public fechaFin: InputFecha = FECHA_FIN;
-   /**
-       * @public
-       * @property {Notificacion} nuevaNotificacion
-       * @description Representa una nueva notificación que se utilizará en el componente.
-       * @command Este campo debe ser inicializado antes de su uso.
-       */
-    public nuevaNotificacion!: Notificacion;
+      * @public
+      * @property {Notificacion} nuevaNotificacion
+      * @description Representa una nueva notificación que se utilizará en el componente.
+      * @command Este campo debe ser inicializado antes de su uso.
+      */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Evento que se emite al seleccionar una fila de la tabla.
@@ -158,6 +157,9 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     },
   ];
 
+  // Valor de RFC de ejemplo
+  private loginRfc: string = ENVIRONMENT.RFC;
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -205,8 +207,11 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       )
       .subscribe();
 
-    this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
+    if (this.solicitud150101Query.getValue().solicitudDato?.length) {
+      this.solicitudDatos = this.solicitud150101Query.getValue().solicitudDato ?? [];
+    } else {
+      this.obtenerProgramasReporte();
+    }
   }
 
   /**
@@ -221,12 +226,12 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [
         {
-          value: this.solicitud150101State?.reporteAnualFechaInicio,
+          value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true 
         },
       ],
       reporteAnualFechaFin: [
         {
-          value: this.solicitud150101State?.reporteAnualFechaFin,
+          value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true
         },
       ],
       folioPrograma: [
@@ -239,30 +244,79 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         { value: this.solicitud150101State?.tipoPrograma, disabled: true },
       ],
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
+      // Add validation for numeric fields
+      ventasTotales: ['', [Validators.required, integerValidator]],
+      totalExportaciones: ['', [Validators.required, integerValidator]]
     });
+
+    // Commented now for future validation use
+    // Add value change listeners for validation
+    // this.periodoReporteAnual.get('ventasTotales')?.valueChanges.subscribe(value => {
+    //   this.validateIntegerField('ventasTotales', value, 'Ventas totales (a):');
+    // });
+
+    // Commented now for future validation use
+    // this.periodoReporteAnual.get('totalExportaciones')?.valueChanges.subscribe(value => {
+    //   this.validateIntegerField('totalExportaciones', value, 'Total exportaciones (b):');
+    // });
   }
-  /*
-    * Muestra una alerta cuando el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
-    * La alerta informa al usuario que debe seleccionar otro programa para presentar el reporte anual.
-    * @returns {void}
-    * 
-    */
-  showAlert(): void {
-   
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje:"El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.",
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        }
-        
+
+  /**
+   * @method validateIntegerField
+   * @description Validates if a field contains a valid integer value and shows notification if invalid
+   * @param fieldName - Name of the form field
+   * @param value - Value to validate
+   * @param fieldLabel - Label to show in error message
+   */
+  validateIntegerField(fieldName: string, value: string | number | null | undefined, fieldLabel: string): void {
+    const CONTROL = this.periodoReporteAnual.get(fieldName);
+
+    if (value !== null && value !== '' && value !== undefined) {
+      const NUMVALUE = Number(value);
+      if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
+        // Set field to 0 and show notification
+        CONTROL?.setValue('0', { emitEvent: false });
+        this.showValidationAlert(fieldLabel);
       }
-    
+    }
+  }
+
+  /**
+   * @method showValidationAlert
+   * @description Shows validation alert for invalid integer input
+   * @param fieldName - Name of the field that failed validation
+   */
+  showValidationAlert(fieldName: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: 'Valor inválido',
+      mensaje: `${fieldName} debe ser un número entero válido. El campo se ha establecido en 0.`,
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * @method showAlert
+   * @description Shows a general alert notification
+   */
+  showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: 'Programa seleccionado',
+      mensaje: 'Se ha seleccionado un programa correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 
   /**
    * @method inicializarEstadoFormulario
@@ -274,45 +328,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.periodoReporteAnual.disable();
-    } else {
-      this.periodoReporteAnual.enable();
-      // Vuelve a deshabilitar los campos que deben permanecer deshabilitados
-      this.periodoReporteAnual.get('folioPrograma')?.disable();
-      this.periodoReporteAnual.get('modalidad')?.disable();
-      this.periodoReporteAnual.get('tipoPrograma')?.disable();
-      this.periodoReporteAnual.get('estatus')?.disable();
-    }
-  }
-
-  /**
-   * @description Método para obtener las fechas de inicio y fin del reporte.
-   * Actualiza el estado con las fechas obtenidas del servicio.
-   */
-  obtenerReporteFechas(): void {
-    this.solicitudService
-      .obtenerReporteFechas()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (respuesta: ReporteFechas) => {
-          this.solicitud150101Store.setReporteAnualFechaInicio(
-            respuesta.reporteAnualFechaInicio
-          );
-          this.solicitud150101Store.setReporteAnualFechaFin(
-            respuesta.reporteAnualFechaFin
-          );
-        },
-      });
-  }
-  onFechaInicio(fecha: string): void {
-    if (fecha) {
-      this.periodoReporteAnual.patchValue({ reporteAnualFechaInicio: fecha });
-      this.solicitud150101Store.setReporteAnualFechaInicio(fecha);
-    }
-  }
-  onFechaFin(fecha: string): void {
-    if (fecha) {
-      this.periodoReporteAnual.patchValue({ reporteAnualFechaFin: fecha });
-      this.solicitud150101Store.setReporteAnualFechaFin(fecha);
     }
   }
 
@@ -326,13 +341,45 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
   obtenerProgramasReporte(): void {
     this.solicitudService
-      .obtenerProgramasReporte()
+      .obtenerProgramasReporte(this.loginRfc)
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (respuesta: ProgramasReporte[]) => {
-          this.solicitudDatos = respuesta;
+        next: (respuesta: Record<string, unknown>) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          this.solicitud150101Store.setReporteAnualFechaInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+          this.solicitud150101Store.setReporteAnualFechaFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
+          const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
+          if (Array.isArray(DATOS) && DATOS.length) {
+            const PROGRAMAS = DATOS.map((item) => {
+              const PROGRAMA = item as ProgramasReporte;
+              return {
+                folioPrograma: PROGRAMA.folioPrograma ?? '',
+                modalidad: PROGRAMA.modalidad ?? '',
+                tipoPrograma: PROGRAMA.tipoPrograma ?? '',
+                estatus: PROGRAMA.estatus ?? '',
+                idProgramaCompuesto: PROGRAMA.idProgramaCompuesto ?? 0,
+              };
+            });
+            this.solicitudDatos = PROGRAMAS;
+            this.solicitud150101Store.setSolicitusDatos(this.solicitudDatos);
+          } else {
+            this.solicitudDatos = [];
+          }
         },
+        error: () => {
+        this.solicitudDatos = [];
+      },
       });
+  }
+
+  private formatDateToMonthYear(dateString: string): string {
+    if(getValidDatos(dateString)) {
+      const DATE = new Date(dateString);
+      const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+      const YEAR = DATE.getFullYear();
+      return `${MONTH}-${YEAR}`;
+    }
+    return '';
   }
 
   /**
@@ -350,13 +397,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
     this.solicitud150101Store.actualizarFolioPrograma(evento.folioPrograma);
-    this.solicitud150101Store.actualizarModalidad(evento.modalidad);
-    this.solicitud150101Store.actualizarTipoPrograma(evento.tipoPrograma);
+    this.solicitud150101Store.actualizarModalidad(evento.modalidad);  
+    this.solicitud150101Store.actualizarTipoPrograma(evento.tipoPrograma);  
     this.solicitud150101Store.actualizarEstatus(evento.estatus);
+    this.solicitud150101Store.setIdProgramaCompuesto(evento.idProgramaCompuesto?.toString() ?? '');
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
-    this.showAlert();
     this.periodoReporteAnual.patchValue({
       folioPrograma: evento.folioPrograma,
       modalidad: evento.modalidad,

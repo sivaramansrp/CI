@@ -1,5 +1,4 @@
 import {
-  CONFIGURACION_ACCIONISTAS,
   CONFIGURACION_FEDERETARIOS,
   CONFIGURACION_OPERACIONES,
 } from '../../constantes/modificacion.enum';
@@ -10,11 +9,10 @@ import {
 } from '../../models/plantas-consulta.model';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
-import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { ServiciosImmex } from '../../../../shared/models/complementaria.model';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -23,9 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './datos-complimentaria.component.scss',
   standalone: true,
   imports: [
-    TituloComponent,
-    DatosCertificacionComponent,
-    TablaDinamicaComponent,
+    ComplementariaComponent
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
@@ -37,13 +33,6 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Configuración de las columnas de la tabla para los accionistas (Complimentaria).
-   * @type {ConfiguracionColumna<Complimentaria>[]}
-   */
-  configuracionTabla: ConfiguracionColumna<Complimentaria>[] =
-    CONFIGURACION_ACCIONISTAS;
 
   /**
    * Configuración de las columnas de la tabla para los federetarios.
@@ -77,6 +66,17 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   datosComplimentaria: Complimentaria[] = [];
 
+  /**
+   * Datos de los servicios Immex obtenidos desde el servicio.
+   * @type {ServiciosImmex[]}
+   */
+  datosServiciosImmex: ServiciosImmex[] = [];
+
+  /**
+   * Constructor del componente DatosComplimentariaComponent.
+   * @param modificionService Servicio para manejar las solicitudes de modificación.
+   * @param toastr Servicio para mostrar notificaciones.
+   */
   constructor(
     public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService
@@ -84,8 +84,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
     this.obtenerFederetarios(); // Carga los federetarios.
     this.obtenerOperacions(); // Carga las operaciones.
     this.obtenerComplimentaria(); // Carga los datos de complimentaria.
+    this.obtenerServiciosImmex(); // Carga los servicios Immex.
   }
-
 
   /**
    * Método que obtiene los datos de complimentaria desde el servicio.
@@ -137,6 +137,24 @@ export class DatosComplimentariaComponent implements OnDestroy {
         },
         () => {
           this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+        }
+      );
+  }
+
+  /**
+   * Método que obtiene los datos de servicios Immex desde el servicio.
+   * Asigna los datos obtenidos a la variable `datosServiciosImmex`.
+   */
+  obtenerServiciosImmex(): void {
+    this.modificionService
+      .obtenerServiciosImmex() // Llama al servicio para obtener los datos de servicios Immex.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: ServiciosImmex[]) => {
+          this.datosServiciosImmex = [...data]; // Almacena los datos de servicios Immex.
+        },
+        () => {
+          this.toastr.error('Error al cargar los servicios Immex'); // Manejo de errores.
         }
       );
   }

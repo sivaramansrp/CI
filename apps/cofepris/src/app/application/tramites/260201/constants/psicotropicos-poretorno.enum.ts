@@ -30,9 +30,12 @@ export const ID_PROCEDIMIENTO = 260201;
  * @description Lista de elementos requeridos para completar el formulario o proceso.
  */
 export const ELEMENTOS_REQUERIDOS = [
-  
+  'calle',
   'correoElectronico',
   'denominacionRazon',
-  'scian'
+  'scian',
+  'numeroExterior'
   
 ];
+
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';

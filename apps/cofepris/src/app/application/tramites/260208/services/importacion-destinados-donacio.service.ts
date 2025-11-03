@@ -1,4 +1,12 @@
-import { Tramite260208State, Tramite260208Store } from '../estados/tramite260208Store.store';
+import {
+  API_POST_SOLICITUD_GUARDAR,
+  COMUN_URL,
+} from '@libs/shared/data-access-user/src/core/servers/api-router';
+import {
+  Tramite260208State,
+  Tramite260208Store,
+} from '../estados/tramite260208Store.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +15,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImportacionDestinadosDonacioService {
-
+  host: string;
   /**
    * Creates an instance of ImportacionDestinadosDonacioService.
    *
@@ -17,28 +25,45 @@ export class ImportacionDestinadosDonacioService {
   constructor(
     private readonly http: HttpClient,
     private readonly tramite260208Store: Tramite260208Store
-  ) { }
+  ) {
+    this.host = `${COMUN_URL.BASE_URL}`;
+  }
 
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
-   * 
-   * @param DATOS - Estado de la solicitud `Tramite260208State` con la información 
+   *
+   * @param DATOS - Estado de la solicitud `Tramite260208State` con la información
    *                del tipo de solicitud a actualizar en el store.
    */
   actualizarEstadoFormulario(DATOS: Tramite260208State): void {
     this.tramite260208Store.update((state) => ({
       ...state,
-      ...DATOS
+      ...DATOS,
     }));
   }
 
   /**
-  * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-  * 
-  * @returns Observable con los datos del estado de la solicitud `Tramite260208State`,
-  *          cargados desde el archivo JSON especificado en la ruta de `assets`.
-  */
+   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+   *
+   * @returns Observable con los datos del estado de la solicitud `Tramite260208State`,
+   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260208State> {
     return this.http.get<Tramite260208State>('assets/json/260208/datos.json');
+  }
+
+  /*
+   * Guarda los datos de la solicitud.
+   * @param {number} tramite - El ID del trámite.
+   * @param {any} payload - Los datos a guardar.
+   * @returns {Observable<BaseResponse<any>>} - Observable con la respuesta del servidor.
+   */
+
+  postGuardarDatos<T>(
+    tramite: string,
+    payload: T
+  ): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.host}${API_POST_SOLICITUD_GUARDAR(tramite)}`;
+    return this.http.post<BaseResponse<T>>(ENDPOINT, payload);
   }
 }

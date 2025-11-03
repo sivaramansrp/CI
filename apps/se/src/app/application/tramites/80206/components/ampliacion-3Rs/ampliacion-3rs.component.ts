@@ -261,6 +261,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * Elimina servicios seleccionados del grid.
    */
   eliminarServiciosGrid(): void {
+      if (this.domiciliosSeleccionados.length === 0) {
+      this.mostrarAlerta = true;
+      this.mensajeDeAlerta = 'Seleccione la(s) Fracción(es) de Importación a eliminar.';
+      return;
+    }
     const DATOS_IMMEX_ACTUALIZADOS = [...this.datosSector];
     this.domiciliosSeleccionados.forEach((selectedItem) => {
       const INDICE = DATOS_IMMEX_ACTUALIZADOS.findIndex(
@@ -289,7 +294,7 @@ agregarServiciosAmpliacion(): void {
   const SECTOR_EXISTENTE = this.datosSector.some(sector => sector.clave === SECTOR_SELECCIONADO);
   if (SECTOR_EXISTENTE) {
     this.mostrarAlerta = true;
-    this.mensajeDeAlerta = 'El sector seleccionado ya existe en la lista.';
+    this.mensajeDeAlerta = 'El sector que intenta ingresar ya existe en la lista de sectores capturados.';
     return;
   }
 
@@ -362,22 +367,36 @@ agregarServiciosAmpliacion(): void {
    * Maneja los datos recibidos del componente hijo.
    */
   procesarDatosDelHijo(): void {
-    const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
-    if (DATA === '3.2.25') {
-      this.isSelectedRegla = true;
-    } else {
-      this.isSelectedRegla = false;
-       this.mensajeDeAlerta = "El programa que solicita la ampliaci�n no est� asociado a la zona fronteriza norte.";
-      this.activarModal();
-    }
+  const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
+  
+  if (!DATA || DATA === '' || DATA === -1 || DATA === '-1' || DATA === this.predeterminado) {
+    this.isSelectedRegla = false;
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
     this.tramite80206Store.setSeleccionarRegla(DATA);
-
+    
     const ISVALID = this.validarFormulario();
     this.seccionStore.establecerSeccion([ISVALID]);
     this.seccionStore.establecerFormaValida([ISVALID]);
+    return; 
   }
+  
+  if (DATA === '3.2.25') {
+    this.isSelectedRegla = true;
+  } else {
+    this.isSelectedRegla = false;
+    this.mensajeDeAlerta = "El programa que solicita la ampliación no está asociado a la zona fronteriza norte.";
+    this.activarModal();
+  }
+  
+  this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
+  this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
+  this.tramite80206Store.setSeleccionarRegla(DATA);
+
+  const ISVALID = this.validarFormulario();
+  this.seccionStore.establecerSeccion([ISVALID]);
+  this.seccionStore.establecerFormaValida([ISVALID]);
+}
 
   /**
    * Actualiza el sector seleccionado basado en la entrada del usuario.

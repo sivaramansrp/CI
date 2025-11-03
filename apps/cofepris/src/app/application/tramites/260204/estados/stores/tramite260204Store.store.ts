@@ -4,7 +4,6 @@ import { Fabricante } from '../../../../shared/models/terceros-relacionados.mode
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -18,6 +17,8 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * Representa el estado de la aplicación para el trámite 260204.
  */
 export interface Tramite260204State {
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number;
   /**
    * Datos de la tabla de destinatarios finales.
    * @type {Destinatario[]}
@@ -171,6 +172,7 @@ export interface Tramite260204State {
  */
 export function createInitialState(): Tramite260204State {
   return {
+    idSolicitud:0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -221,13 +223,8 @@ export function createInitialState(): Tramite260204State {
       paisDeProcedenciaDatos: [],
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [
-      {
-        clave: '',
-        descripcion: '',
-      }
-    ],
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    scianConfigDatos: [],
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -305,12 +302,33 @@ export class Tramite260204Store extends Store<Tramite260204State> {
    * el estado del formulario de mercancías se actualice correctamente. Es útil para reflejar cambios 
    * en el formulario de mercancías dentro del estado de la aplicación.
    */
-  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
-    this.update((state) => ({
-      ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
-  }
+public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+      this.update((state) => {
+        const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+        newFabricantes.forEach((nuevo) => {
+          if (!nuevo?.id) {
+            nuevo.id =
+              ACTUALIZADA.length > 0
+                ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+                : 1;
+          }
+
+          const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+          if (INDICE > -1) {
+            ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+          } else {
+            ACTUALIZADA.push(nuevo);
+          }
+        });
+
+        return {
+          ...state,
+          fabricanteTablaDatos: ACTUALIZADA,
+        };
+      });
+    }
 
 
   /**
@@ -420,6 +438,14 @@ public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
   }));
 }
 
-
+ /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
+   */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
 
 }

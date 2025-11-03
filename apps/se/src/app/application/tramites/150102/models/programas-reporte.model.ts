@@ -11,6 +11,7 @@ export interface ProgramasReporte {
   tipoPrograma: string;
   /** Estatus actual del programa */
   estatus: string;
+  idProgramaCompuesto: string;
 }
 /**
  * @description Interfaz que define la estructura de un objeto utilizado para representar

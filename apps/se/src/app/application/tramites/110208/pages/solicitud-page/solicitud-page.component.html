@@ -3,7 +3,14 @@
         <div class="col-md-12">
           <h2>Validar a posteriori el certificado de SGP</h2>
         </div>
-  
+    <div class="col-12">
+        @if (esFormaValido) {
+        <div
+          class="alert alert-info alert-danger"
+          [innerHTML]="formErrorAlert"
+        ></div>
+        }
+      </div>
         <app-wizard [listaPasos]="pasos"></app-wizard>
   
       </div>

@@ -5,10 +5,12 @@
  * Componente que gestiona la información del solicitante en el trámite 90305.
  * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
  */
-import { Component,OnInit} from '@angular/core';
+import { Component,OnInit, ViewChild} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { Destinatario110203Component } from '../../components/destinatario-110203/destinatario-110203.component';
 import { Solocitud110203Service } from '../../service/service110203.service';
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 /**
  * compo doc
  * @selector app-datos-90305
@@ -40,11 +42,18 @@ export class DatosComponent implements OnInit {
    /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
  *  Ayuda a prevenir fugas de memoria en flujos observables. */
    private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Referencia al componente hijo "DestinatarioComponent" para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: Destinatario110203Component;
+
+
    /** Constructor que inyecta el servicio del trámite 221601 y el query de consulta.  
  *  Permite acceder a los datos y lógica necesaria para el componente. */
     constructor(
     private Solocitud110203Service: Solocitud110203Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public tramiteQuery: Tramite110203Query,
   ) {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -77,5 +86,18 @@ export class DatosComponent implements OnInit {
         this.Solocitud110203Service.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+/**
+ * Valida todos los formularios requeridos, incluyendo el formulario del componente destinatario.
+ *
+ * @returns `true` si todos los formularios son válidos; `false` si alguno no lo es.
+ */
+  public validarFormularios(): boolean {
+  let allValid = true;
+  if (this.destinatarioComponent && !this.destinatarioComponent.validarFormularios()) {
+    allValid = false;
+  }
+  return allValid;
   }
 }

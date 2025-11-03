@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
 /**
@@ -186,7 +187,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * Objeto que representa una nueva notificación a mostrar al usuario.
    * Puede incluir información como el tipo, mensaje, duración, etc.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    *  Índice del pedimento marcado para eliminación.
@@ -210,6 +211,11 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   bienesTablaProducidos: boolean = false;
+  /** Mensaje de alerta cuando las ventas totales son menores que las exportaciones totales.
+   *
+   * @type {string}
+   */
+  public mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.
@@ -225,7 +231,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService,
     public consultaioQuery: ConsultaioQuery,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -313,7 +320,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
           value: this.solicitud150102State.totalImportaciones,
           disabled: true,          
         },
-        [Validators.maxLength(16),Validators.required],
+        [Validators.maxLength(16)],
       ],
       saldo: [{ value: this.solicitud150102State.saldo, disabled: true }],
       porcentajeExportacion: [
@@ -560,6 +567,46 @@ seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
 eliminarBienesProducidos(): void {
     this.bienesProducidosSelection = -1;
   } 
+
+    /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  public diferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    } else {
+      this.nuevaNotificacion = null;
+    }
+  }
+
+    /**
+   * @method mostrarNotificacion
+   * @description Muestra una notificación y la limpia después del tiempo especificado
+   * @param notificacion - Objeto de notificación a mostrar
+   */
+  private mostrarNotificacion(notificacion: Notificacion): void {
+    this.nuevaNotificacion = notificacion;
+
+ if (notificacion.tiempoDeEspera) {
+      setTimeout(() => {
+        this.nuevaNotificacion = null;
+      }, notificacion.tiempoDeEspera);
+    }
+  }
 
   /**
    * @description Método que se ejecuta cuando el componente se destruye.

@@ -20,8 +20,10 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constantes/materias-primas.enum';
 import { Subject } from 'rxjs';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
+import { ViewChild } from '@angular/core';
 
 
 /**
@@ -82,6 +84,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+     * @property {string} idProcedimiento
+     * @description
+     * Identificador del procedimiento.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  
 
   /**
    * Representa el estado actual del trámite en el componente.
@@ -143,7 +152,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
    * según los requisitos del sistema.
    */
-   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario'];
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon', 'manifesto'];
   /**
    * Configuración de la tabla de mercancías utilizada en el componente.
    * 
@@ -240,6 +249,23 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {TablaOpcionConfig[]} - Arreglo de configuraciones de opciones para la tabla.
    */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
+
+  
+     /**
+         * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+         * @description
+         * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+         * mediante el decorador `@ViewChild`.
+         *
+         * Esta propiedad permite acceder a los métodos públicos y propiedades
+         * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+         *
+         * > Nota: Angular inicializa esta referencia después de que la vista
+         * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+         */
+        @ViewChild(DatosDeLaSolicitudComponent)
+        datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+     
 
 
   /**
@@ -437,6 +463,25 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

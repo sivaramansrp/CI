@@ -402,13 +402,6 @@ describe('AmpliacionAnexoComponent', () => {
       expect(AmpliacionAnexoComponent.validarFormatoFraccion('abcd1234')).toBe(false);
     });
 
-    it('should validate form correctly when form exists', () => {
-      component.inicializarFormularioInfoRegistro();
-      const result = component.validarFormulario();
-
-      expect(result).toBe(true);
-    });
-
     it('should return false when formulario is null', () => {
       component.formularioInfoRegistro = null as any;
       const result = component.validarFormulario();

@@ -24,18 +24,28 @@
  */
 
 import {
+  AVISO,
   AccionBoton,
   AlertComponent,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
+  NotificacionesComponent,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
+  RegistroSolicitudService,
+  esValidObject,
+  getValidDatos
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
-import { FALTAN_CAMPOS_POR_CAPTURAR, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { FALTAN_CAMPOS_POR_CAPTURAR, MENSAJE_DE_PAGE, MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { GuardarAdapter_260216 } from '../../adapters/guardar-payload.adapter';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260216Query } from '../../estados/tramite260216Query.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -45,15 +55,40 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CommonModule,
     WizardComponent,
     PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     BtnContinuarComponent,
     AlertComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit{
+     /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+    /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+      /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+    /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+   /**
+       * Estado del formulario de registro IMMEX.
+       */
+      storeData!: Tramite260216State;
   /**
    * @property {string | null} tituloMensaje
    * @description Título del mensaje que se muestra en el wizard.
@@ -75,6 +110,14 @@ export class ContenedorDePasosComponent {
    */
   indice: number = 1;
 
+    TEXTOS: string = AVISO.Aviso;
+  
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+
   /**
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del wizard.
@@ -95,6 +138,42 @@ export class ContenedorDePasosComponent {
   };
 
   /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+
+  
+ /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+  
+ /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+    /**
+   * @property {string} MENSAJE_DE_ERROR
+   * @description
+   * Propiedad usada para almacenar el mensaje de error actual.
+   * Se inicializa como cadena vacía y se actualiza en función
+   * de las validaciones o errores capturados en el flujo.
+   */
+     MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+  
+
+   constructor(private tramite260216Query: Tramite260216Query,
+    private tramite260216Store: Tramite260216Store,
+    public registroSolicitudService: RegistroSolicitudService, 
+    private toastrService: ToastrService) {}
+  
+    ngOnInit(): void {
+      this.tramite260216Query.selectTramiteState$.pipe().subscribe((data) => {
+        this.storeData = data;
+      });
+    }
+
+  /**
    * @method seleccionaTab
    * @description Cambia el índice actual al valor proporcionado.
    * @param {number} i - Índice del paso seleccionado.
@@ -110,19 +189,17 @@ export class ContenedorDePasosComponent {
   }
 
   /**
- * @property {string} MENSAJE_DE_ERROR
- * @description
- * Propiedad usada para almacenar el mensaje de error actual.
- * Se inicializa como cadena vacía y se actualiza en función
- * de las validaciones o errores capturados en el flujo.
- */
-  MENSAJE_DE_ERROR: string = '';
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
 
   /**
-   * @property {string} infoAlert
-   * Clase CSS usada para mostrar alertas informativas.
+   * Clase CSS para mostrar una alerta de error.
    */
-  public infoAlert = 'alert-danger text-center';
+  infoError = 'alert-danger text-center';
+
 
   /**
  * @property {PasoUnoComponent} pasoUnoComponent
@@ -148,24 +225,76 @@ export class ContenedorDePasosComponent {
    * ```
    */
   getValorIndice(e: AccionBoton): void {
-    this.MENSAJE_DE_ERROR = '';
-    if (e.valor > 0 && e.valor < 5) {
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-      const VALIDO = this.pasoUnoComponent?.validarPasoUno();
-      if (VALIDO) {
-         this.indice = e.valor;
+  console.log("this.storeData",this.storeData)
         if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
-      } else {
-        this.MENSAJE_DE_ERROR = FALTAN_CAMPOS_POR_CAPTURAR;
-      }
+             let isValid = true;
+       
+               if (this.indice === 1 && this.pasoUnoComponent) {
+               isValid = this.pasoUnoComponent.validarPasoUno();
+             }
+             if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+               this.mostrarAlerta=true;
+               this.seleccionarFilaNotificacion = {
+                 tipoNotificacion: 'alert',
+                 categoria: 'danger',
+                 modo: 'action',
+                 titulo: '',
+                 mensaje: MENSAJE_DE_PAGE,
+                 cerrar: true,
+                 tiempoDeEspera: 2000,
+                 txtBtnAceptar: 'SI',
+                 txtBtnCancelar: 'NO',
+               }
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+  
+             }
+             if (!isValid) {
+               this.esFormaValido = true;
+               this.datosPasos.indice = this.indice;
+               return;
+             }
+       
+              const PAYLOAD = GuardarAdapter_260216.toFormPayload(this.storeData);
+                  let shouldNavigate = false;
+                  this.registroSolicitudService.postGuardarDatos('260216', PAYLOAD).subscribe(response => {
+                    shouldNavigate = response.codigo === '00';
+                    if (!shouldNavigate) {
+                      const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+                      this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+                      this.esFormaValido = false;
+                      this.indice = 1;
+                      this.datosPasos.indice = 1;
+                      this.wizardComponent.indiceActual = 1;
+                      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                      return;
+                    }
+                    if(shouldNavigate) {
+                      if(esValidObject(response) && esValidObject(response.datos)) {
+                        const DATOS = response.datos as { id_solicitud?: number };
+                        if(getValidDatos(DATOS.id_solicitud)) {
+                          this.tramite260216Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+                        } else {
+                          this.tramite260216Store.setIdSolicitud(0);
+                        }
+                      }
+                      const INDICE_ACTUALIZADO = this.indice + 1;
+                      this.toastrService.success(response.mensaje);
+                      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+                        this.indice = INDICE_ACTUALIZADO;
+                        this.datosPasos.indice = INDICE_ACTUALIZADO;
+                        this.esFormaValido = false;
+                        this.wizardComponent.siguiente();
+                      }
+                    } else {
+                      this.toastrService.error(response.mensaje);
+                    }
+                  });
+                }else{
+                  this.indice = e.valor;
+                  this.datosPasos.indice = this.indice;
+                  this.wizardComponent.atras();
+                }
     }
-  }
 
   /**
    * @method obtenerNombreDelTítulo
@@ -190,5 +319,72 @@ export class ContenedorDePasosComponent {
       default:
         return TITULOMENSAJE;
     }
+  }
+    /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+    onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+     /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+   /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+   public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
+  }
+
+
+    /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
   }
 }

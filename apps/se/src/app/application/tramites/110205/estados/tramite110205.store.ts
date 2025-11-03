@@ -14,7 +14,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @description Representa el estado de la aplicación para el trámite 110205.
  * Contiene las propiedades necesarias para gestionar los datos del formulario,
  * tablas, catálogos y otros elementos relacionados con el trámite.
- * 
+ *
  * @property { {[key: string]: unknown} } formCertificado - Datos del formulario de certificado.
  * @property { Catalogo } estado - Estado actual del trámite.
  * @property { Catalogo[] } paisBloques - Lista de países o bloques relacionados.
@@ -47,9 +47,9 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  */
 export interface Tramite110205State {
   idSolicitud: number | null;
-  formCertificado: {[key: string]: unknown};
+  formCertificado: { [key: string]: unknown };
   estado: Catalogo;
-  paisBloques: Catalogo[];
+  paisBloques: Catalogo;
   mercanciaForm: { [key: string]: unknown };
   mercanciaTabla: Mercancia[];
   formDatosCertificado: { [key: string]: unknown };
@@ -58,6 +58,7 @@ export interface Tramite110205State {
   representacionFederalSeleccion: Catalogo;
   formDatosDelDestinatario: { [key: string]: unknown };
   grupoRepresentativo: GrupoRepresentativo;
+  formExportor: { [key: string]: unknown };
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -83,8 +84,17 @@ export interface Tramite110205State {
   mercanciaProductores: MercanciaTabla[];
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
+  cambioError?: boolean;
+  serviciosImmxError?: boolean;
+  /** Lista de mercancías encontradas o buscadas. */
+  buscarMercancia: Mercancia[];
+  productores: HistoricoColumnas[];
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
 }
-
 
 /**
  * @method createInitialState
@@ -92,7 +102,7 @@ export interface Tramite110205State {
  * Inicializa todas las propiedades requeridas en el estado del store.
  * @function createInitialState
  * @description
- * 
+ *
  * @returns {Tramite110205State} Estado inicial del trámite 110205.
  */
 export function createInitialState(): Tramite110205State {
@@ -118,13 +128,12 @@ export function createInitialState(): Tramite110205State {
       correoElectronico: '',
       numeroLetra: '',
       calle: '',
-
     },
     estado: {
       id: -1,
       descripcion: '',
     },
-    paisBloques: [],
+    paisBloques: { id: -1, descripcion: '' },
     mercanciaForm: {
       fraccionArancelaria: '',
       nombreComercialMercancia: '',
@@ -186,6 +195,16 @@ export function createInitialState(): Tramite110205State {
       telefono: '',
       correoElectronico: '',
     },
+    formExportor: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
     formaValida: {
       certificado: false,
       datos: false,
@@ -215,7 +234,15 @@ export function createInitialState(): Tramite110205State {
     procductoUno:[],
     agregarProductoresExportador: [],
     mercanciaProductores: [],
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+    /** Flag que indica errores en el cambio de modalidad, false por defecto */
+    cambioError: false,
+
+    /** Flag que indica errores en servicios IMMX, false por defecto */
+    serviciosImmxError: false,
+    buscarMercancia: [],
+    productores: [],
+    productoresExportador: [],
   };
 }
 
@@ -253,6 +280,30 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   }
 
   /**
+   * Establece el estado de error para el campo de cambio de modalidad.
+   *
+   * @param cambioError - Indica si existe un error en el campo de cambio de modalidad.
+   */
+  public setCambioError(cambioError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cambioError,
+    }));
+  }
+
+  /**
+   * Establece el estado de error para el campo de servicios IMMX.
+   *
+   * @param serviciosImmxError - Indica si existe un error en el campo de servicios IMMX.
+   */
+  public setserviciosImmxError(serviciosImmxError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      serviciosImmxError,
+    }));
+  }
+
+  /**
    * @method setFormCertificado
    * @description
    * Actualiza los datos del formulario de certificado.
@@ -273,7 +324,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de formulario.
    * @param values Valores a actualizar en el formulario.
    */
-  setFormHistorico(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormHistorico(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formulario: {
         ...state.formulario,
@@ -288,7 +341,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de productor.
    * @param values Valores a actualizar en el formulario.
    */
-  setAgregarFormDatosProductor(values: { [key: string]: string | number | boolean | null }): void {
+  setAgregarFormDatosProductor(values: {
+    [key: string]: string | number | boolean | null;
+  }): void {
     this.update((state) => ({
       agregarDatosProductorFormulario: {
         ...state.agregarDatosProductorFormulario,
@@ -316,7 +371,7 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los bloques de países en el almacén.
    * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
    */
-  setBloque(paisBloques: Catalogo[]): void {
+  setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({
       ...state,
       paisBloques,
@@ -329,7 +384,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de mercancía en el almacén.
    * @param values Objeto que contiene los valores a actualizar en el formulario de mercancía.
    */
-  setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormMercancia(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       mercanciaForm: {
         ...state.mercanciaForm,
@@ -349,14 +406,14 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       const LISTAEXISTENTE = STATE.mercanciaTabla || [];
       const NUEVOARTICULO = { ...mercanciaTabla[0] };
 
-      if (NUEVOARTICULO.id === 0) {  
+      if (NUEVOARTICULO.id === 0) {
         // Agregar nuevo elemento con una identificación generada
         NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
         const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
         return { ...STATE, mercanciaTabla: UPDATEDLIST };
       }
 
-     // Actualizar el elemento existente cuando id > 0
+      // Actualizar el elemento existente cuando id > 0
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
@@ -365,12 +422,49 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   }
 
   /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
+
+    /**
+     * @method setProductoresExportador
+     * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+     *
+     * Este método permite establecer los datos de los productores asociados al exportador.
+     *
+     * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+     *
+     * @returns {void}
+     */
+    public setProductoresExportador(
+      productoresExportador: HistoricoColumnas[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        productoresExportador,
+      }));
+    }
+
+  /**
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+   */
+  setProductores(productores: HistoricoColumnas[]): void {
+    this.update((state) => ({ ...state, productores }));
+  }
+
+  /**
    * @method setFormDatosCertificado
    * @description
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosCertificado(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formDatosCertificado: {
         ...state.formDatosCertificado,
@@ -411,7 +505,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza la representación federal seleccionada en el almacén.
    * @param representacionFederalSeleccion Objeto de tipo `Catalogo` que contiene la información de la representación federal seleccionada.
    */
-  setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
+  setRepresentacionFederalDatosSeleccion(
+    representacionFederalSeleccion: Catalogo
+  ): void {
     this.update((state) => ({
       ...state,
       representacionFederalSeleccion,
@@ -424,10 +520,29 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de destinatario en el almacén.
    * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
    */
-  setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosDelDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formDatosDelDestinatario: {
         ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @method setFormExportador
+   * @description
+   * Actualiza los datos del formulario de exportador en el almacén.
+   * @param values Objeto que contiene los valores a actualizar en el formulario de exportador.
+   */
+  setFormExportador(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
         ...values,
       },
     }));
@@ -577,11 +692,11 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   }
 
   /**
- * @summary Actualiza `fechaFactura` en el estado.
- * @description Persiste la fecha recibida en el store (Akita) de forma inmutable.
- * @param {string} fechaFactura Fecha en formato ISO (`YYYY-MM-DD`).
- * @returns {void}
- */
+   * @summary Actualiza `fechaFactura` en el estado.
+   * @description Persiste la fecha recibida en el store (Akita) de forma inmutable.
+   * @param {string} fechaFactura Fecha en formato ISO (`YYYY-MM-DD`).
+   * @returns {void}
+   */
   setFechaFactura(fechaFactura: string): void {
     this.update((state) => ({
       ...state,
@@ -624,7 +739,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de destinatario en el almacén.
    * @param values Objeto que contiene los valores a actualizar en el formulario de destinatario.
    */
-  setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDestinatario(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formDestinatario: {
         ...state.formDestinatario,
@@ -639,7 +756,9 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormCertificadoGenric(values: {
+    [key: string]: undefined | boolean | string | number | object;
+  }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -672,12 +791,12 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     }));
   }
   /**
-     * Actualiza el lugar en el grupo representativo.
-     *
-     * Este método permite establecer el lugar en el grupo representativo del trámite.
-     *
-     * @param {string} lugar - El lugar a establecer.
-     */
+   * Actualiza el lugar en el grupo representativo.
+   *
+   * Este método permite establecer el lugar en el grupo representativo del trámite.
+   *
+   * @param {string} lugar - El lugar a establecer.
+   */
   public setGrupoRepresentativoLugar(lugar: string): void {
     this.update((state) => ({
       ...state,
@@ -727,7 +846,6 @@ export class Tramite110205Store extends Store<Tramite110205State> {
       grupoRepresentativo: { ...state.grupoRepresentativo, cargo },
     }));
   }
-
 
   /**
    * Actualiza el teléfono en el grupo representativo.
@@ -784,12 +902,12 @@ export class Tramite110205Store extends Store<Tramite110205State> {
    * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
    * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
    */
-    setAgregarProductoresExportador(productor: HistoricoColumnas): void {
+    setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
       this.update((state) => ({
         ...state,
         agregarProductoresExportador: [
           ...state.agregarProductoresExportador,
-          {...productor},
+          ...productor.map(item => ({ ...item })),
         ],
       }));
     }

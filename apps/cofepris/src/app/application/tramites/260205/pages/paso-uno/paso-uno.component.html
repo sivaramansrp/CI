@@ -47,23 +47,23 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      } @case (2) {
+      @if(esDatosRespuesta){
+      <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
+      }
         @if(esDatosRespuesta){
-          <app-contenedor-de-datos-solicitud></app-contenedor-de-datos-solicitud>
+          <app-contenedor-de-datos-solicitud #contenedorDeDatosSolicitudComponent [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
         }
-      } @case (3) {
+     
         @if(esDatosRespuesta){
-          <app-terceros-relacionados-vista></app-terceros-relacionados-vista>
-        }
-
-      } @case (4) {
-        @if(esDatosRespuesta){
-          <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+          <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [hidden]="indice !== 3"></app-terceros-relacionados-vista>
         }
 
-      } }
+    
+        @if(esDatosRespuesta){
+          <app-pago-de-derechos-contenedora #pagoDeDerechosContenedoraComponent [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
+        }
+
+     
     </ng-container>
   </div>
 </div>
