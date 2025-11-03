@@ -1,23 +1,21 @@
-import { CommonModule } from '@angular/common';
-
-import { AVISO, AlertComponent, PasoCargaDocumentoComponent, PasoFirmaComponent } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { AccionBoton } from '@libs/shared/data-access-user/src';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
-import { PASOS } from '../../constantes/materias-primas.enum';
-
-import { Subject, map,takeUntil } from 'rxjs';
+import { AccionBoton,AlertComponent, NotificacionesComponent, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 import { Tramite260203State, Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { GuardarAdapter_260203 } from '../../adapters/guardar-payload.adapter';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
@@ -34,19 +32,21 @@ import { Tramite260203Query } from '../../estados/queries/tramite260203Query.que
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    PasoCargaDocumentoComponent,
     PasoFirmaComponent,
-    AlertComponent,
+    PasoCargaDocumentoComponent,
+    NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
 })
-export class SolicitudPageComponent implements OnInit, OnDestroy{
+export class SolicitudPageComponent implements OnInit {
   /**
-   * @property {string | null} tituloMensaje
+   * @property {string} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
    */
   tituloMensaje: string = TITULO_MENSAJE;
+
   /**
    * @property {ListaPasosWizard[]} pasos
    * Lista de pasos del wizard obtenidos desde una constante externa.
@@ -64,39 +64,18 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    * Referencia al componente Wizard para controlar navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-    /**
-  * URL de la página actual.
-  */
-  public solicitudState!: Tramite260203State;
-   /**
-   * Evento que se emite para cargar archivos.
-   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-   */
-  cargarArchivosEvento = new EventEmitter<void>();
-   /**
- * Indica si el botón para cargar archivos está habilitado.
- */
-  activarBotonCargaArchivos: boolean = false;
+
 
   /**
- * Indica si la sección de carga de documentos está activa.
- * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
- */
-  seccionCargarDocumentos: boolean = true;
-  /*
-  * Indica si hay una carga en progreso.
-  */
-  cargaEnProgreso: boolean = true;
-  /**
- * Identificador del trámite actual.
- */
- tramiteId: string = '260203';
-  
-  /**
-   * Identificador numérico de la solicitud actual.
-   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
-   */
-  idSolicitud: number = 0;
+      * @property {PasoUnoComponent} pasoUnoComponent
+      * @description
+      * Referencia al componente hijo `PasoUnoComponent` mediante
+      * `@ViewChild`. Permite acceder a sus métodos y propiedades
+      * desde este componente padre.
+      */
+      @ViewChild(PasoUnoComponent)
+      pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * @property {DatosPasos} datosPasos
    * Objeto de configuración utilizado por el componente wizard.
@@ -107,31 +86,134 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  
-  /**
-   * Textos constantes utilizados en el componente.
-   */
-  TEXTOS = AVISO;
-    /**
-   * Notificador para gestionar la destrucción de observables.
-   */
-  destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private store: Tramite260203Store,
-     private tramite260203Query: Tramite260203Query,
-  ) {
-    // Suscripción al estado de la solicitud en el store
-  }
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitudState: number | null = 0;
+
+   /**
+   * Estado de la solicitud actual.
+   *
+   * @type {Tramite260203State}
+   * @memberof SolicitudPageComponent
+   */
+  idTipoTRamite: string = '260203';
+
+  
+     /**
+   * @property {string} MENSAJE_DE_ERROR
+   * @description
+   * Propiedad usada para almacenar el mensaje de error actual.
+   * Se inicializa como cadena vacía y se actualiza en función
+   * de las validaciones o errores capturados en el flujo.
+   */
+     MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+  
+
+  /**
+   * URL de la página actual.
+   */
+    public solicitudState!: Tramite260203State;
+
+     /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+    public seleccionarFilaNotificacion!: Notificacion;
+
+
+/**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+public mostrarAlerta: boolean = false;
+
+     /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+    /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * @ignore
+   * Este método es ignorado por Compodoc.
+   */
+  cargaEnProgreso: boolean = true;
+
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+
+
+  constructor(
+    private tramiteStore: Tramite260203Store,
+    private tramiteQuery: Tramite260203Query
+    ,private toastrService: ToastrService,
+    public registroSolicitudService: RegistroSolicitudService
+  ) { }
 
   ngOnInit(): void {
-       this.tramite260203Query.selectTramiteState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      ).subscribe();
+    this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
   }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Maneja el estado de progreso de la carga de documentos.
+   * Actualiza la variable `cargaEnProgreso` según el estado recibido.
+   * @param carga - Indica si la carga está en progreso (`true`) o no (`false`).
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+
   /**
    * @method seleccionaTab
    * @description Cambia el índice actual del wizard manualmente.
@@ -149,33 +231,174 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón presionado.
    */
   getValorIndice(e: AccionBoton): void {
-  if (e.accion === 'cont') {
-    
-    if (this.indice === 1 && e.accion === 'cont') {
-    const SIGUIENTE_PASO = this.indice + 1;
-    
-    this.indice = SIGUIENTE_PASO;
-    this.datosPasos.indice = SIGUIENTE_PASO;
-    
-    if (this.wizardComponent) {
-      this.wizardComponent.siguiente();
-    } else {
-      console.error('El componente wizard no está disponible para navegar al siguiente paso');
-    }
-    
-    return;
+
+      if (e.accion === 'cont') {
+           let isValid = true;
+     
+             if (this.indice === 1 && this.pasoUnoComponent) {
+             isValid = this.pasoUnoComponent.validarPasoUno();
+           }
+           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+             this.mostrarAlerta=true;
+             this.seleccionarFilaNotificacion = {
+               tipoNotificacion: 'alert',
+               categoria: 'danger',
+               modo: 'action',
+               titulo: '',
+               mensaje: MENSAJE_DE_PAGE,
+               cerrar: true,
+               tiempoDeEspera: 2000,
+               txtBtnAceptar: 'SI',
+               txtBtnCancelar: 'NO',
+             }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+
+           }
+           if (!isValid) {
+             this.esFormaValido = true;
+             this.datosPasos.indice = this.indice;
+             return;
+           }
+     
+            const PAYLOAD = GuardarAdapter_260203.toFormPayload(this.solicitudState);
+                let shouldNavigate = false;
+                this.registroSolicitudService.postGuardarDatos('260203', PAYLOAD).subscribe(response => {
+                  shouldNavigate = response.codigo === '00';
+                  if (!shouldNavigate) {
+                    const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+                    this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+                    this.esFormaValido = false;
+                    this.indice = 1;
+                    this.datosPasos.indice = 1;
+                    this.wizardComponent.indiceActual = 1;
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                    return;
+                  }
+                  if(shouldNavigate) {
+                    if(esValidObject(response) && esValidObject(response.datos)) {
+                      const DATOS = response.datos as { id_solicitud?: number };
+                      if(getValidDatos(DATOS.id_solicitud)) {
+                        this.tramiteStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
+                      } else {
+                        this.tramiteStore.setIdSolicitud(0);
+                      }
+                    }
+                    const INDICE_ACTUALIZADO = this.indice + 1;
+                    this.toastrService.success(response.mensaje);
+                    if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+                      this.indice = INDICE_ACTUALIZADO;
+                      this.datosPasos.indice = INDICE_ACTUALIZADO;
+                      this.esFormaValido = false;
+                      this.wizardComponent.siguiente();
+                    }
+                  } else {
+                    this.toastrService.error(response.mensaje);
+                  }
+                });
+              }else{
+                this.indice = e.valor;
+                this.datosPasos.indice = this.indice;
+                this.wizardComponent.atras();
+              }
   }
-  
-  const PASO_ANTERIOR = this.indice - 1;
-  this.indice = PASO_ANTERIOR;
-  this.datosPasos.indice = PASO_ANTERIOR;
-  
-  if (this.wizardComponent) {
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
+  }
+
+  /**
+   * @method siguiente
+   * @description
+   * Método para navegar programáticamente al siguiente paso del wizard.
+   * Ejecuta la transición forward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_forward
+   * Realiza navegación que:
+   * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+   * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+   * - Actualiza índice local basado en posición del wizard
+   * - Sincroniza datos de pasos con nueva posición
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component
+   * - Datos de configuración de pasos
+   * - Estado visual de la UI
+   * 
+   * @future_validation
+   * Comentario indica que se implementará:
+   * - Validación de documentos cargados
+   * - Verificación de completitud de adjuntos
+   * - Control de calidad de archivos
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @programmatic_navigation
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * @method anterior
+   * @description
+   * Método para navegar programáticamente al paso anterior del wizard.
+   * Ejecuta la transición backward en el componente wizard y actualiza los
+   * índices correspondientes para mantener sincronización de estado.
+   * 
+   * @navigation_backward
+   * Realiza navegación que:
+   * - Retrocede al paso anterior usando `wizardComponent.atras()`
+   * - Actualiza índice local basado en nueva posición del wizard
+   * - Sincroniza datos de pasos con posición actualizada
+   * - Mantiene consistencia de estado durante retroceso
+   * 
+   * @wizard_synchronization
+   * Mantiene sincronización entre:
+   * - Índice local del componente
+   * - Índice actual del wizard component  
+   * - Datos de configuración de pasos
+   * - Estado visual de navegación
+   * 
+   * @state_preservation
+   * Durante retroceso:
+   * - Preserva datos capturados en pasos anteriores
+   * - Mantiene validaciones ya realizadas
+   * - Conserva estado de formularios
+   * 
+   * @state_update
+   * Actualiza:
+   * - `indice`: Nueva posición actual + 1
+   * - `datosPasos.indice`: Sincronización con datos de pasos
+   * 
+   * @void
+   * @backward_navigation
+   */
+  anterior(): void {
     this.wizardComponent.atras();
-  } else {
-    console.error('El componente wizard no está disponible para navegar al paso anterior');
-  }
-}
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
   /**
@@ -193,72 +416,9 @@ export class SolicitudPageComponent implements OnInit, OnDestroy{
         return this.pasos[1].titulo;
       case 3:
         return this.pasos[2].titulo;
+
       default:
         return TITULO_MENSAJE;
     }
-  }
-    
-  /**
-   * Emite un evento para cargar archivos.
-   * {void} No retorna ningún valor.
-   */
-  onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
-
-  /*
-  * Maneja el evento de carga en progreso.
-  */
-   onCargaEnProgreso(carga: boolean): void {
-    this.cargaEnProgreso = carga;
-  }
-     /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
-  manejaEventoCargaDocumentos(carga: boolean): void {
-    this.activarBotonCargaArchivos = carga;
-  }
-   /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado de la sección de carga de documentos.
-   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * {void} No retorna ningún valor.
-   */
-  cargaRealizada(cargaRealizada: boolean): void {
-    this.seccionCargarDocumentos = cargaRealizada ? false : true;
-  }
-
-    /**
-   * Método para navegar a la siguiente sección del wizard.
-   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  siguiente(): void {
-    // Aqui se hara la validacion de los documentos cargdados
-    this.wizardComponent.siguiente();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
-
-  /**
-   * Método para navegar a la sección anterior del wizard.
-   * Actualiza el índice y el estado de los pasos.
-   * {void} No retorna ningún valor.
-   */
-  anterior(): void {
-    this.wizardComponent.atras();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
-  /**
-   * Método que se ejecuta cuando se destruye el componente.
-   * Limpia el notifier para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }

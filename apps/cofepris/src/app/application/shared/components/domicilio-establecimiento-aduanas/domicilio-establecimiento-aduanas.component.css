@@ -16,3 +16,6 @@
     height: 50%;
     resize: none;
 }
+.tiene-error{
+    color:#d0021b;
+}

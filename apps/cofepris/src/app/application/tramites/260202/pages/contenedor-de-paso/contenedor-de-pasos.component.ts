@@ -1,14 +1,20 @@
+import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
 import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
-  WizardComponent
+  RegistroSolicitudService,
+  WizardComponent,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { Tramite260202State, Tramite260202Store } from '../../estados/tramite260202Store.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { GuardarAdapter_260202 } from '../../adapters/guardar-payload.adapter';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
-import { Tramite260202State } from '../../estados/tramite260202Store.store';
 
 /**
  * @component
@@ -75,6 +81,11 @@ export class ContenedorDePasosComponent implements OnInit {
   public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
+     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+     */
+    TEXTOS = AVISO_PRIVACIDAD;
+
+  /**
    * @property {DatosPasos} datosPasos
    * @description Objeto que contiene información sobre los pasos del wizard.
    * Incluye el número total de pasos, el índice actual y los textos de los botones.
@@ -110,8 +121,8 @@ export class ContenedorDePasosComponent implements OnInit {
  */
   seccionCargarDocumentos: boolean = true;
 
-  constructor(private tramite260202Query: Tramite260202Query) {}
-  
+  constructor(private tramite260202Query: Tramite260202Query, private tramite260202Store: Tramite260202Store, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {}
+
   ngOnInit(): void {
     this.tramite260202Query.selectTramiteState$.pipe().subscribe((data) => {
       this.storeData = data;
@@ -144,7 +155,9 @@ export class ContenedorDePasosComponent implements OnInit {
       if (this.esFormaValido) {
         this.datosPasos.indice = 1;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        // return;
       }
+      this.postGuardarDatos(e);
     }
     else {
       if (e.valor > 0 && e.valor < 5) {
@@ -156,6 +169,77 @@ export class ContenedorDePasosComponent implements OnInit {
         }
       }
     }
+  }
+
+
+  /**
+   * Método que se ejecuta después de guardar los datos.
+   * Actualmente no realiza ninguna acción.
+   */
+  postGuardarDatos(e: AccionBoton): void {
+    const PAYLOAD = GuardarAdapter_260202.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos('260202', PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if(shouldNavigate) {
+          this.navigateToPasoDos(e, response);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+  }
+
+  navigateToPasoDos(e: AccionBoton, response: BaseResponse<unknown>): void {
+    this.esFormaValido = false;
+    if(esValidObject(response) && esValidObject(response.datos)) {
+      const DATOS = response.datos as { id_solicitud?: number };
+      if(getValidDatos(DATOS.id_solicitud)) {
+        this.tramite260202Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+      } else {
+        this.tramite260202Store.setIdSolicitud(0);
+      }
+    }
+    // Calcular el nuevo índice basado en la acción
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor;
+    }
+    this.toastrService.success(response.mensaje);
+    if (indiceActualizado > 0 && indiceActualizado < 5) {
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
   }
 
   /**

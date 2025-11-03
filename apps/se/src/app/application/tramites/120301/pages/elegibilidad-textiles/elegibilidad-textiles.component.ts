@@ -343,10 +343,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private guardadoService: GuardadoService,
     public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
-    private tramiteStore: Tramite120301Store,
     private tramiteQuery: Tramite120301Query,
     private solicitanteQuery: SolicitanteQuery,
-    private textilesState: ElegibilidadDeTextilesStore) {
+  ) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),

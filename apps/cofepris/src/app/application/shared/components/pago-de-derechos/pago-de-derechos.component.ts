@@ -3,20 +3,17 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
+  ValidationErrors
 } from '@angular/forms';
 import {
-  BANCO_CATALOGOS,
-  ESTADO_CATALOGOS
-} from '../../constantes/pago-banco.enum';
-import {
+  AlertComponent,
   Catalogo,
   ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   REGEX_LLAVE_DE_PAGO_DE_DERECHO,
-  REGEX_PATRON_DECIMAL_2,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import {CatalogoSelectComponent, CatalogoServices} from '@libs/shared/data-access-user/src';
 import {
@@ -30,6 +27,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {
+  FECHA_DE_IMPORTACION_PAGO,
   FECHA_DE_PAGO,
   PagoDerechosFormState
 } from '../../models/terceros-relacionados.model';
@@ -42,6 +40,31 @@ import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
+
+export function importePagoValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+
+  // Allow empty — required validator will handle emptiness
+  if (value === null || value === '') {
+    return null;
+  }
+
+  // ✅ 1. Check if value is numeric
+  const numericRegex = /^[0-9.]+$/;
+  if (!numericRegex.test(value)) {
+    return { nonNumeric: true };
+  }
+
+  // ✅ 2. Check for valid format (max 15 digits and up to 2 decimals)
+  const decimalRegex = /^\d{1,15}(\.\d{1,2})?$/;
+  if (!decimalRegex.test(value)) {
+    return { invalidDecimal: true };
+  }
+
+  // ✅ All good
+  return null;
+}
+
 
 
 /**
@@ -59,11 +82,22 @@ import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
     ReactiveFormsModule,
     InputFechaComponent,
     TituloComponent,
+    AlertComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+  messageAlert: string = `
+  <div style="text-align: center;">
+    <strong>¡Precaución!</strong>
+    <span class="fw-normal">
+      Debes capturar todos los campos de pago de derechos.
+    </span>
+  </div>
+`;
+verificarAlerta:number[]=[];
+
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -209,6 +243,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private catalogoService: CatalogoServices
     
   ) {
+    this.verificarAlerta=FECHA_DE_IMPORTACION_PAGO;
 
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -271,13 +306,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       importePago: [
       this.solicitudState?.importePago || '',
       [
-        decimalValidator(2),
+        importePagoValidator,
         Validators.maxLength(16),
         Validators.required,
       ],
       ],
       bancoObject: [this.solicitudState?.bancoObject || ''],
-      estadoObject: [this.solicitudState?.estadoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -339,9 +373,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
               const DATOS = response.datos as Catalogo[];
               
               if (response) {
-                
                 this.bancoDatos = DATOS;
-                this.estadosDatos = DATOS;
               }
             })
           );
@@ -474,28 +506,6 @@ onBancoSeleccionado(event: any): any {
   return BANCO_OBJ ? BANCO_OBJ[0] : undefined;
 }
 
-/**
- * Método para manejar la selección de estado.
- * @param event {any} Evento del select.
- */
-onEstadoSeleccionado(event: any): any {
-  const SELECTEDVALUE = event.target ? event.target.value : event;
-  const ESTADO = this.estadosDatos.find(e => e.clave === SELECTEDVALUE);
-
-  const ESTADOID = this.pagoDerechosForm.get('estado')?.value;
-  const ESTADO_OBJ = PagoDeDerechosComponent.generarCatalogoObjeto(this.estadosDatos, ESTADOID);
-  this.pagoDerechosForm.patchValue({ estadoObject: ESTADO_OBJ ? ESTADO_OBJ[0] : undefined });
-
-
-  if (ESTADO) {
-    this.pagoDerechosForm.patchValue({ estado: ESTADO.clave });
-    this.pagoDerechosForm.get('estado')?.markAsTouched();
-    this.pagoDerechosForm.get('estado')?.markAsDirty();
-    this.setValoresStoreObject(ESTADO, 'estado', 'setEstadoObject');
-  }
-    return ESTADO_OBJ ? ESTADO_OBJ[0] : undefined;
-
-}
 
 /**
  * Método para actualizar el store con objeto completo.
@@ -603,9 +613,9 @@ export function decimalValidator(maxDecimals: number = 2) {
       return { invalidNumber: true };
     }
     
-    const decimalParts = VALOR.split('.');
-    if (decimalParts.length > 1 && decimalParts[1].length > maxDecimals) {
-      return { tooManyDecimals: { max: maxDecimals, actual: decimalParts[1].length } };
+    const DECIMALPARTS = VALOR.split('.');
+    if (DECIMALPARTS.length > 1 && DECIMALPARTS[1].length > maxDecimals) {
+      return { tooManyDecimals: { max: maxDecimals, actual: DECIMALPARTS[1].length } };
     }
     
     return null;

@@ -1,17 +1,20 @@
+import { Catalogo, CatalogoServices, doDeepCopy, esValidArray, esValidObject, ModeloDeFormaDinamica,TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ModeloDeFormaDinamica, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_TABLA } from '../../../120201/constantes/cupos-constantes.enum';
 import { CONSULTAR_CUPO } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
-import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
+import { SolicitudTPLCANR } from '../../models/insumos.model';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
+
 /**
  * @component ConsultarCupoComponent
  * @description
@@ -137,6 +140,12 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   public cuerpoTabla: InstrumentoCupoTPLForm[] = [];
 
   /**
+   * Identificador único del trámite asociado a la consulta de cupo.
+   * Este valor se utiliza para distinguir el tipo de trámite dentro de la aplicación.
+   */
+  tramiteId: string = '120101';
+
+  /**
  * @constructor
  * @description
  * Constructor del componente `ConsultarCupoComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
@@ -157,6 +166,8 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
     private servicioDeFormularioService: ServicioDeFormularioService,
+    private catalogoServices: CatalogoServices,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter
   ) {
     //
   }
@@ -204,83 +215,18 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.servicioDeFormularioService.registerForm('consultarCupoForm', this.ninoFormGroup);
-    this.obtenerClasificacionRegimenDatos();
-    this.obtenerPaisDatos();
+    this.obtenerRegimenDatos();
+    this.obtenerPaisDestinoDatos();
+    this.obtenerTratadoData();
     if (this.consultaState?.readonly) {
       this.mostrarCampoDeDescripcion();
       this.obtenerTablaDatos();
     }
   }
 
-  /**
- * @method obtenerClasificacionRegimenDatos
- * @description
- * Este método obtiene los datos de clasificación de régimen desde el servicio `SolicitudDeRegistroTplService` 
- * y los asigna al campo correspondiente en el formulario dinámico.
- * 
- * Funcionalidad:
- * - Llama al método `getClasificacionRegimenData` del servicio para obtener los datos.
- * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
- * - Busca el campo `clasificacion` en la configuración del formulario dinámico (`consultarCupoFormData`).
- * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
- * 
- * @example
- * this.obtenerClasificacionRegimenDatos();
- * // El campo `clasificacion` se actualiza con las opciones obtenidas del servicio.
- */
-  public obtenerClasificacionRegimenDatos(): void {
-    this.solicitudDeRegistroTplService
-      .getClasificacionRegimenData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        const CLASIFICACION_FIELD = this.consultarCupoFormData.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion'
-        ) as ModeloDeFormaDinamica;
-        if (CLASIFICACION_FIELD && !CLASIFICACION_FIELD.opciones) {
-          CLASIFICACION_FIELD.opciones = data.map(
-            (item: { id: number; descripcion: string }) => ({
-              descripcion: item.descripcion,
-              id: item.id,
-            })
-          );
-        }
-      });
-  }
 
-  /**
- * @method obtenerPaisDatos
- * @description
- * Este método obtiene los datos de los países desde el servicio `SolicitudDeRegistroTplService` 
- * y los asigna al campo correspondiente en el formulario dinámico.
- * 
- * Funcionalidad:
- * - Llama al método `getPaisData` del servicio para obtener los datos.
- * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
- * - Busca el campo `pais` en la configuración del formulario dinámico (`consultarCupoFormData`).
- * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
- * 
- * @example
- * this.obtenerPaisDatos();
- * // El campo `pais` se actualiza con las opciones obtenidas del servicio.
- */
-  public obtenerPaisDatos(): void {
-    this.solicitudDeRegistroTplService
-      .getPaisData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        const PAIS_FIELD = this.consultarCupoFormData.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'pais'
-        ) as ModeloDeFormaDinamica;
-        if (PAIS_FIELD && !PAIS_FIELD.opciones) {
-          PAIS_FIELD.opciones = data.map(
-            (item: { id: number; descripcion: string }) => ({
-              descripcion: item.descripcion,
-              id: item.id,
-            })
-          );
-        }
-      });
-  }
+
+
 
   /**
    * Busca los datos de la tabla.
@@ -296,6 +242,80 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
       this.mostrarCampoDeDescripcion();
       this.obtenerTablaDatos();
     }
+  }
+
+
+  /**
+   * Obtiene los datos del catálogo de tratados/acuerdos relacionados con el trámite actual
+   * y actualiza las opciones del campo 'tratado' en el formulario dinámico.
+   *
+   * Realiza una petición al servicio `catalogoServices.tratadosAcuerdosCatalogo` usando el
+   * identificador del trámite y el código de catálogo correspondiente. Al recibir la respuesta,
+   * asigna las opciones obtenidas al campo 'tratado' si aún no tiene opciones definidas.
+   *
+   * La suscripción se cancela automáticamente cuando el componente se destruye.
+   */
+  obtenerTratadoData(): void {
+    this.catalogoServices
+      .tratadosAcuerdoCatalogo(this.tramiteId, "TITRAC.TA")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp): void => {
+        const TRATADO_FIELD = this.consultarCupoFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
+        ) as ModeloDeFormaDinamica;
+        if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
+          TRATADO_FIELD.opciones = resp.datos as Catalogo[];
+        }
+      });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de países de destino para el trámite actual.
+   * Realiza una petición al servicio de catálogo utilizando el identificador del trámite y parámetros específicos.
+   * Al recibir la respuesta, actualiza las opciones del campo 'pais' en el formulario dinámico si aún no han sido establecidas.
+   *
+   * @remarks
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  obtenerPaisDestinoDatos(): void {
+    this.catalogoServices
+      .paisDestinoCatalogo(this.tramiteId, { cveTratado: "SGPQFB045", cvePais: "TICERM.QFBA" })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp): void => {
+        const PAIS_FIELD = this.consultarCupoFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'pais'
+        ) as ModeloDeFormaDinamica;
+        if (PAIS_FIELD && !PAIS_FIELD.opciones) {
+          PAIS_FIELD.opciones = resp.datos as Catalogo[];
+        }
+      });
+  }
+
+  /**
+   * Obtiene los datos del régimen desde el servicio de catálogo y actualiza las opciones
+   * del campo 'clasificacion' en el formulario dinámico de consultar cupo.
+   *
+   * Realiza una petición al servicio `clasificacionRegimenCatalogo` utilizando el `tramiteId`
+   * y parámetros específicos, y asigna la respuesta como opciones del campo correspondiente
+   * si aún no han sido establecidas.
+   *
+   * @remarks
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   */
+  obtenerRegimenDatos(): void {
+    this.catalogoServices
+      .clasificacionRegimenCatalogo(this.tramiteId, { tramite: 'TITPEX.130110', id: "01" })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp): void => {
+        const REGIMEN_FIELD = this.consultarCupoFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion'
+        ) as ModeloDeFormaDinamica;
+        if (REGIMEN_FIELD && !REGIMEN_FIELD.opciones) {
+          REGIMEN_FIELD.opciones = resp.datos as Catalogo[];
+        }
+      });
   }
 
   /**
@@ -314,36 +334,24 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
  * // Obtiene y muestra los datos de la tabla de cupos.
  */
   obtenerTablaDatos(): void {
-    this.solicitudDeRegistroTplService
-        .obtenerTablaDatos()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((resp) => {
-          const TABLA_DATOS = resp.data;
-          const NUEVO_CUERPO_TABLA = TABLA_DATOS.map(
-            (item: InstrumentoCupoTPLForm) => ({
-              id: 1,
-              cveTratado: item.cveTratado,
-              cveRegimenClasificacion: item.cveRegimenClasificacion,
-              cvePaisDestino: item.cvePaisDestino,
-              fraccionArancelaria: item.fraccionArancelaria,
-              categoriaTextilDescripcion: item.categoriaTextilDescripcion,
-              productoDescripcion: item.productoDescripcion,
-              subProductoClasificacion: item.subProductoClasificacion,
-              fechaInicioVigencia: item.fechaInicioVigencia,
-              fechaFinVigencia: item.fechaFinVigencia,
-              montoDisponible: item.montoDisponible,
-              categoriaTextil: item.categoriaTextil,
-              asignacionMecanismo: item.asignacionMecanismo,
-              unidad: item.unidad,
-              conversionFactor: item.conversionFactor,
-            })
-          );
-          this.cuerpoTabla = NUEVO_CUERPO_TABLA;
-          this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
-          if (this.consultaState?.readonly) {
-            this.controladorDeClicsArchivo(NUEVO_CUERPO_TABLA?.[0]);
-          }
-        });
+    const NANO_FORM = this.forma.get('ninoFormGroup') as FormGroup;
+    const NANO_FORM_VALUE = NANO_FORM.value;
+    const PAYLOAD = {
+      instrumentoCupoTPL: {
+        idTratadoAcuerdo: NANO_FORM_VALUE.tratado === 118 ? NANO_FORM_VALUE.tratado : 118,
+        claveRegimen: NANO_FORM_VALUE.clasificacion === "REG.02" ? NANO_FORM_VALUE.clasificacion : "REG.02",
+        clavePais: NANO_FORM_VALUE.pais==="CAN" ? NANO_FORM_VALUE.pais : "CAN",
+        cveFraccion: "6302530020",
+        descripcionFraccion: "",
+        idFraccionHtsUsa: ""
+      }
+    }
+    this.solicitudDeRegistroTplService.getBuscarDatos(PAYLOAD).subscribe((resp) => {
+      const TABLA_DATOS = this.ampliacionServiciosAdapter.mapBuscarTablaDatosList(resp.datos);
+      this.tramite120101Store.setDynamicFieldValue('idMecanismo', TABLA_DATOS[0].idMecanismo);
+      this.cuerpoTabla = TABLA_DATOS;
+      this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
+    });
   }
 
   /**
@@ -415,6 +423,72 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+
+
+  /**
+   * Obtiene las terciarizadas disponibles para el trámite actual.
+   *
+   * Este método realiza una solicitud al servicio `solicitudDeRegistroTplService` para obtener el monto disponible
+   * asociado al trámite identificado por `tramiteId`. El resultado de la petición es procesado para verificar
+   * si la respuesta es válida y contiene datos. En caso de error, se maneja el código de error específico "01".
+   *
+   * @remarks
+   * - Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * - Los datos obtenidos pueden ser procesados y asignados a una variable local para su uso posterior.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  obtenerTerciarizadasDisponibles(): void {
+    const PAYLOAD = {
+    };
+
+    this.solicitudDeRegistroTplService
+      .getElMontoDisponible(this.tramiteId, PAYLOAD as SolicitudTPLCANR)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if (esValidArray(API_DATOS.datos)) {
+            //   this.disponiblesDatos = this._compartidaSvc.toDisponsibleFiscal(API_DATOS.datos);
+          }
+        }
+      },
+        (err) => {
+          if (err.error.codigo === "01") {
+            // this.rfcError=true;
+          }
+        });
+  }
+
+
+
+  /**
+ * @method verificarLaValidezDelFormulario
+ * @description
+ * Este método verifica la validez de los formularios dinámicos asociados a los pasos del wizard.
+ * @returns {boolean} - Indica si todos los formularios son válidos.
+ */
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('consultarCupoForm') ??
+        false) &&
+      this.isAllArraysFilledIn120101(['anexoUnoTabla1', 'anexoUnoTabla2'])
+    );
+  }
+
+  /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 120101. */
+  isAllArraysFilledIn120101(array: string[]): boolean {
+    return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
+  }
+
+  validarFormulario(): void {
+    this.forma.markAllAsTouched();
+  }
+
+
+
+
 
   /**
   * @method ngOnDestroy

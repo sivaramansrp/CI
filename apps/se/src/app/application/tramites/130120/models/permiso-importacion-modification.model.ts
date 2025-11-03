@@ -225,7 +225,7 @@ export interface DatosExporta {
    * @property {string} número_documento
    * @description Número del documento de exportación.
    */
-  número_documento: string;
+  numero_documento: string;
   /**
    * @property {string} fecha_documento
    * @description Fecha del documento de exportación.
@@ -295,7 +295,7 @@ export interface DatosProductor {
    * @property {string} denominación_razón_social
    * @description Denominación o razón social del productor.
    */
-  denominación_razón_social: string;
+  denominacion_razon_social: string;
   /**
    * @property {string} domicilio
    * @description Domicilio del productor.
@@ -341,7 +341,7 @@ export interface DatosExportador {
    * @property {string} razón_social
    * @description Razón social del exportador.
    */
-  razón_social: string;
+  razon_social: string;
   /**
    * @property {string} domicilio
    * @description Domicilio del exportador.
@@ -353,7 +353,11 @@ export interface DatosExportador {
    */
   observaciones: string;
 
-  denominación_razón_social_exportador: string;
+  /**
+   * @property {string} denominacion_razon_social_exportador
+   * @description Denominación o razón social del exportador.
+   */
+  denominacion_razon_social_exportador: string;
 
 }
 
@@ -376,6 +380,12 @@ export interface DatosFederal {
    * @description Representación federal del trámite.
    */
   representacion_federal: string;
+
+  /**
+   * @property {string} descripcion_representacion_federal
+   * @description Descripción de la representación federal.
+   */
+  descripcion_representacion_federal: string;
 }
 
 /**
@@ -421,7 +431,7 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       valor_total_factura_usd: '',
     },
     datosExporta: params.datosExporta || {
-      número_documento: '',
+      numero_documento: '',
       fecha_documento: '',
       descripcionExportacion: '',
       codigo_arancelario: '',
@@ -430,20 +440,20 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       precio_unitario_usd: '',
     },
     datosProductor: params.datosProductor || {
-      persona_tipo: 'Física',
+      persona_tipo: '',
       personales_nombre: '',
       primer_apellido: '',
       segundo_apellido: '',
-      denominación_razón_social: '',
+      denominacion_razon_social: '',
       domicilio: '',
     },
     datosExportador: params.datosExportador || {
-      persona_tipo: 'Física',
+      persona_tipo: '',
       personales_nombre: '',
       primer_apellido: '',
       segundo_apellido: '',
-      razón_social: '',
-      denominación_razón_social_exportador: '',
+      razon_social: '',
+      denominacion_razon_social_exportador: '',
       domicilio: '',
 
       observaciones: '',
@@ -451,6 +461,7 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
     datosFederal: params.datosFederal || {
       entidad_federativa: '',
       representacion_federal: '',
+      descripcion_representacion_federal: ''
     }
   };
 }

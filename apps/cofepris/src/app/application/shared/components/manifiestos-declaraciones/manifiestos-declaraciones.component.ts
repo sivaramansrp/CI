@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {DatosDomicilioLegalState, DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { InputRadioComponent,TituloComponent,} from '@libs/shared/data-access-user/src';
@@ -30,6 +30,8 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
   styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
+  
+    @Input() public idProcedimiento!: number;
   /**
    * @description
    * Mensaje de alerta que se muestra en el componente.

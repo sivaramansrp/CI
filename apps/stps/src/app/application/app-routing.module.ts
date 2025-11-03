@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -22,12 +23,12 @@ const ROUTES: Routes = [
   },
   {
     path: 'proceso-requerimiento',
-      loadComponent: () =>
-        import('./proceso-requerimiento/proceso-requerimiento.component').then(
-          (m) => m.ProcesoRequerimientoComponent
-        ),
-    },
-    {
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
+  {
     path: 'verificar-dictamen',
     loadComponent: () =>
       import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
@@ -42,10 +43,14 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
