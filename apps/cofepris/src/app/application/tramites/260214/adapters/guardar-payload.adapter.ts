@@ -42,11 +42,11 @@ export class GuardarAdapter_260214 {
           "discriminatorValue": 260214,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "ALTAMIRA",
+          "aduanaAIFA": "",
           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
       },
       "establecimiento": {
-          "RFCResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
+          "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
           "razonSocial": state.datosSolicitudFormState.denominacionRazon,
           "correoElectronico": state.datosSolicitudFormState.correoElectronico,
           "domicilio": {
@@ -101,7 +101,7 @@ export class GuardarAdapter_260214 {
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -167,8 +167,8 @@ export class GuardarAdapter_260214 {
         return {
             "idPersonaSolicitud": "",
             "ideTipoTercero": "TIPERS.FAB",
-            "personaMoral": "1",
-            "booleanExtranjero": "0",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
             "booleanFisicaNoContribuyente": "0",
             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
             "razonSocial": destinatario.razonSocial,
@@ -318,7 +318,7 @@ export class GuardarAdapter_260214 {
       }),
       "pagoDeDerechos": {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
-          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,GuardarAdapter_260214,
+          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
               "clave": state.pagoDerechos.banco,
               "descripcion": ""
