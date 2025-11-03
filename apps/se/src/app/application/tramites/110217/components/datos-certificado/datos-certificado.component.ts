@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
@@ -56,21 +56,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Observable que contiene la lista de idiomas disponibles.
-   */
-  idiomaDatos$!: Observable<Catalogo[]>;
-
-  /**
-   * Observable que contiene la lista de entidades federativas disponibles.
-   */
-  entidadFederativas$!: Observable<Catalogo[]>;
-
-  /**
-   * Observable que contiene la lista de representaciones federales disponibles.
-   */
-  representacionFederal$!: Observable<Catalogo[]>;
-
-  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -96,28 +81,11 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery
   ) {
 
-    /**
-     * Suscripción al estado del formulario para actualizar los valores del formulario al obtener datos.
-     */
-    this.tramiteQuery.selectSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((state) => ({
-        observaciones: state.observaciones,
-        idioma: state.idioma,
-        entidadFederativa: state.entidadFederativa,
-        representacionFederal: state.representacionFederal
-      }))
-    ).subscribe((estado: { [key: string]: unknown }) => {
+    this.tramiteQuery.formDatosCertificado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
         this.formDatosCertificadoValues = estado;
-    });
-
-    /**
-     * Asignación de los observables que contienen los catálogos de datos (vacíos por ahora).
-     * En un futuro se pueden conectar con servicios de catálogos.
-     */
-    this.idiomaDatos$ = this.tramiteQuery.select(() => []);
-    this.entidadFederativas$ = this.tramiteQuery.select(() => []);
-    this.representacionFederal$ = this.tramiteQuery.select(() => []);
+      });
   }
 
   /**
@@ -158,7 +126,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param estado El estado del idioma seleccionado.
    */
   idiomaSeleccion(estado: Catalogo): void {
-    this.store.setIdioma(estado.id.toString());
+    this.store.setIdioma(estado.clave || '');
   }
 
   /**
@@ -174,7 +142,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param estado El estado de la representación federal seleccionada.
    */
   representacionFederalSeleccion(estado: Catalogo): void {
-    this.store.setRepresentacionFederal(estado.id.toString());
+    this.store.setRepresentacionFederal(estado.clave || '');
   }
 
   /**
@@ -183,6 +151,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+    this.store.setFormValidity('datosCertificado', valida);
   }
 
   /**

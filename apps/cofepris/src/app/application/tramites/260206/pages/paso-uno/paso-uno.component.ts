@@ -10,7 +10,7 @@ import { SECCIONES_TRAMITE_260206 } from '../../constantes/maquila-materias-prim
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
-
+import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -47,6 +47,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
    public esDatosRespuesta: boolean = false;
+
+   /**
+          * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+          * @description
+          * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+          * mediante el decorador `@ViewChild`.
+          *
+          * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+          * a sus propiedades, por ejemplo para delegar la validación del formulario
+          * interno (`validarContenedor()`).
+          *
+          * > Nota: Angular inicializa esta referencia después de que la vista
+          * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+          */
+         @ViewChild(ContenedorDeDatosSolicitudComponent)
+         contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+     
+         @ViewChild(PagoDeDerechosContenedoraComponent)
+         pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+     
+         @ViewChild(TercerosRelacionadosVistaComponent)
+         tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+     
+   
 
   /**
    * Constructor de la clase PasoUnoComponent.
@@ -106,6 +130,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     .subscribe((tab) => {
       this.indice = tab;
     });
+  }
+
+   /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    return (
+      (esTabValido && esTercerosValido&& esPagoValido)? true : false
+
+    );
   }
 
   /**

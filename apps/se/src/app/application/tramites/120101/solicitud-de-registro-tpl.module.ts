@@ -9,6 +9,7 @@ import { InsumosComponent } from './components/insumos/insumos.component';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ProcesoProductivoComponent } from './components/proceso-productivo/proceso-productivo.component';
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
@@ -36,7 +37,8 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
     BienFinalComponent,
     FirmaElectronicaComponent,
     InsumosComponent,
-    ProcesoProductivoComponent
+    ProcesoProductivoComponent,
+    PasoFirmaComponent
   ],
   providers: [ServicioDeFormularioService,
     //provideHttpClient()

@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { HttpClient } from '@angular/common/http';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202State } from '../../estados/tramite260202Store.store';
 import { Tramite260202Store } from '../../estados/tramite260202Store.store';
@@ -54,6 +57,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
    */
   public consultaState!: ConsultaioState;
+
+  @ViewChild('solicitante') solicitante!: SolicitanteComponent;
+
+  @ViewChild('datosSolicitud') datosSolicitud!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild('tercerosRelacionados') tercerosRelacionados!: TercerosRelacionadosVistaComponent;
+
+  @ViewChild('pagoDeDerechos') pagoDeDerechos!: PagoDeDerechosContenedoraComponent
 
   /**
    * Constructor de la clase PasoUnoComponent.
@@ -147,6 +158,45 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.tramite260202Store.updateTabSeleccionado(i);
+  }
+
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosSolicitud) {
+      if (!this.datosSolicitud.validarFormularioDatos()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.tercerosRelacionados) {
+      if (!this.tercerosRelacionados.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.pagoDeDerechos) {
+      if (!this.pagoDeDerechos.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

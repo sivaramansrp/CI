@@ -1,21 +1,11 @@
 import {
   AnexoExportacion,
-  AnexoImportacion,
-  Sensible,
+  AnexoImportacion
 } from '../../models/complementaria.model';
-import {
-  CONFIGURACION_ANEXO_EXPORTACION,
-  CONFIGURACION_ANEXO_IMPORTACION,
-  CONFIGURACION_SENSIBLES,
-} from '../../constants/complementaria.enum';
 import { Component, OnDestroy } from '@angular/core';
-import {
-  ConfiguracionColumna,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
+import { Anexo } from '../../../../shared/models/anexos.model';
+import { AnexosComponent } from '../../../../shared/components/anexos/anexos.component';
 import { CommonModule } from '@angular/common';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
@@ -54,28 +44,11 @@ import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 @Component({
   selector: 'app-anexo-uno-pestana',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, AnexosComponent],
   templateUrl: './anexo-uno-pestana.component.html',
   styleUrl: './anexo-uno-pestana.component.scss',
 })
 export class AnexoUnoPestanaComponent implements OnDestroy {
-  /**
-   * Tipo de selección de la tabla.
-   * @property {TablaSeleccion} tablaSeleccion
-   */
-  public tablaSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
-
-  /**
-   * Configuración de la tabla de exportación de anexos.
-   * 
-   * Esta propiedad define la configuración de las columnas para la tabla
-   * de exportación de anexos, utilizando el tipo genérico `ConfiguracionColumna`
-   * con el modelo de datos `AnexoExportacion`. La configuración se inicializa
-   * con los valores definidos en `CONFIGURACION_ANEXO_EXPORTACION`.
-   */
-  public configuracionAnexoExportacionTabla: ConfiguracionColumna<AnexoExportacion>[] =
-    CONFIGURACION_ANEXO_EXPORTACION;
-
   /**
    * Arreglo que almacena los datos de exportación relacionados con el anexo.
    * 
@@ -87,28 +60,6 @@ export class AnexoUnoPestanaComponent implements OnDestroy {
   public anexoExportacionTablaDatos: AnexoExportacion[] = [];
 
   /**
-   * Arreglo que almacena los elementos seleccionados de tipo AnexoExportacion.
-   * 
-   * Este arreglo se utiliza para gestionar los datos seleccionados en la tabla
-   * de exportación dentro del componente. Cada elemento del arreglo representa
-   * un anexo de exportación seleccionado por el usuario.
-   */
-  public anexoExportacionTablaSeleccionada: AnexoExportacion[] = [];
-
-  /**
-   * Configuración de la tabla para el anexo de importación.
-   * 
-   * Esta propiedad define la configuración de las columnas para la tabla
-   * que muestra los datos relacionados con el anexo de importación. 
-   * Utiliza una estructura de configuración predefinida para establecer 
-   * las propiedades de las columnas.
-   * 
-   * @type {ConfiguracionColumna<AnexoImportacion>[]}
-   */
-  public configuracionAnexoImportacionTabla: ConfiguracionColumna<AnexoImportacion>[] =
-    CONFIGURACION_ANEXO_IMPORTACION;
-
-  /**
    * Arreglo que almacena los datos de importación relacionados con el anexo.
    * 
    * Este arreglo contiene objetos de tipo `AnexoImportacion` que representan
@@ -118,41 +69,12 @@ export class AnexoUnoPestanaComponent implements OnDestroy {
   public anexoImportacionTablaDatos: AnexoImportacion[] = [];
 
   /**
-   * Arreglo que almacena los elementos seleccionados de tipo AnexoImportacion.
-   * Este arreglo se utiliza para gestionar los datos seleccionados en la tabla
-   * dentro del componente AnexoUnoPestana.
-   */
-  public anexoImportacionTablaSeleccionada: AnexoImportacion[] = [];
-
-  /**
-   * Configuración de la tabla para elementos sensibles.
-   * 
-   * Esta propiedad define la configuración de las columnas para la tabla
-   * que muestra los datos sensibles. Utiliza el tipo genérico `ConfiguracionColumna<Sensible>`
-   * para garantizar que las columnas estén correctamente tipadas.
-   * 
-   * @type {ConfiguracionColumna<Sensible>[]} - Arreglo de configuraciones de columnas.
-   * @see CONFIGURACION_SENSIBLES - Configuración predeterminada para las columnas sensibles.
-   */
-  public configuracionSensiblesTabla: ConfiguracionColumna<Sensible>[] =
-    CONFIGURACION_SENSIBLES;
-
-  /**
-   * Arreglo que almacena datos sensibles de tipo `Sensible`.
+   * Arreglo que almacena datos sensibles de tipo `Anexo`.
    * 
    * Este arreglo se utiliza para gestionar y mostrar información
    * sensible en la tabla de datos dentro del componente.
    */
-  public sensiblesTablaDatos: Sensible[] = [];
-
-  /**
-   * Arreglo que almacena los elementos sensibles seleccionados en la tabla.
-   * 
-   * Este arreglo se utiliza para gestionar y manipular los datos sensibles
-   * seleccionados por el usuario en la interfaz de usuario. Cada elemento
-   * del arreglo es de tipo `Sensible`.
-   */
-  public sensiblesTablaSeleccionada: Sensible[] = [];
+  public sensiblesTablaDatos: Anexo[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.

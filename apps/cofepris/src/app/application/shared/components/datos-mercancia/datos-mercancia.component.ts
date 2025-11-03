@@ -13,14 +13,15 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 import {
   CAMPOS_CLAVE,
-  CROSLISTA_DE_PAISES,
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
@@ -55,6 +56,8 @@ import {
   FECHA_DE_CADUCIDAD_PAGO,
   FECHA_DE_FABRICACIO_PAGO,
 } from '../../models/terceros-relacionados.model';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -85,7 +88,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit, AfterViewInit {
+export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges {
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -380,19 +383,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @property {Catalogo[]} paisDeProcedenciaDatos
    * Datos de países para la lista cruzada de procedencia.
    */
-  public paisDeProcedenciaDatos: string[] = CROSLISTA_DE_PAISES;
+  public paisDeProcedenciaDatos: string[] = [];
 
   /**
    * @property {Catalogo[]} usoEspesificoDatos
    * Datos de usos específicos para lista cruzada.
    */
-  public usoEspesificoDatos: string[] = CROSLISTA_DE_PAISES;
+  public usoEspesificoDatos: string[] = [];
 
   /**
    * @property {Catalogo[]} seleccionarOrigenDelPais
    * Datos de países para lista cruzada de país de origen.
    */
-  public seleccionarOrigenDelPais: string[] = CROSLISTA_DE_PAISES;
+  public seleccionarOrigenDelPais: string[] = [];
 
   /**
    * Indica si se debe mostrar el campo de datos de mercancía en la interfaz.
@@ -418,7 +421,21 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
-  
+  tipoFOFA='FOFA.OTR';
+
+  /**
+   * @property {Subscription} subscription
+   * @description Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
+   * Se inicializa como una nueva instancia de Subscription y se utiliza para evitar fugas de memoria.
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para cancelar suscripciones activas al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -430,44 +447,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoService: CatalogoServices
   ) {
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'clasificacionProductoDatos',
-      '/cofepris/mercanciaClasificacionProducto.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'especificarClasificacionProductoDatos',
-      '/cofepris/especificarClasificacionProducto.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'tipoProductoDatos',
-      '/cofepris/tipoProductoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'formaFarmaceuticaDatos',
-      '/cofepris/formaFarmaceutica.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'estadoFisicoDatos',
-      '/cofepris/estadoFisicoDatos.json'
-    );
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'cantidadUmcDatos',
-      '/cofepris/cantidadUmcDatos.json'
-    );
-     this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'fraccionArancelariaDatos',
-      '/cofepris/cantidadUmcDatos.json'
-    );
-
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
       this.idProcedimiento
     )
@@ -560,16 +542,167 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     ];
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tipoProducto'] || changes['formaFarmaceutica']) {
+      this.updateValidation();
+    }
+  }
+
   /**
    * @method ngOnInit
    * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
    * Llama al método `crearMercanciaForm` para construir el formulario.
    */
   ngOnInit(): void {
+    this.inicializarCatalogo(String(this.idProcedimiento));
     this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
+    this.inicializarCrosslist();
+  }
+
+  /**
+   * Inicializa los datos de los crosslists de países y uso específico.
+   * Realiza llamadas básicas a la API para obtener los catálogos y asignarlos a las propiedades correspondientes.
+   */
+  inicializarCrosslist(): void {
+    this.subscription.add(
+      this.catalogoService
+        .paisesCatalogo(String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          if (response && Array.isArray(response.datos)) {
+            this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
+          }
+        })
+    );
+
+    // País de procedencia
+    this.subscription.add(
+      this.catalogoService
+        .paisesCatalogo(String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          if (response && Array.isArray(response.datos)) {
+            this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
+          }
+        })
+    );
+
+    // Uso específico
+    this.subscription.add(
+      this.catalogoService
+        .usosEspecificoMercanciaCatalogo(String(this.idProcedimiento), String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          if (response && Array.isArray(response.datos)) {
+            this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
+          }
+        })
+    );
+  }
+
+  /**
+   * Maneja el cambio de clasificación de producto.
+   * Actualiza el valor en el formulario y carga el catálogo de especificar clasificación de producto.
+   *
+   * @param event - Objeto con el valor seleccionado de clasificación de producto.
+   */
+  onCambioClasificacionProducto(event: any): void {
+    const CLASIFICACION_SELECCIONADA = event.clave;
+    this.mercanciaForm
+      .get('clasificacionProducto')
+      ?.setValue(CLASIFICACION_SELECCIONADA);
+    this.subscription.add(
+      this.catalogoService
+        .especificarClasificacionProductoCatalogo(
+          String(this.idProcedimiento),
+          String(CLASIFICACION_SELECCIONADA)
+        )
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.especificarClasificacionProductoDatos = DATOS;
+          }
+        })
+    );
+  }
+
+  /**
+   * Inicializa los catálogos requeridos para el formulario de mercancía.
+   * Carga los catálogos de clasificación de producto, tipo de producto, forma farmacéutica,
+   * estado físico y unidades de medida comercial.
+   *
+   * @param tramite - Identificador del trámite para cargar los catálogos correspondientes.
+   */
+  inicializarCatalogo(tramite: string): void {
+    this.subscription.add(
+      this.catalogoService
+        .clasificacionProductoCatalogo(tramite, String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.clasificacionProductoDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .tiposProductoCatalogo(tramite, String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.tipoProductoDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .formaFarmaceuticaCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.formaFarmaceuticaDatos = DATOS;
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.catalogoService
+        .estadoFisicoMercanciaCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.estadoFisicoDatos = DATOS;
+          }
+        })
+    );
+   
+    this.subscription.add(
+      this.catalogoService
+        .unidadesMedidaComercialCatalogo(tramite)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.cantidadUmcDatos = DATOS;
+          }
+        })
+    );
   }
 
   /**
@@ -685,6 +818,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           'fechaDeFabricacio',
           'fechaDeCaducidad',
         ];
+        break;
+      case 260202:
+        this.elementosAnadidos = ['especifique','especifiqueForma'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260208:
       case 260209:
@@ -953,7 +1090,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
         DatosMercanciaComponent.numeroConDecimalesValidator()
-        
       ],
     ],
     cantidadUmt: [
@@ -990,6 +1126,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       this.seleccionadasUsoEspesificoDatos,
       [Validators.required, matrizRequerida]
     ],
+    especifique: [
+      this.obtenerValor('especifique')
+    ],
+    especifiqueForma: [
+      this.obtenerValor('especifiqueForma')
+    ],
+    especifiqueEstado:[this.obtenerValor('especifiqueEstado')]
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1034,6 +1177,19 @@ this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
     }
   }
 }
+updateValidation(): void {
+  const TIPO_PRODUCTO = this.mercanciaForm.get('tipoProducto')?.value;
+  if (this.elementosAnadidos.includes('especifique') && TIPO_PRODUCTO === this.tipoProductoEspecial) {
+    this.mercanciaForm.get('especifique')?.setValidators([Validators.required]);
+  }
+  const FORMA_FARMACEUTICA = this.mercanciaForm.get('formaFarmaceutica')?.value;
+  if (this.elementosAnadidos.includes('especifiqueForma') && FORMA_FARMACEUTICA === this.tipoProductoEspecial) {
+    this.mercanciaForm.get('especifiqueForma')?.setValidators([Validators.required]);
+  }
+  this.mercanciaForm.get('especifique')?.updateValueAndValidity();
+  this.mercanciaForm.get('especifiqueForma')?.updateValueAndValidity();
+}
+
 
   static numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -1095,7 +1251,7 @@ public getIdFromDescripcion(
  */
 public obtenerValor(
   field: keyof TablaMercanciasDatos | keyof MercanciaForm
-): string | number | undefined | string[] {
+): string | number | undefined | string[] | Catalogo | undefined {
   return (
     (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
     (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
@@ -1234,31 +1390,31 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
-
     const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
-    const CLASIFICACIONOBJ = this.clasificacionProductoDatos?.find(item => item.id === Number(CLASIFICACIONID));
-    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.descripcion ?? '';
+    const CLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.clasificacionProductoDatos, CLASIFICACIONID);
+    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.claveClasificacionProductoObj = CLASIFICACIONOBJ?.[0] ?? undefined;
 
     const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
-    const ESPECIFICARCLASIFICACIONOBJ = this.especificarClasificacionProductoDatos?.find(item => item.id === Number(ESPECIFICARCLASIFICACIONID));
-    VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.descripcion ?? '';
+    const ESPECIFICARCLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.especificarClasificacionProductoDatos, ESPECIFICARCLASIFICACIONID);
+    VALORTABLAMERCANCIA.especificarClasificacionObj = ESPECIFICARCLASIFICACIONOBJ?.[0] ?? undefined;
 
     const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
-    const TIPOPRODUCTOOBJ = this.tipoProductoDatos?.find(item => item.id === Number(TIPOPRODUCTOID));
-    VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.descripcion ?? '';
+    const TIPOPRODUCTOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.tipoProductoDatos, TIPOPRODUCTOID);
+    VALORTABLAMERCANCIA.tipoProductoObj = TIPOPRODUCTOOBJ?.[0] ?? undefined;
 
     const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
-    const FORMAFARMACEUTICAOBJ = this.formaFarmaceuticaDatos?.find(item => item.id === Number(FORMAFARMACEUTICAID));
-    VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.descripcion ?? '';
+    const FORMAFARMACEUTICAOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.formaFarmaceuticaDatos, FORMAFARMACEUTICAID);
+    VALORTABLAMERCANCIA.formaFarmaceuticaObj = FORMAFARMACEUTICAOBJ?.[0] ?? undefined;
 
     const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
-    const ESTADOFISICOOBJ = this.estadoFisicoDatos?.find(item => item.id === Number(ESTADOFISICOID));
-    VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.descripcion ?? '';
+    const ESTADOFISICOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.estadoFisicoDatos, ESTADOFISICOID);
+    VALORTABLAMERCANCIA.estadoFisicoObj = ESTADOFISICOOBJ?.[0] ?? undefined;
 
     const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
-    const UMCOBJ = this.cantidadUmcDatos?.find(item => item.id === Number(UMCID));
-    VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.descripcion ?? '';
-    
+    const UMCOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.cantidadUmcDatos, UMCID);
+    VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
+
     // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     
@@ -1270,18 +1426,25 @@ public convertToStringArray(value: unknown): string[] {
 }
 
   /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+    return catalogo.filter(item => item.clave === id);
+  }
+
+  /**
    * Restablece el formulario de mercancía a su estado inicial.
    * Este método se utiliza para limpiar todos los campos del formulario,
    * eliminando cualquier dato ingresado previamente.
    */
   limpiarMercancia(): void {
     this.seleccionadasUsoEspesificoDatos = [];
-    this.usoEspesificoDatos = [...CROSLISTA_DE_PAISES];
     this.seleccionadasPaisDeOriginDatos = [];
-    this.paisDeProcedenciaDatos = [...CROSLISTA_DE_PAISES];
     this.seleccionadasPaisDeProcedenciaDatos = [];
-    this.seleccionarOrigenDelPais = [...CROSLISTA_DE_PAISES];
-
     this.mercanciaForm.reset();
   }
 
@@ -1347,6 +1510,8 @@ public convertToStringArray(value: unknown): string[] {
       }
     }
   }
+
+ 
   /**
    * Valida la longitud de la fracción arancelaria ingresada en el formulario.
    * Si la longitud es menor a 8 caracteres, establece `showLimitError` en true,
@@ -1356,7 +1521,7 @@ public convertToStringArray(value: unknown): string[] {
     const FRACCION_ARANCELARIA = this.mercanciaForm.get(
       'fraccionArancelaria'
     )?.value;
-    if (FRACCION_ARANCELARIA.length < 8) {
+    if (FRACCION_ARANCELARIA?.length < 8) {
       this.showLimitError = true;
     } else {
       this.showLimitError = false;

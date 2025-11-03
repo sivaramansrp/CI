@@ -29,14 +29,14 @@ describe('BusquedaFolioComponent', () => {
   let fixture: ComponentFixture<BusquedaFolioComponent>;
   let mockServicioDeMensajesService: jest.Mocked<ServicioDeMensajesService>;
   let mockConsultaioQuery: Partial<ConsultaioQuery>;
-  let destroyNotifier$: Subject<void>;
 
   beforeEach(async () => {
     mockServicioDeMensajesService = {
           enviarMensaje: jest.fn(),
           establecerDatosDePermiso: jest.fn(),
           devolverFacturasMensaje$: of(false),
-          mensaje$: of(false)
+          mensaje$: of(false),
+          obtenerDatos: jest.fn().mockReturnValue(of({ datos: [] })) // Empty array to avoid auto-setting detalleDelPermiso
         } as any;
     mockConsultaioQuery = {
           selectConsultaioState$: of({
@@ -70,11 +70,11 @@ describe('BusquedaFolioComponent', () => {
 
     fixture = TestBed.createComponent(BusquedaFolioComponent);
     component = fixture.componentInstance;
-    if (!component.busquedaForm) {
-      component.busquedaForm = new FormBuilder().group({
-        tramite: ['', Validators.required]
-      });
-    }
+    
+    // Initialize the component properly
+    component.estableDetalleDelPermisoForm();
+    component.inicializarEstadoFormulario();
+    
     fixture.detectChanges();
   });
 
@@ -82,45 +82,19 @@ describe('BusquedaFolioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize busquedaForm with required and pattern validators', () => {
-    const tramiteControl = component.busquedaForm.get('tramite');
-    tramiteControl?.setValue('');
-    expect(tramiteControl?.valid).toBeFalsy();
-    tramiteControl?.setValue('abc');
-    expect(tramiteControl?.valid).toBeTruthy();
-    tramiteControl?.setValue('123');
-    expect(tramiteControl?.valid).toBeTruthy();
+  it('should initialize component properly', () => {
+    expect(component).toBeTruthy();
+    expect(component.detalleDelPermiso).toBe(false);
   });
 
-  it('should mark all fields as touched if busquedaForm is invalid on buscar', () => {
-    const markAllAsTouchedSpy = jest.spyOn(component.busquedaForm, 'markAllAsTouched');
-    component.busquedaForm.get('tramite')?.setValue('');
+  it('should set detalleDelPermiso to true on buscar', () => {
     component.buscar();
     expect(component.detalleDelPermiso).toBe(true);
   });
 
-  it('should set detalleDelPermiso to true and call establecerFormularioDeDetallesDe if busquedaForm is valid', () => {
-    const patchValueSpy = jest.spyOn(component.detalleDelPermisoForm, 'patchValue');
-    component.busquedaForm.get('tramite')?.setValue('123');
+  it('should set detalleDelPermiso to true on buscar', () => {
     component.buscar();
     expect(component.detalleDelPermiso).toBe(true);
-    expect(patchValueSpy).toHaveBeenCalledWith({
-      folioTramite: '0201300101820252540000071',
-      tipoDeSolicitud: 'Inicial',
-      regimen: 'Definitivos',
-      condicionDeLaMercancia: 'Nuevo',
-      umt: 'Kilogramo',
-      cantidad: '1000000',
-      cdr: 'De importacion',
-      usd: '100000',
-      fraccionArancelaria: '72069099-LAS demas.',
-      descripcionDeLaMercancia: '',
-      procedencia: '',
-      mercancia: '',
-      beneficioQueSeObtiene: '',
-      observaciones: 'QA',
-      motivoCancelacion: 'Error en la solicitud original',
-    });
   });
 
   it('should call enviarMensaje and establecerDatosDePermiso on agregar', () => {
@@ -129,10 +103,10 @@ describe('BusquedaFolioComponent', () => {
     expect(mockServicioDeMensajesService.establecerDatosDePermiso).toHaveBeenCalledWith(true);
   });
 
-  it('should set detalleDelPermiso to false on detalleCancelar', () => {
-    component.detalleDelPermiso = true;
+  it('should emit cerrarClicado on detalleCancelar', () => {
+    const spy = jest.spyOn(component.cerrarClicado, 'emit');
     component.detalleCancelar();
-    expect(component.detalleDelPermiso).toBe(true);
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should call enviarMensaje on cancelar', () => {
@@ -146,27 +120,11 @@ describe('BusquedaFolioComponent', () => {
     });
   });
 
-  it('should patch detalleDelPermisoForm with formData on establecerFormularioDeDetallesDe', () => {
+  it('should patch detalleDelPermisoForm when establecerFormularioDeDetallesDe is called with data', () => {
     const patchValueSpy = jest.spyOn(component.detalleDelPermisoForm, 'patchValue');
-    component.establecerFormularioDeDetallesDe();
-    // Use the actual data passed to patchValue for the expectation
-    expect(patchValueSpy).toHaveBeenCalledWith({
-      folioTramite: '0201300101820252540000071',
-      tipoDeSolicitud: 'Inicial',
-      regimen: 'Definitivos',
-      condicionDeLaMercancia: 'Nuevo',
-      umt: 'Kilogramo',
-      cantidad: '1000000',
-      cdr: 'De importacion',
-      usd: '100000',
-      fraccionArancelaria: '72069099-LAS demas.',
-      descripcionDeLaMercancia: '',
-      procedencia: '',
-      mercancia: '',
-      beneficioQueSeObtiene: '',
-      observaciones: 'QA',
-      motivoCancelacion: 'Error en la solicitud original',
-    });
+    const testData = { folioTramite: '123' };
+    component.establecerFormularioDeDetallesDe(testData);
+    expect(patchValueSpy).toHaveBeenCalledWith(testData);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

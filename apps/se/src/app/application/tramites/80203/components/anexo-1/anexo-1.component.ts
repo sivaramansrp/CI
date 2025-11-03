@@ -8,6 +8,7 @@ import {
   NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
+  SoloNumerosDirective,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -21,6 +22,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  forwardRef
 } from '@angular/core';
 import {
   FRACCION_EXPORTACION,
@@ -114,6 +116,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    forwardRef(() => SoloNumerosDirective),
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
@@ -371,6 +374,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Se utiliza para mantener el estado de la selección actual en los selects de NICO.
    */
   NICO_SELECCIONADO: Catalogo[] = [];
+  /**
+   * @property {boolean} eliminarNICOAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ningún elemento NICO para eliminar.
+   * Se establece a `true` cuando el usuario intenta eliminar códigos NICO sin haber seleccionado ninguno,
+   * mostrando un mensaje de error que solicita elegir al menos un NICO para eliminar.
+   */
+  eliminarNICOAlerta: boolean = false
 
   /**
    * @constructor
@@ -661,6 +672,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
   
   this.showTableExport = true;
   this.showTableFractionExp = true;
+  this.immexRegistroform.get('permisoImmexDatos')?.setValue('');
 }
 
 
@@ -1012,7 +1024,8 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
 
   eliminarNico(params:string): void {
     if (this.listSelectedView.length === 0) {
-      return;
+      this.eliminarNICOAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe elegir al menos un nico para eliminar.');
     }
     const SELECTED_IDS = new Set(
       this.listSelectedView.map((item) => item.claveNico)
@@ -1064,12 +1077,13 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Actualiza el estado en el store tras la eliminación.
    */
   eliminarPermisoImmex(): void {
-    this.espectaculoAlerta = true;
+    
     if (!this.listaFilaSeleccionada) {
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
+      this.eliminarPlantasAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
     } else if (this.listaFilaSeleccionada) {
-      this.eliminarPermisoImmexConfirmacion = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
+      this.eliminarPlantasConfirmacion = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Al eliminar el permiso también se eliminaran las fracciones relacionadas. ¿Desea eliminar el registro?', '', 'danger', 'Cancelar');
     }
   }
 
@@ -1104,8 +1118,7 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
     } else if (this.listaFilaSeleccionadaFraccion) {
       this.eliminarPlantasConfirmacion = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
-    }
-    if (this.listaFilaSeleccionadaFraccion) {
+      if (this.listaFilaSeleccionadaFraccion) {
       const SELECTED_IDS = new Set(
         [this.listaFilaSeleccionadaFraccion].map(
           (item) => item.fraccionArancelaria.cveFraccion
@@ -1118,6 +1131,7 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
       this.immexRegistroStore.establecerDatos({
         fraccionTablaDatos: this.fraccionTablaDatos,
       });
+    }
     }
   }
 
@@ -1203,4 +1217,47 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
       this.mercanciaExportacionForm.markAllAsTouched();
     }
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de registro IMMEX verificando múltiples condiciones:
+   * 1. Verifica que existan datos en las tablas de IMMEX y fracciones arancelarias
+   * 2. Si ambas tablas tienen datos, valida el formulario de mercancía de importación
+   * 3. Si las tablas están vacías, marca el formulario principal como tocado y establece errores específicos en el store
+   * 
+   * Establece errores específicos en el store para cada condición no cumplida:
+   * - mercanciaImportacionFormError: cuando el formulario de importación es inválido
+   * - IMMEXTablaError: cuando la tabla de permisos IMMEX está vacía
+   * - fraccionTablaError: cuando la tabla de fracciones arancelarias está vacía
+   * 
+   * @returns {boolean} `true` si todas las validaciones pasan correctamente, `false` en caso contrario
+   */
+  validarFormulario(): boolean {
+      let VALID = true;
+      if (this.immexTableDatos.length > 0 && this.fraccionTablaDatos.length > 0) {
+        if(this.mercanciaImportacionForm.valid){
+          VALID = true;
+        }
+        else{  
+          VALID = false;
+          this.immexRegistroStore.establecerDatos({
+            mercanciaImportacionFormError: true
+          })
+        }
+      } else {
+        this.immexRegistroform.markAllAsTouched();
+        VALID = false;
+        if(this.immexTableDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            IMMEXTablaError: true
+          })
+        }
+        if(this.fraccionTablaDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            fraccionTablaError: true
+          })
+        }
+      }
+      return VALID;
+    }
 }

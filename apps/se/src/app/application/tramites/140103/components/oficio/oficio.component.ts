@@ -1,5 +1,5 @@
-import { BtnContinuarComponent, ConsultaioState, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioState, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
@@ -7,18 +7,15 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConfiguracionItem } from '../../models/detalle';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DetalleComponent } from '../detalle/detalle.component';
 import { DevolverComponent } from '../devolver/devolver.component';
 import { HttpClient } from '@angular/common/http';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
-
 import { ModalComponent } from '../model/modal.component';
 import { NUEVO_DATOS_CUPO } from '../../constants/detalle.enum';
-import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
-import { Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Tramite140103Query } from '../../estados/query/tramite140103.query';
+import { Tramite140103Store } from '../../estados/store/tramite140103.store';
+import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
@@ -42,11 +39,9 @@ import { Tramite140103Store } from '../../../../estados/tramites/tramite140103.s
   standalone: true,
   imports: [
     TablaDinamicaComponent,
-    DetalleComponent,
     FormsModule,
     ReactiveFormsModule,
     TituloComponent,
-    BtnContinuarComponent,
     CommonModule,
     DevolverComponent,
     ModalComponent,
@@ -271,6 +266,11 @@ onClickSeleccionar(): void {
         txtBtnCancelar: '',
       };
     } 
+    else{
+      this.oficio = [...this.oficio, this.selectedCertificados as ConfiguracionItem];
+      this.Certificados = this.Certificados.filter(item => item !== this.selectedCertificados);
+      this.selectedCertificados = null;
+    }
   }
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.
@@ -303,7 +303,7 @@ onClickSeleccionar(): void {
     this.oficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
     this.oficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
     this.oficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
-    this.oficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
+    this.oficioForm.get('oficioData.cancelar')?.setValue(''); // Asigna un valor predeterminado al campo 'cancelar'
   }
 
   /**
@@ -421,7 +421,26 @@ abrirDevolverFacturas() : void {
    * Resetea la variable `selectedCertificado` a null y oculta el modal.
    */
   closeCapturaMontoModal():void {
+    this.oficioForm.reset();
+    this.showCapturaMontoModal = false;
+  this.Certificados = [...this.Certificados];
+  this.selectedCertificado = null;
+  }
+  agregarMonto():void{
+    if(this.oficioForm.invalid){
+      this.oficioForm.markAllAsTouched();
+    }
+    else{
+     if (this.selectedCertificado) {
+       this.Certificados = [...this.Certificados, this.selectedCertificado as ConfiguracionItem];
+       this.oficio= this.oficio.filter(item => item !== this.selectedCertificado);
+       this.selectedCertificado = null;
+     }
+     this.oficioForm.reset();
     this.showCapturaMontoModal = false;
     this.selectedCertificado = null;
+    }
+
+
   }
 }

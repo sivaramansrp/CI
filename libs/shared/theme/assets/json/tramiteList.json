@@ -227,7 +227,7 @@
     "id": 33,
     "tramite": 80308,
     "linkDashboard": "/se/modificacion/solicitud",
-    "linkDepartment": "/se/modificacion/solicitud",
+    "linkDepartment": "/pago/modificacion/solicitud",
     "department": "se"
   },
   {

@@ -183,6 +183,9 @@ export interface ResiduoPeligroso
   capacidad: string;
   /** Lista de materias primas relacionadas con el residuo. */
   materiasPrimasRelacionadas: MateriaResiduo[];
+
+  /** Descripción de la especie (Clave, Nombre, Descripción) */
+  desc_especie?: string;
 }
 
 

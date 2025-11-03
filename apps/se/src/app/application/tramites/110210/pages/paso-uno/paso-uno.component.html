@@ -15,7 +15,7 @@
       <ng-container>
         <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
           @if(esDatosRespuesta){
-        <app-duplicado-de-certificado #Duplicado [hidden]="indice !== 2" (rowClicked)="enableCertificadoTab($event)"></app-duplicado-de-certificado>
+        <app-duplicado-de-certificado #Duplicado [hidden]="indice !== 2" (rowClicked)="enableCertificadoTab($event)" (noDatosError)="noDatosError.emit()" (disableCertificado)="disableCertificado()"></app-duplicado-de-certificado>
         <app-certificado-de-origen #certificado [hidden]="indice !== 3" [certificadoDatos]="certificadoDatos"></app-certificado-de-origen>
         }
       </ng-container>

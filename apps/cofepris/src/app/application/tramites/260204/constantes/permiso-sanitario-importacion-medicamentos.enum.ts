@@ -134,3 +134,40 @@ export const PRIVACY_NOTICE_CONTENT = `
     </div>
   </div>
 `;
+
+export const ID_PROCEDIMIENTO = 260204;
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para completar el formulario o proceso.
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  'correoElectronico',
+  'denominacionRazon',
+  'scian'
+];
+
+/**
+ * Constante que representa el título del mensaje utilizado en el permiso sanitario
+ * de importación de medicamentos y materias primas destinados a investigación en humanos.
+ * 
+ * Esta constante se utiliza para mostrar un mensaje descriptivo en la interfaz de usuario
+ * relacionado con el trámite correspondiente. Proporciona información clara y específica
+ * sobre el propósito del permiso sanitario.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const TITULO_MENSAJE =
+  'Permiso sanitario de importación de medicamentos y materias primas destinados a investigación en humanos';
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_PAGE= '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';

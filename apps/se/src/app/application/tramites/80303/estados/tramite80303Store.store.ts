@@ -1,12 +1,8 @@
 import {
   AnexoExportacion,
   AnexoImportacion,
-  DatosContribuyente,
-  DatosEmpresaSubmanufacturera,
-  DatosPlantaManufacturera,
   Federatario,
   FederatarioRealizaranLasOperaciones,
-  Sensible,
   ServicioImmex,
 } from '../models/complementaria.model';
 import {
@@ -14,6 +10,8 @@ import {
   EmpresaSubmanufacturera,
   ModificacionDatos,
 } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Complimentaria, Empresas, Plantas } from '../../../shared/models/complementaria.model';
+import { Anexo } from '../../../shared/models/anexos.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -50,15 +48,15 @@ export interface Tramite80303State {
 
   /**
    * Datos de la tabla de productos sensibles.
-   * @type {Sensible[]}
+   * @type {Anexo[]}
    */
-  sensiblesTablaDatos: Sensible[];
+  sensiblesTablaDatos: Anexo[];
 
   /**
    * Datos de la tabla de accionistas.
-   * @type {DatosContribuyente[]}
+   * @type {Complimentaria[]}
    */
-  accionistasTablaDatos: DatosContribuyente[];
+  accionistasTablaDatos: Complimentaria[];
 
   /**
    * Datos de la tabla de federatarios.
@@ -74,15 +72,15 @@ export interface Tramite80303State {
 
   /**
    * Datos de la tabla de empresas submanufactureras.
-   * @type {DatosEmpresaSubmanufacturera[]}
+   * @type {Empresas[]}
    */
-  empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[];
+  empresasSubmanufacturerasTablaDatos: Empresas[];
 
   /**
    * Datos de la tabla de plantas manufactureras.
-   * @type {DatosPlantaManufacturera[]}
+   * @type {Plantas[]}
    */
-  plantasManufacturerasTablaDatos: DatosPlantaManufacturera[];
+  plantasManufacturerasTablaDatos: Plantas[];
 
   /**
    * Datos de la tabla de servicios IMMEX.
@@ -216,10 +214,10 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos sensibles.
    *
    * @method updateSensiblesTablaDatos
-   * @param {Sensible[]} sensiblesTablaDatos - Nueva lista de datos sensibles.
+   * @param {Anexo[]} sensiblesTablaDatos - Nueva lista de datos sensibles.
    * @returns {void}
    */
-  public updateSensiblesTablaDatos(sensiblesTablaDatos: Sensible[]): void {
+  public updateSensiblesTablaDatos(sensiblesTablaDatos: Anexo[]): void {
     this.update((state) => ({
       ...state,
       sensiblesTablaDatos,
@@ -230,11 +228,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de accionistas.
    *
    * @method updateAccionistasTablaDatos
-   * @param {DatosContribuyente[]} accionistasTablaDatos - Nueva lista de datos de accionistas.
+   * @param {Complimentaria[]} accionistasTablaDatos - Nueva lista de datos de accionistas.
    * @returns {void}
    */
   public updateAccionistasTablaDatos(
-    accionistasTablaDatos: DatosContribuyente[]
+    accionistasTablaDatos: Complimentaria[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -278,11 +276,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de empresas submanufactureras.
    *
    * @method updateEmpresasSubmanufacturerasTablaDatos
-   * @param {DatosEmpresaSubmanufacturera[]} empresasSubmanufacturerasTablaDatos - Nueva lista de datos de empresas submanufactureras.
+   * @param {Empresas[]} empresasSubmanufacturerasTablaDatos - Nueva lista de datos de empresas submanufactureras.
    * @returns {void}
    */
   public updateEmpresasSubmanufacturerasTablaDatos(
-    empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[]
+    empresasSubmanufacturerasTablaDatos: Empresas[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -294,11 +292,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de plantas manufactureras.
    *
    * @method updatePlantasManufacturerasTablaDatos
-   * @param {DatosPlantaManufacturera[]} plantasManufacturerasTablaDatos - Nueva lista de datos de plantas manufactureras.
+   * @param {Plantas[]} plantasManufacturerasTablaDatos - Nueva lista de datos de plantas manufactureras.
    * @returns {void}
    */
   public updatePlantasManufacturerasTablaDatos(
-    plantasManufacturerasTablaDatos: DatosPlantaManufacturera[]
+    plantasManufacturerasTablaDatos: Plantas[]
   ): void {
     this.update((state) => ({
       ...state,

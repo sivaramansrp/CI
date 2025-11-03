@@ -156,7 +156,7 @@ export const CONFIGURACION_SERVICIO = [
      */
     {
         encabezado: 'Tipo de servicio',
-        clave: (ele: ServicioInfo): string | undefined => ele.tipoServicio,
+        clave: (ele: ServicioInfo): string | undefined => ele.descripcionTipo,
         orden: 2
     },
 ]

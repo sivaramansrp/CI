@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
+
+import { ExpedicionAsignacionComponent } from '../../components/expedicion-asignacion/expedicion-asignacion.component';
 /**
  * # Documentación - PasoUnoComponent
  *
@@ -18,6 +20,11 @@ import { ExpedicionCertificadosFronteraService } from '../../services/expedicion
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy{
+
+   /**
+     * Referencia ViewChild al componente de asignación de datos de empresa.
+     */
+    @ViewChild('asignacionRef') asignacion!: ExpedicionAsignacionComponent;
 
  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
@@ -51,6 +58,61 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Valida el formulario del tab actualmente seleccionado.
+   * @returns true si el formulario es válido, false en caso contrario.
+   */
+  public validarTabActual(): boolean {
+    // Si estamos en el tab 2 (Expedición certificados), validar el formulario
+    if (this.indice === 2 && this.asignacion && this.asignacion.asignacionForm) {
+      // Marcar todos los campos como touched para mostrar errores
+      this.asignacion.asignacionForm.markAllAsTouched();
+      
+      // Validar campos específicos requeridos
+      const ANODELOFICIO = this.asignacion.asignacionForm.get('anoDelOficio');
+      const NUMEROOFICIO = this.asignacion.asignacionForm.get('numeroOficio');
+      const MONTOAEXPEDIR = this.asignacion.asignacionForm.get('montoAExpedir');
+
+      return (ANODELOFICIO?.valid || false) &&
+             (NUMEROOFICIO?.valid || false) &&
+             (MONTOAEXPEDIR?.valid || false);
+    }
+    
+    // Para otros tabs, retornar true (no hay validación específica)
+    return true;
+  }
+
+  /**
+   * Método público para validar el formulario independientemente del tab actual.
+   * Utilizado por el componente padre para validar antes de continuar al siguiente paso.
+   */
+  public validarFormularioCompleto(): boolean {
+    // Only validate if we're on tab 2 (where the form is visible)
+    if (this.indice === 2) {
+      if (this.asignacion && this.asignacion.asignacionForm) {
+        // Forzar validación usando el método del componente hijo
+        if (this.asignacion.forzarValidacion) {
+          this.asignacion.forzarValidacion();
+        }
+        
+        // Marcar todos los campos como touched
+        this.asignacion.asignacionForm.markAllAsTouched();
+        
+        // Validar solo los campos requeridos específicos
+        const ANODELOFICIO = this.asignacion.asignacionForm.get('anoDelOficio');
+        const NUMEROOFICIO = this.asignacion.asignacionForm.get('numeroOficio');
+        const MONTOAEXPEDIR = this.asignacion.asignacionForm.get('montoAExpedir');
+
+        const ISVALID = (ANODELOFICIO?.valid || false) &&
+                       (NUMEROOFICIO?.valid || false) &&
+                       (MONTOAEXPEDIR?.valid || false);
+              return ISVALID;
+      }
+      return false;
+    }
+    return true;
   }
 
   /**
