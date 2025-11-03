@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
@@ -19,6 +19,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  
+    @Input() public idProcedimiento!: number;
   /**
    * Estado de la solicitud.
    */

@@ -613,9 +613,9 @@ export function decimalValidator(maxDecimals: number = 2) {
       return { invalidNumber: true };
     }
     
-    const decimalParts = VALOR.split('.');
-    if (decimalParts.length > 1 && decimalParts[1].length > maxDecimals) {
-      return { tooManyDecimals: { max: maxDecimals, actual: decimalParts[1].length } };
+    const DECIMALPARTS = VALOR.split('.');
+    if (DECIMALPARTS.length > 1 && DECIMALPARTS[1].length > maxDecimals) {
+      return { tooManyDecimals: { max: maxDecimals, actual: DECIMALPARTS[1].length } };
     }
     
     return null;

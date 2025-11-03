@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
+import { CROSLISTA_DE_PAISES, FUNCIONAMIENTO_LIST, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
@@ -81,6 +81,10 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
 })
 export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy, AfterViewInit {
+  funcionamientoList:number[] = [];
+
+  @Input() public idProcedimiento!: number;
+
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -315,6 +319,13 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   * Inicializa la instancia del modal de Bootstrap.
   */
   ngAfterViewInit(): void {
+    this.funcionamientoList = FUNCIONAMIENTO_LIST;
+    if(this.funcionamientoList.includes(this.idProcedimiento)){
+      this.domicilio.get('avisoCheckbox')?.setValidators([]);
+      this.domicilio.get('avisoCheckbox')?.updateValueAndValidity();
+      this.domicilio.get('licenciaSanitaria')?.setValidators([]);
+      this.domicilio.get('licenciaSanitaria')?.updateValueAndValidity();
+    }
     if (this.modalAddAgentMercancias) {
       this.modalInstance = new Modal(this.modalAddAgentMercancias.nativeElement);
     }
@@ -395,14 +406,14 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     * Inicializa el grupo de formularios con los valores del estado de la solicitud.
     */
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]{5}$')]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
+      muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120),Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
       localidad: [this.solicitudState?.localidad,[Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
       colonia: [this.solicitudState?.colonia,[Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
-      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100),Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(50)]],
     });
