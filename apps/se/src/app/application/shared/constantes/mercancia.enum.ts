@@ -261,4 +261,4 @@ export const FECHA_DE_PAGO: number[] = [110211];
 /**
  * IDs de procedimientos en los que el campo “Mercancías seleccionadas” es obligatorio.
  */
-export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207];
+export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207, 110211];
