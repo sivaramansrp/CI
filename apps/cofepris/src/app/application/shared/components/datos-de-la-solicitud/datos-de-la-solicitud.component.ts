@@ -2015,7 +2015,8 @@ verificarCamposValidosODeshabilitados(): boolean {
     'regimenLaMercancia',
     'aviso',
     'licenciaSanitaria',
-    'rfcSanitario'
+    'rfcSanitario',
+    'publico',
   ];
 
   const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
