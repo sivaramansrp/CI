@@ -686,10 +686,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
     this.formMercancias = this.fb.group({
       nombreComercial: [
         '',
-        [Validators.required, Validators.maxLength(1000)],
+      
       ],
-      nombreComun: ['', [Validators.required, Validators.maxLength(250)]],
-      nombreCientifico: ['', [Validators.maxLength(250)]],
+      nombreComun: ['',],
+      nombreCientifico: [''],
       usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         '',
@@ -1222,6 +1222,14 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.mercanciasTabla = this.idProcedimiento === 260512 || this.idProcedimiento === 260513 ? DATOS_MERCANCIAS : MERCANCIAS_DATA;
+   if(this.identificacion){
+    this.formMercancias.get('nombreComercial')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComun')?.setValidators([Validators.required, Validators.maxLength(250)]);
+    this.formMercancias.get('nombreCientifico')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComercial')?.updateValueAndValidity();
+    this.formMercancias.get('nombreComun')?.updateValueAndValidity();
+    this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
+   }
   }
 
   /**

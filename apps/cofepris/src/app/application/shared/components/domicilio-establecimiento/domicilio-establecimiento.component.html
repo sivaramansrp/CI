@@ -299,16 +299,10 @@
           <ng-titulo titulo="Datos mercancía"></ng-titulo>
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
-             <label *ngIf="idProcedimiento !== 260512; else nombreCientificoAlt" for="nombreCientifico">
+             <label for="nombreCientifico">
               Nombre científico
               <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
              </label>
-            <ng-template #nombreCientificoAlt>
-              <label for="nombreCientifico">
-                Nombre químico o científico
-                <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
-              </label>
-            </ng-template>
             <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
               setValoresStore(
               formMercancias,
@@ -332,7 +326,7 @@
           <div class="form-group">
             <label for="nombreComun">
               Nombre común
-              <span *ngIf="identificacion">*</span>
+              <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreComun')?.invalid && formMercancias.get('nombreComun')?.touched}">*</span>
             </label>
             <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
               setValoresStore(
@@ -357,7 +351,7 @@
           <div class="form-group">
             <label for="nombreCientifico">
               Nombre químico o científico
-              <span *ngIf="identificacion">*</span>
+              <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>
             </label>
             <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" (change)="
               setValoresStore(
@@ -380,7 +374,7 @@
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">
               Uso específico
-              <span *ngIf="true" [ngClass]="{'tiene-error':formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:
+              <span  [ngClass]="{'tiene-error':formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:
             </label>
             <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
               setValoresStore(
@@ -690,7 +684,8 @@
                 <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
                 [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
-                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                [isDisabled]="esFormularioSoloLectura"
+                    [markTouched]="!!(formMercancias.get('clasificacionToxicologica')?.invalid && formMercancias.get('clasificacionToxicologica')?.touched)"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -700,7 +695,9 @@
                 <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
                 [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('objetoImportacion')?.markAsTouched();"
-                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                [isDisabled]="esFormularioSoloLectura"
+                [markTouched]="!!(formMercancias.get('objetoImportacion')?.invalid && formMercancias.get('objetoImportacion')?.touched)"
+                ></app-catalogo-select>
               </div>
             </div>
           </div>
