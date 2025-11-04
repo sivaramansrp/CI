@@ -11,7 +11,7 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
   providedIn: 'root',
 })
 export class DatosTramiteService {
-  private readonly url = ENVIRONMENT.API_HOST_TEST;
+  private readonly url = ENVIRONMENT.API_HOST;
   public uploadArchivo = DatosTramiteService.uploadArchivo;
   public submitSolicitud = DatosTramiteService.submitSolicitud;
 
