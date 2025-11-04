@@ -160,7 +160,7 @@
                setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
                " />
             <label class="form-check-label" for="avisoCheckbox">
-            <span>Aviso de funcionamiento*</span>
+            <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched}">*</span></span>
             </label>
          </div>
          @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required']) {

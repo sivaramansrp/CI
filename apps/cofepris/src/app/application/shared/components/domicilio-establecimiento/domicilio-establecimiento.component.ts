@@ -1234,10 +1234,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
    }
    if(!this.rfcValido){
-this.formMercancias.disable();
+this.domicilio.disable();
    }
    else{
-    this.formMercancias.enable();
+    this.domicilio.enable();
    }
   }
   ngOnChanges(changes: SimpleChanges): void {
