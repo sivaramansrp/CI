@@ -481,4 +481,10 @@ export const EXPRESAS_EXTRANJERAS= [
  * Si no se encuentran plantas, se tomará el domicilio fiscal como referencia,
  * sujeto a aprobación durante la visita domiciliaria.
  */
-export const TEXTO_DE_ALERTA = `Si no se encuentran plantas con los criterios de búsqueda, el domicilio marcado como fiscal, será tomado para tal efecto, lo cual<br><div class="text-center">estará sujeto a aprobación al momento de la visita domiciliaria</div>`;
+export const TEXTO_DE_ALERTA = `Si no se encuentran plantas con los criterios de búsqueda, el domicilio marcado como fiscal, será tomado para tal efecto, lo cual estará sujeto a aprobación al momento de la visita domiciliaria`;
+
+/**
+ * Texto de alerta utilizado para informar al usuario sobre el procedimiento
+ * en caso de no encontrar plantas que cumplan con los criterios de búsqueda.
+ */
+export const TEXTO_ALERTA = `Si no se encuentran plantas con los criterios de búsqueda, el domicilio marcado como fiscal, será tomado para tal efecto, lo cual<br><div class="text-center">estará sujeto a aprobación al momento de la visita domiciliaria</div>`;
