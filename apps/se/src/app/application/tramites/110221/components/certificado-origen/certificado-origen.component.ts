@@ -170,6 +170,11 @@ export class CertificadoOrigenComponent
    */
   datos1: Observable<Mercancia[]>;
 
+/**
+ * Indica si el domicilio del tercer operador está presente.
+ * @type {boolean}
+ */
+  domicilio: boolean = false;
   /**
    * Estado de la selección de la tabla.
    * @type {TablaSeleccion}
@@ -279,8 +284,16 @@ export class CertificadoOrigenComponent
    * Observable que emite los datos de la mercancia en formato tabla.
    * @type {Observable<Mercancia[]>}
    */
-  datosTabla$: Observable<Mercancia[]> = of([]);
-
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTabla$: Mercancia[] = [];
+/**
+   * @descripcion
+   * Estado actual de la sección.
+   */
+  private seccionState!: SeccionLibState;
   /**
    * @property {number} idProcedimiento
    * @description
@@ -288,7 +301,11 @@ export class CertificadoOrigenComponent
    * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
    */
   idProcedimiento: number = IDPROCEDIMIENTO;
-
+/**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTablaUno$: Observable<Mercancia[]> = of([]);
   /**
    * @property {Tramite110221State} certificadoState
    * @description
@@ -314,6 +331,8 @@ export class CertificadoOrigenComponent
     public tramiteQuery: Tramite110221Query,
     public certificadoService: ValidarInicialmenteCertificadoService,
     private toastr: ToastrService,
+        private query: Tramite110221Query,
+    
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
   ) {
@@ -359,8 +378,15 @@ export class CertificadoOrigenComponent
    * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
    * y suscribirse a los cambios en el formulario.
    */
-  ngOnInit(): void {
-    
+ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -371,26 +397,17 @@ export class CertificadoOrigenComponent
       )
       .subscribe();
 
-    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
+    this.query.selectPeru$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state: Tramite110221State) => {
+          this.certificadoState = state;
+          this.datosTabla$ = state.mercanciaTabla;
+        })
+      )
+      .subscribe();
+    this.datosTablaUno$ = this.query.selectmercanciaTablaUno$;
   }
-
-  /**
-   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
-   */
-  cargarEstados(): void {
-    this.certificadoService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
-        }
-      );
-  }
-
 
 
   /**
@@ -424,7 +441,6 @@ export class CertificadoOrigenComponent
     // Obtener los valores del catálogo seleccionados del estado de la tienda
     const SELECTED_ESTADO = this.certificadoState?.estado;
     const SELECTED_BLOQUE = this.certificadoState?.paisBloques;
-
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: {
@@ -476,11 +492,8 @@ export class CertificadoOrigenComponent
               numeroDeSerie: '',
             })
           );
-          this.datosTabla$ = of(MAPPED_DATA || []);
-
-          this.store.setbuscarMercancia(
-            MAPPED_DATA
-          );
+          this.datosTablaUno$ = of(MAPPED_DATA || []);
+          this.store.setbuscarMercancia(MAPPED_DATA);
         },
        
       });
@@ -515,18 +528,15 @@ export class CertificadoOrigenComponent
       this.modalInstance.show();
     }
   }
-
   /**
-   * @method guardarClicado
-   * @description
-   * Actualiza el observable `datosTabla$` con el arreglo de mercancías recibido como parámetro.
-   * Se utiliza para reflejar los datos seleccionados o modificados en la tabla de mercancías del componente.
-   *
-   * @param {Mercancia[]} event - Arreglo de mercancías que se asigna al observable de la tabla.
-   * @returns {void}
+   * @descripcion
+   * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
+   * También actualiza el store para mantener la sincronización de datos entre componentes.
+   * @param {Mercancia[]} evento - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
    */
-  guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
+  guardarClicado(evento: Mercancia[]): void {
+    this.datosTabla$ = evento;
+    this.store.setmercanciaTabla(evento);
   }
 
   /**
