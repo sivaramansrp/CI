@@ -53,7 +53,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { Modal } from 'bootstrap';
+import Modal from 'bootstrap/js/dist/modal';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -90,6 +90,7 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
+  @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -1082,7 +1083,15 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
       this.listaMercancias.push(NUEVA_MERCANCIA);
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+       const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+      MODAL_INSTANCE?.hide();
+    }
       this.tieneFormularioMercanciasEnviado = false;
+    }
+    else{
+      this.formMercancias.markAllAsTouched();
     }
   }
 

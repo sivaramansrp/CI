@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionVisibilidad } from '../../../260513/components/datos-solicitud/datos-solicitud.component';
-import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../../../shared/constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
+import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/constante260512.enum';
 
 
 /**
