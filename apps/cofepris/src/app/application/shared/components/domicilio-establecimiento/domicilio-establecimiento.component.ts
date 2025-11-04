@@ -9,7 +9,6 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
   REGEX_TEXTO_ALFANUMERICO_EXTENDIDO,
@@ -18,7 +17,9 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+
 import {
+  AfterViewInit,
   Component,
   Input,
   OnDestroy,
@@ -26,8 +27,10 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+
 import {
   ConfiguracionVisibilidad,
+  DATOS_MERCANCIAS,
   MERCANCIAS_DATA,
   MercanciasInfo,
   NICO_TABLA,
@@ -86,7 +89,7 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
-export class DomicilioComponent implements OnInit, OnDestroy {
+export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
   @Input() idProcedimiento!: number;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -1207,6 +1210,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
       this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
     }
+  }
+  ngAfterViewInit(): void {
+    this.mercanciasTabla = this.idProcedimiento === 260512 || this.idProcedimiento === 260513 ? DATOS_MERCANCIAS : MERCANCIAS_DATA;
   }
 
   /**
