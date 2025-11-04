@@ -4,7 +4,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { map, Observable } from 'rxjs';
-import { API_GET_CATALOGO_CONSULTA_PAISES, API_GET_CATALOGO_FRACCION_ARANCELARIA, API_GET_CATALOGO_FRACCIONES_ARANCELARIAS, API_GET_CATALOGO_RESTRICCIONES, API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES, API_GET_CATALOGO_USOS_MERCANCIA,API_GET_CATALOGO_ADUANAS,API_GET_CATALOGO_REGIMENES_VIGENTES } from 'apps/agricultura/src/app/application/core/server/api-router';
+import { API_GET_CATALOGO_CONSULTA_PAISES, API_GET_CATALOGO_FRACCION_ARANCELARIA, API_GET_CATALOGO_FRACCIONES_ARANCELARIAS, API_GET_CATALOGO_RESTRICCIONES, API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES, API_GET_CATALOGO_USOS_MERCANCIA,API_GET_CATALOGO_ADUANAS,API_GET_CATALOGO_REGIMENES_VIGENTES,API_GET_CATALOGO_PUNTO_INSPECCION,API_GET_CATALOGO_OFICINAS_INSPECCION } from 'apps/agricultura/src/app/application/core/server/api-router';
 
 @Injectable({
   providedIn: 'root'
@@ -132,6 +132,30 @@ export class CatalogosService {
       const ENDPOINT = `${this.host}${API_GET_CATALOGO_REGIMENES_VIGENTES(tramite.toString())}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
+
+      /**
+   * Obtiene el catálogo de oficinas de inspección para un trámite y aduana específicos.
+   *
+   * @param tramite - El identificador numérico del trámite para el cual se requiere el catálogo.
+   * @param cveAduana - La clave de la aduana asociada al trámite.
+   * @returns Un observable que emite la respuesta base con el arreglo de objetos de catálogo de oficinas de inspección.
+   */
+  obtieneCatalogoOficinasInspeccion(tramite: number, cveAduana: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_OFICINAS_INSPECCION(tramite.toString(), cveAduana)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de puntos de inspección para un trámite y OISA específicos.
+   *
+   * @param tramite - El identificador numérico del trámite.
+   * @param oisa - El identificador de la OISA (Oficina de Inspección de Sanidad Agropecuaria).
+   * @returns Un observable que emite la respuesta base con el arreglo de catálogos de puntos de inspección.
+   */
+  obtieneCatalogoPuntoInspeccion(tramite: number, oisa: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_PUNTO_INSPECCION(tramite.toString(), oisa)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
 
 }

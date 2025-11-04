@@ -328,12 +328,24 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   myScrollbarValue: boolean = true;
 
   /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
+  public destroyNotifier$ = new Subject<void>();
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Controla la habilitación/deshabilitación de todos los campos del formulario.
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @description Formulario principal.
+   * Este `FormGroup` contiene todos los controles del formulario.
+   */
+  forma!: FormGroup;
 
   /**
    * Indica si se debe mostrar la confirmación para eliminar datos de la tabla.
@@ -364,14 +376,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.getaduanaLista();
     this.getRegimenLista();
     forkJoin([
-       this.obtenerCatalogosTransporte(),
-    this.obtenerCatalogosArancelaria(),
+      //  this.obtenerCatalogosTransporte(),
+    // this.obtenerCatalogosArancelaria(),
     this.obtenerCatalogosUMC(),
     this.obtenerCatalogosUMT(),
     this.obtenerCatalogosUSO()
     ]).pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe({
-      next: ([transporte, arancelaria, umc, umt, uso]) => {
+      next: ([umc, umt, uso]) => {
       this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
       this.cuerpoTablaFila = datos.mercanciaGroup;
       this.datosMercanciaStore = datos.realizarGroup;
@@ -448,51 +460,27 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   }
 
 
-  /**
-   * Obtiene los datos del catálogo de transporte y puntos de inspección.
-   * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
-   * 
-   * @public
-   * @method obtenerCatalogosTransporte
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.aduanaDeIngresoList = data.data as Catalogo[];
-      this.tipoRequisitoList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      return of([]); 
-    })
-  );
-}
-
-
-  /**
-   * Obtiene los datos del catálogo de fracciones arancelarias.
-   * Carga las opciones disponibles para oficinas de inspección.
-   * 
-   * @public
-   * @method obtenerCatalogosArancelaria
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-  public obtenerCatalogosArancelaria(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.oficinaInspeccionList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      console.error('Error loading arancelaria catalog:', err);
-      return of([]); // fallback to empty array on error
-    })
-  );
-}
-
+//   /**
+//    * Obtiene los datos del catálogo de transporte y puntos de inspección.
+//    * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
+//    * 
+//    * @public
+//    * @method obtenerCatalogosTransporte
+//    * @memberof DatosDeLaSolicitudComponent
+//    * @returns {void}
+//    */
+// public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
+//   return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
+//     map((data) => {
+//       this.aduanaDeIngresoList = data.data as Catalogo[];
+//       this.tipoRequisitoList = data.data as Catalogo[];
+//       return data.data as Catalogo[];
+//     }),
+//     catchError((err) => {
+//       return of([]); 
+//     })
+//   );
+// }
 
   /**
    * Obtiene los datos del catálogo de Unidades de Medida Comercial (UMC).
@@ -532,7 +520,6 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
     map((data) => {
       this.regimenList = data.data as Catalogo[];
       this.nicoList = data.data as Catalogo[];
-      this.puntoInspeccionList = data.data as Catalogo[];
       return data.data as Catalogo[];
     }),
     catchError((err) => {
@@ -583,18 +570,61 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
   }
 
     /**
+   * Obtiene la lista para el select de oficina de inspección de sanidad agropecuaria desde el selector.
+   * @method catalogoOficinas
+   */
+  catalogoOficinas(_forma?: FormGroup): void {
+    const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    this.obtenerSanidadoficinaInspeccionList(VALOR.aduanaIngreso);
+  }
+
+  /**
+   * Obtiene la lista para el select de puntos de inspeccion desde el selector.
+   * @method obtenerPuntoInspeccion
+   */
+  obtenerPuntoInspeccion(_forma?: FormGroup): void {
+  const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    this.obtenerPuntoInspeccionList(VALOR.oficinaInspeccion);
+  }
+
+    /**
    * Obtiene la lista para el select de régimen.
    * @method getRegimenLista
    */
   getRegimenLista(): void {
 
-    this.catalogosService.obtieneCatalogoRegimenesVigentes(220203)
-      .pipe(
-        takeUntil(this.DESTROY_NOTIFIER$)
-      ).subscribe(
-      (data): void => {
+    this.catalogosService.obtieneCatalogoRegimenesVigentes(220203).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.regimenList = data.datos ?? [];
     });
+  }
+
+    /**
+   * Obtiene la lista para el select de punto de inspección.
+   * @method obtenerPuntoInspeccionList
+   */
+  obtenerPuntoInspeccionList(valor: string): void {
+    this.catalogosService.obtieneCatalogoPuntoInspeccion(220203, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.puntoInspeccionList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene la lista para el select de sanidad agropecuaria.
+   * @method obtenerSanidadoficinaInspeccionList
+   */
+  obtenerSanidadoficinaInspeccionList(cveAduana: string): void {
+    this.oficinaInspeccionList = [];
+    if(cveAduana && cveAduana !== ''){
+      this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, cveAduana)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.oficinaInspeccionList = data.datos ?? [];
+        }
+      );
+    }
+
   }
 
   /**
