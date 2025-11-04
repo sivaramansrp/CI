@@ -473,7 +473,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * `agregar()` o `quitar()` según corresponda.
    */
   ngAfterViewInit(): void {
-    this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
+    //this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
     this.paisDeProcedenciaBotonsUno = [
       {
         btnNombre: 'Agregar todos',
