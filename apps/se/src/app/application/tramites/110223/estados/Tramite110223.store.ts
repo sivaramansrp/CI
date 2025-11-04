@@ -160,6 +160,9 @@ export interface TramiteState {
 
   /** Historial de productores exportador agregados. */
   agregarProductoresExportador: HistoricoColumnas[];
+
+  /** Lista de mercancías disponibles */
+  disponiblesDatos: Mercancia[];
  
 }
 
@@ -276,6 +279,7 @@ export const INITIAL_STATE: TramiteState = {
       fax: '',
       correo: '',
     },
+    disponiblesDatos: [],
 };
 
 /**
@@ -703,5 +707,19 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       },
     }));
   }
+
+  /**
+  * @method setDatosConfidencialesProductor
+  * @description
+  * Actualiza el estado de datos confidenciales del productor en el almacén.
+  * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+  * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
 
 }
