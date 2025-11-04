@@ -547,9 +547,9 @@ private setupNonModalMode(): void {
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
-    if (this.chequeoValidacionAlGuardar) {
-      return this.guardarDestinatarioModal();
-    }
+    // if (this.chequeoValidacionAlGuardar) {
+    //   return this.guardarDestinatarioModal();
+    // }
     return this.guardarDestinatarioNormal();
   }
 

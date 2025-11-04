@@ -1,11 +1,15 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -28,7 +32,9 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   standalone: true,
   imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
-export class ZoosanitarioPageComponent {
+export class ZoosanitarioPageComponent implements OnInit {
+  @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
+  @ViewChild(PasoUnoComponent) guardadoTotal!: PasoUnoComponent;
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -74,7 +80,7 @@ export class ZoosanitarioPageComponent {
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
@@ -104,14 +110,21 @@ export class ZoosanitarioPageComponent {
     */
   readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
 
-   /** Indica la visibilidad del botón Guardar. */
-    public btnGuardarVisible: string = 'visible';
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
+
+  public solicitudState!: ZoosanitarioStore;
+
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
    * @method constructor
    */
-  constructor() {
+  constructor(
+    private tramite220201Query: ZoosanitarioQuery,
+
+  ) {
     this.pasos = PASOS;
   }
 
@@ -122,7 +135,6 @@ export class ZoosanitarioPageComponent {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
       const ISVALID = this.validarTodosFormulariosPasoUno();
@@ -131,6 +143,7 @@ export class ZoosanitarioPageComponent {
         return; // Detener ejecución si los formularios son inválidos
       }
     }
+
     // Calcular el nuevo índice basado en la acción
     let indiceActualizado = e.valor;
     if (e.accion === 'cont') {
@@ -147,6 +160,7 @@ export class ZoosanitarioPageComponent {
       this.datosPasos.indice = indiceActualizado;
 
       if (e.accion === 'cont') {
+        this.guardadoTotalSolicitud();
         this.wizardComponent.siguiente();
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
@@ -184,9 +198,10 @@ export class ZoosanitarioPageComponent {
     }
   }
   /**
- * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
- */
+   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
+    this.pasoUnoComponent.validarFormularios()
     if (!this.pasoUnoComponent) {
       return true;
     }
@@ -210,14 +225,27 @@ export class ZoosanitarioPageComponent {
     return numeros.reduce((acumulador, numero) => acumulador + numero, 0);
   }
 
-    /**
-   * Obtiene los datos del store y los guarda utilizando el servicio.
+  /**
+   * Maneja el guardado parcial de una solicitud invocando el método `guardaSolicitudParcial` 
+   * del servicio `guardadoParcial`. Esta función se utiliza típicamente para persistir 
+   * el estado actual del formulario o los datos de la aplicación.
    */
-  // eslint-disable-next-line class-methods-use-this
-  obtenerDatosDelStore(): void {
-    // Lógica para obtener datos del store y guardarlos
+  guardadoParcialSolicitud(): void {
+    this.guardadoParcial.guardaSolicitudParcial();
   }
 
+  guardadoTotalSolicitud(): void {
+    this.guardadoTotal.guardadoTotal();
+  }
 
+  ngOnInit(): void {
+    this.tramite220201Query.seleccionarTodo$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = { ...this.solicitudState, ...seccionState } as unknown as ZoosanitarioStore;
+        })
+      ).subscribe();
+  }
 
 }

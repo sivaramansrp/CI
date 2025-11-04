@@ -21,6 +21,11 @@ export class Tramite120101Query extends Query<SolicitudDeRegistroTpl120101State>
     return state;
   });
 
+
+  /**
+ * Observable selector for retrieving the entire state.
+ */
+allStoreData$ = this.select((state) => state);
   /**
    * Constructor de la clase Tramite120101Store.
    * Inicializa la consulta con el almacén proporcionado.

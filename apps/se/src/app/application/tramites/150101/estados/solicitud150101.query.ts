@@ -29,6 +29,11 @@ export class Solicitud150101Query extends Query<Solicitud150101State> {
   });
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
    * @param solicitud150101Store - Instancia del store de Solicitud150101.
    */
   constructor(protected solicitud150101Store: Solicitud150101Store) {

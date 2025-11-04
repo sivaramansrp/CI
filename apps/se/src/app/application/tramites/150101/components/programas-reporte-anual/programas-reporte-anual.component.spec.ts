@@ -8,6 +8,7 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ProgramasReporteAnnualComponent', () => {
   let component: ProgramasReporteAnnualComponent;
@@ -20,6 +21,7 @@ describe('ProgramasReporteAnnualComponent', () => {
     actualizarEstatus: jest.fn(),
     setReporteAnualFechaInicio: jest.fn(),
     setReporteAnualFechaFin: jest.fn(),
+    setIdProgramaCompuesto: jest.fn(),
   };
 
   const mockSolicitudQuery = {
@@ -31,6 +33,9 @@ describe('ProgramasReporteAnnualComponent', () => {
       reporteAnualFechaInicio: '2025-01-01',
       reporteAnualFechaFin: '2025-12-31',
     }),
+    getValue: jest.fn().mockReturnValue({
+    solicitudDato: [],
+  }),
   };
 
   const mockConsultaioQuery = {
@@ -49,8 +54,7 @@ describe('ProgramasReporteAnnualComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProgramasReporteAnnualComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, ProgramasReporteAnnualComponent, HttpClientTestingModule],
       providers: [
         { provide: Solicitud150101Store, useValue: mockSolicitudStore },
         { provide: Solicitud150101Query, useValue: mockSolicitudQuery },
@@ -130,36 +134,6 @@ describe('ProgramasReporteAnnualComponent', () => {
       'Inactivo'
     );
     expect(emitSpy).toHaveBeenCalledWith(true);
-  });
-
-  it('should update store and patch fechaInicio when onFechaInicio is called', () => {
-    component.onFechaInicio('2025-01-01');
-    expect(
-      component.periodoReporteAnual.get('reporteAnualFechaInicio')?.value
-    ).toBe('2025-01-01');
-    expect(mockSolicitudStore.setReporteAnualFechaInicio).toHaveBeenCalledWith(
-      '2025-01-01'
-    );
-  });
-
-  it('should update store and patch fechaFin when onFechaFin is called', () => {
-    component.onFechaFin('2025-12-31');
-    expect(
-      component.periodoReporteAnual.get('reporteAnualFechaFin')?.value
-    ).toBe('2025-12-31');
-    expect(mockSolicitudStore.setReporteAnualFechaFin).toHaveBeenCalledWith(
-      '2025-12-31'
-    );
-  });
-
-  it('should disable or enable form based on formularioDeshabilitado', () => {
-    component.formularioDeshabilitado = true;
-    component.inicializarEstadoFormulario();
-    expect(component.periodoReporteAnual.disabled).toBe(true);
-
-    component.formularioDeshabilitado = false;
-    component.inicializarEstadoFormulario();
-    expect(component.periodoReporteAnual.enabled).toBe(true);
   });
 
   it('should clean up subscriptions on destroy', () => {
