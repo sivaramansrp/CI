@@ -684,14 +684,13 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
 
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+      claveDescripcionModal: [{value: this.solicitudState?.claveDescripcionModal, disabled: true}, Validators.required],
     });
     this.formMercancias = this.fb.group({
       nombreComercial: [
-        '',
-      
+        ''
       ],
-      nombreComun: ['',],
+      nombreComun: [''],
       nombreCientifico: [''],
       usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
