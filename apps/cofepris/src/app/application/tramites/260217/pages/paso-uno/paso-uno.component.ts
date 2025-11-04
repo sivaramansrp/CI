@@ -1,10 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite260217State, Tramite260217Store } from '../../estados/tramite260217Store.store';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { HttpClient } from '@angular/common/http';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -36,6 +39,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  @ViewChild(ContenedorDeDatosSolicitudComponent)
+    contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild(PagoDeDerechosContenedoraComponent)
+  pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+  @ViewChild(TercerosRelacionadosVistaComponent)
+  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
@@ -122,6 +134,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.tramite260217Store.updateTabSeleccionado(i);
+  }
+
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+
+    );
   }
 
   /**
