@@ -16,26 +16,32 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SolitudeComponent } from './components/solitude/solitude.component';
 
 
 @NgModule({
   declarations: [
     CancelacionDeComponent,
-    DatosComponent,FirmarSolicitudComponent,
-   
+    DatosComponent,
+    FirmarSolicitudComponent,
   ],
   imports: [
-    CommonModule,Solicitante140103Component,
+    CommonModule,
+    Solicitante140103Component,
     CancelacionDeRoutingModule,
     BtnContinuarComponent,
     CancelacionDeCertificateComponent,
     TituloComponent,
-    DevolverComponent,DetalleComponent,OficioComponent,
-  
-    WizardComponent,FirmaElectronicaComponent, ReactiveFormsModule,
-    TablaDinamicaComponent
-  
+    DevolverComponent,
+    DetalleComponent,
+    OficioComponent,
+    SolitudeComponent,
+    WizardComponent,
+    FirmaElectronicaComponent, 
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    FormsModule
   ],
   providers: [
     ToastrService

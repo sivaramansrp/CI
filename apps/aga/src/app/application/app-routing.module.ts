@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';

@@ -2,16 +2,25 @@
 /**
  * Componente encargado de gestionar los datos del trámite.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, ConsultaioQuery ,ConsultaioState} from "@ng-mf/data-access-user";
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+} from '@ng-mf/data-access-user';
+
+import {
+  Catalogo,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
-import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
 /**

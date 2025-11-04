@@ -5,7 +5,7 @@
       <div class="row row-spacing">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="asignado"> Monto asignado:</label>
+            <label class="form-label" for="asignado">Monto asignado:</label>
             <input class="form-control" id="asignado" formControlName="asignado" type="text">
           </div>
         </div>
@@ -52,11 +52,11 @@
       <app-modal [active]="showDevolverModal">
         <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
       </app-modal>
-      <div class="row row-spacing">
+      <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
-            <textarea class="form-control" id="observaciones" style="height: 120px;"
+            <label class="form-label" for="observaciones">Motivo de la cancelación*:</label>
+            <textarea class="form-control custom-textarea" id="observaciones" style="height: 120px;"
               disabled>Cancelación a solicitud de la empresa</textarea>
           </div>
         </div>
@@ -67,15 +67,21 @@
           <div class="row row-spacing">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="cancelar"> *Monto a cancelar <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label>
-                <input class="form-control" id="cancelar" formControlName="cancelar" type="text">
+                <label class="form-label" for="cancelar"><span [ngClass]="{'text-danger': oficioForm.get('oficioData.cancelar')?.invalid && oficioForm.get('oficioData.cancelar')?.touched}">*</span>Monto a cancelar <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label>
+                <input
+                  class="form-control"
+                  id="cancelar"
+                  formControlName="cancelar"
+                  type="text"
+                  [ngClass]="{'text-danger': oficioForm.get('oficioData.cancelar')?.invalid && oficioForm.get('oficioData.cancelar')?.touched}"
+                >
               </div>
             </div>
           </div>
           <div class="row row-spacing text-right">
             <div>
               <button type="button" class="btn btn-default me-2 btn-space"
-                [disabled]="esFormularioSoloLectura">Agregar</button>
+                [disabled]="esFormularioSoloLectura" (click)="agregarMonto()">Agregar</button>
               <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura"
                 (click)="closeCapturaMontoModal()">Cancelar</button>
             </div>

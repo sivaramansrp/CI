@@ -391,6 +391,8 @@ export interface PagoDerechosFormState {
   fechaPago: string;
   importePago: string;
   banco?: string;
+  bancoObject?: Catalogo;
+  estadoObject?: Catalogo;
 }
 
 /**
@@ -412,6 +414,8 @@ export const FECHA_DE_FABRICACIO_PAGO = {
   required: true,
   habilitado: true,
 };
+
+export const FECHA_DE_IMPORTACION_PAGO = [260512]
 
 
 /**

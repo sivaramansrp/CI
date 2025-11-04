@@ -1,8 +1,9 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 
 /**
  * @class AgregarProveedorContenedoraComponent
@@ -20,7 +21,7 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
  * @dependencies
  * - CommonModule: Proporciona directivas comunes de Angular
  * - AgregarProveedorComponent: Componente hijo para la gestión de proveedores
- * - Tramite260214Store: Store de estado para el trámite 260210
+ * - Tramite260210Store: Store de estado para el trámite 260210
  * 
  * @template ./agregar-proveedor-contenedora.component.html
  * @styles ./agregar-proveedor-contenedora.component.scss
@@ -69,21 +70,28 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
   
+
+    /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+     */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
+     
   /**
-   * @property tramite260214Store
+   * @property Tramite260210Store
    * @description Store de estado inyectado que maneja toda la lógica de estado del trámite 260210.
    * Este store contiene los métodos y propiedades necesarios para gestionar los datos de proveedores
    * y mantener la consistencia del estado a través de la aplicación.
    * 
-   * @type {Tramite260214Store}
+   * @type {Tramite260210Store}
    * @access public - Accesible desde la plantilla del componente
    * @readonly - El store se inyecta una vez en la construcción y no se modifica
    * 
    * @example
    * // Acceso desde la plantilla
-   * {{ tramite260214Store.proveedores$ | async }}
+   * {{ Tramite260210Store.proveedores$ | async }}
    */
-  public tramite260214Store: Tramite260214Store;
+  public Tramite260210Store: Tramite260210Store;
 
   /**
    * @constructor
@@ -91,7 +99,7 @@ export class AgregarProveedorContenedoraComponent {
    * Se ejecuta automáticamente cuando Angular crea una instancia del componente.
    * Utiliza el sistema de inyección de dependencias de Angular para obtener el store del trámite.
    * 
-   * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260210.
+   * @param {Tramite260210Store} Tramite260210Store - Store que administra el estado del trámite 260210.
    *        Contiene los métodos y propiedades para gestionar proveedores, validaciones y persistencia de datos.
    * 
    * @throws {Error} Si el store no puede ser inyectado correctamente
@@ -102,8 +110,8 @@ export class AgregarProveedorContenedoraComponent {
    * 
    * @since 1.0.0
    */
-  constructor(tramite260214Store: Tramite260214Store) {
-    this.tramite260214Store = tramite260214Store;
+  constructor(Tramite260210Store: Tramite260210Store) {
+    this.Tramite260210Store = Tramite260210Store;
   }
 
   /**
@@ -141,12 +149,12 @@ export class AgregarProveedorContenedoraComponent {
    * </app-agregar-proveedor>
    * 
    * @see Proveedor - Modelo de datos del proveedor
-   * @see Tramite260214Store.updateProveedorTablaDatos - Método del store que se invoca
+   * @see Tramite260210Store.updateProveedorTablaDatos - Método del store que se invoca
    * 
    * @since 1.0.0
    * @version 1.0.0
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
-    this.tramite260214Store.updateProveedorTablaDatos(event);
+    this.Tramite260210Store.updateProveedorTablaDatos(event);
   }
 }

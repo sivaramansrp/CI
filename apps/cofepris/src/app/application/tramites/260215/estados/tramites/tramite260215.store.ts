@@ -1,7 +1,9 @@
 import { DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario ,Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
+
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 260215
@@ -246,6 +248,17 @@ destinatarioFinalTablaDatos: Destinatario[];
    */
   destinatarioFinalTablaModificaDatos: Destinatario[];
     opcionesColapsableState: boolean;
+    /** Datos de cancelación legacy */
+  datos: Cancelacion[];
+  /** ID del tipo de trámite */
+  idTipoTramite: number;
+
+   claveEntidadFederativa: string,
+
+  /** Motivo de cancelación */
+  motivoCancelacion: string;
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
 
 }
 
@@ -473,7 +486,12 @@ export function createInitialState(): Solicitud260215State {
             /**
              * Lista de proveedores relacionados con el trámite.
              */
-            proveedorTablaDatos: []
+            proveedorTablaDatos: [],
+              datos: [],
+    idTipoTramite: 260214,
+    motivoCancelacion: '',
+    idSolicitud: 202808106,
+    claveEntidadFederativa: '09',
 
   };
 }

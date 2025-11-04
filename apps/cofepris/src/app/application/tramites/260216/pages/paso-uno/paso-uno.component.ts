@@ -31,6 +31,28 @@ import { Tramite260216Query } from '../../estados/tramite260216Query.query';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
+  
+    /**
+       * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+       * @description
+       * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+       * mediante el decorador `@ViewChild`.
+       *
+       * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+       * a sus propiedades, por ejemplo para delegar la validación del formulario
+       * interno (`validarContenedor()`).
+       *
+       * > Nota: Angular inicializa esta referencia después de que la vista
+       * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+       */
+     
+      @ViewChild(PagoDeDerechosContenedoraComponent)
+      pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+  
+      @ViewChild(TercerosRelacionadosVistaComponent)
+      tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+  
   /**
    * Represents the current index or step in a process.
    *
@@ -165,9 +187,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
   validarPasoUno(): boolean {
-    return (
-      this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false
-    );
+  const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+  const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+  const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+
+      return (
+        (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO)? true : false
+
+      );
   }
 
   /**
