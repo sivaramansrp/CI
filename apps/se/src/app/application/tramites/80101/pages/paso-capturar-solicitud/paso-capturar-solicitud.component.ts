@@ -223,6 +223,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private consultaQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
+    
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }

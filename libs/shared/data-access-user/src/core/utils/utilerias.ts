@@ -420,3 +420,17 @@ export function formatDateToYYYYMMDD(dateString: string): string {
             window.URL.revokeObjectURL(LINK.href);
   
   }
+
+  /**
+ * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
+ * @param fecha_creacion Fecha en formato ISO (string)
+ * @returns Fecha formateada como string
+ */
+export function formatFechaCreacion(fecha_creacion: string): string {
+    const DATE = new Date(fecha_creacion);
+    if (isNaN(DATE.getTime())) {
+        return fecha_creacion;
+    }
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
+}

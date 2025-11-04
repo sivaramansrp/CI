@@ -1,33 +1,33 @@
 <div class="page">
   <div class="container">
     <div class="row">
-
+      <div class="col-md-12">
+        <h2>Permiso automático de importación</h2>
+      </div>
+      @if (mostrarOtraPestana) {
+      <div class="alert alert-info alert-dismissible fade show text-center firmar-alert" style="color:#3c763d"
+        role="alert">
+        La solicitud ha quedado registrada con el número temporal
+        <span>{{ numeroSolicitud }}</span>. Éste no tiene validez legal y sirve solamente para efectos de identificar
+        tu solicitud.
+        Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.
+      </div>
+      }
       @if(indice === 1){
-      <div class="col-md-12">
-        <h1>Permiso automático de importación</h1>
+      @if (esFormaValido) {
+      <div class="col-12 p-0">
+        <div class="text-center">
+          <div class="col-md-12 campos-requeridos p-0">
+            <div class="alert alert-danger" [innerHTML]="formularioAlertaError"></div>
+          </div>
+        </div>
       </div>
       }
-      @if(indice === 2){
-      <div class="col-md-12">
-        <h1>Cargar archivos</h1>
-      </div>
       }
-
-       @if (!esValido) {
-        <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
-      }
-
       <div class="row mt-5" *ngIf="indice === 2">
-      <div class="col-md-12">
-        <lib-notificaciones
-          [notificacionInput]="alertaNotificacion"
-        ></lib-notificaciones>
       </div>
-    </div>
-
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
-
     <div class="row">
       @switch (indice) {
       @case (1) {
@@ -38,7 +38,6 @@
       <app-paso-cuatro></app-paso-cuatro>
       }
       }
-
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>

@@ -284,29 +284,23 @@ public mostrarAlerta: boolean = false;
                       }
                     }
                     // Calcular el nuevo índice basado en la acción
-                    let indiceActualizado = e.valor;
-                    if (e.accion === 'cont') {
-                      indiceActualizado = e.valor + 1;
-                    }
+                    const INDICE_ACTUALIZADO = this.indice + 1;                    
                     this.toastrService.success(response.mensaje);
-                    if (indiceActualizado > 0 && indiceActualizado < 5) {
-                      this.indice = indiceActualizado;
-                      this.datosPasos.indice = indiceActualizado;
-                      if (e.accion === 'cont') {
+                     if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+                        this.indice = INDICE_ACTUALIZADO;
+                        this.datosPasos.indice = INDICE_ACTUALIZADO;
+                        this.esFormaValido = false;
                         this.wizardComponent.siguiente();
-                      } else {
-                        this.wizardComponent.atras();
                       }
+                    } else {
+                      this.toastrService.error(response.mensaje);
                     }
-                  } else {
-                    this.toastrService.error(response.mensaje);
-                  }
-                });
-              }else{
-                this.indice = e.valor;
-                this.datosPasos.indice = this.indice;
-                this.wizardComponent.atras();
-              }
+                  });
+                }else{
+                  this.indice = e.valor;
+                  this.datosPasos.indice = this.indice;
+                  this.wizardComponent.atras();
+                }
   }
 
   public static generarAlertaDeError(mensajes:string): string {

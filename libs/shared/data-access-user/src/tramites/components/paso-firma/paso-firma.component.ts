@@ -93,6 +93,8 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
    */
   @Input() procedure: number = 0;
 
+   @Input() idMecanismo: number | null = null;
+
   /**
    * URL del procedimiento actual utilizada para la navegación entre pasos del trámite.
    * Se usa para:
@@ -230,8 +232,8 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             documentos_requeridos: response.datos?.documentos_requeridos || [],
             rfc_solicitante: 'AAL0409235E6'
           };
-          if (this.procedure === 110216 || this.procedure === 110210) {
-            PAYLOAD = renameKey(PAYLOAD as unknown as Record<string, unknown>, 'rfcSolicitante', 'rfc_solicitante') as unknown as FirmarRequest;
+          if(this.idMecanismo){
+            PAYLOAD={...PAYLOAD, id_mecanismo: this.idMecanismo};
           }
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
         }),

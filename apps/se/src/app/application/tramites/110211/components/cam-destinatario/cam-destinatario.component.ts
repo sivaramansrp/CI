@@ -1,11 +1,20 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  CamState,
+  camCertificadoStore,
+} from '../../estados/cam-certificado.store';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
+import { RepresentanteLegalExportadorComponent } from '../../../../shared/components/representante-legal-exportador/representante-legal-exportador.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 /**
@@ -75,16 +84,11 @@ interface FormValues {
     ReactiveFormsModule,
     DatosDelDestinatarioComponent,
     TituloComponent,
-    DestinatarioComponent
-  ]
+    DestinatarioComponent,
+    RepresentanteLegalExportadorComponent,
+  ],
 })
-export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
-  /**
-   * @property {FormGroup} exportadorForm
-   * @description Formulario para capturar los datos del exportador.
-   */
-  exportadorForm!: FormGroup;
-
+export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**
    * @property {FormValues} formDestinatarioValues
    * @description Valores actuales del formulario de destinatario.
@@ -98,6 +102,12 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
   formDatosDelDestinatarioValues!: FormValues;
 
   /**
+   * @property {CamState['grupoRepresentativo']} grupoRepresentativo
+   * @description Estado actual del grupo representativo.
+   */
+  grupoRepresentativo!: CamState['grupoRepresentativo'];
+
+  /**
    * @property {Subject<void>} destroyNotifier$
    * @description Notificador para gestionar la destrucción de suscripciones.
    * @private
@@ -109,7 +119,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * @description Estado actual del formulario de exportador.
    * @private
    */
-  private exportadoState!: CamState;
+  exportadoState!: CamState;
 
   /**
    * @property {SeccionLibState} seccionState
@@ -124,8 +134,32 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * @property {number} idProcedimiento
+   * @description ID del procedimiento asociado al componente.
+   */
+  idProcedimiento: number = 110211;
 
-  @ViewChild('destinatarioRef')destinatarioComponent!: DestinatarioComponent;
+  /**
+   * @property {DatosDelDestinatarioComponent} datosDelDestinatarioComponent
+   * @description Referencia al componente hijo `DatosDelDestinatarioComponent` para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('datosDelDestinatarioComponent', { static: false })
+  datosDelDestinatarioComponent!: DatosDelDestinatarioComponent;
+
+  /**
+   * @property {DestinatarioComponent} destinatarioComponent
+   * @description Referencia al componente hijo `DestinatarioComponent` para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('destinatarioRef', { static: false })
+  destinatarioComponent!: DestinatarioComponent;
+
+  /**
+   * @property {RepresentanteLegalExportadorComponent} representanteLegalExportadorComponent
+   * @description Referencia al componente hijo `RepresentanteLegalExportadorComponent` para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('representanteLegalExportadorComponent', { static: false })
+  representanteLegalExportadorComponent!: RepresentanteLegalExportadorComponent;
 
   /**
    * @constructor
@@ -157,6 +191,11 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
         this.formDestinatarioValues = estado;
       });
 
+    this.query.selectGrupoRepresentativo$?.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.grupoRepresentativo = estado;
+      });
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -173,8 +212,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * Hook del ciclo de vida que se llama después de inicializar el componente.
    * Obtiene los datos iniciales para el formulario y el estado de la sección.
    */
-async ngOnInit(): Promise<void> {
-   await this.seccionQuery.selectSeccionState$
+  async ngOnInit(): Promise<void> {
+    await this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -187,69 +226,36 @@ async ngOnInit(): Promise<void> {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
-            this.initActionFormBuild();
         })
       )
       .subscribe();
-
-  
   }
 
   /**
-   * @method ngAfterViewInit
    * @description
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `exportadorForm`.
-   * En caso contrario, habilita el formulario para permitir la edición.
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param event Evento con el campo y valor a actualizar.
+   * @returns {void}
    */
-  ngAfterViewInit(): void {
-    if (this.esFormularioSoloLectura) {
-      this.exportadorForm.disable();
-    } else {
-      this.exportadorForm.enable();
-    }
+  setValoresStore1(event: {
+    formGroupName: string;
+    campo: string;
+    VALOR: string;
+    METODO_NOMBRE: string;
+  }): void {
+    const { VALOR, METODO_NOMBRE } = event;
+    (this.store as unknown as Record<string, (value: unknown) => void>)[
+      METODO_NOMBRE
+    ]?.(VALOR);
   }
 
   /**
-   * @method initActionFormBuild
-   * @description
-   * Inicializa el formulario de exportador con los valores actuales del estado.
+   * Maneja los valores del store para el representante legal.
+   * @param event Evento del formulario con estructura específica del representante
    */
-  initActionFormBuild(): void {
-    this.exportadorForm = this.fb.group({
-      lugar: [
-      this.exportadoState.lugar,
-      [Validators.required] 
-      ],
-      exportador: [
-      this.exportadoState.exportador,
-      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-      ],
-      empresa: [
-      this.exportadoState.empresa,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
-      ],
-      cargo: [
-      this.exportadoState.cargo,
-      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
-      ],
-      lada: [
-      this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      telfono: [
-      this.exportadoState.telfono,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      fax: [
-      this.exportadoState.fax,
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
-      ],
-      correo: [
-      this.exportadoState.correo,
-      [Validators.required, Validators.email, Validators.maxLength(100)]
-      ]
-    });
-
+  setValoresStoreRepresentante(event: { formGroupName: string; campo: string; VALOR: unknown; METODO_NOMBRE: string }): void {
+    const { VALOR } = event;
+    this.store.setGrupoRepresentativoNombreExportador({ [event.campo]: VALOR });
   }
 
   /**
@@ -268,7 +274,12 @@ async ngOnInit(): Promise<void> {
    * Actualiza el almacén con los datos del formulario de datos del destinatario.
    * @param event Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
    */
-  setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreDatos(event: {
+    formGroupName: string;
+    campo: string;
+    valor: any;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
   }
@@ -279,7 +290,12 @@ async ngOnInit(): Promise<void> {
    * Actualiza el almacén con los datos del formulario de destinatario.
    * @param event Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
    */
-  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreDe(event: {
+    formGroupName: string;
+    campo: string;
+    valor: any;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
@@ -320,22 +336,35 @@ async ngOnInit(): Promise<void> {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: camCertificadoStore) => void)(VALOR);
   }
-    validarFormularios():boolean{
+  validarFormularios(): boolean {
     let isFormInvalid = true;
- if(this.exportadorForm.invalid){
-  this.exportadorForm.markAllAsTouched();
-   isFormInvalid = false;
+    //  if(this.exportadorForm.invalid){
+    // this.exportadorForm.markAllAsTouched();
+    //  isFormInvalid = false;
+    // }
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    if (this.representanteLegalExportadorComponent) {
+      if (!this.representanteLegalExportadorComponent.validarFormularios()) {
+        isFormInvalid = false;
+      }
+    } else {
+      isFormInvalid = false;
+    }
+    return isFormInvalid;
   }
-if(this.destinatarioComponent){
-  if(!this.destinatarioComponent.validarFormularios()){
-    isFormInvalid =false;
-  }
-}
-else{
-  isFormInvalid = false;
-}
-   return isFormInvalid;
-}
 
   /**
    * @method ngOnDestroy

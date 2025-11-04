@@ -6,19 +6,37 @@
                 <div class="form-group">
                     <label class="form-label" for="codigoPostal">Código postal*:</label>
                     <input class="form-control" id="codigoPostal" formControlName="codigoPostal" type="text" maxlength="12"
-                    size="29" (change)="setValoresStore(domicilioForm,'codigoPostal', 'setCodigoPostal')"/>
+                    size="29" (change)="setValoresStore(domicilioForm,'codigoPostal', 'setCodigoPostal')" [disabled]="!establecimientoSeleccionado || esFormularioSoloLectura"
+                    [ngClass]="esInvalido('codigoPostal') ? 'required' : ''" />
+                   @if(domicilioForm.get('codigoPostal')?.invalid && domicilioForm.get('codigoPostal')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('codigoPostal')?.errors?.['required']){
+                         <small>Este campo es obligatorio</small>
+                       } @else if (domicilioForm.get('codigoPostal')?.errors?.['pattern']) {
+                         <small>Por favor, escribe un número entero válido</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [label]="'Estado*'"  [placeholder]="'Selecciona una opción'" [catalogo]="datosEstado"
-                    formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')"[isDisabled]="esFormularioSoloLectura">
+                <app-catalogo-select [label]="'Estado'"  [placeholder]="'Selecciona una opción'" [catalogo]="datosEstado" [required]="true"
+                    formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')"[isDisabled]="esFormularioSoloLectura || !establecimientoSeleccionado">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="municipio">Municipio o alcaldía*:</label>
                     <input class="form-control" id="municipio" formControlName="municipio" type="text"  maxlength="120"
-                    size="29" (change)="setValoresStore(domicilioForm,'municipio', 'setMunicipio')"/>
+                    size="29" (change)="setValoresStore(domicilioForm,'municipio', 'setMunicipio')"
+                    [ngClass]="esInvalido('municipio') ? 'required' : ''" />
+                   @if(domicilioForm.get('municipio')?.invalid && domicilioForm.get('municipio')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('municipio')?.errors?.['required']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
         </div>
@@ -26,21 +44,49 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="localidad">Localidad*:</label>
-                    <input class="form-control" id="localidad" formControlName="localidad" type="text" maxlength="120" (change)="setValoresStore(domicilioForm,'localidad', 'setLocalidad')"/>
+                    <input class="form-control" id="localidad" formControlName="localidad" type="text" maxlength="120" (change)="setValoresStore(domicilioForm,'localidad', 'setLocalidad')"
+                    [ngClass]="esInvalido('localidad') ? 'required' : ''" />
+                    @if(domicilioForm.get('localidad')?.invalid && domicilioForm.get('localidad')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('localidad')?.errors?.['required']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="colonia">Colonia*:</label>
-                    <input class="form-control" id="colonia" formControlName="colonia" type="text" maxlength="120" size="29" (change)="setValoresStore(domicilioForm,'colonia', 'setColonia')"/>
+                    <input class="form-control" id="colonia" formControlName="colonia" type="text" maxlength="120" size="29" (change)="setValoresStore(domicilioForm,'colonia', 'setColonia')"
+                    [ngClass]="esInvalido('colonia') ? 'required' : ''" />
+                    @if(domicilioForm.get('colonia')?.invalid && domicilioForm.get('colonia')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('colonia')?.errors?.['required']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label" for="calle">Calle*:<i class="bi bi-question-circle-fill"></i></label>
-                    <input class="form-control" id="calle" formControlName="calle" type="text" maxlength="300" (change)="setValoresStore(domicilioForm,'calle', 'setCalle')"/>
+                    <label class="form-label" for="calle">Calle*:
+                        <span tooltip="Domicilio, calle, numero interior, numero exterior, lote" placement="top">
+                            <i class="bi bi-question-circle-fill"></i>
+                        </span>
+                    </label>
+                    <input class="form-control" id="calle" formControlName="calle" type="text" maxlength="100" (change)="setValoresStore(domicilioForm,'calle', 'setCalle')"
+                    [ngClass]="esInvalido('calle') ? 'required' : ''" />
+                    @if(domicilioForm.get('calle')?.invalid && domicilioForm.get('calle')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('calle')?.errors?.['required']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
         </div>
@@ -48,13 +94,27 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label class="form-label" for="lada">Lada:</label>
-                    <input class="form-control" id="lada" formControlName="lada" type="text" maxlength="5" (change)="setValoresStore(domicilioForm,'lada', 'setLada')"/>
+                    <input class="form-control" id="lada" formControlName="lada" type="text" (change)="setValoresStore(domicilioForm,'lada', 'setLada')"/>
+                    @if(domicilioForm.get('lada')?.invalid && domicilioForm.get('lada')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('lada')?.errors?.['pattern']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="form-label" for="telefono">Teléfono:</label>
-                    <input class="form-control" id="telefono" formControlName="telefono" type="text" maxlength="24" (change)="setValoresStore(domicilioForm,'telefono', 'setTelefono')"/>
+                    <input class="form-control" id="telefono" formControlName="telefono" type="text" maxlength="30" (change)="setValoresStore(domicilioForm,'telefono', 'setTelefono')"/>
+                    @if(domicilioForm.get('telefono')?.invalid && domicilioForm.get('telefono')?.touched){
+                     <div class="text-danger">
+                       @if(domicilioForm.get('telefono')?.errors?.['pattern']){
+                         <small>Este campo es obligatorio</small>
+                       }
+                     </div>
+                    }
                 </div>
             </div>
         </div>
@@ -69,7 +129,7 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-default btn-space">
+            <button type="button" class="btn btn-danger mx-2" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
             <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
@@ -90,9 +150,11 @@
             </div>
             <div class="col-md-4">
             <div class="form-group">
-            <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:<i
-            class="bi bi-question-circle-fill"   title="Número de la autorización
-indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-toggle="tooltip"></i></label>
+            <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:
+                <span tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top">
+                <i class="bi bi-question-circle-fill"></i>
+                </span>
+            </label>
             <input class="form-control" id="noLicenciaSanitaria" formControlName="noLicenciaSanitaria"
             placeholder="" type="text" (change)="setValoresStore(domicilioForm,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')"/>
             </div>
@@ -101,7 +163,7 @@ indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-t
         <div class="row">
             <div class="col-md-4">
             <div class="form-group btn-space">
-                <app-catalogo-select [label]="'Régimen al que se destinará*'"  [placeholder]="'Selecciona una opción'"
+                <app-catalogo-select [label]="'Régimen al que se destinará*'"  [placeholder]="'Selecciona una opción'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'la mercancÍa'"
                 [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
@@ -117,7 +179,7 @@ indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-t
         <div class="row" class="mt-5">
             <div class="form-group">
                 <label class="form-label" for="scian">Datos del producto*:</label>
-                <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto"
+                <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto" [styleCenter]="true"
                     [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="datosProducto" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
                 </app-tabla-dinamica>
             </div>
