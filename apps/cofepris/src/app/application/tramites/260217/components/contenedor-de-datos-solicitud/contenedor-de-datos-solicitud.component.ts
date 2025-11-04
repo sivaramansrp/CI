@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -155,6 +155,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
    public esFormularioSoloLectura: boolean = false; 
 
+   @ViewChild(DatosDeLaSolicitudComponent)
+   datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
   /**
    * @constructor
    * @description
@@ -264,6 +267,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

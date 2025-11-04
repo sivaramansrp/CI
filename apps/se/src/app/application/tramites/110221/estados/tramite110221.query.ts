@@ -17,6 +17,20 @@ export class Tramite110221Query extends Query<Tramite110221State> {
   selectTramite$ = this.select((state) => {
     return state;
   });
+/**
+   * @descripcion
+   * Observable que selecciona el estado completo del certificado.
+   */
+  selectPeru$ = this.select((state) => {
+    return state;
+  });
+  /**
+   * @descripcion
+   * Observable que selecciona la tabla de mercancías del estado.
+   */
+  selectmercanciaTablaUno$ = this.select((state) => {
+    return state.disponiblesDatos;
+  });
 
     /** @descripcion
    * Observable que selecciona los productores agregados por el exportador.

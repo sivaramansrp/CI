@@ -1,19 +1,3 @@
-/** Modelo de los datos del destinatario para el formulario. 
- * Define nombre, dirección y datos de contacto. */
-export interface DestinatarioDatos {
-  nombre: string;
-  primer: string;
-  segundo: string;
-  fiscal: string;
-  razon: string;
-  calle: string;
-  letra: string;
-  ciudad: string;
-  correo: string;
-  fax: string;
-  telefono: string;
-}
-
 /**
  * Interfaz que representa la respuesta de la API.
  * Contiene un arreglo de objetos de tipo `CertificadoData` en la propiedad `datos`.
@@ -36,6 +20,9 @@ export interface CertificadoData {
   cvePaisFabricacion: string;
   solicitud: SolicitudData;
   medioTransporte: string;
+  rutaCompleta: string,
+  puertoEmbarque:string,
+  puertoDesembarque: string,
   precisa: string;
   presenta: string;
   observaciones: string;
