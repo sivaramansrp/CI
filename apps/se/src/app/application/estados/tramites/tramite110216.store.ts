@@ -359,6 +359,14 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({ ...state, paisBloques }));
   }
 
+  /**
+ * Actualiza el país bloque seleccionado en el estado del trámite.
+ * @param paisBloque Objeto de tipo Catalogo que representa el país bloque a asignar.
+ */
+  public setBloqu(paisBloque: Catalogo): void {
+    this.update((state) => ({ ...state, paisBloque }));
+  }
+
   public setAltaPlanta(altaPlanta: Catalogo[]): void {
     this.update((state) => ({ ...state, altaPlanta }));
   }
