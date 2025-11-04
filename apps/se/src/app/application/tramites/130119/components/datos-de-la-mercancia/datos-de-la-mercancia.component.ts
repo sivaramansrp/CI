@@ -1,18 +1,31 @@
 /**
  * Componente encargado de gestionar los datos de la mercancía.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, ConsultaioQuery, InputFecha } from "@ng-mf/data-access-user";
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import {
+  Catalogo,
+  InputFecha,
+  InputFechaComponent,
+  REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
+  REGEX_PATRON_ALFANUMERICO,
+  REGEX_PATRON_DECIMAL_15_4,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
+
 import { FECHA } from '../../constants/aviso-importacion-maquinas.enum';
-import { InputFechaComponent } from "@ng-mf/data-access-user";
-import { TituloComponent } from "@ng-mf/data-access-user";
+
+import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
 
@@ -22,7 +35,7 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
 @Component({
   selector: 'app-datos-de-la-mercancia',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputFechaComponent],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputFechaComponent, TooltipModule],
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
@@ -99,20 +112,30 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosDeLaMercanciaForm = this.fb.group({
-      descripcion: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/)]],
+      descripcion: ['', [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)]],
       fraccionArancelaria: ['', Validators.required],
-      umt: [{ value: '', disabled: true }],
-      cantidad: ['', [Validators.required, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)]],
-      valorFacturaUSD: ['', [Validators.required, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)]],
+      umt: [{ value: 'Pieza', disabled: true }],
+      cantidad: ['', [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
+      valorFacturaUSD: ['', [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
       paisOrigen: ['', Validators.required],
       paisExportador: ['', Validators.required],
-      numeroFactura: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9Ññ]+$/)]],
+      numeroFactura: ['', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       fechaExpedicionFactura: ['', Validators.required],
-      observaciones: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)]
+      observaciones: ['', Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)]
     });
+    this.datosDeLaMercanciaForm.get('umt')?.enable();
+    this.datosDeLaMercanciaForm.get('umt')?.setValue('Pieza');
+    this.datosDeLaMercanciaForm.get('umt')?.disable();
     this.getFraccionArancelaria();
     this.getPasises();
     this.getValoresStore();
+    setTimeout(() => {
+      if (!this.datosDeLaMercanciaForm.get('umt')?.value) {
+        this.datosDeLaMercanciaForm.get('umt')?.enable();
+        this.datosDeLaMercanciaForm.get('umt')?.setValue('Pieza');
+        this.datosDeLaMercanciaForm.get('umt')?.disable();
+      }
+    }, 0);
   }
 
   /**
@@ -123,8 +146,10 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   habilitarDeshabilitarFormulario(): void {
     if (this.esSoloLectura) {
       this.datosDeLaMercanciaForm.disable();
+      this.datosDeLaMercanciaForm.get('umt')?.disable();
     } else {
       this.datosDeLaMercanciaForm.enable();
+      this.datosDeLaMercanciaForm.get('umt')?.disable();
     }
   }
  

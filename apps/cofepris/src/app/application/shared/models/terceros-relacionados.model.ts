@@ -415,6 +415,8 @@ export const FECHA_DE_FABRICACIO_PAGO = {
   habilitado: true,
 };
 
+export const FECHA_DE_IMPORTACION_PAGO = [260512]
+
 
 /**
  * @const FECHA_DE_CADUCIDAD_PAGO
