@@ -42,7 +42,9 @@ import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DocumentoRequeridoFirmar } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
 import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
+import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.store';
 
 @Component({
   selector: 'carga-documento',
@@ -193,7 +195,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     private cdr: ChangeDetectorRef,
     private catalogoDocumentosService: CatalogoDocumentosService,
     private cargarDocumentoService: CargarDocumentoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private documentosFirmaStore: DocumentosFirmaStore,
   ) { 
     
   }
@@ -938,6 +941,12 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
             archivo.estatus = 'cargado';
           });
 
+          const DOCUMENTOS: DocumentoRequeridoFirmar[] = res.datos.map(doc => ({
+          id_documento_seleccionado: doc.idDocumento,
+          hash_documento: doc.firma?.cadenaOriginal,
+          sello_documento: ''
+          }));
+          this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
           this.cargaEnProgreso.emit(false);
       }
     },
