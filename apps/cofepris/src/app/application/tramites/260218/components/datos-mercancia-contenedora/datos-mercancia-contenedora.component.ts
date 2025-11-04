@@ -16,6 +16,7 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query';
@@ -51,6 +52,13 @@ import { Tramite260218Query } from '../../estados/tramite260218Query.query';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+   
   /**
    * @property {TablaMercanciasDatos} SeleccionadoDatos
    * @description

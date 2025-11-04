@@ -12,6 +12,7 @@ import { AgregarFacturadorComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 /**
@@ -46,6 +47,15 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
 export class AgregarsFacturadorContenedoraComponent {
+
+
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+   
   /**
    * @constructor
    * @description

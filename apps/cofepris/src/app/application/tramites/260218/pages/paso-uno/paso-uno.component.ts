@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
@@ -43,6 +43,28 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+     * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+     * @description
+     * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     *
+     * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+     * a sus propiedades, por ejemplo para delegar la validación del formulario
+     * interno (`validarContenedor()`).
+     *
+     * > Nota: Angular inicializa esta referencia después de que la vista
+     * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+     */
+    @ViewChild(ContenedorDeDatosSolicitudComponent)
+    contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+    @ViewChild(PagoDeDerechosContenedoraComponent)
+    pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+    @ViewChild(TercerosRelacionadosVistaComponent)
+    tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
@@ -131,7 +153,31 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     this.indice = indice;
   }
 
-  
+   /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    return (
+      (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO) ? true : false
+
+    );
+  }
+
   /**
    * Método del ciclo de vida OnDestroy de Angular.
    * Limpia las suscripciones activas emitiendo un valor al destroyNotifier$

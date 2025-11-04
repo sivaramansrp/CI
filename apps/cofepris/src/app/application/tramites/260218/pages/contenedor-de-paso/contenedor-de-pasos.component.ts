@@ -25,7 +25,7 @@ import {
   getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MENSAJE_DE_VALIDACION, PASOS } from '../../constants/pasos.enum';
+import { MENSAJE_DE_VALIDACION, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS } from '../../constants/pasos.enum';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -119,7 +119,7 @@ export class ContenedorDePasosComponent implements OnInit {
    * @description
    * Índice actual del paso seleccionado (empieza en 1).
    */
-  indice: number = 1;
+  indice: number = 3;
 
   /**
    * @property {WizardComponent} wizardComponent
@@ -314,7 +314,7 @@ esMostrarAlerta: boolean = false;
             categoria: 'danger',
             modo: 'action',
             titulo: '',
-            mensaje: MENSAJE_DE_VALIDACION,
+            mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
             cerrar: true,
             tiempoDeEspera: 2000,
             txtBtnAceptar: 'SI',

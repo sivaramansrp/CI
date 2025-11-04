@@ -12,6 +12,7 @@ import { AgregarFabricanteComponent } from "../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from "../../constants/pasos.enum";
 import { Tramite260218Store } from "../../estados/tramite260218Store.store";
 
 /**
@@ -49,6 +50,15 @@ import { Tramite260218Store } from "../../estados/tramite260218Store.store";
   styleUrl: './agregar-fabricante-contenedora.component.scss',
 })
 export class AgregarsFabricanteContenedoraComponent {
+
+
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+   
   /**
    * @property {boolean} estaOculto
    * @description
