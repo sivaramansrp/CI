@@ -100,7 +100,7 @@
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
             <label for="Numero">Número de notaria*:</label>
-            <input type="text" id="Numero"  maxlength="10" pattern="\d*"  name="Numero" min="0" class="form-control"
+            <input type="text" id="Numero" maxlength="10" pattern="\d*" name="Numero" min="0" class="form-control"
               formControlName="nombreDeNotaria"
               [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"
               (input)="onInputMaxLength($event, 10, 'formaModificaciones.nombreDeNotaria')" />
@@ -258,7 +258,11 @@
             (change)="onCambio($event, item.campo)"></app-catalogo-select>
         </div>
 
-        } @else {
+        } @else if(item.tipo_input === 'spacer')
+        {
+        <div [ngClass]="item.class"></div>
+        }
+        @else{
         <div [ngClass]="item.class">
           <label for="{{ item.campo }}">{{ item.labelNombre }}@if(item.required){*}:</label>
           <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
@@ -317,9 +321,7 @@
         @if (item.campo === 'taxId') {
         <div class="col-md-6"></div>
         }
-           @if (item.campo === 'pais') {
-          <div class="col-md-6 mt-1 pais-width-84"></div>
-        }
+
         } }
       </div>
     </div>
