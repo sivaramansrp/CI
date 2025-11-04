@@ -26,6 +26,7 @@ export const ENVIRONMENT = {
     "inah":"http://localhost:4221",
     "crt":"http://localhost:4222",
     "stps":"http://localhost:4223",
-    "bandejas":"http://localhost:4224"
+    "bandejas":"http://localhost:4224",
+    "privados":"http://localhost:4225"
   }
 };
