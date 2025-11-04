@@ -384,7 +384,7 @@ export class SolicitudPageComponent implements OnInit {
         apellido_materno: DATOS_PRODUCTO.apellidoMaterno || null,
         razon_social: DATOS_PRODUCTO.razonSocial ?? '',
         descripcion_ubicacion: DATOS_PRODUCTO.domicilio,
-        rfc: 'AAL0409235E6',
+        rfc: 'LEQI8101314S7',
         pais: DATOS_MERCANCIA.paisOrigen
       },
 
