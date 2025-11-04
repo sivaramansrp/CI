@@ -12,6 +12,7 @@ import {
   REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
+  REGEX_TEXTO_ALFANUMERICO_EXTENDIDO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -86,7 +87,7 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
-
+  @Input() idProcedimiento!: number;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -283,18 +284,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_CODIGO_POSTAL)]],
-      estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle, Validators.required],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.requiredTrue],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, Validators.required
-      ],
+            codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]+$')]],
+            estado: [this.solicitudState?.estado, Validators.required],
+            muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
+            localidad: [this.solicitudState?.localidad,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            colonia: [this.solicitudState?.colonia,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+            lada: [this.solicitudState?.lada],
+            telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+            avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+            licenciaSanitaria: [ { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required, Validators.maxLength(50)]],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],

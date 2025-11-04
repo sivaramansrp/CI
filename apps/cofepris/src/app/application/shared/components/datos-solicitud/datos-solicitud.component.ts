@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
+import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
@@ -47,12 +48,14 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     ManifiestosComponent,
     NotificacionesComponent,
     RepresentanteLegalRfcComponent,
-    TooltipModule
+    TooltipModule,
+    DatosDelEstablecimientoRFCComponent
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  @Input() idProcedimiento!: number;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */

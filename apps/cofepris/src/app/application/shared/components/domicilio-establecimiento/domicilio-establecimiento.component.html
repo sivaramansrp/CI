@@ -3,23 +3,24 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="codigoPostal">Código postal*:</label>
+        <label class="form-label" for="codigoPostal">Código postal<span  [ngClass]="{'tiene-error': domicilio.get('codigoPostal')?.invalid && domicilio.get('codigoPostal')?.touched}">*</span>:</label>
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12"
           formControlName="codigoPostal" (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
           " [ngClass]="esValido('codigoPostal') ? 'required' : ''" />
-        <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['required']"
-          class="mensaje-error">
-          Este campo es obligatorio
-        </div>
-        <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['maxlength']"
-          class="mensaje-error">
-          El código postal no puede tener más de 12 caracteres.
-        </div>
-        <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['pattern']"
-          class="mensaje-error">
-          El valor capturado no es válido.
-        </div>
+       <div class="d-grid">
+               <div *ngIf="domicilio.get('codigoPostal')?.touched">
+                  <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('required')">
+                  Este campo es obligatorio.
+                  </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('maxlength')">
+                  El código postal no puede exceder los 12 caracteres.
+                  </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('pattern')">
+                  Por favor, escribe un número entero válido
+                  </small>
+               </div>
+            </div>
       </div>
     </div>
     <div class="col-md-4">
@@ -29,7 +30,7 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
+        <label class="form-label" for="muncipio">Municipio y alcaldía<span [ngClass]="{'tiene-error': domicilio.get('muncipio')?.invalid && domicilio.get('muncipio')?.touched}">*</span>:</label>
         <input class="form-control" id="muncipio" placeholder="" type="text" maxlength="120" formControlName="muncipio"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" 
           [ngClass]="esValido('muncipio') ? 'required' : ''" />
@@ -47,6 +48,21 @@
         <input class="form-control" id="localidad" placeholder="" type="text" maxlength="120"
           formControlName="localidad" (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
+           <div class="d-grid">
+            <div
+               *ngIf="
+               domicilio.get('localidad')?.invalid &&
+               domicilio.get('localidad')?.touched
+               "
+               >
+               <small
+                  class="mensaje-error"
+                  *ngIf="domicilio.get('localidad')?.hasError('pattern')"
+                  >
+               El valor capturado no es válido.
+               </small>
+            </div>
+         </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
@@ -54,19 +70,37 @@
         <input class="form-control" id="colonia" placeholder="" type="text" maxlength="120" formControlName="colonia"
           (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
       </div>
+         <div class="d-grid">
+            <div
+               *ngIf="
+               domicilio.get('colonia')?.invalid &&
+               domicilio.get('colonia')?.touched
+               "
+               >
+               <small
+                  class="mensaje-error"
+                  *ngIf="domicilio.get('colonia')?.hasError('pattern')"
+                  >
+               El valor capturado no es válido.
+               </small>
+            </div>
+         </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
+        <label class="form-label" for="calle">Calle<span [ngClass]="{'tiene-error': domicilio.get('calle')?.invalid && domicilio.get('calle')?.touched}">*</span>: <span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" 
           [ngClass]="esValido('calle') ? 'required' : ''"/>
-        <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']"
-          class="mensaje-error">
-          Este campo es obligatorio.
-        </div>
+                 <div class="d-grid">
+               <div *ngIf="domicilio.get('calle')?.touched">
+                  <small class="mensaje-error" *ngIf="domicilio.get('calle')?.hasError('required')">
+                  Este campo es obligatorio.
+                  </small>
+               </div>
+            </div>
       </div>
     </div>
   </div>
@@ -80,20 +114,29 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label class="form-label" for="telefono">Teléfono*:</label>
+        <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'tiene-error': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched}">*</span>:</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="24" formControlName="telefono"
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" 
           [ngClass]="esValido('telefono') ? 'required' : ''"/>
-        <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
-          class="mensaje-error">
-          Este campo es obligatorio.
-        </div>
+        <div class="d-grid">
+               <div *ngIf="domicilio.get('telefono')?.touched">
+                  <small class="mensaje-error" *ngIf="domicilio.get('telefono')?.hasError('required')">
+                  Este campo es obligatorio.
+                  </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('telefono')?.hasError('maxlength')">
+                  Por favor, escribe un número entero válido
+                  </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('telefono')?.hasError('pattern')">
+                  Por favor, escribe un número entero válido
+                  </small>
+               </div>
+            </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h4>S.C.I.A.N.*:</h4>
+      <h4>S.C.I.A.N.<span >*</span>:</h4>
     </div>
   </div>
   <div class="row">

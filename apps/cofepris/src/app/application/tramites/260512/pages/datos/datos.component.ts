@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ConfiguracionVisibilidad } from '../../../260513/components/datos-solicitud/datos-solicitud.component';
+import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../../../shared/constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
@@ -24,7 +26,14 @@ import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.
 })
 export class DatosComponent implements OnInit, OnDestroy {
   idProcedimiento:number = 260512;
-  
+  isAvisoLicenciaVisible: boolean = true;
+  isAduanasEntradaVisible: boolean = true;
+    /**
+     * Configuración de visibilidad utilizada para determinar qué elementos
+     * deben ser visibles en el componente. Se inicializa con la configuración
+     * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
+     */
+    configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD;
   @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
     /**
      * @property {PagoDerechosFormState} pagoDerechos

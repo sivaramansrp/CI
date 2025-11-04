@@ -24,10 +24,8 @@
             }
             @case (2) {
             @if(esDatosRespuesta){
-            <app-datos-del-establecimiento-rfc    [idProcedimiento]="idProcedimiento"></app-datos-del-establecimiento-rfc>
-            <app-domicillo-establecimiento-aduanas    [idProcedimiento]="idProcedimiento"></app-domicillo-establecimiento-aduanas>
-            <app-manifiestos    [idProcedimiento]="idProcedimiento"></app-manifiestos>
-            <app-representante-legal-rfc    [idProcedimiento]="idProcedimiento"></app-representante-legal-rfc>
+<app-datos-de-la [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+[isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad" [idProcedimiento]="idProcedimiento"></app-datos-de-la>
             }
             }
             @case (3) {
