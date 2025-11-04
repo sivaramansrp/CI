@@ -119,7 +119,7 @@ export class ContenedorDePasosComponent implements OnInit {
    * @description
    * Índice actual del paso seleccionado (empieza en 1).
    */
-  indice: number = 2;
+  indice: number = 1;
 
   /**
    * @property {WizardComponent} wizardComponent
