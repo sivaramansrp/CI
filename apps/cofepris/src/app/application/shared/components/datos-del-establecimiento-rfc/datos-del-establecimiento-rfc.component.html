@@ -39,7 +39,7 @@
         El texto excede el límite de caracteres permitido.
       </span>
       <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['pattern']" class="mensaje-error">
-        Existen datos incorrectos que no cumplen con el formato esperado.
+       El valor capturado no es válido.
       </span>
     </div>
   </div>
@@ -62,10 +62,10 @@
             Este campo es obligatorio.
           </span>
           <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-        El valor ingresado no es una dirección válida de correo electrónico
+El valor Ingresado no es una dirección válida de correo electrónico
           </span>
             <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['pattern']" class="mensaje-error">
-           El valor ingresado no es una dirección válida de correo electrónico
+          El valor Ingresado no es una dirección válida de correo electrónico
             </span>
         </div>
       </div>

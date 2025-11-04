@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { CROSLISTA_DE_PAISES, FUNCIONAMIENTO_LIST, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -406,13 +406,13 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     * Inicializa el grupo de formularios con los valores del estado de la solicitud.
     */
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]{5}$')]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]+$')]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120),Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
-      localidad: [this.solicitudState?.localidad,[Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
-      colonia: [this.solicitudState?.colonia,[Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
-      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100),Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.\-#]{2,}$/)]],
-      lada: [this.solicitudState?.lada, [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120),Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+      localidad: [this.solicitudState?.localidad,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+      colonia: [this.solicitudState?.colonia,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+      lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(50)]],
