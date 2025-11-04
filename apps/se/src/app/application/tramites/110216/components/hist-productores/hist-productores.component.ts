@@ -221,7 +221,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
  * Actualiza la lista de productores exportador en el store si el evento contiene datos.
  * @param event Arreglo de objetos HistoricoColumnas con los datos de los productores.
  */
-  emitProductoresExportador(event: HistoricoColumnas[]) {
+  emitProductoresExportador(event: HistoricoColumnas[]): void {
     if (event.length > 0) {
       this.store.setProductoresExportador([]);
       this.store.setProductoresExportador(event);
