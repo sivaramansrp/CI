@@ -1,1 +1,5 @@
-<app-scian-tabla (scianSeleccionado)="obtenerSeleccionado($event)"></app-scian-tabla>
+<app-scian-tabla 
+[idProcedimiento]="idProcedimiento"
+[scianConfigDatos]="scianSeleccionado"
+(scianSeleccionadoSpecific)="obtenerSeleccionado($event)"
+></app-scian-tabla>

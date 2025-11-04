@@ -25,6 +25,10 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  */
 export interface Tramite260202State {
   /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+  /**
    * Lista de destinatarios finales en la tabla de datos.
    */
   destinatarioFinalTablaDatos: Destinatario[];
@@ -130,6 +134,7 @@ export interface Tramite260202State {
  */
 export function createInitialState(): Tramite260202State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -177,6 +182,8 @@ export function createInitialState(): Tramite260202State {
       fechaCaducidad: '',
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
+      especifique: '',
+      especifiqueForma: '',
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
@@ -385,6 +392,18 @@ export class Tramite260202Store extends Store<Tramite260202State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
     }));
   }
 }

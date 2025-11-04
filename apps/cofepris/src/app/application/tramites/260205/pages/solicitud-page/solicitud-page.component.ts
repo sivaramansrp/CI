@@ -1,19 +1,21 @@
-import { AccionBoton, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
-import { Component, EventEmitter } from '@angular/core';
-import { PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
+import { AccionBoton,AlertComponent, NotificacionesComponent, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 import { Tramite260205State, Tramite260205Store } from '../../estados/stores/tramite260205.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
+import { GuardarAdapter_260205 } from '../../adapters/guardar-payload.adapter';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
@@ -31,12 +33,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoTresComponent,
     BtnContinuarComponent,
     PasoFirmaComponent,
-    PasoCargaDocumentoComponent
+    PasoCargaDocumentoComponent,
+    NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
   /**
    * @property {string} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
@@ -60,6 +64,17 @@ export class SolicitudPageComponent {
    * Referencia al componente Wizard para controlar navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+
+  /**
+      * @property {PasoUnoComponent} pasoUnoComponent
+      * @description
+      * Referencia al componente hijo `PasoUnoComponent` mediante
+      * `@ViewChild`. Permite acceder a sus métodos y propiedades
+      * desde este componente padre.
+      */
+      @ViewChild(PasoUnoComponent)
+      pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @property {DatosPasos} datosPasos
@@ -86,10 +101,37 @@ export class SolicitudPageComponent {
    */
   idTipoTRamite: string = '260205';
 
+  
+     /**
+   * @property {string} MENSAJE_DE_ERROR
+   * @description
+   * Propiedad usada para almacenar el mensaje de error actual.
+   * Se inicializa como cadena vacía y se actualiza en función
+   * de las validaciones o errores capturados en el flujo.
+   */
+     MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+  
+
   /**
    * URL de la página actual.
    */
     public solicitudState!: Tramite260205State;
+
+     /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+    public seleccionarFilaNotificacion!: Notificacion;
+
+
+/**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+public mostrarAlerta: boolean = false;
 
      /**
    * Evento que se emite para cargar archivos.
@@ -114,11 +156,21 @@ export class SolicitudPageComponent {
    */
   cargaEnProgreso: boolean = true;
 
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+
 
   constructor(
     private tramiteStore: Tramite260205Store,
     private tramiteQuery: Tramite260205Query
-  ) {
+    ,private toastrService: ToastrService,
+    public registroSolicitudService: RegistroSolicitudService
+  ) { }
+
+  ngOnInit(): void {
     this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
       this.solicitudState = data;
     });
@@ -179,20 +231,93 @@ export class SolicitudPageComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón presionado.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(
-        e.valor
-      );
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+           let isValid = true;
+     
+             if (this.indice === 1 && this.pasoUnoComponent) {
+             isValid = this.pasoUnoComponent.validarPasoUno();
+           }
+           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+             this.mostrarAlerta=true;
+             this.seleccionarFilaNotificacion = {
+               tipoNotificacion: 'alert',
+               categoria: 'danger',
+               modo: 'action',
+               titulo: '',
+               mensaje: MENSAJE_DE_PAGE,
+               cerrar: true,
+               tiempoDeEspera: 2000,
+               txtBtnAceptar: 'SI',
+               txtBtnCancelar: 'NO',
+             }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+
+           }
+           if (!isValid) {
+             this.esFormaValido = true;
+             this.datosPasos.indice = this.indice;
+             return;
+           }
+     
+            const PAYLOAD = GuardarAdapter_260205.toFormPayload(this.solicitudState);
+                let shouldNavigate = false;
+                this.registroSolicitudService.postGuardarDatos('260205', PAYLOAD).subscribe(response => {
+                  shouldNavigate = response.codigo === '00';
+                  if (!shouldNavigate) {
+                    const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+                    this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+                    this.esFormaValido = false;
+                    this.indice = 1;
+                    this.datosPasos.indice = 1;
+                    this.wizardComponent.indiceActual = 1;
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                    return;
+                  }
+                  if(shouldNavigate) {
+                    if(esValidObject(response) && esValidObject(response.datos)) {
+                      const DATOS = response.datos as { id_solicitud?: number };
+                      if(getValidDatos(DATOS.id_solicitud)) {
+                        this.tramiteStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
+                      } else {
+                        this.tramiteStore.setIdSolicitud(0);
+                      }
+                    }
+                    // Calcular el nuevo índice basado en la acción
+                    const INDICE_ACTUALIZADO = this.indice + 1;                    
+                    this.toastrService.success(response.mensaje);
+                     if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+                        this.indice = INDICE_ACTUALIZADO;
+                        this.datosPasos.indice = INDICE_ACTUALIZADO;
+                        this.esFormaValido = false;
+                        this.wizardComponent.siguiente();
+                      }
+                    } else {
+                      this.toastrService.error(response.mensaje);
+                    }
+                  });
+                }else{
+                  this.indice = e.valor;
+                  this.datosPasos.indice = this.indice;
+                  this.wizardComponent.atras();
+                }
   }
 
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
+  }
 
   /**
    * @method siguiente

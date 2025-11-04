@@ -2,7 +2,8 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 /**
  * @component AgregarFabricanteContenedoraComponent
  * @description Componente contenedor que actúa como intermediario entre la vista y el estado de la aplicación
@@ -25,14 +26,21 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 })
 export class AgregarFabricanteContenedoraComponent {
   
+
+    /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+     */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
+     
   /**
-   * @property tramite260214Store
+   * @property Tramite260210Store
    * @description Store público que gestiona el estado completo del trámite 260214.
    * Esta propiedad proporciona acceso a todas las operaciones de estado relacionadas
    * con el trámite, incluyendo la gestión de fabricantes, datos del formulario,
    * validaciones y persistencia de información.
    * 
-   * @type {Tramite260214Store}
+   * @type {Tramite260210Store}
    * @readonly
    * @public
    * @memberof AgregarFabricanteContenedoraComponent
@@ -40,13 +48,13 @@ export class AgregarFabricanteContenedoraComponent {
    * @example
    * ```typescript
    * // Acceso al estado actual de fabricantes
-   * const fabricantes = this.tramite260214Store.fabricantes();
+   * const fabricantes = this.Tramite260210Store.fabricantes();
    * 
    * // Verificar si hay cambios pendientes
-   * const hasChanges = this.tramite260214Store.hasUnsavedChanges();
+   * const hasChanges = this.Tramite260210Store.hasUnsavedChanges();
    * ```
    */
-  public readonly tramite260214Store: Tramite260214Store;
+  public readonly Tramite260210Store: Tramite260210Store;
 
   /**
    * @constructor
@@ -54,7 +62,7 @@ export class AgregarFabricanteContenedoraComponent {
    * para el funcionamiento del componente contenedor. Se encarga de inyectar el store
    * del trámite 260214 que permitirá la gestión del estado de los fabricantes.
    * 
-   * @param {Tramite260214Store} tramite260214Store - Instancia del store que administra 
+   * @param {Tramite260210Store} Tramite260210Store - Instancia del store que administra 
    * el estado del trámite 260214, incluyendo la gestión de fabricantes, validaciones
    * y operaciones CRUD sobre los datos del trámite.
    * 
@@ -67,8 +75,8 @@ export class AgregarFabricanteContenedoraComponent {
    * // No requiere invocación manual
    * ```
    */
-  constructor(tramite260214Store: Tramite260214Store) {
-    this.tramite260214Store = tramite260214Store;
+  constructor(Tramite260210Store: Tramite260210Store) {
+    this.Tramite260210Store = Tramite260210Store;
   }
 
   /**
@@ -108,9 +116,9 @@ export class AgregarFabricanteContenedoraComponent {
    * ```
    * 
    * @see {@link Fabricante} - Modelo de datos para fabricantes
-   * @see {@link Tramite260214Store.updateFabricanteTablaDatos} - Método del store que realiza la actualización
+   * @see {@link Tramite260210Store.updateFabricanteTablaDatos} - Método del store que realiza la actualización
    */
   updateFabricanteTablaDatos(event: Fabricante[]): void {
-    this.tramite260214Store.updateFabricanteTablaDatos(event);
+    this.Tramite260210Store.updateFabricanteTablaDatos(event);
   }
 }

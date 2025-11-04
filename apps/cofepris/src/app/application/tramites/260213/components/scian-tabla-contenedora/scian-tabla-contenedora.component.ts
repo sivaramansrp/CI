@@ -10,6 +10,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260213Store } from '../../estados/tramite260213Store.store';
@@ -46,12 +47,18 @@ import { Tramite260213Store } from '../../estados/tramite260213Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+    
+    /**
+     * @property {number} idProcedimiento
+     * @description Identificador del procedimiento.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @property {TablaScianConfig} scianSeleccionado
    * Contiene la configuración seleccionada de la tabla SCIAN.
    * Este objeto es utilizado para almacenar la información de la selección actual en la tabla.
    */
-  public scianSeleccionado!: TablaScianConfig;
+  public scianSeleccionado!: TablaScianConfig[];
 
   /**
    * @constructor
@@ -80,10 +87,11 @@ export class ScianTablaContenedoraComponent {
    * this.obtenerSeleccionado(seleccion);
    * ```
    */
-  obtenerSeleccionado(event: TablaScianConfig): void {
-    this.Tramite260213Store.update((state) => ({
+  obtenerSeleccionado(event: TablaScianConfig | TablaScianConfig[]): void {
+    const DATOS = Array.isArray(event) ? event : [event];
+     this.Tramite260213Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event],
-    }));
+      scianConfigDatos: DATOS
+    }))
   }
 }

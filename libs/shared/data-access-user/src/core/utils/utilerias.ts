@@ -363,3 +363,91 @@ export function formatDateToYYYYMMDD(dateString: string): string {
   const DATE = new Date(dateString);
   return DATE.toISOString().split('T')[0];
 }
+
+/**  
+ * **Formatea una fecha en formato DD/MM/YYYY.**  
+ * Convierte una cadena de fecha válida en una representación legible con día, mes y año.  
+ *  
+ * @param fechaStr - Cadena de fecha a formatear (por ejemplo, `"2025-11-03"`).  
+ * @returns La fecha formateada en formato `"DD/MM/YYYY"`.  
+ */
+export function formatFechaDDMMYYYY(fechaStr: string): string {
+  const FECHA = new Date(fechaStr);
+
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const YEAR = FECHA.getFullYear();
+
+  return `${DAY}/${MONTH}/${YEAR}`;
+}
+
+    /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
+  export function manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }
+
+  /**
+   *  Exporta un archivo Excel a partir de una cadena base64.
+   * 
+   * @param dataFile 
+   */
+  export function exportExcelFile( dataFile: string): void {
+    const BASE64_DATA = dataFile ?? '';
+    const BYTE_CHARACTERS = atob(BASE64_DATA);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+        BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Crear enlace de descarga
+    const LINK = document.createElement('a');
+    LINK.href = window.URL.createObjectURL(BLOB);
+    LINK.download = 'datosRPE.xlsx';
+    LINK.click();
+
+    // Liberar memoria
+            window.URL.revokeObjectURL(LINK.href);
+  
+  }
+
+  /**
+ * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
+ * @param fecha_creacion Fecha en formato ISO (string)
+ * @returns Fecha formateada como string
+ */
+export function formatFechaCreacion(fecha_creacion: string): string {
+    const DATE = new Date(fecha_creacion);
+    if (isNaN(DATE.getTime())) {
+        return fecha_creacion;
+    }
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
+}

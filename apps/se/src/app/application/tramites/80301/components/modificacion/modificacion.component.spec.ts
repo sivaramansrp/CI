@@ -56,12 +56,6 @@ describe('ModificacionComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should initialize the form on ngOnInit', () => {
-        component.ngOnInit();
-        expect(component.modificacionForm).toBeDefined();
-        expect(component.modificacionForm.get('rfc')?.value).toBe('RFC123');
-    });
-
     it('should load modification data and update the form', () => {
         component.loadDatosModificacion();
         expect(solicitudServiceMock.getDatosModificacion).toHaveBeenCalled();

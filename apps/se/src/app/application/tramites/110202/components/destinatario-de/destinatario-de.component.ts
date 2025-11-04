@@ -38,26 +38,16 @@ interface FormValues {
     DestinatarioComponent,
     DatosDelDestinatarioComponent,
     DetallesDelTransporteComponent
-],
+  ],
   templateUrl: './destinatario-de.component.html',
   styleUrl: './destinatario-de.component.scss',
 })
 export class DestinatarioDeComponent implements OnDestroy, OnInit {
-  /** Inicializa el formulario reactivo del destinatario */
-  iniciarFormulario(): void {
-    this.destinatarioForm = this.fb.group({
-      medioDeTransporte: [''],
-      // Agrega otros controles aquí si es necesario
-    });
-  }
- 
+
   /** Referencia al componente datos-del-destinatario para marcar campos como tocados */
   @ViewChild(DatosDelDestinatarioComponent) datosDelDestinatarioComponent?: DatosDelDestinatarioComponent;
   /** Referencia al componente destinatario para marcar campos como tocados */
   @ViewChild(DestinatarioComponent) destinatarioComponent?: DestinatarioComponent;
-  /**
-   * Maneja el envío del formulario y muestra errores si hay campos obligatorios vacíos.
-   */
   /** Bandera de validez para datos-del-destinatario */
   datosDelDestinatarioValido: boolean = false;
   /** Bandera de validez para destinatario */
@@ -114,7 +104,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery,
     public destinatarioService: DestinatarioService
   ) {
-  this.iniciarFormulario();
+    this.iniciarFormulario();
     this.inicializarSuscripciones();
   }
 
@@ -130,7 +120,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
         })
       )
   }
- /** Método público para validar todos los formularios y emitir validez al store */
+  /** Método público para validar todos los formularios y emitir validez al store */
   public validateAll(): boolean {
     let valid = true;
     if (this.destinatarioForm && this.destinatarioForm.invalid) {
@@ -153,7 +143,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     }
     return valid;
   }
-  
+
   /**
    * Recibe validez del formulario de datos-del-destinatario
    */
@@ -196,7 +186,14 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     }
     // Lógica para continuar a la siguiente página si todos los formularios son válidos
   }
- 
+  /** Inicializa el formulario reactivo del destinatario */
+  iniciarFormulario(): void {
+    this.destinatarioForm = this.fb.group({
+      medioDeTransporte: [''],
+      // Agrega otros controles aquí si es necesario
+    });
+  }
+
   /**
    * Configura las suscripciones necesarias para el formulario y el estado.
    */

@@ -1,473 +1,317 @@
+import { DatosSolicitudFormState } from '../../../shared/models/datos-solicitud.model';
+import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
+import { Fabricante } from '../../../shared/models/terceros-relacionados.model';
+import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
-
-import { Store, StoreConfig } from '@datorama/akita';
-
-import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { MercanciaForm } from '../../../shared/models/datos-solicitud.model';
+import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
+import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
+import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
+import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
+import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
+import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
 /**
- * Estado de la tienda para el trámite 260212.
+ * Representa el estado del trámite 260212 en la aplicación.
+ *
+ * @interface Tramite260212State
+ *
+ * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales.
+ * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores.
+ * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes.
+ * @property {DatosSolicitudFormState} datosSolicitudFormState - Información del formulario de solicitud.
+ * @property {MercanciaForm} mercanciaForm - Datos del formulario de mercancías.
+ * @property {TablaOpcionConfig[]} opcionConfigDatos - Opciones de configuración de tabla.
+ * @property {TablaScianConfig[]} scianConfigDatos - Configuraciones SCIAN disponibles.
+ * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Configuración de tabla de mercancías.
+ * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Opciones seleccionadas.
+ * @property {TablaScianConfig[]} seleccionadoScianDatos - Configuraciones SCIAN seleccionadas.
+ * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Mercancías seleccionadas.
+ * @property {boolean} opcionesColapsableState - Estado del panel colapsable.
+ * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
+ * @property {number} [tabSeleccionado] - Pestaña seleccionada actualmente.
  */
 export interface Tramite260212State {
   /**
-   * Estado actual del trámite.
+   * @property {number | null} idSolicitud
+   * @description
+   * Identificador único de la solicitud del trámite 80207 en el sistema VUCEM.
+   * Puede ser nulo si aún no se ha generado o asignado un ID oficial al trámite.
+   *
+   * @unique_identifier ID único del trámite en sistema
+   * @nullable Puede ser null antes de envío oficial
+   * @system_reference Referencia para tracking y consultas
    */
-  estado: string ;
-  /**
-   * Clave seleccionada.
-   */
-  selectedClave: CatalogoResponse | null,
-  /**
-   * Descripción seleccionada.
-   */
-  selectedDescripcion: CatalogoResponse | null,
-  /**
-   * Clasificación especificada seleccionada.
-   */
-  selecteDespecificarClasificacion:Catalogo |null
-  /**
-   * Banco seleccionado.
-   */
-  banco:string,
-  /**
-   * RFC del responsable sanitario.
-   */
-  rfcDelResponsableSanitario:string,
-  /**
-   * Denominación o razón social.
-   */
-  denominacionRazonSocial:string,
-  /**
-   * Correo electrónico.
-   */
-  correoElectronico:string,
-  /**
-   * Municipio.
-   */
-  municipio:string,
-  /**
-   * Localidad.
-   */
-  localidad:string,
-  /**
-   * Colonia.
-   */
-  colonia:string,
-  /**
-   * Calle.
-   */
-  calle:string,
-  /**
-   * Lada telefónica.
-   */
-  lada:string,
-  /**
-   * Teléfono.
-   */
-  teléfono:string,
-  /**
-   * Código postal.
-   */
-  codigoPostal:string,
-  /**
-   * Régimen.
-   */
-  regimen:string,
-  /**
-   * Entradas.
-   */
-  entradas:string,
-  /**
-   * Clave de referencia.
-   */
-  ClaveDeReferncia:string,
-  /**
-   * Cadena de la dependencia.
-   */
-  CadenaDeLaDependencia:string,
-  /**
-   * Llave de pago.
-   */
-  llaveDePago:string,
-  /**
-   * Fecha de pago.
-   */
-  setFechaDePago:string,
-  /**
-   * Importe de pago.
-   */
-  importeDePago:string,
-   losDatos: string;
-  rfc: string;
-  nombre: string;
-  primerApellido: string;
-  segundoApellido: string;
-      avisoclave: string;
-      noLicenciaSanitaria: string;
+  idSolicitud: number | null;
+  destinatarioFinalTablaDatos: Destinatario[];
+  facturadorTablaDatos: Facturador[];
+  proveedorTablaDatos: Proveedor[];
+  fabricanteTablaDatos: Fabricante[];
+  datosSolicitudFormState: DatosSolicitudFormState;
+  mercanciaForm: MercanciaForm;
+  opcionConfigDatos: TablaOpcionConfig[];
+  scianConfigDatos: TablaScianConfig[];
+  tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+  seleccionadoopcionDatos: TablaOpcionConfig[];
+  seleccionadoScianDatos: TablaScianConfig[];
+  seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+  opcionesColapsableState: boolean;
+  pagoDerechos: PagoDerechosFormState;
+  tabSeleccionado?: number;
 }
 
 /**
  * Crea el estado inicial para el trámite 260212.
- * @returns Estado inicial de Tramite260212State
+ *
+ * @returns {Tramite260212State} El estado inicial del store.
  */
 export function createInitialState(): Tramite260212State {
   return {
-    // selectedClave: '',
-    estado: '',
-    selectedClave: null,
-    selectedDescripcion: null,
-    selecteDespecificarClasificacion:null,
-    banco:'',
-    rfcDelResponsableSanitario:'',
-    denominacionRazonSocial:'',
-    correoElectronico:'',
-    municipio:'',
-    localidad:'',
-    colonia:'',
-    calle:'',
-    lada:'',
-    teléfono:'',
-    codigoPostal:'',
-    regimen:'',
-    entradas:'',
-    ClaveDeReferncia:'',
-    CadenaDeLaDependencia:'',
-    llaveDePago:'',
-    setFechaDePago:'',
-    importeDePago:'',
-       losDatos: '',
-      rfc: '',
-      nombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-          avisoclave: '',
-      noLicenciaSanitaria: '',
+    idSolicitud: 0,
+    destinatarioFinalTablaDatos: [],
+    facturadorTablaDatos: [],
+    proveedorTablaDatos: [],
+    fabricanteTablaDatos: [],
+    datosSolicitudFormState: {
+      rfcSanitario: '',
+      denominacionRazon: '',
+      correoElectronico: '',
+      codigoPostal: '',
+      estado: '',
+      municipioAlcaldia: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      lada: '',
+      telefono: '',
+      aviso: '',
+      licenciaSanitaria: '',
+      regimen: '',
+      adunasDeEntradas: '',
+      aeropuerto: false,
+      publico: 'si',
+      representanteRfc: '',
+      representanteNombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+    },
+    mercanciaForm: {
+      clasificacionProducto: '',
+      especificarClasificacionProducto: '',
+      denominacionEspecificaProducto: '',
+      denominacionDistintiva: '',
+      denominacionComun: '',
+      tipoProducto: '',
+      formaFarmaceutica: '',
+      estadoFisico: '',
+      fraccionArancelaria: '',
+      descripcionFraccion: '',
+      cantidadUmtValor: '',
+      cantidadUmt: '',
+      cantidadUmcValor: '',
+      cantidadUmc: '',
+      presentacion: '',
+      numeroRegistroSanitario: '',
+      fechaCaducidad: '',
+      paisDeOriginDatos: [],
+      paisDeProcedenciaDatos: [],
+    },
+    opcionConfigDatos: TABLA_OPCION_DATA,
+    scianConfigDatos: [],
+    tablaMercanciasConfigDatos: [],
+    seleccionadoopcionDatos: [],
+    seleccionadoScianDatos: [],
+    seleccionadoTablaMercanciasDatos: [],
+    opcionesColapsableState: true,
+    pagoDerechos: {
+      claveReferencia: '',
+      cadenaDependencia: '',
+      estado: '',
+      llavePago: '',
+      fechaPago: '',
+      importePago: '',
+    },
+    tabSeleccionado: 1,
   };
 }
+
+/**
+ * Store que maneja el estado del trámite 260212.
+ */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'permisoMaquilaState', resettable: true })
-/**
- * Tienda Akita para manejar el estado del trámite 260212.
- */
+@StoreConfig({ name: 'tramite260212', resettable: true })
 export class Tramite260212Store extends Store<Tramite260212State> {
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Establece el estado seleccionado.
-   * @param estado Estado a establecer
+   * Actualiza el estado del formulario de solicitud.
+   *
+   * @param datosSolicitudFormState - Estado actualizado del formulario.
    */
-  public setSelectedEstado(estado: string): void {
+  public updateDatosSolicitudFormState(
+    datosSolicitudFormState: DatosSolicitudFormState
+  ): void {
     this.update((state) => ({
       ...state,
-      estado,
+      datosSolicitudFormState,
     }));
   }
 
   /**
-   * Establece la clave seleccionada.
-   * @param selectedClave Clave seleccionada
+   * @method updateFabricanteTablaDatos
+   * @description
+   * Agrega nuevos fabricantes a la tabla de datos de fabricantes.
+   *
+   * @param {Fabricante[]} newFabricantes
+   * Lista de nuevos fabricantes a agregar.
    */
-  public setClave(selectedClave: CatalogoResponse): void {
+  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+    this.update((state) => {
+      const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+      newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        fabricanteTablaDatos: ACTUALIZADA,
+      };
+    });
+  }
+
+  /**
+   * Agrega nuevos destinatarios finales a la lista existente.
+   *
+   * @param newDestinatarios - Arreglo de objetos `Destinatario` a añadir.
+   */
+  public updateDestinatarioFinalTablaDatos(
+    newDestinatarios: Destinatario[]
+  ): void {
     this.update((state) => ({
       ...state,
-      selectedClave,
+      destinatarioFinalTablaDatos: [
+        ...state.destinatarioFinalTablaDatos,
+        ...newDestinatarios,
+      ],
     }));
   }
 
   /**
-   * Establece la descripción seleccionada.
-   * @param selectedDescripcion Descripción seleccionada
+   * Agrega nuevos proveedores a la lista existente.
+   *
+   * @param newProveedores - Arreglo de objetos `Proveedor` a añadir.
    */
-  public setDescripcion(selectedDescripcion: CatalogoResponse): void {
+  public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      selectedDescripcion,
+      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
     }));
   }
 
   /**
-   * Establece la clasificación especificada seleccionada.
-   * @param selecteDespecificarClasificacion Clasificación seleccionada
+   * Agrega nuevos facturadores a la lista existente.
+   *
+   * @param newFacturadores - Arreglo de objetos `Facturador` a añadir.
    */
-  public setDespecificarClasificacion(selecteDespecificarClasificacion: CatalogoResponse): void {
+  public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      selecteDespecificarClasificacion,
+      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
     }));
   }
 
   /**
-   * Establece el banco.
-   * @param banco Banco a establecer
+   * Actualiza las opciones de configuración disponibles.
+   *
+   * @param opcionConfigDatos - Arreglo actualizado de `TablaOpcionConfig`.
    */
-  public setBanco(banco: string): void {
+  public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
     this.update((state) => ({
       ...state,
-      banco,
+      opcionConfigDatos,
     }));
   }
 
   /**
-   * Establece el RFC del responsable sanitario.
-   * @param rfcDelResponsableSanitario RFC a establecer
+   * Actualiza las configuraciones SCIAN disponibles.
+   *
+   * @param scianConfigDatos - Arreglo actualizado de `TablaScianConfig`.
    */
-  public setRfcDelResponsableSanitario(rfcDelResponsableSanitario: string):void {
+  public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
-      rfcDelResponsableSanitario,
+      scianConfigDatos: [...state.scianConfigDatos, ...scianConfigDatos],
     }));
   }
 
   /**
-   * Establece la denominación o razón social.
-   * @param denominacionRazonSocial Denominación a establecer
+   * Actualiza la configuración de la tabla de mercancías.
+   *
+   * @param tablaMercanciasConfigDatos - Arreglo actualizado de `TablaMercanciasDatos`.
    */
-  public setDenominacionRazonSocial(denominacionRazonSocial: string):void {
+  public updateTablaMercanciasConfigDatos(
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[]
+  ): void {
     this.update((state) => ({
       ...state,
-      denominacionRazonSocial,
+      tablaMercanciasConfigDatos,
     }));
   }
 
   /**
-   * Establece el correo electrónico.
-   * @param correoElectronico Correo a establecer
+   * Actualiza la información del formulario de pago de derechos.
+   *
+   * @param nuevoPagoDerechos - Nuevo objeto de tipo `PagoDerechosFormState`.
    */
-  public setCorreoElectronico(correoElectronico: string):void {
+  public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,
-      correoElectronico,
+      pagoDerechos: nuevoPagoDerechos,
     }));
   }
 
   /**
-   * Establece el municipio.
-   * @param municipio Municipio a establecer
+   * Cambia la pestaña actualmente seleccionada.
+   *
+   * @param tabSeleccionado - Índice de la nueva pestaña seleccionada.
    */
-  public setMunicipio(municipio: string):void {
+  public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
       ...state,
-      municipio,
+      tabSeleccionado: tabSeleccionado,
     }));
   }
 
   /**
-   * Establece la localidad.
-   * @param localidad Localidad a establecer
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
    */
-  public setLocalidad(localidad: string):void {
+  public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
       ...state,
-      localidad,
+      idSolicitud,
     }));
   }
-
-  /**
-   * Establece la colonia.
-   * @param colonia Colonia a establecer
-   */
-  public setColonia(colonia: string):void {
-    this.update((state) => ({
-      ...state,
-      colonia,
-    }));
-  }
-
-  /**
-   * Establece la calle.
-   * @param calle Calle a establecer
-   */
-  public setCalle(calle: string):void {
-    this.update((state) => ({
-      ...state,
-      calle,
-    }));
-  }
-
-  /**
-   * Establece la lada telefónica.
-   * @param lada Lada a establecer
-   */
-  public setLada(lada: string):void {
-    this.update((state) => ({
-      ...state,
-      lada,
-    }));
-  }
-
-  /**
-   * Establece el teléfono.
-   * @param teléfono Teléfono a establecer
-   */
-  public setTelefono(teléfono: string):void {
-    this.update((state) => ({
-      ...state,
-      teléfono,
-    }));
-  }
-
-  /**
-   * Establece el código postal.
-   * @param codigoPostal Código postal a establecer
-   */
-  public setCodigoPostal(codigoPostal: string):void {
-    this.update((state) => ({
-      ...state,
-      codigoPostal,
-    }));
-  }
-
-  /**
-   * Establece el régimen.
-   * @param regimen Régimen a establecer
-   */
-  public setRegimen(regimen: string):void {
-    this.update((state) => ({
-      ...state,
-      regimen,
-    }));
-  }
-
-  /**
-   * Establece las entradas.
-   * @param entradas Entradas a establecer
-   */
-  public setEntradas(entradas: string):void {
-    this.update((state) => ({
-      ...state,
-      entradas,
-    }));
-  }
-  /**
-   * Establece la clave de referencia.
-   * @param ClaveDeReferncia Clave de referencia a establecer
-   */
-  public setClaveDeReferncia(ClaveDeReferncia: string):void {
-    this.update((state) => ({
-      ...state,
-      ClaveDeReferncia,
-    }));
-  }
-  /**
-   * Establece la cadena de la dependencia.
-   * @param CadenaDeLaDependencia Cadena a establecer
-   */
-  public setCadenaDeLaDependencia(CadenaDeLaDependencia: string):void {
-    this.update((state) => ({
-      ...state,
-      CadenaDeLaDependencia,
-    }));
-  }
-
-  /**
-   * Establece la llave de pago.
-   * @param llaveDePago Llave de pago a establecer
-   */
-  public setLlaveDePago(llaveDePago: string):void {
-    this.update((state) => ({
-      ...state,
-      llaveDePago,
-    }));
-  }
-  /**
-   * Establece la fecha de pago.
-   * @param setFechaDePago Fecha de pago a establecer
-   */
-  public setFechaDePago(setFechaDePago: string):void {
-    this.update((state) => ({
-      ...state,
-      setFechaDePago,
-    }));
-  }
-  /**
-   * Establece el importe de pago.
-   * @param importeDePago Importe de pago a establecer
-   */
-  public setImporteDePago(importeDePago: string):void {
-    this.update((state) => ({
-      ...state,
-      importeDePago,
-    }));
-  }
- /**
- * Establece los datos generales del formulario.
- * Se actualiza el campo 'losDatos' en el store.
- * Útil para datos agrupados del tercero.
- */
-public setLosDatos(losDatos: string): void {
-  this.update((state) => ({
-    ...state,
-    losDatos,
-  }));
-}
-
-/**
- * Establece el RFC del tercero.
- * Se actualiza el campo 'rfc' en el store.
- * Necesario para identificación fiscal.
- */
-public setRfc(rfc: string): void {
-  this.update((state) => ({
-    ...state,
-    rfc,
-  }));
-}
-
-/**
- * Establece el nombre del tercero.
- * Se actualiza el campo 'nombre' en el store.
- * Aplica a personas físicas o morales.
- */
-public setNombre(nombre: string): void {
-  this.update((state) => ({
-    ...state,
-    nombre,
-  }));
-}
-
-/**
- * Establece el primer apellido del tercero.
- * Se actualiza el campo 'primerApellido' en el store.
- * Solo aplica para personas físicas.
- */
-public setPrimerApellido(primerApellido: string): void {
-  this.update((state) => ({
-    ...state,
-    primerApellido,
-  }));
-}
-
-/**
- * Establece el segundo apellido del tercero.
- * Se actualiza el campo 'segundoApellido' en el store.
- * Solo aplica para personas físicas.
- */
-public setSegundoApellido(segundoApellido: string): void {
-  this.update((state) => ({
-    ...state,
-    segundoApellido,
-  }));
-}
-
-/**
- * Establece la clave del aviso sanitario.
- * Se actualiza el campo 'avisoclave' en el store.
- * Utilizado en trámites sanitarios.
- */
-public setAvisoclave(avisoclave: string): void {
-  this.update(state => ({ ...state, avisoclave }));
-}
-
-/**
- * Establece el número de licencia sanitaria.
- * Se actualiza el campo 'noLicenciaSanitaria' en el store.
- * Aplica para fabricantes o proveedores con regulación sanitaria.
- */
-public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
-  this.update(state => ({ ...state, noLicenciaSanitaria }));
-}
-
 }

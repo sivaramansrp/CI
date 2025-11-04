@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
@@ -459,6 +459,17 @@ const ROUTES: Routes = [
     path: 'detalle-v-dictamen',
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'autorizar-dictamen',
+    loadComponent: () =>
+      import('./autorizar-dictamen/autorizar-dictamen.component').then((m) => m.AutorizarDictamenComponent
+    ),
+  },
+  {
+    path: 'confirmar-notificacion',
+    loadComponent: () =>
+      import('./confirmar-notificacion/confirmar-notificacion.component').then((m) => m.ConfirmarNotificacionComponent),
   },
   {
     path: 'datos-generales-tramite',

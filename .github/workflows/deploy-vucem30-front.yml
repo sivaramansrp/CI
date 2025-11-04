@@ -78,6 +78,7 @@ jobs:
           docker compose -f ./docker/modulefederation-stps-microfront.yml build && docker compose -f ./docker/modulefederation-stps-microfront.yml push
           docker compose -f ./docker/modulefederation-funcionario-microfront.yml build && docker compose -f ./docker/modulefederation-funcionario-microfront.yml push
           docker compose -f ./docker/modulefederation-bandejas-microfront.yml build && docker compose -f ./docker/modulefederation-bandejas-microfront.yml push
+          docker compose -f ./docker/modulefederation-privados-microfront.yml build && docker compose -f ./docker/modulefederation-privados-microfront.yml push
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -104,3 +105,4 @@ jobs:
             microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev -n default
             microk8s kubectl rollout restart deployment modulefederation-bandejas-microfront-deployment-dev -n default
             microk8s kubectl rollout restart deployment modulefederation-agricultura-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-privados-microfront-deployment-dev -n default

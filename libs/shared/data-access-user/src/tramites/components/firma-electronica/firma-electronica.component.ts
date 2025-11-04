@@ -254,6 +254,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
       );
 
       if (ESLOGIN) {
+        // Crear el payload para la autenticación
         const PAYLOAD = {
           "rfc": RESULTADO.rfc,
           "certificate": RESULTADO.certificado,
@@ -265,7 +266,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
         this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
         this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
           next: (response) => {
-            if(esValidObject(response)){
+            if (esValidObject(response)) {
               this.toastrService.success('Autenticación exitosa');
             }
           },
@@ -286,7 +287,6 @@ export class FirmaElectronicaComponent implements OnDestroy {
           rfc: RESULTADO.rfc,
           fechaFin: RESULTADO.fechaFin,
         });
-        this.toastrService.success('Firma electrónica generada correctamente');
       }
 
     } catch (error) {

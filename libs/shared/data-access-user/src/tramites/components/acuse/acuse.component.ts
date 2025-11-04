@@ -154,57 +154,10 @@ export class AcuseComponent implements OnChanges, OnDestroy {
 
     if (changes['idSolicitud']?.currentValue) {
       this.generarYMostrarDocumentos();
-      if (this.tituloResoluciones != "") {
-        this.datosTablaResoluciones = [];
-        this.guardarResolucion();
-      }
     }
   }
 
 
-  guardarResolucion(): void {
-    console.log('Folio', this.folio);
-    console.log('idSolicitud', this.idSolicitud);
-    console.log('procedure', this.procedure);
-    console.log('txtAlerta', this.txtAlerta);
-    this.documentosResolucinService.getDetalleTramiteByFolio(this.procedure.toString(),this.folio).subscribe({
-      next: (data) => {
-        if (data?.codigo === '00') {
-          console.log('Guardado de resolución exitoso', data.datos?.resolucion?.id_resolucion);
-          this.documentosResolucinService.guardarResolucion(this.procedure.toString(), data.datos?.resolucion?.id_resolucion || 0).subscribe({
-            next: (res) => {
-              if (res?.codigo === '00') {
-                this.idLlaveArchivo = res.datos?.llave_archivo || '';
-                this.acuseDetalleService.getDescargarAcuse(this.procedure, this.idLlaveArchivo).subscribe({  
-                  next: (data) => {
-                    if (data?.codigo === '00' && data?.datos?.contenido) {
-                      this.datosTablaResoluciones = [
-                        {
-                          id: 1,
-                          documento: data.datos.nombre_archivo,
-                          urlPdf: AcuseComponent.crearUrlPdf(data.datos.contenido),
-                          idDocumento: '1',
-                        },
-                      ];
-                    }
-                  },        
-                  error: (err) => {
- 
-                  }
-                });
-              } 
-            },
-            error: (err) => {
- 
-            }
-          });
-        }
-      },
-      error: (err) => {
-
-      }
-    });
-  }
 
   /**
    * Método que genera y muestra los documentos necesarios para el acuse.
@@ -217,9 +170,12 @@ export class AcuseComponent implements OnChanges, OnDestroy {
       this.url === 'pexim' ||
       [
         80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
+        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
+        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223, 120101,130102,
+        5701, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102, 140101,140102,
         80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204,
         110205, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217,
-        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102,
+        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102, 150101, 150102
       ].includes(this.procedure)
     ) {
       this.documentosService130118
