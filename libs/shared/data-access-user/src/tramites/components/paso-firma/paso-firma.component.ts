@@ -1,16 +1,19 @@
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { DocumentoRequeridoFirmar, FirmarRequest } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
 import { base64ToHex, encodeToISO88591Hex, formatFecha, renameKey } from '../../../core/utils/utilerias';
-import { catchError, of, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '../../../core/models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../core/models/shared/cadena-original-request.model';
 import { DocumentoService } from '../../../core/services/shared/documento/documento.service';
 import { FirmaElectronicaComponent } from '../firma-electronica/firma-electronica.component';
-import { FirmarRequest } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
 import { TramiteFolioStore } from '../../../core/estados/tramiteFolio.store';
+
+import { DocumentosFirmaQuery } from '../../../core/queries/documentos-firma.query';
+import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.store';
 
 @Component({
   selector: 'paso-firma',
@@ -106,6 +109,19 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
    * ```
    */
   @Input() procedureUrl: string = '';
+
+  /** Lista de documentos que requieren firma electrónica.
+   * Esta lista se obtiene del store `DocumentosFirmaStore` a través del query `DocumentosFirmaQuery`.
+   * Se utiliza para mostrar los documentos al usuario y procesar la firma de cada uno.
+   */
+  public documentosFirma: DocumentoRequeridoFirmar[] = [];
+
+  /**
+   * Array que almacena las cadenas originales de los documentos que requieren firma.
+   */
+  public cadenasOriginalesDocumentos: string[] = [];
+
+
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento.
@@ -114,12 +130,21 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
     private router: Router,
     private documentoService: DocumentoService,
     private tramiteStore: TramiteFolioStore,
+    private documentosFirmaQuery: DocumentosFirmaQuery,
+    private documentosFirmaStore: DocumentosFirmaStore,
     private tramiteFolioQuery: TramiteFolioQueries) { }
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    */
   ngOnInit(): void {
+    this.documentosFirmaQuery.documentos$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((docs) => {
+      this.documentosFirma = docs;
+      this.cadenasOriginalesDocumentos = docs.map(d => d.hash_documento);
+    });
+      
     // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
   }
@@ -189,6 +214,20 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
     this.datosFirmaReales = datos;
     this.obtieneFirma(datos.firma);
   }
+  
+  /**
+   * Maneja los documentos firmados y actualiza el store con los sellos correspondientes.
+   * @param sellos - Array de cadenas que representan los sellos de los documentos firmados.
+   */
+  onDocumentosFirmados(sellos: string[]): void {
+    // Mezclas los sellos con los documentos de Akita
+    const DOCUMENTOS = this.documentosFirma.map((doc, i) => ({
+      ...doc,
+      sello_documento: base64ToHex(sellos[i] || '')
+    }));
+
+    this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
+  }
 
   /**
    * Método para obtener la firma del documento.
@@ -227,7 +266,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
+            documentos_requeridos: this.documentosFirma || response.datos?.documentos_requeridos || [],
             rfc_solicitante: 'AAL0409235E6'
           };
           if (this.procedure === 110216 || this.procedure === 110210) {
