@@ -8,6 +8,7 @@ import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/ap
 import { ProductorExportador } from '../models/certificado-origen.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
+import { Tramite110223Query } from '../query/tramite110223.query';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -33,7 +34,9 @@ export class CertificadosOrigenService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient,private store: Tramite110223Store, public httpService: HttpCoreService) { }
+  constructor(private http: HttpClient,private store: Tramite110223Store, public httpService: HttpCoreService,
+    private tramite110223Query: Tramite110223Query
+  ) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -267,6 +270,11 @@ export class CertificadosOrigenService {
     return this.httpService.post<{ [key: string]: unknown }>(PROC_110223.BUSCAR, { body: body });
   }
   
+  /**
+   * Guarda los datos del certificado de origen.
+   * @param body Objeto que contiene los datos a guardar.
+   * @returns Observable con la respuesta del guardado.
+   */
   guardarDatosPost(
     body: Record<string, unknown>
   ): Observable<Record<string, unknown>> {
@@ -303,6 +311,14 @@ export class CertificadosOrigenService {
           return throwError(() => ERROR);
         })
       );
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<TramiteState> {
+    return this.tramite110223Query.selectPexim$;
   }
 
 }

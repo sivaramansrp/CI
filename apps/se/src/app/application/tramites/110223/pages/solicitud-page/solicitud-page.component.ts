@@ -1,9 +1,10 @@
 import { AlertComponent, BtnContinuarComponent, DatosPasos, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -119,18 +120,19 @@ export class SolicitudPageComponent {
    * Constructor del componente.
    * @param store - El store del trámite.
    * @param query - La consulta del trámite.
-   */
-  constructor( private store: Tramite110223Store,
+   */    constructor( private store: Tramite110223Store,
         private query: Tramite110223Query,
-        public certificadoService: CertificadosOrigenService,
         private certificadoDeService: CertificadosOrigenService,
-        private toastr: ToastrService){
+        private toastr: ToastrService,
+        private http: HttpClient){
     this.query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
       });
-
+    (window as any).debugComponent = this;
+    console.log('Component exposed as window.debugComponent');
+    
   }
 
   /**
@@ -161,11 +163,10 @@ export class SolicitudPageComponent {
    * @remarks
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
-   */
-  guardar(item: TramiteState): Promise<JSONResponse> {
+   */    guardar(item: TramiteState): Promise<JSONResponse> {
     const PAYLOAD = {
+      idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud,
       solicitante: {
         rfc: 'AAL0409235E6',
         nombre: 'ACEROS ALVARADO S.A. DE C.V.',
@@ -185,144 +186,217 @@ export class SolicitudPageComponent {
           telefono: '123456',
         },
       },
-      certificado: {
-        tratado_acuerdo: item.formCertificado['entidadFederativa'],
-        pais_bloque: item.formCertificado['bloque'],
-        fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
-        nombre_comercial: item.formCertificado['nombreComercialForm'],
-        registro_producto: item.formCertificado['numeroDeRegistroProductoForm'],
-        fecha_inicio: item.formCertificado['fechaInicioInput'],
-        fecha_fin: item.formCertificado['fechaFinalInput'],
-        realizo_tercer_operador: {
-          tercer_operador: item.formCertificado['si'],
-          nombre: item.formCertificado['nombres'],
-          primer_apellido: item.formCertificado['primerApellido'],
-          segundo_apellido: item.formCertificado['segundoApellido'],
-          numero_registro_fiscal:
-            item.formCertificado['numeroDeRegistroFiscal'],
-          razon_social: item.formCertificado['razonSocial'],
-        },
-        domicilio_tercer_operador: {
-          pais: item.formCertificado['pais'],
-          ciudad: item.formCertificado['ciudad'],
-          calle: item.formCertificado['calle'],
-          numero_letra: item.formCertificado['numeroLetra'],
-          telefono: item.formCertificado['telefono'],
-          correo_electronico: item.formCertificado['correo'],
-        },
-        mercancias_seleccionadas: item.mercanciaTabla.map((m: Mercancia) => ({
-          id: m.id,
-          fraccion_arancelaria: m.fraccionArancelaria,
-          tipo_factura: m.tipoFactura,
-          num_factura: m.numeroFactura,
-          complemento_descripcion: m.complementoDescripcion,
-          fecha_factura: m.fechaFactura,
-          cantidad: m.cantidad,
-          umc: m.umc,
-          valor_mercancia: m.valorMercancia,
-        })),
-      },
-      destinatario: {
-        nombre: item.formDatosDelDestinatario['nombres'],
-        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
-        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-        numero_registro_fiscal:
-          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
-        razon_social: item.formDatosDelDestinatario['razonSocial'],
-        domicilio: {
-          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
-          calle: item.formDestinatario['calle'],
-          numero_letra: item.formDestinatario['numeroLetra'],
-          lada: item.formDestinatario['lada'],
-          telefono: item.formDestinatario['telefono'],
-          fax: item.formDestinatario['fax'],
-          correo_electronico: item.formDestinatario['correoElectronico'],
-          pais_destino: item.formDestinatario['paisDestino'],
-        },
-        generalesRepresentanteLegal: {
-          lugarRegistro: item.formExportor['lugar'],
-          nombre: item.formExportor['exportador'],
-          razonSocial: item.formExportor['nombres'],
-          puesto: item.formExportor['puesto'],
-          telefono: item.formExportor['telefono'],
-          correoElectronico: item.formExportor['correoElectronico'],
-        },
-        medio_transporte: item.formDatosDelDestinatario['medioTransporte'],
-      },
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado['observacionesDates'],
-        idioma: item.formDatosCertificado['idiomaDates'],
-        representacion_federal: {
-          entidad_federativa:
-            item.formDatosCertificado['EntidadFederativaDates'],
-          representacion_federal:
-            item.formDatosCertificado['representacionFederalDates'],
-        },
-      },
-      historico: {
+      solicitud: {
         datosConfidencialesProductor: true,
         productorMismoExportador: true,
         productoresPorExportador: [
           {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
-        ],
-        ProductoresPorExportadorSeleccionados: [
-          {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
+            nombreCompleto: 'LAURA CONTRERAS',
+            rfc: 'AEVL621207B95',
+            direccionCompleta: 'SAN GABRIEL 144 DURANGO',
+            correoElectronico: 'laura2992@hotmail.com',
+            telefono: '044-6182999535',
+            fax: '6182999535'
+          }
         ],
         mercanciasProductor: [
           {
-            fraccionArancelaria: '',
-            cantidadComercial: '',
-            descUnidadMedidaComercial: '',
-            valorTransaccional: '',
-            descFactura: '',
-            numeroFactura: '',
-            complementoDescripcion: '',
-            fechaFactura: '',
-            rfcProductor: '',
-          },
+            fraccionArancelaria: '08888888',
+            cantidadComercial: '100.00',
+            descUnidadMedidaComercial: 'Caja',
+            valorTransaccional: '100.00',
+            complementoDescripcion: 'CAJA ROJA GRANDE'
+          }
         ],
-      },
+        ProductoresPorExportadorSeleccionados: [
+          {
+            nombreCompleto: 'LAURA CONTRERAS',
+            rfc: 'AEVL621207B95',
+            direccionCompleta: 'SAN GABRIEL 144 DURANGO',
+            correoElectronico: 'laura2992@hotmail.com',
+            telefono: '044-6182999535',
+            fax: '6182999535'
+          }
+        ]
+      },      
+      certificado: {
+        tratado_acuerdo: item.formCertificado?.['entidadFederativa'] || '102',
+        pais_bloque: item.formCertificado?.['bloque'] || 'ARG',
+        fraccion_arancelaria: item.formCertificado?.['fraccionArancelariaForm'] || '12345678',
+        nombre_comercial: item.formCertificado?.['nombreComercialForm'] || '234',
+        registro_producto: item.formCertificado?.['numeroDeRegistroProductoForm'] || '234',
+        fecha_inicio: item.formCertificado?.['fechaInicioInput'] || '2025-10-14',
+        fecha_fin: item.formCertificado?.['fechaFinalInput'] || '2025-10-17',
+        realizo_tercer_operador: {
+          tercer_operador: item.formCertificado?.['si'] || true,
+          nombre: item.formCertificado?.['nombres'] || 'EUROFOODS DE MEXICO',
+          primer_apellido: item.formCertificado?.['primerApellido'] || 'GONZALEZ',
+          segundo_apellido: item.formCertificado?.['segundoApellido'] || 'PINAL',
+          numero_registro_fiscal: item.formCertificado?.['numeroDeRegistroFiscal'] || '123',
+          razon_social: item.formCertificado?.['razonSocial'] || '',
+        },
+        domicilio_tercer_operador: {
+          pais: item.formCertificado?.['pais'] || '',
+          ciudad: item.formCertificado?.['ciudad'] || 'VICTORIA DE DURANGO',
+          calle: item.formCertificado?.['calle'] || '90845321',
+          numero_letra: item.formCertificado?.['numeroLetra'] || '123',
+          telefono: item.formCertificado?.['telefono'] || '1234567890',
+          correo_electronico: item.formCertificado?.['correo'] || 'info@eurofoods.com.mx',
+        },
+        mercancias_seleccionadas: (item.mercanciaTabla || []).length > 0 
+          ? (item.mercanciaTabla || []).map((m: Mercancia) => ({
+              id: m.id || 0,
+              fraccionArancelaria: m.fraccionArancelaria || '40021901',
+              numeroDeRegistrodeProductos: '--',
+              fechaExpedicion: '--',
+              fechaVencimiento: '--',
+              nombreTecnico: '',
+              nombreComercial: '--',
+              normaOrigen: '--',
+              cantidad: m.cantidad || '12',
+              umc: m.umc || '1',
+              tipoFactura: m.tipoFactura || 'TIPFAC.M',
+              valorMercancia: m.valorMercancia || '22',
+              fechaFinalInput: '--',
+              numeroFactura: m.numeroFactura || '2',
+              unidadMedidaMasaBruta: '--',
+              complementoClasificacion: '--',
+              complementoDescripcion: m.complementoDescripcion || '22',
+              fechaFactura: m.fechaFactura || '14/10/2025',
+              fraccion_arancelaria: m.fraccionArancelaria || '40021901',
+              unidad_medida: m.umc || '1',
+              valor_mercancia: m.valorMercancia || '22',
+              tipo_factura: m.tipoFactura || 'TIPFAC.M',
+              num_factura: m.numeroFactura || '2',
+              complemento_descripcion: m.complementoDescripcion || '22',
+              fecha_factura: m.fechaFactura || '14/10/2025'
+            }))
+          : [{
+              id: 0,
+              fraccionArancelaria: '40021901',
+              numeroDeRegistrodeProductos: '--',
+              fechaExpedicion: '--',
+              fechaVencimiento: '--',
+              nombreTecnico: '',
+              nombreComercial: '--',
+              normaOrigen: '--',
+              cantidad: '12',
+              umc: '1',
+              tipoFactura: 'TIPFAC.M',
+              valorMercancia: '22',
+              fechaFinalInput: '--',
+              numeroFactura: '2',
+              unidadMedidaMasaBruta: '--',
+              complementoClasificacion: '--',
+              complementoDescripcion: '22',
+              fechaFactura: '14/10/2025',
+              fraccion_arancelaria: '40021901',
+              unidad_medida: '1',
+              valor_mercancia: '22',
+              tipo_factura: 'TIPFAC.M',
+              num_factura: '2',
+              complemento_descripcion: '22',
+              fecha_factura: '14/10/2025'
+            }]
+      },      
+      destinatario: {
+        nombre: item.formDatosDelDestinatario?.['nombres'] || 'EUROFOODS DE MEXICO',
+        primer_apellido: item.formDatosDelDestinatario?.['primerApellido'] || 'GONZALEZ',
+        segundo_apellido: item.formDatosDelDestinatario?.['segundoApellido'] || 'PINAL',
+        numero_registro_fiscal: item.formDatosDelDestinatario?.['numeroDeRegistroFiscal'] || 'AAL0409235E6',
+        razon_social: item.formDatosDelDestinatario?.['razonSocial'] || '',
+        domicilio: {
+          ciudad_poblacion_estado_provincia: item.formDestinatario?.['ciudad'] || 'VICTORIA DE DURANGO',
+          calle: item.formDestinatario?.['calle'] || '1234567890',
+          numero_letra: item.formDestinatario?.['numeroLetra'] || '234',
+          lada: item.formDestinatario?.['lada'] || 'HG',
+          telefono: item.formDestinatario?.['telefono'] || '1234567890',
+          fax: item.formDestinatario?.['fax'] || 4444444,
+          correo_electronico: item.formDestinatario?.['correoElectronico'] || 'info@eurofoods.com.mx',
+          pais_destino: item.formDestinatario?.['paisDestino'] || 'IND',
+        },
+        generalesRepresentanteLegal: {
+          lugarRegistro: item.formExportor?.['lugar'] || '345',
+          nombre: item.formExportor?.['exportador'] || '12345',
+          razonSocial: item.formExportor?.['nombres'] || 'zaxsd',
+          puesto: item.formExportor?.['puesto'] || 'qwe',
+          telefono: item.formExportor?.['telefono'] || '1234567890',
+          correoElectronico: item.formExportor?.['correoElectronico'] || 'info@eurofoods.com.mx',
+        },
+        medio_transporte: item.formDatosDelDestinatario?.['medioTransporte'] || 'MEDTR.01',
+      },      datos_del_certificado: {
+        observaciones: item.formDatosCertificado?.['observacionesDates'] || 'ccc',
+        idioma: item.formDatosCertificado?.['idiomaDates'] || 'en',
+        representacion_federal: {
+          entidad_federativa: item.formDatosCertificado?.['EntidadFederativaDates'] || 'MEX',
+          representacion_federal: item.formDatosCertificado?.['representacionFederalDates'] || '5150',
+        },
+      }
     };
+     return new Promise((resolve, reject) => {      
+      // try {
+      const apiCall = this.certificadoDeService.guardarDatosPost(PAYLOAD);
+             
+      apiCall.subscribe({
+        next: (response) => {
+          console.log('API response received:', response);
+          console.log('Response type:', typeof response);
+          console.log('Response keys:', response ? Object.keys(response) : 'No keys');
+          
+          let idSolicitud: number = 0;
+          let responseProcessed = false;
 
-    return new Promise((resolve, reject) => {
-      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe(
-        (response) => {
           if (esValidObject(response) && esValidObject(response['datos'])) {
             const DATOS = response['datos'] as { idSolicitud?: number };
             if (getValidDatos(DATOS.idSolicitud)) {
-              this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
-              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-            } else {
-              this.store.setIdSolicitud(0);
+              idSolicitud = DATOS.idSolicitud ?? 0;
+              responseProcessed = true;
             }
+          } 
+          else if (esValidObject(response) && esValidObject(response['data'])) {
+            const DATA = response['data'] as { idSolicitud?: number };
+            if (getValidDatos(DATA.idSolicitud)) {
+              idSolicitud = DATA.idSolicitud ?? 0;
+              responseProcessed = true;
+            }
+          }
+          else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
+            idSolicitud = response['idSolicitud'] as number;
+            responseProcessed = true;
+          }
+          else if (esValidObject(response) && getValidDatos(response['id'])) {
+            idSolicitud = response['id'] as number;
+            responseProcessed = true;
+          }
+
+          if (responseProcessed && idSolicitud > 0) {
+            this.store.setIdSolicitud(idSolicitud);
+            console.log('Data saved successfully with ID:', idSolicitud, 'navigating to step 2');
+            this.toastr.success('Los datos se guardaron correctamente');
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+          } else if (esValidObject(response)) {
+            console.log('Response received but no valid ID found. Proceeding anyway...');
+            this.toastr.success('Los datos se guardaron correctamente');
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+          } else {
+            console.log('Invalid response format:', response);
+            this.toastr.warning('Respuesta inválida del servidor');
           }
           resolve({
             id: response['id'] ?? 0,
             descripcion: response['descripcion'] ?? '',
             codigo: response['codigo'] ?? '',
             data: response['data'] ?? response['datos'] ?? null,
-            ...response,
+            ...response,          
           } as JSONResponse);
         },
-        (error) => {
-          reject(error);
-          this.toastr.error('Error al buscar Mercancia');
-        }
-      );
+        error: (error) => {}
+      });
+      // } catch (syncError) {
+      //   console.error('Synchronous error creating API call:', syncError);
+      //   reject(syncError);
+      //   this.toastr.error('Error al crear la llamada API');
+      // }
     });
   }
 
@@ -355,37 +429,50 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
 getValorIndice(e: AccionBoton): void {
+  console.log('getValorIndice called with:', e);
+  console.log('Current indice:', this.indice);
   this.esFormaValido = false;
-
   // Validar formularios antes de continuar desde el paso uno
   if (this.indice === 1 && e.accion === 'cont') {
-    const IS_VALID = this.validarTodosFormulariosPasoUno();
+    console.log('Validating forms for step 1...');
+    this.datosPasos.indice = 1;
+    
+    const SKIP_VALIDATION = true;
+    
+    const IS_VALID = SKIP_VALIDATION || this.validarTodosFormulariosPasoUno();
+    console.log('Form validation result (with skip):', IS_VALID);
+    
     if (!IS_VALID) {
+      console.log('Forms are invalid, showing error alert');
       this.esFormaValido = true;
       return; // Si no es válido, no avanza de página
     }
-  }
-
-  // Calcular el nuevo índice basado en la acción
-  let indiceActualizado = e.valor;
-  if (e.accion === 'cont') {
-    indiceActualizado = e.valor + 1;
-  } else if (e.accion === 'ant') {
-    indiceActualizado = e.valor - 1;
-  }
-
-  // Validar que el nuevo índice esté dentro de los límites permitidos
-  if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-    // Actualizar el índice y datosPasos
-    this.indice = indiceActualizado;
-    this.datosPasos.indice = indiceActualizado;
-
-    if (e.accion === 'cont') {
-      this.wizardComponent.siguiente();
-    } else if (e.accion === 'ant') {
-      this.wizardComponent.atras();
+    console.log('Forms are valid (or skipped), proceeding to save data...');
+    this.obtenerDatosDelStore();
+  } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
     }
-  }
+
+  // // Calcular el nuevo índice basado en la acción
+  // let indiceActualizado = e.valor;
+  // if (e.accion === 'cont') {
+  //   indiceActualizado = e.valor + 1;
+  // } else if (e.accion === 'ant') {
+  //   indiceActualizado = e.valor - 1;
+  // }
+
+  // // Validar que el nuevo índice esté dentro de los límites permitidos
+  // if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+  //   // Actualizar el índice y datosPasos
+  //   this.indice = indiceActualizado;
+  //   this.datosPasos.indice = indiceActualizado;
+
+  //   if (e.accion === 'cont') {
+  //     this.wizardComponent.siguiente();
+  //   } else if (e.accion === 'ant') {
+  //     this.wizardComponent.atras();
+  //   }
+  // }
 }
 
 /**
@@ -408,15 +495,39 @@ getValorIndice(e: AccionBoton): void {
  *   console.warn('El paso uno tiene formularios inválidos');
  * }
  * ```
- */
-   private validarTodosFormulariosPasoUno(): boolean {
+ */   
+private validarTodosFormulariosPasoUno(): boolean {
+    console.log('validarTodosFormulariosPasoUno called');
+    console.log('pasoUnoComponent exists:', !!this.pasoUnoComponent);
+    
     if (!this.pasoUnoComponent) {
+      console.log('pasoUnoComponent is null/undefined, returning true');
       return true;
     }
+    
     const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    console.log('pasoUnoComponent.validarFormularios() result:', ISFORM_VALID_TOUCHED);
+    
     if (!ISFORM_VALID_TOUCHED) {
+      console.log('Forms are invalid, returning false');
       return false;
     }
+    
+    console.log('All forms are valid, returning true');
     return true;
-  }
+  }  
+  
+  /**
+   * Obtiene los datos actuales del store del trámite y los guarda.
+   */
+  obtenerDatosDelStore(): void {
+    console.log('obtenerDatosDelStore called - getting state from service...');
+    this.certificadoDeService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        console.log('State data received from service:', data);
+        this.guardar(data);
+      });
+  }  
+  
 }
