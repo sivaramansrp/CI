@@ -28,3 +28,21 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `
+
+export const FECHA_VENCIMIENTO = {
+  labelNombre: 'Fecha de vencimiento:',
+  required: false,
+  habilitado: false,
+};
+
+export const FECHA_EXPEDICION = {
+  labelNombre: 'Fecha de expedición:',
+  required: false,
+  habilitado: false,
+};
+
+export const FECHA_FACTURA = {
+  labelNombre: 'Fecha de la factura:',
+  required: false,
+  habilitado: true,
+};

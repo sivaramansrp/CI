@@ -358,10 +358,34 @@ export function convertDate(dateString: string): string {
  * Si la cadena de fecha es vacía o nula, devuelve una cadena vacía.
  * Convierte la fecha a un objeto Date y obtiene su representación ISO limitada a la parte de fecha.
  */
-export function formatDateToYYYYMMDD(dateString: string): string {
-  if (!dateString) {return '';}
-  const DATE = new Date(dateString);
-  return DATE.toISOString().split('T')[0];
+// export function formatDateToYYYYMMDD(dateString: string): string {
+//   if (!dateString) {return '';}
+//   const DATE = new Date(dateString);
+//   return DATE.toISOString().split('T')[0];
+// }
+
+/**
+ * **Convierte una fecha en formato ISO a 'DD/MM/YYYY'.**
+ * 
+ * Ejemplo:
+ *  Entrada: "2025-02-18T18:16:05.000-06:00"
+ *  Salida:  "18/02/2025"
+ * 
+ * @param dateString - Cadena de fecha en formato ISO o similar.
+ * @returns La fecha formateada como "DD/MM/YYYY".
+ */
+export function formatDateToDDMMYYYY(dateString: string): string {
+  if (!dateString) {
+    return '';
+  }
+
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
 }
 
     /**
@@ -420,3 +444,27 @@ export function formatDateToYYYYMMDD(dateString: string): string {
             window.URL.revokeObjectURL(LINK.href);
   
   }
+
+  /**
+ * **Convierte una fecha con zona horaria ISO a formato 'YYYY-MM-DD HH:mm:ss.s'**
+ * 
+ * Ejemplo:
+ *  Entrada: "2025-02-18T18:16:05.000-06:00"
+ *  Salida:  "2025-02-18 18:16:05.0"
+ * 
+ * @param fechaStr - Cadena de fecha en formato ISO con zona horaria.
+ * @returns La fecha formateada como "YYYY-MM-DD HH:mm:ss.s".
+ */
+export function formatFechaCustom(fechaStr: string): string {
+  const fecha = new Date(fechaStr);
+
+  const year = fecha.getFullYear();
+  const month = String(fecha.getMonth() + 1).padStart(2, "0");
+  const day = String(fecha.getDate()).padStart(2, "0");
+  const hours = String(fecha.getHours()).padStart(2, "0");
+  const minutes = String(fecha.getMinutes()).padStart(2, "0");
+  const seconds = String(fecha.getSeconds()).padStart(2, "0");
+
+  // Agrega ".0" al final según el formato requerido
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.0`;
+}

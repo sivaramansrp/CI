@@ -15,7 +15,9 @@ import mercanciasFromDatos from '@libs/shared/theme/assets/json/110203/mercancia
 
 import { REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
+import { InputFecha, InputFechaComponent } from "@ng-mf/data-access-user";
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { FECHA_FACTURA } from '../../constant/destinatario.enum';
 
 /**
  * Componente que gestiona los datos del certificado 110203, incluyendo la visualización de mercancias, 
@@ -39,7 +41,7 @@ import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-
 @Component({
   selector: 'app-datos-certificado-110203',
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, CommonModule, NotificacionesComponent],
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, CommonModule, NotificacionesComponent, InputFechaComponent],
   templateUrl: './datos-certificado-110203.component.html',
   styleUrl: './datos-certificado-110203.component.scss'
 })
@@ -165,6 +167,8 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
  * Indica si se debe mostrar la notificación de validación en la interfaz.
  */
   public showValidationNotification: boolean = false;
+
+  fechaDeLaFacturaInput: InputFecha = FECHA_FACTURA;
 
   /**
    * Inicializa el componente inyectando los servicios requeridos y configurando las suscripciones de estado.
@@ -422,13 +426,70 @@ formatDecimal(controlName: string, functionName: keyof Tramite110203Store): void
  * @returns `true` si la validación es exitosa; `false` si la longitud es mayor a 36, y muestra una notificación.
  */
 private validateForm(): boolean {
+  const DESCRIPCION_VALOR = this.mercanciasForm.get('complemento')?.value;
   const FACTURA_VALOR = this.mercanciasForm.get('factura')?.value;
-  if (FACTURA_VALOR && FACTURA_VALOR.length > 36) {
+  const MERCANCIA_VALOR = this.mercanciasForm.get('valor')?.value;
+  if (
+    DESCRIPCION_VALOR && DESCRIPCION_VALOR.length > 200 &&
+    FACTURA_VALOR && FACTURA_VALOR.length > 36
+  ) {
     this.mostrarNotificacionValidacion();
+    return false;
+  } else if (DESCRIPCION_VALOR && DESCRIPCION_VALOR.length > 200) {
+    this.mostrarDescripcionValidacion();
+    return false;
+  } else if (FACTURA_VALOR && FACTURA_VALOR.length > 36) {
+    this.mostrarFacturaValidacion();
+    return false;
+  }
+
+  if(DESCRIPCION_VALOR === '' || MERCANCIA_VALOR === ''){
+    this.mostrarValorValidacion();
+    return false;
+  }
+
+  if(FACTURA_VALOR === ''){
+    this.mostrarFacturaValorValidacion();
     return false;
   }
   
   return true;
+}
+
+/**
+ * Muestra la notificación de validación para errores en el formulario.
+ */
+private mostrarDescripcionValidacion(): void {
+  this.validationNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Error de Validación',
+    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres de la descripción no puede ser mayor a 200.',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  this.showValidationNotification = true;
+}
+
+/**
+ * Muestra la notificación de validación para errores en el formulario.
+ */
+private mostrarFacturaValidacion(): void {
+  this.validationNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Error de Validación',
+    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres del número de factura no puede ser mayor a 36.',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  this.showValidationNotification = true;
 }
 
 /**
@@ -440,7 +501,43 @@ private mostrarNotificacionValidacion(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: 'Error de Validación',
-    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres del número de factura no puede ser mayor a 36.',
+    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres de la descripción no puede ser mayor a 200., El número de caracteres del número de factura no puede ser mayor a 36.',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  this.showValidationNotification = true;
+}
+
+/**
+ * Muestra la notificación de validación para errores en el formulario.
+ */
+private mostrarValorValidacion(): void {
+  this.validationNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Error de Validación',
+    mensaje: 'Los siguientes datos son requeridos: Complemento de la descripción, Valor de la mercancía',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  this.showValidationNotification = true;
+}
+
+/**
+ * Muestra la notificación de validación para errores en el formulario.
+ */
+private mostrarFacturaValorValidacion(): void {
+  this.validationNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Error de Validación',
+    mensaje: 'Los siguientes datos son requeridos: Número de factura',
     cerrar: true,
     tiempoDeEspera: 0,
     txtBtnAceptar: 'Aceptar',
