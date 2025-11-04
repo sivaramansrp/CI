@@ -1,8 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { CertificadoKimberleyComponent } from '../../components/certificado-kimberley/certificado-kimberley.component';
+import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
+import { ProrrogasComponent } from '../../components/prorrogas/prorrogas.component';
+import { Solocitud130301Service } from '../../services/service130301.service';
+
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Solocitud130301Service } from '../../services/service130301.service';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -13,16 +17,10 @@ import { Solocitud130301Service } from '../../services/service130301.service';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
-
-    /**
-   * Constructor del componente. Se inyectan servicios y queries necesarios para el flujo de datos.
-   * @param consultaQuery Consulta a los datos del store.
-   * @param solocitud130301Service Servicio para carga y actualización de datos del formulario.
-   */
-    constructor(
-      private consultaQuery: ConsultaioQuery,
-      private solocitud130301Service: Solocitud130301Service,
-    ) {}
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private solocitud130301Service: Solocitud130301Service,
+  ) {}
   
   /**
    * Índice para manejar la pestaña seleccionada.
@@ -72,7 +70,10 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    * Decorador `ViewChild` para acceder a la instancia del componente `SolicitanteComponent`.
    * Este componente se utiliza para gestionar información relacionada con el solicitante.
    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild('Solicitante') solicitante!: SolicitanteComponent;
+  @ViewChild('datosDelTramite') datosDelTramiteComponent!: DatosDelTramiteComponent;
+  @ViewChild('certificadoKimberley') certificadoKimberleyComponent!: CertificadoKimberleyComponent;
+  @ViewChild('prorrogas') prorrogasComponent!: ProrrogasComponent;
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
@@ -120,4 +121,75 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
     }
+    /**
+   * Valida todos los formularios del paso uno del trámite 130301.
+   * Verifica la validez de todos los componentes hijos: Solicitante, Datos de la solicitud, 
+   * Certificado Kimberley y Prorrogas.
+   * Si algún formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+   * Incluye validación especial para campos deshabilitados en Prorrogas usando getRawValue().
+   * 
+   * @returns {boolean} verdadero si todos los formularios son válidos, falso si alguno es inválido o no existe la referencia al componente.
+   */
+  public validarTodosFormulariosPasoUno(): boolean {
+    let esValido = true;
+
+    // Validar Solicitante (siempre debe estar presente)
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        esValido = false;
+      }
+    } else {
+      esValido = false;
+    }
+
+    // Solo validar otros componentes si los datos están cargados
+    if (this.esDatosRespuesta) {
+      // Validar Datos de la solicitud
+      if (this.datosDelTramiteComponent?.datosDelTramite) {
+        if (this.datosDelTramiteComponent.datosDelTramite.invalid) {
+          this.datosDelTramiteComponent.markAllAsTouched();
+          esValido = false;
+        }
+      } else {
+        esValido = false;
+      }
+
+      // Validar Certificado Kimberley
+      if (this.certificadoKimberleyComponent?.certificadoKimberley) {
+        if (this.certificadoKimberleyComponent.certificadoKimberley.invalid) {
+          this.certificadoKimberleyComponent.markAllAsTouched();
+          esValido = false;
+        }
+      } else {
+        esValido = false;
+      }
+
+      // Validar Prorrogas (incluir campos deshabilitados en validación)
+      if (this.prorrogasComponent?.prorrogasForm) {
+        // Validar campos requeridos específicos, incluso si están deshabilitados
+        const VALORES_COMPLETOS = this.prorrogasComponent.prorrogasForm.getRawValue();
+        const MOTIVO_JUSTIFICACION_VALIDO = VALORES_COMPLETOS.motivoJustificacion && VALORES_COMPLETOS.motivoJustificacion.trim() !== '';
+        const OTRAS_DECLARACIONES_VALIDO = VALORES_COMPLETOS.otrasDeclaraciones && VALORES_COMPLETOS.otrasDeclaraciones.trim() !== '';
+        
+        if (this.prorrogasComponent.prorrogasForm.invalid || !MOTIVO_JUSTIFICACION_VALIDO || !OTRAS_DECLARACIONES_VALIDO) {
+          this.prorrogasComponent.markAllAsTouched();
+          
+          // Forzar marcado de campos deshabilitados como tocados para mostrar errores
+          if (!MOTIVO_JUSTIFICACION_VALIDO) {
+            this.prorrogasComponent.prorrogasForm.get('motivoJustificacion')?.markAsTouched();
+          }
+          if (!OTRAS_DECLARACIONES_VALIDO) {
+            this.prorrogasComponent.prorrogasForm.get('otrasDeclaraciones')?.markAsTouched();
+          }
+          
+          esValido = false;
+        }
+      } else {
+        esValido = false;
+      }
+    }
+
+    return esValido;
+  }
 }
