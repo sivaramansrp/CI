@@ -11,7 +11,8 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
-import { DetalleDelPermiso } from '../../../../shared/models/detalleDelPermiso.model';
+import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { DetalleDelBuscarResponse } from '../../../../shared/models/detalleDelPermiso.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
@@ -20,6 +21,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { ServiciosService } from '../../../../shared/services/servicios.service';
+import { Solicitud140104State } from '../../estados/desistimiento-de-permiso.store';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
@@ -36,9 +38,10 @@ export class CancelacionDeSolicitudComponent
    */
   tramiteID = '140104';
   /**
-   * Formulario para capturar los datos de la solicitud.
+   * Represents the current state of the Solicitud 140104 process within the Cancelación de Solicitud component.
+   * Used to manage and track the application's workflow and data for the cancellation request.
    */
-  solicitudForm?: FormGroup;
+  public solicitudState!: Solicitud140104State;
   /**
    * Sujeto para gestionar la destrucción del componente y evitar fugas de memoria.
    */
@@ -198,6 +201,13 @@ export class CancelacionDeSolicitudComponent
    * Esto puede activar la visualización de un modal de confirmación o habilitar opciones relacionadas con la eliminación.
    * */
   esEliminarDos: boolean = false;
+
+  /**
+   * Almacena los datos detallados del permiso obtenidos por folio de resolución.
+   * Se utiliza para mostrar la información en el modal de modificación.
+   */
+  detalleDelPermisoDatos: DetalleDelBuscarResponse[] | null = null;
+
   /**
    * Constructor del componente.
    *
@@ -211,7 +221,8 @@ export class CancelacionDeSolicitudComponent
     private servicioDeMensajesService: ServicioDeMensajesService,
     private consultaQuery: ConsultaioQuery,
     private desistimientoQuery: DesistimientoQuery,
-    private serviciosService: ServiciosService
+    private serviciosService: ServiciosService,
+    private store: DesistimientoStore
   ) {
     this.establecerBusquedaForm();
   }
@@ -223,17 +234,6 @@ export class CancelacionDeSolicitudComponent
    * de la solicitud de cancelación.
    */
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      folioTramite: ['', Validators.required],
-      tipoSolicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacionRegimen: ['', Validators.required],
-      condicionMercancia: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      unidadMedida: ['', Validators.required],
-      cantidadSolicitada: ['', [Validators.required]],
-      valorSolicitado: ['', [Validators.required]],
-    });
     this.cancelacionForm = this.fb.group({
       motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
@@ -244,13 +244,6 @@ export class CancelacionDeSolicitudComponent
         this.servicioDeMensajesService.actualizarDatosForma(
           this.cuerpoTablaCancelacion as Cancelacion[]
         );
-        // this.desistimientoQuery.selectMotivoCancelacion$
-        //   .pipe(takeUntil(this.destroyNotificationSubject$))
-        //   .subscribe((data) => {
-        //     this.cancelacionForm.patchValue({
-        //       motivoCancelacion: data,
-        //     });
-        //   });
       }
     });
 
@@ -259,11 +252,8 @@ export class CancelacionDeSolicitudComponent
       .obtenerDatos()
       .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe((data) => {
-        if (Array.isArray(data?.datos)) {
-          this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
-          this.cancelacionForm.patchValue({
-            motivoCancelacion: data.motivoCancelacion,
-          });
+        if (Array.isArray(data)) {
+          this.cuerpoTablaCancelacion = data as Cancelacion[];
         } else {
           this.cuerpoTablaCancelacion = [];
         }
@@ -342,11 +332,11 @@ export class CancelacionDeSolicitudComponent
   }
 
   /**
-   * @descripcion
-   * Abre el modal de modificación con los datos seleccionados.
-   * @param disponiblesDatos - Los datos seleccionados para modificación.
+   * Busca el folio de resolución ingresado en el formulario.
+   * Valida que el campo no esté vacío y muestra una notificación si es requerido.
+   * Si el valor es válido, obtiene el detalle del permiso y abre el modal de modificación.
    */
-  abrirModificarModal(): void {
+  buscarFolioResolucion(): void {
     const FOLIORESOLUCIONVALUE =
       this.busquedaForm.get('folioResolucion')?.value;
 
@@ -356,7 +346,7 @@ export class CancelacionDeSolicitudComponent
         categoria: CategoriaMensaje.ALERTA,
         modo: 'action',
         titulo: '',
-        mensaje: 'El Folio de Trámite es un dato requerido',
+        mensaje: 'El Folio de Resolución es un dato requerido',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
@@ -364,34 +354,6 @@ export class CancelacionDeSolicitudComponent
       };
       return;
     }
-    // if (FOLIORESOLUCIONVALUE.length < 25) {
-    //   this.nuevaNotificacion = {
-    //     tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    //     categoria: CategoriaMensaje.ALERTA,
-    //     modo: 'action',
-    //     titulo: '',
-    //     mensaje: 'El Folio de Trámite no puede ser menor de 25 carácteres',
-    //     cerrar: false,
-    //     tiempoDeEspera: 2000,
-    //     txtBtnAceptar: 'Aceptar',
-    //     txtBtnCancelar: '',
-    //   };
-    //   return;
-    // }
-    // if (FOLIORESOLUCIONVALUE.length > 25) {
-    //   this.nuevaNotificacion = {
-    //     tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    //     categoria: CategoriaMensaje.ALERTA,
-    //     modo: 'action',
-    //     titulo: '',
-    //     mensaje: 'El Folio de Trámite no puede ser mayor de 25 carácteres',
-    //     cerrar: false,
-    //     tiempoDeEspera: 2000,
-    //     txtBtnAceptar: 'Aceptar',
-    //     txtBtnCancelar: '',
-    //   };
-    //   return;
-    // }
     if (FOLIORESOLUCIONVALUE || FOLIORESOLUCIONVALUE !== '') {
       this.obtenerDetalleDelPermisoDatos();
       if (this.modalInstanceDos) {
@@ -400,70 +362,152 @@ export class CancelacionDeSolicitudComponent
     }
   }
 
+  /**
+   * Obtiene el detalle del permiso según el folio de resolución ingresado.
+   * Realiza la petición al servicio y mapea la respuesta para mostrarla en el modal.
+   */
   obtenerDetalleDelPermisoDatos(): void {
     const PAYLOAD = {
-      id_solicitud: this.tramiteID,
+      id_solicitud: Number(this.tramiteID),
       rfc_solicitante: 'AAL0409235E6',
       clave_entidad_federativa: 'SIN',
-      id_tipo_tramite: this.tramiteID,
+      id_tipo_tramite: Number(this.tramiteID),
       folio_cancelar: this.busquedaForm.get('folioResolucion')?.value,
     };
 
-    // this.serviciosService
-    //   .obtenerDetalleDelPermisoDatos(this.tramiteID, PAYLOAD)
-    //   .pipe(
-    //     map((data: BaseResponse<DetalleDelPermiso[]>) => {
-    //       const RESPONSE = (data.datos ?? []).map((item: DetalleDelPermiso) => {
-    //         return {
-    //           aviso: item.aviso ?? '',
-    //           cantidadAutorizada: item.cantidadAutorizada ?? null,
-    //           cantidadSolicitada: item.cantidadSolicitada ?? null,
-    //           clasificacionRegimen: item.clasificacionRegimen ?? null,
-    //           claveEntidadFederativaSolicitante: item.claveEntidadFederativaSolicitante ?? null,
-    //           condicionMercancia: item.condicionMercancia ?? null,
-    //           descripcionMercancia: item.descripcionMercancia ?? null,
-    //           esquemaReglaOctava: item.esquemaReglaOctava ?? null,
-    //           fechaFinVigencia: item.fechaFinVigencia ?? null,
-    //           fechaInicioVigencia: item.fechaInicioVigencia ?? null,
-    //           fraccion: item.fraccion ?? null,
-    //           general: item.general ?? null,
-    //           idResolucion: item.idResolucion ?? null,
-    //           idSolicitud: item.idSolicitud ?? null,
-    //           idSolicitudTemporal: item.idSolicitudTemporal ?? null,
-    //           idTipoTramite: item.idTipoTramite ?? null,
-    //           ideEstadoResolucion: item.ideEstadoResolucion ?? null,
-    //           ideEstadoSolicitud: item.ideEstadoSolicitud ?? null,
-    //           justificacion: item.justificacion ?? null,
-    //           numFolioTramite: item.numFolioTramite ?? null,
-    //           numeroResolucion: item.numeroResolucion ?? null,
-    //           observacion: item.observacion ?? null,
-    //           paises: item.paises ?? null,
-    //           regimen: item.regimen ?? null,
-    //           rfcSolicitante: item.rfcSolicitante ?? null,
-    //           saldoDisponible: item.saldoDisponible ?? null,
-    //           textoDictamen: item.textoDictamen ?? null,
-    //           tipoSolicitud: item.tipoSolicitud ?? null,
-    //           tipoSolicitudPexim: item.tipoSolicitudPexim ?? null,
-    //           unidadMedicion: item.unidadMedicion ?? null,
-    //           unidadMedidaUMC: item.unidadMedidaUMC ?? null,
-    //           unidadMedidaUMT: item.unidadMedidaUMT ?? null,
-    //           usoEspecifico: item.usoEspecifico ?? null,
-    //           valorFacturaUSD: item.valorFacturaUSD ?? null,
-    //           valorSolicitado: item.valorSolicitado ?? null,
-    //         };
-    //       });
-    //       return RESPONSE;
-    //     })
-    //   )
-    //   .subscribe({
-    //     error: (err) => {
-    //       console.error('Error al obtener plantas disponibles:', err);
-    //     },
-    //   });
+    this.serviciosService
+      .obtenerDetalleDelPermisoDatos(this.tramiteID, PAYLOAD)
+      .pipe(
+        map((data: BaseResponse<DetalleDelBuscarResponse[]>) =>
+          (data.datos ?? []).map((item) => this.mapDetalleDelPermiso(item))
+        )
+      )
+      .subscribe({
+        next: (response: DetalleDelBuscarResponse[]) => {
+          this.detalleDelPermisoDatos = response;
+        },
+        error: (err) => {
+          console.error('Error al obtener detalle del permiso:', err);
+        },
+      });
   }
+
   /**
-   * @descripcion
-   * Cierra el modal de modificación.
+   * Mapea los campos relacionados con mercancía y valores de la respuesta.
+   * @param item DetalleDelBuscarResponse
+   * @returns Campos seleccionados de DetalleDelBuscarResponse
+   */
+  private mapMercanciaYValores(
+    item: DetalleDelBuscarResponse
+  ): Pick<
+    DetalleDelBuscarResponse,
+    | 'descripcionMercancia'
+    | 'condicionMercancia'
+    | 'fraccion'
+    | 'clasificacionRegimen'
+    | 'esquemaReglaOctava'
+    | 'regimen'
+    | 'usoEspecifico'
+    | 'cantidadAutorizada'
+    | 'cantidadSolicitada'
+    | 'valorSolicitado'
+    | 'valorFacturaUSD'
+    | 'saldoDisponible'
+    | 'unidadMedidaUMT'
+    | 'unidadMedidaUMC'
+    | 'unidadMedicion'
+    | 'claveEntidadFederativaSolicitante'
+    | 'fechaInicioVigencia'
+    | 'fechaFinVigencia'
+  > {
+    return {
+      descripcionMercancia: item.descripcionMercancia ?? null,
+      condicionMercancia: item.condicionMercancia ?? null,
+      fraccion: item.fraccion ?? null,
+      clasificacionRegimen: item.clasificacionRegimen ?? null,
+      esquemaReglaOctava: item.esquemaReglaOctava ?? null,
+      regimen: item.regimen ?? null,
+      usoEspecifico: item.usoEspecifico ?? null,
+      cantidadAutorizada: item.cantidadAutorizada ?? null,
+      cantidadSolicitada: item.cantidadSolicitada ?? null,
+      valorSolicitado: item.valorSolicitado ?? null,
+      valorFacturaUSD: item.valorFacturaUSD ?? null,
+      saldoDisponible: item.saldoDisponible ?? null,
+      unidadMedidaUMT: item.unidadMedidaUMT ?? null,
+      unidadMedidaUMC: item.unidadMedidaUMC ?? null,
+      unidadMedicion: item.unidadMedicion ?? null,
+      claveEntidadFederativaSolicitante:
+        item.claveEntidadFederativaSolicitante ?? null,
+      fechaInicioVigencia: item.fechaInicioVigencia ?? null,
+      fechaFinVigencia: item.fechaFinVigencia ?? null,
+    };
+  }
+
+  /**
+   * Mapea los campos generales e identificadores de la respuesta.
+   * @param item DetalleDelBuscarResponse
+   * @returns Campos seleccionados de DetalleDelBuscarResponse
+   */
+  private mapGeneralYIds(
+    item: DetalleDelBuscarResponse
+  ): Omit<
+    DetalleDelBuscarResponse,
+    | 'descripcionMercancia'
+    | 'condicionMercancia'
+    | 'fraccion'
+    | 'clasificacionRegimen'
+    | 'esquemaReglaOctava'
+    | 'regimen'
+    | 'usoEspecifico'
+    | 'cantidadAutorizada'
+    | 'cantidadSolicitada'
+    | 'valorSolicitado'
+    | 'valorFacturaUSD'
+    | 'saldoDisponible'
+    | 'unidadMedidaUMT'
+    | 'unidadMedidaUMC'
+    | 'unidadMedicion'
+    | 'claveEntidadFederativaSolicitante'
+    | 'fechaInicioVigencia'
+    | 'fechaFinVigencia'
+  > {
+    return {
+      aviso: item.aviso ?? '',
+      tipoSolicitud: item.tipoSolicitud ?? null,
+      tipoSolicitudPexim: item.tipoSolicitudPexim ?? null,
+      numFolioTramite: item.numFolioTramite ?? null,
+      numeroResolucion: item.numeroResolucion ?? null,
+      justificacion: item.justificacion ?? null,
+      observacion: item.observacion ?? null,
+      textoDictamen: item.textoDictamen ?? null,
+      idResolucion: item.idResolucion ?? null,
+      idSolicitud: item.idSolicitud ?? null,
+      idSolicitudTemporal: item.idSolicitudTemporal ?? null,
+      idTipoTramite: item.idTipoTramite ?? null,
+      ideEstadoResolucion: item.ideEstadoResolucion ?? null,
+      ideEstadoSolicitud: item.ideEstadoSolicitud ?? null,
+      general: item.general ?? null,
+      paises: item.paises ?? null,
+      rfcSolicitante: item.rfcSolicitante ?? null,
+    };
+  }
+
+  /**
+   * Combina los mapeos de mercancía/valores y generales/ids en un solo objeto.
+   * @param item DetalleDelBuscarResponse
+   * @returns DetalleDelBuscarResponse
+   */
+  private mapDetalleDelPermiso(
+    item: DetalleDelBuscarResponse
+  ): DetalleDelBuscarResponse {
+    return {
+      ...this.mapMercanciaYValores(item),
+      ...this.mapGeneralYIds(item),
+    };
+  }
+
+  /**
+   * Cierra el modal de modificación y resetea el formulario de búsqueda.
    */
   cerrarModificarModal(): void {
     if (this.modalInstances) {
@@ -566,5 +610,19 @@ export class CancelacionDeSolicitudComponent
       };
       this.esEliminarDos = true;
     }
+  }
+
+  /**
+   * Establece los valores en el store del trámite 120501.
+   *
+   * LicitacionesVigentesComponent
+   * El formulario que contiene los valores.
+   * El nombre del campo en el formulario.
+   * El nombre del método en el store a invocar.
+   *
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.store.actualizarEstado({ [campo]: VALOR });
   }
 }

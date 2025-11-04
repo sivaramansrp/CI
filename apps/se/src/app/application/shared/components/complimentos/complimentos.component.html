@@ -73,7 +73,7 @@
           <label class="d-flex align-items-start">
             <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-4" type="checkbox"
               aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
-            <span>* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
+            <span>* Compromiso de ventas anuales por un valor superior a 500,000 dólares de los Estados Unidos de
               América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
               facturación total.</span>
           </label>
@@ -99,8 +99,8 @@
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
-            <label for="Numero">Número de notaria*:</label>
-            <input type="text" id="Numero" maxlength="10" pattern="\d*" name="Numero" min="0" class="form-control"
+            <label for="Numero">Número de notaría*:</label>
+            <input type="text" id="Numero"  maxlength="10" pattern="\d*"  name="Numero" min="0" class="form-control"
               formControlName="nombreDeNotaria"
               [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"
               (input)="onInputMaxLength($event, 10, 'formaModificaciones.nombreDeNotaria')" />

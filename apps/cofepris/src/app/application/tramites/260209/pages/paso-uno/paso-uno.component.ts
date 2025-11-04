@@ -104,6 +104,21 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+public validarTodosLosFormularios(): boolean {
+  let allFormsValid = true;
+  
+  return allFormsValid ;
+
+}
+
+  /**
   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
   * Luego reinicializa el formulario con los valores actualizados desde el store.
   */

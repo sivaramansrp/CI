@@ -1,11 +1,12 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import { EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoStore } from '../../estados/desistimiento-de-permiso.store';
+import { DetalleDelBuscarResponse } from '../../../../shared/models/detalleDelPermiso.model';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
 /**
@@ -32,7 +33,7 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
-export class BusquedaFolioComponent implements OnDestroy {
+export class BusquedaFolioComponent implements OnDestroy, OnChanges{
   /**
    * Formulario utilizado para capturar el número de folio del trámite.
    * Este formulario incluye validaciones requeridas y de patrón numérico.
@@ -67,6 +68,8 @@ export class BusquedaFolioComponent implements OnDestroy {
    * Esto evita fugas de memoria en la aplicación.
    */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  @Input() detalleDelPermisoDatos: DetalleDelBuscarResponse[] | null = null;
 
   /**
    * Constructor del componente.
@@ -202,21 +205,26 @@ export class BusquedaFolioComponent implements OnDestroy {
    */
   public estableDetalleDelPermisoForm(): void {
     this.detalleDelPermisoForm = this.fb.group({
-      folioTramite: [{ value: '', disabled: true }],
-      tipoDeSolicitud: [{ value: '', disabled: true }],
+      numFolioTramite: [{ value: '', disabled: true }],
+      tipoSolicitud: [{ value: '', disabled: true }],
       regimen: [{ value: '', disabled: true }],
-      condicionDeLaMercancia: [{ value: '', disabled: true }],
-      umt: [{ value: '', disabled: true }],
-      cantidad: [{ value: '', disabled: true }],
-      cdr: [{ value: '', disabled: true }],
-      usd: [{ value: '', disabled: true }],
-      fraccionArancelaria: [{ value: '', disabled: true }],
-      descripcionDeLaMercancia: [{ value: '', disabled: true }],
-      procedencia: [{ value: '', disabled: true }],
-      mercancia: [{ value: '', disabled: true }],
-      beneficioQueSeObtiene: [{ value: '', disabled: true }],
-      observaciones: [{ value: '', disabled: true }],
+      condicionMercancia: [{ value: '', disabled: true }],
+      unidadMedidaUMT: [{ value: '', disabled: true }],
+      cantidadAutorizada: [{ value: '', disabled: true }],
+      clasificacionRegimen: [{ value: '', disabled: true }],
+      usoEspecifico: [{ value: '', disabled: true }],
+      valorSolicitado: [{ value: '', disabled: true }],
+      fraccion: [{ value: '', disabled: true }],
+      descripcionMercancia: [{ value: '', disabled: true }],
+      esquemaReglaOctava: [{ value: '', disabled: true }],
+      paises: [{ value: '', disabled: true }],
     });
+  }
+
+   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['detalleDelPermisoDatos'] && this.detalleDelPermisoDatos) {
+      this.detalleDelPermisoForm.patchValue(this.detalleDelPermisoDatos);
+    }
   }
 
   /**

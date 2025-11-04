@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -128,6 +129,7 @@ export class RepresentanteLegalExportadorComponent
    */
   constructor(
     private fb: FormBuilder,
+     private validacionesService: ValidacionesFormularioService,
     private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService
   ) {}
 
@@ -149,11 +151,24 @@ export class RepresentanteLegalExportadorComponent
     }
   }
 
+    /**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
    /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): void {
-    if (this.form) {
+  public markAllFieldsTouched(): boolean {
+       if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return false;
     }
+    return true;
   }
 
 
@@ -256,17 +271,6 @@ export class RepresentanteLegalExportadorComponent
       METODO_NOMBRE: metodoNombre,
     });
   }
-
-  /**
-   * @description
-   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
   /**
    * Valida el formulario y marca los campos como tocados si es inválido
    */
@@ -277,4 +281,14 @@ export class RepresentanteLegalExportadorComponent
      }
      return true;
    }
+  /**
+   * @description
+   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

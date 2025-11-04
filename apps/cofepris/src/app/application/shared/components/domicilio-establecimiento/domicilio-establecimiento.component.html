@@ -45,14 +45,32 @@
       <div class="form-group">
         <label class="form-label" for="localidad">Localidad:</label>
         <input class="form-control" id="localidad" placeholder="" type="text" maxlength="120"
-          formControlName="localidad" (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
+          formControlName="localidad" (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" 
+          [ngClass]="esValido('localidad') ? 'required' : ''" />
+        <div *ngIf="domicilio.get('localidad')?.touched && domicilio.get('localidad')?.errors?.['maxlength']"
+          class="mensaje-error">
+          El campo localidad no puede tener más de 120 caracteres.
+        </div>
+        <div *ngIf="domicilio.get('localidad')?.touched && domicilio.get('localidad')?.errors?.['pattern']"
+          class="mensaje-error">
+          El valor capturado no es válido.
+        </div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="colonia">Colonia:</label>
         <input class="form-control" id="colonia" placeholder="" type="text" maxlength="120" formControlName="colonia"
-          (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
+          (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" 
+          [ngClass]="esValido('colonia') ? 'required' : ''" />
+        <div *ngIf="domicilio.get('colonia')?.touched && domicilio.get('colonia')?.errors?.['maxlength']"
+          class="mensaje-error">
+          El campo colonia no puede tener más de 120 caracteres.
+        </div>
+        <div *ngIf="domicilio.get('colonia')?.touched && domicilio.get('colonia')?.errors?.['pattern']"
+          class="mensaje-error">
+          El valor capturado no es válido.
+        </div>
       </div>
     </div>
   </div>
@@ -81,12 +99,16 @@
     <div class="col-md-3">
       <div class="form-group">
         <label class="form-label" for="telefono">Teléfono*:</label>
-        <input class="form-control" id="telefono" placeholder="" type="number" maxlength="24" formControlName="telefono"
+        <input class="form-control" id="telefono" placeholder="" type="text" maxlength="24" formControlName="telefono"
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" 
           [ngClass]="esValido('telefono') ? 'required' : ''"/>
         <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
+        </div>
+        <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['pattern']"
+          class="mensaje-error">
+          Por favor, escribe un número entero válido
         </div>
       </div>
     </div>

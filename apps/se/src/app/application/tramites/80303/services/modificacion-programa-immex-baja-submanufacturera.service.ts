@@ -1,6 +1,8 @@
+import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDatos } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite80303Store } from '../estados/tramite80303Store.store';
 
@@ -72,5 +74,17 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
           modificacionDatos: resp,
         }));
       });
+  }
+
+  /**
+   * Obtiene los datos del formulario de modificación.
+   * 
+   * @returns {Observable<DatosModificacion>} Observable con los datos de modificación.
+   * Obtiene los datos de modificación desde un archivo JSON local.
+   */
+  obtenerModificacionFormDatos(): Observable<DatosModificacion> {
+    return this.httpServicios.get<DatosModificacion>(
+      'assets/json/80303/modificacion-datos.json'
+    );
   }
 }

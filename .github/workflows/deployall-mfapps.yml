@@ -12,10 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Find microfrontend apps in apps/
+      - name: Find microfrontend apps in apps/ (excluding dashboard)
         id: set-matrix
         run: |
-          APPS=$(find apps -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+          APPS=$(find apps -maxdepth 1 -mindepth 1 -type d -exec basename {} \; \
+            | grep -v '^dashboard$' \
+            | jq -R -s -c 'split("\n")[:-1]')
           echo "apps=$APPS" >> $GITHUB_OUTPUT
 
   build-push-deploy:
@@ -24,17 +26,22 @@ jobs:
     strategy:
       matrix:
         app_name: ${{ fromJson(needs.discover-apps.outputs.apps) }}
+    continue-on-error: true
     environment:
       name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set Node.js memory limit
+        run: echo "NODE_OPTIONS=--max-old-space-size=10096"
+
       - name: Install dependencies
         run: npm install
 
       - name: Build microfront app
         run: npx nx build ${{ matrix.app_name }}
+        
 
       - name: Reset Nx cache
         run: npx nx reset
@@ -55,27 +62,41 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
+      - name: Ensure Docker Compose file exists
+        run: |
+          if [ ! -f docker/modulefederation-${{ matrix.app_name }}-microfront.yml ]; then
+            echo "ERROR: docker/modulefederation-${{ matrix.app_name }}-microfront.yml does not exist!"
+            exit 1
+          fi
+
       - name: Update Docker Compose image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}.yml || echo "No compose file for ${{ matrix.app_name }}"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ matrix.app_name }}-microfront.yml
 
       - name: Build Docker image for microfront app
         run: |
-          docker compose -f docker/modulefederation-${{ matrix.app_name }}.yml build --no-cache
+          docker compose -f docker/modulefederation-${{ matrix.app_name }}-microfront.yml build --no-cache
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}
+          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}
+
+      - name: Ensure k8s deployment folder exists
+        run: |
+          if [ ! -d k8s/${{ matrix.app_name }}-microfront ]; then
+            echo "ERROR: k8s/${{ matrix.app_name }}-microfront does not exist!"
+            exit 1
+          fi
 
       - name: List yaml files before copy
         run: |
-          echo "Showing YAML files in k8s/${{ matrix.app_name }}/"
-          ls -l k8s/${{ matrix.app_name }}/ || echo "Directory does not exist"
-          find k8s/${{ matrix.app_name }}/ || echo "Directory does not exist"
+          echo "Showing YAML files in k8s/${{ matrix.app_name }}-microfront/"
+          ls -l k8s/${{ matrix.app_name }}-microfront/ || echo "Directory does not exist"
+          find k8s/${{ matrix.app_name }}-microfront/ || echo "Directory does not exist"
 
       - name: Update deployment YAML image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}/*.yaml || echo "No k8s yaml for ${{ matrix.app_name }}"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ matrix.app_name }}-microfront:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ matrix.app_name }}-microfront/*-deployment-dev.yaml
 
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
@@ -83,8 +104,8 @@ jobs:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: k8s/${{ matrix.app_name }}/*.yaml
-          target: ~/deployments/${{ matrix.app_name }}/
+          source: k8s/${{ matrix.app_name }}-microfront/*.yaml
+          target: ~/deployments/${{ matrix.app_name }}-microfront/
           strip_components: 2
 
       - name: List files on remote after copy
@@ -94,7 +115,7 @@ jobs:
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
-            ls -l ~/deployments/${{ matrix.app_name }}/
+            ls -l ~/deployments/${{ matrix.app_name }}-microfront/
 
       - name: SSH Deploy and Restart
         uses: appleboy/ssh-action@v1.0.3
@@ -104,7 +125,7 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
             set -e
-            APP_NAME="${{ matrix.app_name }}"
+            APP_NAME="${{ matrix.app_name }}-microfront"
             IMAGE_TAG="${{ steps.get-version.outputs.VERSION }}"
             DEPLOY_DIR=~/deployments/$APP_NAME
             DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"

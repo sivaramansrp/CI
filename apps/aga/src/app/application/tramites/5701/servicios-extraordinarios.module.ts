@@ -35,6 +35,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CheckInputTextComponent } from '../../shared/components/check-input-text/check-input-text.component';
+import { AcuseReciboComponent } from '../../shared/components/acuse-recibo/acuse-recibo.component';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -94,4 +95,4 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
   exports: [PasoUnoComponent],
   providers: [ToastrService, CatalogosService, BsModalService],
 })
-export class ServiciosExtraordinariosModule {}
+export class ServiciosExtraordinariosModule { }

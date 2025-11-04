@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -599,48 +600,48 @@ const ROUTES: Routes = [
         (m) => m.ProcesoRequerimientoComponent
       ),
   },
-{   
-  path: 'permiso-sanitario-productos',
-  loadChildren: () =>
-    import('./tramites/260104/permiso-sanitario-productos.module').then(
-      (m) => m.PermisoSanitarioProductosModule
-    ),
-},
-{
-  path: 'modificacion-permiso-lab',
-  loadChildren: () =>
-    import('./tramites/260918/modificacion-permiso-lab.module').then(
-      (m) => m.ModificacionPermisoLabModule
-    )
-},
-{
-  path: 'sustancias-permitidas',
-  loadChildren: () =>
-    import('./tramites/260515/permit-de-substances.module').then(
-      (m) => m.PermitDeSubstancesModule
-    )
-},
-{
-      path: 'importacion-retorno-sanitario',
-      loadChildren: () =>
-        import('./tramites/260103/importacion-retorno-sanitario.module').then(
-          (m) => m.ImportacionRetornoSanitarioModule
-        ),
-},
-{
-  path: 'importacion-plafest',
-  loadChildren: () =>
-    import('./tramites/260507/importacion-plafest.module').then(
-      (m) => m.ImportacionPlafestModule
-    ),
-},
-{
-      path: 'medicamentos-donacion',
-      loadChildren: () =>
-        import('./tramites/260909/medicamentos-donacion.module').then(
-          (m) => m.MedicamentosDonacionModule
-        )
-    },    
+  {
+    path: 'permiso-sanitario-productos',
+    loadChildren: () =>
+      import('./tramites/260104/permiso-sanitario-productos.module').then(
+        (m) => m.PermisoSanitarioProductosModule
+      ),
+  },
+  {
+    path: 'modificacion-permiso-lab',
+    loadChildren: () =>
+      import('./tramites/260918/modificacion-permiso-lab.module').then(
+        (m) => m.ModificacionPermisoLabModule
+      )
+  },
+  {
+    path: 'sustancias-permitidas',
+    loadChildren: () =>
+      import('./tramites/260515/permit-de-substances.module').then(
+        (m) => m.PermitDeSubstancesModule
+      )
+  },
+  {
+    path: 'importacion-retorno-sanitario',
+    loadChildren: () =>
+      import('./tramites/260103/importacion-retorno-sanitario.module').then(
+        (m) => m.ImportacionRetornoSanitarioModule
+      ),
+  },
+  {
+    path: 'importacion-plafest',
+    loadChildren: () =>
+      import('./tramites/260507/importacion-plafest.module').then(
+        (m) => m.ImportacionPlafestModule
+      ),
+  },
+  {
+    path: 'medicamentos-donacion',
+    loadChildren: () =>
+      import('./tramites/260909/medicamentos-donacion.module').then(
+        (m) => m.MedicamentosDonacionModule
+      )
+  },
   {
     path: 'importar-de-remedios-herbals',
     loadChildren: () =>
@@ -690,10 +691,14 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

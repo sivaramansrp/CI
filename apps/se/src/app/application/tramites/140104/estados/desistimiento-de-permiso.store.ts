@@ -1,21 +1,23 @@
-import {
-  Cancelacion,
-  PermisosDatos,
-  createDatosState,
-} from '../models/cancelacion-de-solicitus.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Cancelacion } from '../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
 
 export interface Solicitud140104State {
-  datos: Cancelacion[];
-  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
   idSolicitud: number | null;
+  motivoCancelacion: string | null;
+  cuerpoTablaCancelacion: Cancelacion[];
 }
 
+/**
+ * Crea el estado inicial para la solicitud 140104.
+ *
+ * @returns El estado inicial con un arreglo vacío de cancelaciones y el idSolicitud en 0.
+ */
 export function createInitialSolicitudState(): Solicitud140104State {
   return {
-    datos: [],
     idSolicitud: 0,
+    motivoCancelacion: '',
+    cuerpoTablaCancelacion: [],
   };
 }
 
@@ -23,21 +25,12 @@ export function createInitialSolicitudState(): Solicitud140104State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'desistimiento-de-permiso', resettable: true })
-/**
- * Tienda (store) Akita para gestionar el estado relacionado con la cancelación o desistimiento
- * de solicitudes de permiso.
- *
- * @description
- * Esta clase extiende de `Store` de Akita y permite inicializar y actualizar el estado
- * de tipo `PermisosDatos`. Está diseñada para almacenar y manejar los datos relacionados
- * con los trámites de cancelación, como el folio del trámite, tipo de solicitud, fracción arancelaria, etc.
- */
 export class DesistimientoStore extends Store<Solicitud140104State> {
   /**
    * Constructor que inicializa la tienda con el estado inicial generado por `createDatosState()`.
    */
   constructor() {
-    super(createDatosState());
+    super(createInitialSolicitudState());
   }
 
   /**
@@ -51,9 +44,20 @@ export class DesistimientoStore extends Store<Solicitud140104State> {
    *
    * @param datos - Arreglo de objetos de tipo `Cancelacion` que se utilizará para actualizar el estado.
    */
-  public actualizarDatosForma(datos: Cancelacion[]): void {
+  public actualizarDatosForma(cuerpoTablaCancelacion: Cancelacion[]): void {
     this.update((_state) => ({
-      datos,
+      cuerpoTablaCancelacion,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Solicitud140104State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
     }));
   }
 

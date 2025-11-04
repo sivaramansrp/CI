@@ -35,6 +35,7 @@
       "inah/Routes": ["apps/inah/src/app/remote-entry/entry.routes.ts"],
       "inbal/Routes": ["apps/inbal/src/app/remote-entry/entry.routes.ts"],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],
+      "privados/Routes": ["apps/privados/src/app/remote-entry/entry.routes.ts"],
       "profepa/Routes": ["apps/profepa/src/app/remote-entry/entry.routes.ts"],
       "se/Routes": ["apps/se/src/app/remote-entry/entry.routes.ts"],
       "semarnat/Routes": ["apps/semarnat/src/app/remote-entry/entry.routes.ts"],

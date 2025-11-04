@@ -129,6 +129,12 @@ export const ERROR_FORMA_ALERT_QUAD= `
 
 `;
 
+/**
+ * Mensaje de validación cuando las ventas totales son menores que cero.
+ */
+export const VENTAS_TOTALES_MENSAJES =
+  "Ventas totales deben ser mayores o iguales a cero.";
+
 
   /**
  * Mensaje de alerta que indica que se debe agregar al menos una mercancía para continuar con el trámite.

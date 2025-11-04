@@ -1,4 +1,4 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #certificadoDeOrigen
     [operador]="operador"
     [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
@@ -7,23 +7,23 @@
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
-    [tableData]="disponiblesDatos || []"
+    [tableData]="(datosTablaUno$ | async) ||  []"
     (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
     (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
     (filaClics)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
-    [guardarClicado]="(datosTabla$ | async) ||  []"
+    [guardarClicado]="datosTabla$"
     (formaValida)="setFormValida($event)"
     (guardarClicadoEvent)="guardarClicado($event)"
     [datosForm]="formCertificadoValues"
-    [cargoDeMercancias]="cargoDeMercancias"
+    [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
     [mercanciasDisponibles]="mercanciasDisponibles"
     [tramiteState]="formCertificadoValues"
     [elementosRequeridos]="elementosRequeridos"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)"
-    [domicilio]="domicilio"
-    >
+    [cargoDeMercancias]="cargoDeMercancias"
+    [domicilio]="domicilio">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">

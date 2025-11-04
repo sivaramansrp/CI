@@ -189,7 +189,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            seccionState.tablaMercanciasConfigDatos;
         })
       )
       .subscribe();
@@ -278,6 +278,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       opcionesColapsableState: event.opcionesColapsableState,
     }));
   }
+
 
   /**
    * @method ngOnDestroy

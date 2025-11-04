@@ -1,5 +1,6 @@
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
 import { DatosDelModificacion, DatosDelServicios } from "../estados/models/datos-tramite.model";
+import { Empresas } from "../../../shared/models/complementaria.model";
 
 /**
  * Constantes y configuraciones para el trámite 80302 - Modificación programa IMMEX
@@ -43,52 +44,52 @@ export const PASOS = [
 export const CONFIGURACION_EMPRESAS = [
   {
     encabezado: 'Registro Federal de Contribuyente',
-    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    clave: (ele: Empresas) : string | undefined => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    clave: (ele: Empresas) : string | undefined => ele.razonSocial,
     orden: 2,
   },
   {
     encabezado: 'Calle',
-    clave: (ele: Operacions) : string | undefined => ele.calle,
+    clave: (ele: Empresas) : string | undefined => ele.calle,
     orden: 3,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    clave: (ele: Empresas) : string | undefined => ele.numeroInterior,
     orden: 4,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    clave: (ele: Empresas) : string | undefined => ele.numeroExterior,
     orden: 5,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    clave: (ele: Empresas) : string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    clave: (ele: Empresas) : string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Operacions) : string | undefined => ele.estado,
+    clave: (ele: Empresas) : string | undefined => ele.entidadFederativa,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (ele: Operacions) : string | undefined => ele.pais,
+    clave: (ele: Empresas) : string | undefined => ele.pais,
     orden: 9,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    clave: (ele: Empresas) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
     orden: 13,
   },
 ];

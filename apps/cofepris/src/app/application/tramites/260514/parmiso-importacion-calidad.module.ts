@@ -14,6 +14,7 @@ import { RepresentanteLegalRfcComponent } from '../../shared/components/represen
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago-derechos/shared-pago-derechos.component';
+import {PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, PasoDosComponent, PasoTresComponent
@@ -34,6 +35,7 @@ import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
+    PagoDeDerechosContenedoraComponent
   ],
   providers: [
     provideHttpClient(),

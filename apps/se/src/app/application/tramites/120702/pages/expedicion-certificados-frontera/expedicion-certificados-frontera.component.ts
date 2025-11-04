@@ -5,7 +5,8 @@ import {
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { EXPEDICION_CERTIFICADOS_FRONTERA } from '../../constantes/expedicion-certificados-frontera.enum';
+import { ERROR_FORMA_ALERT, EXPEDICION_CERTIFICADOS_FRONTERA } from '../../constantes/expedicion-certificados-frontera.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Interfaz que representa la acción del botón dentro del wizard.
@@ -28,10 +29,26 @@ interface AccionBoton {
   templateUrl: './expedicion-certificados-frontera.component.html',
 })
 export class ExpedicionCertificadosFronteraComponent {
+
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+    public formErrorAlert = ERROR_FORMA_ALERT;
+  
+    /**
+     * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+     * }
+     */
+    esFormaValido: boolean = false;
   /**
    * Referencia al componente hijo `WizardComponent` para controlar la navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente paso uno para acceder a sus métodos de validación.
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * Lista de pantallas que conforman los pasos del wizard.
@@ -60,17 +77,54 @@ export class ExpedicionCertificadosFronteraComponent {
 
   /**
    * Cambia el paso actual del wizard en función de la acción realizada (continuar o retroceder).
+   * Valida el formulario antes de continuar al siguiente paso.
    * 
    * @param e Objeto que contiene la acción (`accion`) y el paso (`valor`) al que se desea mover.
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+      
+      // Si la acción es continuar, validar el formulario del paso actual
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        if (this.validarPasoActual()) {
+          this.esFormaValido = false; // Ocultar mensaje de error
+          this.indice = e.valor;
+          this.wizardComponent.siguiente();
+        } else {
+          this.esFormaValido = true; // Mostrar mensaje de error
+          // No continuar si la validación falla
+        }
       } else {
+        this.esFormaValido = false; // Ocultar mensaje de error al retroceder
+        this.indice = e.valor;
         this.wizardComponent.atras();
       }
+    }
+  }
+
+  /**
+   * Valida el formulario del paso actual.
+   * @returns true si el formulario es válido, false en caso contrario.
+   */
+  private validarPasoActual(): boolean {
+    switch (this.indice) {
+      case 1:
+        // Validar paso 1 - usar el método que valida todo el formulario
+        if (this.pasoUnoComponent) {
+          return this.pasoUnoComponent.validarFormularioCompleto();
+        }
+        return false;
+      
+      case 2:
+        // Validar paso 2 si es necesario
+        return true;
+      
+      case 3:
+        // Validar paso 3 si es necesario
+        return true;
+      
+      default:
+        return true;
     }
   }
 }

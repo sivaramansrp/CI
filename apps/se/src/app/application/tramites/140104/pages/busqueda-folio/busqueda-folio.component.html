@@ -7,14 +7,14 @@
             <form [formGroup]="detalleDelPermisoForm">
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label" for="folioTramite">Folio del permiso:
+                        <label class="form-label" for="numFolioTramite">Folio del permiso:
                         </label>
-                        <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                        <input type="text" class="form-control" id="numFolioTramite" formControlName="numFolioTramite">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="tipoDeSolicitud">Tipo de solicitud:
+                        <label class="form-label" for="tipoSolicitud">Tipo de solicitud:
                         </label>
-                        <input type="text" class="form-control" id="tipoDeSolicitud" formControlName="tipoDeSolicitud">
+                        <input type="text" class="form-control" id="tipoSolicitud" formControlName="tipoSolicitud">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="regimen">Régimen:
@@ -25,72 +25,72 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label" for="condicionDeLaMercancia">Condición de la mercancía:
+                        <label class="form-label" for="condicionMercancia">Condición de la mercancía:
                         </label>
-                        <input type="text" class="form-control" id="condicionDeLaMercancia"
-                            formControlName="condicionDeLaMercancia">
+                        <input type="text" class="form-control" id="condicionMercancia"
+                            formControlName="condicionMercancia">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="umt">Unidad de medida de la tarifa (UMT):
+                        <label class="form-label" for="unidadMedidaUMT">Unidad de medida de la tarifa (UMT):
                         </label>
-                        <input type="text" class="form-control" id="umt" formControlName="umt">
+                        <input type="text" class="form-control" id="unidadMedidaUMT" formControlName="unidadMedidaUMT">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="cantidad">Cantidad:
+                        <label class="form-label" for="cantidadAutorizada">Cantidad:
                         </label>
-                        <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
+                        <input type="text" class="form-control" id="cantidadAutorizada" formControlName="cantidadAutorizada">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label" for="cdr">Clasificación del régimen:
+                        <label class="form-label" for="clasificacionRegimen">Clasificación del régimen:
                         </label>
-                        <input type="text" class="form-control" id="cdr" formControlName="cdr">
+                        <input type="text" class="form-control" id="clasificacionRegimen" formControlName="clasificacionRegimen">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="usd">Valor de factura USD:
+                        <label class="form-label" for="usoEspecifico">Valor de factura USD:
                         </label>
-                        <input type="text" class="form-control" id="usd" formControlName="usd">
+                        <input type="text" class="form-control" id="usoEspecifico" formControlName="usoEspecifico">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="usd">último saldo:
+                        <label class="form-label" for="valorSolicitado">último saldo:
                         </label>
-                        <input type="text" class="form-control" id="usd" formControlName="usd">
+                        <input type="text" class="form-control" id="valorSolicitado" formControlName="valorSolicitado">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:
+                        <label class="form-label" for="fraccion">Fracción arancelaria:
                         </label>
-                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="fraccionArancelaria"
-                            formControlName="fraccionArancelaria"></textarea>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="fraccion"
+                            formControlName="fraccion"></textarea>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="descripcionDeLaMercancia">Descripción de la mercancía:
+                        <label class="form-label" for="descripcionMercancia">Descripción de la mercancía:
                         </label>
                         <textarea rows="3" style="height: 80px" readonly class="form-control"
-                            id="descripcionDeLaMercancia" formControlName="descripcionDeLaMercancia"></textarea>
+                            id="descripcionMercancia" formControlName="descripcionMercancia"></textarea>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-10">
-                        <label class="form-label" for="beneficioQueSeObtiene">Esquema regla 8va:
+                        <label class="form-label" for="esquemaReglaOctava">Esquema regla 8va:
                         </label>
-                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="beneficioQueSeObtiene"
-                            formControlName="beneficioQueSeObtiene"></textarea>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="esquemaReglaOctava"
+                            formControlName="esquemaReglaOctava"></textarea>
                     </div>
 
                 </div>
 
                 <div class="row">
                     <div class="col-md-10">
-                        <label class="form-label" for="observaciones">País(es) de destino:
+                        <label class="form-label" for="paises">País(es) de destino:
                         </label>
-                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="observaciones"
-                            formControlName="observaciones"></textarea>
+                        <textarea rows="3" style="height: 80px" readonly class="form-control" id="paises"
+                            formControlName="paises"></textarea>
                     </div>
                 </div>
             </form>

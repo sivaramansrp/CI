@@ -326,4 +326,16 @@ export class Tramite260207Store extends Store<Tramite260207State> {
       tabSeleccionado: tabSeleccionado,
     }));
   }
+
+  /**
+   * @method setIdSolicitud
+   * @description Actualiza el ID de la solicitud en el estado.
+   * @param {number} idSolicitud - Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud: idSolicitud,
+    }));
+  }
 }

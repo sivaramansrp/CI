@@ -4,15 +4,23 @@
  * Utiliza formularios reactivos y se integra con un servicio para obtener los datos necesarios.
  * Además, gestiona el estado del trámite utilizando un store y una query.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs/operators';
+
 import { Subject } from 'rxjs';
 
-import { Catalogo,ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs/operators';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import {
+  Catalogo,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
