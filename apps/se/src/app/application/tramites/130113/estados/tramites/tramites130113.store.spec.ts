@@ -121,13 +121,8 @@ describe('Tramite130113Store', () => {
   });
 
   it('should preserve existing state when updating partial state', () => {
-    // First update
     store.actualizarEstado({ solicitud: 'First Update' });
-    
-    // Second update with different property
     store.actualizarEstado({ producto: 'Second Update' });
-    
-    // Both should be preserved
     expect(store.getValue().solicitud).toBe('First Update');
     expect(store.getValue().producto).toBe('Second Update');
   });
