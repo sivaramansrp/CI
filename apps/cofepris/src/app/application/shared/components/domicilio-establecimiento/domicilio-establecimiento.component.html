@@ -365,6 +365,9 @@
               formMercancias.get('nombreCientifico')?.invalid &&
               formMercancias.get('nombreCientifico')?.touched
               " class="mensaje-error">
+               <small *ngIf="formMercancias.get('nombreCientifico')?.errors?.['required']">
+              Este campo es obligatorio
+              </small>
               <small *ngIf="formMercancias.get('nombreCientifico')?.errors?.['maxlength']">
               Por favor, no escribas más de 250 caracteres
               </small>
@@ -523,7 +526,7 @@
                 <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
                 name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
                 (change)="setValoresStore(formMercancias, 'UMC', 'setUMC'); formMercancias.get('UMC')?.markAsTouched();"
-                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                [isDisabled]="esFormularioSoloLectura"  [markTouched]="!!(formMercancias.get('UMC')?.invalid && formMercancias.get('UMC')?.touched)"></app-catalogo-select>
               </div>
             </div>
           </div>
