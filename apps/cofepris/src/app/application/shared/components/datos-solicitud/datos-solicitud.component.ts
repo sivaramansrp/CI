@@ -56,6 +56,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
   @Input() idProcedimiento!: number;
+
+  @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
