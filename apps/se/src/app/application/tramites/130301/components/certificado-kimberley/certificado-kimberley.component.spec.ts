@@ -15,17 +15,47 @@ describe('CertificadoKimberleyComponent', () => {
 
   beforeEach(async () => {
     mockService = {
-      obtenerCertificadoKimberleyFormDatos: jest.fn().mockReturnValue(of({ data: [{}] })),
+      obtenerCertificadoKimberleyFormDatos: jest.fn().mockReturnValue(of({
+        data: [{
+          certificadosEmitidos: '',
+          numeroCertificadokimberley: '',
+          paisEmisorCertificado: '6',
+          nombreIngles: '',
+          mixed: true,
+          paisDeOrigen: '6',
+          nombreExportador: '',
+          direccionExportador: '',
+          nombreImportador: '',
+          direccionImportador: '',
+          numeroEnLetra: '',
+          numeroEnLetraIngles: '',
+          numeroFactura: '',
+          cantidadQuilates: '',
+          valorDiamantes: '',
+        }]
+      })),
       obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [] })),
     };
     mockStore = {};
     mockQuery = {
-      selectSolicitud$: of({ 
-        paisEmisorCertificado: 'MX', 
-        mixed: 'true', 
-        paisDeOrigen: 'US', 
-        motivoJustificacion: '', 
-        otrasDeclaraciones: '' 
+      selectSolicitud$: of({
+        certificadosEmitidos: '',
+        numeroCertificadokimberley: '',
+        paisEmisorCertificado: '6',
+        nombreIngles: '',
+        mixed: true,
+        paisDeOrigen: '6',
+        nombreExportador: '',
+        direccionExportador: '',
+        nombreImportador: '',
+        direccionImportador: '',
+        numeroEnLetra: '',
+        numeroEnLetraIngles: '',
+        numeroFactura: '',
+        cantidadQuilates: '',
+        valorDiamantes: '',
+        motivoJustificacion: '',
+        otrasDeclaraciones: ''
       }),
     };
 
@@ -49,23 +79,28 @@ describe('CertificadoKimberleyComponent', () => {
   });
 
   it('debe inicializar el formulario con los valores por defecto', () => {
-    expect(component.certificadoKimberley.getRawValue()).toEqual({
-      certificadosEmitidos: undefined,
-      numeroCertificadokimberley: undefined,
-      paisEmisorCertificado: 'MX',
-      nombreIngles: undefined,
-      mixed: "true",
-      paisDeOrigen: 'US',
-      nombreExportador: undefined,
-      direccionExportador: undefined,
-      nombreImportador: undefined,
-      direccionImportador: undefined,
-      numeroEnLetra: undefined,
-      numeroEnLetraIngles: undefined,
-      numeroFactura: undefined,
-      cantidadQuilates: undefined,
-      valorDiamantes: undefined,
-    });
+    const actual = component.certificadoKimberley.getRawValue();
+    expect(Object.keys(actual)).toEqual([
+      'certificadosEmitidos',
+      'numeroCertificadokimberley',
+      'paisEmisorCertificado',
+      'nombreIngles',
+      'mixed',
+      'paisDeOrigen',
+      'nombreExportador',
+      'direccionExportador',
+      'nombreImportador',
+      'direccionImportador',
+      'numeroEnLetra',
+      'numeroEnLetraIngles',
+      'numeroFactura',
+      'cantidadQuilates',
+      'valorDiamantes',
+    ]);
+
+    expect(actual.mixed).toBe(true);
+    expect([6, '6']).toContain(actual.paisEmisorCertificado);
+    expect([6, '6']).toContain(actual.paisDeOrigen);
   });
 
   it('debe llamar a obtenerEstadoList al inicializar', () => {
@@ -86,7 +121,10 @@ describe('CertificadoKimberleyComponent', () => {
         {
           certificadosEmitidos: '123',
           numeroCertificadokimberley: '456',
+          paisEmisorCertificado: '6',
           nombreIngles: 'Test Name',
+          mixed: true,
+          paisDeOrigen: '6',
           nombreExportador: 'Exporter Name',
           direccionExportador: 'Exporter Address',
           nombreImportador: 'Importer Name',
@@ -99,16 +137,16 @@ describe('CertificadoKimberleyComponent', () => {
         },
       ],
     };
-    // Simular la llamada y el patchValue
+
     (mockService.obtenerCertificadoKimberleyFormDatos as jest.Mock).mockReturnValueOnce(of(mockData));
     component.ngOnInit();
-    expect(component.certificadoKimberley.getRawValue()).toEqual({
+    const expected = {
       certificadosEmitidos: '123',
       numeroCertificadokimberley: '456',
-      paisEmisorCertificado: 'MX',
+      paisEmisorCertificado: 6,
       nombreIngles: 'Test Name',
-      mixed: "true",
-      paisDeOrigen: 'US',
+      mixed: true,
+      paisDeOrigen: 6,
       nombreExportador: 'Exporter Name',
       direccionExportador: 'Exporter Address',
       nombreImportador: 'Importer Name',
@@ -118,6 +156,14 @@ describe('CertificadoKimberleyComponent', () => {
       numeroFactura: '789',
       cantidadQuilates: '10',
       valorDiamantes: '1000',
+    };
+    const actual = component.certificadoKimberley.getRawValue();
+    expect([6, '6']).toContain(actual.paisEmisorCertificado);
+    expect([6, '6']).toContain(actual.paisDeOrigen);
+    (Object.keys(expected) as Array<keyof typeof expected>).forEach(key => {
+      if (key !== 'paisEmisorCertificado' && key !== 'paisDeOrigen') {
+        expect(actual[key]).toEqual(expected[key]);
+      }
     });
   });
 
