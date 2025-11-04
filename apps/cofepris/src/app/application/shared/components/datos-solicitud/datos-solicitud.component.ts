@@ -56,7 +56,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
   @Input() idProcedimiento!: number;
-
+  rfcValido = false;
   @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -317,6 +317,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       ) => void
     )(VALOR);
     this.servicioDeFormularioService.setFormValue('datosSolicitudForm', { [campo]: VALOR });
+  }
+  onRfcValidoChange(valor: boolean):void {
+    this.rfcValido = valor;
   }
 
   /**

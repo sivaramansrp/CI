@@ -1,5 +1,5 @@
 <div class="container">
-  <app-datos-del-establecimiento-rfc [idProcedimiento]="idProcedimiento"></app-datos-del-establecimiento-rfc>
+  <app-datos-del-establecimiento-rfc [idProcedimiento]="idProcedimiento"  (rfcValidoChange)="onRfcValidoChange($event)"></app-datos-del-establecimiento-rfc>
   <app-domicillo 
     [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
     [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
@@ -11,6 +11,7 @@
     [tieneUsoEspecifico]="tieneUsoEspecifico"
     [idProcedimiento]="idProcedimiento"
     [identificacion]="identificacion"
+      [rfcValido]="rfcValido"
     >
   </app-domicillo>
   <app-manifiestos  [idProcedimiento]="idProcedimiento"></app-manifiestos>

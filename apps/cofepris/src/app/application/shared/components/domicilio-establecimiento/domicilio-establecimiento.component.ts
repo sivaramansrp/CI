@@ -22,9 +22,11 @@ import {
   AfterViewInit,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 
@@ -89,9 +91,10 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
-export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
+export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
   @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
+  @Input() rfcValido: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -1230,7 +1233,25 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit {
     this.formMercancias.get('nombreComun')?.updateValueAndValidity();
     this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
    }
+   if(!this.rfcValido){
+this.formMercancias.disable();
+   }
+   else{
+    this.formMercancias.enable();
+   }
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.formMercancias) {
+      return;
+    }
+  if (changes['rfcValido']) {
+    if (!this.rfcValido) {
+      this.domicilio.disable();
+    } else {
+      this.domicilio.enable();
+    }
+  }
+}
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
