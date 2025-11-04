@@ -35,21 +35,11 @@
       </div>
  </div>
  <div class="col-md-4 mt-3">
-
-    <!-- <div class="form-group">
-        <label class="form-label" for="expedicion">Fecha de expedición:</label>
-        <input class="form-control" id="expedicion" formControlName="expedicion"  type="date" (change)="setValoresStore(tratadosForm,'expedicion', 'setExpedicion')">
-      </div> -->
       <div class="form-group">
         <input-fecha [setFecha]="tratadosForm.get('expedicion')?.value" [datos]="fechaDeExpedicionInput"></input-fecha>
       </div>
 </div>
 <div class="col-md-4 mt-3">
- 
-    <!-- <div class="form-group">
-        <label class="form-label" for="vencimiento">Fecha de vencimiento:</label>
-        <input class="form-control" id="vencimiento" formControlName="vencimiento"  type="date" (change)="setValoresStore(tratadosForm,'vencimiento', 'setVencimiento')">
-      </div> -->
       <div class="form-group">
           <input-fecha [setFecha]="tratadosForm.get('vencimiento')?.value" [datos]="fechaDeVencimientoInput"></input-fecha>
       </div>

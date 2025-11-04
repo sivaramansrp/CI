@@ -28,19 +28,52 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `
+/**
+ * Constante que define el mensaje de error en formato HTML
+ * para indicar que el campo 'Precisa' es obligatorio.
+ */
+export const ERROR_PRECISA_REQUIRED = `
+<div class="d-flex align-items-start">
+  <div class="me-2">
+    <span>1.</span>
+  </div>
+  <div class="flex-grow-1 d-flex justify-content-center">
+    <div class="text-center">
+      <div style="color: black;">
+        Corrija los siguientes errores:
+      </div>
+      <div style="color: red;">
+        (Precisa) es un campo requerido
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
+/**
+ * Constante que define la configuración del campo 'Fecha de vencimiento'.
+ * Incluye la etiqueta, si es requerido y su estado de habilitación.
+ */
 export const FECHA_VENCIMIENTO = {
   labelNombre: 'Fecha de vencimiento:',
   required: false,
   habilitado: false,
 };
 
+/**
+ * Constante que define la configuración del campo 'Fecha de expedición'.
+ * Contiene la etiqueta, si es obligatorio y su estado de habilitación.
+ */
 export const FECHA_EXPEDICION = {
   labelNombre: 'Fecha de expedición:',
   required: false,
   habilitado: false,
 };
 
+/**
+ * Constante que define la configuración del campo 'Fecha de la factura'.
+ * Especifica la etiqueta, si es requerido y su estado de habilitación.
+ */
 export const FECHA_FACTURA = {
   labelNombre: 'Fecha de la factura:',
   required: false,

@@ -1,4 +1,4 @@
-import { CatalogoServices,formatFechaCustom,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent, formatFechaCustom } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
@@ -292,11 +292,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
 
-  //   this.tramite110203Query.selectSolicitud$
-  // .pipe(takeUntil(this.unsubscribe$))
-  // .subscribe((state) => {
-  //   this.certificadoState = state;
-  // });
     
     this.obtenerTratadoAcuerdo();
   }
@@ -474,11 +469,6 @@ obtenerPaisesPorTratado(tratadoId: string): void {
     .subscribe({
       next: (response) => {        
         if (response?.datos && response.datos.length > 0) {
-          // Extract the first país clave from the response
-          // const PAIS_CLAVE = response.datos[0].clave;
-          // if (PAIS_CLAVE !== undefined) {
-          //   this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
-          // }
           this.paisBloque = response.datos;
         } else {
           this.paisBloque = [];
@@ -492,35 +482,15 @@ obtenerPaisesPorTratado(tratadoId: string): void {
 }
 
 /**
- * Obtiene los tratados y acuerdos asociados a un país específico.
- *
- * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
- */
-// obtenerTratadosAcuerdosPorPais(cvePais: string): void {
-//   this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
-//     .pipe(takeUntil(this.destroyNotifier$))
-//     .subscribe({
-//       next: (response) => {
-//         this.paisBloque = response?.datos ?? [];
-//       },
-//       error: (error) => {
-//         console.error('Error obteniendo tratados-acuerdos por país:', error);
-//         this.paisBloque = [];
-//       }
-//     });
-// }
-
-/**
  * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
  */
 buscarDatos(): void {
-    // const PAYLOAD = {
-    //   numeroCertificado: "25402500186802", 
-    //   // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
-    //   rfcSolicitante: "AAL0409235E6"
-    // };
 
-    let PAYLOAD: any;
+    type CertificadoPayload =
+      | { numeroCertificado: string; rfcSolicitante: string }
+      | { cvePaisSeleccionado: string; cveTratadoAcuerdoSeleccionado: string; rfcSolicitante: string };
+
+    let PAYLOAD: CertificadoPayload;
 
     if (this.valorSeleccionado === 'Por número de certificado') {
       PAYLOAD = {
@@ -533,12 +503,13 @@ buscarDatos(): void {
         cveTratadoAcuerdoSeleccionado: this.datosBusquedaFormulario.get('tratadoAcuerdo')?.value || '',
         rfcSolicitante: "AAL0409235E6"
       };
+    } else {
+      return;
     }
 
     this.Solocitud110203Service.buscarCertificado(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: unknown) => {
-        // const DATOS = (response as any).datos ?? [];
       const API_RESPONSE = response as ApiResponse;
       const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
 

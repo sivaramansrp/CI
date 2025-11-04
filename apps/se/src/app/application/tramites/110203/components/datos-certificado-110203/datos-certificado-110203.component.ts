@@ -501,7 +501,7 @@ private mostrarNotificacionValidacion(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: 'Error de Validación',
-    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres de la descripción no puede ser mayor a 200., El número de caracteres del número de factura no puede ser mayor a 36.',
+    mensaje: 'Por favor, corrija los siguientes errores: El número de caracteres del complemento de la descripción no puede ser mayor a 200., El número de caracteres del número de factura no puede ser mayor a 36.',
     cerrar: true,
     tiempoDeEspera: 0,
     txtBtnAceptar: 'Aceptar',
@@ -651,6 +651,33 @@ private updateMercanciasWithApiData(state: Solicitud110203State): void {
       registro: state.registro || this.mercancias[0].registro,
     };
   }
+}
+
+/**
+ * Método que valida el formulario del certificado.
+ * Verifica que el campo 'precisa' tenga un valor; si no, marca todos los campos como tocados.
+ * 
+ * @returns `true` si el formulario es válido, `false` en caso contrario.
+ */
+  validarFormularios(): boolean {
+    if (
+      this.certificadoForm.get('precisa')?.value !== '' &&
+      this.certificadoForm.get('precisa')?.value !== null 
+    ) {
+      return true;
+    }
+    this.certificadoForm.markAllAsTouched();
+    return false;
+  }
+
+/**
+ * Método que verifica si el campo 'precisa' está vacío o contiene solo espacios.
+ * 
+ * @returns `true` si el campo está vacío o en blanco, `false` en caso contrario.
+ */
+public isPrecisaEmpty(): boolean {
+  const PRECISA_CONTOL = this.certificadoForm.get('precisa');
+  return !PRECISA_CONTOL?.value || PRECISA_CONTOL.value.trim() === '';
 }
 
   /**
