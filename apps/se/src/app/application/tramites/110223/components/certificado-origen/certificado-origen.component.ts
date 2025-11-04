@@ -637,7 +637,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   validarFormulario(): boolean {
     let ESVALIDO = true;
     if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validatorCheck()) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
         ESVALIDO = false;
       }
     } else {
