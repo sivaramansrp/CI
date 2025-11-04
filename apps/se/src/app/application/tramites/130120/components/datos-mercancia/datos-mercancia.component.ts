@@ -118,6 +118,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     await this.initActionFormBuild();
 
     combineLatest([
@@ -427,7 +428,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /** @method setTotalMercanciaImportar Calcula y actualiza el valor total de la factura en USD. */
-  setTotalMercanciaImportar(): void {
+  setTotalMercanciaImportar(subformName: FormGroup, campo: string, metodoNombre: keyof PermisoImportacionStore): void {
+    this.setValoresStore(subformName, campo, metodoNombre);
     const DATOSMERCANICA = this.datosMercanica;
     const VALARTOTALFACTURACONTROL = DATOSMERCANICA.get('valor_total_factura');
     const VALORTOTALFACTURA = parseFloat(VALARTOTALFACTURACONTROL && VALARTOTALFACTURACONTROL.value ? VALARTOTALFACTURACONTROL.value : '0');
@@ -445,7 +447,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /** @method setMercanciaImportar Calcula y actualiza el valor de factura y precio unitario en USD. */
-  setMercanciaImportar(): void {
+  setMercanciaImportar(subformName: FormGroup, campo: string, metodoNombre: keyof PermisoImportacionStore): void {
+    this.setValoresStore(subformName, campo, metodoNombre);
     const DATOSMERCANICA = this.datosMercanica;
     const VALOR_FACTURA = parseFloat(DATOSMERCANICA.get('valor_factura')?.value);
     const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
@@ -534,7 +537,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     const FACTOR_CONVERSION = (this.datosMercanica.get('factor_conversion')?.value ?? 0);
     const VALOR_UMC = (this.datosMercanica.get('cantidad_umc')?.value ?? 0);
     const VALOR_UMT_AUX = Number((FACTOR_CONVERSION * VALOR_UMC).toFixed(3));
+
     this.datosMercanica.get('cantidad_umt')?.setValue(VALOR_UMT_AUX);
+    this.store.setCantidadUmt(String(VALOR_UMT_AUX));
   }
 
   /**
@@ -581,6 +586,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       const RESULT_FACT_AUX = (VALOR_MONEDA * FACTOR * VALOR_TOTAL_FACTURA) / FACTOR;
       const RESULT_FACT = DatosMercanciaComponent.truncar(RESULT_FACT_AUX);
       this.datosMercanica.get('valor_total_factura_usd')?.setValue(RESULT_FACT);
+      this.store.setValorTotalFacturaUsd((RESULT_FACT).toString());
     } catch (ERROR) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
@@ -609,6 +615,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       const VALOR_MONEDA = await lastValueFrom(this.obtenerMonedaConversion(TIPO_MONEDA));
       const VALOR_FACTURA_USD = DatosMercanciaComponent.truncar(VALOR_FACTURA * VALOR_MONEDA);
       this.datosMercanica.get('valor_factura_usd')?.setValue(VALOR_FACTURA_USD);
+      this.store.setValorFacturaUsd((VALOR_FACTURA_USD).toString());
     } catch (ERROR) {
       console.error('Error calculando el valor de la factura en USD:', ERROR);
     }
@@ -671,6 +678,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       (MERCANCIA_AVISO !== null && MERCANCIA_AVISO.toString().trim().length >= 1)) {
       if (CANTIDAD_UMT === 0 || CANTIDAD_UMT.toString().trim().length === 0) {
         this.datosMercanica.get('precio_unitario_usd')?.setValue(0);
+        this.store.setPrecioUnitarioUsd((0).toString());
         return;
       }
       const FACTOR = 10000000;
@@ -689,6 +697,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         RESULTADO_PRECIO_UNITARIO = DatosMercanciaComponent.truncar(RESULTADO_AUX);
       }
       this.datosMercanica.get('precio_unitario_usd')?.setValue(RESULTADO_PRECIO_UNITARIO);
+      this.store.setPrecioUnitarioUsd((RESULTADO_PRECIO_UNITARIO).toString());
     }
   }
 

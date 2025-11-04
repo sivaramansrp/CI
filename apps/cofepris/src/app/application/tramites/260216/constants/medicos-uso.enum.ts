@@ -96,3 +96,7 @@ export const FALTAN_CAMPOS_POR_CAPTURAR = '<div><b>¡Error de registro!</b> Falt
 export const ELEMENTOS_REQUERIDOS = [
   'fabricante'
 ];
+
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
+
+export const MENSAJE_DE_PAGE= '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';

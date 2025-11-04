@@ -1,5 +1,5 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EMAIL, NotificacionesComponent,Pedimento, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -32,6 +32,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
  */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+  
+    @Input() public idProcedimiento!: number;
   /**
    * @description
    * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
