@@ -288,15 +288,12 @@ public mostrarAlerta: boolean = false;
                            this.tramiteStore.setIdSolicitud(0);
                          }
                        }
-                       // Calcular el nuevo índice basado en la acción
-                       let indiceActualizado = e.valor;
-                       if (e.accion === 'cont') {
-                         indiceActualizado = e.valor + 1;
-                       }
+                       
+                      const INDICE_ACTUALIZADO = this.indice + 1;
                        this.toastrService.success(response.mensaje);
-                       if (indiceActualizado > 0 && indiceActualizado < 5) {
-                         this.indice = indiceActualizado;
-                         this.datosPasos.indice = indiceActualizado;
+                       if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+                         this.indice = INDICE_ACTUALIZADO;
+                         this.datosPasos.indice = INDICE_ACTUALIZADO;
                          if (e.accion === 'cont') {
                            this.wizardComponent.siguiente();
                          } else {

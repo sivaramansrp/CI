@@ -3,25 +3,36 @@
     <div class="form">
         <div class="row align-item-end">
             <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="rfc">RFC*:</label>
-                    <input
-                        class="form-control"
-                        id="rfc"
-                        placeholder=""
-                        type="text"
-                        formControlName="rfc"
-                        [ngClass]="{
-                            'required': esValido('rfc'),
-                            'tiene-invalido': representante.get('rfc')?.invalid && representante.get('rfc')?.touched
-                        }"
-                         maxlength="13"
-                        (change)="setValoresStore(representante,'rfc', 'setRfc')"
-                    />
-                    <p *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="mensaje-error">
-                        Este campo es obligatorio.
-                    </p>
-                </div>
+               <div class="form-group">
+    <label class="form-label" for="rfc">RFC<span
+  [ngClass]="{
+    'tiene-error':
+      (representante.get('rfc')?.invalid && representante.get('rfc')?.touched) ||
+      representante.get('rfc')?.errors?.['pattern']
+  }"
+>*</span>:</label>
+    <input
+        class="form-control"
+        id="rfc"
+        placeholder=""
+        type="text"
+        formControlName="rfc"
+        [ngClass]="{
+            'required': esValido('rfc'),
+            'tiene-invalido': representante.get('rfc')?.invalid && representante.get('rfc')?.touched
+        }"
+          maxlength="13"
+        (change)="setValoresStore(representante,'rfc', 'setRfc')"
+    />
+
+    <p *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="mensaje-error">
+        Este campo es obligatorio.
+    </p>
+
+    <p *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('pattern')" class="mensaje-error">
+        Existen datos incorrectos que no cumplen con el formato esperado.
+    </p>
+</div>
             </div>
             <div class="col-md-4 d-flex align-items-center">
                 <div>

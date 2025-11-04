@@ -4,7 +4,7 @@ import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild } from '
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { CrossListLable } from '@libs/shared/data-access-user/src';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
@@ -31,6 +31,7 @@ import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query'
 import { DatosService } from '../../../shared/services/datos.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TooltipDirective } from "ngx-bootstrap/tooltip";
 
 /**
  * Componente que gestiona el formulario y las interacciones relacionadas con el domicilio del establecimiento.
@@ -46,7 +47,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     TablaDinamicaComponent,
     InputRadioComponent,
     CrosslistComponent,
-  ],
+    TooltipDirective
+],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrls: ['./domicilio-del-establecimiento.component.scss'],
 })
@@ -57,6 +59,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   */
+  establecimientoSeleccionado: boolean = false;
   /**
    * Referencia a los componentes Crosslist.
    */
@@ -105,6 +112,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Lista de clasificaciones de productos cargadas dinámicamente.
    */
   clasificacionProducto: Catalogo[] = [];
+
+  /**
+   * Indica si el checkbox "Aviso de funcionamiento" está marcado.
+   * Cuando está marcado, el campo "No. de licencia sanitaria" se deshabilita.
+   */
+  public avisoFuncionamientoChecked: boolean = false;
 
   /**
    * Notificador para destruir observables relacionados con los servicios.
@@ -205,6 +218,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que inicializa el componente.
    */
   ngOnInit(): void {
+    // Restablecer la selección de establecimiento cuando se inicializa el componente (cambio de pestaña)  
+    this.domicilioStore.resetEstablecimientoSeleccionado();
+    
     this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -229,6 +245,24 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+
+    // Suscríbase al estado de selección de establecimientos
+    this.domicilioquery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((state) => {
+          const PREV_ESTABLECIMIENTO_SELECCIONADO = this.establecimientoSeleccionado;
+          this.establecimientoSeleccionado = state.establecimientoSeleccionado;
+          this.solicitudState = state;
+          
+          // Actualizar el estado del formulario cuando cambie la selección del establecimiento o se inicialicen los formularios.
+          if (PREV_ESTABLECIMIENTO_SELECCIONADO !== this.establecimientoSeleccionado || 
+              (this.domicilioForm && this.claveScianForm && this.DatosMercanciaForm)) {
+            this.updateFormState();
+          }
+        })
+      )
+      .subscribe();
 
     this.cargarEstadoData();
     this.cargarDatosTabla();
@@ -257,15 +291,47 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    this.updateFormState();
+  }
+
+  /**
+   * Actualiza el estado de los formularios basado en las condiciones actuales.
+   */
+  updateFormState(): void {
+    // Gestiona el modo de solo lectura por separado; si es de solo lectura, deshabilita todo.
     if (this.esFormularioSoloLectura) {
-      this.domicilioForm.disable();
-      this.claveScianForm.disable();
-      this.DatosMercanciaForm.disable();
+      this.domicilioForm?.disable();
+      this.claveScianForm?.disable();
+      this.DatosMercanciaForm?.disable();
+      return;
+    }
+
+    // Manejar la lógica de selección de establecimiento
+    if (!this.establecimientoSeleccionado) {
+      this.domicilioForm?.disable();
+      this.claveScianForm?.disable();
+      this.DatosMercanciaForm?.disable();
+      
+      // Mantenga siempre habilitados estos campos específicos (independientemente de la selección del establecimiento).
+      this.domicilioForm?.get('autorizacionIVAIEPS')?.enable();
+      this.domicilioForm?.get('aviso')?.enable();
+      
+      // Para noLicenciaSanitaria, verificar el estado del checkbox
+      if (this.avisoFuncionamientoChecked) {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.disable();
+      } else {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.enable();
+      }
     } else {
-      this.domicilioForm.enable();
-      this.claveScianForm.enable();
-      this.DatosMercanciaForm.enable();
-    } 
+      this.domicilioForm?.enable();
+      this.claveScianForm?.enable();
+      this.DatosMercanciaForm?.enable();
+      
+      // Incluso cuando el establecimiento está seleccionado, mantener la lógica del checkbox
+      if (this.avisoFuncionamientoChecked) {
+        this.domicilioForm?.get('noLicenciaSanitaria')?.disable();
+      }
+    }
   }
 
   /**
@@ -277,14 +343,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   inicializarFormulario(): void {
     this.domicilioForm = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.maxLength(12)]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS),]],
       estado: [this.solicitudState?.estado, Validators.required],
       municipio: [this.solicitudState?.municipio, Validators.required],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
-      colonia: [this.solicitudState?.colonia, [Validators.maxLength(120)]],
+      localidad: [this.solicitudState?.localidad, [Validators.required]],
+      colonia: [this.solicitudState?.colonia, [Validators.required]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(300)]],
-      lada: [this.solicitudState?.lada, [Validators.maxLength(5)]],
-      telefono: [this.solicitudState?.telefono, [Validators.maxLength(24)]],
+      lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      telefono: [this.solicitudState?.telefono, [Validators.pattern(REGEX_SOLO_NUMEROS), Validators.maxLength(24)]],
       scian: [this.solicitudState?.scian],
       aviso: [this.solicitudState?.aviso],
       noLicenciaSanitaria: [this.solicitudState?.noLicenciaSanitaria, Validators.required],
@@ -317,6 +383,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       paisDestino: [this.solicitudState?.paisDestino, Validators.required],
       paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
     });
+
+    this.avisoFuncionamientoChecked = Boolean(this.domicilioForm.get('aviso')?.value);
+
+
+    this.updateFormState();
   }
 
   /**
@@ -342,12 +413,17 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @param event Evento del checkbox.
    */
   toggleNoLicenciaSanitaria(event: Event): void {
+    this.avisoFuncionamientoChecked = (event.target as HTMLInputElement).checked;
     const NO_LICENCIA_SANITARIA = this.domicilioForm.get('noLicenciaSanitaria');
 
-    if ((event.target as HTMLInputElement).checked) {
+    if (this.avisoFuncionamientoChecked) {
       NO_LICENCIA_SANITARIA?.disable();
+      NO_LICENCIA_SANITARIA?.setValue(''); 
     } else {
-      NO_LICENCIA_SANITARIA?.enable();
+
+      if (!this.esFormularioSoloLectura && (this.establecimientoSeleccionado || !this.establecimientoSeleccionado)) {
+        NO_LICENCIA_SANITARIA?.enable();
+      }
     }
   }
 
@@ -448,6 +524,19 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   public datosDelProducto(): void {
     this.modal = 'show';
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.domicilioForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que destruye el componente.

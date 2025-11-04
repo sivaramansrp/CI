@@ -1,7 +1,12 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { BienFinalComponent } from '../../components/bien-final/bien-final.component';
 import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultarCupoComponent } from '../../components/consultar-cupo/consultar-cupo.component';
 import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
+import { InsumosComponent } from '../../components/insumos/insumos.component';
+import { ProcesoProductivoComponent } from '../../components/proceso-productivo/proceso-productivo.component';
+import { RepresentacionFederalComponent } from '../../components/representacion-federal/representacion-federal.component';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 /**
  * @component PasoUnoComponent
@@ -66,6 +71,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * @type {InstrumentoCupoTPLForm}
  */
   public elementoDeTablaSeleccionado!: InstrumentoCupoTPLForm;
+
+  /**
+   * Referencia al componente hijo `ConsultarCupoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('consultarCupo') consultarCupo!: ConsultarCupoComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('representacionFederal') representacionFederal!: RepresentacionFederalComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('bienFinal') bienFinal!: BienFinalComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('insumos') insumos!: InsumosComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('procesoProductivo') procesoProductivo!: ProcesoProductivoComponent;
 
   /**
   * @constructor
@@ -140,6 +170,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     if (event) {
       this.elementoDeTablaSeleccionado = event;
     }
+  }
+
+  validarFormularios(): void {
+    this.consultarCupo?.validarFormulario();
+    this.representacionFederal?.validarFormulario();
+    this.bienFinal?.validarFormulario();
+    this.insumos?.validarFormulario();
+    this.procesoProductivo?.validarFormulario();
   }
 
   /**

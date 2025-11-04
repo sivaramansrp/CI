@@ -1,1 +1,7 @@
-<app-pago-de-derechos-banco></app-pago-de-derechos-banco>
+       <app-pago-de-derechos 
+    #pagoDeDerechosComponent
+    [idProcedimiento]="idProcedimiento"
+    [pagoDerechoFormState]="pagoDerechos"
+    (updatePagoDerechos)="updatePagoDerechos($event)"
+    [formularioDeshabilitado]="formularioDeshabilitado" 
+></app-pago-de-derechos>
