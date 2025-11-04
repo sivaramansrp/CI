@@ -220,6 +220,19 @@ export class SolicitudPageComponent {
     return true;
   }
 
+  /**
+ * Método que construye y guarda los datos de un trámite.
+ * 
+ * @param data - Estado del trámite a procesar.
+ * @returns Una promesa con la respuesta JSON del guardado.
+ * 
+ * Construye diferentes secciones del certificado utilizando los métodos del servicio:
+ * - TRATADOS: Información de tratados asociados.
+ * - DESTINATARIO: Datos del destinatario.
+ * - TRANSPORTE: Información del medio de transporte.
+ * - CERTIFICADO: Datos generales del certificado.
+ * - DATOS_CERTIFICADO: Detalles específicos del certificado.
+ */
     guardar(data: Tramite110209State): Promise<JSONResponse> {
       const TRATADOS = this.servicio110209.buildTratados(data);
       const DESTINATARIO = this.servicio110209.buildDestinatario(data);
@@ -298,6 +311,12 @@ export class SolicitudPageComponent {
       });
     }
 
+/**
+ * Método que obtiene los datos actuales del store y los procesa.
+ * 
+ * Se suscribe una sola vez al estado completo del servicio `servicio110209`
+ * y llama al método `guardar` con los datos obtenidos.
+ */
     obtenerDatosDelStore(): void {
       this.servicio110209.getAllState()
         .pipe(take(1))
@@ -306,6 +325,15 @@ export class SolicitudPageComponent {
         });
     }
 
+/**
+ * Método que maneja la navegación en un componente tipo wizard según la acción del botón.
+ * 
+ * @param e - Objeto que contiene la acción del botón y el valor del paso.
+ * 
+ * Si el valor está entre 1 y 2 inclusive, actualiza el índice del paso actual y:
+ * - Si `accion` es 'cont', avanza al siguiente paso.
+ * - De lo contrario, retrocede al paso anterior.
+ */
       pasoNavegarPor(e: AccionBoton): void {
         if (e.valor > 0 && e.valor < 3) {
           this.indice = e.valor;

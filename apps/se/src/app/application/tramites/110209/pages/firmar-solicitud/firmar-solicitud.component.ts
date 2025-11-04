@@ -24,6 +24,13 @@ export class FirmarSolicitudComponent implements OnDestroy{
   */
 private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+/**
+ * Constructor de la clase que inicializa las dependencias necesarias.
+ * 
+ * @param router - Servicio de enrutamiento para navegación entre rutas.
+ * @param serviciosExtraordinariosServices - Servicio para manejar trámites extraordinarios.
+ * @param tramiteStore - Almacén (store) para gestionar el estado de los trámites.
+ */
   constructor(private router: Router,
   private serviciosExtraordinariosServices: TramiteFolioService,
   private tramiteStore: TramiteStore
