@@ -336,9 +336,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   }
 
   validarContenedor(): boolean {
-    return (
-      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
-    );
+    return this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ;
   }
 
   /**
