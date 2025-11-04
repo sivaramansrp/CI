@@ -1118,3 +1118,13 @@ export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catal
  */
 export const CATALOGO_USOS_ESPECIFICO_MERCANCIA = (TRAMITE: string, PROCEDIMIENTO: string): string =>
   `sat-t${TRAMITE}/catalogo/tramite/usos-especifico-mercancia/${PROCEDIMIENTO}`;
+
+/*
+  * API para obtener la descripción de una fracción arancelaria
+ */
+export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: string): string => `sat-t${TRAMITE}/solicitud/fraccion-descripcion?clave=${CLAVE}&idTipoTramite=${TRAMITE}`;
+
+/*
+  * API para obtener la unidad de medida por fracción arancelaria
+ */
+export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;

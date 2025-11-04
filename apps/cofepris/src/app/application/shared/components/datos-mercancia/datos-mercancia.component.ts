@@ -14,6 +14,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -88,7 +89,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges {
+export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -1501,12 +1502,30 @@ public convertToStringArray(value: unknown): string[] {
       if (isNaN(Number(FRACCION))) {
         this.abrirModal();
       } else {
-        this.mercanciaForm
-          .get('descripcionFraccion')
-          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-        this.mercanciaForm
-          .get('cantidadUmt')
-          ?.setValue(UMT_DESHABILITADO_VALOR);
+        this.datosSolicitudService.obtenerFraccionesArancelarias(this.idProcedimiento, FRACCION)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(
+          (response) => {
+            if (response.codigo === "00") {
+              const DATOS_FRACCION = response.datos as { descripcionAlternativa: string };
+              this.mercanciaForm.get('descripcionFraccion')?.setValue(DATOS_FRACCION.descripcionAlternativa);
+            } else {
+              this.abrirModal();
+            }
+          }
+        );
+        this.datosSolicitudService.obtenerUMT(this.idProcedimiento, FRACCION)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(
+          (response) => {
+            if (response.codigo === "00") {
+              const DATOS_UMT = response.datos as { descripcion: string };
+              this.mercanciaForm.get('cantidadUmt')?.setValue(DATOS_UMT.descripcion);
+            } else {
+              this.abrirModal();
+            }
+          }
+        );
       }
     }
   }
@@ -1586,6 +1605,11 @@ public convertToStringArray(value: unknown): string[] {
     };
 
     this.elementoParaEliminar = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 
