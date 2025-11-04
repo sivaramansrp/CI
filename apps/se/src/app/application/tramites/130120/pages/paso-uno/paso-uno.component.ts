@@ -30,7 +30,7 @@ import { TramiteRealizerComponent } from "../../components/tramite_realizer/tram
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent, SolicitanteComponent, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
+  imports: [CommonModule, SolicitanteComponent, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {

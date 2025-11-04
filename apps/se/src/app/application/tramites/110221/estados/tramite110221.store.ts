@@ -224,6 +224,8 @@ export interface Tramite110221State {
   tipoFactura: string;
   fecha: string;
   numeroFactura: string;
+    disponiblesDatos:Mercancia[];
+
   mercanciaSeleccionadasTablaData:SeleccionadasTabla[],
   mercanciaDisponsiblesTablaDatos:ColumnasTabla[],
   valordeContenidoRegional:string,
@@ -261,7 +263,6 @@ export interface Tramite110221State {
    * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
    */
   formExportor: { [key: string]: unknown };}
-  
  
 /**
  * asegurando que el estado comience limpio y sin datos previos.
@@ -287,11 +288,11 @@ export function createInitialState(): Tramite110221State {
     fechaInicioInput: '',
     fechaFinalInput: '',
   },
-    estado: {
+     estado: {
       id: -1,
       descripcion: '',
     },
-     paisBloques: { id: -1, descripcion: '' },
+    paisBloques: { id: -1, descripcion: '' },
  mercanciaProductores: [],
     mercanciaTabla: [],
     formDatosCertificado: {
@@ -368,6 +369,7 @@ export function createInitialState(): Tramite110221State {
     fecha: '',
     mercanciaSeleccionadasTablaData:[],
     mercanciaDisponsiblesTablaDatos:[],
+      disponiblesDatos: [],
     otrasInstancias:'',
     valordeContenidoRegional:'',
   destinatarioForm: {} as DestinatarioForm,
@@ -568,19 +570,31 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    * Actualiza el estado seleccionado en el almacén.
    * @param estado - Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
    */
-  setEstado(estado: Catalogo): void {
+setEstado(estado: Catalogo): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
-
+/**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
   /**
-   * @descripcion
+   * @method setBloque
+   * @description
    * Actualiza los bloques de países en el almacén.
-   * @param paisBloques - Array de objetos `Catalogo` que representa los bloques de países.
+   * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
    */
- setBloque(paisBloques: Catalogo): void {
+  setBloque(paisBloques: Catalogo): void {
     this.update((state) => ({
       ...state,
       paisBloques,

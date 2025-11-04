@@ -436,6 +436,7 @@ export const REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: {
     storeStateName: 'setGrupoRepresentativoCorreoElectronico',
   },
   ],
+  '110211': DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG,
 
 };
 
