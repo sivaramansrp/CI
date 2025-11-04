@@ -141,7 +141,9 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.cargarProductorPorExportador();
+    if (this.productoresExportador.length === 0) {
+      this.cargarProductorPorExportador();
+    }
   }
 
   /**
@@ -215,6 +217,24 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+ * Actualiza la lista de productores exportador en el store si el evento contiene datos.
+ * @param event Arreglo de objetos HistoricoColumnas con los datos de los productores.
+ */
+  emitProductoresExportador(event: HistoricoColumnas[]) {
+    if (event.length > 0) {
+      this.store.setProductoresExportador(event);
+    }
+  }
+
+  /**
+ * Actualiza la lista de productores exportador después de eliminar elementos seleccionados.
+ * @param event Arreglo actualizado de productores exportador después de la eliminación.
+ */
+  eliminarEventoExportador(event: HistoricoColumnas[]): void {
+    this.store.updateAgregarProductoresExportador(event);
+  }
+
   /** Actualiza el estado de validez del formulario según el valor recibido. */
   public formaValida(event: boolean): void {
     this.store.setFormValidity('histProductores', event);
@@ -274,6 +294,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
               correoElectronico: PRODUCTOR.correoElectronico ?? '',
               telefono: PRODUCTOR.telefono ?? '',
               fax: PRODUCTOR.fax ?? '',
+              nuevo: true
             };
           });
           this.store.setAgregarProductoresExportador(RESULT);
