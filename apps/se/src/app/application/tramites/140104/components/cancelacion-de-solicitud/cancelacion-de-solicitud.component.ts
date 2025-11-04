@@ -346,7 +346,7 @@ export class CancelacionDeSolicitudComponent
         categoria: CategoriaMensaje.ALERTA,
         modo: 'action',
         titulo: '',
-        mensaje: 'El Folio de Trámite es un dato requerido',
+        mensaje: 'El Folio de Resolución es un dato requerido',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
@@ -354,34 +354,6 @@ export class CancelacionDeSolicitudComponent
       };
       return;
     }
-    // if (FOLIORESOLUCIONVALUE.length < 25) {
-    //   this.nuevaNotificacion = {
-    //     tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    //     categoria: CategoriaMensaje.ALERTA,
-    //     modo: 'action',
-    //     titulo: '',
-    //     mensaje: 'El Folio de Trámite no puede ser menor de 25 carácteres',
-    //     cerrar: false,
-    //     tiempoDeEspera: 2000,
-    //     txtBtnAceptar: 'Aceptar',
-    //     txtBtnCancelar: '',
-    //   };
-    //   return;
-    // }
-    // if (FOLIORESOLUCIONVALUE.length > 25) {
-    //   this.nuevaNotificacion = {
-    //     tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    //     categoria: CategoriaMensaje.ALERTA,
-    //     modo: 'action',
-    //     titulo: '',
-    //     mensaje: 'El Folio de Trámite no puede ser mayor de 25 carácteres',
-    //     cerrar: false,
-    //     tiempoDeEspera: 2000,
-    //     txtBtnAceptar: 'Aceptar',
-    //     txtBtnCancelar: '',
-    //   };
-    //   return;
-    // }
     if (FOLIORESOLUCIONVALUE || FOLIORESOLUCIONVALUE !== '') {
       this.obtenerDetalleDelPermisoDatos();
       if (this.modalInstanceDos) {
