@@ -225,7 +225,7 @@ export function createInitialState(): Tramite260205State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],

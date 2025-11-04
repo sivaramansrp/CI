@@ -267,7 +267,7 @@ export class ContenedorDePasosComponent implements OnInit {
       }
       const PAYLOAD = GuardarAdapter_260214.toFormPayload(this.storeData);
       let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
+      this.registroSolicitudService.postGuardarDatos('260214', PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
         if (!shouldNavigate) {
           const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
@@ -351,6 +351,24 @@ export class ContenedorDePasosComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
   public static generarAlertaDeError(mensajes:string): string {

@@ -2,24 +2,19 @@
  * Este componente maneja el formulario de registro de mercancía.
  */
 
-import { CommonModule } from '@angular/common';
-
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { Catalogo, CatalogoServices, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209State, Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { CommonModule } from '@angular/common';
+import { FECHA_FACTURA } from '../../constantes/certificado-sgp.enum';
+import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
-
-import { Subject, takeUntil } from 'rxjs';
 import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL} from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
-
-import { InputFechaComponent } from "@ng-mf/data-access-user";
-
-import { FECHA_FACTURA } from '../../constantes/certificado-sgp.enum';
 
 /**
  * Este componente maneja el formulario de registro de mercancía.
@@ -77,6 +72,12 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**  
+  * Contiene el estado actual de la solicitud del trámite 110209.  
+  * Permite acceder y manipular los datos relacionados con el flujo del trámite.  
+  */
+  public solicitudState!: Tramite110209State;
+
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
@@ -106,61 +107,43 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getMercanciasValor();
-    this.getTipoFactura();
-    this.getUnidadValor();
     this.obtenerUnidadComercializacion();
     this.obtenerTipoFactura();
   }
 
   /**
-   * Obtiene las opciones de tipo de factura desde el servicio.
-   */
-  getTipoFactura(): void {
-    this.service.getTipoDeFactura().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.tipoFacturaOptions = data;
-      }
-    );
-  }
-
-  /**
-   * Obtiene las opciones de unidad de medida desde el servicio.
-   */
-  getUnidadValor(): void {
-    this.service.getUnidad().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.unidadOptions = data;
-      }
-    );
-  }
-
-  /**
    * Obtiene los valores de las mercancías desde el store y los asigna al formulario.
    */
-  getMercanciasValor(): void {
-    this.tramite110209Query.selectTramite110209$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.mercanciaFrom.patchValue({
-          nombreComercial: data.mercanciasSeleccionadas.nombreComercial,
-          nombreIngles: data.mercanciasSeleccionadas.nombreIngles,
-          cantidad: 21343,
-          fechaFactura: '2025-02-25',
-          descripcion:data.descripcion,
-          marca:data.marca,
-          valorMercancia:data.valorMercancia,
-          unidadMedida:data.unidadMedida,
-          numeroFactura:data.numeroFactura,
-          tipoFactura:data.tipoFactura
+    getMercanciasValor(): void {
+    this.tramite110209Query.selectTramite110209$
+    .pipe(
+      takeUntil(this.destroyed$),
+            map((seccionState) => {
+            this.solicitudState = seccionState as Tramite110209State;
+            })
+          )
+          .subscribe();
+      
+        this.mercanciaFrom = this.fb.group({
+          nombreComercial: this.solicitudState.mercanciasSeleccionadas.nombreComercial,
+          nombreIngles: this.solicitudState.mercanciasSeleccionadas.nombreIngles,
+          descripcion:this.solicitudState.descripcion,
+          marca:this.solicitudState.marca,
+          valorMercancia:this.solicitudState.valorMercancia,
+          cantidad: this.solicitudState.cantidad,
+          unidadMedida:this.solicitudState.unidadMedida,
+          numeroFactura:this.solicitudState.numeroFactura,
+          tipoFactura:this.solicitudState.tipoFactura,
+          fechaFactura: this.solicitudState.fechaFactura
         });
+
+        if (this.mercanciaFrom.get('nombreComercial')) {
+          this.mercanciaFrom.get('nombreComercial')?.disable();
+        }
+        if (this.mercanciaFrom.get('nombreIngles')) {
+          this.mercanciaFrom.get('nombreIngles')?.disable();
+        }
       }
-    );
-  }
 
 
     /**

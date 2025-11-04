@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProgramasReporte } from '../models/programas-reporte.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
@@ -6,6 +7,10 @@ import { StoreConfig } from '@datorama/akita';
  * Interfaz que define el estado inicial de la tienda `Solicitud150101Store`.
  */
 export interface Solicitud150101State {
+  /**
+   * idSolicitud
+   */
+  idSolicitud: number | null;
   /**
    * Fecha de inicio del reporte anual.
    */
@@ -60,6 +65,12 @@ export interface Solicitud150101State {
    * Porcentaje de exportación.
    */
   porcentajeExportacion: number;
+
+  /** solicitudDato */
+  solicitudDato?: ProgramasReporte[];
+
+  /** idProgramaCompuesto */
+  idProgramaCompuesto?: string;
 }
 
 /**
@@ -68,6 +79,10 @@ export interface Solicitud150101State {
  */
 export function createInitialState(): Solicitud150101State {
   return {
+    /**
+     * idSolicitud
+     */
+    idSolicitud: 0,
     /**
      * Fecha de inicio del reporte anual.
      */
@@ -122,6 +137,12 @@ export function createInitialState(): Solicitud150101State {
      * Porcentaje de exportación.
      */
     porcentajeExportacion: 0,
+
+    /** Arreglo que contiene los datos de la solicitud anual del programa. */
+    solicitudDato: [],
+
+    /** Identificador compuesto del programa asociado a la solicitud. */
+    idProgramaCompuesto: '',
   };
 }
 
@@ -271,5 +292,32 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
     nuevoDatos: Solicitud150101State
   ): void {
     this.update(nuevoDatos);
+  }
+
+  /**
+   * Actualiza el estado de la solicitud anual con nuevos datos.
+   * @param nuevoDatos Nuevo estado de la solicitud anual.
+   */
+  public setSolicitusDatos(solicitudDato: ProgramasReporte[]): void {
+    this.update((state) => ({
+      ...state,
+      solicitudDato,
+    }));
+  }
+
+  /**
+   * Actualiza el identificador de la solicitud en el estado de la tienda.
+   * @param idSolicitud Identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({ ...state, idSolicitud }));
+  }
+
+  /**
+   * Actualiza el identificador compuesto del programa asociado a la solicitud.
+   * @param idProgramaCompuesto Identificador compuesto del programa.
+   */
+  public setIdProgramaCompuesto(idProgramaCompuesto: string): void {
+    this.update((state) => ({ ...state, idProgramaCompuesto }));
   }
 }

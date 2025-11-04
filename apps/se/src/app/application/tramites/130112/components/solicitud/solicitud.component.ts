@@ -204,7 +204,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     /**
    * Indica si se debe mostrar el error de clasificación.
    */
-  mostrarErrorClasificacion = true;
+  mostrarErrorClasificacion = false;
 
   /*
    * Indica si se debe mostrar el tooltip del valor de la factura en USD.
@@ -286,7 +286,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    */
@@ -931,5 +931,49 @@ this.tramite130112Store.actualizarEstado({
       valorTotalUSD: String(VALOR_TOTAL_USD)
     });
     this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+  }
+
+  /**
+   * Marca todos los campos de los formularios como tocados para mostrar errores de validación.
+   * Este método se ejecuta cuando la validación falla y es necesario mostrar todos los errores
+   */
+  marcarCamposComoTocados(): void {
+    // Marcar todos los formularios como tocados para activar la visualización de validación
+    if (this.formDelTramite) {
+      this.formDelTramite.markAllAsTouched();
+    }
+    if (this.mercanciaForm) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+    if (this.paisForm) {
+      this.paisForm.markAllAsTouched();
+    }
+    if (this.frmRepresentacionForm) {
+      this.frmRepresentacionForm.markAllAsTouched();
+    }
+    
+    // Asegurar que los mensajes de error se muestren para todos los campos de validación cuando falla la validación
+    this.mostrarErrorClasificacion = true;
+    this.mostrarErroresPartidas = true;
+    this.mostrarErroresMercancia = true;
+  }
+
+  /**
+   * Valida todos los formularios del componente y verifica que existan partidas en la tabla.
+   * Este método realiza una validación integral de todos los formularios reactivos del componente
+   */
+  validarFormulario(): boolean {
+    const IS_VALID =
+      this.formDelTramite.valid &&
+      this.mercanciaForm.valid &&
+      this.paisForm.valid &&
+      this.frmRepresentacionForm.valid &&
+      this.tableBodyData.length > 0;
+
+    if (!IS_VALID) {
+      this.marcarCamposComoTocados();
+    }
+    
+    return IS_VALID;
   }
 }

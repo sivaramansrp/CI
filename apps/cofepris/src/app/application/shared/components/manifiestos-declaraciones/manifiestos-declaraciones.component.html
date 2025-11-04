@@ -1,24 +1,33 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
 <form [formGroup]="manifiestos">
   <div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-info content-with-checkbox py-6">
-          <div class="col-md-1">
-            <input type="checkbox" id="mensaje" 
-            formcontrolName="mensaje" [checked]="esFormularioSoloLectura ? true : false || isUpdateDatos" 
-            [disabled]="esFormularioSoloLectura"
-            (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"
-            />
-            <span class="fw-bold align-middle"> *</span>
-          </div>
-          <div class="col-md-11">{{ mensaje }} </div>
-      </div>
+<div class="col-md-12">
+  <div class="alert alert-info d-flex align-items-start p-3 rounded content-with-checkbox">
+    <!-- Checkbox Section -->
+    <div class="me-3 d-flex align-items-center">
+      <input
+        type="checkbox"
+        id="mensaje"
+        formControlName="mensaje"
+        [checked]="esFormularioSoloLectura ? true : isUpdateDatos"
+        [disabled]="esFormularioSoloLectura"
+        (change)="setValoresStore(manifiestos, 'mensaje', 'setMensaje')"
+      />
+      <span class="fw-bold ms-1" [ngClass]="{'tiene-error':manifiestos.get('mensaje')?.touched && manifiestos.get('mensaje')?.errors?.['required']}">*</span>
     </div>
+
+    <!-- Message Section -->
+    <div class="flex-grow-1">
+      {{ mensaje }}
+    </div>
+  </div>
+</div>
+
   </div>
   <div class="row">
     <div class="col-md-12">
       <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de
-        acuerdo en hacerlos públicos?*:</label>
+        acuerdo en hacerlos públicos?<span [ngClass]="{'tiene-error':manifiestos.get('cumplimiento')?.touched && manifiestos.get('cumplimiento')?.errors?.['required']}" class="fw-bold align-middle">*</span>:</label>
     </div>
     <div class="col-md-2">
       <app-input-radio [radioOptions]="cumplimientoOptions" [isRequired]="true" formControlName="cumplimiento"
