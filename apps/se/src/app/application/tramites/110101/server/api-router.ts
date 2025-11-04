@@ -114,6 +114,12 @@ export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/
 export const API_GET_FRACCION_ARANCELARIA_PARTIDA = (CVEFRACCION: string): string => `sat-t110101/fraccion-arancelaria/${CVEFRACCION}/partida`;
 
 /**
+ * API para consultar la unidad de medida comercial.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-unidades-medida-comerciales
+ */
+export const API_GET_UNIDAD_MEDIDA_COMERCIAL = `sat-t110101/catalogo/unidades-medida-comercial`;
+
+/**
  * API para validar fracción arancelaria.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-fraccion-arancelaria
  */

@@ -12,8 +12,8 @@ import { GenerarCadenaOrigRequest } from "../models/request/generar-cadena-origi
 import { SolicitudCompletaRequest } from "../models/request/guardado-solicitud-request.model";
 
 import { FirmaResponse } from "../models/response/firma-response.model";
-import { MercanciaSolicitudResponse } from "../models/response/validar-solicitud-response.model";
 import { RegistroCuestionarioRequest } from "../models/request/validar-solicitud-request.model";
+import { ValidarSolicitudResponse } from "../models/response/validar-solicitud-response.model";
 
 @Injectable({
     providedIn: 'root'
@@ -75,8 +75,8 @@ export class SolicitudService {
      * Valida la solicitud completa previo al guardado.
      * @returns Observable con la respuesta del servidor.
      */
-    postValidarSolicitudCompleta(PAYLOAD: RegistroCuestionarioRequest): Observable<BaseResponse<MercanciaSolicitudResponse>> {
+    postValidarSolicitudCompleta(PAYLOAD: RegistroCuestionarioRequest): Observable<BaseResponse<ValidarSolicitudResponse>> {
         const ENDPOINT = `${this.host}${API_POST_VALIDAR_SOLICITUD_COMPLETA}`;
-        return this.http.post<BaseResponse<MercanciaSolicitudResponse>>(ENDPOINT, PAYLOAD);
+        return this.http.post<BaseResponse<ValidarSolicitudResponse>>(ENDPOINT, PAYLOAD);
     }
 }

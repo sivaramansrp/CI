@@ -1,12 +1,19 @@
 /**
  * Modelo de respuesta para la validación de la solicitud completa.
  */
-export interface MercanciaSolicitudResponse {
+export interface ValidarSolicitudResponse {
   /** Datos de la mercancía */
   mercancia: Mercancia;
 
   /** Lista de tratados agregados a la mercancía */
   tratados_agregados: TratadoAgregado[];
+
+   /** 
+   * Lista de errores de validación devueltos por el servicio.  
+   * Si contiene elementos, indica que la validación no fue completamente exitosa,
+   * incluso si el código de respuesta fue EXITO.
+   */
+  errores?: string[];
 }
 
 /**
@@ -69,10 +76,10 @@ export interface TratadoAgregado {
   id_tratado_acuerdo: number;
 
   /** Clave del grupo de criterio del tratado */
-  cve_grupo_criterio: string;
+  cve_grupo_criterio: string | null;
 
   /** Clave del país asociado al tratado */
-  cve_pais: string;
+  cve_pais: string | null;
 
   /** Identificador del bloque comercial (si aplica) */
   id_bloque: number | null;
@@ -81,11 +88,14 @@ export interface TratadoAgregado {
   cve_bloque: string | null;
 
   /** Identificador del tipo de proceso de mercancía */
-  ide_tipo_proceso_mercancia: string;
+  ide_tipo_proceso_mercancia: string | null;
 
   /** Indica si cumple con el juego de reglas del tratado */
   cumple_juego: boolean | null;
 
   /** Indica si cumple con la acumulación del tratado */
   cumple_acumulacion: boolean | null;
+  
+  /** Clave tratado acuerdo */
+    cve_tratado_acuerdo: string | null;
 }
