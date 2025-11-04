@@ -120,7 +120,8 @@ export class SolicitudPageComponent {
    * Constructor del componente.
    * @param store - El store del trámite.
    * @param query - La consulta del trámite.
-   */    constructor( private store: Tramite110223Store,
+   */    
+  constructor( private store: Tramite110223Store,
         private query: Tramite110223Query,
         private certificadoDeService: CertificadosOrigenService,
         private toastr: ToastrService,
@@ -131,7 +132,6 @@ export class SolicitudPageComponent {
         this.solicitudState = solicitud;
       });
     (window as any).debugComponent = this;
-    console.log('Component exposed as window.debugComponent');
     
   }
 
@@ -163,7 +163,8 @@ export class SolicitudPageComponent {
    * @remarks
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
-   */    guardar(item: TramiteState): Promise<JSONResponse> {
+   */    
+  guardar(item: TramiteState): Promise<JSONResponse> {
     const PAYLOAD = {
       idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
@@ -334,15 +335,11 @@ export class SolicitudPageComponent {
       }
     };
      return new Promise((resolve, reject) => {      
-      // try {
       const apiCall = this.certificadoDeService.guardarDatosPost(PAYLOAD);
              
       apiCall.subscribe({
         next: (response) => {
-          console.log('API response received:', response);
-          console.log('Response type:', typeof response);
-          console.log('Response keys:', response ? Object.keys(response) : 'No keys');
-          
+         
           let idSolicitud: number = 0;
           let responseProcessed = false;
 
@@ -371,16 +368,9 @@ export class SolicitudPageComponent {
 
           if (responseProcessed && idSolicitud > 0) {
             this.store.setIdSolicitud(idSolicitud);
-            console.log('Data saved successfully with ID:', idSolicitud, 'navigating to step 2');
-            this.toastr.success('Los datos se guardaron correctamente');
             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
           } else if (esValidObject(response)) {
-            console.log('Response received but no valid ID found. Proceeding anyway...');
-            this.toastr.success('Los datos se guardaron correctamente');
             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-          } else {
-            console.log('Invalid response format:', response);
-            this.toastr.warning('Respuesta inválida del servidor');
           }
           resolve({
             id: response['id'] ?? 0,
@@ -389,14 +379,8 @@ export class SolicitudPageComponent {
             data: response['data'] ?? response['datos'] ?? null,
             ...response,          
           } as JSONResponse);
-        },
-        error: (error) => {}
+        }
       });
-      // } catch (syncError) {
-      //   console.error('Synchronous error creating API call:', syncError);
-      //   reject(syncError);
-      //   this.toastr.error('Error al crear la llamada API');
-      // }
     });
   }
 
@@ -405,8 +389,10 @@ export class SolicitudPageComponent {
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
   pasoNavegarPor(e: AccionBoton): void {
+    
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
+    
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -429,51 +415,22 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
 getValorIndice(e: AccionBoton): void {
-  console.log('getValorIndice called with:', e);
-  console.log('Current indice:', this.indice);
-  this.esFormaValido = false;
-  // Validar formularios antes de continuar desde el paso uno
-  if (this.indice === 1 && e.accion === 'cont') {
-    console.log('Validating forms for step 1...');
-    this.datosPasos.indice = 1;
-    
-    const SKIP_VALIDATION = true;
-    
-    const IS_VALID = SKIP_VALIDATION || this.validarTodosFormulariosPasoUno();
-    console.log('Form validation result (with skip):', IS_VALID);
-    
-    if (!IS_VALID) {
-      console.log('Forms are invalid, showing error alert');
-      this.esFormaValido = true;
-      return; // Si no es válido, no avanza de página
+    this.esFormaValido = false;
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
+      const SKIP_VALIDATION = true;
+
+      const ISVALID = SKIP_VALIDATION || this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+      this.obtenerDatosDelStore();
     }
-    console.log('Forms are valid (or skipped), proceeding to save data...');
-    this.obtenerDatosDelStore();
-  } else if (e.valor > 0 && e.valor <= this.pasos.length) {
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
       this.pasoNavegarPor(e);
     }
-
-  // // Calcular el nuevo índice basado en la acción
-  // let indiceActualizado = e.valor;
-  // if (e.accion === 'cont') {
-  //   indiceActualizado = e.valor + 1;
-  // } else if (e.accion === 'ant') {
-  //   indiceActualizado = e.valor - 1;
-  // }
-
-  // // Validar que el nuevo índice esté dentro de los límites permitidos
-  // if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-  //   // Actualizar el índice y datosPasos
-  //   this.indice = indiceActualizado;
-  //   this.datosPasos.indice = indiceActualizado;
-
-  //   if (e.accion === 'cont') {
-  //     this.wizardComponent.siguiente();
-  //   } else if (e.accion === 'ant') {
-  //     this.wizardComponent.atras();
-  //   }
-  // }
-}
+  }
 
 /**
  * @descripcion
@@ -484,48 +441,27 @@ getValorIndice(e: AccionBoton): void {
  * - Si existe, ejecuta la función `validarFormularios()` del componente 
  *   y retorna `false` en caso de que alguno no sea válido.
  *
- * @returns {boolean}  
- * Retorna `true` si todos los formularios son válidos o si el componente no existe,  
- * de lo contrario retorna `false`.
- *
- * @ejemplo
- * ```ts
- * const esValido = this.validarTodosFormulariosPasoUno();
- * if (!esValido) {
- *   console.warn('El paso uno tiene formularios inválidos');
- * }
- * ```
  */   
 private validarTodosFormulariosPasoUno(): boolean {
-    console.log('validarTodosFormulariosPasoUno called');
-    console.log('pasoUnoComponent exists:', !!this.pasoUnoComponent);
-    
+     
     if (!this.pasoUnoComponent) {
-      console.log('pasoUnoComponent is null/undefined, returning true');
       return true;
     }
     
     const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
-    console.log('pasoUnoComponent.validarFormularios() result:', ISFORM_VALID_TOUCHED);
-    
     if (!ISFORM_VALID_TOUCHED) {
-      console.log('Forms are invalid, returning false');
       return false;
     }
-    
-    console.log('All forms are valid, returning true');
-    return true;
+      return true;
   }  
   
   /**
    * Obtiene los datos actuales del store del trámite y los guarda.
    */
   obtenerDatosDelStore(): void {
-    console.log('obtenerDatosDelStore called - getting state from service...');
     this.certificadoDeService.getAllState()
       .pipe(take(1))
       .subscribe(data => {
-        console.log('State data received from service:', data);
         this.guardar(data);
       });
   }  
