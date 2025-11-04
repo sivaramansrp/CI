@@ -320,7 +320,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   */
   ngAfterViewInit(): void {
     this.funcionamientoList = FUNCIONAMIENTO_LIST;
-    if(this.funcionamientoList.includes(this.idProcedimiento)){
+    if(!this.funcionamientoList.includes(this.idProcedimiento)){
       this.domicilio.get('avisoCheckbox')?.setValidators([]);
       this.domicilio.get('avisoCheckbox')?.updateValueAndValidity();
       this.domicilio.get('licenciaSanitaria')?.setValidators([]);
