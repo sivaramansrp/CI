@@ -55,10 +55,7 @@
           [required]="true"
           name="aduanaIngreso"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-          )
-        " 
+          (change)="setValoresStore(); catalogoOficinas(datosMercanciaFormGroup);"
         ></app-catalogo-select>
           <div
           *ngIf="datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.touched">
@@ -73,10 +70,7 @@
           [required]="true"
           name="oficinaInspeccion"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-          )
-        " 
+          (change)="setValoresStore(); obtenerPuntoInspeccion(datosMercanciaFormGroup)"
         ></app-catalogo-select>
            <div
           *ngIf="datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.touched">
@@ -92,10 +86,8 @@
           name="puntoInspeccion"
           [isDisabled]="esFormularioSoloLectura"
           (change)="
-          setValoresStore(
-          )
-        " 
-        ></app-catalogo-select>
+          setValoresStore()" 
+          ></app-catalogo-select>
           <div
           *ngIf="datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.touched">
           <small class="mensaje-error">Este campo es obligatorio.</small>

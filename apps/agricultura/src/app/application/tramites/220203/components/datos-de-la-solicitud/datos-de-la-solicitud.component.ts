@@ -10,7 +10,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-
+import {CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 /**
  * @fileoverview
  * Componente Angular para gestionar los datos de la solicitud de importación de acuicultura.
@@ -328,12 +328,24 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   myScrollbarValue: boolean = true;
 
   /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
+  public destroyNotifier$ = new Subject<void>();
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Controla la habilitación/deshabilitación de todos los campos del formulario.
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @description Formulario principal.
+   * Este `FormGroup` contiene todos los controles del formulario.
+   */
+  forma!: FormGroup;
 
   /**
    * Indica si se debe mostrar la confirmación para eliminar datos de la tabla.
@@ -358,17 +370,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
-    private readonly acuiculturaStore: AcuiculturaStore
+    private readonly acuiculturaStore: AcuiculturaStore,
+    public catalogosService: CatalogosService
   ) {
+    this.getaduanaLista();
+    this.getRegimenLista();
     forkJoin([
-       this.obtenerCatalogosTransporte(),
-    this.obtenerCatalogosArancelaria(),
+      //  this.obtenerCatalogosTransporte(),
+    // this.obtenerCatalogosArancelaria(),
     this.obtenerCatalogosUMC(),
     this.obtenerCatalogosUMT(),
     this.obtenerCatalogosUSO()
     ]).pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe({
-      next: ([transporte, arancelaria, umc, umt, uso]) => {
+      next: ([umc, umt, uso]) => {
       this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
 
       this.cuerpoTablaFila = datos.mercanciaGroup;
@@ -448,51 +463,27 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   }
 
 
-  /**
-   * Obtiene los datos del catálogo de transporte y puntos de inspección.
-   * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
-   * 
-   * @public
-   * @method obtenerCatalogosTransporte
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.aduanaDeIngresoList = data.data as Catalogo[];
-      this.tipoRequisitoList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      return of([]); 
-    })
-  );
-}
-
-
-  /**
-   * Obtiene los datos del catálogo de fracciones arancelarias.
-   * Carga las opciones disponibles para oficinas de inspección.
-   * 
-   * @public
-   * @method obtenerCatalogosArancelaria
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-  public obtenerCatalogosArancelaria(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.oficinaInspeccionList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      console.error('Error loading arancelaria catalog:', err);
-      return of([]); // fallback to empty array on error
-    })
-  );
-}
-
+//   /**
+//    * Obtiene los datos del catálogo de transporte y puntos de inspección.
+//    * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
+//    * 
+//    * @public
+//    * @method obtenerCatalogosTransporte
+//    * @memberof DatosDeLaSolicitudComponent
+//    * @returns {void}
+//    */
+// public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
+//   return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
+//     map((data) => {
+//       this.aduanaDeIngresoList = data.data as Catalogo[];
+//       this.tipoRequisitoList = data.data as Catalogo[];
+//       return data.data as Catalogo[];
+//     }),
+//     catchError((err) => {
+//       return of([]); 
+//     })
+//   );
+// }
 
   /**
    * Obtiene los datos del catálogo de Unidades de Medida Comercial (UMC).
@@ -532,7 +523,6 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
     map((data) => {
       this.regimenList = data.data as Catalogo[];
       this.nicoList = data.data as Catalogo[];
-      this.puntoInspeccionList = data.data as Catalogo[];
       return data.data as Catalogo[];
     }),
     catchError((err) => {
@@ -563,6 +553,81 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
         return of([]); // fallback to empty array on error
       })
     );
+  }
+
+  /**
+   * @description Obtiene la lista de aduanas desde un archivo JSON.
+   * @method getaduanaLista
+   * @returns {void}
+   */
+  getaduanaLista(): void {
+    this.catalogosService.obtieneCatalogoAduana(220203) 
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.aduanaDeIngresoList = data.datos ?? [];
+      }
+    );
+
+  }
+
+    /**
+   * Obtiene la lista para el select de oficina de inspección de sanidad agropecuaria desde el selector.
+   * @method catalogoOficinas
+   */
+  catalogoOficinas(_forma?: FormGroup): void {
+    const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    this.obtenerSanidadoficinaInspeccionList(VALOR.aduanaIngreso);
+  }
+
+  /**
+   * Obtiene la lista para el select de puntos de inspeccion desde el selector.
+   * @method obtenerPuntoInspeccion
+   */
+  obtenerPuntoInspeccion(_forma?: FormGroup): void {
+  const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    this.obtenerPuntoInspeccionList(VALOR.oficinaInspeccion);
+  }
+
+    /**
+   * Obtiene la lista para el select de régimen.
+   * @method getRegimenLista
+   */
+  getRegimenLista(): void {
+
+    this.catalogosService.obtieneCatalogoRegimenesVigentes(220203).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.regimenList = data.datos ?? [];
+    });
+  }
+
+    /**
+   * Obtiene la lista para el select de punto de inspección.
+   * @method obtenerPuntoInspeccionList
+   */
+  obtenerPuntoInspeccionList(valor: string): void {
+    this.catalogosService.obtieneCatalogoPuntoInspeccion(220203, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.puntoInspeccionList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene la lista para el select de sanidad agropecuaria.
+   * @method obtenerSanidadoficinaInspeccionList
+   */
+  obtenerSanidadoficinaInspeccionList(cveAduana: string): void {
+    this.oficinaInspeccionList = [];
+    if(cveAduana && cveAduana !== ''){
+      this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, cveAduana)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.oficinaInspeccionList = data.datos ?? [];
+        }
+      );
+    }
+
   }
 
   /**
