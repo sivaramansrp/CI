@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260213State, Tramite260213Store } from '../../estados/tramite260213Store.store';
@@ -23,6 +23,27 @@ import { Tramite260213Query } from '../../estados/tramite260213Query.query';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+  /**
+       * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+       * @description
+       * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+       * mediante el decorador `@ViewChild`.
+       *
+       * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+       * a sus propiedades, por ejemplo para delegar la validación del formulario
+       * interno (`validarContenedor()`).
+       *
+       * > Nota: Angular inicializa esta referencia después de que la vista
+       * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+       */
+      @ViewChild(ContenedorDeDatosSolicitudComponent)
+      contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+  
+      @ViewChild(PagoDeDerechosContenedoraComponent)
+      pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+  
+      @ViewChild(TercerosRelacionadosVistaComponent)
+      tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
   /**
    * Índice que representa la posición actual o seleccionada.
    * Puede ser un número o indefinido si no se ha establecido.
@@ -150,5 +171,29 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260213State> {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+   /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+
+    );
   }
 }

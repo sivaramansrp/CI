@@ -88,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
     private readonly httpServicios: HttpClient,
-    private catalogoService: CatalogosService
+    private catalogoService: CatalogosService,
   ) {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
@@ -115,7 +115,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    
   }
 
   /**
@@ -158,9 +158,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   validarFormulario(): boolean {
     if (this.PagoDeDerechoComponent) {
       return this.PagoDeDerechoComponent.validarFormulario();
-    } 
-      return false;
-    
+    }
+    return false;
+
   }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.

@@ -379,13 +379,30 @@ export function formatDateToDDMMYYYY(dateString: string): string {
     return '';
   }
 
-  const date = new Date(dateString);
+  const DATE = new Date(dateString);
 
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
+  const DAY = String(DATE.getDate()).padStart(2, '0');
+  const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+  const YEAR = DATE.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  return `${DAY}/${MONTH}/${YEAR}`;
+}
+
+/**  
+ * **Formatea una fecha en formato DD/MM/YYYY.**  
+ * Convierte una cadena de fecha válida en una representación legible con día, mes y año.  
+ *  
+ * @param fechaStr - Cadena de fecha a formatear (por ejemplo, `"2025-11-03"`).  
+ * @returns La fecha formateada en formato `"DD/MM/YYYY"`.  
+ */
+export function formatFechaDDMMYYYY(fechaStr: string): string {
+  const FECHA = new Date(fechaStr);
+
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const YEAR = FECHA.getFullYear();
+
+  return `${DAY}/${MONTH}/${YEAR}`;
 }
 
     /**
@@ -456,15 +473,29 @@ export function formatDateToDDMMYYYY(dateString: string): string {
  * @returns La fecha formateada como "YYYY-MM-DD HH:mm:ss.s".
  */
 export function formatFechaCustom(fechaStr: string): string {
-  const fecha = new Date(fechaStr);
+  const FECHA = new Date(fechaStr);
 
-  const year = fecha.getFullYear();
-  const month = String(fecha.getMonth() + 1).padStart(2, "0");
-  const day = String(fecha.getDate()).padStart(2, "0");
-  const hours = String(fecha.getHours()).padStart(2, "0");
-  const minutes = String(fecha.getMinutes()).padStart(2, "0");
-  const seconds = String(fecha.getSeconds()).padStart(2, "0");
+  const YEAR = FECHA.getFullYear();
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const HOURS = String(FECHA.getHours()).padStart(2, "0");
+  const MINUTES = String(FECHA.getMinutes()).padStart(2, "0");
+  const SECONDS = String(FECHA.getSeconds()).padStart(2, "0");
 
   // Agrega ".0" al final según el formato requerido
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.0`;
+  return `${YEAR}-${MONTH}-${DAY} ${HOURS}:${MINUTES}:${SECONDS}.0`;
+}
+
+/**
+ * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
+ * @param fecha_creacion Fecha en formato ISO (string)
+ * @returns Fecha formateada como string
+ */
+export function formatFechaCreacion(fecha_creacion: string): string {
+    const DATE = new Date(fecha_creacion);
+    if (isNaN(DATE.getTime())) {
+        return fecha_creacion;
+    }
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
 }

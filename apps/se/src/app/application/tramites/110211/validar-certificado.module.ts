@@ -3,7 +3,6 @@ import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.
 import { CommonModule } from '@angular/common';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -14,8 +13,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
 @NgModule({
   declarations: [
     CamCertificadoComponent,
-    PasoDosComponent
-     ],
+  ],
   imports: [
     CommonModule,
     ValidarCertificadoRoutingModule,
@@ -33,7 +31,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     AlertComponent,
     PasoFirmaComponent
   ],
-    providers: [
+  providers: [
     ToastrService
   ]
 })

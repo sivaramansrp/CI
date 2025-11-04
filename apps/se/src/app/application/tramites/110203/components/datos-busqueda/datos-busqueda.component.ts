@@ -291,7 +291,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
-
     
     this.obtenerTratadoAcuerdo();
   }
