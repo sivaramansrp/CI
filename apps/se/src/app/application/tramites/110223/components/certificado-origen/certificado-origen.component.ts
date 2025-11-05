@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Catalogo, CatalogoServices, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
+import { Catalogo, CatalogoServices, ConfiguracionColumna, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
 import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
@@ -16,6 +16,7 @@ import { Modal } from "bootstrap";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
+import { CARGA_MERCANCIA_EXPORT } from "../../../../shared/constantes/modificacion.enum";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
@@ -185,7 +186,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      * @descripcion
      * Indica si hay mercancías disponibles.
      */
-    mercanciasDisponibles: boolean = false;
+    mercanciasDisponibles: boolean = true;
+
+    /**
+   * Indica si la tabla de mercancías disponibles está visible.
+   */
+  mercanciasDisponiblesTabla: boolean = false;
 
     /**
      * @descripcion
@@ -267,6 +273,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
    */
   idProcedimiento: number = IDPROCEDIMIENTO
+
+  /**
+   * Configuración de las columnas de la tabla de carga de mercancías.
+   * Contiene la definición de cada columna utilizada para mostrar los datos de las mercancías.
+   *
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   
   /**
    * @property {boolean} fromMercanciasDisponibles
@@ -553,11 +567,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           this.busquedaRealizada = true;
           this.datosTablaUno$ = of(DATOS_MAPEADOS || []);
           
-          if (DATOS_MAPEADOS.length > 0) {
+          // if (DATOS_MAPEADOS.length > 0) {
             this.mercanciasDisponibles = true;
-          } else {
-            this.mercanciasDisponibles = false;
-          }
+          // } else {
+          //   this.mercanciasDisponibles = false;
+          // }
         },
         error: (error) => {},
       });

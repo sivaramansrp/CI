@@ -1,5 +1,5 @@
-import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciasHistorico, MercanciasHistoricos, MercanciaTabla, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { formatearFechaYyyyMmDd, HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable,catchError,map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -9,6 +9,7 @@ import { ProductorExportador } from '../models/certificado-origen.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 import { Tramite110223Query } from '../query/tramite110223.query';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -319,6 +320,114 @@ export class CertificadosOrigenService {
    */
   getAllState(): Observable<TramiteState> {
     return this.tramite110223Query.selectPexim$;
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  // eslint-disable-next-line class-methods-use-this
+  buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
+    return data.map(item => ({
+      "fraccionArancelaria": item.fraccionArancelaria,
+      "cantidadComercial": item.cantidad,
+      "descUnidadMedidaComercial": item.unidadMedida,
+      "valorTransaccional": item.valorMercancia,
+      "descFactura": item.fetchFactura,
+      "fechaFactura": item.fetchFactura,
+      "numeroFactura": item.numeroFactura,
+      "complementoDescripcion": item.complementoDescripcion,
+      "rfcProductor": item.rfcProductor1
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  // eslint-disable-next-line class-methods-use-this
+  buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
+    return data.map(item => ({
+      "nombreCompleto": item.nombreProductor,
+      "rfc": item.numeroRegistroFiscal,
+      "direccionCompleta": item.direccion,
+      "correoElectronico": item.correoElectronico,
+      "telefono": item.telefono,
+      "fax": item.fax
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificado(data: TramiteState): unknown {
+    return {
+      "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
+      "pais_bloque": data.formCertificado['bloque'],
+      "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
+      "nombre_comercial": data.formCertificado['nombreComercialForm'],
+      "registro_producto": data.formCertificado['registroProductoForm'],
+      "fecha_inicio": formatearFechaYyyyMmDd(data.formCertificado['fechaInicioInput'] as string),
+      "fecha_fin": formatearFechaYyyyMmDd(data.formCertificado['fechaFinalInput'] as string),
+      "realizo_tercer_operador": {
+        "tercer_operador": data.formCertificado['si'] as boolean,
+        "nombre": data.formCertificado['nombres'] as string,
+        "primer_apellido": data.formCertificado['primerApellido'] as string,
+        "segundo_apellido": data.formCertificado['segundoApellido'] as string,
+        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] as string,
+        "razon_social": data.formCertificado['razonSocial'] as string
+      },
+      "domicilio_tercer_operador": {
+        "pais": data.formCertificado['pais'] as string,
+        "ciudad": data.formCertificado['ciudad'] as string,
+        "calle": data.formCertificado['calle'] as string,
+        "numero_letra": data.formCertificado['numeroLetra'] as string,
+        "telefono": data.formCertificado['telefono'] as string,
+        "correo_electronico": data.formCertificado['correo'] as string
+      },
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
+    }
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildCertificadoMercancia(data: Mercancia[]): unknown {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+    return data.map((item) => ({
+      ...item,
+      id: 0,
+      fraccion_arancelaria: item.fraccionArancelaria ?? '',
+      cantidad: item.cantidad ?? '',
+      unidad_medida: item.umc ?? '',
+      valor_mercancia: item.valorMercancia ?? '',
+      tipo_factura: item.tipoFactura ?? '',
+      num_factura: item.numeroFactura ?? '',
+      complemento_descripcion: item.complementoDescripcion ?? '',
+      fecha_factura: item.fechaFactura ?? '',
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildDestinatario(data: TramiteState): unknown {
+    return {
+      "nombre": data.grupoReceptor.nombre,
+      "primer_apellido": data.grupoReceptor.apellidoPrimer,
+      "segundo_apellido": data.grupoReceptor.apellidoSegundo,
+      "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
+      "razon_social": data.grupoReceptor.razonSocial,
+      "domicilio": {
+          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad,
+          "calle": data.grupoDeDirecciones.calle,
+          "numero_letra": data.grupoDeDirecciones.numeroLetra,
+          "lada": "HG",
+          "telefono": data.grupoDeDirecciones.telefono,
+          "fax": 4444444,
+          "correo_electronico": data.grupoDeDirecciones.correoElectronico,
+          "pais_destino": "IND"
+      },
+      "generalesRepresentanteLegal": {
+          "lugarRegistro": data.grupoRepresentativo.lugar,
+          "nombre": data.grupoRepresentativo.nombreExportador,
+          "razonSocial": data.grupoRepresentativo.empresa,
+          "puesto": data.grupoRepresentativo.cargo,
+          "telefono": data.grupoRepresentativo.telefono,
+          "correoElectronico": data.grupoRepresentativo.correoElectronico
+        },
+      "medio_transporte": "MEDTR.01"
+    }
   }
 
 }

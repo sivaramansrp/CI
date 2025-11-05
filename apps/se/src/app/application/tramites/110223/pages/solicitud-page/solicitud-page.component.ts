@@ -164,6 +164,11 @@ export class SolicitudPageComponent {
    * La llamada al servicio actualmente está comentada.
    */    
   guardar(item: TramiteState): Promise<JSONResponse> {
+    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
+    const PRODUCTORES_POR_EXPORTADOR = this.certificadoDeService.buildProductoresPorExportador(item.productoresExportador);
+    const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
+    const CERTIFICADO = this.certificadoDeService.buildCertificado(item);
+    const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
     const PAYLOAD = {
       idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
@@ -186,201 +191,91 @@ export class SolicitudPageComponent {
           telefono: '123456',
         },
       },
-      solicitud: {
-        datosConfidencialesProductor: true,
-        productorMismoExportador: true,
-        productoresPorExportador: [
-          {
-            nombreCompleto: 'LAURA CONTRERAS',
-            rfc: 'AEVL621207B95',
-            direccionCompleta: 'SAN GABRIEL 144 DURANGO',
-            correoElectronico: 'laura2992@hotmail.com',
-            telefono: '044-6182999535',
-            fax: '6182999535'
-          }
-        ],
-        mercanciasProductor: [
-          {
-            fraccionArancelaria: '08888888',
-            cantidadComercial: '100.00',
-            descUnidadMedidaComercial: 'Caja',
-            valorTransaccional: '100.00',
-            complementoDescripcion: 'CAJA ROJA GRANDE'
-          }
-        ],
-        ProductoresPorExportadorSeleccionados: [
-          {
-            nombreCompleto: 'LAURA CONTRERAS',
-            rfc: 'AEVL621207B95',
-            direccionCompleta: 'SAN GABRIEL 144 DURANGO',
-            correoElectronico: 'laura2992@hotmail.com',
-            telefono: '044-6182999535',
-            fax: '6182999535'
-          }
-        ]
-      },      
-      certificado: {
-        tratado_acuerdo: item.formCertificado?.['entidadFederativa'] || '',
-        pais_bloque: item.formCertificado?.['bloque'] || '',
-        fraccion_arancelaria: item.formCertificado?.['fraccionArancelariaForm'] || '',
-        nombre_comercial: item.formCertificado?.['nombreComercialForm'] || '',
-        registro_producto: item.formCertificado?.['numeroDeRegistroProductoForm'] || '',
-        fecha_inicio: item.formCertificado?.['fechaInicioInput'] || '',
-        fecha_fin: item.formCertificado?.['fechaFinalInput'] || '',
-        realizo_tercer_operador: {
-          tercer_operador: item.formCertificado?.['si'] || true,
-          nombre: item.formCertificado?.['nombres'] || '',
-          primer_apellido: item.formCertificado?.['primerApellido'] || '',
-          segundo_apellido: item.formCertificado?.['segundoApellido'] || '',
-          numero_registro_fiscal: item.formCertificado?.['numeroDeRegistroFiscal'] || '',
-          razon_social: item.formCertificado?.['razonSocial'] || '',
-        },
-        domicilio_tercer_operador: {
-          pais: item.formCertificado?.['pais'] || '',
-          ciudad: item.formCertificado?.['ciudad'] || '',
-          calle: item.formCertificado?.['calle'] || '',
-          numero_letra: item.formCertificado?.['numeroLetra'] || '',
-          telefono: item.formCertificado?.['telefono'] || '',
-          correo_electronico: item.formCertificado?.['correo'] || '',
-        },
-        mercancias_seleccionadas: (item.mercanciaTabla || []).length > 0 
-          ? (item.mercanciaTabla || []).map((m: Mercancia) => ({
-              id: m.id || 0,
-              fraccionArancelaria: m.fraccionArancelaria || '',
-              numeroDeRegistrodeProductos: '',
-              fechaExpedicion: '',
-              fechaVencimiento: '',
-              nombreTecnico: '',
-              nombreComercial: '',
-              normaOrigen: '',
-              cantidad: m.cantidad || '',
-              umc: m.umc || '',
-              tipoFactura: m.tipoFactura || '',
-              valorMercancia: m.valorMercancia || '',
-              fechaFinalInput: '',
-              numeroFactura: m.numeroFactura || '',
-              unidadMedidaMasaBruta: '',
-              complementoClasificacion: '',
-              complementoDescripcion: m.complementoDescripcion || '',
-              fechaFactura: m.fechaFactura || '',
-              fraccion_arancelaria: m.fraccionArancelaria || '',
-              unidad_medida: m.umc || '',
-              valor_mercancia: m.valorMercancia || '',
-              tipo_factura: m.tipoFactura || '',
-              num_factura: m.numeroFactura || '',
-              complemento_descripcion: m.complementoDescripcion || '',
-              fecha_factura: m.fechaFactura || ''
-            }))
-          : [{
-              id: 0,
-              fraccionArancelaria: '40021901',
-              numeroDeRegistrodeProductos: '--',
-              fechaExpedicion: '--',
-              fechaVencimiento: '--',
-              nombreTecnico: '',
-              nombreComercial: '--',
-              normaOrigen: '--',
-              cantidad: '12',
-              umc: '1',
-              tipoFactura: 'TIPFAC.M',
-              valorMercancia: '22',
-              fechaFinalInput: '--',
-              numeroFactura: '2',
-              unidadMedidaMasaBruta: '--',
-              complementoClasificacion: '--',
-              complementoDescripcion: '22',
-              fechaFactura: '14/10/2025',
-              fraccion_arancelaria: '40021901',
-              unidad_medida: '1',
-              valor_mercancia: '22',
-              tipo_factura: 'TIPFAC.M',
-              num_factura: '2',
-              complemento_descripcion: '22',
-              fecha_factura: '14/10/2025'
-            }]
-      },      
-      destinatario: {
-        nombre: item.formDatosDelDestinatario?.['nombres'] || '',
-        primer_apellido: item.formDatosDelDestinatario?.['primerApellido'] || '',
-        segundo_apellido: item.formDatosDelDestinatario?.['segundoApellido'] || '',
-        numero_registro_fiscal: item.formDatosDelDestinatario?.['numeroDeRegistroFiscal'] || '',
-        razon_social: item.formDatosDelDestinatario?.['razonSocial'] || '',
-        domicilio: {
-          ciudad_poblacion_estado_provincia: item.formDestinatario?.['ciudad'] || '',
-          calle: item.formDestinatario?.['calle'] || '',
-          numero_letra: item.formDestinatario?.['numeroLetra'] || '',
-          lada: item.formDestinatario?.['lada'] || '',
-          telefono: item.formDestinatario?.['telefono'] || '',
-          fax: item.formDestinatario?.['fax'] || 4444444,
-          correo_electronico: item.formDestinatario?.['correoElectronico'] || '',
-          pais_destino: item.formDestinatario?.['paisDestino'] || '',
-        },
-        generalesRepresentanteLegal: {
-          lugarRegistro: item.formExportor?.['lugar'] || '',
-          nombre: item.formExportor?.['exportador'] || '',
-          razonSocial: item.formExportor?.['nombres'] || '',
-          puesto: item.formExportor?.['puesto'] || '',
-          telefono: item.formExportor?.['telefono'] || '',
-          correoElectronico: item.formExportor?.['correoElectronico'] || '',
-        },
-        medio_transporte: item.formDatosDelDestinatario?.['medioTransporte'] || '',
-      },      datos_del_certificado: {
-        observaciones: item.formDatosCertificado?.['observacionesDates'] || '',
-        idioma: item.formDatosCertificado?.['idiomaDates'] || '',
-        representacion_federal: {
-          entidad_federativa: item.formDatosCertificado?.['EntidadFederativaDates'] || '',
-          representacion_federal: item.formDatosCertificado?.['representacionFederalDates'] || '',
-        },
-      }
-    };
-     return new Promise((resolve, reject) => {      
-      const apiCall = this.certificadoDeService.guardarDatosPost(PAYLOAD);
-             
-      apiCall.subscribe({
-        next: (response) => {
-         
-          let idSolicitud: number = 0;
-          let responseProcessed = false;
-
-          if (esValidObject(response) && esValidObject(response['datos'])) {
-            const DATOS = response['datos'] as { idSolicitud?: number };
-            if (getValidDatos(DATOS.idSolicitud)) {
-              idSolicitud = DATOS.idSolicitud ?? 0;
-              responseProcessed = true;
-            }
-          } 
-          else if (esValidObject(response) && esValidObject(response['data'])) {
-            const DATA = response['data'] as { idSolicitud?: number };
-            if (getValidDatos(DATA.idSolicitud)) {
-              idSolicitud = DATA.idSolicitud ?? 0;
-              responseProcessed = true;
-            }
-          }
-          else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
-            idSolicitud = response['idSolicitud'] as number;
-            responseProcessed = true;
-          }
-          else if (esValidObject(response) && getValidDatos(response['id'])) {
-            idSolicitud = response['id'] as number;
-            responseProcessed = true;
-          }
-
-          if (responseProcessed && idSolicitud > 0) {
-            this.store.setIdSolicitud(idSolicitud);
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-          } else if (esValidObject(response)) {
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-          }
-          resolve({
-            id: response['id'] ?? 0,
-            descripcion: response['descripcion'] ?? '',
-            codigo: response['codigo'] ?? '',
-            data: response['data'] ?? response['datos'] ?? null,
-            ...response,          
-          } as JSONResponse);
+      solicitud: {},      
+      certificado: CERTIFICADO,
+      destinatario: DESTINATARIO,
+      historico: {
+          datosConfidencialesProductor: item.formulario['datosConfidencialesProductor'],
+          productorMismoExportador: item.formulario['productorMismoExportador'],
+          productoresPorExportador: [...PRODUCTORES_POR_EXPORTADOR],
+          mercanciasProductor: [...MERCANCIAS_PRODUCDOR],
+          ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
         }
+    }
+
+    return new Promise((resolve, reject) => {
+        this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            resolve({
+              id: response['id'] ?? 0,
+              descripcion: response['descripcion'] ?? '',
+              codigo: response['codigo'] ?? '',
+              data: response['data'] ?? response['datos'] ?? null,
+              ...response
+            } as JSONResponse);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
       });
-    });
+
+    //  return new Promise((resolve, reject) => {      
+    //   const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
+             
+    //   API_CALL.subscribe({
+    //     next: (response) => {
+         
+    //       let idSolicitud: number = 0;
+    //       let responseProcessed = false;
+
+    //       if (esValidObject(response) && esValidObject(response['datos'])) {
+    //         const DATOS = response['datos'] as { idSolicitud?: number };
+    //         if (getValidDatos(DATOS.idSolicitud)) {
+    //           idSolicitud = DATOS.idSolicitud ?? 0;
+    //           responseProcessed = true;
+    //         }
+    //       } 
+    //       else if (esValidObject(response) && esValidObject(response['data'])) {
+    //         const DATA = response['data'] as { idSolicitud?: number };
+    //         if (getValidDatos(DATA.idSolicitud)) {
+    //           idSolicitud = DATA.idSolicitud ?? 0;
+    //           responseProcessed = true;
+    //         }
+    //       }
+    //       else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
+    //         idSolicitud = response['idSolicitud'] as number;
+    //         responseProcessed = true;
+    //       }
+    //       else if (esValidObject(response) && getValidDatos(response['id'])) {
+    //         idSolicitud = response['id'] as number;
+    //         responseProcessed = true;
+    //       }
+
+    //       if (responseProcessed && idSolicitud > 0) {
+    //         this.store.setIdSolicitud(idSolicitud);
+    //         this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    //       } else if (esValidObject(response)) {
+    //         this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    //       }
+    //       resolve({
+    //         id: response['id'] ?? 0,
+    //         descripcion: response['descripcion'] ?? '',
+    //         codigo: response['codigo'] ?? '',
+    //         data: response['data'] ?? response['datos'] ?? null,
+    //         ...response,          
+    //       } as JSONResponse);
+    //     }
+    //   });
+    // });
   }
 
   /**

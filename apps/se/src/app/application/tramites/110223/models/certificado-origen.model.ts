@@ -1,18 +1,26 @@
 import { Mercancia } from "../../../shared/models/modificacion.enum";
-import { MercanciaTabla } from "../../../shared/models/certificado-origen.model";
+// import { MercanciaTabla } from "../../../shared/models/certificado-origen.model";
 
 /**
- * Representa las columnas del histórico de productores.
+ * Representa las columnas del historial de productores.
  */
 export interface HistoricoColumnas {
+  /** Identificador único del productor. */
   id: number;
+  /** Nombre del productor. */
   nombreProductor: string;
+  /** Número de registro fiscal del productor. */
   numeroRegistroFiscal: string;
+  /** Dirección del productor. */
   direccion: string;
+  /** Correo electrónico del productor. */
   correoElectronico: string;
+  /** Número telefónico del productor. */
   telefono: string;
+  /** Número de fax del productor. */
   fax: string;
 }
+
 /**
  * Representa los datos del productor exportador.
  */
@@ -66,11 +74,11 @@ export interface GrupoDeDirecciones {
  */
 export interface GrupoRepresentativo {
   lugar: string;
-  nombre: string;
+  nombreExportador: string;
   empresa: string;
   cargo: string;
   registroFiscal: string;
-  correo: string;
+  correoElectronico: string;
   telefono: string;
   fax: string;
 }
@@ -290,4 +298,29 @@ export interface MercanciasHistoricos {
   * objeto de tipo `MercanciaTabla`.
   */
   datos: MercanciaTabla[];
+}
+
+/**
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la tabla de mercancías.
+ * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
+ * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
+ * valor de la mercancía y RFC del productor.
+ * 
+ */
+export interface MercanciaTabla {
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  valorMercancia: string;
+  rfcProductor?: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
 }
