@@ -471,17 +471,14 @@ private async cargarCatalogosParaModificacion(): Promise<void> {
     return;
   }
   try {
-    // Load estados if needed
     if (SELECTEDDATA.entidadFederativa || SELECTEDDATA.entidadFederativaObj) {
       const ESTADOSRESPONSE = await this.catalogoService.estadosCatalogo(this.tramiteID).toPromise();
       this.estadosDatos = ESTADOSRESPONSE?.datos as Catalogo[] || [];
       
-      // Find the estado by descripcion or use the stored object
       const ESTADOCLAVE = SELECTEDDATA.entidadFederativaObj?.clave ||
         this.estadosDatos.find(estado => estado.descripcion === SELECTEDDATA.entidadFederativa)?.clave;
 
       if (ESTADOCLAVE) {
-        // Load municipios for the selected estado
         const MUNICIPIOSRESPONSE = await this.catalogoService.municipiosDelegacionesCatalogo(this.tramiteID, String(ESTADOCLAVE)).toPromise();
         this.municipiosDatos = MUNICIPIOSRESPONSE?.datos as Catalogo[] || [];
         this.municipiosTempDatos = [...this.municipiosDatos];
@@ -503,13 +500,11 @@ private async cargarCatalogosParaModificacion(): Promise<void> {
       }
     }
 
-    // Load paises catalog if not already loaded
     if (!this.paisesDatos.length) {
       const PAIS_RESPONSE = await this.catalogoService.paisesCatalogo(this.tramiteID).toPromise();
       this.paisesDatos = PAIS_RESPONSE?.datos as Catalogo[] || [];
     }
 
-    // Load codigo postal catalog if not already loaded
     if (!this.codigosPostalesDatos.length) {
       this.datosSolicitudService
         .obtenerListaCodigosPostales()
@@ -533,7 +528,6 @@ private patchFormWithCatalogObjects(): void {
     return;
   }
 
-  // Use catalog objects if available, otherwise try to find by descripcion
   const PAISCLAVE = SELECTEDDATA.paisObj?.clave || this.paisesDatos.find(pais => 
     pais.descripcion === SELECTEDDATA.pais
   )?.clave || SELECTEDDATA.pais;
@@ -583,7 +577,6 @@ private patchFormWithCatalogObjects(): void {
   });
 }
 
-// ...existing code...
 
 
   /**
@@ -942,21 +935,7 @@ guardarFabricante(): void {
               }
             })
           );  
-        
-
-    // this.datosSolicitudService
-    //   .obtenerListaPaises()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.paisesDatos = data;
-    //   });
-
-    // this.datosSolicitudService
-    //   .obtenerListaEstados()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.estadosDatos = data;
-    //   });
+       
 
        this.subscription.add(
             this.catalogoService
@@ -970,31 +949,6 @@ guardarFabricante(): void {
               }
             })
           );  
-
-
-    // this.datosSolicitudService
-    //   .obtenerListaMunicipios()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.municipiosTempDatos = data;
-    //   });
-
-      
-
-    // this.datosSolicitudService
-    //   .obtenerListaLocalidades()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.localidadesTempDatos = data;
-    //   });
-
-
-    // this.datosSolicitudService
-    //   .obtenerListaColonias()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.coloniasTempDatos = data;
-    //   });
 
   }
 
