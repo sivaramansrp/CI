@@ -1,4 +1,4 @@
-import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, formatFecha } from "@ng-mf/data-access-user";
+import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, formatFecha, formatearFechaSolicitud } from "@ng-mf/data-access-user";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_FALTAN } from "../../constants/permiso-importacion-modification.enum";
 import { Subject, map, takeUntil } from "rxjs";
@@ -233,8 +233,8 @@ export class IntroPermisoComponent implements OnInit {
    */
   buildPayload(): GuardarSolicitudRequest {
     const DATOS_GENERALES = this.realizarState;
-    const FECHA_FACTURA = formatFecha(DATOS_GENERALES.datosMercanica.factura_fecha);
-    const FECHA_DOCUMENTO = formatFecha(DATOS_GENERALES.datosExporta.fecha_documento);
+    const FECHA_FACTURA = formatearFechaSolicitud(DATOS_GENERALES.datosMercanica.factura_fecha);
+    const FECHA_DOCUMENTO = formatearFechaSolicitud(DATOS_GENERALES.datosExporta.fecha_documento);
     return {
       //TODOcve_entidad_federativa se debe obtener del estado del solicitante ejemplo "SIN" representa SINALOA o cualquier otro estado
       cve_entidad_federativa: DATOS_GENERALES.datosFederal.descripcion_representacion_federal,

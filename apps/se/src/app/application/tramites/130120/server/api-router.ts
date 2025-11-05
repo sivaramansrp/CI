@@ -102,3 +102,15 @@ export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t1
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/guardar
  */
 export const API_POST_GUARDAR_TRAMITE = 'sat-t130120/solicitud/guardar'
+
+/**
+ * Api para generar la cadena original de la solicitud del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t130120/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+
+/**
+ * Api para firmar la solicitud del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/firmar_2
+ */
+export const API_POST_FIRMAR = (IDSOLICITUD: string) : string => `sat-t130120/solicitud/${IDSOLICITUD}/firmar`;
