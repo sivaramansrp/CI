@@ -60,6 +60,7 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -697,8 +698,9 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         '',
         [
           Validators.required,
-          Validators.pattern(REGEX_SOLO_DIGITOS)],
-        Validators.minLength(8),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+          Validators.minLength(8)],
+       
       ],
 
       descripcionFraccion: [{ value: '', disabled: true }],
@@ -790,7 +792,18 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         clave_Scian: this.formAgente.get('claveScianModal')?.value,
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
+      
+    const exists = this.nicoTablaDatos.some(
+      item =>
+        item.clave_Scian === NUEVO_DATO.clave_Scian &&
+        item.descripcion_Scian === NUEVO_DATO.descripcion_Scian
+    );
+
+    if (!exists) {
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos];
+    }
+      //this.nicoTablaDatos.push(NUEVO_DATO);
       this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
@@ -1059,6 +1072,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.servicioDeFormularioService.setFormValue('domicilioForm', { [campo]: VALOR });
   }
 
+  agregarMercanciaModal(): void {
+    this.formMercancias.reset();
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    * 
@@ -1081,13 +1098,30 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       umc: RAW.UMC,
       unidadMedidaTarifa: RAW.UMT,
     };
+    const INDEX = this.listaMercancias.findIndex(
+      item => item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria
+    );
+
+    if (INDEX !== -1) {
+      // Update existing row
+      this.listaMercancias[INDEX] = NUEVA_MERCANCIA;
+    } else {
+      // Add new row
       this.listaMercancias.push(NUEVA_MERCANCIA);
+    }
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      
        const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
     if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
       MODAL_INSTANCE?.hide();
+       setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+      }, 300);  
     }
       this.tieneFormularioMercanciasEnviado = false;
     }
@@ -1177,6 +1211,23 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.seleccionarlistaMercancias = event;
   }
 
+  public seleccionarlistaSeccionNico(event: NicoInfo[]): void {
+    this.personaparas = event;
+  }
+
+  public eliminarScian(): void {
+    if (this.personaparas.length > 0) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(
+        item => !this.personaparas.some(selected =>
+          selected.clave_Scian === item.clave_Scian &&
+          selected.descripcion_Scian === item.descripcion_Scian
+        )
+      );
+      this.personaparas = [];
+    }
+  }
+
+
   /**
    * @method eliminarMercancia
    * @description
@@ -1200,25 +1251,33 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     }
   }
 
+ 
   /**
    * @method modificarMercancia
+   * 
    * @description
    * Método que modifica una mercancía de la lista de mercancías seleccionadas.
    */
   public modificarMercancia(): void {
-    if(this.seleccionarlistaMercancias.length !== 0) {
-      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
-      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
-      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
-      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
-      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
-      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
-      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
-      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
-      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
-      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
-      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
-      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
+    if (this.seleccionarlistaMercancias.length !== 0) {
+      const SELECTED = this.seleccionarlistaMercancias[0];
+      this.formMercancias.patchValue({
+        nombreComercial: SELECTED.nombreComercial,
+        nombreComun: SELECTED.nombreComun,
+        nombreCientifico: SELECTED.nombreCientifico,
+        usoEspecifico: SELECTED.usoEspecifico,
+        fraccionArancelaria: SELECTED.fraccionArancelaria,
+        descripcionFraccion: SELECTED.descripcionFraccion,
+        cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt ,
+        UMT:  SELECTED.unidadMedidaTarifa,
+        cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
+        UMC: SELECTED.umc || SELECTED.umc,
+        porcentajeConcentracion: SELECTED.porcentajeConcentracion,
+        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
+        objetoImportacion: SELECTED.objetoImportacion,
+        ...(this.formMercancias.contains('numeroRegistro') && { numeroRegistro: "1" })
+       
+      });
     }
   }
   ngAfterViewInit(): void {
