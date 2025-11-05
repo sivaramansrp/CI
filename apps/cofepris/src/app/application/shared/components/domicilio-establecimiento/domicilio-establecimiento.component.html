@@ -398,6 +398,37 @@
             </div>
           </div>
           }
+          @if(estadoValidte){
+            <div class="form-group">
+                <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
+                name="estadoFisico" [placeholder]="'Seleccione un valor'" 
+                (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
+                [isDisabled]="esFormularioSoloLectura"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
+            </div>
+              <div class="form-group" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value.toLowerCase() === 'otro'">
+            <label for="estadoFisicoOtro">
+             Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('estadoFisicoOtro')?.invalid && formMercancias.get('estadoFisicoOtro')?.touched}">*</span>:
+            </label>
+          
+            <input type="text" id="estadoFisicoOtro"  formControlName="estadoFisicoOtro" class="form-control"
+            (change)="
+            setValoresStore(
+            formMercancias,
+            'estadoFisicoOtro',
+            'setEstadoFisicoOtro'
+            );
+            formMercancias.get('estadoFisicoOtro')?.markAsTouched();
+            " />
+            <div *ngIf="
+              formMercancias.get('estadoFisicoOtro')?.invalid &&
+              formMercancias.get('estadoFisicoOtro')?.touched
+              " class="mensaje-error">
+              <small *ngIf="formMercancias.get('estadoFisicoOtro')?.errors?.['required']">
+              Este campo es obligatorio
+              </small>
+            </div>
+          </div>
+          }
           <div class="form-group">
             <label for="fraccionArancelaria">
               Fracción arancelaria<span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:

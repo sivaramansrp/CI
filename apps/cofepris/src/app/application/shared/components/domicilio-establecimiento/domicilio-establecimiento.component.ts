@@ -96,6 +96,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
   @Input() rfcValido: boolean = false;
+  estadoValidte:boolean=true;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -196,6 +197,27 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
+  estadoFisicoCatalogo: Catalogo[] = [
+    {
+        "id": 1,
+        "descripcion": "Selecciona un valor"
+    },
+    {
+        "id": 2,
+        "descripcion": "Sólido"
+    },
+    {
+        "id": 3,
+        "descripcion": "Líquido"
+    },
+    {
+        "id": 4,
+        "descripcion": "Gaseoso"
+    },
+    {
+        "id": 5,
+        "descripcion": "Otro"
+    }];
   /**
    * Constructor del componente.
    * @param fb
@@ -307,6 +329,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
+      estadoFisico: [this.solicitudState?.estadoFisico],
+      estadoFisicoOtro: [this.solicitudState?.estadoFisicoOtro, [Validators.maxLength(100)]],
+      
+
     });
 
 
@@ -793,13 +819,13 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
       
-    const exists = this.nicoTablaDatos.some(
+    const EXISTS = this.nicoTablaDatos.some(
       item =>
         item.clave_Scian === NUEVO_DATO.clave_Scian &&
         item.descripcion_Scian === NUEVO_DATO.descripcion_Scian
     );
 
-    if (!exists) {
+    if (!EXISTS) {
       this.nicoTablaDatos.push(NUEVO_DATO);
       this.nicoTablaDatos = [...this.nicoTablaDatos];
     }

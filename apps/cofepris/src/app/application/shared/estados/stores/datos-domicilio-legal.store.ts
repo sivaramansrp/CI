@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns DatosDomicilioLegal
  */
 export interface DatosDomicilioLegalState {
+  estadoFisicoOtro:string;
   /**
    * claveDeReferencia
    * @type {string}
@@ -217,6 +218,7 @@ export interface DatosDomicilioLegalState {
 
 export function createInitialState(): DatosDomicilioLegalState {
   return {
+    estadoFisicoOtro: '',
     /**
      * claveDeReferencia
      * @type {string}
@@ -974,6 +976,13 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         this.update((state) => ({
             ...state,
             mensaje,
+        }));
+    }
+
+    public setEstadoFisicoOtro(estadoFisicoOtro: string):void {
+        this.update((state) => ({
+            ...state,
+            estadoFisicoOtro,
         }));
     }
     
