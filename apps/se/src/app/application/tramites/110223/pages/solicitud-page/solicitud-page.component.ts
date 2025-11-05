@@ -193,10 +193,10 @@ export class SolicitudPageComponent {
           telefono: '123456',
         },
       },
-      solicitud: {},      
+      // solicitud: {},      
       certificado: CERTIFICADO,
       destinatario: DESTINATARIO,
-      historico: {
+      solicitud: {
           datosConfidencialesProductor: item.formulario['datosConfidencialesProductor'],
           productorMismoExportador: item.formulario['productorMismoExportador'],
           productoresPorExportador: [...PRODUCTORES_POR_EXPORTADOR],
@@ -233,11 +233,11 @@ export class SolicitudPageComponent {
      return new Promise((resolve) => {      
       const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
              
-      API_CALL.subscribe({        
+      API_CALL.subscribe({          
         next: (response) => {
           const RESPONSE_OBJ = response as Record<string, unknown>;
-          const { idSolicitud, responseProcessed } = this.extraerIdSolicitud(RESPONSE_OBJ);
-          this.procesarRespuestaYNavegar(RESPONSE_OBJ, idSolicitud, responseProcessed);
+          const { ID_SOLICITUD, RESPONSE_PROCESSED } = this.extraerIdSolicitud(RESPONSE_OBJ);
+          this.procesarRespuestaYNavegar(RESPONSE_OBJ, ID_SOLICITUD, RESPONSE_PROCESSED);
           resolve(this.construirRespuestaJSON(RESPONSE_OBJ));
         }
       });
@@ -249,7 +249,7 @@ export class SolicitudPageComponent {
    * @param response Respuesta del servidor
    * @returns Objeto con el ID de solicitud y si fue procesado correctamente
    */
-  private extraerIdSolicitud(response: Record<string, unknown>): { idSolicitud: number; responseProcessed: boolean } {
+  private extraerIdSolicitud(response: Record<string, unknown>): { ID_SOLICITUD: number; RESPONSE_PROCESSED: boolean } {
     let IDSOLICITUD: number = 0;
     let RESPONSEPROCESSED = false;
 
@@ -276,7 +276,7 @@ export class SolicitudPageComponent {
       RESPONSEPROCESSED = true;
     }
 
-    return { idSolicitud: IDSOLICITUD, responseProcessed: RESPONSEPROCESSED };
+    return { ID_SOLICITUD: IDSOLICITUD, RESPONSE_PROCESSED: RESPONSEPROCESSED };
   }
 
   /**
