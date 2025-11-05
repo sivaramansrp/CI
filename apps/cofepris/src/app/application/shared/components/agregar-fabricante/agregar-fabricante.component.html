@@ -41,8 +41,7 @@
         }
       </div>
 
-    @if( agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr ||
-  idProcedimiento === 260904){
+    @if(mostrarRFC){
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
@@ -71,10 +70,14 @@
           </small>
         </div>
       </div>
-      @if (
-  (!agregarFabricanteForm.get('nacionalidad')?.value ||
-  !agregarFabricanteForm.get('tipoPersona')?.value &&
-  chequeoValidacionAlGuardar ) && agregarFabricanteForm.get('rfc')?.disabled
+      @if(
+    !(
+      agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
+      (
+        agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
+        agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL
+      )
+    )
 ) {
   <div class="col-md-4">
     <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
@@ -96,7 +99,7 @@
     </div>
   </div>
 }
-      @else if (!estaOculto && !chequeoValidacionAlGuardar ) {
+      @else if (!estaOculto) {
       <div class="col-md-4">
         <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
@@ -137,7 +140,21 @@
     } }
 
     <!-- Datos Personales -->
-    @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA){
+@if( (
+    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+    (
+      !agregarFabricanteForm.get('tipoPersona')?.value ||
+      agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
+    )
+  ) ||
+  (
+    agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
+    (
+      !agregarFabricanteForm.get('tipoPersona')?.value ||
+      agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
+    )
+  )
+) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">

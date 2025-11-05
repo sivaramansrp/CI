@@ -33,13 +33,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { DEFAULT_TABLA_ORDENS, PROCEDIMIENTOS_MUESTRAN_RFC } from '../../constantes/terceros-relacionados-fabricante.enum';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
   PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -614,7 +614,7 @@ private patchFormWithCatalogObjects(): void {
       tipoPersona: [
         {
           value: this.obtenerValor('tipoPersona'),
-          disabled: this.chequeoValidacionAlGuardar,
+          disabled: true,
         },
         Validators.required
       ],
@@ -1206,67 +1206,86 @@ guardarFabricante(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   changeNacionalidad(): void {
-    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
-    const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
-    this.disableLabel=[];
-     if(VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
-    this.elementosDeshabilitados=[];
+  const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+  const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+  this.disableLabel = [];
+
+  this.agregarFabricanteForm.get('tipoPersona')?.reset();
+
+  if (this.agregarFabricanteForm.get('nacionalidad')?.value) {
+    this.agregarFabricanteForm.get('tipoPersona')?.enable();
+  } else {
+    this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
-  else{
-    if(this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' && this.agregarFabricanteForm.get('tipoPersona')?.value ){
- this.agregarFabricanteForm.patchValue({pais: 'MEX'});
+
+  if (VALOR_FORMULARIO.nacionalidad === 'Extranjero') {
+    this.elementosDeshabilitados = [];
+  } else {
+    if (
+      this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' &&
+      this.agregarFabricanteForm.get('tipoPersona')?.value
+    ) {
+      this.agregarFabricanteForm.patchValue({ pais: 'MEX' });
     }
-     this.elementosDeshabilitados = ['pais'];
+    this.elementosDeshabilitados = ['pais'];
   }
-if((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')){
- 
-  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
-}
-    if (RFC_CONTROL) {
-      RFC_CONTROL.setValidators([
-        Validators.required,
-        AgregarFabricanteComponent.rfcFisicaValidator(
-          VALOR_FORMULARIO.tipoPersona
-        ),
-      ]);
-      RFC_CONTROL.markAsTouched();
-      RFC_CONTROL.updateValueAndValidity();
+
+  if ((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')) {
+    this.agregarFabricanteForm.patchValue({ pais: 'MEX' });
+  }
+
+  if (RFC_CONTROL) {
+    RFC_CONTROL.setValidators([
+      Validators.required,
+      AgregarFabricanteComponent.rfcFisicaValidator(
+        VALOR_FORMULARIO.tipoPersona
+      ),
+    ]);
+    RFC_CONTROL.markAsTouched();
+    RFC_CONTROL.updateValueAndValidity();
+  }
+
+  const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+  const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+  if (!NACIONALIDAD || NACIONALIDAD === '') {
+    this.estaDeshabilitadoDesplegable = true;
+    Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+      this.agregarFabricanteForm.get(controlName)?.disable();
+      if (controlName === 'nacionalidad') {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+      }
+      if (controlName === 'tipoPersona' && NACIONALIDAD) {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+      }
+    });
+    if (this.chequeoValidacionAlGuardar) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
     }
-    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
-    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
-    if (!NACIONALIDAD || NACIONALIDAD === '') {
-      this.estaDeshabilitadoDesplegable = true;
+  } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
+    if (NACIONALIDAD && TIPO_PERSONA) {
+      this.estaDeshabilitadoDesplegable = false;
       Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-        this.agregarFabricanteForm.get(controlName)?.disable();
-        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
           this.agregarFabricanteForm.get(controlName)?.enable();
         }
       });
-      if (this.chequeoValidacionAlGuardar) {
-        this.agregarFabricanteForm.get('tipoPersona')?.disable();
-      }
-    } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
-      if (NACIONALIDAD && TIPO_PERSONA) {
-        this.estaDeshabilitadoDesplegable = false;
-        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-          if (!this.elementosDeshabilitados.includes(controlName)) {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        });
-      } else {
-        this.estaDeshabilitadoDesplegable = true;
-        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        });
-      }
+    } else {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+        if (controlName === 'tipoPersona' && NACIONALIDAD) {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
     }
-    this.agregarFabricanteForm.get('pais')?.patchValue('');
-    this.agregarFabricanteForm.markAsUntouched();
-    this.forzarDeshabilitarPais();
   }
+  this.agregarFabricanteForm.get('pais')?.patchValue('');
+  this.agregarFabricanteForm.markAsUntouched();
+  this.forzarDeshabilitarPais();
+}
 
   /**
    * @method changeTipoPersona
@@ -1403,7 +1422,16 @@ private resetExcept(excludedControls: string[]): void {
       }
     }
   }
-
+  /**
+   * Getter que determina si se debe mostrar el campo RFC en el formulario.
+   * @returns {boolean} True si la nacionalidad no es 'Extranjero' y el procedimiento actual está en la lista de procedimientos que muestran RFC; de lo contrario, false.
+   */
+  get mostrarRFC(): boolean {
+    return (
+      this.agregarFabricanteForm?.get('nacionalidad')?.value !== 'Extranjero' &&
+      PROCEDIMIENTOS_MUESTRAN_RFC.includes(this.idProcedimiento)
+    );
+  }
   /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
