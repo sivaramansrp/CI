@@ -167,6 +167,10 @@ ngOnInit(): void {
     }
   }
 
+  validarFormulario(): void {
+    this.forma.markAllAsTouched();
+  }
+
   /**
   * @method ngOnDestroy
   * @description

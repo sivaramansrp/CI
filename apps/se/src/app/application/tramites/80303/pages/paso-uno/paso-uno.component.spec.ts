@@ -4,7 +4,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { AnexoUnoPestanaComponent } from '../../components/anexo-uno-pestana/anexo-uno-pestana.component';
-import { ComplementariaComponent } from '../../components/complementaria/complementaria.component';
+import { ComplementarioComponent } from '../../components/complementaria/complementaria.component';
 import { MontoYFactorComponent } from '../../components/monto-y-factor/monto-y-factor.component';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -18,7 +18,7 @@ describe('PasoUnoComponent', () => {
         ModificacionComponent,
         BitacoraComponent,
         AnexoUnoPestanaComponent,
-        ComplementariaComponent,
+        ComplementarioComponent,
         MontoYFactorComponent,
       HttpClientModule],
       declarations: [PasoUnoComponent],

@@ -6,7 +6,7 @@ export interface FraccionValidarResponse {
     descripcion: string;
     
     /** Indica si el peso es requerido */
-    peso_requerido: boolean | null;
+    peso_requerido: number | null;
     
     /** Indica si el volumen es requerido */
     volumen_requerido: boolean | null;
@@ -52,20 +52,20 @@ export interface DetalleMercancia {
  */
 export interface ProcesoSolicitado {
     /** ID único del proceso CEROR */
-    id_proceso_ceror: number;
+    id_proceso_ceror: number | null;
     
     /** Nombre del proceso */
-    nombre: string;
+    nombre: string | null;
     
     /** Fecha de inicio de vigencia */
-    fec_ini_vigencia: string;
+    fec_ini_vigencia: string | null;
     
     /** Fecha de fin de vigencia (null si no aplica) */
     fec_fin_vigencia: string | null;
     
     /** Indica si el proceso está activo */
-    activo: boolean;
+    activo: boolean | null;
     
     /** Indica si cumple con el proceso */
-    cumple_proceso: boolean;
+    cumple_proceso: boolean | null;
 }

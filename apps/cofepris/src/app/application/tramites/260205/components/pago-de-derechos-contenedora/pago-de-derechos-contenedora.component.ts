@@ -2,10 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import {ID_PROCEDIMIENTO} from '../../constantes/materias-primas.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component PagoDeDerechosContenedoraComponent
  * 
@@ -54,6 +55,10 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   public pagoDerechos: PagoDerechosFormState;
 
+  @ViewChild(PagoDeDerechosComponent)
+    pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  
+
   /**
    * que indica si el formulario está en modo solo lectura.
    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
@@ -61,6 +66,13 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @type {boolean}
    */
   esFormularioSoloLectura!: boolean;
+
+   /**
+       * Identificador único del procedimiento.
+       * Esta propiedad es de solo lectura y se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+       */
+      public readonly idProcedimiento = ID_PROCEDIMIENTO;
+    
 
   /**
    * @constructor
@@ -93,7 +105,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
   }
-
+ 
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
    /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *

@@ -291,6 +291,7 @@ this.peruCertificadoService
         valorDeContenidoRegional: item.valorContenidoRegional || '',
         normaOrigen: item.normaOrigen || '',
         nombreIngles: item.nombreIngles || '',
+        numeroRegistroProducto: item.numeroRegistroProducto || '',
       }));
 
       this.disponiblesDatos = MAPPED_DATA;

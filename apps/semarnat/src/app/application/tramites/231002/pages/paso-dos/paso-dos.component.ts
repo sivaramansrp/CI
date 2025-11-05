@@ -3,7 +3,6 @@ import {
   FirmaElectronicaComponent,
   Notificacion,
   NotificacionesComponent,
-  TramiteFolioStore,
   base64ToHex,
   encodeToISO88591Hex,
   formatFecha,
@@ -19,6 +18,7 @@ import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { Firma231002Service } from '../../services/firma231002.service';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Router } from '@angular/router';
+import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa el segundo paso del formulario o asistente (wizard).

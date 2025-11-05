@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
@@ -19,6 +19,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  
+    @Input() public idProcedimiento!: number;
   /**
    * Estado de la solicitud.
    */
@@ -101,7 +103,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.representante = this.fb.group({
-      rfc: [this.solicitudState?.rfc, Validators.required],
+   rfc: [this.solicitudState?.rfc, [Validators.required]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
@@ -172,7 +174,14 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.representante, campo);
   }
-
+validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.representante.invalid){
+      this.representante.markAllAsTouched();
+      ISVALID = false;
+    }
+    return ISVALID;
+}
   /**
    * Limpia los campos del formulario.
    */

@@ -6,11 +6,11 @@ import { Catalogo, CatalogoServices, ConsultaioQuery } from "@ng-mf/data-access-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209State, Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { TransporteService } from '../../services/transporte/transporte.service';
 
 /**
@@ -66,7 +66,11 @@ export class TransporteComponent implements OnInit, OnDestroy {
    */
   tramites: string = '110209';
 
-  
+  /**  
+  * Contiene el estado actual de la solicitud del trámite 110209.  
+  * Permite acceder y manipular los datos relacionados con el flujo del trámite.  
+  */
+  public solicitudState!: Tramite110209State;
 
   /**
    * Constructor del componente.
@@ -161,16 +165,20 @@ export class TransporteComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.transporteForm.patchValue({
-            medioDeTransporte: seccionState.medioDeTransporte,
-            rutaCompleta: seccionState.rutaCompleta,
-            puertoDeEmbarque: seccionState.puertoDeEmbarque,
-            puertoDeDesembarque: seccionState.puertoDeDesembarque
-          });
+          this.solicitudState = seccionState as Tramite110209State;
         })
       )
       .subscribe();
-  }
+
+    // Inicializa el formulario con el valor 'medio' del estado de la solicitud
+    this.transporteForm = this.fb.group({
+      medioDeTransporte: [this.solicitudState.medioDeTransporte],
+      rutaCompleta: [this.solicitudState.rutaCompleta],
+      puertoDeEmbarque: [this.solicitudState.puertoDeEmbarque],
+      puertoDeDesembarque: [this.solicitudState.puertoDeDesembarque]
+    });
+    }
+
   /**
    * @method validarFormulario
    * @description

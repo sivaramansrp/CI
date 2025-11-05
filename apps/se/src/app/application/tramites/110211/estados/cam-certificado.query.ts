@@ -59,6 +59,14 @@ export class camCertificadoQuery extends Query<CamState> {
 
   /**
    * @descripcion
+   * Observable que selecciona el grupo representativo del estado.
+   */
+  selectGrupoRepresentativo$ = this.select((state) => {
+    return state.grupoRepresentativo;
+  });
+
+  /**
+   * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
    * @param store - Instancia de `camCertificadoStore`.
    */

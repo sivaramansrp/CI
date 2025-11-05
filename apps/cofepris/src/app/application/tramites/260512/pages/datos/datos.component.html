@@ -24,10 +24,8 @@
             }
             @case (2) {
             @if(esDatosRespuesta){
-            <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
-            <app-domicillo-establecimiento-aduanas></app-domicillo-establecimiento-aduanas>
-            <app-manifiestos></app-manifiestos>
-            <app-representante-legal-rfc></app-representante-legal-rfc>
+<app-datos-de-la [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+[isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad" [idProcedimiento]="idProcedimiento"[identificacion]="true"[estadoValidte]="true"></app-datos-de-la>
             }
             }
             @case (3) {
@@ -37,7 +35,13 @@
             }
             @case (4) {
             @if(esDatosRespuesta){
-            <app-shared-pago-derechos [mostrarNotificacionAlerta]="true"></app-shared-pago-derechos>
+          <app-pago-de-derechos 
+    #pagoDeDerechosComponent
+    [idProcedimiento]="idProcedimiento"
+    [pagoDerechoFormState]="pagoDerechos"
+    (updatePagoDerechos)="updatePagoDerechos($event)"
+    [formularioDeshabilitado]="formularioDeshabilitado" 
+></app-pago-de-derechos>
             }
             }
             }

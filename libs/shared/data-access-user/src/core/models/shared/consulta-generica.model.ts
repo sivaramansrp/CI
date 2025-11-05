@@ -19,6 +19,7 @@ export interface BodyTablaResolucion {
   idDocumento: string;
   documento: string;
   urlPdf: string;
+  fullBase64?: string;
 }
 
 /**
@@ -28,21 +29,21 @@ export interface BodyTablaResolucion {
  * ============================
  */
 export interface HeaderTablaAcuses {
-    key: keyof BodyTablaAcuses;
-    valor: string;
-  }  
-  /**
- * ============================
- * Interfaz para el cuerpo de la Tabla de Acuses
- * Se utiliza para mostrar la Tabla de Acuses en el componente Acuses de la Consulta Generica.
- * ============================
- */
-  export interface BodyTablaAcuses {
-    id: number;
-    idDocumento: string;
-    documento: string;
-    urlPdf: string;
-  }  
+  key: keyof BodyTablaAcuses;
+  valor: string;
+}
+/**
+* ============================
+* Interfaz para el cuerpo de la Tabla de Acuses
+* Se utiliza para mostrar la Tabla de Acuses en el componente Acuses de la Consulta Generica.
+* ============================
+*/
+export interface BodyTablaAcuses {
+  id: number;
+  idDocumento: string;
+  documento: string;
+  urlPdf: string;
+}
 
 /**
  * ============================
@@ -50,23 +51,23 @@ export interface HeaderTablaAcuses {
  * Se utiliza para mostrar la Tabla de Requerimientos en el componente Requerimientos de la Consulta Generica.
  * ============================
  */
-  export interface HeaderTablaRequerimientos {
-    key: keyof BodyTablaRequerimiento;
-    valor: string;
-  }
-  /**
- * ============================
- * Interfaz para el cuerpo de la Tabla de Requerimientos
- * Se utiliza para mostrar la Tabla de Requerimientos en el componente Requerimientos de la Consulta Generica.
- * ============================
- */
-  export interface BodyTablaRequerimiento {
-    id: number;
-    fechaCreacion: string;
-    fechaGeneracion: string;
-    fechaAtencion: string;
-    estatus: string;
-    urlPdf: string;
+export interface HeaderTablaRequerimientos {
+  key: keyof BodyTablaRequerimiento;
+  valor: string;
+}
+/**
+* ============================
+* Interfaz para el cuerpo de la Tabla de Requerimientos
+* Se utiliza para mostrar la Tabla de Requerimientos en el componente Requerimientos de la Consulta Generica.
+* ============================
+*/
+export interface BodyTablaRequerimiento {
+  id: number;
+  fechaCreacion: string;
+  fechaGeneracion: string;
+  fechaAtencion: string;
+  estatus: string;
+  urlPdf: string;
 }
 
 /**
@@ -91,7 +92,7 @@ export interface BodyTablaTareasTramite {
   nombreUsuarioAsignado: string;
   claveUsuarioAsignado: string;
   fechaAsignacion: string;
-  fechaAtencion: string|null;
+  fechaAtencion: string | null;
 }
 
 /**
@@ -172,7 +173,7 @@ export interface BodyTablaEnvioDigital {
 /*
 * Interfaz para el encabezado de la Tabla de opiniones (primera pestaña de la bandeja de opiniones)
 * Se utiliza para mostrar la tabla de opiniones del componente opinion.  
-*/ 
+*/
 export interface HeaderTablaOpiniones {
   key: keyof BodyTablaOpiniones;
   valor: string;
@@ -180,7 +181,7 @@ export interface HeaderTablaOpiniones {
 /*
 * Interfaz para el cuerpo de la Tabla de opiniones (primera pestaña de la bandeja de opiniones)
 * Se utiliza para mostrar la tabla de opiniones del componente opinion.  
-*/ 
+*/
 export interface BodyTablaOpiniones {
   id: number;
   fechaSolicitud: string;
@@ -193,7 +194,7 @@ export interface BodyTablaOpiniones {
 /*
 * Interfaz para el cuerpo de la Tabla de observaciones dictamen
 * Se utiliza para mostrar tabla observaciones del componente dictamen.  
-*/ 
+*/
 export interface BodyTablaDictamenObservaciones {
   id: number;
   fechaObservacion: string;
@@ -248,7 +249,7 @@ export interface SolicitudDetalleOpinion {
   estatus: string;
   fechaCreacion: string;
   fechaSolicitud: string;
-  justificacionOpinion: string;  
+  justificacionOpinion: string;
 }
 /**
  * ============================
@@ -262,5 +263,5 @@ export interface OpinionDetalleOpinion {
   sentido: string;
   generadoPor: string;
   fechaGeneracion: string;
-  opinion: string;  
+  opinion: string;
 }

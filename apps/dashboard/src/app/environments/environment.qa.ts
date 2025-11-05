@@ -26,6 +26,7 @@ export const ENVIRONMENT = {
       "inah": "https://qa.front.v30.ultrasist.net/inah",
       "crt": "https://qa.front.v30.ultrasist.net/crt",
       "stps": "https://qa.front.v30.ultrasist.net/stps",
-      "bandejas": "https://qa.front.v30.ultrasist.net/bandejas"
-    }    
+      "bandejas": "https://qa.front.v30.ultrasist.net/bandejas",
+      "privados": "https://qa.front.v30.ultrasist.net/privados"
+    }
   };

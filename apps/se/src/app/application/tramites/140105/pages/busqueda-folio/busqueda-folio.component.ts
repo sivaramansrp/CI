@@ -1,4 +1,3 @@
-import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Component, OnDestroy } from '@angular/core';
 import { EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup} from '@angular/forms';
@@ -84,9 +83,12 @@ export class BusquedaFolioComponent implements OnDestroy {
     private fb: FormBuilder,
     private consultaQuery: ConsultaioQuery,
   ) {
+    // Initialize busquedaForm
+    this.busquedaForm = this.fb.group({
+      tramite: ['']
+    });
    
     this.estableDetalleDelPermisoForm();
-    this.buscar();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -96,6 +98,14 @@ export class BusquedaFolioComponent implements OnDestroy {
         })
       )
       .subscribe();
+    this.servicioDeMensajesService.obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        if (data?.datos && Array.isArray(data.datos) && data.datos.length > 0) {
+          this.detalleDelPermiso = true;
+          this.detalleDelPermisoForm.patchValue(data.datos[0]);
+        }
+      });
   }
 
   /**
@@ -109,14 +119,10 @@ export class BusquedaFolioComponent implements OnDestroy {
 
   /**
    * Ejecuta la lógica para buscar un trámite por folio.
-   * Si el formulario es inválido, se marcan todos los campos como tocados para mostrar errores.
-   * Si es válido, se muestra el detalle del permiso y se cargan los datos correspondientes.
-   *
-   * @param _event Evento de tipo `Event` (no utilizado directamente).
+   * Ahora utiliza los datos del store en lugar de datos hardcodeados.
    */
   public buscar(): void {
     this.detalleDelPermiso = true;
-    this.establecerFormularioDeDetallesDe();
   }
 
   /**
@@ -176,11 +182,13 @@ export class BusquedaFolioComponent implements OnDestroy {
   }
 
   /**
-   * Establece los valores del formulario de detalles a partir del JSON importado.
-   * Esta información simula una respuesta cargada para propósitos de presentación.
+   * Establece el formulario de detalles con datos del API en lugar de datos hardcodeados.
+   * Esta información viene de la respuesta del API de búsqueda.
    */
-  public establecerFormularioDeDetallesDe(): void {
-    this.detalleDelPermisoForm.patchValue(formData);
+  public establecerFormularioDeDetallesDe(data?: Record<string, unknown>): void {
+    if (data) {
+      this.detalleDelPermisoForm.patchValue(data);
+    }
   }
 
   /**

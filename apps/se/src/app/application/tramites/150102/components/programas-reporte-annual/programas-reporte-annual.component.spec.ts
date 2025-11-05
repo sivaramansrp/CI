@@ -1,212 +1,194 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ProgramasReporteAnnualComponent } from './programas-reporte-annual.component';
+import { FormBuilder } from '@angular/forms';
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
-import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
+import { LoginQuery } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { ProgramasReporte } from '../../models/programas-reporte.model';
 
 describe('ProgramasReporteAnnualComponent', () => {
   let component: ProgramasReporteAnnualComponent;
   let fixture: ComponentFixture<ProgramasReporteAnnualComponent>;
-  let solicitudService: jest.Mocked<SolicitudService>;
-  let solicitud150102Store: jest.Mocked<Solicitud150102Store>;
-  let solicitud150102Query: Partial<jest.Mocked<Solicitud150102Query>>;
+  let mockSolicitud150102Store: any;
+  let mockSolicitud150102Query: any;
+  let mockSolicitudService: any;
+  let mockConsultaioQuery: any;
+  let mockLoginQuery: any;
 
   beforeEach(async () => {
-    const solicitudServiceMock: Partial<jest.Mocked<SolicitudService>> = {
-      obtenerReporteFechas: jest.fn(() => of()),
-      obtenerProgramasReporte: jest.fn(() => of()),
+    mockSolicitud150102Store = {
+      actualizarInicio: jest.fn(),
+      actualizarFin: jest.fn(),
+      actualizarIndiceDeRegistroDelPrograma: jest.fn(),
+      actualizarFolioPrograma: jest.fn(),
+      actualizarModalidad: jest.fn(),
+      actualizarTipoPrograma: jest.fn(),
+      actualizarEstatus: jest.fn(),
+      actualizarIdProgramaCompuesto: jest.fn(),
+    };
+    mockSolicitud150102Query = {
+      seleccionarSolicitud$: of({
+        inicio: '01-2024',
+        fin: '12-2024',
+        folioPrograma: 'FP-001',
+        modalidad: 'Modalidad1',
+        tipoPrograma: 'Tipo1',
+        estatus: 'Activo',
+        indiceDeRegistroDelPrograma: 0,
+      }),
+    };
+    mockSolicitudService = {
+      obtenerReporteFechas: jest.fn().mockReturnValue(of({ inicio: '2024-01-01', fin: '2024-12-31' })),
+      obtenerProgramasReporte: jest.fn().mockReturnValue(of({
+        datos: [
+          {
+            folioPrograma: 'FP-001',
+            modalidad: 'Modalidad1',
+            tipoPrograma: 'Tipo1',
+            estatus: 'Activo',
+            idProgramaCompuesto: 'ID-001',
+            fechaInicioVigencia: '2024-01-01',
+            fechaFinVigencia: '2024-12-31'
+          }
+        ]
+      })),
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+    mockLoginQuery = {
+      selectLoginState$: of({ rfc: 'AAL0409235E6' }),
     };
 
-    const solicitud150102StoreMock =
-      {
-        actualizarInicio: jest.fn(() => of()),
-        actualizarFin: jest.fn(() => of()),
-        actualizarFolioPrograma: jest.fn(() => of()),
-        actualizarModalidad: jest.fn(() => of()),
-        actualizarTipoPrograma: jest.fn(() => of()),
-        actualizarEstatus: jest.fn(() => of()),
-        actualizarIndiceDeRegistroDelPrograma: jest.fn(() => of()),
-      } as unknown as Partial<jest.Mocked<Solicitud150102Store>>;
-
-    const solicitud150102QueryMock: Partial<jest.Mocked<Solicitud150102Query>> =
-      {
-        seleccionarSolicitud$: of({
-          ventasTotales: '1000',
-          totalExportaciones: '500',
-          totalImportaciones: '200',
-          saldo: '300',
-          porcentajeExportacion: '50',
-          producidosDatos: [],
-          bienesProducidosDatos: [],
-          inicio: '2023-01-01',
-          fin: '2023-12-31',
-          folioPrograma: '12345',
-          modalidad: 'modalidad-example',
-          tipoPrograma: '',
-          estatus: 'active',
-          indiceDeRegistroDelPrograma:-1
-        }),
-      };
-
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        BsDatepickerModule,
-        TablaDinamicaComponent,
-        HttpClientTestingModule,
-        ProgramasReporteAnnualComponent
-      ],
+      imports: [ProgramasReporteAnnualComponent],
       providers: [
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud150102Store, useValue: solicitud150102StoreMock },
-        { provide: Solicitud150102Query, useValue: solicitud150102QueryMock },
+        FormBuilder,
+        { provide: Solicitud150102Store, useValue: mockSolicitud150102Store },
+        { provide: Solicitud150102Query, useValue: mockSolicitud150102Query },
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: LoginQuery, useValue: mockLoginQuery },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProgramasReporteAnnualComponent);
     component = fixture.componentInstance;
-    solicitudService = TestBed.inject(
-      SolicitudService
-    ) as jest.Mocked<SolicitudService>;
-    solicitud150102Store = TestBed.inject(
-      Solicitud150102Store
-    ) as jest.Mocked<Solicitud150102Store>;
-    solicitud150102Query = TestBed.inject(
-      Solicitud150102Query
-    ) as jest.Mocked<Solicitud150102Query>;
-
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
+  it('should initialize bsConfig correctly', () => {
+    expect(component.bsConfig.dateInputFormat).toBe('MM-YYYY');
+    expect(component.bsConfig.minMode).toBe('month');
+  });
+
+  it('should initialize solicitudConfiguracionTabla', () => {
+    expect(component.solicitudConfiguracionTabla.length).toBe(4);
+    expect(component.solicitudConfiguracionTabla[0].encabezado).toBe('Número/Registro de programa');
+  });
+
+  it('should call obtenerProgramasReporte on construction', () => {
+    expect(mockSolicitudService.obtenerProgramasReporte).toHaveBeenCalled();
+    expect(component.solicitudDatos.length).toBe(1);
+    expect(component.solicitudDatos[0].folioPrograma).toBe('FP-001');
+  });
+
+  it('should set rfcValor on ngOnInit', () => {
+    component.rfcValor = '';
     component.ngOnInit();
-    expect(component.formProgrmasReporte).toBeDefined();
+    expect(component.rfcValor).toBe('AAL0409235E6');
   });
 
-  it('should call obtenerReporteFechas on initialization', () => {
-    solicitudService.obtenerReporteFechas.mockReturnValue(
-      of({ inicio: '2023-01-01', fin: '2023-12-31' } as ReporteFechas)
-    );
-    component.ngOnInit();
-    expect(solicitudService.obtenerReporteFechas).toHaveBeenCalled();
+  it('should initialize formProgrmasReporte with correct values', () => {
+    component.inicializarFormulario();
+    expect(component.formProgrmasReporte.value.folioPrograma).toBe('FP-001');
+    expect(component.formProgrmasReporte.get('folioPrograma')?.disabled).toBe(true);
   });
 
-  it('should call obtenerProgramasReporte on initialization', () => {
-    solicitudService.obtenerProgramasReporte.mockReturnValue(
-      of([] as ProgramasReporte[])
-    );
-    component.ngOnInit();
-    expect(solicitudService.obtenerProgramasReporte).toHaveBeenCalled();
-  });
-
-  it('should update form values when seleccionarSolicitud$ emits', () => {
-    const state = {
-      ventasTotales: '1000',
-      totalExportaciones: '500',
-      totalImportaciones: '200',
-      saldo: '300',
-      porcentajeExportacion: '50',
-      producidosDatos: [],
-      bienesProducidosDatos: [],
-      inicio: '2023-01-01',
-      fin: '2023-12-31',
-      folioPrograma: '12345',
-      modalidad: 'modalidad-example',
-      tipoPrograma: '12345',
-      estatus: 'active',
-      indiceDeRegistroDelPrograma:-1
-    };
-    solicitud150102Query.seleccionarSolicitud$ = of(state);
-    component.ngOnInit();
-    expect(component.formProgrmasReporte.value).toEqual({
-      inicio: state.inicio,
-      fin: state.fin,
-      folioPrograma: state.folioPrograma,
-      modalidad: state.modalidad,
-      tipoPrograma: state.tipoPrograma,
-      estatus: state.estatus,
-    });
-  });
-
-  it('should update store when actualizarProgramasReporte is called', () => {
-    const programa: ProgramasReporte = {
-      folioPrograma: '12345',
-      modalidad: 'Modalidad 1',
-      tipoPrograma: 'Tipo 1',
-      estatus: 'Activo',
-    };
-    component.actualizarProgramasReporte(programa);
-    expect(solicitud150102Store.actualizarFolioPrograma).toHaveBeenCalledWith(
-      programa.folioPrograma
-    );
-    expect(solicitud150102Store.actualizarModalidad).toHaveBeenCalledWith(
-      programa.modalidad
-    );
-    expect(solicitud150102Store.actualizarTipoPrograma).toHaveBeenCalledWith(
-      programa.tipoPrograma
-    );
-    expect(solicitud150102Store.actualizarEstatus).toHaveBeenCalledWith(
-      programa.estatus
-    );
-  });
-
-it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+  it('should disable form when esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
-    const guardarDatosFormularioSpy = jest.spyOn(
-      component,
-      'guardarDatosFormulario'
-    );
-    component.inicializarEstadoFormulario();
-    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
-  });
-
-  it('should call inicializarFormulario when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
-    component.esFormularioSoloLectura = false;
-    const inicializarFormularioSpy = jest.spyOn(
-      component,
-      'inicializarFormulario'
-    );
-    component.inicializarEstadoFormulario();
-    expect(inicializarFormularioSpy).toHaveBeenCalled();
-  });
-
-  it('should disable formProgrmasReporte when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.esFormularioSoloLectura = true;
-    const disableSpy = jest.spyOn(FormGroup.prototype, 'disable');
+    component.inicializarFormulario();
     component.guardarDatosFormulario();
-    expect(disableSpy).toHaveBeenCalled();
     expect(component.formProgrmasReporte.disabled).toBe(true);
   });
 
-  it('should enable formProgrmasReporte when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('should enable form when esFormularioSoloLectura is false', () => {
     component.esFormularioSoloLectura = false;
-
-    const enableSpy = jest.spyOn(FormGroup.prototype, 'enable');
+    component.inicializarFormulario();
     component.guardarDatosFormulario();
-
-    expect(enableSpy).toHaveBeenCalled();
     expect(component.formProgrmasReporte.enabled).toBe(true);
   });
 
-  it('should complete destroyed$ subject on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('should call actualizarInicio and actualizarFin in obtenerReporteFechas', () => {
+    component.obtenerReporteFechas();
+    expect(mockSolicitud150102Store.actualizarInicio).toHaveBeenCalledWith('2024-01-01');
+    expect(mockSolicitud150102Store.actualizarFin).toHaveBeenCalledWith('2024-12-31');
+  });
+
+  it('should map programas response correctly', () => {
+    const datos = [
+      {
+        folioPrograma: 'FP-002',
+        modalidad: 'Modalidad2',
+        tipoPrograma: 'Tipo2',
+        estatus: 'Inactivo',
+        idProgramaCompuesto: 'ID-002'
+      }
+    ];
+    const result = component.mapProgramasResponse(datos);
+    expect(result[0].folioPrograma).toBe('FP-002');
+    expect(result[0].modalidad).toBe('Modalidad2');
+  });
+
+  it('should update store and emit event in actualizarProgramasReporte', () => {
+    const emitSpy = jest.spyOn(component.filaDeInformeSeleccionada, 'emit');
+    component.solicitudDatos = [
+      { folioPrograma: 'FP-001', modalidad: '', tipoPrograma: '', estatus: '', idProgramaCompuesto: '' }
+    ];
+    const evento: ProgramasReporte = { folioPrograma: 'FP-001', modalidad: 'm', tipoPrograma: 't', estatus: 'e', idProgramaCompuesto: 'id' };
+    component.actualizarProgramasReporte(evento);
+    expect(mockSolicitud150102Store.actualizarIndiceDeRegistroDelPrograma).toHaveBeenCalledWith(0);
+    expect(mockSolicitud150102Store.actualizarFolioPrograma).toHaveBeenCalledWith('FP-001');
+    expect(emitSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('should format date to MM-YYYY', () => {
+    expect(component['formatDateToMonthYear']('2024-01-15')).toBe('01-2024');
+    expect(component['formatDateToMonthYear']('')).toBe('');
+  });
+
+  it('should set nuevaNotificacion in showAlert', () => {
+    component.showAlert();
+    expect(component.nuevaNotificacion.titulo).toBe('Programa seleccionado');
+    expect(component.nuevaNotificacion.tipoNotificacion).toBe('alert');
+  });
+
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario in inicializarEstadoFormulario when not readonly', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario in inicializarEstadoFormulario when readonly', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 });

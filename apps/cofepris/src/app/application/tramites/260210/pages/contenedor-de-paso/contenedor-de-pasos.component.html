@@ -3,14 +3,14 @@
     <div class="col-md-12">
       <h1>{{ tituloMensaje || null }}</h1>
     </div>
-    @if(esFormaValido){
-      <ng-alert
-        [CONTENIDO]="MENSAJE_DE_ERROR"
-        [CUSTOMECLASS]="infoAlert"
-      ></ng-alert>
+    <div class="col-12">
+        @if (esFormaValido) {
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
       }
+
+      </div>
     <ng-container *ngIf="indice === 2"> </ng-container>
-    <app-wizard [listaPasos]="pasos"></app-wizard>
+    <app-wizard #WizardComponent [listaPasos]="pasos"></app-wizard>
   </div>
 
   <div class="row">
@@ -27,7 +27,7 @@
       ></app-paso-carga-documento>
          }
      @case (3) {
-      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260210" [procedureUrl]="'permiso-sanitario-importacion-medicamentos-pruebas'"></paso-firma>
+      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260210" [procedureUrl]="'permiso-sanitario-importacion-medicamentos-pruebas/contenedor-de-pasos'"></paso-firma>
       
     } }
 

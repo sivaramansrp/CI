@@ -31,13 +31,13 @@ import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.s
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
    // Variable booleana que indica si es necesario o no (precisa) en el formulario
-    precisa: boolean = true;
+    precisa: boolean = false;
   
     // Variable booleana que indica si el idioma está habilitado o no
     idioma: boolean = true;
   
     // Variable booleana que indica si el idioma está habilitado o no
-    presenta: boolean = true;
+    presenta: boolean = false;
     /**
      * Formulario reactivo que contiene los datos del certificado.
      * Utilizado para la validación y gestión de los datos en el formulario.

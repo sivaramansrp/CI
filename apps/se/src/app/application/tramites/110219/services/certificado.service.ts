@@ -317,9 +317,9 @@ export class CertificadoService {
   }
 
   guardarDatosPost(
-    body: Record<string, any>
-  ): Observable<Record<string, any>> {
-    return this.httpService.post<Record<string, any>>(PROC_110219.GUARDAR, {
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110219.GUARDAR, {
       body: body,
     });
   }

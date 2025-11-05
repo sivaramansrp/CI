@@ -25,10 +25,8 @@
             }
             @case (2) {
             @if(esDatosRespuesta){
-            <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
-            <app-domicillo-establecimiento-aduanas></app-domicillo-establecimiento-aduanas>
-            <app-manifiestos></app-manifiestos>
-            <app-representante-legal-rfc></app-representante-legal-rfc>
+                <app-datos-de-la [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+                [isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad"  ></app-datos-de-la>
             }
             }
             @case(3) {
@@ -39,7 +37,7 @@
 
             @case(4) {
             @if(esDatosRespuesta){
-            <app-shared-pago-derechos></app-shared-pago-derechos>
+            <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
             }
             }
             }
