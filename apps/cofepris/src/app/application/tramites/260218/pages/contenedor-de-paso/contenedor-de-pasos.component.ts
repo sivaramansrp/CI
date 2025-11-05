@@ -19,7 +19,6 @@ import {
   Notificacion,
   NotificacionesComponent,
   PasoCargaDocumentoComponent,
-  PasoFirmaComponent,
   RegistroSolicitudService,
   esValidObject,
   getValidDatos,
@@ -33,6 +32,7 @@ import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
 import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
@@ -153,6 +153,8 @@ export class ContenedorDePasosComponent implements OnInit {
    * @property {boolean} mostrarAlerta
    */
   public mostrarAlerta: boolean = false;
+
+  public requiresPaymentData: boolean = false;
 
    /** Nueva notificación relacionada con el RFC. */
     public seleccionarFilaNotificacion!: Notificacion;
@@ -326,6 +328,7 @@ esMostrarAlerta: boolean = false;
           this.formErrorAlert = this.MENSAJE_DE_ERROR;
           this.esFormaValido = true;
           this.datosPasos.indice = this.indice;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
   
@@ -637,7 +640,14 @@ onClickCargaArchivos(): void {
   }
 
 
-  
+   cerrarModal(value:boolean): void {
+    if(value){
+    this.mostrarAlerta = false;
+    this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+    }
+  }
         /**
    * Genera una alerta de error con los mensajes proporcionados.
    * @param mensajes Mensajes de error a mostrar en la alerta.

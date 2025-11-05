@@ -72,7 +72,7 @@
 
 @if(mostrarAlerta){
   <section>
-    <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+    <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
     </lib-notificaciones>
   </section>
   }
