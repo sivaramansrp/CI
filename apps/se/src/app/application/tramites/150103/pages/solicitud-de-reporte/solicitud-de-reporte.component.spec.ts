@@ -60,7 +60,6 @@ describe('SolicitudDeReporteComponent', () => {
   let mockStore: MockSolicitud150103Store;
   let mockQuery: MockSolicitud150103Query;
 
-  // Helper function to setup wizard component mock
   const setupWizardMock = () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
@@ -136,16 +135,15 @@ describe('SolicitudDeReporteComponent', () => {
       component.getValorIndice({ accion: 'atras', valor: 1 });
 
       expect(component.pasoNavegarPor).toHaveBeenCalledWith({ accion: 'atras', valor: 1 });
-    });    it('should not execute any action when valor is invalid', () => {
-      // Reset component state and mocks
-      component.indice = 2; // Set to something other than 1 to avoid obtenerDatosDelStore
+    });    
+    
+    it('should not execute any action when valor is invalid', () => {
+      component.indice = 2; 
       const obtenerSpy = jest.spyOn(component, 'obtenerDatosDelStore').mockImplementation(() => {});
       const navegarSpy = jest.spyOn(component, 'pasoNavegarPor').mockImplementation(() => {});
 
-      // Test with valor = 0 (invalid - too low)
       component.getValorIndice({ accion: 'cont', valor: 0 });
       
-      // Test with valor greater than pantallasPasos.length (invalid - too high)
       const maxValor = component.pantallasPasos.length + 1;
       component.getValorIndice({ accion: 'cont', valor: maxValor });
 
@@ -175,7 +173,7 @@ describe('SolicitudDeReporteComponent', () => {
       expect(mockStore.setIdSolicitud).toHaveBeenCalledWith(12345);
       expect(component.pasoNavegarPor).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
     });    it('should handle API response without valid idSolicitud', async () => {
-      // Mock response with datos but no valid idSolicitud
+
       mockInformeAnualService.guardarDatosPost = jest.fn().mockReturnValue(observableOf({
         id: 0,
         descripcion: 'No ID', 
@@ -187,7 +185,6 @@ describe('SolicitudDeReporteComponent', () => {
 
       const result = await component.guardar(mockSolicitudState);
 
-      // The component should still call setIdSolicitud with 0 when no valid ID is found
       expect(mockStore.setIdSolicitud).toHaveBeenCalledWith(0);
       expect(result).toEqual({
         id: 0,
@@ -206,7 +203,7 @@ describe('SolicitudDeReporteComponent', () => {
   });
   describe('pasoNavegarPor', () => {
     beforeEach(() => {
-      // Ensure fresh wizard mock for each test
+      // Asegúrese de que cada prueba incluya un nuevo simulacro de asistente.
       setupWizardMock();
     });    it('should navigate to next step when action is cont', () => {
       const accionBoton = { accion: 'cont', valor: 2 };
@@ -216,7 +213,9 @@ describe('SolicitudDeReporteComponent', () => {
       expect(component.indice).toBe(2);
       expect(component.datosPasos.indice).toBe(2);
       expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    });    it('should navigate to previous step when action is atras', () => {
+    });    
+    
+    it('should navigate to previous step when action is atras', () => {
       const accionBoton = { accion: 'atras', valor: 1 };
 
       component.pasoNavegarPor(accionBoton);
@@ -242,14 +241,10 @@ describe('SolicitudDeReporteComponent', () => {
     it('should complete full flow from getValorIndice to guardar', async () => {
       component.indice = 1;
       jest.spyOn(component, 'pasoNavegarPor').mockImplementation(() => {});
-
-      // Mock the guardar method to avoid actual API call
       jest.spyOn(component, 'guardar').mockResolvedValue({} as JSONResponse);
 
-      // Trigger the flow
       component.getValorIndice({ accion: 'cont', valor: 1 });
 
-      // Wait for async operations
       await new Promise(resolve => setTimeout(resolve, 100));
 
       expect(mockInformeAnualService.getAllState).toHaveBeenCalled();
