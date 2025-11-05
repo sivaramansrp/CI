@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-vegetales-nutrientes.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
@@ -21,6 +23,12 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -37,6 +45,13 @@ export class PlaguicidasComponent {
    * Título del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
+
+  public textoPeligro: string = TEXTO_DE_PELIGRO;
 
   /**
    * Título del asistente.
@@ -55,13 +70,37 @@ export class PlaguicidasComponent {
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
       }
+      this.isPeligro = false;
     }
+    // if (e.valor > 0 && e.valor < 5) {
+    //   this.indice = e.valor;
+    //   if (e.accion === 'cont') {
+    //     this.wizardComponent.siguiente();
+    //   } else {
+    //     this.wizardComponent.atras();
+    //   }
+    // }
+  }
+
+  /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
   }
 }

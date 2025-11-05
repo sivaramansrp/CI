@@ -6,6 +6,8 @@ import { DatosDomicilioLegalService } from '../../../../shared/services/datos-do
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { Tramite260509Query } from '../../../../estados/queries/260509/tramite260509.query';
+import { Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -54,6 +56,10 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Se obtiene a través de la consulta ConsultaioQuery.
    */
   public consultaState!: ConsultaioState;
+  
+  private isDatosDeLaSolicitudComponentValid: boolean = false;
+  private isTercerosComponentValid: boolean = false;
+  private isPagoDeDerechosComponentValid: boolean = false;
 
   /**
    * Constructor del componente Datos260502Component.
@@ -64,7 +70,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public store: Tramite260509Store,
+    public query: Tramite260509Query,
   ) {}
 
   /**
@@ -115,6 +123,36 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
           this.pagoBancoService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = this.query.getValue().formValidity?.datosDeLaSolicitud ?? false;
+    this.isTercerosComponentValid = this.query.getValue().formValidity?.terceros ?? false;
+    this.isPagoDeDerechosComponentValid = this.query.getValue().formValidity?.pagoDeDerechos ?? false;
+
+    // if (!this.isCertificadoOrigenComponentValid) {
+    //   this.certificadoOrigenComponent?.validarFormulario(); 
+    // }
+
+    // if (!this.isDatosCertificadoComponentValid) {
+    //   this.datosCertificadoComponent?.validarFormulario();
+    // }
+
+    // if (!this.isDestinarioComponentValid) {
+    //   this.destinatarioComponent?.validarFormulario();
+    // }
+
+    // if (!this.isHistProductoresComponentValid) {
+    //   this.histProductoresComponent?.validarFormulario();
+    // }
+
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid &&
+      this.isPagoDeDerechosComponentValid
+
   }
 
   /**
