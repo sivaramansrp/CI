@@ -1326,6 +1326,7 @@ export class DomicilioComponent
           document.body.style.removeProperty("overflow");
           document.body.style.removeProperty("padding-right");
         }, 100);
+        this.seleccionarlistaMercancias=[];
       }
       this.tieneFormularioMercanciasEnviado = false;
     } else {
