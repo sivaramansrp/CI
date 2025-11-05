@@ -44,8 +44,9 @@ export interface InsumosTabla {
     fraccionArancelaria: string | null;
     valorEnDolares: number | null;
     paisDeOrigen: string | null;
-    peso: boolean | null;
+    peso: number | null;
     volumen: boolean | null;
+    cvePais: string | null | undefined;
 }
 
 /**
@@ -66,8 +67,9 @@ export interface EnvasesTabla {
     fraccionArancelaria: string | null;
     valorEnDolares: number | null;
     paisDeOrigen: string | null;
-    peso: boolean | null;
+    peso: number | null;
     volumen: boolean | null;
+    cvePais: string | null | undefined;
 }
 
 /**

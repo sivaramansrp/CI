@@ -6,8 +6,9 @@
  * También interactúa con el estado global del trámite a través del store `Tramite260216Store`.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260216Store } from '../../../estados/tramite260216Store.store';
@@ -50,11 +51,20 @@ export class PagoDeDerechosContenedoraComponent {
    */
   @Input() formularioDeshabilitado: boolean = false;
 
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
   public pagoDerechos: PagoDerechosFormState;
+
+  /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  
 
   /**
    * @constructor
@@ -84,5 +94,11 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

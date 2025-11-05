@@ -12,6 +12,9 @@ import { DetallesDelTransporteService } from '../../services/detalls-de-transpor
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 
 import { FECHA_EXPEDICION, FECHA_VENCIMIENTO } from '../../constantes/certificado-sgp.enum';
+import { Tramite110209State, Tramite110209Store } from '../../estados/stores/tramite110209.store';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { formatFechaDDMMYYYY } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente: DetallesDelTransporteComponent
@@ -56,21 +59,19 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    */
   formularioCargado: boolean = false;
 
+  /**  
+  * Contiene el estado actual de la solicitud del trámite 110209.  
+  * Permite acceder y manipular los datos relacionados con el flujo del trámite.  
+  */
+  public solicitudState!: Tramite110209State;
+
   /**
    * Constructor del componente DetallesDelTransporteComponent.
    * 
    * @param {FormBuilder} fb - El servicio FormBuilder proporcionado por Angular.
    * @param {DetallesDelTransporteService} service - El servicio para obtener los detalles del transporte.
    */
-  constructor(private fb: FormBuilder, private service: DetallesDelTransporteService) {
-    this.detallesDelTransporteForm = this.fb.group({
-      tratado: [{ value: '', disabled: true }],
-      paisOBloque: [{ value: '', disabled: true }],
-      paisOOrigin: [{ value: '', disabled: true }],
-      paisODestino: [{ value: '', disabled: true }],
-      fechaDeExpedicion: [{ value: ''}],
-      fechaDeVencimiento: [{ value: ''}]
-    });
+  constructor(private fb: FormBuilder, private service: DetallesDelTransporteService,private tramite110209Query: Tramite110209Query, private tramite110209Store: Tramite110209Store) {
   }
 
   /**
@@ -81,41 +82,36 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
     this.getMedioDeTransporte();
   }
 
-  /**
-   * Obtiene los detalles del transporte desde el servicio y los asigna al formulario.
-   */
-  getMedioDeTransporte(): void {
-    this.service.getMedioDeTransporte().pipe(
+ getMedioDeTransporte(): void {
+    this.tramite110209Query.selectTramite110209$.pipe(
       takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.formularioCargado = true;
-        this.detallesDelTransporteForm.patchValue({
-          tratado: data.tratado,
-          paisOBloque: data.paisOBloque,
-          paisOOrigin: data.paisOOrigin,
-          paisODestino: data.paisODestino,
-          fechaDeExpedicion: data.fetchaDeExpedicion,
-          fechaDeVencimiento: data.fetchaDeVencimiento
-        });
-      }
-    );
-  }
-  /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de detalles del transporte.
-   * Si el formulario es válido, retorna `true`.
-   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
-   * 
-   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
-   */
-  validarFormulario(): boolean {
-    if (this.detallesDelTransporteForm.valid) {
-      return true;
-    }
-    this.detallesDelTransporteForm.markAllAsTouched();
-    return false;
+    ).subscribe((seccionState) => {
+      this.solicitudState = seccionState as Tramite110209State;
+
+          if (!this.detallesDelTransporteForm) {
+            this.formularioCargado = true;
+              this.detallesDelTransporteForm = this.fb.group({
+                tratado: this.solicitudState.tratadoAcuerdo,
+                paisOBloque: this.solicitudState.paisBloque,
+                paisOOrigin: this.solicitudState.paisOrigen,
+                paisODestino: this.solicitudState.paisBloque,
+                fechaDeExpedicion: formatFechaDDMMYYYY(this.solicitudState.fechaExpedicion),
+                fechaDeVencimiento: formatFechaDDMMYYYY(this.solicitudState.fechaVencimiento),
+              });
+              this.detallesDelTransporteForm.disable();
+            } else {
+              this.formularioCargado = true;
+              this.detallesDelTransporteForm.patchValue({
+                tratado: this.solicitudState.tratadoAcuerdo,
+                paisOBloque: this.solicitudState.paisBloque,
+                paisOOrigin: this.solicitudState.paisOrigen,
+                paisODestino: this.solicitudState.paisBloque,
+                fechaDeExpedicion: formatFechaDDMMYYYY(this.solicitudState.fechaExpedicion),
+                fechaDeVencimiento: formatFechaDDMMYYYY(this.solicitudState.fechaVencimiento),
+              });
+              this.detallesDelTransporteForm.disable();
+            }
+    });
   }
 
   /**

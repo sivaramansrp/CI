@@ -1,5 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 /**
  * @Injectable
@@ -19,6 +20,15 @@ export class ServicioDeFormularioService {
  * @type {Map<string, FormGroup>}
  */
   private forms = new Map<string, FormGroup>();
+
+    /**
+     * @property formTouchedNotifier
+     * @description
+     * Notificador privado basado en `Subject` que emite el nombre del formulario cuando este ha sido marcado como "tocado".
+     * Permite a los componentes suscribirse y reaccionar a los cambios de estado de los formularios.
+     * @type {Subject<string>}
+     */
+    private formTouchedNotifier = new Subject<string>();
 
   /**
  * @method registerForm
@@ -108,4 +118,16 @@ removeControl(formName: string, controlName: string): void {
     FORMA.removeControl(controlName);
   }
 }
+
+/**
+   * @method markFormAsTouched
+   * @description
+   * Actualiza los validadores de un control específico de un formulario dinámico registrado en el servicio.
+   * @param {string} formName - El nombre único del formulario.
+   */
+  markFormAsTouched(formName: string): void {
+    this.formTouchedNotifier.next(formName);
+  }
+
+  
 }

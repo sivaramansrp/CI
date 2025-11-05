@@ -1,7 +1,7 @@
 import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-b
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
+import { ApiResponse, CertificadoData, TablaRow } from '../../models/certificado-sgp.model';
 import { Solicitud110209Service } from '../../services/solicitud-110209/solicitud-110209.service';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
@@ -243,8 +244,21 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * llamando al método setTratadoAcuerdo.  
      */
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110209Store.setTramite110209({ tratadoAcuerdo: valor }));
+      .pipe(takeUntil(this.unsubscribe$),
+       distinctUntilChanged(),
+       debounceTime(200))
+      .subscribe(valor => {
+        this.tramite110209Store.setTramite110209({ tratadoAcuerdo: valor })
+
+      this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
+    
+    if (valor && valor.trim() !== '') {
+      this.obtenerPaisesPorTratado(valor);
+    } else {
+      this.paisBloque = [];
+    }
+  });
+  
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -259,20 +273,10 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
 
-    /** 
-    * Llama a la función para obtener los datos del establecimiento.
-    */
-    this.getEstableCimiento();
-
     /**
     * Llama a la función para obtener los tratados y acuerdos.
     */
-    this.obtenerTratadosAcuerdos();
-
-    /**
-    * Llama a la función para obtener los países y bloques.
-    */
-    this.obtenerPaisesBloque();
+    this.obtenerTratadosAcuerdo();
   }
   /**
    * Handles radio value changes.
@@ -284,14 +288,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.valorSeleccionado = valor;
     this.validadoresActualización();
     this.tramite110209Store.setTramite110209({ valorSeleccionado: valor });
-  }
-
-  /**
-   * Assigns establishment table data, including headers and body, from a JSON file.
-   */
-  private getEstableCimiento(): void {
-    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
-    this.establecimientoBodyData = this.destinatarioTableData?.cuerpoTabla;
   }
 
   /**
@@ -367,6 +363,7 @@ public buscar(): void {
     }
   } else {
     this.verTabla = true;
+    this.buscarDatos();
   }
 }
 
@@ -419,8 +416,8 @@ public buscar(): void {
    * la propiedad `this.tratadoAcuerdo`. La suscripción se gestiona para finalizar automáticamente cuando
    * el componente se destruye, evitando fugas de memoria.
    */
-  obtenerTratadosAcuerdos(): void {
-    this.catalogoService.tratadosAcuerdosCatalogo(this.tramites,"TITRAC.TA")
+  obtenerTratadosAcuerdo(): void {
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -444,19 +441,153 @@ public buscar(): void {
       });
   }
 
+  /**
+ * Actualiza el estado de selección de filas y guarda las filas seleccionadas.
+ *
+ * @param tieneSeleccion - Indica si hay filas seleccionadas (true) o no (false).
+ */
   onRowSelectionChange(hasSelection: boolean): void {
   this.filaSeleccionada = hasSelection;
-  
-  // Optionally get the actual selected rows data
   if (hasSelection) {
     this.selectedRowsData = this.establecimientoBodyData.filter(row => row.selected);
-    console.log('Selected rows:', this.selectedRowsData);
-    
-    // Store in Akita store for persistence
-    // this.tramite110203Store.setSelectedRows(this.selectedRowsData);
   } else {
     this.selectedRowsData = [];
   }
+}
+
+/**
+ * Obtiene la lista de países asociados a un tratado y, si hay resultados, 
+ * obtiene los tratados y acuerdos relacionados al primer país clave encontrado.
+ *
+ * @param tratadoId - Identificador del tratado para filtrar los países.
+ */
+obtenerPaisesPorTratado(tratadoId: string): void {
+  this.catalogoService.getPaisesPorTratado(this.tramites, tratadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {        
+        if (response?.datos && response.datos.length > 0) {
+          this.paisBloque = response.datos;
+        } else {
+          this.paisBloque = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error obteniendo países por tratado:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
+ */
+buscarDatos(): void {
+    const PAYLOAD = {
+      numeroCertificado: "25402500071307", 
+      // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
+      rfcSolicitante: "AAL0409235E6",
+      cvePaisSeleccionado: "P-JPN",
+      cveTratadoAcuerdoSeleccionado: "107"
+    };
+
+    this.Solicitud110209Service.buscarCertificado(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response: unknown) => {
+      const API_RESPONSE = response as ApiResponse;
+      const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
+
+        if (DATOS.length > 0) {
+          this.procesarDatosCertificado(DATOS[0]);
+          this.actualizarTabla(DATOS);
+        }
+      });
+
+    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+}
+
+private procesarDatosCertificado(data: CertificadoData): void {
+    this.actualizarDatosTratado(data);
+    this.actualizarDatosDestinatario(data);
+    this.actualizarDatosTransporte(data);
+    this.actualizarDatosCertificado(data);
+    this.actualizarDatosMercancias(data);
+}
+
+private actualizarDatosTratado(data: CertificadoData): void {
+    this.tramite110209Store.setTramite110209({ tratadoAcuerdo: data.tratadoAsociado.nombre ?? '' });
+    this.tramite110209Store.setTramite110209({ paisBloque: data.paisAsociado.nombre ?? '' });
+    this.tramite110209Store.setTramite110209({ paisOrigen: data.cvePaisFabricacion || 'México' });
+    this.tramite110209Store.setTramite110209({ paisDestino: data.paisAsociado.nombre ?? '' });
+    this.tramite110209Store.setTramite110209({ fechaExpedicion: data.fechaExpedicion ?? '' });
+    this.tramite110209Store.setTramite110209({ fechaVencimiento: data.fechaVencimiento ?? '' });
+}
+
+private actualizarDatosDestinatario(data: CertificadoData): void {
+    const PERSONA = data.solicitud.personaSolicitud;
+    this.tramite110209Store.setTramite110209({ nombre: PERSONA.nombre ?? '' });
+    this.tramite110209Store.setTramite110209({ primerApellido: PERSONA.apellidoMaterno ?? '' });
+    this.tramite110209Store.setTramite110209({ segundoApellido: PERSONA.apellidoPaterno ?? '' });
+    this.tramite110209Store.setTramite110209({ numeroDeRegistroFiscal: PERSONA.numeroIdentificacionFiscal ?? '' });
+    this.tramite110209Store.setTramite110209({ razonSocial: PERSONA.razonSocial ?? '' });
+
+    const DOMICILIO = PERSONA.domicilio;
+    this.tramite110209Store.setTramite110209({ calle: DOMICILIO.calle ?? '' });
+    this.tramite110209Store.setTramite110209({ numeroLetra: DOMICILIO.letra ?? '' });
+    this.tramite110209Store.setTramite110209({ ciudad: DOMICILIO.ciudad ?? '' });
+    this.tramite110209Store.setTramite110209({ correoElectronico: PERSONA.correoElectronico ?? '' });
+    this.tramite110209Store.setTramite110209({ fax: DOMICILIO.fax ?? '' });
+    this.tramite110209Store.setTramite110209({ telefono: DOMICILIO.telefono ?? '' });
+}
+
+private actualizarDatosTransporte(data: CertificadoData): void {
+    this.tramite110209Store.setTramite110209({ medioDeTransporte: data.medioTransporte });
+    this.tramite110209Store.setTramite110209({ rutaCompleta: data.rutaCompleta });
+    this.tramite110209Store.setTramite110209({ puertoDeEmbarque: data.puertoEmbarque });
+    this.tramite110209Store.setTramite110209({ puertoDeDesembarque: data.puertoDesembarque });
+}
+
+private actualizarDatosCertificado(data: CertificadoData): void {
+    this.tramite110209Store.setTramite110209({ observaciones: data.observaciones });
+}
+
+private actualizarDatosMercancias(data: CertificadoData): void {
+    const MERCANCIA = data.mercanciasAsociadas[0];
+
+        this.tramite110209Store.setTramite110209({ 
+        mercanciasSeleccionadas: {
+            numeroDeOrden: MERCANCIA.numeroOrden ?? '',
+            fraccionArancelaria: MERCANCIA.fraccionArancelaria ?? '',
+            nombreTecnico: MERCANCIA.nombreTecnico ?? '',
+            nombreComercial: MERCANCIA.nombreComercial ?? '',
+            nombreIngles: MERCANCIA.nombreIngles ?? '',
+            numeroDeRegistro: MERCANCIA.numeroRegistro ?? '',
+        }
+    });
+
+    this.tramite110209Store.setTramite110209({ descripcion: MERCANCIA.complementoDescripcion ?? '' });
+    this.tramite110209Store.setTramite110209({ marca: MERCANCIA.marca ?? '' });
+    this.tramite110209Store.setTramite110209({ valorMercancia: MERCANCIA.valorMercancia ?? '' });
+    this.tramite110209Store.setTramite110209({ cantidad: MERCANCIA.cantidad ?? '' });
+    this.tramite110209Store.setTramite110209({ unidadMedida: MERCANCIA.unidadMedidaComercial ?? '' });
+    this.tramite110209Store.setTramite110209({ numeroFactura: MERCANCIA.numeroFactura ?? '' });
+    this.tramite110209Store.setTramite110209({ tipoFactura: MERCANCIA.tipoFactura ?? '' });
+    this.tramite110209Store.setTramite110209({ fechaFactura: MERCANCIA.fechaFactura ?? '' });
+}
+
+private actualizarTabla(datos: CertificadoData[]): void {
+    const CUERPO_TABLA = datos.map((item: CertificadoData) => ({
+      numeroDeCertificado: item.numeroCertificado,
+      expedicion: item.fechaExpedicion,
+      vencimiento: item.fechaVencimiento,
+    }));
+
+    this.establecimientoBodyData = [];
+    CUERPO_TABLA.forEach((row: TablaRow) => {
+      const TABLE_ROW: TableBodyData = { tbodyData: [] };
+      TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
+      this.establecimientoBodyData.push(TABLE_ROW);
+    });
 }
 
   /** 

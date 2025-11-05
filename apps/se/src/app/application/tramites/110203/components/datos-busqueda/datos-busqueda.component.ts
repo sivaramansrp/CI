@@ -272,9 +272,11 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     
     this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
     
-    if (valor) {
+    if (valor && valor.trim() !== '') {
       this.obtenerPaisesPorTratado(valor);
-    } 
+    } else {
+      this.paisBloque = [];
+    }
   });
 
     /** 
@@ -289,12 +291,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
-
-    this.tramite110203Query.selectSolicitud$
-  .pipe(takeUntil(this.unsubscribe$))
-  .subscribe((state) => {
-    this.certificadoState = state;
-  });
     
     this.obtenerTratadoAcuerdo();
   }
@@ -437,7 +433,7 @@ public buscar(): void {
    * el componente se destruye, evitando fugas de memoria.
    */
   obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites,"TITRAC.TA")
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -472,36 +468,13 @@ obtenerPaisesPorTratado(tratadoId: string): void {
     .subscribe({
       next: (response) => {        
         if (response?.datos && response.datos.length > 0) {
-          // Extract the first país clave from the response
-          const PAIS_CLAVE = response.datos[0].clave;
-          if (PAIS_CLAVE !== undefined) {
-            this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
-          }
+          this.paisBloque = response.datos;
         } else {
           this.paisBloque = [];
         }
       },
       error: (error) => {
         console.error('Error obteniendo países por tratado:', error);
-        this.paisBloque = [];
-      }
-    });
-}
-
-/**
- * Obtiene los tratados y acuerdos asociados a un país específico.
- *
- * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
- */
-obtenerTratadosAcuerdosPorPais(cvePais: string): void {
-  this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-        this.paisBloque = response?.datos ?? [];
-      },
-      error: (error) => {
-        console.error('Error obteniendo tratados-acuerdos por país:', error);
         this.paisBloque = [];
       }
     });

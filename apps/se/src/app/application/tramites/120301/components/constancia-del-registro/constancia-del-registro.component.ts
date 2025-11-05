@@ -395,10 +395,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-
     this.initActionFormBuild();
-
     this.fitosanitarioForm.get('anoDeLaConstancia')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((value) => {
@@ -407,7 +404,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           this.errorValidacion.emit(false);
         }
       });
-
     // Suscríbase a los cambios del botón de opción para borrar errores de validación al cambiar a "Todos"
     this.fitosanitarioForm.get('flexRadioRegistro')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
@@ -418,7 +414,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           this.errorValidacion.emit(false);
         }
       });
-
     // Obtenga el estado actual de solo lectura inmediatamente
     // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
     const CURRENT_STATE = this.consultaioQuery.getValue();
@@ -497,21 +492,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           console.error('Error al obtener los datos:', error);
         }
       });
-    // this.fitosanitarioForm.patchValue({
-    //   fraccionArancelaria: datos.fraccion_arancelaria,
-    //   descripcionProducto: datos.descripcion_producto,
-    //   tratado: datos.tratado_bloque,
-    //   subproducto: datos.clasificacion_subproducto,
-    //   mecanismo: datos.mecanismo_asignacion,
-    //   typoCategoria: datos.categoria_textil,
-    //   typoRegimen: datos.regimen,
-    //   descripcionCategoriaTextil: datos.descripcion_categoria_textil,
-    //   PaisDestino: datos.pais_origen_destino,
-    //   unidadMedidaCategoriaTextil: datos.unidad_medida,
-    //   factorConversionCategoriaTextil: datos.factor_conversion,
-    //   fechaInicioVigencia: datos.fecha_inicio_vigencia,
-    //   fechaFinVigencia: datos.fecha_fin_vigencia
-    // });
   }
 
   /**
@@ -770,9 +750,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         this.tramite120301.setIdMecanismo(DATOS.id_mecanismo_asignacion);
         this.tramite120301.setClavePais(DATOS.codigo_pais);
       }
-
-
-
       const FORM_VALUES = {
         anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
         numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
@@ -872,36 +849,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
         return;
       }
-
-      // Cargar datos de la tabla después de pasar la validación
-      // Para modo Específico, use datos basados en archivos con filtrado
-      // this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
-      //   'constancia-del-registro-tabla-asociados.json'
-      // )
-      //   .pipe(
-      //     takeUntil(this.destroyNotifier$),
-      //     map((response) =>
-      //       this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
-      //     )
-      //   )
-      //   .subscribe({
-      //     next: (filteredData) => {
-      //       if (!filteredData || filteredData.length === 0) {
-      //         // Mostrar el modal si no se encuentra ningún registro
-      //         const MODAL_ELEMENT = document.getElementById('confirmarBuscar');
-      //         if (MODAL_ELEMENT) {
-      //           const BS_MODAL = new (window as unknown as { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } }).bootstrap.Modal(MODAL_ELEMENT);
-      //           BS_MODAL.show();
-      //         }
-      //         return;
-      //       }
-      //       // Si hay datos, mostrarlos en la tabla
-      //       this.configuracionTablaDatos = filteredData;
-      //       this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
-      //         filteredData
-      //       );
-      //     },
-      //   });
       this.cargaDatosTabla();
     } else {
       // Para la opción 'Todos', use la llamada API
@@ -941,7 +888,13 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           this.tramite120301.setIdSolicitud(DATOS.id_solicitud);
           this.mostrarTabs.emit(true);
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
+        }
+        else if (response?.codigo === 'SAT120301-018') {
+          this.formularioAlertaError = ERROR_FORMA_ALERT;
+          this.esFormaValido = true;
+          window.scrollTo(0, 0);
+        }
+        else {
           console.error('Error al obtener datos:', response?.mensaje);
         }
       },
@@ -949,8 +902,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         console.error('Error en la guardado parcial:', err);
       }
     });
-
-
   }
 
   /**
@@ -1038,29 +989,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
- * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
- * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
- * Si es válido, limpia el error y permite continuar.
- */
-  continuar(): void {
-    this.enviada = true;
-    this.fitosanitarioForm.markAllAsTouched();
-    this.fitosanitarioForm.updateValueAndValidity();
-    this.cdr.detectChanges();
-
-    if (!this.fitosanitarioForm.valid) {
-      this.formularioAlertaError = ERROR_FORMA_ALERT;
-      this.esFormaValido = true;
-      window.scrollTo(0, 0);
-      return;
-    }
-    this.esFormaValido = false;
-    this.formularioAlertaError = '';
-    window.scrollTo(0, 0);
-
-    this.mostrarTabs.emit(true);
-  }
   /**
    * @method ngOnDestroy
    * @description
