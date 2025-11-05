@@ -384,7 +384,10 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('usoEspecifico')?.markAsTouched();
-                     "></textarea>
+                     "
+                       [ngClass]="
+              isValid(formMercancias, 'usoEspecifico') ? 'required' : ''
+            "></textarea>
                   <div *ngIf="
                      formMercancias.get('usoEspecifico')?.invalid &&
                      formMercancias.get('usoEspecifico')?.touched
@@ -441,7 +444,10 @@
                   'setFraccionArancelaria'
                   );
                   formMercancias.get('fraccionArancelaria')?.markAsTouched();
-                  " />
+                  " 
+                  [ngClass]="
+              isValid(formMercancias, 'fraccionArancelaria') ? 'required' : ''
+            "/>
                   <div *ngIf="
                      formMercancias.get('fraccionArancelaria')?.invalid &&
                      formMercancias.get('fraccionArancelaria')?.touched
@@ -484,7 +490,10 @@
                            'setCantidadUMT'
                            );
                            formMercancias.get('cantidadUMT')?.markAsTouched();
-                           " />
+                           "
+                           [ngClass]="
+              isValid(formMercancias, 'cantidadUMT') ? 'required' : ''
+            " />
                         <div *ngIf="
                            formMercancias.get('cantidadUMT')?.invalid &&
                            formMercancias.get('cantidadUMT')?.touched
@@ -526,7 +535,10 @@
                            'setCantidadUMC'
                            );
                            formMercancias.get('cantidadUMC')?.markAsTouched();
-                           " />
+                           "
+                           [ngClass]="
+              isValid(formMercancias, 'cantidadUMC') ? 'required' : ''
+            " />
                         <div *ngIf="
                            formMercancias.get('cantidadUMC')?.invalid &&
                            formMercancias.get('cantidadUMC')?.touched
@@ -565,7 +577,9 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('porcentajeConcentracion')?.markAsTouched();
-                     " />
+                     "[ngClass]="
+              isValid(formMercancias, 'porcentajeConcentracion') ? 'required' : ''
+            " />
                   <div *ngIf="
                      formMercancias.get('porcentajeConcentracion')?.invalid &&
                      formMercancias.get('porcentajeConcentracion')?.touched

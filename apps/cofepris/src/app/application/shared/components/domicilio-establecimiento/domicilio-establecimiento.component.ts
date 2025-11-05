@@ -826,6 +826,16 @@ export class DomicilioComponent
     this.inicializarEstadoFormulario();
   }
 
+/**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
   /**
    * @method cerrarModalScian
    * @description Oculta el modal relacionado con el catálogo SCIAN.
