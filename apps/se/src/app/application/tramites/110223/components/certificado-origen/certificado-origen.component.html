@@ -9,7 +9,6 @@
     (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
     (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
-    [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificado"
     [cargoDeMercancias]="cargoDeMercancias"
@@ -20,7 +19,8 @@
     [idProcedimiento]="idProcedimiento"
     (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
     [domicilioTercer]="true"
-    (guardarClicadoChange)="guardarClicados($event)" 
+    [guardarClicado]="datosTabla$"
+    (guardarClicadoEvent)="guardarClicado($event)"
     (seleccionado)="onMercanciaSeleccionada($event)">
 </app-certificado-de-origen>
 
