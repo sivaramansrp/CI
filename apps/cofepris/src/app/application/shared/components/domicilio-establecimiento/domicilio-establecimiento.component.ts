@@ -1248,6 +1248,14 @@ export class DomicilioComponent
     campo: string,
     metodoNombre: keyof DatosDomicilioLegalStore,
   ): void {
+    if(this.formMercancias.getRawValue()?.estadoFisico === '5' && this.estadoValidte ){
+        this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
+      }
+      if(this.formMercancias.getRawValue()?.objetoImportacion === '5' && this.estadoValidte){
+        this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
+      }
     const VALOR = form.get(campo)?.value;
     (
       this.datosDomicilioLegalStore[metodoNombre] as (
@@ -1470,17 +1478,6 @@ export class DomicilioComponent
     }
   }
   ngAfterViewInit(): void {
-      this.formMercancias.valueChanges.subscribe(value => {
-      if(value.estadoFisico === '5' && this.estadoValidte ){
-        this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
-        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
-      }
-      if(value.objetoImportacion === '5' && this.estadoValidte){
-        this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
-        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
-      }
-          // Perform any actions based on the new value here
-        });
     if (this.identificacion) {
       this.formMercancias
         .get("nombreComercial")
