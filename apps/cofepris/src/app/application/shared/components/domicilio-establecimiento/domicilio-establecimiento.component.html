@@ -301,8 +301,7 @@
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
              <label for="nombreCientifico">
-              Nombre científico
-              <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
+              Nombre científico<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
              </label>
             <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
               setValoresStore(
@@ -326,8 +325,7 @@
           </div>
           <div class="form-group">
             <label for="nombreComun">
-              Nombre común
-              <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreComun')?.invalid && formMercancias.get('nombreComun')?.touched}">*</span>
+              Nombre común<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreComun')?.invalid && formMercancias.get('nombreComun')?.touched}">*</span>
             </label>
             <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
               setValoresStore(
@@ -351,8 +349,7 @@
           </div>
           <div class="form-group">
             <label for="nombreCientifico">
-              Nombre químico o científico
-              <span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>
+              Nombre químico o científico<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>
             </label>
             <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" (change)="
               setValoresStore(
@@ -377,8 +374,7 @@
           @if(tieneUsoEspecifico) {
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">
-              Uso específico
-              <span  [ngClass]="{'tiene-error':formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:
+              Uso específico<span  [ngClass]="{'tiene-error':formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:
             </label>
             <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
               setValoresStore(
@@ -403,8 +399,7 @@
           }
           <div class="form-group">
             <label for="fraccionArancelaria">
-              Fracción arancelaria
-              <span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
+              Fracción arancelaria<span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
             </label>
             <span class="bi bi-question-circle-fill" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado" placement="top"></span>
             <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
@@ -433,8 +428,7 @@
           </div>
           <div class="form-group">
             <label for="descripcionFraccion">
-              Descripción de la fracción arancelaria
-              <span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
+              Descripción de la fracción arancelaria<span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
             </label>
             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control"
               (change)="
@@ -450,8 +444,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMT">
-                  Cantidad UMT
-                  <span [ngClass]="{'tiene-error':formMercancias.get('cantidadUMT')?.invalid && formMercancias.get('cantidadUMT')?.touched}">*</span>:
+                  Cantidad UMT <span [ngClass]="{'tiene-error':formMercancias.get('cantidadUMT')?.invalid && formMercancias.get('cantidadUMT')?.touched}">*</span>:
                 </label>
                 <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="
                   setValoresStore(
@@ -481,8 +474,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">
-                  UMT
-                  <span [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>
+                  UMT<span [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>
                 </label>
                 <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa" placement="top"></span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
@@ -494,8 +486,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMC">
-                  Cantidad UMC
-                  <span [ngClass]="{'tiene-error':formMercancias.get('cantidadUMC')?.invalid && formMercancias.get('cantidadUMC')?.touched}">*</span>:
+                  Cantidad UMC <span [ngClass]="{'tiene-error':formMercancias.get('cantidadUMC')?.invalid && formMercancias.get('cantidadUMC')?.touched}">*</span>:
                 </label>
                 <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="
                   setValoresStore(
@@ -533,8 +524,7 @@
           </div>
           <div class="form-group">
             <label for="porcentajeConcentracion">
-              Porcentaje de concentración
-              <span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
+              Porcentaje de concentración<span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
             </label>
             <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
               class="form-control" (change)="
@@ -559,8 +549,7 @@
           </div>
           <div class="form-group" *ngIf="mostrarNumeroRegistro">
             <label for="numeroRegistro">
-              Número de registro sanitario
-              <span [ngClass]="{'tiene-error':formMercancias.get('numeroRegistro')?.invalid && formMercancias.get('numeroRegistro')?.touched}">*</span>:
+              Número de registro sanitario<span [ngClass]="{'tiene-error':formMercancias.get('numeroRegistro')?.invalid && formMercancias.get('numeroRegistro')?.touched}">*</span>:
             </label>
             <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="
               setValoresStore(

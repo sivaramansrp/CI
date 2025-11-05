@@ -1086,23 +1086,30 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       umc: RAW.UMC,
       unidadMedidaTarifa: RAW.UMT,
     };
-    const index = this.listaMercancias.findIndex(
+    const INDEX = this.listaMercancias.findIndex(
       item => item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria
     );
 
-    if (index !== -1) {
+    if (INDEX !== -1) {
       // Update existing row
-      this.listaMercancias[index] = NUEVA_MERCANCIA;
+      this.listaMercancias[INDEX] = NUEVA_MERCANCIA;
     } else {
       // Add new row
       this.listaMercancias.push(NUEVA_MERCANCIA);
     }
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      
        const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
     if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
       MODAL_INSTANCE?.hide();
+       setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+      }, 300);  
     }
       this.tieneFormularioMercanciasEnviado = false;
     }
@@ -1223,22 +1230,21 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   public modificarMercancia(): void {
     if (this.seleccionarlistaMercancias.length !== 0) {
-      const selected = this.seleccionarlistaMercancias[0];
+      const SELECTED = this.seleccionarlistaMercancias[0];
       this.formMercancias.patchValue({
-        nombreComercial: selected.nombreComercial,
-        nombreComun: selected.nombreComun,
-        nombreCientifico: selected.nombreCientifico,
-        usoEspecifico: selected.usoEspecifico,
-        fraccionArancelaria: selected.fraccionArancelaria,
-        descripcionFraccion: selected.descripcionFraccion,
-        cantidadUMT: selected.cantidadUmt || selected.cantidadUmt ,
-        UMT:  selected.unidadMedidaTarifa,
-        cantidadUMC: selected.cantidadUmc || selected.cantidadUmc,
-        UMC: selected.umc || selected.umc,
-        porcentajeConcentracion: selected.porcentajeConcentracion,
-        clasificacionToxicologica: selected.clasificacionToxicologica,
-        objetoImportacion: selected.objetoImportacion,
-        // If you have numeroRegistro in your form, add:
+        nombreComercial: SELECTED.nombreComercial,
+        nombreComun: SELECTED.nombreComun,
+        nombreCientifico: SELECTED.nombreCientifico,
+        usoEspecifico: SELECTED.usoEspecifico,
+        fraccionArancelaria: SELECTED.fraccionArancelaria,
+        descripcionFraccion: SELECTED.descripcionFraccion,
+        cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt ,
+        UMT:  SELECTED.unidadMedidaTarifa,
+        cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
+        UMC: SELECTED.umc || SELECTED.umc,
+        porcentajeConcentracion: SELECTED.porcentajeConcentracion,
+        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
+        objetoImportacion: SELECTED.objetoImportacion,
         ...(this.formMercancias.contains('numeroRegistro') && { numeroRegistro: "1" })
        
       });
