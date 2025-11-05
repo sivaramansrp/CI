@@ -8,7 +8,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
-        <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" maxlength="13"
+        <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" [maxlength]="13"
       (change)="setValoresStore(datosDelForm,'rfcDel', 'setRfcDel')">
       </div>
       <div class="d-grid">
@@ -25,7 +25,7 @@
     <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="denominacionRazonSocial">Denominación o razón social<span [ngClass]="{'tiene-error': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched}">*</span>:</label>
-          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
+          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" [maxlength]="100" size="75"
             [ngClass]="{'tiene-invalido': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched}"
         formControlName="denominacionRazonSocial"
         (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
@@ -39,7 +39,7 @@
         El texto excede el límite de caracteres permitido.
       </span>
       <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['pattern']" class="mensaje-error">
-        Existen datos incorrectos que no cumplen con el formato esperado.
+       El valor capturado no es válido.
       </span>
     </div>
   </div>
@@ -51,7 +51,7 @@
         <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="{'tiene-error': datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched}">*</span>:
             <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
         </label>
-        <input class="form-control" id="correoElectronico" maxlength="320" size="29"
+        <input class="form-control" id="correoElectronico" [maxlength]="320" size="29"
       formControlName="correoElectronico" placeholder="" type="text"
       [ngClass]="{'tiene-invalido': datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched}"
       (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
@@ -62,10 +62,10 @@
             Este campo es obligatorio.
           </span>
           <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-        El valor ingresado no es una dirección válida de correo electrónico
+El valor Ingresado no es una dirección válida de correo electrónico
           </span>
             <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['pattern']" class="mensaje-error">
-           El valor ingresado no es una dirección válida de correo electrónico
+          El valor Ingresado no es una dirección válida de correo electrónico
             </span>
         </div>
       </div>

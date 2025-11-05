@@ -367,7 +367,7 @@ const FRACCION = String(this.importacionForm.get('fraccionArancelaria')?.value ?
         this.cerrarModalImportacion();
         
         setTimeout(() => {
-          this.pagemostrarNotificacion('La operación se realizó exitosamente.');
+          this.pagemostrarNotificacion('Debe proporcionar por lo menos un nico.');
         }, 200);
         
  }
