@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Datos Generales</h2>
+    </div>
+    <div class="col-md-12">
+      <app-general-data-house *ngIf="isHouseSelected(); else masterData"/>
+      <ng-template #masterData>
+        <app-general-data-master/>
+      </ng-template>
+    </div>
+    <div class="col-md-12" *ngIf="!isHouseSelected()">
+      <app-house (houseClicked)="houseClicked($event)"></app-house>
+    </div>
+    <div class="col-md-12" *ngIf="dataLoaded()">
+      <app-people-merchandise></app-people-merchandise>
+    </div>
+    <div class="col-md-12 mt-5 text-right">
+      <gob-button
+        type="button"
+        className="btn-primary"
+        label="Regresar"
+        (clicked)="goBack()"
+      ></gob-button>
+    </div>
+  </div>
+</div>

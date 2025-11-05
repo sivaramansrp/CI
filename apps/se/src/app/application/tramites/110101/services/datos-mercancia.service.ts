@@ -1,7 +1,7 @@
-import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
+import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_GET_UNIDAD_MEDIDA_COMERCIAL, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
+import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { DatosFraccionArancelariaResponse } from "../models/response/datos-fraccion-arancelaria-response.model";
-import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { FraccionValidarRequest } from "../models/request/validar-fraccion-request.model";
 import { FraccionValidarResponse } from "../models/response/validar-fraccion-response.model";
 import { HttpClient } from "@angular/common/http";
@@ -66,5 +66,14 @@ export class DatosMercanciaService {
     postValidarEmpaque(PAYLOAD: InsumoTratadosRequest): Observable<BaseResponse<boolean>> {
         const ENDPOINT = `${this.host}${API_POST_VALIDAR_EMPAQUE}`;
         return this.http.post<BaseResponse<boolean>>(ENDPOINT, PAYLOAD);
+    }
+
+    /**
+     * Consulta la unidad de medida comercial
+     * @returns Observable con la respuesta del servidor que contiene los datos de la unidad de medida comercial
+     */
+    getUnidadMedidaComercial(): Observable<BaseResponse<Catalogo[]>> {
+        const ENDPOINT = `${this.host}${API_GET_UNIDAD_MEDIDA_COMERCIAL}`;
+        return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 }

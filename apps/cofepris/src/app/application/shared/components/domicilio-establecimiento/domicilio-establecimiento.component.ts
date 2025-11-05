@@ -812,22 +812,22 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default uno',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary uno',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary uno',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default uno',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
     },
   ];
 
@@ -838,22 +838,22 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default duos',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary duos',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary duos',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default duos',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
     },
   ];
 
@@ -864,22 +864,22 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default tres',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary tres',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary tres',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default tres',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
     },
   ];
   /**
@@ -889,22 +889,22 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default cuatro',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary cuatro',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary cuatro',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default cuatro',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
     },
   ];
 
@@ -915,22 +915,22 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default cinco',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary cinco',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary cinco',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default cinco',
-      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
     },
   ];
 
@@ -1031,7 +1031,6 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.colapsableTress = !this.colapsableTress;
     this.paisProcedenciaDelColapsable = !this.paisProcedenciaDelColapsable;
   }
-
   /**
    * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
    * If the control does not exist, no action is taken.

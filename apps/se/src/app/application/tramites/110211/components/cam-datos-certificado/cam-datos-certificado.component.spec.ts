@@ -1,124 +1,131 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
-
-import { FormBuilder } from '@angular/forms';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { camCertificadoQuery } from '../../estados/cam-certificado.query';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { TestBed } from '@angular/core/testing';
 import { CamDatosCertificadoComponent } from './cam-datos-certificado.component';
-
-@Injectable()
-class SERVICIO_MOCK_CAM_CERTIFICADO { }
-
-@Injectable()
-class STORE_MOCK_CAM_CERTIFICADO { }
-
-@Injectable()
-class QUERY_MOCK_CAM_CERTIFICADO {
-  formDatosCertificado$ = observableOf({});
-}
+import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
+import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('CamDatosCertificadoComponent', () => {
-  let fixture: ComponentFixture<CamDatosCertificadoComponent>;
-  let componente: any;
+  let component: CamDatosCertificadoComponent;
+  let fixture: any;
+  let storeMock: jest.Mocked<camCertificadoStore>;
+  let queryMock: Partial<camCertificadoQuery>;
+  let consultaioQueryMock: Partial<ConsultaioQuery>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, CamDatosCertificadoComponent],
-      declarations: [
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  beforeEach(async () => {
+    storeMock = {
+      setFormDatosCertificadoGenric: jest.fn(()=> of()),
+      setFormDatosCertificado: jest.fn(()=> of()),
+      setIdiomaSeleccion: jest.fn(()=> of()),
+      setEntidadFederativaSeleccion: jest.fn(()=> of()),
+      setRepresentacionFederalDatosSeleccion: jest.fn(()=> of()),
+      setFormValida: jest.fn(()=> of())
+    } as any;
+
+    queryMock = {
+      selectFormDatosDelDestinatario$: of({ test: 'value' })
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ 
+        readonly: true,
+        procedureId: '123',
+        parameter: 'test',
+        department: 'HR',
+        folioTramite: '456',
+        tipoDeTramite: 'type',
+        estadoDeTramite: 'state',
+        create: true,
+        update: false,
+        consultaioSolicitante: null,
+        action_id: 'action_1',
+        current_user: 'user_1',
+        id_solicitud: 'solicitud_1',
+        nombre_pagina: 'pagina_1',
+        idSolicitudSeleccionada: 'solicitud_2'
+      })
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [CamDatosCertificadoComponent, DatosCertificadoDeComponent, CommonModule, HttpClientTestingModule, ToastrModule.forRoot()],
       providers: [
-        FormBuilder,
-        { provide: CamCertificadoService, useClass: SERVICIO_MOCK_CAM_CERTIFICADO },
-        { provide: camCertificadoStore, useClass: STORE_MOCK_CAM_CERTIFICADO },
-        { provide: camCertificadoQuery, useClass: QUERY_MOCK_CAM_CERTIFICADO },
-        ConsultaioQuery
+        ToastrService,
+        { provide: CamCertificadoService, useValue: {} },
+        { provide: camCertificadoStore, useValue: storeMock },
+        { provide: camCertificadoQuery, useValue: queryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
       ]
-    }).overrideComponent(CamDatosCertificadoComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(CamDatosCertificadoComponent);
-    componente = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    componente.ngOnDestroy = function () { };
-    fixture.destroy();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debe ejecutar el constructor', async () => {
-    expect(componente).toBeTruthy();
+  it('should initialize formDatosCertificadoValues from query', () => {
+    expect(component.formDatosCertificadoValues).toEqual({ test: 'value' });
   });
 
-  it('debe ejecutar ngOnInit', async () => {
-    componente.idiomOpcion = jest.fn();
-    componente.entidadFederativasOpcion = jest.fn();
-    componente.representacionFederalOpcion = jest.fn();
-    componente.ngOnInit();
+  it('should set esFormularioSoloLectura from consultaioQuery', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
-  it('debe ejecutar setValoresStore', async () => {
-    componente.store = componente.store || {};
-    componente.store.setFormCertificadoGenric = jest.fn();
-    componente.setValoresStore({});
+  it('setValoresStore should call store.setFormDatosCertificadoGenric', () => {
+    const event = { formGroupName: 'group', campo: 'campo', valor: 'valor', storeStateName: 'state' };
+    component.setValoresStore(event);
+    expect(storeMock.setFormDatosCertificadoGenric).toHaveBeenCalledWith({ campo: 'valor' });
   });
 
-  it('debe ejecutar idiomOpcion', async () => {
-    componente.camCertificadoService = componente.camCertificadoService || {};
-    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    componente.idiomOpcion();
+  it('obtenerDatosFormulario should call store.setFormDatosCertificado', () => {
+    const data = { foo: 'bar' };
+    component.obtenerDatosFormulario(data);
+    expect(storeMock.setFormDatosCertificado).toHaveBeenCalledWith(data);
   });
 
-  it('debe ejecutar entidadFederativasOpcion', async () => {
-    componente.camCertificadoService = componente.camCertificadoService || {};
-    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    componente.entidadFederativasOpcion();
+  it('idiomaSeleccion should call store.setIdiomaSeleccion', () => {
+    const catalogo = { id: 1, nombre: 'Español' } as any;
+    component.idiomaSeleccion(catalogo);
+    expect(storeMock.setIdiomaSeleccion).toHaveBeenCalledWith(catalogo);
   });
 
-  it('debe ejecutar representacionFederalOpcion', async () => {
-    componente.camCertificadoService = componente.camCertificadoService || {};
-    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    componente.representacionFederalOpcion();
+  it('entidadFederativaSeleccion should call store.setEntidadFederativaSeleccion', () => {
+    const catalogo = { id: 2, nombre: 'Entidad' } as any;
+    component.entidadFederativaSeleccion(catalogo);
+    expect(storeMock.setEntidadFederativaSeleccion).toHaveBeenCalledWith(catalogo);
   });
 
-  it('debe ejecutar obtenerDatosFormulario', async () => {
-    componente.store = componente.store || {};
-    componente.store.setFormDatosCertificado = jest.fn();
-    componente.obtenerDatosFormulario({});
+  it('representacionFederalSeleccion should call store.setRepresentacionFederalDatosSeleccion', () => {
+    const catalogo = { id: 3, nombre: 'Representación' } as any;
+    component.representacionFederalSeleccion(catalogo);
+    expect(storeMock.setRepresentacionFederalDatosSeleccion).toHaveBeenCalledWith(catalogo);
   });
 
-  it('debe ejecutar idiomaSeleccion', async () => {
-    componente.store = componente.store || {};
-    componente.store.setIdiomaSeleccion = jest.fn();
-    componente.idiomaSeleccion({});
+  it('setFormValida should call store.setFormValida', () => {
+    component.setFormValida(true);
+    expect(storeMock.setFormValida).toHaveBeenCalledWith({ datos: true });
   });
 
-  it('debe ejecutar entidadFederativaSeleccion', async () => {
-    componente.store = componente.store || {};
-    componente.store.setEntidadFederativaSeleccion = jest.fn();
-    componente.entidadFederativaSeleccion({});
+  it('validarFormularios should call datosCertificadoDeComponent.validarFormularios', () => {
+    component.datosCertificadoDeComponent = { validarFormularios: jest.fn().mockReturnValue(true) } as any;
+    expect(component.validarFormularios()).toBe(true);
+    expect(component.datosCertificadoDeComponent.validarFormularios).toHaveBeenCalled();
   });
 
-  it('debe ejecutar representacionFederalSeleccion', async () => {
-    componente.store = componente.store || {};
-    componente.store.setRepresentacionFederalDatosSeleccion = jest.fn();
-    componente.representacionFederalSeleccion({});
-  });
-
-  it('debe ejecutar setFormValida', async () => {
-    componente.store = componente.store || {};
-    componente.store.setFormValida = jest.fn();
-    componente.setFormValida({});
-  });
-
-  it('debe ejecutar ngOnDestroy', async () => {
-    componente.destroyNotifier$ = componente.destroyNotifier$ || {};
-    componente.destroyNotifier$.next = jest.fn();
-    componente.destroyNotifier$.complete = jest.fn();
-    componente.ngOnDestroy();
+  it('ngOnDestroy should complete destroyNotifier$', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

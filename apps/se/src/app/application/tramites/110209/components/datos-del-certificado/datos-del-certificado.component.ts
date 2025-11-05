@@ -8,6 +8,7 @@ import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChi
 import { ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209State, Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { CommonModule } from '@angular/common';
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 import { Modal } from 'bootstrap';
@@ -17,7 +18,6 @@ import { Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
 
 /**
@@ -88,6 +88,12 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('registrodeMercancia') registrodeMercanciaElemento!: ElementRef;
 
+  /**  
+   * Representa el estado actual de la solicitud dentro del trámite 110209.  
+   * Se utiliza para almacenar y gestionar la información del flujo del trámite.  
+   */
+  public solicitudState!: Tramite110209State;
+
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
@@ -157,15 +163,26 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Obtiene las mercancías desde el servicio.
    */
-  getMercancias(): void {
-    this.service.getMercancias().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data:Mercancias[]) => {
-        this.datosTabla = Array.isArray(data) ? data : [];
-      }
-    );
-  }
+getMercancias(): void {    
+    this.tramite110209Query.selectTramite110209$
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((storeState: Tramite110209State) => {
+            
+            if (storeState && storeState.mercanciasSeleccionadas) {
+                const MERCANCIAS_TABLA_DATOS: Mercancias[] = [{
+                    numeroDeOrden: storeState.mercanciasSeleccionadas.numeroDeOrden || '',
+                    fraccionArancelaria: storeState.mercanciasSeleccionadas.fraccionArancelaria || '',
+                    nombreTecnico: storeState.mercanciasSeleccionadas.nombreTecnico || '',
+                    nombreComercial: storeState.mercanciasSeleccionadas.nombreComercial || '',
+                    nombreIngles: storeState.mercanciasSeleccionadas.nombreIngles || '',
+                    numeroDeRegistro: storeState.mercanciasSeleccionadas.numeroDeRegistro || '',
+                }];
+                this.datosTabla = MERCANCIAS_TABLA_DATOS;
+            } else {
+                this.datosTabla = [];
+            }
+        });
+}
 
    /**
      * Establece el valor en Tramite110209Store para el campo especificado del formulario.
@@ -187,12 +204,14 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.datosDelCertificadoForm.patchValue({
-            observaciones: seccionState.observaciones
-          });
+        this.solicitudState = seccionState as Tramite110209State;
         })
       )
       .subscribe();
+
+      this.datosDelCertificadoForm.patchValue({
+        observaciones: this.solicitudState.observaciones
+      });
   }
 
   /**
@@ -249,6 +268,15 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     this.datosDelCertificadoForm.markAllAsTouched();
     return false;
   }
+
+  /**  
+   * Método que se ejecuta al modificar un registro.  
+   * Cierra o reinicia el modal de cancelación llamando a `modalCancelar()`.  
+   */
+  onModificar(): void {
+    this.modalCancelar();
+  }
+
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

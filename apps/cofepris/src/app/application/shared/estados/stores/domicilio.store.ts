@@ -85,6 +85,8 @@ export interface DomicilioState {
   apellidoMaterno: string;
   /** Cumplimiento de obligaciones fiscales del representante legal. */
   cumplimiento: string;
+  /** Indica si se ha seleccionado un establecimiento. */
+  establecimientoSeleccionado: boolean;
 
 }
 
@@ -174,7 +176,9 @@ export function createInitialState(): DomicilioState {
     /** Apellido materno del representante legal. */
     apellidoMaterno: '',
     /** Cumplimiento de obligaciones fiscales del representante legal. */
-    cumplimiento: ''
+    cumplimiento: '',
+    /** Indica si se ha seleccionado un establecimiento. */
+    establecimientoSeleccionado: false
   };
 }
 
@@ -655,6 +659,27 @@ export class DomicilioStore extends Store<DomicilioState> {
     this.update((state) => ({
       ...state,
       cumplimiento,
+    }));
+  }
+
+  /**
+   * Actualiza el estado de selección del establecimiento.
+   * @param establecimientoSeleccionado Indica si se ha seleccionado un establecimiento.
+   */
+  public setEstablecimientoSeleccionado(establecimientoSeleccionado: boolean): void {
+    this.update((state) => ({
+      ...state,
+      establecimientoSeleccionado,
+    }));
+  }
+
+  /**
+   * Reinicia solo el estado de selección del establecimiento.
+   */
+  public resetEstablecimientoSeleccionado(): void {
+    this.update((state) => ({
+      ...state,
+      establecimientoSeleccionado: false,
     }));
   }
 

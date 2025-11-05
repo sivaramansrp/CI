@@ -77,9 +77,10 @@
             [placeholder]="'Seleccione una opción'"
             [disabledPrimerOption]="false"
             [hiddenPrimerOption]="false"
+            [markTouched]="pagoDerechosForm.get('banco')?.touched ?? false"
             (change)="onBancoSeleccionado($event); actualizarStore()"
           ></app-catalogo-select>
-          <div *ngIf="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || this.pagoDerechosForm.get('banco')?.value===null ||this.pagoDerechosForm.get('banco')?.value==='-1')&& isContinuarButtonClicked)" class="text-danger">
+          <div *ngIf="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || pagoDerechosForm.get('banco')?.value===null ||pagoDerechosForm.get('banco')?.value==='-1')&& pagoDerechosForm.get('banco')?.touched)" class="text-danger">
           <small >
             Todos los campos de pago son requeridos
           </small>
@@ -180,15 +181,15 @@
                   )
                 "
         />
-        <div *ngIf="(esInvalido('importePago') && pagoDerechosForm.controls['importePago'].errors?.['required']) ||((this.pagoDerechosForm.get('importePago')?.value==='' || this.pagoDerechosForm.get('importePago')?.value===null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('importePago')?.touched)" class="text-danger">
+        <div  class="text-danger">
 
-          <small >
+          <small *ngIf="(esInvalido('importePago') && pagoDerechosForm.controls['importePago'].errors?.['required']) ||((this.pagoDerechosForm.get('importePago')?.value==='' || this.pagoDerechosForm.get('importePago')?.value===null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('importePago')?.touched)">
             Todos los campos de pago son requeridos
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidNumber']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['nonNumeric']">
             Por favor, escribe un número entero válido
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['tooManyDecimals']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidDecimal']">
             Este campo solo permite números hasta dos decimales
           </small>
           </div>
