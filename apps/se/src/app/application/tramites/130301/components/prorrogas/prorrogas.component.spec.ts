@@ -28,7 +28,7 @@ describe('ProrrogasComponent', () => {
         motivoJustificacion: 'Test Justification',
         otrasDeclaraciones: 'Test Declarations',
         paisEmisorCertificado: 'Test Country',
-        mixed: 'false',
+        mixed: false,
         paisDeOrigen: 'Test Origin',
       }),
     };

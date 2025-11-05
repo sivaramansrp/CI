@@ -115,4 +115,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Marca todos los campos del formulario como tocados para mostrar errores de validación.
+   */
+  public markAllAsTouched(): void {
+    if (this.datosDelTramite) {
+      this.datosDelTramite.markAllAsTouched();
+    }
+  }
 }

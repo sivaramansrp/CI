@@ -210,9 +210,9 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        // return;
+        return;
       }
-
+      this.esFormaValido = false;
       this.postGuardarDatos(e);
     }else{
       this.indice = e.valor;
@@ -252,7 +252,7 @@ export class ContenedorDePasosComponent implements OnInit {
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = e.valor;
           }
           this.toastrService.success(response.mensaje);
           if (indiceActualizado > 0 && indiceActualizado < 5) {

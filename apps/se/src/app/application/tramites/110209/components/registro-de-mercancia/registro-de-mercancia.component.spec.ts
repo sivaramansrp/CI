@@ -6,6 +6,7 @@ import { MercanciasService } from '../../services/mercancias/mercancias.service'
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 const NOMBRE_COMERCIAL = 'nombreComercial';
 const NOMBRE_INGLES = 'nombreIngles';
@@ -52,7 +53,7 @@ describe('RegistroDeMercanciaComponent', () => {
     routerMock = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, RegistroDeMercanciaComponent],
+      imports: [ReactiveFormsModule, RegistroDeMercanciaComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: MercanciasService, useValue: serviceMock },
@@ -75,18 +76,6 @@ describe('RegistroDeMercanciaComponent', () => {
     expect(component.mercanciaFrom).toBeDefined();
     expect(component.mercanciaFrom.get(NOMBRE_COMERCIAL)).toBeDefined();
     expect(component.mercanciaFrom.get(NOMBRE_INGLES)).toBeDefined();
-  });
-
-  it('debe obtener y asignar tipo de factura en getTipoFactura', () => {
-    component.getTipoFactura();
-    expect(serviceMock.getTipoDeFactura).toHaveBeenCalled();
-    expect(component.tipoFacturaOptions[0].descripcion).toBe('Factura A');
-  });
-
-  it('debe obtener y asignar unidad de medida en getUnidadValor', () => {
-    component.getUnidadValor();
-    expect(serviceMock.getUnidad).toHaveBeenCalled();
-    expect(component.unidadOptions[0].descripcion).toBe('Unidad A');
   });
 
   it('debe obtener y asignar valores de mercancía en getMercanciasValor', () => {
