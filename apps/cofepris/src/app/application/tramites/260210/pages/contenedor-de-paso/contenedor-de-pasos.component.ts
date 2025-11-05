@@ -1,8 +1,8 @@
+import { AVISO, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { MENSAJE_DE_VALIDACION,TITULOMENSAJE } from '../../constants/medicos-uso.enum';
-import {AVISO} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
@@ -13,17 +13,21 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import {PasoCargaDocumentoComponent} from '@ng-mf/data-access-user';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
+import { Observable, Subject, catchError, map, switchMap, take, takeUntil, throwError } from 'rxjs';
+import {Tramite260210State, Tramite260210Store} from '../../estados/tramite260210Store.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { PASOS } from '../../constants/medicos-uso.enum';
-import {Tramite260210State} from '../../estados/tramite260210Store.store';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 /**
  * @component ContenedorDePasosComponent
  * @description Componente contenedor principal del flujo tipo "wizard".
@@ -49,7 +53,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent {
+export class ContenedorDePasosComponent implements OnInit {
   /**
    * @property tituloMensaje
    * @description Título dinámico que se muestra en la parte superior del componente wizard.
@@ -111,7 +115,7 @@ export class ContenedorDePasosComponent {
      * ID del estado de la solicitud.
      * @type {number | null}
      */
-    idSolicitudState: number | null = 0;
+    idSolicitudState!: number | null;
 
   
     /** Nueva notificación relacionada con el RFC. */
@@ -122,7 +126,7 @@ export class ContenedorDePasosComponent {
    * @description Referencia al componente `WizardComponent`, permite manipular métodos como `siguiente()` o `atras()`.
    * @type {WizardComponent}
    */
-  @ViewChild(WizardComponent)
+  @ViewChild('WizardComponent')
   public wizardComponent!: WizardComponent;
 
   /**
@@ -241,20 +245,69 @@ public solicitudState: Tramite260210State = {} as Tramite260210State;
   }
 
   
-  constructor(private toastrService: ToastrService,) {}
+  /**
+   * Subject utilizado para notificar la destrucción del componente.
+   * Se utiliza con el operador `takeUntil` para cancelar automáticamente
+   * las suscripciones activas cuando el componente es destruido, 
+   * evitando así posibles fugas de memoria.
+   * 
+   * @type {Subject<void>}
+   * @example
+   * ```typescript
+   * // Uso típico con takeUntil
+   * this.someObservable$.pipe(
+   *   takeUntil(this.destroyNotifier$)
+   * ).subscribe();
+   * ```
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+   * Identificador del tipo de trámite.
+   * @type {string}
+   */
+  idTipoTramite: string = '260210';
 
   /**
-   * @method getValorIndice
-   * @description Recibe una acción desde el botón de navegación del wizard y actualiza el paso y el título.
-   * Llama al método correspondiente en el wizard para avanzar o retroceder.
-   * @param {AccionBoton} e - Objeto con el valor del paso y la acción a ejecutar (`cont` o `atras`).
-   * @returns {void}
+   * @property {Tramite260201State} storeData
+   * @description Estado de la tienda para el trámite 260210.
    */
-  public getValorIndice(e: AccionBoton): void {
+  storeData!: Tramite260210State;
 
-    if (e.accion === 'cont') {
-      let isValid = true;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+  
+  constructor(
+    private toastrService: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService,
+    public tramiteQuery: Tramite260210Query,
+    public tramite260210Store: Tramite260210Store
+  ) {}
+
+ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+}
+
+
+/**
+   * @method getValorIndice
+   * @description Actualiza el índice y el título del mensaje según la acción del botón.
+   * Navega hacia adelante o hacia atrás en el wizard.
+   * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
+   */
+  getValorIndice(e: AccionBoton): void {
+
+      if (e.accion === 'cont') {
+        let isValid = true;
 
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
@@ -272,35 +325,62 @@ public solicitudState: Tramite260210State = {} as Tramite260210State;
           txtBtnAceptar: 'SI',
           txtBtnCancelar: 'NO',
         }
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;
       }
 
-      this.esFormaValido = false;
+      const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+          this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = true;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if(shouldNavigate) {
+          if(esValidObject(response) && esValidObject(response.datos)) {
+            this.esFormaValido = false;
+            const DATOS = response.datos as { id_solicitud?: number };
+            const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+            this.idSolicitudState = ID_SOLICITUD;
+            this.tramite260210Store.setIdSolicitud(ID_SOLICITUD);
+          }
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor;
+          }
+          this.toastrService.success(response.mensaje);
+          if (indiceActualizado > 0 && indiceActualizado < 5) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
+            }
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+    }else{
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      this.wizardComponent.siguiente();
-      
-        this.idSolicitudState = 202836800;
-       // this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
-      
-      this.toastrService.success("pass hogya");
- 
-    } else {
-      if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
-      }
+      this.wizardComponent.atras();
     }
-
-}
+  }
 
 /**
    * @method cargaRealizada
@@ -549,5 +629,29 @@ onClickCargaArchivos(): void {
       default:
         return TITULOMENSAJE;
     }
+  }
+
+
+        /**
+   * Genera una alerta de error con los mensajes proporcionados.
+   * @param mensajes Mensajes de error a mostrar en la alerta.
+   * @returns HTML de la alerta de error.
+   */
+static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="row">
+<div class="col-md-12 justify-content-center text-center">
+  <div class="row">
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <ol>
+    <li>${mensajes}</li>
+    </ol>
+    </div>
+  </div>
+</div>
+</div>
+`;
+return ALERTA;
   }
 }

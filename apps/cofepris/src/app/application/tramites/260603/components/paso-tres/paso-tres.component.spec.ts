@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
@@ -11,7 +12,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent,RouterTestingModule,ToastrModule.forRoot()],
+      imports: [PasoTresComponent, RouterTestingModule, ToastrModule.forRoot(), HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);

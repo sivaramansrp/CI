@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
+import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
@@ -47,12 +48,16 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     ManifiestosComponent,
     NotificacionesComponent,
     RepresentanteLegalRfcComponent,
-    TooltipModule
+    TooltipModule,
+    DatosDelEstablecimientoRFCComponent
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  @Input() idProcedimiento!: number;
+  rfcValido = false;
+  @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -215,32 +220,29 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se inicializa el componente
    * */
   ngOnInit(): void {
-    this.datosDomicilioLegalQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
-      denominacion: [
-        { value: this.solicitudState?.denominacion, disabled: true },
-        Validators.required,
-      ],
-      correo: [
-        { value: this.solicitudState?.correo, disabled: true },
-        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
-      ],
-    });
-    this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'datosSolicitudForm') {
-        this.forma.markAllAsTouched();
-      }
-    })
-    this.inicializarEstadoFormulario();
+  this.datosDomicilioLegalQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+  this.forma = this.fb.group({
+    rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
+    denominacion: [{ value: this.solicitudState?.denominacion, disabled: true }, [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,\-&]+$/)]],
+    correo: [
+      { value: this.solicitudState?.correo, disabled: true },
+      [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
+    ],
+  });
+  this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
+  this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+    if (formName === 'datosSolicitudForm') {
+      this.forma.markAllAsTouched();
+    }
+  })
+  this.inicializarEstadoFormulario();
   }
 
   /**
@@ -312,6 +314,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       ) => void
     )(VALOR);
     this.servicioDeFormularioService.setFormValue('datosSolicitudForm', { [campo]: VALOR });
+  }
+  onRfcValidoChange(valor: boolean):void {
+    this.rfcValido = valor;
   }
 
   /**

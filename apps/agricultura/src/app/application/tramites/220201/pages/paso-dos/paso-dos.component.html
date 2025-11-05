@@ -3,5 +3,14 @@
 
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <anexar-documentos ></anexar-documentos>
+    <div class="col-md-12">
+    <carga-documento
+      [idTipoTRamite]="'220201'"
+      [cargaArchivosEvento]="reenviarEvento"
+      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion"
+      (cargaRealizada)="documentosCargados($event)"
+      (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+    ></carga-documento>
+  </div>
+
 </div>

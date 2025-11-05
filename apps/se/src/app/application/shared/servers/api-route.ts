@@ -63,3 +63,29 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
     certificadoOrigen:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/obtener-certificado-origen`,
 });
+
+
+/**
+ * Genera la ruta de la API para consultar los datos de cupo en el grid, según el trámite especificado.
+ *
+ * @param TRAMITE - Identificador del trámite a utilizar en la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const BUSCAR_CONSULTAR = (TRAMITE: string): string => `sat-t${TRAMITE}/${SOLICITUD}/consultar-cupo/buscar-datos-grid`;
+
+/**
+ * Construye la URL para guardar una solicitud asociada a un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite para el cual se va a guardar la solicitud.
+ * @returns La URL completa para la operación de guardar solicitud del trámite dado.
+ */
+export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}/${TRAMITE}/solicitud/guardar`;
+
+/**
+ * Construye la URL para buscar instrumentos asociados a un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite para el cual se desean buscar los instrumentos.
+ * @returns La URL completa como cadena de texto para realizar la búsqueda de instrumentos.
+ */
+export const BUSCAR_INSTRUMENTOS = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscarInstrumentos`;
+

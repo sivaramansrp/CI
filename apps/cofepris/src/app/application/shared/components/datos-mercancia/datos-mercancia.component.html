@@ -265,6 +265,7 @@
           formControlName="estadoFisico"
           [label]="'Estado físico'"
           [required]="true"
+            [markUntouched]="mercanciaForm.get('estadoFisico')?.errors?.['required'] && mercanciaForm.get('estadoFisico')?.touched ? true : false"
           name="estadoFisico"
           [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
@@ -346,15 +347,14 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria <span
+            >Fracción arancelaria<span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
             }"
               >*</span
             >:
-          </label>
-          <span
+          </label>&nbsp;<span
             tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
           >
             <i class="bi bi-question-circle-fill"></i>
@@ -485,15 +485,14 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmt"
-            >UMT <span
+            >UMT<span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
             }"
               >*</span
-            >:
-          </label>
-          <span tooltip="Unidad de medida de la tarifa">
+            >: 
+          </label>&nbsp;<span tooltip="Unidad de medida de la tarifa">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input
@@ -567,6 +566,7 @@
           [markUntouched]="mercanciaForm.get('cantidadUmc')?.errors?.['required'] && mercanciaForm.get('cantidadUmc')?.touched? true : false"
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
+           [markTouched]="mercanciaForm.get('cantidadUmc')?.touched??false"
           name="cantidadUmc"
 
 
@@ -635,7 +635,7 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-md-12 mt-3">
+      <div class="col-md-12">
         <div class="panel-group ficha-collapse mb-0" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(1)">

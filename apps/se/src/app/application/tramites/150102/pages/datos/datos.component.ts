@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -34,13 +34,20 @@ export class DatosComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
-  /**
-   * Referencia al componente `DatosDeReporteAnnualComponent` dentro de la plantilla.
-   *
-   * Se utiliza para acceder a métodos o propiedades del componente hijo desde el componente padre.
+      /**
+     * Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('datosDeComp') datosDeComp!: DatosDeReporteAnnualComponent;
+  
+    /**
+     * Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('programasDeComp') programasDeComp!: ProgramasReporteAnnualComponent;
+    
+    /**
+   * Emite evento cuando se cambia de tab para ocultar error message.
    */
-  @ViewChild(DatosDeReporteAnnualComponent)
-  datosDeReporteAnnualComponent!: DatosDeReporteAnnualComponent;
+   @Output() cambioDePestana = new EventEmitter<void>();
 
   /**
    * Constructor del componente.
@@ -120,6 +127,43 @@ export class DatosComponent implements OnInit, OnDestroy {
     if (evento) {
       this.estaHabilitado = evento;
     }
+  }
+
+    /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): number {
+   
+    
+    if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
+      this.datosDeComp.formReporteAnnual.markAllAsTouched();
+      if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 1;
+      }
+      else if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value>=0){
+        this.datosDeComp.diferenciaTotal();
+        return 2;
+
+      }
+      else if(Number(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value) < Number(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value)){
+       this.datosDeComp.diferenciaTotal();
+        return 3;
+      }
+      else if(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value>=0 && (this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 4;
+      }
+     
+    }
+    else if(this.indice===2&& this.programasDeComp?.formProgrmasReporte.get('estatus')?.value!==''){
+      this.programasDeComp?.showAlert();
+      return 5;
+    }
+    return 0;
   }
 
   /**

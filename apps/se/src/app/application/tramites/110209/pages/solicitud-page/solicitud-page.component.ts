@@ -9,17 +9,20 @@ import {
 import { Component, ViewChild } from '@angular/core';
 import {
   DatosPasos,
+  JSONResponse,
   ListaPasosWizard,
   WizardComponent,
-} from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
+} from '@libs/shared/data-access-user/src';
+import { Subject, take, takeUntil } from 'rxjs';
 import {
   Tramite110209State,
   Tramite110209Store,
 } from '../../estados/stores/tramite110209.store';
+import { esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solicitud.component';
+import { Solicitud110209Service } from '../../services/solicitud-110209/solicitud-110209.service';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-
+import { doDeepCopy } from '@ng-mf/data-access-user';
 /**
  * Componente que representa la página de solicitud.
  */
@@ -137,7 +140,8 @@ export class SolicitudPageComponent {
    */
   constructor(
     public tramiteStore: Tramite110209Store,
-    public tramiteQuery: Tramite110209Query
+    public tramiteQuery: Tramite110209Query,
+    private servicio110209: Solicitud110209Service
   ) {
     this.tramiteQuery.selectTramite110209$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -170,7 +174,8 @@ export class SolicitudPageComponent {
         this.esFormaValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
-    }
+      this.obtenerDatosDelStore();
+    } 
 
     let indiceActualizado = e.valor;
     if (e.accion === 'cont') {
@@ -192,6 +197,7 @@ export class SolicitudPageComponent {
       }
     }
   }
+
   /**
    * @method validarTodosFormulariosPasoUno
    * @description
@@ -213,4 +219,130 @@ export class SolicitudPageComponent {
     }
     return true;
   }
+
+  /**
+ * Método que construye y guarda los datos de un trámite.
+ * 
+ * @param data - Estado del trámite a procesar.
+ * @returns Una promesa con la respuesta JSON del guardado.
+ * 
+ * Construye diferentes secciones del certificado utilizando los métodos del servicio:
+ * - TRATADOS: Información de tratados asociados.
+ * - DESTINATARIO: Datos del destinatario.
+ * - TRANSPORTE: Información del medio de transporte.
+ * - CERTIFICADO: Datos generales del certificado.
+ * - DATOS_CERTIFICADO: Detalles específicos del certificado.
+ */
+    guardar(data: Tramite110209State): Promise<JSONResponse> {
+      const TRATADOS = this.servicio110209.buildTratados(data);
+      const DESTINATARIO = this.servicio110209.buildDestinatario(data);
+      const TRANSPORTE = this.servicio110209.buildTransporte(data);
+      const CERTIFICADO = this.servicio110209.buildCertificado(data);
+      const DATOS_CERTIFICADO = this.servicio110209.buildDatosCertificado(data);
+      const PAYLOAD = {
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 0,
+      "idTipoTramite": 110209,
+      "discriminatorValue": "110209",
+      "rfc_solicitante": "AAL0409235E6",
+      "rfc": "AAL0409235E6",
+      "cve_unidad_administrativa": "0203",
+      "costoTotal": 10000.5,
+      "certificado_serial_number": "1234567890ABCDEF",
+      "numero_folio_tramite_original": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+       "solicitante": {
+          "rfc": "AAL0409235E6",
+          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+          "actividad_economica": "Fabricación de productos de hierro y acero",
+          "correo_electronico": "contacto@acerosalvarado.com",
+          "domicilio": {
+              "pais": "México",
+              "codigo_postal": "06700",
+              "estado": "Ciudad de México",
+              "municipio_alcaldia": "Cuauhtémoc",
+              "localidad": "Centro",
+              "colonia": "Roma Norte",
+              "calle": "Av. Insurgentes Sur",
+              "numero_exterior": "123",
+              "numero_interior": "Piso 5, Oficina A",
+              "lada": "",
+              "telefono": "123456"
+          }
+      },
+        "tratados": TRATADOS,
+        "transporte": TRANSPORTE,
+        "certificado": CERTIFICADO,
+       "destinatario": DESTINATARIO,
+       "datos_del_cerificado": DATOS_CERTIFICADO
+      }
+        return new Promise((resolve, reject) => {
+          this.servicio110209.guardarDatosPost(PAYLOAD).subscribe(
+            (response) => {
+              const API_RESPONSE = doDeepCopy(response);
+              if (
+                esValidObject(API_RESPONSE) &&
+                esValidObject(API_RESPONSE.datos)
+              ) {
+                if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                  this.tramiteStore.setIdSolicitud(
+                    API_RESPONSE.datos.id_solicitud
+                  );
+                  this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                } else {
+                  this.tramiteStore.setIdSolicitud(0);
+                }
+              }
+              resolve({
+                id: API_RESPONSE['id'] ?? 0,
+                descripcion: API_RESPONSE['descripcion'] ?? '',
+                codigo: API_RESPONSE['codigo'] ?? '',
+                data: API_RESPONSE['data'] ?? API_RESPONSE['datos'] ?? null,
+                ...API_RESPONSE
+              } as JSONResponse);
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+      });
+    }
+
+/**
+ * Método que obtiene los datos actuales del store y los procesa.
+ * 
+ * Se suscribe una sola vez al estado completo del servicio `servicio110209`
+ * y llama al método `guardar` con los datos obtenidos.
+ */
+    obtenerDatosDelStore(): void {
+      this.servicio110209.getAllState()
+        .pipe(take(1))
+        .subscribe(data => {
+          this.guardar(data);
+        });
+    }
+
+/**
+ * Método que maneja la navegación en un componente tipo wizard según la acción del botón.
+ * 
+ * @param e - Objeto que contiene la acción del botón y el valor del paso.
+ * 
+ * Si el valor está entre 1 y 2 inclusive, actualiza el índice del paso actual y:
+ * - Si `accion` es 'cont', avanza al siguiente paso.
+ * - De lo contrario, retrocede al paso anterior.
+ */
+      pasoNavegarPor(e: AccionBoton): void {
+        if (e.valor > 0 && e.valor < 3) {
+          this.indice = e.valor;
+          
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      }
 }

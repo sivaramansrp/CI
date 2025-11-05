@@ -1,7 +1,7 @@
+import { API_OBTENER_FRACCIONES_ARANCELARIAS, API_OBTENER_UMT, Catalogo } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { API_BUSCAR_REPRESENTANTE } from '../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -159,4 +159,27 @@ export class DatosSolicitudService {
     const ENDPOINT = `${this.host}${API_BUSCAR_REPRESENTANTE(tramite)}`;
     return this.httpServicios.post<BaseResponse<RepresentanteData>>(ENDPOINT, PAYLOAD);
   }
+
+  /**
+   * Obtiene la descripción de las fracciones arancelarias.
+   * @param tramiteId ID del trámite.
+   * @param clave Clave de la fracción arancelaria.
+   * @returns Observable con la respuesta del servidor.
+   */
+  obtenerFraccionesArancelarias<T>(tramiteId: number, clave: string): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_FRACCIONES_ARANCELARIAS(tramiteId, clave)}`;
+    return this.httpServicios.get<BaseResponse<T>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene la unidad de medida por fracción arancelaria.
+   * @param tramiteId ID del trámite.
+   * @param cveFraccion Clave de la fracción arancelaria.
+   * @returns Observable con la respuesta del servidor.
+   */
+  obtenerUMT<T>(tramiteId: number, cveFraccion: string): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_UMT(tramiteId, cveFraccion)}`;
+    return this.httpServicios.get<BaseResponse<T>>(ENDPOINT);
+  }
+
 }

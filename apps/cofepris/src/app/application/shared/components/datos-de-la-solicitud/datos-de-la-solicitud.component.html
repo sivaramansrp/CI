@@ -72,12 +72,12 @@
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila">
         <div class="form-group">
           <label class="form-label municipio-label" for="denominacionRazon">Denominación o razón social</label>
-          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"  [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched ? 'text-danger' : ''" >*</span>
+          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"  [ngClass]="((isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched)|| ((datosSolicitudForm.get('denominacionRazon')?.errors?.['required']|| datosSolicitudForm.get('denominacionRazon')?.value===''|| datosSolicitudForm.get('denominacionRazon')?.value===null) && datosSolicitudForm.get('denominacionRazon')?.touched)) ? 'text-danger' : ''" >*</span>
           <span class="form-label municipio-labe">:</span>
           <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon" (change)="actualizarStore()"
             maxlength="100" [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''" />
           <div class="mensaje-error"
-            *ngIf="isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched">
+            *ngIf="((isValid(datosSolicitudForm, 'denominacionRazon') && datosSolicitudForm.get('denominacionRazon')?.touched)|| ((datosSolicitudForm.get('denominacionRazon')?.errors?.['required']|| datosSolicitudForm.get('denominacionRazon')?.value===''|| datosSolicitudForm.get('denominacionRazon')?.value===null) && datosSolicitudForm.get('denominacionRazon')?.touched))">
             Este campo es obligatorio.
           </div>
         </div>
@@ -99,7 +99,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'codigoPostal') && datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
+          <label class="form-label" for="codigoPostal">Código postal<span [ngClass]="{'text-danger':(isValid(datosSolicitudForm, 'codigoPostal') && datosSolicitudForm.get('codigoPostal')?.touched)||(datosSolicitudForm.get('codigoPostal')?.errors?.['required']|| datosSolicitudForm.get('codigoPostal')?.value===''|| datosSolicitudForm.get('codigoPostal')?.value===null) && datosSolicitudForm.get('codigoPostal')?.touched }">*</span>:</label>
           <input class="form-control" id="codigoPostal" type="text" maxlength="12" formControlName="codigoPostal" (change)="actualizarStore()"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
@@ -123,13 +123,12 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'municipioAlcaldia')&&datosSolicitudForm.get('municipioAlcaldia')?.touched }">*</span>:</label>
+          <label class="form-label municipio-label" for="municipioAlcaldia">{{ etiquetaMunicipio }}<span [ngClass]="{'text-danger':(isValid(datosSolicitudForm, 'municipioAlcaldia')&&datosSolicitudForm.get('municipioAlcaldia')?.touched)||datosSolicitudForm.get('municipioAlcaldia')?.errors?.['required']|| (( datosSolicitudForm.get('municipioAlcaldia')?.value===''||datosSolicitudForm.get('municipioAlcaldia')?.value===null) && datosSolicitudForm.get('municipioAlcaldia')?.touched )}">*</span>:</label>
           <input class="form-control" id="municipioAlcaldia" type="text" maxlength="120" (change)="actualizarStore()"
             formControlName="municipioAlcaldia" [ngClass]="
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
             " />
-          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('municipioAlcaldia')?.errors?.['required'] 
-              && datosSolicitudForm.get('municipioAlcaldia')?.touched">
+          <div class="mensaje-error" *ngIf="(datosSolicitudForm.get('municipioAlcaldia')?.errors?.['required']|| datosSolicitudForm.get('municipioAlcaldia')?.value===''|| datosSolicitudForm.get('municipioAlcaldia')?.value===null) && datosSolicitudForm.get('municipioAlcaldia')?.touched">
             Este campo es obligatorio.
           </div>
         </div>
@@ -193,14 +192,14 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'calle') && datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
+          <label class="form-label" for="calle">Calle<span [ngClass]="{'text-danger':((isValid(datosSolicitudForm, 'calle') && datosSolicitudForm.get('calle')?.touched))||(datosSolicitudForm.get('calle')?.errors?.['required']|| datosSolicitudForm.get('calle')?.value===''|| datosSolicitudForm.get('calle')?.value===null) && datosSolicitudForm.get('calle')?.touched }">*</span>:</label>
           <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle" (change)="actualizarStore()"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''" />
-          <div class="mensaje-error" *ngIf="datosSolicitudForm.get('calle')?.errors?.['required'] 
-            && datosSolicitudForm.get('calle')?.touched">
+          <div class="mensaje-error" *ngIf="(datosSolicitudForm.get('calle')?.errors?.['required'] 
+          || datosSolicitudForm.get('representanteNombre')?.value===''|| datosSolicitudForm.get('representanteNombre')?.value===null) && datosSolicitudForm.get('representanteNombre')?.touched">
             Este campo es obligatorio.
           </div>
         </div>
@@ -271,12 +270,12 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'text-danger':(datosSolicitudForm.get('telefono')?.errors?.['required']||datosSolicitudForm.get('telefono')?.errors?.['pattern'] )&& datosSolicitudForm.get('telefono')?.touched}">*</span>:</label>
+          <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'text-danger':((datosSolicitudForm.get('telefono')?.errors?.['required']||datosSolicitudForm.get('telefono')?.errors?.['pattern'] )&& datosSolicitudForm.get('telefono')?.touched)|| (datosSolicitudForm.get('telefono')?.value===''|| datosSolicitudForm.get('telefono')?.value===null) && datosSolicitudForm.get('telefono')?.touched}">*</span>:</label>
           <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" (change)="actualizarStore()" [ngClass]="
          ( (datosSolicitudForm.get('telefono')?.errors?.['required']||datosSolicitudForm.get('telefono')?.errors?.['pattern']) && datosSolicitudForm.get('telefono')?.touched) ? 'required' : ''
             " />
           <div class="mensaje-error"
-            *ngIf="datosSolicitudForm.get('telefono')?.errors?.['required'] && datosSolicitudForm.get('telefono')?.touched">
+            *ngIf="(datosSolicitudForm.get('telefono')?.errors?.['required'] && datosSolicitudForm.get('telefono')?.touched)|| (datosSolicitudForm.get('telefono')?.value===''|| datosSolicitudForm.get('telefono')?.value===null) && datosSolicitudForm.get('telefono')?.touched">
             Este campo es obligatorio.
           </div>
           <div *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']" class="mensaje-error">
@@ -519,10 +518,10 @@
           formControlName="publico">
         </app-input-radio>
         <span
-        *ngIf="datosSolicitudForm.get('publico')?.touched && (datosSolicitudForm.get('publico')?.value!=='Si' && datosSolicitudForm.get('publico')?.value!=='No') "
-      class="mensaje-error">
-      Este campo es obligatorio.
-  </span>
+        *ngIf="datosSolicitudForm.get('publico')?.touched && datosSolicitudForm.get('publico')?.errors?.['required']"
+        class="mensaje-error">
+        Este campo es obligatorio.
+      </span>
       </div>
       
     </div>
@@ -535,7 +534,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteRfc">
-            RFC<span [ngClass]="{'text-danger':isValid(datosSolicitudForm, 'representanteRfc')&&datosSolicitudForm.get('representanteRfc')?.touched }">*</span>:
+            RFC<span [ngClass]="{'text-danger':(isValid(datosSolicitudForm, 'representanteRfc')&&datosSolicitudForm.get('representanteRfc')?.touched)||(datosSolicitudForm.get('representanteRfc')?.errors?.['required']|| datosSolicitudForm.get('representanteRfc')?.value===''|| datosSolicitudForm.get('representanteRfc')?.value===null) && datosSolicitudForm.get('representanteRfc')?.touched }">*</span>:
           </label>
           <input class="form-control" id="representanteRfc" type="text" 
             [maxlength]="13"
@@ -544,7 +543,7 @@
             " />
         </div>
         <div class="mensaje-error"
-            *ngIf="datosSolicitudForm.get('representanteRfc')?.errors?.['required'] && datosSolicitudForm.get('representanteRfc')?.touched">       
+            *ngIf="(datosSolicitudForm.get('representanteRfc')?.errors?.['required'] || datosSolicitudForm.get('representanteRfc')?.value===''|| datosSolicitudForm.get('representanteRfc')?.value===null) && datosSolicitudForm.get('representanteRfc')?.touched">       
           Este campo es obligatorio.
         </div>
       </div>
@@ -599,7 +598,7 @@
         <label class="form-label" for="correoElectronico">Correo electrónico
         </label>
         <span class="form-label municipio-label"
-          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') && datosSolicitudForm.get('correoElectronico')?.touched? 'text-danger' : ''"
+          [ngClass]="(isValid(datosSolicitudForm, 'correoElectronico') && datosSolicitudForm.get('correoElectronico')?.touched)||((datosSolicitudForm.get('correoElectronico')?.errors?.['required']|| datosSolicitudForm.get('correoElectronico')?.value===''|| datosSolicitudForm.get('correoElectronico')?.value===null) && datosSolicitudForm.get('correoElectronico')?.touched)? 'text-danger' : ''"
           *ngIf="esCampoRequerido('correoElectronico')">*</span>
         <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">
@@ -612,8 +611,8 @@
               ? 'required'
               : ''
           " />
-        <small class="mensaje-error" *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required'] &&
-          datosSolicitudForm.get('correoElectronico')?.touched">
+        <small class="mensaje-error" *ngIf="(esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required'] &&
+          datosSolicitudForm.get('correoElectronico')?.touched) ||((datosSolicitudForm.get('correoElectronico')?.errors?.['required']|| datosSolicitudForm.get('correoElectronico')?.value===''|| datosSolicitudForm.get('correoElectronico')?.value===null) && datosSolicitudForm.get('correoElectronico')?.touched)">
           Este campo es obligatorio.</small>
         <div class="mensaje-error" *ngIf="
             datosSolicitudForm.get('correoElectronico')?.touched &&

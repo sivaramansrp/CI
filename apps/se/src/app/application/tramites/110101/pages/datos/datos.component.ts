@@ -19,6 +19,10 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
 })
 export class DatosComponent implements OnInit, OnDestroy {
   /**
+  * Esta variable se utiliza para almacenar total de tabs iniciales internos del tramite.
+  */
+  totalTabs = 4;
+  /**
  * @property {boolean} esDictaminadorBandera
  * @description Indica si se está mostrando boton de la calificación con bandera.
  * Por defecto es false.
@@ -188,6 +192,20 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Avanza de tabs internos del tramite con el boton Continuar.
+   */
+  avanzarTab(): boolean {
+    // Actualizamos el total por si cambia dinámicamente en tiempo real por tab oculto
+     this.totalTabs = this.solicitudeState?.tab_procesos ? 5 : 4;
+    if (this.indice < this.totalTabs) {
+      this.indice++;
+      return true;
+    }
+    return false;
+  }
+
 
   /**
    * Guarda los datos del formulario obteniendo el estado actual del formulario desde el servicio.

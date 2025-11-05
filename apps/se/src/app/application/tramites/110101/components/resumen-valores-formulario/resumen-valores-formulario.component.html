@@ -32,7 +32,7 @@
       <input type="text" id="impEnvasesOriginarios" formControlName="impEnvasesOriginarios" class="form-control" />
     </div>
     <div *ngIf="camposVisibles.has('imp_envases_no_originarios')" class="col-3">
-      <input type="text" id="impEnvaseNoOriginarios" formControlName="impEnvaseNoOriginarios" class="form-control" />
+      <input type="text" id="impEnvasesNoOriginarios" formControlName="impEnvasesNoOriginarios" class="form-control" />
     </div>
 
     <!-- Total valor en dólares -->
@@ -54,7 +54,7 @@
 
     <!-- Valor de transacción -->
     <div *ngIf="camposVisibles.has('valor_transaccion')" class="col-6 align-self-center">Valor de transacción</div>
-    <div class="col-3" *ngIf="false"></div>
+    <div class="col-3"></div> 
     <div *ngIf="camposVisibles.has('valor_transaccion')" class="col-3">
       <input type="text" id="valor_transaccion" formControlName="valorTransaccion" class="form-control" />
     </div>
@@ -84,7 +84,7 @@
     <div *ngIf="camposVisibles.has('pct_valor_no_originarios')" class="col-6 align-self-center">
       % de materiales originarios/no originarios, según corresponda en el Tratado, vs valor de la mercancía
     </div>
-    <div class="col-3" *ngIf="false"></div>
+    <div class="col-3"></div>
     <div *ngIf="camposVisibles.has('pct_valor_no_originarios')" class="col-3">
       <input type="text" id="ptc_Valor_No_Originarios" formControlName="ptcValorNoOriginarios" class="form-control" />
     </div>

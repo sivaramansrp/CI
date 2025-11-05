@@ -19,6 +19,8 @@ export class Tramite40101Query extends Query<Tramite40101State> {
     return state;
   });
 
+  solicitanteData$ = this.select(state => state.solicitanteDatas);
+
   /**
    * Constructor del servicio.
    * 

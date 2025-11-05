@@ -14,10 +14,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Componente para manejar los detalles de la mercancía.
@@ -31,8 +31,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-del-destinatario.component.scss',
 })
 export class DatosDelDestinatarioComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Datos del formulario para inicializar los valores
    * @type { [key: string]: unknown }
@@ -53,7 +52,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207,110208];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -107,7 +106,7 @@ export class DatosDelDestinatarioComponent
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService) {
     this.createForm();
   }
   /**
@@ -121,12 +120,29 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
-    this.applyNumeroRegistroFiscalValidation();
+      if (this.idProcedimiento === 110212) {
+      const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }else{
+      this.applyNumeroRegistroFiscalValidation();
+    }
     this.inicializarEstadoFormulario();
   }
-
+  /**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
   /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): boolean{
+  public markAllFieldsTouched(): boolean {
     if (this.formDatosDelDestinatario.invalid) {
       this.formDatosDelDestinatario.markAllAsTouched();
       return false;
@@ -150,8 +166,17 @@ export class DatosDelDestinatarioComponent
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
-    });  
-    this.updateRequiredValidators();
+    });
+    if (this.idProcedimiento === 110212) {
+      const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else {
+      this.updateRequiredValidators();
+    }
   }
 
   /**
@@ -163,12 +188,13 @@ export class DatosDelDestinatarioComponent
    */
   updateRequiredValidators(): void {
     if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
-    }else{
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    } else {
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
     }
+
   }
 
   /**
@@ -187,32 +213,32 @@ export class DatosDelDestinatarioComponent
     const NOMBRES = this.formDatosDelDestinatario.get('nombres'); // Add validation for nombres
 
     if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
-        return;
+      return;
     }
 
     if (this.idProcedimiento === 110205 || this.idProcedimiento === 110223) {
-        NUMERO_REGISTRO_FISCAL.setValidators([
-            Validators.required,
-            Validators.maxLength(30),
-        ]);
-        PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
-        NOMBRES.setValidators([
-            Validators.required, // Add required validation for nombres
-            Validators.maxLength(20),
-        ]);
+      NUMERO_REGISTRO_FISCAL.setValidators([
+        Validators.required,
+        Validators.maxLength(30),
+      ]);
+      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+      NOMBRES.setValidators([
+        Validators.required, // Add required validation for nombres
+        Validators.maxLength(20),
+      ]);
     } else {
-        NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
-        PRIMER_APELLIDO.setValidators([
-            Validators.required,
-            Validators.maxLength(20),
-        ]);
-        NOMBRES.setValidators([Validators.maxLength(20)]); // Optional for other cases
+      NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
+      PRIMER_APELLIDO.setValidators([
+        Validators.required,
+        Validators.maxLength(20),
+      ]);
+      NOMBRES.setValidators([Validators.maxLength(20)]); // Optional for other cases
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
     NOMBRES.updateValueAndValidity(); // Update validity for nombres
-}
+  }
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -240,7 +266,7 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
-    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+    if (changes?.['idProcedimiento']?.currentValue && changes?.['idProcedimiento']) {
       this.updateRequiredValidators();
     }
   }
