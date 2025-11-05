@@ -19,6 +19,13 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * Representa el estado completo de la solicitud para el trámite 260218.
  */
 export interface Tramite260218State {
+
+  /**
+   * @property {number | null} idSolicitud
+   * Identificador único de la solicitud asociada al trámite.
+   */
+  idSolicitud: number | null;
+
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
    * Lista de destinatarios finales asociados al trámite.
@@ -113,6 +120,7 @@ export interface Tramite260218State {
 // Función que inicializa el estado de la solicitud.
 export function createInitialState(): Tramite260218State {
   return {
+    idSolicitud: null, // Inicialmente no hay solicitud asociada.
     destinatarioFinalTablaDatos: [], // Lista vacía de destinatarios.
     facturadorTablaDatos: [], // Lista vacía de facturadores.
     proveedorTablaDatos: [], // Lista vacía de proveedores.
@@ -163,7 +171,7 @@ export function createInitialState(): Tramite260218State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA, // Datos iniciales de la tabla de opciones.
     scianConfigDatos: [], // Datos vacíos de la tabla SCIAN.
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA, // Datos iniciales de las mercancías.
+    tablaMercanciasConfigDatos: [], // Datos iniciales de las mercancías.
     seleccionadoopcionDatos: [], // Opciones seleccionadas vacías.
     seleccionadoScianDatos: [], // Datos seleccionados de SCIAN vacíos.
     seleccionadoTablaMercanciasDatos: [], // Datos seleccionados de mercancías vacíos.
@@ -332,6 +340,18 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }
