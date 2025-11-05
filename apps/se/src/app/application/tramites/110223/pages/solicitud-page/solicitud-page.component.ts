@@ -131,7 +131,6 @@ export class SolicitudPageComponent {
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
       });
-    (window as any).debugComponent = this;
     
   }
 

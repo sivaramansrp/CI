@@ -422,6 +422,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     });
   }
 
+  /**
+   * @descripcion
+   * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
+   * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+   */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
     this.store.setMercanciaTabla(evento);
@@ -508,7 +513,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       .subscribe({
         next: (response: any) => {
           
-          const MAPPED_DATA: Mercancia[] = (response?.datos ?? []).map(
+          const DATOS_MAPEADOS: Mercancia[] = (response?.datos ?? []).map(
             (item: any) => ({
               id: item.idMercancia,
               fraccionArancelaria: item.fraccionArancelaria || '',
@@ -544,11 +549,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
             })
           );
 
-          this.store.setbuscarMercancia(MAPPED_DATA);
+          this.store.setbuscarMercancia(DATOS_MAPEADOS);
           this.busquedaRealizada = true;
-          this.datosTablaUno$ = of(MAPPED_DATA || []);
+          this.datosTablaUno$ = of(DATOS_MAPEADOS || []);
           
-          if (MAPPED_DATA.length > 0) {
+          if (DATOS_MAPEADOS.length > 0) {
             this.mercanciasDisponibles = true;
           } else {
             this.mercanciasDisponibles = false;
