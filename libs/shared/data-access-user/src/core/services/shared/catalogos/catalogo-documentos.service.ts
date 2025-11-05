@@ -14,7 +14,7 @@ export class CatalogoDocumentosService {
     constructor(
         private http: HttpClient,
     ) {
-        this.host = `${ENVIRONMENT.API_HOST_TEST}/api`;
+        this.host = `${ENVIRONMENT.API_HOST}/api`;
     }
 
     getDocumentosObligatorios(tramite: string, params: ParametrosGetDocumentos): Observable<CatalogoDocumentosResponse> {
