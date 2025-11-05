@@ -591,26 +591,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     }
   }
 
-       /**
- * @descripcion
- * Actualiza la tabla de mercancías en el store con la lista recibida en el evento
- * y limpia previamente la mercancía seleccionada.
- *
- * @param {Mercancia[]} event  
- * Lista de mercancías que se deben guardar en el store.
- *
- * @returns {void}  
- * No retorna ningún valor.
- *
- * @ejemplo
- * ```ts
- * this.guardarClicados(listaMercancias);
- * ```
- */
-      guardarClicados(event:Mercancia[]):void{
-         this.store.clearSelectedMercancia();
-    this.store.setMercanciaTabla(event);
-      }
       /**
  * @descripcion
  * Establece en el store la mercancía seleccionada en el evento.
