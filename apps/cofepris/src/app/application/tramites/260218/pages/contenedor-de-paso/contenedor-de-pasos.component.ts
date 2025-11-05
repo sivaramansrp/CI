@@ -156,6 +156,8 @@ export class ContenedorDePasosComponent implements OnInit {
 
   public requiresPaymentData: boolean = false;
 
+  public confirmarSinPagoDeDerechos: number = 0;
+
    /** Nueva notificación relacionada con el RFC. */
     public seleccionarFilaNotificacion!: Notificacion;
 
@@ -646,6 +648,7 @@ onClickCargaArchivos(): void {
     this.requiresPaymentData = true;
     } else {
       this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
     }
   }
         /**

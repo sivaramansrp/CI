@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
@@ -24,7 +24,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit, OnChanges {
   // Variable que mantiene el índice de la pestaña seleccionada.
   indice: number | undefined = 1;
 
@@ -66,6 +66,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     @ViewChild(TercerosRelacionadosVistaComponent)
     tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
+    @Input() confirmarSinPagoDeDerechos: number = 0;
+
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
    * @constructor
@@ -84,6 +86,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       map((seccionState) => {
         this.consultaState = seccionState;
       })).subscribe();
+  }
+
+
+ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
   }
 
   /**
