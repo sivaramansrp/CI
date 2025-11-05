@@ -3,8 +3,8 @@ import { Catalogo, CatalogoServices, ConfiguracionColumna, ConsultaioQuery, Inpu
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
 import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
-import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
 import { CARGA_MERCANCIA_EXPORT } from "../../../../shared/constantes/modificacion.enum";
+import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
@@ -577,8 +577,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           // } else {
           //   this.mercanciasDisponibles = false;
           // }
-        },
-        error: (error) => {},
+        }
       });
   }
 

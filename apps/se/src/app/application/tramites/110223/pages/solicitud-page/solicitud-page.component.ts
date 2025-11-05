@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -7,10 +7,10 @@ import { CertificadosOrigenService } from '../../services/certificado-origen.ser
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
 import { HttpClient } from '@angular/common/http';
+import { PASOS } from '../../enums/constantes-alertas.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PASOS } from '../../enums/constantes-alertas.enum';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110223Query } from '../../query/tramite110223.query';
 
@@ -138,18 +138,21 @@ export class SolicitudPageComponent {
    * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
    * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
    * */
-  buildMercanciaSeleccionadas(arr: any[]): any[] {
-    return arr.map((item: any) => ({
-      id: item.id,
-      fraccion_arancelaria: item.fraccionArancelaria,
-      tipo_factura: item.tipoFactura,
-      num_factura: item.numeroFactura,
-      complemento_descripcion: item.complementoDescripcion,
-      fecha_factura: item.fechaFactura,
-      cantidad: item.cantidad,
-      umc: item.umc,
-      valor_mercancia: item.valorMercancia,
-    }));
+  buildMercanciaSeleccionadas(arr: unknown[]): Record<string, unknown>[] {
+    return arr.map((item: unknown) => {
+      const MERCANCIA_ITEM = item as Record<string, unknown>;
+      return {
+      id: MERCANCIA_ITEM['id'],
+      fraccion_arancelaria: MERCANCIA_ITEM['fraccionArancelaria'],
+      tipo_factura: MERCANCIA_ITEM['tipoFactura'],
+      num_factura: MERCANCIA_ITEM['numeroFactura'],
+      complemento_descripcion: MERCANCIA_ITEM['complementoDescripcion'],
+      fecha_factura: MERCANCIA_ITEM['fechaFactura'],
+      cantidad: MERCANCIA_ITEM['cantidad'],
+      umc: MERCANCIA_ITEM['umc'],
+      valor_mercancia: MERCANCIA_ITEM['valorMercancia'],
+    };
+    });
   }
 
   /**
@@ -227,54 +230,83 @@ export class SolicitudPageComponent {
     //     });
     //   });
 
-     return new Promise((resolve, reject) => {      
+     return new Promise((resolve) => {      
       const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
              
-      API_CALL.subscribe({
+      API_CALL.subscribe({        
         next: (response) => {
-         
-          let idSolicitud: number = 0;
-          let responseProcessed = false;
-
-          if (esValidObject(response) && esValidObject(response['datos'])) {
-            const DATOS = response['datos'] as { idSolicitud?: number };
-            if (getValidDatos(DATOS.idSolicitud)) {
-              idSolicitud = DATOS.idSolicitud ?? 0;
-              responseProcessed = true;
-            }
-          } 
-          else if (esValidObject(response) && esValidObject(response['data'])) {
-            const DATA = response['data'] as { idSolicitud?: number };
-            if (getValidDatos(DATA.idSolicitud)) {
-              idSolicitud = DATA.idSolicitud ?? 0;
-              responseProcessed = true;
-            }
-          }
-          else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
-            idSolicitud = response['idSolicitud'] as number;
-            responseProcessed = true;
-          }
-          else if (esValidObject(response) && getValidDatos(response['id'])) {
-            idSolicitud = response['id'] as number;
-            responseProcessed = true;
-          }
-
-          if (responseProcessed && idSolicitud > 0) {
-            this.store.setIdSolicitud(idSolicitud);
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-          } else if (esValidObject(response)) {
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-          }
-          resolve({
-            id: response['id'] ?? 0,
-            descripcion: response['descripcion'] ?? '',
-            codigo: response['codigo'] ?? '',
-            data: response['data'] ?? response['datos'] ?? null,
-            ...response,          
-          } as JSONResponse);
+          const RESPONSE_OBJ = response as Record<string, unknown>;
+          const { idSolicitud, responseProcessed } = this.extraerIdSolicitud(RESPONSE_OBJ);
+          this.procesarRespuestaYNavegar(RESPONSE_OBJ, idSolicitud, responseProcessed);
+          resolve(this.construirRespuestaJSON(RESPONSE_OBJ));
         }
       });
     });
+  }
+
+  /**
+   * Extrae el ID de solicitud de la respuesta del servidor.
+   * @param response Respuesta del servidor
+   * @returns Objeto con el ID de solicitud y si fue procesado correctamente
+   */
+  private extraerIdSolicitud(response: Record<string, unknown>): { idSolicitud: number; responseProcessed: boolean } {
+    let IDSOLICITUD: number = 0;
+    let RESPONSEPROCESSED = false;
+
+    if (esValidObject(response) && esValidObject(response['datos'])) {
+      const DATOS = response['datos'] as { idSolicitud?: number };
+      if (getValidDatos(DATOS.idSolicitud)) {
+        IDSOLICITUD = DATOS.idSolicitud ?? 0;
+        RESPONSEPROCESSED = true;
+      }
+    } 
+    else if (esValidObject(response) && esValidObject(response['data'])) {
+      const DATA = response['data'] as { idSolicitud?: number };
+      if (getValidDatos(DATA.idSolicitud)) {
+        IDSOLICITUD = DATA.idSolicitud ?? 0;
+        RESPONSEPROCESSED = true;
+      }
+    }
+    else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
+      IDSOLICITUD = response['idSolicitud'] as number;
+      RESPONSEPROCESSED = true;
+    }
+    else if (esValidObject(response) && getValidDatos(response['id'])) {
+      IDSOLICITUD = response['id'] as number;
+      RESPONSEPROCESSED = true;
+    }
+
+    return { idSolicitud: IDSOLICITUD, responseProcessed: RESPONSEPROCESSED };
+  }
+
+  /**
+   * Procesa la respuesta del servidor y navega al siguiente paso si es necesario.
+   * @param response Respuesta del servidor
+   * @param idSolicitud ID de la solicitud extraído
+   * @param responseProcessed Indica si la respuesta fue procesada correctamente
+   */
+  private procesarRespuestaYNavegar(response: Record<string, unknown>, idSolicitud: number, responseProcessed: boolean): void {
+    if (responseProcessed && idSolicitud > 0) {
+      this.store.setIdSolicitud(idSolicitud);
+      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    } else if (esValidObject(response)) {
+      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+    }
+  }
+
+  /**
+   * Construye la respuesta JSON final.
+   * @param response Respuesta del servidor
+   * @returns Respuesta JSON procesada
+   */
+  private construirRespuestaJSON(response: Record<string, unknown>): JSONResponse {
+    return {
+      id: response['id'] ?? 0,
+      descripcion: response['descripcion'] ?? '',
+      codigo: response['codigo'] ?? '',
+      data: response['data'] ?? response['datos'] ?? null,
+      ...response,          
+    } as JSONResponse;
   }
 
   /**
