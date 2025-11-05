@@ -556,7 +556,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
-    const CONTENEDORES = this.solicitudForm.value.tipoBusqueda;
+    const CONTENEDORES = this.solicitudForm.value.contenedores;
     const DIGITOCONTROL = this.solicitudForm.value.digitoDeControl || '';
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
       const API_PAYLOAD = {
@@ -654,6 +654,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Agregar solicitud.
    */
   agregarSolicitud(payload: any): void {
+      const tipoBusqueda = this.solicitudForm.value.tipoBusqueda;
       this.datosTramiteService.agregarSolicitud(payload).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
         if (respuesta?.codigo === '00') {
@@ -673,7 +674,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.value.numeroContenedor = '';
           this.solicitudForm.value.digitoDeControl = '';
           this.mostrarAgregarTipoContenedor = false;
-          this.solicitudForm.get('tipoBusqueda')?.setValue(payload.tipo_contenedor);
+          this.solicitudForm.get('tipoBusqueda')?.setValue(tipoBusqueda);
 
           // this.solicitudForm.reset();
           // this.solicitudForm.markAsUntouched();
