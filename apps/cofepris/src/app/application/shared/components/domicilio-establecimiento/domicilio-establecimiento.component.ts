@@ -33,7 +33,6 @@ import {
 import {
   ConfiguracionVisibilidad,
   DATOS_MERCANCIAS,
-  MERCANCIAS_DATA,
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,

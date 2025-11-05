@@ -403,7 +403,7 @@
                   <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
                   name="estadoFisico" [placeholder]="'Seleccione un valor'" 
                   (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
-                  [isDisabled]="esFormularioSoloLectura"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
+                  [isDisabled]="esFormularioSoloLectura || rfcValido"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
                </div>
                }
                <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">
