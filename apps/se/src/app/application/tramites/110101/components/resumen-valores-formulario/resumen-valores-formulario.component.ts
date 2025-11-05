@@ -77,7 +77,7 @@ export class ResumenValoresFormularioComponent implements OnChanges {
    * 
    * @method ngOnInit
    */
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['valoresRecibidosResumen']?.currentValue) {
     const DATOS = changes['valoresRecibidosResumen'].currentValue;
 

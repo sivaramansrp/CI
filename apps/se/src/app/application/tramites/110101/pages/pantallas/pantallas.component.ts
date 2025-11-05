@@ -480,7 +480,6 @@ export class PantallasComponent implements OnInit {
         aprobado: proceso.cumple_proceso ?? null
       })) || []
     };
-    console.log('Payload de solicitud completa:', PAYLOAD);
 
     this.solicitudService.postSolicitudGuardar(PAYLOAD)
       .pipe(takeUntil(this.destroy$))
@@ -679,7 +678,6 @@ export class PantallasComponent implements OnInit {
         }
       }
     };
-    console.log('Payload de solicitud completa validar:', PAYLOAD);
 
     this.solicitudService.postValidarSolicitudCompleta(PAYLOAD)
       .pipe(takeUntil(this.destroy$))
