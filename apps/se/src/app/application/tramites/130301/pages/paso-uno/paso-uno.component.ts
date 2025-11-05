@@ -68,11 +68,18 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
 
   /**
    * Decorador `ViewChild` para acceder a la instancia del componente `SolicitanteComponent`.
-   * Este componente se utiliza para gestionar información relacionada con el solicitante.
-   */
+  * Instancias de componentes hijos accedidas mediante `ViewChild` para gestionar los formularios y datos del trámite:
+  * - `SolicitanteComponent`: Información y validación del solicitante.
+  * - `DatosDelTramiteComponent`: Datos específicos del trámite.
+  * - `CertificadoKimberleyComponent`: Formulario y validación del certificado Kimberley.
+  * - `ProrrogasComponent`: Gestión y validación de prorrogas.
+  */
   @ViewChild('Solicitante') solicitante!: SolicitanteComponent;
+  /** Instancia del componente para datos del trámite */
   @ViewChild('datosDelTramite') datosDelTramiteComponent!: DatosDelTramiteComponent;
+  /** Instancia del componente para certificado Kimberley */
   @ViewChild('certificadoKimberley') certificadoKimberleyComponent!: CertificadoKimberleyComponent;
+  /** Instancia del componente para prorrogas */
   @ViewChild('prorrogas') prorrogasComponent!: ProrrogasComponent;
 
   /**
