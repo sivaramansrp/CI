@@ -6,7 +6,6 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import {
@@ -33,6 +32,7 @@ import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-d
 import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ViewChild } from '@angular/core';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
  * incluyendo domicilio, manifiestos y representante legal.
@@ -42,7 +42,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
@@ -55,6 +54,11 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+
+  @ViewChild(DatosDelEstablecimientoRFCComponent) datosDelEstablecimientoRfcComp!: DatosDelEstablecimientoRFCComponent;
+  @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
+  @ViewChild(ManifiestosComponent) manifiestosComp!: ManifiestosComponent;
+  @ViewChild(RepresentanteLegalRfcComponent) representanteLegalRfcComp!: RepresentanteLegalRfcComponent;
   @Input() idProcedimiento!: number;
   rfcValido = false;
   @Input() identificacion: boolean = false;
@@ -321,6 +325,22 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.rfcValido = valor;
   }
 
+  validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === false){
+      ISVALID = false;
+    }
+    if(this.domicilioComp.validatorButtonClick() === false){
+      ISVALID = false;
+    }
+    if(this.manifiestosComp.validarClickDeBoton() === false){
+      ISVALID = false;
+    }
+    if(this.representanteLegalRfcComp.validarClickDeBoton() === false){
+      ISVALID = false;
+    }
+    return ISVALID;
+  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.

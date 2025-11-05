@@ -136,11 +136,11 @@
    </div>
    <div class="row">
       <div class="col-md-12 mt-5">
-         <h4>S.C.I.A.N.<span >*</span>:</h4>
+         <h4>S.C.I.A.N.<span [ngClass]="{'tiene-error': nicoTablaDatosCheck && nicoTablaDatos.length === 0}">*</span>:</h4>
       </div>
    </div>
    <div class="row">
-      <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [isInvalida]="domicilio.invalid && domicilio.touched && nicoTablaDatos.length === 0"
+      <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [isInvalida]="nicoTablaDatosCheck && nicoTablaDatos.length === 0"
       [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       (listaDeFilaSeleccionada)="seleccionarlistaSeccionNico($event)">
       </app-tabla-dinamica>
@@ -201,7 +201,7 @@
    </div>
    <div class="row">
       <div class="col-md-12 mt-5">
-         <h5>Datos de la mercancía*:</h5>
+         <h5>Datos de la mercancía<span [ngClass]="{'text-danger': mercanciasTablaCheck && mercanciasTablaDatos.length === 0 }">*</span>:</h5>
       </div>
    </div>
    <div class="row mt-5">
@@ -210,7 +210,7 @@
       [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos" 
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-      [isInvalida]="domicilio.invalid && domicilio.touched && mercanciasTablaDatos.length === 0"
+      [isInvalida]="mercanciasTablaCheck && mercanciasTablaDatos.length === 0"
       (listaDeFilaSeleccionada)="seleccionarlistaSeccionMercancias($event)"
       ></app-tabla-dinamica>
       <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
@@ -220,13 +220,13 @@
          </app-table-pagination>
       </div>
       <div class="container text-end mt-5">
-         @if(mercanciasTablaDatos.length > 0) {
-         <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+         @if(seleccionarlistaMercancias.length > 0) {
+         <button class="btn btn-default me-2" 
          [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
          <button class="btn btn-danger me-2" data-bs-toggle="modal"
          [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
          }
-         <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+         <button class="btn btn-primary me-2"  
          [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
       </div>
    </div>
@@ -403,7 +403,7 @@
                   <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
                   name="estadoFisico" [placeholder]="'Seleccione un valor'" 
                   (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
-                  [isDisabled]="esFormularioSoloLectura || rfcValido"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
+                  [isDisabled]="esFormularioSoloLectura ||  (formMercancias.get('estadoFisico')?.disabled ?? false)"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
                </div>
                }
                <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">

@@ -513,6 +513,7 @@ export class DomicilioComponent
    * Datos de la tabla de selección de radio.
    */
   nicoTablaDatos: NicoInfo[] = [];
+  nicoTablaDatosCheck:boolean = false;
 
   /**
    * Tabla de selección de checkbox.
@@ -523,6 +524,8 @@ export class DomicilioComponent
    * Datos de la tabla de selección de checkbox.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  mercanciasTablaCheck:boolean = false;
 
   /**
    * Lista de mercancías seleccionadas.
@@ -1269,6 +1272,7 @@ export class DomicilioComponent
 
   agregarMercanciaModal(): void {
     this.formMercancias.reset();
+    this.openModal();
   }
 
   /**
@@ -1320,13 +1324,18 @@ export class DomicilioComponent
           document.body.classList.remove("modal-open");
           document.body.style.removeProperty("overflow");
           document.body.style.removeProperty("padding-right");
-        }, 300);
+        }, 100);
       }
       this.tieneFormularioMercanciasEnviado = false;
     } else {
       this.formMercancias.markAllAsTouched();
     }
   }
+
+  openModal():void {
+  const MODAL = new Modal(document.getElementById('modalAddAgentMercancias')!);
+  MODAL.show();
+}
 
   /**
    * Actualiza la paginación de la tabla de establecimientos.
@@ -1475,6 +1484,7 @@ export class DomicilioComponent
           numeroRegistro: "1",
         }),
       });
+      this.openModal();
     }
   }
   ngAfterViewInit(): void {
@@ -1510,7 +1520,29 @@ export class DomicilioComponent
       }
     }
   }
-
+  validatorButtonClick(): boolean {
+   let ISVALID = true;
+   if(this.domicilio.invalid){
+    this.domicilio.markAllAsTouched();
+    ISVALID = false;
+   }
+   
+   if(this.nicoTablaDatos.length === 0){
+    this.nicoTablaDatosCheck = true;
+    ISVALID = false;
+   }
+   else{
+    this.nicoTablaDatosCheck = false;
+   }
+   if(this.mercanciasTablaDatos.length === 0){
+    this.mercanciasTablaCheck=true;
+    ISVALID = false;
+   }
+   else{
+    this.mercanciasTablaCheck=false;
+   }
+   return ISVALID;
+  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
