@@ -1,10 +1,10 @@
 import {
   API_GET_CATALOGO_ADUANAS,
   API_GET_CATALOGO_BANCOS,
-  API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
   API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
   API_GET_CATALOGO_FRACCION_ARANCELARIA,
+  API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
   API_GET_CATALOGO_MEDIO_TRANSPORTE,
   API_GET_CATALOGO_OFICINAS_INSPECCION,
   API_GET_CATALOGO_PUNTOS_VERIFICACION,
@@ -15,16 +15,24 @@ import {
   API_GET_CATALOGO_TIPOS_PRODUCTO,
   API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES,
   API_GET_CATALOGO_USOS_MERCANCIA,
-  API_GET_DATOS_SOLICITUD,
   API_GET_CATALOGO_VIDA_SILVESTRE,
+  API_GET_DATOS_SOLICITUD,
+  API_GET_SOLICITUDES_MOVILIZACION_NACIONAL,
+  API_GET_SOLICITUDES_PAGO_DERECHOS,
+  API_GET_SOLICITUDES_TERCEROS_RELACIONADOS,
 } from '../../../../../core/server/api-router';
 import { Observable, map } from 'rxjs';
+import {
+  PrellenadoSolicitud,
+  PrellenadoSolicitudMovilizacionNacional,
+  PrellenadoSolicitudPagoDerechos,
+  PrellenadoSolicitudTercerosRelacionados,
+} from '../../../models/220202/prellenado-solicitud.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PrellenadoSolicitud } from "../../../models/220202/prellenado-solicitud.model";
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +75,7 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
       .pipe(
-      // la clave se pasa como descripcion y la descripcion se obtiene de otro endpoint
+      // la clave se pasa como descripción y la descripción se obtiene de otro endpoint
         map((response: BaseResponse<Catalogo[]>) => ({
           ...response,
           datos: response.datos?.map(item => ({
@@ -79,7 +87,7 @@ export class CatalogosService {
   }
 
   /**
-     * Obtiene el catálogo de nico para un trámite y clave de fracción específicos.
+     * Obtiene el catálogo de nico para un trámite y clave de fracción especificos.
      *
      * @param tramite - El identificador numérico del trámite para el cual se solicita el catálogo.
      * @param cveFraccion - La clave de la fracción arancelaria a consultar.
@@ -89,7 +97,7 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCION_ARANCELARIA(tramite.toString(), cveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT)
       .pipe(
-      // la clave se pasa como descripcion y la descripcion se obtiene de otro endpoint
+      // la clave se pasa como descripción y la descripción se obtiene de otro endpoint
         map((response: BaseResponse<Catalogo[]>) => ({
           ...response,
           datos: response.datos?.map(item => ({
@@ -125,7 +133,7 @@ export class CatalogosService {
   /**
   * Obtiene el catálogo de tipos producto para un trámite específico.
   *
-  * @param tramite - El identificador numérico del trámite para el cual se requiere el tipo de orducto.
+  * @param tramite - El identificador numérico del trámite para el cual se requiere el tipo de producto.
   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo `Catalogo`.
   */
   obtieneCatalogoTiposProducto(tramite: number): Observable<BaseResponse<Catalogo[]>> {
@@ -247,12 +255,51 @@ export class CatalogosService {
    *
    * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
    * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
-   * @param cveUcon - La clave única asociada al usuario o contexto.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
    * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
    */
   obtenSolicitudPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitud>> {
     const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
     return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
+   */
+  obtenSolicitudPrellenadoMovilizacionNacional(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudMovilizacionNacional>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_MOVILIZACION_NACIONAL(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudMovilizacionNacional>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada de terceros relaciondos basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitudTercerosRelacionados`).
+   */
+  obtenSolicitudPrellenadoTercerosRelacionados(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudTercerosRelacionados>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_TERCEROS_RELACIONADOS(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudTercerosRelacionados>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada de terceros relaciondos basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitudPagoDerechos`).
+   */
+  obtenSolicitudPrellenadoPagoDerechos(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudPagoDerechos>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_PAGO_DERECHOS(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudPagoDerechos>>(ENDPOINT);
   }
 
   /**
@@ -265,7 +312,7 @@ export class CatalogosService {
     const ENDPOINT = `${this.host}${API_GET_CATALOGO_REGIMENES(tramite.toString())}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-  
+
   /**
    * Obtiene el catálogo de vida-silvestre.
    *

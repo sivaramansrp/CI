@@ -16,9 +16,13 @@ import {
   DatosDeFila,
   DatosForma,
   FilaSolicitud,
+  Movilizacion,
+  PagoDeDerechos,
   RadioOpcion,
   SolicitudData,
   SolicitudFilaTabla,
+  TercerosrelacionadosExportadorTable,
+  TercerosrelacionadosdestinoTable,
 } from '../../models/220202/fitosanitario.model';
 import {
   DetallasDatos,
@@ -926,7 +930,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
+      // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
+      this.obtenerPrellenadoMovilizacionNacional('202850466');
+      this.obtenerPrellenadoTercerosRelacionados('202850466');
+      this.obtenerPrellenadoPagoDerechos('202850466');
       this.catalogosService
+        // .obtenSolicitudPrellenado(event.id_solicitud)
         .obtenSolicitudPrellenado(220202, true, '202850466' ?? '')
         // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
@@ -1069,6 +1078,119 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de movilizacion nacional
+   * @param idSolicitud
+   */
+  obtenerPrellenadoMovilizacionNacional(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: Movilizacion = {
+              transporte: datos.datos.id_transporte,
+              guiaIdentificacion: datos.datos.id_punto_verificacion,
+              empresaTransportista: datos.datos.razon_social,
+              medioTransporte: datos.datos.ide_medio_transporte
+            };
+            (this.agriculturaApiService.updateMovilizacion as (value: Movilizacion) => void)(GUARDAR_VALORES);
+          }
+        }
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de terceros relacionados
+   * @param idSolicitud
+   */
+  obtenerPrellenadoTercerosRelacionados(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+              const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] = [];
+            datos.datos.terceros_destinatario.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable = {
+                tipoMercancia: '',
+                nombre: item.nombre,
+                primerApellido: item.apellido_paterno,
+                segundoApellido: item.apellido_materno,
+                razonSocial: item.razon_social,
+                pais: item.pais,
+                codigoPostal: item.codigo_postal,
+                estado: item.cve_entidad,
+                municipio: item.cve_deleg_mun,
+                colonia: item.cve_colonia,
+                calle: item.calle,
+                numeroExterior: item.num_exterior,
+                numeroInterior: item.num_interior,
+                lada: item.lada,
+                telefono: item.telefonos,
+                correo: item.correo,
+                planta: '',
+                domicilio: '',
+                municipioDescripcion: '',
+                estadoDescripcion: '',
+                paisDescripcion: '',
+                coloniaDescripcion: ''
+              };
+              ARRAY_TERCEROS_DESTINO.push(GUARDAR_VALORES_TERCEROS_DESTINO);
+              (this.agriculturaApiService.updateTercerosRelacionado as (value: TercerosrelacionadosdestinoTable[]) => void)(ARRAY_TERCEROS_DESTINO);
+            });
+            const ARRAY_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable[] = [];
+            datos.datos.terceros_exportador.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable = {
+                tipoMercancia: '',
+                nombre: item.nombre,
+                razonSocial: item.razon_social,
+                pais: item.pais,
+                telefono: item.telefonos,
+                domicilio: item.descripcion_ubicacion,
+                correo: item.correo,
+                primerApellido: item.apellido_paterno,
+                segundoApellido: item.apellido_materno,
+                lada: item.lada
+              }
+              ARRAY_TERCEROS_EXPORTADOR.push(GUARDAR_VALORES_TERCEROS_EXPORTADOR);
+              (this.agriculturaApiService.updateTercerosExportador as (value: TercerosrelacionadosExportadorTable[]) => void)(ARRAY_TERCEROS_EXPORTADOR);
+            })
+
+          }
+        }
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de pago de derechos
+   * @param idSolicitud
+   */
+  obtenerPrellenadoPagoDerechos(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: PagoDeDerechos = {
+              exentoPago: datos.datos.exento_pago,
+              justificacion: datos.datos.ide_motivo_exento_pago,
+              claveReferencia: datos.datos.cve_referencia_bancaria,
+              cadenaDependencia: datos.datos.cadena_pago_dependencia,
+              banco: datos.datos.cve_banco,
+              llavePago: datos.datos.llave_pago,
+              importePago: datos.datos.imp_pago,
+              fechaPago: datos.datos.fec_pago
+            };
+            (this.agriculturaApiService.updatePago as (value: PagoDeDerechos) => void)(GUARDAR_VALORES);
+          }
+        }
+      });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
