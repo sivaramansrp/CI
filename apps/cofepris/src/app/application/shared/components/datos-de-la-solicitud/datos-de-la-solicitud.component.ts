@@ -1129,10 +1129,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
-        
-        
         CONTROL?.enable();
-        
         }
        
   

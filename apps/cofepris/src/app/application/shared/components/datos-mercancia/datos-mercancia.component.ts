@@ -834,6 +834,14 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260217:
+        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
+        this.elementosNoValidos = [
+          'formaFarmaceutica',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        break;
       case 260219:
         this.elementosAnadidos = [
           'especifique',
@@ -865,6 +873,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         ];
         break;
       case 260214:
+        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
         this.elementosNoValidos = [
           'formaFarmaceutica',
           'numeroRegistroSanitario',

@@ -52,7 +52,7 @@ describe('Solocitud130301Service', () => {
   it('debe obtener los datos de registro toma muestras mercancias', () => {
     const mockResponse: Solicitud130301State = {
       paisEmisorCertificado: 'MX',
-      mixed: 'true',
+      mixed: true,
       paisDeOrigen: 'ZA',
       motivoJustificacion: 'Motivo',
       otrasDeclaraciones: 'Declaraciones'

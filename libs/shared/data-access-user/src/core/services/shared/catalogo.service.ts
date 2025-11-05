@@ -45,10 +45,8 @@ import {
   CATALOGO_TRATADOS_ACUERDOS,
   CATALOGO_TRATADO_ACUERDO,
   CATALOGO_TRATADO_ACUERDOS,
-  CATALOGO_TRATADO_ACUERDOS_PAIS,
   CATALOGO_TRATADO_ACUERDO_NEW,
   CATALOGO_TRATADO_ACUERDO_PAIS,
-  CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC,
   CATALOGO_UNIDAD_DE_MASA_BRUTA,
   CATALOGO_UNIDAD_MASA_BRUTA,
   CLASIFICACION_REGIMEN,
@@ -674,14 +672,6 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    if (tramite === '110214' || tramite === '110216') {
-      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
-      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    }
-    if (tramite === '110217') {
-      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS_PAIS(tramite)}`;
-      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    }
     const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }

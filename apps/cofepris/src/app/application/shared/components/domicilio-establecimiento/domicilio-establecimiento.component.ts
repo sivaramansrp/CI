@@ -9,24 +9,30 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
+  REGEX_TEXTO_ALFANUMERICO_EXTENDIDO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+
 import {
+  AfterViewInit,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
+
 import {
   ConfiguracionVisibilidad,
+  DATOS_MERCANCIAS,
   MERCANCIAS_DATA,
   MercanciasInfo,
   NICO_TABLA,
@@ -49,7 +55,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { Modal } from 'bootstrap';
+import Modal from 'bootstrap/js/dist/modal';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -85,8 +91,10 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
-export class DomicilioComponent implements OnInit, OnDestroy {
-
+export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
+  @Input() identificacion: boolean = false;
+  @Input() idProcedimiento!: number;
+  @Input() rfcValido: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -283,18 +291,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_CODIGO_POSTAL)]],
-      estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      colonia: [this.solicitudState?.colonia, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      calle: [this.solicitudState?.calle, Validators.required],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.requiredTrue],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, Validators.required
-      ],
+            codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]+$')]],
+            estado: [this.solicitudState?.estado, Validators.required],
+            muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
+            localidad: [this.solicitudState?.localidad,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            colonia: [this.solicitudState?.colonia,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+            lada: [this.solicitudState?.lada],
+            telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+            avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+            licenciaSanitaria: [ { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required, Validators.maxLength(50)]],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
@@ -678,15 +684,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+      claveDescripcionModal: [{value: this.solicitudState?.claveDescripcionModal, disabled: true}, Validators.required],
     });
     this.formMercancias = this.fb.group({
       nombreComercial: [
-        '',
-        [Validators.required, Validators.maxLength(1000)],
+        ''
       ],
-      nombreComun: ['', [Validators.required, Validators.maxLength(250)]],
-      nombreCientifico: ['', [Validators.maxLength(250)]],
+      nombreComun: [''],
+      nombreCientifico: [''],
       usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         '',
@@ -1079,7 +1084,15 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       this.listaMercancias.push(NUEVA_MERCANCIA);
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+       const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+      MODAL_INSTANCE?.hide();
+    }
       this.tieneFormularioMercanciasEnviado = false;
+    }
+    else{
+      this.formMercancias.markAllAsTouched();
     }
   }
 
@@ -1208,6 +1221,35 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
     }
   }
+  ngAfterViewInit(): void {
+    this.mercanciasTabla = this.idProcedimiento === 260512 || this.idProcedimiento === 260513 ? DATOS_MERCANCIAS : MERCANCIAS_DATA;
+   if(this.identificacion){
+    this.formMercancias.get('nombreComercial')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComun')?.setValidators([Validators.required, Validators.maxLength(250)]);
+    this.formMercancias.get('nombreCientifico')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComercial')?.updateValueAndValidity();
+    this.formMercancias.get('nombreComun')?.updateValueAndValidity();
+    this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
+   }
+   if(!this.rfcValido){
+this.domicilio.disable();
+   }
+   else{
+    this.domicilio.enable();
+   }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.formMercancias) {
+      return;
+    }
+  if (changes['rfcValido']) {
+    if (!this.rfcValido) {
+      this.domicilio.disable();
+    } else {
+      this.domicilio.enable();
+    }
+  }
+}
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

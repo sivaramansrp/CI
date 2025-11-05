@@ -31,6 +31,7 @@ export const SELECCIONAR_TRANSFORMACION = [
   { label: 'Ensamble o montaje', value: 'ensamble' }
 ]
 
+
 /** Configuración de las columnas para la tabla de insumos en el trámite 110101. */
 export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
     { encabezado: 'Nombre técnico', clave: (item: InsumosTabla) => item.nombreTecnico ?? undefined, orden: 1 },
@@ -46,7 +47,7 @@ export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
 
 /** Configuración de las columnas para la tabla de procesos en el trámite 110101. */
 export const PROCESO_TABLA: ConfiguracionColumna<ProcesoSolicitado>[] = [
-    { encabezado: 'Proceso', clave: (item: ProcesoSolicitado) => item.nombre, orden: 1 },
+    { encabezado: 'Proceso', clave: (item: ProcesoSolicitado) => item.nombre ?? undefined, orden: 1 },
 ];
 
   /** Configuración de las columnas para la tabla de envases en el trámite 110101. */
@@ -83,9 +84,9 @@ export const DATOS_MERCANCIA_MODAL_FORM = [
   },
   
   {
-    id: 'fraccionArancelaria',
+    id: 'fraccionArancelariaModal',
     labelNombre: 'Fracción arancelaria',
-    campo: 'fraccionArancelaria',
+    campo: 'fraccionArancelariaModal',
     clase: 'col-md-6',
     tipoInput: 'text',
     desactivado: false,
