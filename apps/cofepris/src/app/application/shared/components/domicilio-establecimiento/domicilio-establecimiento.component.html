@@ -141,11 +141,12 @@
    </div>
    <div class="row">
       <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [isInvalida]="domicilio.invalid && domicilio.touched && nicoTablaDatos.length === 0"
-      [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="seleccionarlistaSeccionNico($event)">
       </app-tabla-dinamica>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
         @if(nicoTablaDatos.length > 0) {
-         <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+         <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarScian()">Eliminar</button>
         }
          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
             [disabled]="esFormularioSoloLectura">

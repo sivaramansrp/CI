@@ -60,6 +60,7 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -791,7 +792,18 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         clave_Scian: this.formAgente.get('claveScianModal')?.value,
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
+      
+    const exists = this.nicoTablaDatos.some(
+      item =>
+        item.clave_Scian === NUEVO_DATO.clave_Scian &&
+        item.descripcion_Scian === NUEVO_DATO.descripcion_Scian
+    );
+
+    if (!exists) {
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos];
+    }
+      //this.nicoTablaDatos.push(NUEVO_DATO);
       this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
@@ -1199,6 +1211,23 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.seleccionarlistaMercancias = event;
   }
 
+  public seleccionarlistaSeccionNico(event: NicoInfo[]): void {
+    this.personaparas = event;
+  }
+
+  public eliminarScian(): void {
+    if (this.personaparas.length > 0) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(
+        item => !this.personaparas.some(selected =>
+          selected.clave_Scian === item.clave_Scian &&
+          selected.descripcion_Scian === item.descripcion_Scian
+        )
+      );
+      this.personaparas = [];
+    }
+  }
+
+
   /**
    * @method eliminarMercancia
    * @description
@@ -1222,6 +1251,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     }
   }
 
+ 
   /**
    * @method modificarMercancia
    * 
