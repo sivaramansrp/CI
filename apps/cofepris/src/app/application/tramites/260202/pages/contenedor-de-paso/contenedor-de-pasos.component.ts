@@ -155,8 +155,9 @@ export class ContenedorDePasosComponent implements OnInit {
       if (this.esFormaValido) {
         this.datosPasos.indice = 1;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        // return;
+        return;
       }
+      this.esFormaValido = false;
       this.postGuardarDatos(e);
     }
     else {
