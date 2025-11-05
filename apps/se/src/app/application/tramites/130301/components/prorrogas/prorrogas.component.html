@@ -29,6 +29,11 @@
         <div class="col-md-4">
             <label for="prorrogaAl" class="form-label">Prorroga al*:</label>
             <input type="text" class="form-control" formControlName="prorrogaAl" id="prorrogaAl">
+            @if (prorrogasForm.get('prorrogaAl')?.touched && prorrogasForm.get('prorrogaAl')?.invalid) {
+                <div class="text-danger">
+                    <small>Este campo es obligatorio.</small>
+                </div>
+            }
         </div>
     </div>
     <div class="row mt-5">
@@ -36,6 +41,11 @@
             <div class="form-group">
                 <label for="motivoJustificacion">Motivo y/o justificación de las modificaciones*:</label>
                 <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'motivoJustificacion', 'setMotivoJustificacion')"></textarea>
+                @if (prorrogasForm.get('motivoJustificacion')?.touched && prorrogasForm.get('motivoJustificacion')?.invalid) {
+                    <div class="text-danger">
+                        <small>Este campo es obligatorio.</small>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -44,6 +54,11 @@
             <div class="form-group">
                 <label for="otrasDeclaraciones">Otras declaraciones*:</label>
                 <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'otrasDeclaraciones', 'setOtrasDeclaraciones')"></textarea>
+                @if (prorrogasForm.get('otrasDeclaraciones')?.touched && prorrogasForm.get('otrasDeclaraciones')?.invalid) {
+                    <div class="text-danger">
+                        <small>Este campo es obligatorio.</small>
+                    </div>
+                }
             </div>
         </div>
     </div>
