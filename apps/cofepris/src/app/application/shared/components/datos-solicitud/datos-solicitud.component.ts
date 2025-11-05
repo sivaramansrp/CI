@@ -78,6 +78,8 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
   @Input() tieneDomicilioHabilitar: boolean = false;
 
+    @Input() estadoValidte: boolean = false;
+
   /**
    * Estado de la solicitud.
    */

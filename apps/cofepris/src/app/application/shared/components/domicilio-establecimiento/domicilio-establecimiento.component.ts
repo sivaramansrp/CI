@@ -96,7 +96,7 @@ export class DomicilioComponent
   @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
   @Input() rfcValido: boolean = false;
-  estadoValidte: boolean = true;
+  @Input() estadoValidte: boolean = true;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
