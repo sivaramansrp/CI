@@ -177,21 +177,21 @@ export const DATOS_REALIZAR = [
         campo: 'régimen',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [ 
-        { "id": 1, "descripcion": "Definitivos" },
-        { "id": 2, "descripcion": "Temporales" },
-        { "id": 3, "descripcion": "Depósito Fiscal" },
-        { "id": 4, "descripcion": "Tránsito de mercancías" },
-        { "id": 5, "descripcion": "Elaboración, transformación o reparación en recinto fiscalizado" },
-        { "id": 6, "descripcion": "Recinto fiscalizado estratégico" },
-        { "id": 7, "descripcion": "Importación" },
-        { "id": 8, "descripcion": "Exportación" },
-        { "id": 9, "descripcion": "Tránsito internacional" },
-        { "id": 10, "descripcion": "Depósito fiscal de gas licuado de petróleo o de gas natural" },
-        { "id": 11, "descripcion": "Depósito fiscal de vehículos" },
-        { "id": 12, "descripcion": "Definitivo de importación" },
-        { "id": 13, "descripcion": "Temporales de importación para retornar al extranjero en el mismo estado" },
-        { "id": 14, "descripcion": "Temporales de importación para elaboración, transformación o reparación para empresas con programa IMMEX" }
+        catalogos: [
+            { "id": 1, "descripcion": "Definitivos" },
+            { "id": 2, "descripcion": "Temporales" },
+            { "id": 3, "descripcion": "Depósito Fiscal" },
+            { "id": 4, "descripcion": "Tránsito de mercancías" },
+            { "id": 5, "descripcion": "Elaboración, transformación o reparación en recinto fiscalizado" },
+            { "id": 6, "descripcion": "Recinto fiscalizado estratégico" },
+            { "id": 7, "descripcion": "Importación" },
+            { "id": 8, "descripcion": "Exportación" },
+            { "id": 9, "descripcion": "Tránsito internacional" },
+            { "id": 10, "descripcion": "Depósito fiscal de gas licuado de petróleo o de gas natural" },
+            { "id": 11, "descripcion": "Depósito fiscal de vehículos" },
+            { "id": 12, "descripcion": "Definitivo de importación" },
+            { "id": 13, "descripcion": "Temporales de importación para retornar al extranjero en el mismo estado" },
+            { "id": 14, "descripcion": "Temporales de importación para elaboración, transformación o reparación para empresas con programa IMMEX" }
         ],
     },
     {
@@ -200,7 +200,7 @@ export const DATOS_REALIZAR = [
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [
-        { "id": 1, "descripcion": "De Importaci¿¿n" },
+            { "id": 1, "descripcion": "De Importaci¿¿n" },
         ],
     }
 ];
@@ -422,26 +422,26 @@ export const DATOS_MERCANCIA = [
         primerOpcion: 'Selecciona el País',
         validators: ['required'],
         catalogos: [
-            {"id": 1, "descripcion": "Selecciona el país"},
-            {"id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"},
-            {"id": 3, "descripcion": "ALBANIA (REPUBLICA DE)"},
-            {"id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"},
-            {"id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)"},
-            {"id": 6, "descripcion": "ANGOLA (REPUBLICA DE)"},
-            {"id": 7, "descripcion": "ANGUILA"},
-            {"id": 8, "descripcion": "ANTARTIDA"},
-            {"id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"},
-            {"id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"},
-            {"id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)"},
-            {"id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)"},
-            {"id": 13, "descripcion": "ARGENTINA (REPUBLICA)"},
-            {"id": 14, "descripcion": "ARMENIA (REPUBLICA DE)"},
-            {"id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)"},
-            {"id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)"},
-            {"id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)"},
-            {"id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)"},
-            {"id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)"},
-            {"id": 20, "descripcion": "Kuwaiti Dinar"},
+            { "id": 1, "descripcion": "Selecciona el país" },
+            { "id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)" },
+            { "id": 3, "descripcion": "ALBANIA (REPUBLICA DE)" },
+            { "id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)" },
+            { "id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)" },
+            { "id": 6, "descripcion": "ANGOLA (REPUBLICA DE)" },
+            { "id": 7, "descripcion": "ANGUILA" },
+            { "id": 8, "descripcion": "ANTARTIDA" },
+            { "id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)" },
+            { "id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)" },
+            { "id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)" },
+            { "id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)" },
+            { "id": 13, "descripcion": "ARGENTINA (REPUBLICA)" },
+            { "id": 14, "descripcion": "ARMENIA (REPUBLICA DE)" },
+            { "id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)" },
+            { "id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)" },
+            { "id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)" },
+            { "id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)" },
+            { "id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)" },
+            { "id": 20, "descripcion": "Kuwaiti Dinar" },
         ],
         storeFunction: 'setPaisExportador',
     },
@@ -453,27 +453,27 @@ export const DATOS_MERCANCIA = [
         primerOpcion: 'Selecciona el País',
         validators: ['required'],
         catalogos: [
-             {"id": 1, "descripcion": "Selecciona el país"},
-            {"id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"},
-            {"id": 3, "descripcion": "ALBANIA (REPUBLICA DE)"},
-            {"id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"},
-            {"id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)"},
-            {"id": 6, "descripcion": "ANGOLA (REPUBLICA DE)"},
-            {"id": 7, "descripcion": "ANGUILA"},
-            {"id": 8, "descripcion": "ANTARTIDA"},
-            {"id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"},
-            {"id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"},
-            {"id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)"},
-            {"id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)"},
-            {"id": 13, "descripcion": "ARGENTINA (REPUBLICA)"},
-            {"id": 14, "descripcion": "ARMENIA (REPUBLICA DE)"},
-            {"id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)"},
-            {"id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)"},
-            {"id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)"},
-            {"id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)"},
-            {"id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)"},
-            {"id": 20, "descripcion": "BAHREIN (REINO DE)"},
-            {"id": 21, "descripcion": "Kuwaiti Dinar"},
+            { "id": 1, "descripcion": "Selecciona el país" },
+            { "id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)" },
+            { "id": 3, "descripcion": "ALBANIA (REPUBLICA DE)" },
+            { "id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)" },
+            { "id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)" },
+            { "id": 6, "descripcion": "ANGOLA (REPUBLICA DE)" },
+            { "id": 7, "descripcion": "ANGUILA" },
+            { "id": 8, "descripcion": "ANTARTIDA" },
+            { "id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)" },
+            { "id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)" },
+            { "id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)" },
+            { "id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)" },
+            { "id": 13, "descripcion": "ARGENTINA (REPUBLICA)" },
+            { "id": 14, "descripcion": "ARMENIA (REPUBLICA DE)" },
+            { "id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)" },
+            { "id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)" },
+            { "id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)" },
+            { "id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)" },
+            { "id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)" },
+            { "id": 20, "descripcion": "BAHREIN (REINO DE)" },
+            { "id": 21, "descripcion": "Kuwaiti Dinar" },
         ],
         storeFunction: 'setPaisOrigen',
     },
@@ -746,7 +746,7 @@ export const TEXTOS = {
     <p>- En caso de que no requieras algún documento, selecciónalo y elíminalo</p>
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
-  };
+};
 
 
 export const FECHA_FACTURA = {
@@ -762,59 +762,74 @@ export const FECHA_DOCUMENTO = {
 };
 
 export const OPCION_DE_RADIO = [
-  {
-    /**
-     * Etiqueta para persona física.
-     * @type {string}
-     */
-    "label": "Física",
-    /**
-     * Valor para persona física.
-     * @type {string}
-     */
-    "value": "Física"
-  },
-  {
-    /**
-     * Etiqueta para persona moral.
-     * @type {string}
-     */
-    "label": "Moral",
-    /**
-     * Valor para persona moral.
-     * @type {string}
-     */
-    "value": "Moral"
-  },
-  {
-    "label": "Ninguno",
-    "value": "Ninguno"
-  }
+    {
+        /**
+         * Etiqueta para persona física.
+         * @type {string}
+         */
+        "label": "Física",
+        /**
+         * Valor para persona física.
+         * @type {string}
+         */
+        "value": "Física"
+    },
+    {
+        /**
+         * Etiqueta para persona moral.
+         * @type {string}
+         */
+        "label": "Moral",
+        /**
+         * Valor para persona moral.
+         * @type {string}
+         */
+        "value": "Moral"
+    },
+    {
+        "label": "Ninguno",
+        "value": "Ninguno"
+    }
 ];
 
 export const OPCION_DE_RADIO_EXPORTADOR = [
-  {
-    /**
-     * Etiqueta para persona física.
-     * @type {string}
-     */
-    "label": "Física",
-    /**
-     * Valor para persona física.
-     * @type {string}
-     */
-    "value": "Física"
-  },
-  {
-    /**
-     * Etiqueta para persona moral.
-     * @type {string}
-     */
-    "label": "Moral",
-    /**
-     * Valor para persona moral.
-     * @type {string}
-     */
-    "value": "Moral"
-  }
+    {
+        /**
+         * Etiqueta para persona física.
+         * @type {string}
+         */
+        "label": "Física",
+        /**
+         * Valor para persona física.
+         * @type {string}
+         */
+        "value": "Física"
+    },
+    {
+        /**
+         * Etiqueta para persona moral.
+         * @type {string}
+         */
+        "label": "Moral",
+        /**
+         * Valor para persona moral.
+         * @type {string}
+         */
+        "value": "Moral"
+    }
 ];
+
+/**
+ * Textos HTML para mensajes de error en el formulario.
+ */
+export const ERROR_FORMA_FALTAN = `
+    <p class="text-danger m-0">Faltan campos por capturar.</p>
+`;
+
+/**
+ * Textos HTML para mensajes de error en el formulario.
+ */
+export const ERROR_FORMA_ALERT = `
+    <p class="m-0">Corrija los siguientes errores:</p>
+    <p class="text-danger m-0">Debe seleccionar una constancia de registro.</p>
+`;

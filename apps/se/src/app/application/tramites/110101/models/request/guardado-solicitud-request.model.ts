@@ -80,6 +80,12 @@ export interface RegistroCuestionarioMercancia {
     
     /** ID condición exportador autorizado */
     ide_condicion_exportador_aut: string | null;
+
+    /** Solicita exportador autorizado Japón */
+    solicita_exportador_aut_jpn: boolean | null;
+    
+    /** ID condición exportador autorizado Japón */
+    ide_condicion_exportador_aut_jpn: string | null;
     
     /** Mercancía asociada a la solicitud */
     mercancia_asociada_sol: MercanciaAsociadaSol;
@@ -214,6 +220,12 @@ export interface MercanciaAsociadaSol {
     
     /** Clave fracción NALADISA 02 */
     cve_fraccion_naladisa02: string | null;
+
+    /** Descripción del juego */
+    descripcion_juego: string | null;
+
+    /** Tipo de método */
+    tipo_metodo: string | null;
 }
 
 /**
@@ -338,8 +350,15 @@ export interface CriterioTratado {
     /** Clave tratado acuerdo bloque */
     cve_tratado_acuerdo_bloque: string | null;
     
-    /** ID descripción alterna fracción */
-    id_desc_alterna_fraccion: number | null;
+    /** Cumple juego */
+    cumple_juego: boolean | null;
+
+    /** Cumple acumulación */
+    cumple_acumulacion: boolean | null;
+
+    /** ID tipo proceso mercancía */
+    ide_tipo_proceso_mercancia: string | null;
+
 }
 
 /**

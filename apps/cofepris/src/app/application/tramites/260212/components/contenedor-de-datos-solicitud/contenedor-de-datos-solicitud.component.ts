@@ -1,215 +1,67 @@
-import { ADUANAS_DATA, DATOS_ALERT, ID_PROCEDIMIENTO, MANIFIESTOS_ALERT, MERCANCIA_POR_DEFECTO } from '../../constantes/permiso-maquila.enum';
-import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { Modal } from 'bootstrap';
-import { SolicitudService } from '../../services/solicitud.service';
-import { TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { Subject } from 'rxjs';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
-
-
-
+import { ViewChild } from '@angular/core';
 
 /**
- * Componente DatosDeLaSolicitud
- * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
- */
-/**
- * @var {boolean} esFormularioSoloLectura
- * @description
- * Indica si el formulario debe mostrarse en modo solo lectura.
- * Cuando es verdadero, los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
- * Este valor se actualiza dinámicamente según el estado de la sección consultada.
- */
+ * @component ContenedorDeDatosSolicitudComponent
+ * @description Container component that orchestrates user interactions
+ * for entering and managing “datos de la solicitud” (request data).
+ * Integrates the `DatosDeLaSolicitudComponent` and synchronizes data
+ * with the global state managed by `Tramite260212Store`.
+ **/
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
-  imports: [CommonModule,
-    ReactiveFormsModule,
-    DatosDeLaSolicitudComponent
-
-  ],
+  imports: [CommonModule, DatosDeLaSolicitudComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
-   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
-   * @type {boolean}
-   * @public
-   * 
-   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   * @property elementosRequeridos
+   * @description Arreglo de campos requeridos para el formulario de datos de la solicitud,
+   * utilizado para propósitos de validación.
+   * @type {string[]}
    */
-  public esFormularioSoloLectura: boolean = false;
+  elementosRequeridos = [
+    'denominacionRazon',
+    'scian',
+    'correoElectronico',
 
-  /** Subject para destruir el componente */
-  private destroy$ = new Subject<void>();
-  /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<string> =
-    this.tramite260212Query.selectedEstado$;
-  /** Catálogo de estados cargado desde un archivo JSON */
-
-  rfcDelResponsableSanitario$ = this.tramite260212Query.selectedRfcDelResponsableSanitario$;
-
-  denominacionRazonSocial$ = this.tramite260212Query.selectedDenominacionRazonSocial$
-
-  correoElectronico$ = this.tramite260212Query.selectedCorreoElectronico$
-  municipio$ = this.tramite260212Query.selectedMunicipio$
-  localidad$ = this.tramite260212Query.selectedLocalidad$
-  colonia$ = this.tramite260212Query.selectedColonia$
-  calle$ = this.tramite260212Query.selectedCalle$
-  lada$ = this.tramite260212Query.selectedLada$
-  telefono$ = this.tramite260212Query.SelectedTelefono$
-  codigoPostal$ = this.tramite260212Query.SelectedCodigoPostal$
-
-  /** Formulario principal de datos del establecimiento */
-  datosEstablecimientoForm!: FormGroup;
-
-
-  /** Constante que almacena los datos de alerta */
-  DATOS_ALERT = DATOS_ALERT
-  /** Constante que almacena los datos de manifiestos de alerta */
-  MANIFIESTOS_ALERT = MANIFIESTOS_ALERT
-
+    'manifesto',
+  ];
   /**
- * Arreglo que almacena los datos de la solicitud.
- * Se utiliza para gestionar la información relacionada con las solicitudes en el componente.
- */
-  solicitudData: SolicitudModel[] = [];
-
-  /**
- * Arreglo que almacena los datos de las mercancías.
- * Se utiliza para manejar la información de las mercancías asociadas en el componente.
- */
-  mercanicaData: MercanciaModel[] = MERCANCIA_POR_DEFECTO;
-
-  /**
- * Arreglo que almacena los datos de las mercancías.
- * Se utiliza para manejar la información de las mercancías asociadas en el componente.
- */
-  public seleccionadaMercanciaDatos: MercanciaModel[] = [];
-
-  /**
- * Arreglo que almacena los datos de las mercancías.
- * Se utiliza para manejar la información de las mercancías asociadas en el componente.
- */
-  public seleccionadaScianDatos: ClaveModel[] = [];
-
-  /**
- * Variable que controla el estado plegable de una sección en el componente.
- * Se utiliza para mostrar u ocultar contenido de manera dinámica.
- */
-  plegable = true;
-
-  /**
- * Variable que indica si se debe mostrar un formulario genérico.
- * Su valor inicial está establecido en false.
- */
-  mostrarFormulario = false;
-
-  /**
-   * Arreglo que almacena los estados obtenidos del catálogo.
-   * Este arreglo es utilizado en el componente para gestionar la información de estados.
-   */
-  estado: CatalogoResponse[] =ADUANAS_DATA;
-
-  /**
-   * Arreglo que almacena los datos relacionados con las claves S.C.I.A.N.
-   * Se utiliza para manejar la información de las claves en el componente.
-   */
-  claveScianDatas: ClaveModel[] = [];
-
-  /**
-   * Variable que representa la tabla de selección de elementos.
-   * Es una configuración utilizada para mostrar datos seleccionables.
-   */
-  tablaSeleccion = TablaSeleccion;
-
-  /**
-   * Referencia al elemento modal para agregar mercancías.
-   */
-  @ViewChild('modalSeleccionarEstablesmiento') modalElement!: ElementRef;
-
-  /**
-   * Referencia al elemento modal para agregar mercancías.
-   */
-  @ViewChild('mercanciasConfirmacionModal') mercanciasConfirmacionModalElement!: ElementRef;
-
-  /**
-   * Referencia al elemento modal para agregar mercancías.
-   */
-  @ViewChild('scianEliminarModal') scianEliminarModalElement!: ElementRef;
-
-  /**
-   * Referencia al elemento del modal para agregar o editar claves S.C.I.A.N.
-   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
-   *
-   * @type {ElementRef}
-   * @memberof DatosDeLaSolicitudComponent
-   * @example
-   * this.modalScianRef.nativeElement.show();
-   */
-  @ViewChild('modalScianRef') modalScianRef!: ElementRef;
-
-  /**
-   * Instancia del modal para agregar o editar claves S.C.I.A.N.
-   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
-   *
-   * @type {Modal | null}
+   * @property destroyNotifier$
+   * @description Subject used to gracefully unsubscribe from observables
+   * when the component is destroyed.
+   * @type {Subject<void>}
    * @private
-   * @memberof DatosDeLaSolicitudComponent
-   * @example
-   * this.modalInstance?.show();
-   * this.modalInstance?.hide();
    */
-  private modalInstance: Modal | null = null;
-
-  /** Almacena el tipo de acción del botón seleccionado (por ejemplo, modificar o eliminar mercancía). */
-  public tipoButton: string = '';
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Referencia al elemento del modal para agregar o editar mercancías.
-   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
-   *
-   * @type {ElementRef}
-   * @memberof DatosDeLaSolicitudComponent
-   * @example
-   * this.modalMercanciasRef.nativeElement.show();
+   * @property tramiteState
+   * @description Holds the current state of the “Tramite 260212” process,
+   * retrieved from the store via `Tramite260212Query`.
+   * @type {Tramite260212State}
    */
-  @ViewChild('modalMercanciasRef') modalMercanciasRef!: ElementRef;
-
-  /**
-   * Instancia del modal para agregar o editar mercancías.
-   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
-   *
-   * @type {Modal | null}
-   * @private
-   * @memberof DatosDeLaSolicitudComponent
-   * @example
-   * this.modalMercanciasInstance?.show();
-   * this.modalMercanciasInstance?.hide();
-   */
-  private modalMercanciasInstance: Modal | null = null;
-
   public tramiteState!: Tramite260212State;
 
-  elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian','manifiestosCasillaDeVerificacion','manifesto'];
-
-  @Input() formularioDeshabilitado: boolean = false;
-
-  public readonly idProcedimiento = ID_PROCEDIMIENTO;
-
+  /**
+   * @property opcionConfig
+   * @description Configuration object for the "opcion" table,
+   * including the selection type, table settings, and data array.
+   */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
@@ -217,8 +69,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * @property {object} scianConfig
-   * Configuración de la tabla SCIAN.
+   * @property scianConfig
+   * @description Configuration object for the SCIAN table,
+   * including selection type, table settings, and data array.
    */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -227,8 +80,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * @property {object} tablaMercanciasConfig
-   * Configuración de la tabla de mercancías.
+   * @property tablaMercanciasConfig
+   * @description Configuration object for the “mercancías” table,
+   * including selection type, table settings, and data array.
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -237,52 +91,110 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * @property {TablaScianConfig[]} scianConfigDatos
-   * Datos seleccionados de la tabla SCIAN.
+   * @property scianConfigDatos
+   * @description Stores the list of SCIAN table configurations
+   * currently in use within the component.
+   * @type {TablaScianConfig[]}
    */
   public scianConfigDatos: TablaScianConfig[] = [];
 
   /**
-   * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos
-   * Datos seleccionados de la tabla de mercancías.
+   * @property tablaMercanciasConfigDatos
+   * @description Stores the list of “mercancías” data objects
+   * currently in use within the component.
+   * @type {TablaMercanciasDatos[]}
    */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
 
   /**
-   * Constructor de la clase DatosDeLaSolicitudComponent.
-   * 
-   * @param solicitudService - Servicio para manejar las solicitudes.
-   * @param fb - FormBuilder para construir formularios reactivos.
-   * @param tramite260212Store - Almacén para el trámite 260212.
-   * @param tramite260212Query - Consulta para el trámite 260212.
+   * @property seleccionadoopcionDatos
+   * @description Stores the selected “opcion” data coming from the table.
+   * @type {TablaOpcionConfig[]}
    */
-  constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
-    private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query,
-    private consultaioQuery: ConsultaioQuery
-  ) {
+  public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
 
+  /**
+   * @property seleccionadoScianDatos
+   * @description Stores the selected SCIAN data coming from the table.
+   * @type {TablaScianConfig[]}
+   */
+  public seleccionadoScianDatos: TablaScianConfig[] = [];
+
+  /**
+   * @property seleccionadoTablaMercanciasDatos
+   * @description Stores the selected “mercancías” data
+   * coming from the respective table.
+   * @type {TablaMercanciasDatos[]}
+   */
+  public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
+
+  /**
+   * @property idProcedimiento
+   * @description ID of the current procedure, defined as a read-only property.
+   * @type {string | number}
+   * @readonly
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   *
+   * Esta propiedad permite acceder a los métodos públicos y propiedades
+   * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+   *
+   * > Nota: Angular inicializa esta referencia después de que la vista
+   * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent)
+  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @constructor
+   * @description Initializes dependencies and services used within this component.
+   *
+   * @param {Tramite260212Query} Tramite260212Query - Query service to retrieve the current
+   * state of the “Tramite 260212” from the store.
+   * @param {Tramite260212Store} Tramite260212Store - Store service to update the
+   * “Tramite 260214” state with the selected data from the component.
+   */
+  constructor(
+    private Tramite260212Query: Tramite260212Query,
+    private Tramite260212Store: Tramite260212Store,
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe();
   }
 
-
- /**
- * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
- * - Inicializa el formulario de datos del establecimiento.
- * - Obtiene las solicitudes desde el servicio y las almacena en `solicitudData`.
- * - Obtiene las claves del catálogo y las almacena en `estado`.
- * - Actualiza el campo `estado` del formulario con el estado seleccionado desde el observable.
- */
+  /**
+   * @method ngOnInit
+   * @description Angular lifecycle hook that runs once the component is initialized.
+   * Subscribes to the “Tramite260212” state changes and updates the component’s local
+   * configuration objects with data from the store.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
-    this.fomInitialize();
-    this.inicializarEstadoFormulario();
-     this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
-      .subscribe((response: ClaveModel[]) => {
-        this.claveScianDatas = [...this.claveScianDatas, ...response];
-      });
-
-    this.tramite260212Query.selectSolicitud$
+    this.Tramite260212Query.selectTramiteState$
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
@@ -293,513 +205,58 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   /**
-   * Inicializa el estado del formulario según el modo de solo lectura.
-   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
-      if (this.datosEstablecimientoForm) {
-        this.guardarDatosFormulario();
-      }
-    } else {
-      this.actualizarEstado();
-    }
-  }
-
-  /**
-   * Guarda los datos del formulario y actualiza su estado.
-   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
-    this.actualizarEstado();
-    // Solo intentar deshabilitar si el formulario ya está inicializado
-    if (this.datosEstablecimientoForm) {
-      if (this.esFormularioSoloLectura) {
-        this.datosEstablecimientoForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.datosEstablecimientoForm.enable();
-      }
-    }
-  }
-
-  /**
-   * @method actualizarEstado
-   * @description
-   * Actualiza los valores del formulario `datosEstablecimientoForm` con los datos provenientes de varios observables y servicios.
-   * Obtiene la información de la solicitud y la clave del estado, y suscribe a diferentes observables para actualizar los campos correspondientes del formulario.
-   * Utiliza el operador `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+   * Maneja el evento cuando se selecciona una opción en la tabla.
    *
-   * @returns {void}
-   */
-  actualizarEstado(): void {
-    this.solicitudService.getSolicitudes()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data): void => {
-        this.solicitudData = data
-      });
-
-    this.solicitudService.getClave()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data): void => {
-        this.estado = data
-      });
-
-    this.selectedEstado$.subscribe((selectedEstado) => {
-      if (selectedEstado) {
-        this.datosEstablecimientoForm.get('estado')?.setValue(selectedEstado);
-      }
-    });
-    this.rfcDelResponsableSanitario$.pipe(takeUntil(this.destroy$)).subscribe((rfcDelResponsableSanitario) => {
-      if (rfcDelResponsableSanitario) {
-        this.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.setValue(rfcDelResponsableSanitario);
-      }
-    });
-    this.denominacionRazonSocial$.pipe(takeUntil(this.destroy$)).subscribe((denominacionRazonSocial) => {
-      if (denominacionRazonSocial) {
-        this.datosEstablecimientoForm.get('denominacionRazonSocial')?.setValue(denominacionRazonSocial);
-      }
-    });
-    this.correoElectronico$.pipe(takeUntil(this.destroy$)).subscribe((correoElectronico) => {
-      if (correoElectronico) {
-        this.datosEstablecimientoForm.get('correoElectronico')?.setValue(correoElectronico);
-      }
-    });
-    this.municipio$.pipe(takeUntil(this.destroy$)).subscribe((municipio) => {
-      if (municipio) {
-        this.datosEstablecimientoForm.get('municipio')?.setValue(municipio);
-      }
-    });
-    this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
-      if (localidad) {
-        this.datosEstablecimientoForm.get('localidad')?.setValue(localidad);
-      }
-    });
-    this.colonia$.pipe(takeUntil(this.destroy$)).subscribe((colonia) => {
-      if (colonia) {
-        this.datosEstablecimientoForm.get('colonia')?.setValue(colonia);
-      }
-    });
-    this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
-      if (calle) {
-        this.datosEstablecimientoForm.get('calle')?.setValue(calle);
-      }
-    });
-
-    this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
-      if (lada) {
-        this.datosEstablecimientoForm.get('lada')?.setValue(lada);
-      }
-    });
-    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
-      if (telefono) {
-        this.datosEstablecimientoForm.get('telefono')?.setValue(telefono);
-      }
-    });
-    this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
-      if (codigoPostal) {
-        this.datosEstablecimientoForm.get('codigoPostal')?.setValue(codigoPostal);
-      }
-    });
-  }
-
-
-  /**
- * Configuración de la tabla para mostrar las claves S.C.I.A.N.
- * - Define las columnas y los datos que se muestran en la tabla.
- */
-  configuracionTablaScian: ConfiguracionColumna<ClaveModel>[] = [
-    { encabezado: 'Clave S.C.I.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
-    { encabezado: 'Descripcíon del S.C.I.A.N.', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
-  ];
-
-  /**
- * Inicializa el formulario `datosEstablecimientoForm`.
- * - Configura los campos requeridos y sus validaciones correspondientes.
- * - Incluye campos como RFC, razón social, correo, dirección, y contacto.
- */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  fomInitialize() {
-    this.datosEstablecimientoForm = this.fb.group({
-      rfcDelResponsableSanitario: [{value: '', disabled: true}],
-      denominacionRazonSocial: [{value: '', disabled: true}, [Validators.required]],
-      correoElectronico: [{value: '', disabled: true}, [Validators.required, Validators.maxLength(30), Validators.email]],
-      codigoPostal: [{value: '', disabled: true}, [Validators.required]],
-      estado: [{value: '', disabled: false}, [Validators.required]],
-      municipio: [{value: '', disabled: true}, [Validators.required]],
-      localidad: [{value: '', disabled: true}, [Validators.required]],
-      colonia: [{value: '', disabled: true}, [Validators.required]],
-      calle: [{value: '', disabled: true}, [Validators.required]],
-      lada: [{value: '', disabled: true}, [Validators.required]],
-      telefono: [{value: '', disabled: true}, [Validators.required]],
-      datosManifiestos: [false, [Validators.required]],
-    });
-
-    if (this.seleccionarEstablecimientoState) {
-      this.datosEstablecimientoForm.enable();
-    }
-
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-
-        })
-      )
-      .subscribe()
-  }
-
-  /**
-   * Alterna el estado plegable de la sección de opciones de pre-llenado.
-   * Cambia la variable `plegable` para mostrar u ocultar la sección.
-   * @returns {void}
-   */
-  mostrarPlegable(): void {
-    this.plegable = !this.plegable;
-  }
-
-  /**
-   * Muestra el formulario para agregar una clave S.C.I.A.N.
-   * Cambia la variable `mostrarFormularioScian` a true.
-   * @returns {void}
-   */
-  toggleScianFormulario(): void {
-    if (this.modalScianRef) {
-      this.modalInstance = new Modal(this.modalScianRef.nativeElement);
-      this.modalInstance.show();
-    }
-  }
-  /**
-   * Oculta el formulario de clave S.C.I.A.N.
-   * Cambia la variable `mostrarFormularioScian` a false.
-   * @returns {void}
-   */
-  cerrarScianFormulario(): void {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
-  }
-
-  /**
-   * @method agregarScian
-   * @description
-   * Agrega una nueva clave S.C.I.A.N. al arreglo `claveScianDatas`.
-   * Este método recibe un objeto con las propiedades `clave` y `descripcion` y lo almacena en el arreglo correspondiente.
-   * Se utiliza para gestionar las claves S.C.I.A.N. seleccionadas o capturadas por el usuario en el componente.
+   * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`)
+   *                que representa las opciones seleccionadas.
    *
-   * @param {{clave: string, descripcion: string}} form - Objeto que contiene la clave y la descripción S.C.I.A.N. a agregar.
+   * Actualiza la configuración de datos en el store `Tramite260212Store`
+   * con las opciones seleccionadas.
+   */
+  opcionSeleccionado(event: TablaOpcionConfig[]): void {
+    this.Tramite260212Store.updateOpcionConfigDatos(event);
+  }
+
+  /**
+   * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
    *
-   * @example
-   * this.agregarScian({ clave: '12345', descripcion: 'Descripción de la clave' });
-   * // Agrega la clave y descripción al arreglo de claves S.C.I.A.N.
-   */
-  agregarScian(form: {clave: string, descripcion: string}): void {
-    if (form) {
-      this.claveScianDatas = [...this.claveScianDatas, {
-        clave: form.clave,
-        descripcion: form.descripcion
-      }];
-    }
-  }
-
-  /**
-   * Muestra el formulario para agregar mercancías.
-   * @returns {void}
-   */
-  openMercanciasForm(): void {
-    if (this.modalMercanciasRef) {
-      this.modalMercanciasInstance = new Modal(this.modalMercanciasRef.nativeElement);
-      this.modalMercanciasInstance.show();
-    }
-  }
-
-  /**
-   * Oculta el formulario de mercancías.
-   * @returns {void}
-   */
-  closeMercanciasForm(): void {
-    if (this.modalMercanciasInstance) {
-      this.modalMercanciasInstance.hide();
-    }
-  }
-
-  /**
- * Configuración de la tabla para mostrar las mercancías.
- * - Define las columnas que representan diversas propiedades de las mercancías.
- * - Incluye detalles como clasificación, denominaciones, forma farmacéutica y estado físico.
- */
-  mercanciasTabla: ConfiguracionColumna<MercanciaModel>[] = [
-    { encabezado: 'Clasificación del producto', clave: (item: MercanciaModel) => item.clasificacionProducto, orden: 1 },
-    { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciaModel) => item.especificarClasificacion, orden: 2 },
-    { encabezado: 'Denominación específica del producto', clave: (item: MercanciaModel) => item.denominacionEspecifica, orden: 3 },
-    { encabezado: 'Denominación distintiva', clave: (item: MercanciaModel) => item.denominacionDistintiva, orden: 4 },
-    { encabezado: 'Denominación común, nombre común o nombre científico', clave: (item: MercanciaModel) => item.denominacionComun, orden: 5 },
-    { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmaceutica, orden: 6 },
-    { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 },
-    { encabezado: 'Fracción arancelaria', clave: (item: MercanciaModel) => item.fraccionArancelaria, orden: 8 },
-    { encabezado: 'Descripción de la fracción', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (item: MercanciaModel) => item.UMC, orden: 10 },
-    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 11 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (item: MercanciaModel) => item.UMT, orden: 12 },
-    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 13 },
-    { encabezado: 'Presentación', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
-    { encabezado: 'Número de registro sanitario', clave: (item: MercanciaModel) => item.numeroDeregistroSanitario, orden: 15 },
-    { encabezado: 'País de orígen', clave: (item: MercanciaModel) => item.paisDeorigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (item: MercanciaModel) => item.paisDeprocedencia, orden: 17 },
-    { encabezado: 'Tipo producto', clave: (item: MercanciaModel) => item.tipoProducto, orden: 18 },
-    { encabezado: 'Uso específico', clave: (item: MercanciaModel) => item.usoEspecifico, orden: 19 },
-    { encabezado: 'Fecha de caducidad', clave: (item: MercanciaModel) => item.fechaDeCaducidad, orden: 20 },
-
-  ];
-
-  /**
- * Configuración de la tabla para mostrar las solicitudes.
- * - Define las columnas con encabezados y claves para los datos relevantes de las solicitudes.
- * - Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
- */
-  configuracionTablaSolicitud: ConfiguracionColumna<SolicitudModel>[] = [
-    { encabezado: 'Fecha Creación', clave: (item: SolicitudModel) => item.fechaCreacion, orden: 1 },
-    { encabezado: 'Mercancía', clave: (item: SolicitudModel) => item.mercancía, orden: 2 },
-    { encabezado: 'Cantidad', clave: (item: SolicitudModel) => item.cantidad, orden: 3 },
-    { encabezado: 'Proveedor', clave: (item: SolicitudModel) => item.proveedor, orden: 4 }
-  ];
-
-  /**
-   * Obtiene el estado seleccionado del formulario y lo guarda en el store
-   */
-  getEstado(): void {
-    const SELECTED_ESTADO = this.datosEstablecimientoForm.get('estado')?.value;
-    this.tramite260212Store.setSelectedEstado(SELECTED_ESTADO);
-  }
-  getMunicipios(): void {
-    const SELECTED_MUNICIPIO = this.datosEstablecimientoForm.get('municipio')?.value;
-    this.tramite260212Store.setSelectedEstado(SELECTED_MUNICIPIO);
-  }
-  /**
-   * Obtiene el rfcDelResponsableSanitario seleccionado del formulario y lo guarda en el store
-   */
-  updateRfcDelResponsableSanitario(): void {
-    const RFC = this.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.value;
-    this.tramite260212Store.setRfcDelResponsableSanitario(RFC);
-  }
-  /**
-    * Obtiene el denominacionRazonSocial seleccionado del formulario y lo guarda en el store
-    */
-  updateDenominacionRazonSocial(): void {
-    const RFC = this.datosEstablecimientoForm.get('denominacionRazonSocial')?.value;
-    this.tramite260212Store.setDenominacionRazonSocial(RFC);
-  }
-  /**
-     * Obtiene el correoElectronico seleccionado del formulario y lo guarda en el store
-     */
-  updateCorreoElectronico(): void {
-    const CORREO = this.datosEstablecimientoForm.get('correoElectronico')?.value;
-    this.tramite260212Store.setCorreoElectronico(CORREO);
-  }
-  /**
-     * Obtiene el municipio seleccionado del formulario y lo guarda en el store
-     */
-  updateMunicipio(): void {
-    const MUNICIPIO = this.datosEstablecimientoForm.get('municipio')?.value;
-    this.tramite260212Store.setMunicipio(MUNICIPIO);
-  }
-  /**
-     * Obtiene el localidad seleccionado del formulario y lo guarda en el store
-     */
-  updateLocalidad(): void {
-    const LOCALIDAD = this.datosEstablecimientoForm.get('localidad')?.value;
-    this.tramite260212Store.setLocalidad(LOCALIDAD);
-  }
-  /**
-     * Obtiene el colonia seleccionado del formulario y lo guarda en el store
-     */
-  updateColonia(): void {
-    const COLONIA = this.datosEstablecimientoForm.get('colonia')?.value;
-    this.tramite260212Store.setColonia(COLONIA);
-  }
-
-  /**
-   * Actualiza el campo 'calle' en el store a partir del valor del formulario.
-   * @returns {void}
-   */
-  updateCalle(): void {
-    const CALLE = this.datosEstablecimientoForm.get('calle')?.value;
-    this.tramite260212Store.setCalle(CALLE);
-  }
-
-  /**
-   * Actualiza el campo 'lada' en el store a partir del valor del formulario.
-   * @returns {void}
-   */
-  updateLada(): void {
-    const LADA = this.datosEstablecimientoForm.get('lada')?.value;
-    this.tramite260212Store.setLada(LADA);
-  }
-
-  /**
-   * Actualiza el campo 'telefono' en el store a partir del valor del formulario.
-   * @returns {void}
-   */
-  updateTelefono(): void {
-    const TELEFONO = this.datosEstablecimientoForm.get('telefono')?.value;
-    this.tramite260212Store.setTelefono(TELEFONO);
-  }
-
-  /**
-   * Actualiza el campo 'codigoPostal' en el store a partir del valor del formulario.
-   * @returns {void}
-   */
-  updateCodigoPostal(): void {
-    const CODIGO_POSTAL = this.datosEstablecimientoForm.get('codigoPostal')?.value;
-    this.tramite260212Store.setCodigoPostal(CODIGO_POSTAL);
-  }
-  /**
-   * Opciones de publicación para la solicitud.
-   */
-  losDatos: unknown[] = [];
-
-  /**
-   * Obtiene las opciones de publicación de la solicitud.
-   */
-  obtenerOpcionesSolicitud(): void {
-    this.solicitudService.getOpcionesPublicacion()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data): void => {
-        this.losDatos = data
-      });
-  }
-  /**
-   * @method seleccionarEstablecimiento
-   * @description
-   * Muestra el modal para seleccionar un establecimiento.
-   * Si la referencia al elemento modal existe, crea una instancia de Bootstrap Modal y la muestra.
+   * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
    *
-   * @example
-   * this.seleccionarEstablecimiento();
-   * // Abre el modal de selección de establecimiento.
+   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260214
+   * utilizando el evento proporcionado.
    */
-
-  seleccionarEstablecimiento(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
+  scianSeleccionado(event: TablaScianConfig[]): void {
+    this.Tramite260212Store.updateScianConfigDatos(event);
   }
-
   /**
-   * @method aceptar
-   * @description
-   * Cierra el modal de selección de establecimiento y habilita todos los controles del formulario `datosEstablecimientoForm`.
-   * Este método se utiliza después de que el usuario ha seleccionado un establecimiento y confirma la selección.
+   * Maneja el evento de selección de mercancías en la tabla.
    *
-   * @example
-   * this.aceptar();
-   * // Cierra el modal y habilita los campos del formulario.
+   * @param event - Arreglo de objetos de tipo `TablaMercanciasDatos` que contiene
+   *                los datos seleccionados en la tabla de mercancías.
    */
-  aceptar(): void {
-    const MODAL_INSTANCE = Modal.getInstance(this.modalElement.nativeElement);
-    MODAL_INSTANCE?.hide();
-    Object.keys(this.datosEstablecimientoForm.controls).forEach(controlName => {
-          this.datosEstablecimientoForm.get(controlName)?.enable();
-      });
-    this.solicitudService.updateSeleccionarEstablecimientoState();
+  mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
+    this.Tramite260212Store.updateTablaMercanciasConfigDatos(event);
   }
 
   /**
- * Obtiene el estado actual para saber si se debe mostrar el modal de selección de establecimiento.
- * @returns {boolean} True si se debe mostrar el modal, false en caso contrario.
- */
-  public get seleccionarEstablecimientoState(): boolean { 
-    return this.solicitudService.getSeleccionarEstablecimientoState();
-  }
-
-  /**
-   * @method agregarMercanciasTabla
-   * @description
-   * Agrega una nueva mercancía al arreglo `mercanicaData`.
-   * Este método recibe un objeto con la propiedad `form` que contiene los datos de la mercancía a agregar.
-   * Se utiliza para gestionar la información de las mercancías asociadas en el componente.
+   * Actualiza el estado del formulario de datos de la solicitud en el store.
    *
-   * @param {{form: MercanciaModel}} event - Objeto que contiene el formulario con los datos de la mercancía.
-   *
-   * @example
-   * this.agregarMercanciasTabla({ form: nuevaMercancia });
-   * // Agrega la mercancía al arreglo de mercancías.
+   * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
    */
-  agregarMercanciasTabla(event: {form: MercanciaModel}): void {
-    if (event) {
-      this.mercanicaData = [...this.mercanicaData, event.form];
-    }
-  }
-
-  /** Actualiza el arreglo de mercancías seleccionadas en la tabla con los elementos recibidos en el evento. */
-  listaDeFilaSeleccionadaMercancias(event: MercanciaModel[]): void {
-    this.seleccionadaMercanciaDatos = event;
-  }
-
-  /** Actualiza el arreglo de scian seleccionadas en la tabla con los elementos recibidos en el evento. */
-  listaDeFilaSeleccionadaScian(event: ClaveModel[]): void {
-    this.seleccionadaScianDatos = event; 
+  datasolicituActualizar(event: DatosSolicitudFormState): void {
+    this.Tramite260212Store.updateDatosSolicitudFormState(event);
   }
 
   /**
- * Muestra el formulario para modificar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
- * @param event - Tipo de acción que se está realizando.
- */
-  modificarMercancias(event: string): void {
-    if (this.seleccionadaMercanciaDatos.length) {
-      this.openMercanciasForm();
-    } else {
-      this.tipoButton = event;
-      if (this.mercanciasConfirmacionModalElement) {
-        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
-        this.modalInstance.show();
-      }
-    }
-  }
-
-  /**
- * Muestra el formulario para eliminar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
- * @param event - Tipo de acción que se está realizando.
- */
-  eliminarMercancias(event: string): void {
-    if (this.seleccionadaMercanciaDatos.length) {
-      this.openMercanciasForm();
-    } else {
-      this.tipoButton = event;
-      if (this.mercanciasConfirmacionModalElement) {
-        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
-        this.modalInstance.show();
-      }
-    }
-  }
-
-  /** Muestra el modal de confirmación para eliminar claves S.C.I.A.N. si hay alguna seleccionada. */
-  eliminarScian(): void {
-    if (this.seleccionadaScianDatos.length) {
-      if (this.scianEliminarModalElement) {
-        this.modalInstance = new Modal(this.scianEliminarModalElement.nativeElement);
-        this.modalInstance.show();
-      }
-    }
-  }
-
-  /** Elimina las claves S.C.I.A.N. seleccionadas del arreglo y cierra el modal de confirmación. */
-  confirmarEliminarScian(): void {
-    const IDS_TO_DELETE = this.seleccionadaScianDatos.map(item => item.clave);
-    this.claveScianDatas = this.claveScianDatas.filter(
-      (item) => !IDS_TO_DELETE.includes(item.clave)
-    );
-    this.modalInstance?.hide();
-  }
-
+   * Actualiza el estado de la tienda `Tramite260212Store` con los datos seleccionados
+   * provenientes del evento de la tabla.
+   *
+   * @param event - Objeto que contiene las opciones seleccionadas, los datos SCIAN seleccionados
+   * y las mercancías seleccionadas de la tabla.
+   */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.tramite260212Store.update((state) => ({
+    this.Tramite260212Store.update((state) => ({
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,
@@ -808,40 +265,36 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     }));
   }
 
-  mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.tramite260212Store.updateTablaMercanciasConfigDatos(event);
-  }
-
-  scianSeleccionado(event: TablaScianConfig[]): void {
-    this.tramite260212Store.updateScianConfigDatos(event);
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**
-   * @method opcionSeleccionado
-   * Maneja el evento cuando se selecciona una opción en la tabla.
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
-   * @param {TablaOpcionConfig[]} event - Opciones seleccionadas en la tabla.
-   */
-  opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.tramite260212Store.updateOpcionConfigDatos(event);
-  }
-
-  /**
-   * @method datasolicituActualizar
-   * Actualiza el estado del formulario de datos de la solicitud en el store.
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
    *
-   * @param {DatosSolicitudFormState} event - Nuevo estado del formulario de datos de la solicitud.
+   * @returns {void} No retorna ningún valor.
    */
-  datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.tramite260212Store.updateDatosSolicitudFormState(event);
-  }
-
-  /*
-  * Método del ciclo de vida de Angular - destruye el componente
-*/
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
-
 }

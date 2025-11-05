@@ -518,10 +518,10 @@
           formControlName="publico">
         </app-input-radio>
         <span
-        *ngIf="datosSolicitudForm.get('publico')?.touched && (datosSolicitudForm.get('publico')?.value!=='Si' && datosSolicitudForm.get('publico')?.value!=='No') "
-      class="mensaje-error">
-      Este campo es obligatorio.
-  </span>
+        *ngIf="datosSolicitudForm.get('publico')?.touched && datosSolicitudForm.get('publico')?.errors?.['required']"
+        class="mensaje-error">
+        Este campo es obligatorio.
+      </span>
       </div>
       
     </div>

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
@@ -13,6 +13,7 @@ import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query'
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * @description
@@ -23,7 +24,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-datos-del-establecimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, TooltipModule, NotificacionesComponent],
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.scss',
 })
@@ -36,10 +37,36 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * @description
+   * Indica si se debe mostrar la notificación.
+   */
+  mostrarNotificacion: boolean = false;
+
+  /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
      * @description
      * Formulario reactivo para capturar los datos del establecimiento.
      */
   datosDelForm!: FormGroup;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   * @property {boolean} establecimientoSeleccionado
+   */
+  public establecimientoSeleccionado: boolean = false;
 
   /**
    * @description
@@ -87,6 +114,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
+    // Restablecer la selección de establecimiento cuando se inicializa el componente (cambio de pestaña)
+    this.domicilioStore.resetEstablecimientoSeleccionado();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -97,6 +126,31 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    // Suscríbase al estado de selección de establecimientos
+    this.domicilioquery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          const PREV_ESTABLECIMIENTO = this.establecimientoSeleccionado;
+          this.establecimientoSeleccionado = state.establecimientoSeleccionado;
+          this.solicitudState = state;
+          
+          // Actualizar el estado del formulario cuando cambie la selección del establecimiento.
+          if (PREV_ESTABLECIMIENTO !== this.establecimientoSeleccionado && this.datosDelForm) {
+            // No interfiera con el modo de solo lectura
+            if (!this.esFormularioSoloLectura) {
+              if (!this.establecimientoSeleccionado) {
+                this.datosDelForm.disable();
+              } else {
+                this.datosDelForm.enable();
+              }
+            }
+          }
+        })
+      )
+      .subscribe();
+
     this.inicializarEstadoFormulario();
   }
 
@@ -124,6 +178,10 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     } else {
       this.datosDelForm.enable(); 
     } 
+    
+    if (!this.establecimientoSeleccionado) {
+      this.datosDelForm.disable();
+    } 
   }
 
   /**
@@ -145,8 +203,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
 
     this.datosDelForm = this.fb.group({
       denominacion: [this.solicitudState?.denominacion, [Validators.required]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.pattern(REGEX_CORREO_ELECTRONICO),]],
     });
+
+    if (!this.establecimientoSeleccionado) {
+      this.datosDelForm.disable();
+    }
   }
 
   /**
@@ -165,8 +227,39 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @description
    * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
    */
-  public abrirModal(): void {
-    this.modal = 'show'; // Muestra el modal
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarNotificacion = true;
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * @description
+   * Método que se ejecuta cuando el usuario acepta el modal.
+   * Habilita todos los campos del formulario.
+   */
+  onModalAcceptAction(): void {
+    this.domicilioStore.setEstablecimientoSeleccionado(true);
+    this.mostrarNotificacion = false;
+  }
+
+  /**
+   * @description
+   * Permite reseleccionar el establecimiento (para casos donde se quiera cambiar).
+   */
+  reseleccionarEstablecimiento(): void {
+    this.domicilioStore.resetEstablecimientoSeleccionado();
   }
 
   /**

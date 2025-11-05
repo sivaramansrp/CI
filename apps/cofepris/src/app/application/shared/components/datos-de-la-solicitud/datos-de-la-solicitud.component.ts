@@ -1129,10 +1129,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
-        
-        
         CONTROL?.enable();
-        
         }
        
   
@@ -1930,6 +1927,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    *                Puede ser una cadena o un número.
    */
   public cambioDeValorIndique(value: string | number): void {
+    this.datosSolicitudForm.get('publico')?.setValue(value);
+    this.datosSolicitudForm.get('publico')?.markAsTouched();
+    this.datosSolicitudForm.get('publico')?.updateValueAndValidity();
     this.predeterminadoSeleccionar = value;
   }
 

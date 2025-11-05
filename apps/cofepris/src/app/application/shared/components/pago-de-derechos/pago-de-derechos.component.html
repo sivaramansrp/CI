@@ -1,6 +1,8 @@
 <div class="container">
   <ng-titulo titulo="Pago de derechos" />
-
+  <div class="row" *ngIf="verificarAlerta.includes(idProcedimiento)">
+      <ng-alert [CONTENIDO]="messageAlert" [CUSTOMECLASS]="'alert-warning'"></ng-alert>
+  </div>
   <form [formGroup]="pagoDerechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->
@@ -75,9 +77,10 @@
             [placeholder]="'Seleccione una opción'"
             [disabledPrimerOption]="false"
             [hiddenPrimerOption]="false"
+            [markTouched]="pagoDerechosForm.get('banco')?.touched ?? false"
             (change)="onBancoSeleccionado($event); actualizarStore()"
           ></app-catalogo-select>
-          <div *ngIf="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || this.pagoDerechosForm.get('banco')?.value===null ||this.pagoDerechosForm.get('banco')?.value==='-1')&& isContinuarButtonClicked)" class="text-danger">
+          <div *ngIf="(esInvalido('banco') && pagoDerechosForm.controls['banco'].errors?.['required']) ||((this.pagoDerechosForm.get('banco')?.value==='' || pagoDerechosForm.get('banco')?.value===null ||pagoDerechosForm.get('banco')?.value==='-1')&& pagoDerechosForm.get('banco')?.touched)" class="text-danger">
           <small >
             Todos los campos de pago son requeridos
           </small>
@@ -105,7 +108,7 @@
     <div class="row g-3 mt-2">
       <!-- Llave de pago -->
       <div class="col-md-4">
-        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido">*</span>:</label>
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido"   [ngClass]="(esInvalido('llavePago')||((this.pagoDerechosForm.get('llavePago')?.value=='' || this.pagoDerechosForm.get('llavePago')?.value==null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('llavePago')?.touched)) ? 'text-error' : ''">*</span>:</label>
         <input
           type="text"
           id="llavePago"
@@ -122,15 +125,23 @@
                 "
           (input)="llavePagoCase()"
         />
-        <div *ngIf="(esInvalido('llavePago') && pagoDerechosForm.controls['llavePago'].errors?.['required']) ||((this.pagoDerechosForm.get('llavePago')?.value==='' || this.pagoDerechosForm.get('llavePago')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
-         
-          <small>
-            Todos los campos de pago son requeridos
-          </small>
-          <small *ngIf="pagoDerechosForm.controls['llavePago'].errors?.['pattern']">
-            Existen datos incorrectos que no cumplen con el formato esperado
-          </small>
-          </div>
+     <div *ngIf="pagoDerechosForm.get('llavePago')?.invalid 
+    && (pagoDerechosForm.get('llavePago')?.touched || isContinuarButtonClicked)"
+    class="text-danger">
+    
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['required']">
+    Todos los campos de pago son requeridos
+  </small>
+
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['pattern']">
+    Existen datos incorrectos que no cumplen con el formato esperado
+  </small>
+
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['maxlength']">
+    La llave de pago no puede tener más de 30 caracteres
+  </small>
+</div>
+
       </div>
 
       <!-- Fecha de pago -->
@@ -170,15 +181,15 @@
                   )
                 "
         />
-        <div *ngIf="(esInvalido('importePago') && pagoDerechosForm.controls['importePago'].errors?.['required']) ||((this.pagoDerechosForm.get('importePago')?.value==='' || this.pagoDerechosForm.get('importePago')?.value===null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('importePago')?.touched)" class="text-danger">
+        <div  class="text-danger">
 
-          <small >
+          <small *ngIf="(esInvalido('importePago') && pagoDerechosForm.controls['importePago'].errors?.['required']) ||((this.pagoDerechosForm.get('importePago')?.value==='' || this.pagoDerechosForm.get('importePago')?.value===null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('importePago')?.touched)">
             Todos los campos de pago son requeridos
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidNumber']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['nonNumeric']">
             Por favor, escribe un número entero válido
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['tooManyDecimals']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidDecimal']">
             Este campo solo permite números hasta dos decimales
           </small>
           </div>

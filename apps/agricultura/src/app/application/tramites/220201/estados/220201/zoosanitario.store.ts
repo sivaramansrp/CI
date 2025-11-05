@@ -14,6 +14,12 @@ import {
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
 
+export interface TramiteFolioState {
+  idTramite: string | null;
+  firma: string | null;
+  idSolicitud: number | null; 
+  procedure: number | null;
+}
 
 /**
  * @fileoverview Store Akita para la gestión del estado de la solicitud zoosanitaria.
