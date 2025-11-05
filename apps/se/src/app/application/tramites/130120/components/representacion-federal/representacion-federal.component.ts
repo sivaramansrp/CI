@@ -203,7 +203,7 @@ export class RepresentacionFederalComponent implements OnInit {
    */
   onEntidadSeleccionado(): void {
     const CVEENTIDAD = this.datosFederal.get('entidad_federativa')?.value;
-    this.store.setEntidad_federativa(CVEENTIDAD);
+    this.store.setDescripcion_representacion_federal(CVEENTIDAD);
     if (CVEENTIDAD) {
       this.obtenerRepresentacionSelectList(CVEENTIDAD);
     } else {

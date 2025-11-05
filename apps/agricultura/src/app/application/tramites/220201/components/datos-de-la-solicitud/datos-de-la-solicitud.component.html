@@ -20,7 +20,7 @@
                   <div class="col-md-12">
                     <label for="Solicitud">Solicitud</label>
                   </div>
-                  <div class="col-md-12">
+                  <div class="col-md-12" style="cursor: pointer">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                       [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
                       [tableId]="'tabla-solicitud'" [showPagination]="true" [mode]="'client'"
@@ -52,7 +52,7 @@
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="sanidadAgropecuaria" formControlName="oficinaInspeccion"
           [label]="'Oficina de inspección de sanidad Agropecuaria'" [required]="true" name="oficinaInspeccion"
-          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerPuntoDeInspeccion(forma)"></app-catalogo-select>
         <div
           *ngIf="datosDelaSolicitud.get('oficinaInspeccion')?.invalid && datosDelaSolicitud.get('oficinaInspeccion')?.touched">
           <small class="mensaje-error">Este campo es obligatorio.</small>
@@ -79,7 +79,7 @@
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="establecimientoTIF" formControlName="establecimientoTIF"
           [label]="'Establecimiento TIF'" [required]="false" name="establecimientoTIF"
-          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+          [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(); obtenerVeterinarioList(forma.get('establecimientoTIF')?.value)"></app-catalogo-select>
       </div>
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="veterinario" formControlName="nombreVeterinario"

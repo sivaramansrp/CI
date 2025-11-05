@@ -215,32 +215,29 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se inicializa el componente
    * */
   ngOnInit(): void {
-    this.datosDomicilioLegalQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
-      denominacion: [
-        { value: this.solicitudState?.denominacion, disabled: true },
-        Validators.required,
-      ],
-      correo: [
-        { value: this.solicitudState?.correo, disabled: true },
-        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
-      ],
-    });
-    this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'datosSolicitudForm') {
-        this.forma.markAllAsTouched();
-      }
-    })
-    this.inicializarEstadoFormulario();
+  this.datosDomicilioLegalQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+  this.forma = this.fb.group({
+    rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
+    denominacion: [{ value: this.solicitudState?.denominacion, disabled: true }, [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,\-&]+$/)]],
+    correo: [
+      { value: this.solicitudState?.correo, disabled: true },
+      [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
+    ],
+  });
+  this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
+  this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+    if (formName === 'datosSolicitudForm') {
+      this.forma.markAllAsTouched();
+    }
+  })
+  this.inicializarEstadoFormulario();
   }
 
   /**

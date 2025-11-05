@@ -19,6 +19,7 @@ export class GuardarMappingAdapter {
   
   static toFormPayload(state: Tramite260210State): unknown {
     return {
+        
       "solicitante": {
         "rfc": "AAL0409235E6",
         "nombre": "ACEROS ALVARADO S.A. DE C.V.",
@@ -39,9 +40,10 @@ export class GuardarMappingAdapter {
         },
       },
       "solicitud": {
-          "discriminatorValue": 260210,
+          "discriminatorValue": 260201,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
+          "aduanaAIFA": "",
           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
       },
       "establecimiento": {
@@ -51,7 +53,7 @@ export class GuardarMappingAdapter {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": "09"
+                  "clave": ""
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -74,10 +76,10 @@ export class GuardarMappingAdapter {
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
               "idMercancia": "",
-              "idClasificacionProducto": "",
-              "nombreClasificacionProducto": mercancia.clasificacionProducto,
-              "ideSubClasificacionProducto": "",
-              "nombreSubClasificacionProducto": mercancia.especificarClasificacionProducto,
+              "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
+              "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
+              "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
+              "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
               "descripcionMercancia": "",
@@ -85,10 +87,10 @@ export class GuardarMappingAdapter {
               "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
-                  "descripcion": ""
+                  "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.unidadMedidaComercializacion
+                  "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
               "cantidadUMCConComas": mercancia.cantidadUMC,
               "unidadMedidaTarifa": {
@@ -100,7 +102,7 @@ export class GuardarMappingAdapter {
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -118,7 +120,7 @@ export class GuardarMappingAdapter {
               "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
               "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
               "booleanFisicaNoContribuyente": "0",
-              "denominacion": fabricante.razonSocial,
+              "denominacion": fabricante.tipoPersona === "Moral" ? fabricante.razonSocial : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
               "razonSocial": fabricante.razonSocial,
               "rfc": fabricante.rfc,
               "curp": fabricante.curp,
@@ -132,33 +134,32 @@ export class GuardarMappingAdapter {
               "descripcionGiro": "",
               "numeroRegistro": "",
               "domicilio": {
-                  
-            "calle": fabricante.calle,
-            "numeroExterior": fabricante.numeroExterior,
-            "numeroInterior": fabricante.numeroInterior,
-            "pais": {
-                "clave": fabricante.paisObj?.clave,
-                "nombre": fabricante.paisObj?.descripcion
-            },
-            "colonia": {
-                "clave": fabricante.coloniaObj?.clave,
-                "nombre": fabricante.coloniaObj?.descripcion
-            },
-            "delegacionMunicipio": {
-                "clave": fabricante.municipioAlcaldiaObj?.clave,
-                "nombre": fabricante.municipioAlcaldiaObj?.descripcion
-            },
-            "localidad": {
-                "clave": fabricante.localidadObj?.clave,
-                "nombre": fabricante.localidadObj?.descripcion
-            },
-            "entidadFederativa": {
-                "clave": fabricante.entidadFederativaObj?.clave,
-                "nombre": fabricante.entidadFederativaObj?.descripcion
-            },
-            "informacionExtra": "",
-            "codigoPostal": fabricante.codigoPostalObj?.descripcion,
-            "descripcionColonia": fabricante.coloniaObj?.descripcion
+                  "calle": fabricante.calle,
+                  "numeroExterior": fabricante.numeroExterior,
+                  "numeroInterior": fabricante.numeroInterior,
+                  "pais": {
+                      "clave": fabricante.paisObj?.clave,
+                      "nombre": fabricante.paisObj?.descripcion
+                  },
+                  "colonia": {
+                      "clave": fabricante.coloniaObj?.clave,
+                      "nombre": fabricante.coloniaObj?.descripcion
+                  },
+                  "delegacionMunicipio": {
+                      "clave": fabricante.municipioAlcaldiaObj?.clave,
+                      "nombre": fabricante.municipioAlcaldiaObj?.descripcion
+                  },
+                  "localidad": {
+                      "clave": fabricante.localidadObj?.clave,
+                      "nombre": fabricante.localidadObj?.descripcion
+                  },
+                  "entidadFederativa": {
+                      "clave": fabricante.entidadFederativaObj?.clave,
+                      "nombre": fabricante.entidadFederativaObj?.descripcion
+                  },
+                  "informacionExtra": "",
+                  "codigoPostal": fabricante.codigoPostal,
+                  "descripcionColonia": fabricante.colonia
               },
               "idSolicitud": "0"
           }
@@ -167,8 +168,8 @@ export class GuardarMappingAdapter {
         return {
             "idPersonaSolicitud": "",
             "ideTipoTercero": "TIPERS.FAB",
-            "personaMoral": "1",
-            "booleanExtranjero": "0",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
             "booleanFisicaNoContribuyente": "0",
             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
             "razonSocial": destinatario.razonSocial,
@@ -189,27 +190,27 @@ export class GuardarMappingAdapter {
                 "numeroInterior": destinatario.numeroInterior,
                 "pais": {
                     "clave": destinatario.paisObj?.clave,
-                    "nombre": destinatario.paisObj?.descripcion || destinatario.pais
+                    "nombre": destinatario.paisObj?.descripcion
                 },
                 "colonia": {
                     "clave": destinatario.coloniaObj?.clave,
-                    "nombre": destinatario.coloniaObj?.descripcion || destinatario.colonia
+                    "nombre": destinatario.coloniaObj?.descripcion
                 },
                 "delegacionMunicipio": {
                     "clave": destinatario.municipioObj?.clave,
-                    "nombre": destinatario.municipioObj?.descripcion || destinatario.municipioAlcaldia
+                    "nombre": destinatario.municipioObj?.descripcion
                 },
                 "localidad": {
                     "clave": destinatario.localidadObj?.clave,
-                    "nombre": destinatario.localidadObj?.descripcion || destinatario.localidad
+                    "nombre": destinatario.localidadObj?.descripcion
                 },
                 "entidadFederativa": {
-                    "clave": destinatario.estadoObj?.clave,
-                    "nombre": destinatario.estadoObj?.descripcion || destinatario.estadoLocalidad
+                    "clave": "",
+                    "nombre": ""
                 },
                 "informacionExtra": "",
-                "codigoPostal": destinatario.codigoPostalObj?.descripcion || destinatario.codigoPostal,
-                "descripcionColonia": destinatario.coloniaObj?.descripcion || destinatario.colonia
+                "codigoPostal": destinatario.codigoPostal,
+                "descripcionColonia": destinatario.colonia
             },
             "idSolicitud": "0"
           }
@@ -240,23 +241,23 @@ export class GuardarMappingAdapter {
                 "numeroInterior": proveedor.numeroInterior,
                 "pais": {
                     "clave": proveedor.paisObj?.clave,
-                    "nombre": proveedor.paisObj?.descripcion || proveedor.pais
+                    "nombre": proveedor.paisObj?.descripcion
                 },
                 "colonia": {
                     "clave": "",
-                    "nombre": proveedor.colonia
+                    "nombre": ""
                 },
                 "delegacionMunicipio": {
                     "clave": "",
-                    "nombre": proveedor.municipioAlcaldia
+                    "nombre": ""
                 },
                 "localidad": {
                     "clave": "",
-                    "nombre": proveedor.localidad
+                    "nombre": ""
                 },
                 "entidadFederativa": {
                     "clave": "",
-                    "nombre": proveedor.entidadFederativa
+                    "nombre": ""
                 },
                 "informacionExtra": "",
                 "codigoPostal": proveedor.codigoPostal,
@@ -290,24 +291,24 @@ export class GuardarMappingAdapter {
               "numeroExterior": facturador.numeroExterior,
               "numeroInterior": facturador.numeroInterior,
               "pais": {
-                  "clave": facturador.paisObj?.clave || "",
-                  "nombre": facturador.paisObj?.descripcion || facturador.pais
+                  "clave": facturador.paisObj?.clave,
+                  "nombre": facturador.paisObj?.descripcion
               },
               "colonia": {
                   "clave": "",
-                  "nombre": facturador.colonia
+                  "nombre": ""
               },
               "delegacionMunicipio": {
                   "clave": "",
-                  "nombre": facturador.municipioAlcaldia
+                  "nombre": ""
               },
               "localidad": {
                   "clave": "",
-                  "nombre": facturador.localidad
+                  "nombre": ""
               },
               "entidadFederativa": {
                   "clave": "",
-                  "nombre": facturador.entidadFederativa
+                  "nombre": ""
               },
               "informacionExtra": "",
               "codigoPostal": facturador.codigoPostal,
@@ -320,13 +321,14 @@ export class GuardarMappingAdapter {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
           "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
-              "clave": state.pagoDerechos.banco,
-              "descripcion": ""
+              "clave": state.pagoDerechos.bancoObject?.clave,
+              "descripcion": state.pagoDerechos.bancoObject?.descripcion
           },
           "llaveDePago": state.pagoDerechos.llavePago,
           "fecPago": state.pagoDerechos.fechaPago,
           "impPago": state.pagoDerechos.importePago
       }
+    
     }
   }
 }

@@ -211,17 +211,17 @@ export interface PermisoModel {
       orden: 11,
     },
     {
-      encabezado: 'País donde se produce o fabrica el ingrediente activo',
+      encabezado: 'País donde se produce o fabrica el ingrediente activo  (TÉCNICO)',
       clave: (ele: MercanciasInfo) => ele.paisProduccionIngredienteActivo,
       orden: 12,
     },
     {
-      encabezado: 'País donde se elabora el producto',
+      encabezado: 'País donde se elabora el producto (FORMULADO)',
       clave: (ele: MercanciasInfo) => ele.paisElaboracionProducto,
       orden: 13,
     },
     {
-      encabezado: 'País de procedencia (último puerto embarque)',
+      encabezado: 'País de procedencia (último puerto de embarque)',
       clave: (ele: MercanciasInfo) => ele.paisProcedenciaUltimoPuerto,
       orden: 14,
     },

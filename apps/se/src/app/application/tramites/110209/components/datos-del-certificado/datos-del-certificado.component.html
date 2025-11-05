@@ -41,11 +41,11 @@
       </div>
  
       <div class="modal-body">
-       <app-registro-de-mercancia></app-registro-de-mercancia>
+       <app-registro-de-mercancia #registroMercancia></app-registro-de-mercancia>
  
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
           <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
-          <button type="button" class="btn btn-primary">Modificar</button>
+          <button type="button" class="btn btn-primary" (click)="onModificar()">Modificar</button>
         </footer>
       </div>
     </div>

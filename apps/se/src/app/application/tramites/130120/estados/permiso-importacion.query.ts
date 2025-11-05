@@ -23,7 +23,7 @@ export class Tramite130120Query extends Query<DatosGrupos> {
    * Observable para los datos de la mercancía.
    */
   setCargaTipo$ = this.select((state) => {
-   return state.datosMercanica;
+    return state.datosMercanica;
   })
 
   /**
@@ -57,7 +57,7 @@ export class Tramite130120Query extends Query<DatosGrupos> {
   selectDatos$ = this.select((state) => {
     return state;
   });
-  
+
   /**
    * Constructor de la clase Tramite130120Query.
    * @param store Instancia del store de permiso de importación.

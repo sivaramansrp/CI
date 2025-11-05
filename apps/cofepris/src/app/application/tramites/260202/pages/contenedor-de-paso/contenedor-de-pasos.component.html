@@ -19,7 +19,7 @@
       } @case (2) {
         <app-paso-carga-documento 
           [idSolicitud]="storeData.idSolicitud"
-          [idTipoTRamite]="'260201'"
+          [idTipoTRamite]="'260202'"
           [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"
@@ -59,4 +59,7 @@
       }
     </div>
   </div>
+  @if (indice === 1) {
+            <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
+        }
 </div>

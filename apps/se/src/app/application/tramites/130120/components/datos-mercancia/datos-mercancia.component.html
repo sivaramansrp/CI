@@ -236,7 +236,7 @@
           </label>
           <input class="form-control" type="text" id="valor_factura" placeholder="" formControlName="valor_factura"
             required="text" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$" [disabled]="esFormularioSoloLectura"
-            (change)="setMercanciaImportar(); calcularValoresDolares();" />
+            (change)="setMercanciaImportar(datosMercanica,'valor_factura', 'setValorFactura'); calcularValoresDolares();" />
           <div *ngIf="datosMercanica.get('valor_factura')?.touched && datosMercanica.get('valor_factura')?.invalid">
             <small *ngIf="datosMercanica.get('valor_factura')?.errors?.['required']"
               class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -307,10 +307,10 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="paisExportadorOpcion" [label]="'País exportador'" [required]="true"
-            name="país_exportador" [isDisabled]="esFormularioSoloLectura" formControlName="pais_exportador"
+            name="pais_exportador" [isDisabled]="esFormularioSoloLectura" formControlName="pais_exportador"
             (change)="setValoresStore(datosMercanica, 'pais_exportador', 'setPaisExportador')">
           </app-catalogo-select>
-          <div *ngIf="datosMercanica.get('país_exportador')?.touched && datosMercanica.get('país_exportador')?.invalid">
+          <div *ngIf="datosMercanica.get('pais_exportador')?.touched && datosMercanica.get('pais_exportador')?.invalid">
             <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
           </div>
         </div>
@@ -320,7 +320,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="paisOrigenOpcion" [label]="'País origen'" [required]="true"
-            name="país_origen" formControlName="pais_origen"
+            name="pais_origen" formControlName="pais_origen"
             (change)="setValoresStore(datosMercanica, 'pais_origen', 'setPaisOrigen')"
             [isDisabled]="esFormularioSoloLectura">
           </app-catalogo-select>
@@ -342,7 +342,8 @@
           </label>
           <input class="form-control" type="text" id="valor_total_factura" placeholder=""
             formControlName="valor_total_factura" required="true" maxlength="17" pattern="^\d{1,14}(\.\d{1,2})?$"
-            [disabled]="esFormularioSoloLectura" (change)="setTotalMercanciaImportar(); calcularValorTotalFacturaUSD();" />
+            [disabled]="esFormularioSoloLectura"
+            (change)="setTotalMercanciaImportar(datosMercanica, 'valor_total_factura', 'setValorTotalFactura'); calcularValorTotalFacturaUSD();" />
           <div
             *ngIf="datosMercanica.get('valor_total_factura')?.touched && datosMercanica.get('valor_total_factura')?.invalid">
             <small *ngIf="datosMercanica.get('valor_total_factura')?.errors?.['required']"

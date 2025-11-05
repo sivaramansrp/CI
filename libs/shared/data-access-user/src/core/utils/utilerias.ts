@@ -364,6 +364,23 @@ export function formatDateToYYYYMMDD(dateString: string): string {
   return DATE.toISOString().split('T')[0];
 }
 
+/**  
+ * **Formatea una fecha en formato DD/MM/YYYY.**  
+ * Convierte una cadena de fecha válida en una representación legible con día, mes y año.  
+ *  
+ * @param fechaStr - Cadena de fecha a formatear (por ejemplo, `"2025-11-03"`).  
+ * @returns La fecha formateada en formato `"DD/MM/YYYY"`.  
+ */
+export function formatFechaDDMMYYYY(fechaStr: string): string {
+  const FECHA = new Date(fechaStr);
+
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const YEAR = FECHA.getFullYear();
+
+  return `${DAY}/${MONTH}/${YEAR}`;
+}
+
     /**
   * Método genérico para manejar un PDF en base64.
   *
@@ -420,3 +437,17 @@ export function formatDateToYYYYMMDD(dateString: string): string {
             window.URL.revokeObjectURL(LINK.href);
   
   }
+
+  /**
+ * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
+ * @param fecha_creacion Fecha en formato ISO (string)
+ * @returns Fecha formateada como string
+ */
+export function formatFechaCreacion(fecha_creacion: string): string {
+    const DATE = new Date(fecha_creacion);
+    if (isNaN(DATE.getTime())) {
+        return fecha_creacion;
+    }
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
+}

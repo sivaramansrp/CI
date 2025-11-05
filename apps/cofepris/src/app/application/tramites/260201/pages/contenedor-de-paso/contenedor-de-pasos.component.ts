@@ -210,10 +210,23 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        return;
+        // return;
       }
 
-      const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
+      this.postGuardarDatos(e);
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+    }
+  }
+
+  /**
+   * Método que se ejecuta después de guardar los datos.
+   * Actualmente no realiza ninguna acción.
+   */
+  postGuardarDatos(e: AccionBoton): void {
+    const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
       let shouldNavigate = false;
       this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
@@ -239,7 +252,7 @@ export class ContenedorDePasosComponent implements OnInit {
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = e.valor;
           }
           this.toastrService.success(response.mensaje);
           if (indiceActualizado > 0 && indiceActualizado < 5) {
@@ -255,11 +268,6 @@ export class ContenedorDePasosComponent implements OnInit {
           this.toastrService.error(response.mensaje);
         }
       });
-    }else{
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
-    }
   }
 
   /**

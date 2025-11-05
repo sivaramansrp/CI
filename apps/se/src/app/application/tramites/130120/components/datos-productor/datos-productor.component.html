@@ -129,22 +129,22 @@
         <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="denominación_razón_social">
+              <label class="form-label" for="denominacion_razon_social">
                 Denominación o razón social*:
               </label>
               <input
                 class="form-control"
                 type="text"
-                id="denominación_razón_social"
+                id="denominacion_razon_social"
                 [disabled]="esFormularioSoloLectura"
                 [placeholder]=""
-                formControlName="denominación_razón_social"
+                formControlName="denominacion_razon_social"
                 [required]="true"
                 maxlength="250"
-                (change)="setValoresStore(datosProductor, 'denominación_razón_social', 'setDenominación_razón_social')"
+                (change)="setValoresStore(datosProductor, 'denominacion_razon_social', 'setDenominacion_razon_social')"
               />
-              <div *ngIf="datosProductor.get('denominación_razón_social')?.touched && datosProductor.get('denominación_razón_social')?.invalid">
-                <small *ngIf="datosProductor.get('denominación_razón_social')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 250 caracteres.</small>
+              <div *ngIf="datosProductor.get('denominacion_razon_social')?.touched && datosProductor.get('denominacion_razon_social')?.invalid">
+                <small *ngIf="datosProductor.get('denominacion_razon_social')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 250 caracteres.</small>
               </div>
             </div>
           </div>

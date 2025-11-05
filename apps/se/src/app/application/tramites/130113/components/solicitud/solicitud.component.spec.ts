@@ -154,6 +154,10 @@ describe('SolicitudComponent', () => {
     it('debería establecer mostrarTabla en true si el formulario es válido', () => {
       component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
         cantidadPartidasDeLaMercancia: ['10', Validators.required],
+        fraccionTigiePartidasDeLaMercancia: ['123456', Validators.required],
+        fraccionDescripcionPartidasDeLaMercancia: ['desc', Validators.required],
+        descripcionPartidasDeLaMercancia: ['desc', Validators.required],
+        valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
       });
 
       component.validarYEnviarFormulario();
