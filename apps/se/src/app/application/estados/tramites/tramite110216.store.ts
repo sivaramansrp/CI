@@ -359,6 +359,14 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({ ...state, paisBloques }));
   }
 
+  /**
+ * Actualiza el país bloque seleccionado en el estado del trámite.
+ * @param paisBloque Objeto de tipo Catalogo que representa el país bloque a asignar.
+ */
+  public setBloqu(paisBloque: Catalogo): void {
+    this.update((state) => ({ ...state, paisBloque }));
+  }
+
   public setAltaPlanta(altaPlanta: Catalogo[]): void {
     this.update((state) => ({ ...state, altaPlanta }));
   }
@@ -680,18 +688,37 @@ public setGrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
   }
 
   /**
-   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
-   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
-   */
-  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+ * Actualiza completamente la lista de productores exportador agregados, reemplazando los valores existentes.
+ * @param agregarProductoresExportador Arreglo completo de productores exportador que reemplazará la lista actual.
+ */
+  updateAgregarProductoresExportador(agregarProductoresExportador: HistoricoColumnas[]): void {
     this.update((state) => ({
       ...state,
-      agregarProductoresExportador: [
-        ...state.agregarProductoresExportador,
-        ...productor.map(item => ({ ...item })),
-      ],
-     }));
+      agregarProductoresExportador,
+    }));
   }
+
+  /**
+ * Agrega productores exportador únicos al arreglo existente, evitando duplicados basados en el ID.
+ * Solo se agregan los elementos que no existen previamente en la lista.
+ * @param productor Arreglo de productores exportador a agregar al estado.
+ */
+  setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+    this.update((state) => {
+      const existing = state.agregarProductoresExportador || [];
+      const uniqueNewItems = productor.filter(
+        (nuevo) => !existing.some((existente) => existente.id === nuevo.id)
+      );
+      return {
+        ...state,
+        agregarProductoresExportador: [
+          ...existing,
+          ...uniqueNewItems.map(item => ({ ...item })),
+        ],
+      };
+    });
+  }
+
 
   /**
    * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.

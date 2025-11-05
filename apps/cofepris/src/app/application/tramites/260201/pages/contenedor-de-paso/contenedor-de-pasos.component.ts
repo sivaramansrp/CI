@@ -210,9 +210,9 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        // return;
+        return;
       }
-
+      this.esFormaValido = false;
       this.postGuardarDatos(e);
     }else{
       this.indice = e.valor;

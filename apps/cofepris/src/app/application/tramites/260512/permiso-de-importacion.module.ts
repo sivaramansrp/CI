@@ -2,6 +2,7 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Firma
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ExportacionService } from '../../shared/services/exportacion.service';
@@ -38,7 +39,8 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent, 
     AlertComponent,
     FirmaElectronicaComponent,
-    PagoDeDerechosComponent
+    PagoDeDerechosComponent,
+    DatosDeLaComponent
   ],
   providers: [
     provideHttpClient(),
