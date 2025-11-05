@@ -17,5 +17,7 @@ import { PagoDeDerechosBancoComponent } from '../../../../shared/components/pago
   styleUrl: './pago-derechos.component.scss',
 })
 export class PagoDerechosComponent {
-  // Aquí puedes agregar propiedades, métodos y lógica adicional para el componente.
+
+  public idProcedimiento: number = 260504; 
+
 }

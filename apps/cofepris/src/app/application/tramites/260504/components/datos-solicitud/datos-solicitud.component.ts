@@ -31,4 +31,6 @@ export class DatosSolicitudComponent {
      * Indica si el campo esPaginacionVisible es visible.
      */
     esPaginacionVisible: boolean = true;
+
+  public idProcedimiento: number = 260504;
 }

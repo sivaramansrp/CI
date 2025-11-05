@@ -176,6 +176,8 @@ export class CatalogoSelectComponent
  * Indica si se debe aplicar un color de fondo especial cuando el select está deshabilitado.
  */
   @Input() bgColorDisabled: boolean = false; 
+
+  @Input() showClave: boolean = false; 
   /**
    * @constructor
    * @param fb - Instancia de `FormBuilder` para crear formularios reactivos.

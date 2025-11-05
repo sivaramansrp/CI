@@ -1,5 +1,4 @@
 import {
-  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
@@ -354,7 +353,9 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   /**
    * Lista de países disponibles para la selección de origen.
    */
-  public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
+  public seleccionarAduanasEntrada: string[] = [];
+
+  public aduanaCatalogo: Catalogo[] = [];
 
   /**
    * Botones para gestionar la lista cruzada de países de origen.
@@ -435,10 +436,19 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   estado: Catalogo[] = [];
 
-  /**
-   * Lista de paises.
+   /**
+   * Control de formulario para la clave scian.
    */
-  public crosListaDePaises = CROSLISTA_DE_PAISES;
+  public claveScianLista: Catalogo[] = [];
+
+  /**
+   * Control de formulario para la clave scian.
+   */
+  public UMCLista: Catalogo[] = [];
+
+  public clasificacionToxicologicaLista: Catalogo[] = [];
+
+  public objetoImportacionLista: Catalogo[] = [];
 
   /**
    * Tabla de selección de checkbox.
@@ -509,6 +519,16 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @property {boolean} colapsableTress
    */
   colapsableTress: boolean = false;
+
+  public paisesCatalogo: Catalogo[] = [];
+
+  public paises: string[] = [];
+
+  /**
+   * Lista de paises.
+   */
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -679,6 +699,12 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       )
       .subscribe()
     this.obtenerEstadoList();
+    this.obtenerClaveSvian();
+    this.obtenerUMCList(); 
+    this.obtenerAduanas();
+    this.obtenerClasificacionToxicologica();
+    this.obtenerObjetoImportacion();
+    this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio()
 
@@ -939,13 +965,99 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @param event
    */
   obtenerEstadoList(): void {
+    if (this.idProcedimiento) {
     this.service
+      .obtenerEstadoList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estado = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.estado = data;
       });
+    }
   }
+
+  /**
+   * Método para obtener el valor de clave scian.
+   * @param event
+   */
+  obtenerClaveSvian(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getClaveSvianList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.claveScianLista = data.datos ?? [];
+      });
+    }
+  }
+
+  obtenerUMCList(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getUMCList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.UMCLista = data.datos ?? [];
+      });
+    }
+  }
+
+  obtenerAduanas(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getAduanasList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.aduanaCatalogo = data.datos ?? [];
+        this.seleccionarAduanasEntrada = this.aduanaCatalogo.map(item => item.descripcion);
+      });
+    } else {
+      this.seleccionarAduanasEntrada = CROSLISTA_DE_PAISES;
+    }
+  }
+
+  obtenerClasificacionToxicologica(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getClasificacionToxicologicaList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.clasificacionToxicologicaLista = data.datos ?? [];
+      });
+    }
+    
+  }
+
+  obtenerObjetoImportacion(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getObjetoImportacionList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.objetoImportacionLista = data.datos ?? [];
+      });
+    }
+  }
+
+  obtenerpaisesLista(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getPaisesList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.paisesCatalogo = data.datos ?? [];
+        this.paises = this.paisesCatalogo.map(item => item.descripcion);
+      });
+    }
+  }
+
+
   /**
     * @method onClaveScianChange
     * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
@@ -953,7 +1065,12 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     */
   onClaveScianChange(event: Event): void {
     const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
-    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
+    let SELECTED_OPTION;
+    if (this.idProcedimiento) {
+      SELECTED_OPTION = this.claveScianLista?.find((item) => Number(item.clave) === Number(SELECTED_VALUE));
+    } else {
+      SELECTED_OPTION = this.estado?.find((item) => item.id === Number(SELECTED_VALUE));
+    }
 
     if (SELECTED_OPTION) {
       this.formAgente.patchValue({
