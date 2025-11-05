@@ -4,6 +4,7 @@ import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/c
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud130106State } from '../../../../estados/tramites/tramite130106.store';
 
 
 
@@ -18,6 +19,13 @@ export class DesmantelarComponent {
    */
   pantallasPasos: ListaPasosWizard[] = OCTA_TEMPO;
 
+  solicitudState!: Solicitud130106State;
+
+    /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
   /**
    * @property {number} indice - El índice actual del paso.
    */

@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -20,15 +20,15 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DatosComponent,FirmarSolicitudComponent,DesmantelarComponent
   ],
   imports: [
-    CommonModule,FraccionComponent,
+    CommonModule, FraccionComponent,
     DesmantelarRoutingModule,
-    BtnContinuarComponent,   
+    BtnContinuarComponent,
     TituloComponent,
     DatosDeLaSolicitudComponent,
     AlertComponent,
-    WizardComponent,FirmaElectronicaComponent,SolicitanteComponent
-  
-  ],
+    WizardComponent, FirmaElectronicaComponent, SolicitanteComponent,
+    PasoFirmaComponent
+],
   providers: [
     ToastrService
   ]

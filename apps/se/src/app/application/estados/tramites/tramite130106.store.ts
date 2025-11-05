@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
    
 export interface Solicitud130106State {
-
+  idSolicitud: number | null;
     regimen: string;
     clasificacion: string;
     solicitudDescripcion: string
@@ -30,6 +30,7 @@ export interface Solicitud130106State {
 
 export function createInitialState(): Solicitud130106State {
     return {
+        idSolicitud: 0,
         regimen: '',
         clasificacion: '',
         solicitudDescripcion: '',
@@ -191,6 +192,18 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
     updateSelectRangoDias(selectRangoDias: string[]):void {
         this.update({ selectRangoDias });
       }
+
+       /**
+ * Guarda el ID de la solicitud en el estado.
+ *
+ * @param idSolicitud - El ID de la solicitud que se va a guardar.
+ */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   
 
 }
