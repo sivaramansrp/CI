@@ -556,7 +556,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
-    const CONTENEDORES = this.solicitudForm.value.contenedores;
+    const CONTENEDORES = this.solicitudForm.value.tipoBusqueda;
     const DIGITOCONTROL = this.solicitudForm.value.digitoDeControl || '';
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
       const API_PAYLOAD = {
@@ -673,6 +673,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.value.numeroContenedor = '';
           this.solicitudForm.value.digitoDeControl = '';
           this.mostrarAgregarTipoContenedor = false;
+          this.solicitudForm.get('tipoBusqueda')?.setValue(payload.tipo_contenedor);
 
           // this.solicitudForm.reset();
           // this.solicitudForm.markAsUntouched();
@@ -789,7 +790,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         });
 
         let contenedores: any[] = [];
-
         switch (TIPO_BUSQUEDA) {
             case SearchType.Contenedor:
                 contenedores = this.datosDelContenedor.map(normalize);
