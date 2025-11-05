@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -65,8 +64,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
-    NotificacionesComponent,
-    InputRadioComponent
+    NotificacionesComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -1216,6 +1214,12 @@ guardarFabricante(): void {
     this.agregarFabricanteForm.get('tipoPersona')?.enable();
   } else {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    // this.agregarFabricanteForm.get('tipoPersona')?.reset();
+    // const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+    // const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+    // this.disableLabel=[];
+    //  if(VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
+    // this.elementosDeshabilitados=[];
   }
 
   if (VALOR_FORMULARIO.nacionalidad === 'Extranjero') {
@@ -1344,6 +1348,9 @@ changeTipoPersona(): void {
 }
 
 private isTipoPersonaEmpty(): boolean {
+  if (!this.agregarFabricanteForm) {
+    return true;
+  }
   const TIPO_PERSONA_VALUE = this.agregarFabricanteForm?.get('tipoPersona')?.value;
   return TIPO_PERSONA_VALUE === '' || TIPO_PERSONA_VALUE === undefined;
 }

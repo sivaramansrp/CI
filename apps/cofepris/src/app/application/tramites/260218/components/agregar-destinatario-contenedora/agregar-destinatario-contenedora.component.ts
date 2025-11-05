@@ -12,6 +12,7 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 /**
@@ -46,6 +47,13 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   styleUrl: './agregar-destinatario-contenedora.component.scss',
 })
 export class AgregarsDestinatarioContenedoraComponent {
+  
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+   
   /**
    * @constructor
    * @description

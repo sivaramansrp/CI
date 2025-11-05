@@ -136,7 +136,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       .subscribe();
 
   this.manifiestos = this.fb.group({
-    mensaje: [this.solicitudState?.mensaje, Validators.required],
+    mensaje: [this.solicitudState?.mensaje, Validators.requiredTrue],
     cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
   });
 

@@ -9,24 +9,30 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
+  REGEX_TEXTO_ALFANUMERICO_EXTENDIDO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+
 import {
+  AfterViewInit,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
+
 import {
   ConfiguracionVisibilidad,
+  DATOS_MERCANCIAS,
   MERCANCIAS_DATA,
   MercanciasInfo,
   NICO_TABLA,
@@ -49,10 +55,11 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { Modal } from 'bootstrap';
+import Modal from 'bootstrap/js/dist/modal';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 
 export interface RespuestaTabla {
   code: number;
@@ -85,8 +92,10 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
-export class DomicilioComponent implements OnInit, OnDestroy {
-
+export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
+  @Input() identificacion: boolean = false;
+  @Input() idProcedimiento!: number;
+  @Input() rfcValido: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -283,18 +292,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_CODIGO_POSTAL)]],
-      estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      colonia: [this.solicitudState?.colonia, [Validators.maxLength(120), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      calle: [this.solicitudState?.calle, Validators.required],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.requiredTrue],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, Validators.required
-      ],
+            codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]+$')]],
+            estado: [this.solicitudState?.estado, Validators.required],
+            muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
+            localidad: [this.solicitudState?.localidad,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            colonia: [this.solicitudState?.colonia,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
+            calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+            lada: [this.solicitudState?.lada],
+            telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+            avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+            licenciaSanitaria: [ { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required, Validators.maxLength(50)]],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
@@ -678,22 +685,22 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+      claveDescripcionModal: [{value: this.solicitudState?.claveDescripcionModal, disabled: true}, Validators.required],
     });
     this.formMercancias = this.fb.group({
       nombreComercial: [
-        '',
-        [Validators.required, Validators.maxLength(1000)],
+        ''
       ],
-      nombreComun: ['', [Validators.required, Validators.maxLength(250)]],
-      nombreCientifico: ['', [Validators.maxLength(250)]],
+      nombreComun: [''],
+      nombreCientifico: [''],
       usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         '',
         [
           Validators.required,
-          Validators.pattern(REGEX_SOLO_DIGITOS)],
-        Validators.minLength(8),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+          Validators.minLength(8)],
+       
       ],
 
       descripcionFraccion: [{ value: '', disabled: true }],
@@ -785,7 +792,18 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         clave_Scian: this.formAgente.get('claveScianModal')?.value,
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
+      
+    const exists = this.nicoTablaDatos.some(
+      item =>
+        item.clave_Scian === NUEVO_DATO.clave_Scian &&
+        item.descripcion_Scian === NUEVO_DATO.descripcion_Scian
+    );
+
+    if (!exists) {
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos];
+    }
+      //this.nicoTablaDatos.push(NUEVO_DATO);
       this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
@@ -1054,6 +1072,10 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('domicilioForm', { [campo]: VALOR });
   }
 
+  agregarMercanciaModal(): void {
+    this.formMercancias.reset();
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    * 
@@ -1076,10 +1098,35 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       umc: RAW.UMC,
       unidadMedidaTarifa: RAW.UMT,
     };
+    const INDEX = this.listaMercancias.findIndex(
+      item => item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria
+    );
+
+    if (INDEX !== -1) {
+      // Update existing row
+      this.listaMercancias[INDEX] = NUEVA_MERCANCIA;
+    } else {
+      // Add new row
       this.listaMercancias.push(NUEVA_MERCANCIA);
+    }
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      
+       const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+      MODAL_INSTANCE?.hide();
+       setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+      }, 300);  
+    }
       this.tieneFormularioMercanciasEnviado = false;
+    }
+    else{
+      this.formMercancias.markAllAsTouched();
     }
   }
 
@@ -1164,6 +1211,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.seleccionarlistaMercancias = event;
   }
 
+  public seleccionarlistaSeccionNico(event: NicoInfo[]): void {
+    this.personaparas = event;
+  }
+
+  public eliminarScian(): void {
+    if (this.personaparas.length > 0) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(
+        item => !this.personaparas.some(selected =>
+          selected.clave_Scian === item.clave_Scian &&
+          selected.descripcion_Scian === item.descripcion_Scian
+        )
+      );
+      this.personaparas = [];
+    }
+  }
+
+
   /**
    * @method eliminarMercancia
    * @description
@@ -1187,27 +1251,64 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     }
   }
 
+ 
   /**
    * @method modificarMercancia
+   * 
    * @description
    * Método que modifica una mercancía de la lista de mercancías seleccionadas.
    */
   public modificarMercancia(): void {
-    if(this.seleccionarlistaMercancias.length !== 0) {
-      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
-      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
-      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
-      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
-      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
-      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
-      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
-      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
-      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
-      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
-      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
-      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
+    if (this.seleccionarlistaMercancias.length !== 0) {
+      const SELECTED = this.seleccionarlistaMercancias[0];
+      this.formMercancias.patchValue({
+        nombreComercial: SELECTED.nombreComercial,
+        nombreComun: SELECTED.nombreComun,
+        nombreCientifico: SELECTED.nombreCientifico,
+        usoEspecifico: SELECTED.usoEspecifico,
+        fraccionArancelaria: SELECTED.fraccionArancelaria,
+        descripcionFraccion: SELECTED.descripcionFraccion,
+        cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt ,
+        UMT:  SELECTED.unidadMedidaTarifa,
+        cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
+        UMC: SELECTED.umc || SELECTED.umc,
+        porcentajeConcentracion: SELECTED.porcentajeConcentracion,
+        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
+        objetoImportacion: SELECTED.objetoImportacion,
+        ...(this.formMercancias.contains('numeroRegistro') && { numeroRegistro: "1" })
+       
+      });
     }
   }
+  ngAfterViewInit(): void {
+    this.mercanciasTabla = this.idProcedimiento === 260512 || this.idProcedimiento === 260513 ? DATOS_MERCANCIAS : MERCANCIAS_DATA;
+   if(this.identificacion){
+    this.formMercancias.get('nombreComercial')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComun')?.setValidators([Validators.required, Validators.maxLength(250)]);
+    this.formMercancias.get('nombreCientifico')?.setValidators([Validators.required, Validators.maxLength(1000)]);
+    this.formMercancias.get('nombreComercial')?.updateValueAndValidity();
+    this.formMercancias.get('nombreComun')?.updateValueAndValidity();
+    this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
+   }
+   if(!this.rfcValido){
+this.domicilio.disable();
+   }
+   else{
+    this.domicilio.enable();
+   }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.formMercancias) {
+      return;
+    }
+  if (changes['rfcValido']) {
+    if (!this.rfcValido) {
+      this.domicilio.disable();
+    } else {
+      this.domicilio.enable();
+    }
+  }
+}
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

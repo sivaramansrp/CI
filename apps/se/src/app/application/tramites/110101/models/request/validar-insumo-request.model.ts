@@ -38,7 +38,7 @@ export interface Insumo {
     ide_tipo_insumo: string;
     
     /** Peso del insumo */
-    peso: boolean | null;
+    peso: number | null;
     
     /** Clave del país */
     cve_pais: string | null;

@@ -128,8 +128,8 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
       cantidad: [{ value: '', disabled: true }],
       prorrogaDel: [{ value: '', disabled: true }],
       prorrogaAl: [{ value: '', disabled: true }, Validators.required],
-      motivoJustificacion: [this.solicitudState?.motivoJustificacion, Validators.required],
-      otrasDeclaraciones: [this.solicitudState?.otrasDeclaraciones, Validators.required],
+      motivoJustificacion: [{ value: this.solicitudState?.motivoJustificacion, disabled: true }, Validators.required],
+      otrasDeclaraciones: [{ value: this.solicitudState?.otrasDeclaraciones, disabled: true }, Validators.required],
     });
   }
 
@@ -173,5 +173,14 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Marca todos los campos del formulario como tocados para mostrar errores de validación.
+   */
+  public markAllAsTouched(): void {
+    if (this.prorrogasForm) {
+      this.prorrogasForm.markAllAsTouched();
+    }
   }
 }

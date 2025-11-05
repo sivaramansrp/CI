@@ -105,6 +105,9 @@ export interface CertificadoKimberleyForma {
     numeroFactura:string;
     cantidadQuilates:string;
     valorDiamantes:string;
+    paisEmisorCertificado:string;
+    mixed:string;
+    paisDeOrigen:string;
 }
 
 export interface RequestCertificadoKimberleyForma {

@@ -1776,4 +1776,15 @@ export class Tramite110217Store extends Store<Tramite110217State> {
       },
     }));
   }
+
+  /**
+ * Actualiza completamente la lista de productores exportador agregados, reemplazando los valores existentes.
+ * @param agregarProductoresExportador Arreglo completo de productores exportador que reemplazará la lista actual.
+ */
+  updateAgregarProductoresExportador(agregarProductoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador,
+    }));
+  }
 }
