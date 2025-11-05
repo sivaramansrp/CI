@@ -27,9 +27,9 @@
       <app-paso-dos></app-paso-dos>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
-          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
-            [dePadre]="true" [ocultabotonAnterior]="false" [btnGuardarVisible]="btnGuardarVisible"
-            (btnGuardarClicked)="guardadoParcialSolicitud()"></btn-continuar>
+          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="false"
+            [dePadre]="true" [ocultabotonAnterior]="false" [btnGuardarVisible]="btnGuardarVisible">
+          </btn-continuar>
         </div>
       </div>
       } @case (3) {

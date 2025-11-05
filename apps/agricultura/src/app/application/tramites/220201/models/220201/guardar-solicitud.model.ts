@@ -249,3 +249,8 @@ export interface Tercerosrelacionados {
         }
     ]
 }
+
+export interface RespuestaGuardarSolicitud {
+    id_solicitud: number;
+    fecha_actualización: string;
+}

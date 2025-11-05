@@ -140,6 +140,7 @@ export class ZoosanitarioPageComponent implements OnInit {
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
+        this.guardadoTotalSolicitud();
         return; // Detener ejecución si los formularios son inválidos
       }
     }
@@ -160,7 +161,7 @@ export class ZoosanitarioPageComponent implements OnInit {
       this.datosPasos.indice = indiceActualizado;
 
       if (e.accion === 'cont') {
-        this.guardadoTotalSolicitud();
+        
         this.wizardComponent.siguiente();
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();

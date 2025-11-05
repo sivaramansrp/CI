@@ -12,7 +12,7 @@ import {
   formatearFechaConMoment
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, catchError, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { Subject, catchError, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CadenaOriginal220201Service } from '../../services/220201/cadenaoriginal220201.service';
@@ -76,6 +76,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  idSolicitud: number | null = null;
+
   datosFirmaReales!: {
     firma: string;
     certSerialNumber: string;
@@ -98,24 +100,19 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const URL_ACTUAL = this.router.url;
     const URL_SEPARADA = URL_ACTUAL.split('/');
     this.url = URL_SEPARADA.slice(0, 3).join('/');
+    this.idSolicitud = this.tramite220201Query.getValue().idSolicitud;
+    console.warn('ID SOLICITUD EN PASO TRES:', this.idSolicitud);
     this.obtenerCadenaOriginal();
+
+
   }
 
   obtenerCadenaOriginal(): void {
-    const PAYLOAD: CadenaOriginalRequest = {
-      num_folio_tramite: '',
-      boolean_extranjero: true,
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "Juan Pérez",
-        es_persona_moral: true,
-        certificado_serial_number: "string"
-      },
-      cve_rol_capturista: "CapturistaGubernamental",
-      cve_usuario_capturista: "Gubernamental",
-      fecha_firma: formatFecha(new Date()),
+    const PAYLOAD = {
+      num_folio_tramite: '0105700100020252336300007',
+      documento_requerido: []
     };
-    this.cadena.obtenerCadenaOriginal('220201', PAYLOAD).subscribe({
+    this.cadena.obtenerCadenaOriginal('225591', PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {
@@ -166,14 +163,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     }
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
-    const ID_SOLICITUD = this.tramite220201Query.getValue().idSolicitud;
     this.documentoService
       .obtenerDatosFirma<FirmarRequest>()
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
           const PAYLOAD: FirmarRequest = {
-            id_solicitud: Number(ID_SOLICITUD),
+            id_solicitud: Number(this.idSolicitud ?? 0),
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
@@ -196,12 +192,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             tramite.data,
             firma,
-            ID_SOLICITUD ?? 0
-          );
-          this.tramiteStore.establecerTramite(
-            this.folio,
-            firma,
-            ID_SOLICITUD ?? 0
+            this.idSolicitud ?? 0
           );
           this.router.navigate([`${this.url}/acuse`]);
         }),

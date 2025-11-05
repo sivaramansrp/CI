@@ -9,9 +9,9 @@ import {
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT, formatFechaCreacion } from "@libs/shared/data-access-user/src";
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../models/220201/capturar-solicitud.model';
+import { GuardaSolicitud, RespuestaGuardarSolicitud } from '../../../models/220201/guardar-solicitud.model';
 import { Observable, map } from "rxjs";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
-import { GuardaSolicitud } from '../../../models/220201/guardar-solicitud.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -120,9 +120,9 @@ export class RegistroSolicitudService {
      * @param payload - Datos de la solicitud a guardar.
      * @returns Un observable que emite la respuesta base con los datos de la solicitud.
      */
-    guardarSolicitud(tramite: number, payload: GuardaSolicitud): Observable<BaseResponse<SolicitudData>> {
+    guardarSolicitud(tramite: number, payload: GuardaSolicitud): Observable<BaseResponse<RespuestaGuardarSolicitud>> {
         const ENDPOINT = `${this.host}${API_POST_GUARDAR(tramite.toString())}`;
-        return this.http.post<BaseResponse<SolicitudData>>(ENDPOINT, payload);
+        return this.http.post<BaseResponse<RespuestaGuardarSolicitud>>(ENDPOINT, payload);
     }
 
 }
