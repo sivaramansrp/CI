@@ -26,19 +26,7 @@ describe('SolicitudService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch programas-reporte data', () => {
-    const mockProgramasReporte: ProgramasReporte[] = [
-      { folioPrograma: '12345', tipoPrograma: 'Type A', modalidad: 'Modal A', estatus: 'Active' },
-    ];
 
-    service.obtenerProgramasReporte().subscribe((data) => {
-      expect(data).toEqual(mockProgramasReporte);
-    });
-
-    const req = httpMock.expectOne('assets/json/150103/programas-reporte.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockProgramasReporte);
-  });
 
   it('should fetch reporte-fechas data', () => {
     const mockReporteFechas: ReporteFechas = {

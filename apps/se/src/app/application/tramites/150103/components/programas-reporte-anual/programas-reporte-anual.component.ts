@@ -46,6 +46,8 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     dateInputFormat: 'MM-YYYY', // Formato de entrada: mes-año
     minMode: 'month', // Solo permite seleccionar mes y año
   };
+
+  /** Estado de la consulta que se obtiene del store. */
   consultaDatos!: ConsultaioState;
 
   /**
@@ -77,6 +79,8 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   /** Configuración de la tabla para mostrar los datos de solicitud */
   solicitudConfiguracionTabla = SOLICITUD_CONFIGURACION_TABLA;
 
+  // Valor de RFC de ejemplo
+  private loginRfc: string = 'AAL0409235E6';
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -93,7 +97,11 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) {
     this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
+    if (this.solicitud150103Query.getValue().solicitudDato?.length) {
+      this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
+    } else {
+      this.obtenerProgramasReporte();
+    }
   }
 
   /**
@@ -162,17 +170,39 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Método para obtener los datos de programas de reporte.
-   * Actualiza los datos con los resultados obtenidos del servicio.
+   * @method obtenerProgramasReporte
+   * @description
+   * Método para obtener la lista de programas de reporte anual desde el servicio.
+   * Actualiza la propiedad `solicitudDatos` con los datos obtenidos.
+   *
+   * @returns {void}
    */
   obtenerProgramasReporte(): void {
     this.informaAnualPrograma
-      .obtenerProgramasReporte()
+      .obtenerProgramasReporte(this.loginRfc)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (respuesta: ProgramasReporte[]) => {
-          this.solicitudDatos = respuesta;
+        next: (respuesta: Record<string, unknown>) => {
+          const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
+          if (Array.isArray(DATOS) && DATOS.length) {
+            const PROGRAMAS = DATOS.map((item) => {
+              const PROGRAMA = item as ProgramasReporte;
+              return {
+                folioPrograma: PROGRAMA.folioPrograma ?? '',
+                modalidad: PROGRAMA.modalidad ?? '',
+                tipoPrograma: PROGRAMA.tipoPrograma ?? '',
+                estatus: PROGRAMA.estatus ?? '',
+              };
+            });
+            this.solicitudDatos = PROGRAMAS;
+            this.solicitud150103Store.setSolicitusDatos(this.solicitudDatos);
+          } else {
+            this.solicitudDatos = [];
+          }
         },
+        error: () => {
+        this.solicitudDatos = [];
+      },
       });
   }
 

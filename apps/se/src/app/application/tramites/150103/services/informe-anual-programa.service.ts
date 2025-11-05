@@ -1,19 +1,29 @@
-import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
+import { BUSCAR_PROGRAMAS, PROC_150103 } from '../servers/api-route';
 import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
-
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ReporteFechas } from '../models/programas-reporte.model';
+import { Solicitud150103Query } from '../estados/solicitud150103.query';
+
 @Injectable({
   providedIn: 'root'
 })
-export class InformeAnualProgramaService {
-
+export class InformeAnualProgramaService {  
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
+   * @param solicitud150103Store Store para manejar el estado de la solicitud.
+   * @param solicitud150103Query Query para acceder al estado de la solicitud.
+   * @param httpService Servicio HTTP core para comunicación con el backend.
    */
-  constructor(private http: HttpClient, private solicitud150103Store: Solicitud150103Store) {}
+  constructor(
+    private http: HttpClient, 
+    private solicitud150103Store: Solicitud150103Store,
+    private solicitud150103Query: Solicitud150103Query,
+    private httpService: HttpCoreService
+  ) {}
   actualizarEstadoFormulario(DATOS: Solicitud150103State): void {
     this.solicitud150103Store.actualizarFolioPrograma(DATOS.folioPrograma);
     this.solicitud150103Store.actualizarModalidad(DATOS.modalidad);
@@ -22,17 +32,6 @@ export class InformeAnualProgramaService {
     this.solicitud150103Store.actualizarVentasTotales(DATOS.ventasTotales);
     this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
    
-  }
-  /**
-   * Obtiene los programas de reporte desde un archivo JSON.
-   * 
-   * Este método realiza una solicitud HTTP para obtener un arreglo de programas de reporte.
-   * @returns Un observable que emite un arreglo de objetos de tipo `ProgramasReporte`.
-   */
-  obtenerProgramasReporte(): Observable<ProgramasReporte[]> {
-    return this.http.get<ProgramasReporte[]>(
-      'assets/json/150103/programas-reporte.json'
-    );
   }
 
   /**
@@ -56,4 +55,75 @@ export class InformeAnualProgramaService {
 getRegistroData(): Observable<Solicitud150103State> {
     return this.http.get<Solicitud150103State>('assets/json/150103/registro.json');
 }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_150103.GUARDAR, { body: body });
+  }
+
+  /**
+   * Construye el objeto de datos del reporte basado en el estado actual.
+   * @param data - Estado actual de la solicitud 150103.
+   * @returns Objeto con los datos del reporte estructurados para el API.
+   */
+  buildDatosReporte(data: Solicitud150103State): Record<string, unknown> {
+    return {
+      rfc_solicitante: 'AAL0409235E6', // This should be obtained from user session
+      idSolicitud: data.idSolicitud || 0,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "EMPRESA EJEMPLO S.A. DE C.V.",
+        actividad_economica: "Actividad económica ejemplo",
+        correo_electronico: "contacto@empresa.com",
+        domicilio: {
+          pais: "México",
+          codigo_postal: "06700",
+          estado: "Ciudad de México",
+          municipio_alcaldia: "Cuauhtémoc",
+          localidad: "Centro",
+          colonia: "Roma Norte",
+          calle: "Av. Ejemplo",
+          numero_exterior: "123",
+          numero_interior: "Piso 1",
+          lada: "",
+          telefono: "123456"
+        }
+      },
+      reporte_anual: {
+        fecha_inicio: data.inicio,
+        fecha_fin: data.fin,
+        folio_programa: data.folioPrograma,
+        modalidad: data.modalidad,
+        tipo_programa: data.tipoPrograma,
+        estatus: data.estatus,
+        total_importaciones: parseFloat(data.totalImportaciones) || 0,
+        saldo: parseFloat(data.saldo) || 0,
+        porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
+      },
+      fracciones: [],
+      sectores: []
+    };
+  }
+  
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Solicitud150103State> {
+    return this.solicitud150103Query.seleccionarSolicitud$;
+  }
+
+  /**
+   * Obtiene la lista de programas para el reporte desde un archivo JSON local.
+   * @returns {Observable<Record<string, unknown>>} Observable que emite un arreglo de programas para el reporte.
+   */
+  obtenerProgramasReporte(rfc: string): Observable<Record<string, unknown>> {
+    return this.http.get<Record<string, unknown>>(BUSCAR_PROGRAMAS(rfc));
+  }
+
 }
