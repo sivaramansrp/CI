@@ -203,6 +203,39 @@ export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA:
 export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
 
 /**
+ * Genera la ruta de la API para obtener los datos de la pestaña movilizacion nacional.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es prellenado.
+ * @param idSolicitud - ID de la solicitud.
+ * @returns Ruta de la API como string.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Registro-Solicitud/consulta-movilizacion-nacional
+ */
+export const API_GET_DATOS_SOLICITUD_MOVILIZACION_NACIONAL = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/movilizacion-nacional`;
+
+/**
+ * Genera la ruta de la API para obtener los datos de la pestaña terceros relacionados.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es prellenado.
+ * @param idSolicitud - ID de la solicitud.
+ * @returns Ruta de la API como string.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Registro-Solicitud/consulta-terceros-relacionados
+ */
+export const API_GET_DATOS_SOLICITUD_TERCEROS_RELACIONADOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/terceros-relacionados`;
+
+/**
+ * Genera la ruta de la API para obtener los datos de la pestaña pago de derechos.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es prellenado.
+ * @param idSolicitud - ID de la solicitud.
+ * @returns Ruta de la API como string.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Registro-Solicitud/consulta-pago-derechos
+ */
+export const API_GET_DATOS_SOLICITUD_PAGO_DERECHOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/pago-derechos`;
+
+/**
  * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
  *
  * @param TRAMITE - Identificador del trámite.

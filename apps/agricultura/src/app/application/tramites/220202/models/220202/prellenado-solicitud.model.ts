@@ -67,3 +67,73 @@ export interface PrellenadoSolicitud {
     }
   ]
 }
+
+export interface PrellenadoSolicitudMovilizacionNacional {
+  id_solicitud: number,
+  id_transporte: string,
+  ide_medio_transporte: string,
+  identificacion_transporte: string,
+  id_punto_verificacion: string,
+  razon_social: string
+}
+
+export interface PrellenadoSolicitudTercerosRelacionados {
+  terceros_exportador: [
+    {
+      id_solicitud: number | null,
+      extranjero: boolean,
+      id_persona_sol: number | null,
+      id_direccion_sol: number,
+      tipo_persona_sol: string | null,
+      persona_moral: boolean,
+      nombre: string,
+      apellido_paterno: string,
+      apellido_materno: string,
+      razon_social: string,
+      pais: string,
+      descripcion_ubicacion: string,
+      lada: string,
+      telefonos: string,
+      correo: string
+    }
+  ],
+  terceros_destinatario: [
+    {
+      id_solicitud: number |null,
+      id_persona_sol: number |null,
+      id_direccion_sol: number |null,
+      tipo_persona_sol: string | null,
+      persona_moral: boolean,
+      num_establ_tif: number | null,
+      nom_establ_tif: string | null,
+      nombre: string,
+      apellido_paterno: string,
+      apellido_materno: string,
+      razon_social: string,
+      pais: string,
+      codigo_postal: string,
+      cve_entidad: string,
+      cve_deleg_mun: string,
+      cve_colonia: string,
+      calle: string,
+      num_exterior: string,
+      num_interior: string,
+      lada: string,
+      telefonos: string,
+      correo: string
+    }
+  ]
+}
+
+export interface PrellenadoSolicitudPagoDerechos {
+  id_solicitud: number | null,
+  id_pago: number | null,
+  exento_pago: string,
+  ide_motivo_exento_pago: string,
+  cve_referencia_bancaria: string,
+  cadena_pago_dependencia: string,
+  cve_banco: string,
+  llave_pago: string,
+  fec_pago: string,
+  imp_pago: string
+}
