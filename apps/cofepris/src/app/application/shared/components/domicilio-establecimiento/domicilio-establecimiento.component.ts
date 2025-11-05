@@ -3,7 +3,7 @@ import {
   CROSLISTA_DE_PAISES,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
-} from '../../constantes/datos-domicilio-legal.enum';
+} from "../../constantes/datos-domicilio-legal.enum";
 import {
   Catalogo,
   ConfiguracionColumna,
@@ -16,7 +16,7 @@ import {
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
+} from "@libs/shared/data-access-user/src";
 
 import {
   AfterViewInit,
@@ -28,7 +28,7 @@ import {
   QueryList,
   SimpleChanges,
   ViewChildren,
-} from '@angular/core';
+} from "@angular/core";
 
 import {
   ConfiguracionVisibilidad,
@@ -37,29 +37,28 @@ import {
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,
-} from '../../models/datos-domicilio-legal.model';
+} from "../../models/datos-domicilio-legal.model";
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
+} from "../../estados/stores/datos-domicilio-legal.store";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
-import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import Modal from 'bootstrap/js/dist/modal';
-import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
+} from "@angular/forms";
+import { Subject, map, takeUntil } from "rxjs";
+import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
+import { CommonModule } from "@angular/common";
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
+import { DatosDomicilioLegalQuery } from "../../estados/queries/datos-domicilio-legal.query";
+import { DatosDomicilioLegalService } from "../../services/datos-domicilio-legal.service";
+import Modal from "bootstrap/js/dist/modal";
+import { ServicioDeFormularioService } from "../../services/forma-servicio/servicio-de-formulario.service";
+import { TablePaginationComponent } from "@ng-mf/data-access-user";
+import { TooltipModule } from "ngx-bootstrap/tooltip";
 
 export interface RespuestaTabla {
   code: number;
@@ -77,7 +76,7 @@ export interface MercanciasTabla {
  * Componente para el domicilio del establecimiento.
  */
 @Component({
-  selector: 'app-domicillo',
+  selector: "app-domicillo",
   standalone: true,
   imports: [
     CommonModule,
@@ -87,23 +86,25 @@ export interface MercanciasTabla {
     TablaDinamicaComponent,
     CrosslistComponent,
     TablePaginationComponent,
-    TooltipModule
+    TooltipModule,
   ],
-  templateUrl: './domicilio-establecimiento.component.html',
-  styleUrls: ['./domicilio-establecimiento.component.scss'],
+  templateUrl: "./domicilio-establecimiento.component.html",
+  styleUrls: ["./domicilio-establecimiento.component.scss"],
 })
-export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
+export class DomicilioComponent
+  implements OnInit, OnDestroy, AfterViewInit, OnChanges
+{
   @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
   @Input() rfcValido: boolean = false;
-  estadoValidte:boolean=true;
+  estadoValidte: boolean = true;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
   @Input() tieneUsoEspecifico: boolean = true;
   /**
-     * Indica si el campo GarantiasOfrecidasVisible es visible.
-     */
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
   @Input() isGarantiasOfrecidasVisible: boolean = false;
   /**
    * Indica si el campo AvisoLicenciaVisible es visible.
@@ -120,7 +121,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
-   /**
+  /**
    * Indica si se debe mostrar el número de registro en la interfaz.
    */
   @Input() mostrarNumeroRegistro: boolean = true;
@@ -142,11 +143,12 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   /**
    * Configuración de visibilidad de los campos.
    */
-  @Input() configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
+  @Input() configuracionVisibilidad: ConfiguracionVisibilidad =
+    DEFAULT_CONFIGURACION_VISIBILIDAD;
 
   /**
-     * Indica si el campo esPaginacionVisible es visible.
-     */
+   * Indica si el campo esPaginacionVisible es visible.
+   */
   @Input() esPaginacionVisible: boolean = false;
 
   /**
@@ -157,8 +159,8 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   @Input() tieneDomicilioHabilitar: boolean = false;
 
   /**
-    * Número total de elementos en la tabla.
-    */
+   * Número total de elementos en la tabla.
+   */
   totalElementos: number = 0;
 
   /**
@@ -171,8 +173,8 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   elementosPorPagina: number = 5;
   /**
-    * Encabezados de la tabla de establecimientos.
-    */
+   * Encabezados de la tabla de establecimientos.
+   */
   public establecimientoHeaderData: string[] = [];
 
   /**
@@ -199,25 +201,26 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   public fullEstablecimientoBodyData = [];
   estadoFisicoCatalogo: Catalogo[] = [
     {
-        "id": 1,
-        "descripcion": "Selecciona un valor"
+      id: 1,
+      descripcion: "Selecciona un valor",
     },
     {
-        "id": 2,
-        "descripcion": "Sólido"
+      id: 2,
+      descripcion: "Sólido",
     },
     {
-        "id": 3,
-        "descripcion": "Líquido"
+      id: 3,
+      descripcion: "Líquido",
     },
     {
-        "id": 4,
-        "descripcion": "Gaseoso"
+      id: 4,
+      descripcion: "Gaseoso",
     },
     {
-        "id": 5,
-        "descripcion": "Otro"
-    }];
+      id: 5,
+      descripcion: "Otro",
+    },
+  ];
   /**
    * Constructor del componente.
    * @param fb
@@ -232,7 +235,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     private service: DatosDomicilioLegalService,
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -242,15 +245,15 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
           this.esFormularioSoloLectura = seccionState.readonly;
           this.esFormularioActualizacion = seccionState.update;
           this.inicializarEstadoFormulario();
-        })
+        }),
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
-    * Evalúa si se debe inicializar o cargar datos en el formulario.
-    * Además, obtiene la información del catálogo de estados.
-    */
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -264,8 +267,8 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   }
 
   /**
- * Método para obtener el valor de la fecha seleccionada.
- */
+   * Método para obtener el valor de la fecha seleccionada.
+   */
   obtenerScianTablaDatos(): void {
     this.service
       .getObtenerScianTablaDatos()
@@ -288,8 +291,8 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   }
 
   /**
- * Carga datos y deshabilita el formulario si es solo lectura.
- */
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -306,7 +309,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-        })
+        }),
       )
       .subscribe();
     this.configurarFormularioDomicillio();
@@ -314,63 +317,101 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
-            codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12),Validators.pattern('^[0-9]+$')]],
-            estado: [this.solicitudState?.estado, Validators.required],
-            muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
-            localidad: [this.solicitudState?.localidad,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
-            colonia: [this.solicitudState?.colonia,[Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)]],
-            calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
-            lada: [this.solicitudState?.lada],
-            telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(this.idProcedimiento === 260513 ? 24 :30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
-            avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-            licenciaSanitaria: [ { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required, Validators.maxLength(50)]],
+      codigoPostal: [
+        this.solicitudState?.codigoPostal,
+        [
+          Validators.required,
+          Validators.maxLength(12),
+          Validators.pattern("^[0-9]+$"),
+        ],
+      ],
+      estado: [this.solicitudState?.estado, Validators.required],
+      muncipio: [
+        this.solicitudState?.muncipio,
+        [Validators.required, Validators.maxLength(120)],
+      ],
+      localidad: [
+        this.solicitudState?.localidad,
+        [Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)],
+      ],
+      colonia: [
+        this.solicitudState?.colonia,
+        [Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO)],
+      ],
+      calle: [
+        this.solicitudState?.calle,
+        [Validators.required, Validators.maxLength(100)],
+      ],
+      lada: [this.solicitudState?.lada],
+      telefono: [
+        this.solicitudState?.telefono,
+        [
+          Validators.required,
+          Validators.maxLength(this.idProcedimiento === 260513 ? 24 : 30),
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+        ],
+      ],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria: [
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
+        [Validators.required, Validators.maxLength(50)],
+      ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-      estadoFisico: [this.solicitudState?.estadoFisico],
-      estadoFisicoOtro: [this.solicitudState?.estadoFisicoOtro, [Validators.maxLength(100)]],
-      objetoImportacionOtro: [this.solicitudState?.objetoImportacionOtro, [Validators.maxLength(100)]],
-
+      estadoFisico: [
+        this.solicitudState?.estadoFisico,
+        [this.estadoValidte ? Validators.required : null],
+      ],
+      estadoFisicoOtro: [
+        this.solicitudState?.estadoFisicoOtro,
+        [Validators.maxLength(100)],
+      ],
+      objetoImportacionOtro: [
+        this.solicitudState?.objetoImportacionOtro,
+        [Validators.maxLength(100)],
+      ],
     });
-
 
     /**
      * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
      */
-    if(this.tieneDomicilioHabilitar) {
+    if (this.tieneDomicilioHabilitar) {
       this.domicilio.disable();
     }
     /**
- * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
- * `mostrarNumeroRegistro` es verdadera.
- * 
- * El control incluye las siguientes validaciones:
- * - Requerido (`Validators.required`)
- * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
- */
+     * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
+     * `mostrarNumeroRegistro` es verdadera.
+     *
+     * El control incluye las siguientes validaciones:
+     * - Requerido (`Validators.required`)
+     * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
+     */
 
-    this.servicioDeFormularioService.registerForm('domicilioForm', this.domicilio);
+    this.servicioDeFormularioService.registerForm(
+      "domicilioForm",
+      this.domicilio,
+    );
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'domicilioForm') {
+      if (formName === "domicilioForm") {
         this.domicilio.markAllAsTouched();
       }
-    })
+    });
   }
 
   /**
-  * compo doc
-  * @method esValido
-  * @description 
-  * Verifica si un campo específico del formulario es válido.
-  * @param campo El nombre del campo que se desea validar.
-  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
-  */
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.domicilio, campo);
   }
-
 
   /**
    * Grupo de formularios principal.
@@ -388,24 +429,24 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   aduanasEntradaBotons = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default",
+      funcion: (): void => this.crossList.toArray()[0].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary",
+      funcion: (): void => this.crossList.toArray()[0].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary",
+      funcion: (): void => this.crossList.toArray()[0].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default",
+      funcion: (): void => this.crossList.toArray()[0].quitar("t"),
     },
   ];
 
@@ -413,15 +454,14 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * Etiquetas para la lista cruzada de países de origen.
    */
   public aduanasEntradaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
-    derecha: 'Aduanas de entrada seleccionadas*:',
+    tituluDeLaIzquierda: "Aduanas de entrada disponibles:",
+    derecha: "Aduanas de entrada seleccionadas*:",
   };
 
   /**
    * Lista de países seleccionados como origen.
    */
   public seleccionadasAduanasEntradaDatos: string[] = [];
-
 
   /**
    * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
@@ -434,7 +474,11 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
     });
-    this.setValoresStore(this.domicilio, 'paisDeOriginDatos', 'setPaisDeOriginDatos');
+    this.setValoresStore(
+      this.domicilio,
+      "paisDeOriginDatos",
+      "setPaisDeOriginDatos",
+    );
   }
 
   /**
@@ -450,12 +494,12 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   /**
    * Control de formulario para la aduanasDeEntradaFecha.
    */
-  aduanasDeEntradaFecha: FormControl = new FormControl('');
+  aduanasDeEntradaFecha: FormControl = new FormControl("");
 
   /**
    * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
    */
-  aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+  aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl("");
 
   /**
    * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
@@ -531,7 +575,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @property {boolean} colapsableTres
    */
   colapsableTres: boolean = false;
- /**
+  /**
    * Indica si la sección es colapsableTres.
    * @property {boolean} colapsableTress
    */
@@ -573,79 +617,78 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * Etiqueta de la lista de fechas.
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País productor del ingrediente activo:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País productor del ingrediente activo:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
- /**
+  /**
    * Etiqueta de la lista de fechas.
    * */
   public paisDeDondeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País donde se elabora el producto:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País donde se elabora el producto:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País de origen:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisEmbarqueLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País de procedencia:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
    * Objeto que representa la configuración de etiquetas para la selección del país donde se elabora el producto.
-   * 
+   *
    * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "país donde se elabora el producto".
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDondeSeElabora: CrossListLable = {
-    tituluDeLaIzquierda: 'País donde se elabora el producto:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País donde se elabora el producto:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
    * Objeto que representa la configuración de la lista cruzada para el campo "País de procedencia".
-   * 
+   *
    * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra en el lado izquierdo de la lista, indicando el país de procedencia.
    * @property {string} derecha - Etiqueta que se muestra en el lado derecho de la lista, indicando los países seleccionados.
    */
   public paisDeProcedencia: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País de procedencia:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
    * @method
    * @description
    * Muestra el modal asociado al modelo de clave.
-   * 
+   *
    * @returns {void}
-   * 
+   *
    * @memberof DomicilioEstablecimientoComponent
    */
   public mostrarModeloClave(): void {
     this.modalInstance.show();
   }
 
-
   /**
    * Objeto que representa la configuración de etiquetas para la selección de país de origen.
-   * 
+   *
    * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "País de origen".
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDeOrigen: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: "País de origen:",
+    derecha: "País(es) seleccionado(s)*:",
   };
 
   /**
@@ -653,10 +696,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
    */
   fraccionesCatalogo = [
-    { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
-    { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
-    { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
-    { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
+    { fraccion: "0101.21.01", descripcion: "Caballos de carrera" },
+    { fraccion: "0201.30.00", descripcion: "Carne de bovino congelada" },
+    { fraccion: "0402.10.01", descripcion: "Leche en polvo, sin azúcar" },
+    { fraccion: "1006.30.99", descripcion: "Arroz semiblanqueado" },
   ];
   /**
    * Estado de colapsabilidad para los diferentes países.
@@ -689,93 +732,93 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-        })
+        }),
       )
       .subscribe();
 
-    
     this.service.event$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((valor) => {
-          this.tieneDomicilioHabilitar = (valor as boolean);
+          this.tieneDomicilioHabilitar = valor as boolean;
           if (!this.tieneDomicilioHabilitar) {
             this.domicilio.enable();
           }
-        })
+        }),
       )
-      .subscribe()
+      .subscribe();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-    this.configurarFormularioDomicillio()
+    this.configurarFormularioDomicillio();
 
     this.formAgente = this.fb.group({
-      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [{value: this.solicitudState?.claveDescripcionModal, disabled: true}, Validators.required],
+      claveScianModal: [
+        this.solicitudState?.claveScianModal,
+        Validators.required,
+      ],
+      claveDescripcionModal: [
+        { value: this.solicitudState?.claveDescripcionModal, disabled: true },
+        Validators.required,
+      ],
     });
     this.formMercancias = this.fb.group({
-      nombreComercial: [
-        ''
-      ],
-      nombreComun: [''],
-      nombreCientifico: [''],
-      usoEspecifico: ['', [Validators.required, Validators.maxLength(1000)]],
+      nombreComercial: [""],
+      nombreComun: [""],
+      nombreCientifico: [""],
+      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
-        '',
+        "",
         [
           Validators.required,
           Validators.pattern(REGEX_SOLO_DIGITOS),
-          Validators.minLength(8)],
-       
+          Validators.minLength(8),
+        ],
       ],
 
-      descripcionFraccion: [{ value: '', disabled: true }],
+      descripcionFraccion: [{ value: "", disabled: true }],
       cantidadUMT: [
-        '',
+        "",
         [
           Validators.required,
           Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES),
         ],
       ],
-      UMT: [{ value: '', disabled: true }, Validators.required],
+      UMT: [{ value: "", disabled: true }, Validators.required],
       cantidadUMC: [
-        '',
+        "",
         [
           Validators.required,
           Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES),
         ],
       ],
-      UMC: ['', Validators.required],
+      UMC: ["", Validators.required],
       porcentajeConcentracion: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(100),
-        ],
+        "",
+        [Validators.required, Validators.maxLength(100)],
       ],
-      clasificacionToxicologica: ['', Validators.required],
-      objetoImportacion: ['', Validators.required],
+      clasificacionToxicologica: ["", Validators.required],
+      objetoImportacion: ["", Validators.required],
     });
 
-/**
- * Si la propiedad `mostrarNumeroRegistro` es verdadera, agrega el control
- * `numeroRegistro` al formulario `formMercancias`.
- *
- * Este control se inicializa con un valor vacío y contiene las siguientes validaciones:
- * - `Validators.required`: el campo es obligatorio.
- * - `Validators.maxLength(50)`: el valor no debe superar los 50 caracteres.
- */
+    /**
+     * Si la propiedad `mostrarNumeroRegistro` es verdadera, agrega el control
+     * `numeroRegistro` al formulario `formMercancias`.
+     *
+     * Este control se inicializa con un valor vacío y contiene las siguientes validaciones:
+     * - `Validators.required`: el campo es obligatorio.
+     * - `Validators.maxLength(50)`: el valor no debe superar los 50 caracteres.
+     */
     if (this.mostrarNumeroRegistro) {
       this.formMercancias.addControl(
-        'numeroRegistro',
-        this.fb.control('', [Validators.required, Validators.maxLength(50)])
+        "numeroRegistro",
+        this.fb.control("", [Validators.required, Validators.maxLength(50)]),
       );
     }
 
-    this.seleccionadasAduanasEntradaDatos = this.solicitudState?.aduanasDeEntrada;
+    this.seleccionadasAduanasEntradaDatos =
+      this.solicitudState?.aduanasDeEntrada;
 
     this.inicializarEstadoFormulario();
-
   }
 
   /**
@@ -793,18 +836,18 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @method limpiarScianForm
    * @description Limpia y reinicia el formulario asociado al agente SCian.
    * @returns {void}
-   * 
+   *
    * @memberof DomicilioEstablecimientoComponent
    */
   limpiarScianForm(): void {
-   Object.keys(this.formAgente.controls).forEach(key => {
-    this.formAgente.get(key)?.setValue(null);
-  });
+    Object.keys(this.formAgente.controls).forEach((key) => {
+      this.formAgente.get(key)?.setValue(null);
+    });
   }
 
   /**
    * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
-   * 
+   *
    * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
    * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
    * limpia el formulario y cierra el modal correspondiente.
@@ -815,33 +858,35 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   guardarScian(): void {
     if (this.formAgente.valid) {
       const NUEVO_DATO: NicoInfo = {
-        clave_Scian: this.formAgente.get('claveScianModal')?.value,
-        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+        clave_Scian: this.formAgente.get("claveScianModal")?.value,
+        descripcion_Scian: this.formAgente.get("claveDescripcionModal")?.value,
       };
-      
-    const EXISTS = this.nicoTablaDatos.some(
-      item =>
-        item.clave_Scian === NUEVO_DATO.clave_Scian &&
-        item.descripcion_Scian === NUEVO_DATO.descripcion_Scian
-    );
 
-    if (!EXISTS) {
-      this.nicoTablaDatos.push(NUEVO_DATO);
-      this.nicoTablaDatos = [...this.nicoTablaDatos];
-    }
+      const EXISTS = this.nicoTablaDatos.some(
+        (item) =>
+          item.clave_Scian === NUEVO_DATO.clave_Scian &&
+          item.descripcion_Scian === NUEVO_DATO.descripcion_Scian,
+      );
+
+      if (!EXISTS) {
+        this.nicoTablaDatos.push(NUEVO_DATO);
+        this.nicoTablaDatos = [...this.nicoTablaDatos];
+      }
       //this.nicoTablaDatos.push(NUEVO_DATO);
-      this.nicoTablaDatos = [...this.nicoTablaDatos]; 
+      this.nicoTablaDatos = [...this.nicoTablaDatos];
       this.formAgente.reset();
       this.cerrarModalScian();
     }
 
-    this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
-      const MATCHED = this.fraccionesCatalogo.find(item =>
-        item.fraccion.startsWith(valor)
-      );
-      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
-      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
-    });
+    this.formMercancias
+      .get("fraccionArancelaria")
+      ?.valueChanges.subscribe((valor: string) => {
+        const MATCHED = this.fraccionesCatalogo.find((item) =>
+          item.fraccion.startsWith(valor),
+        );
+        const DESCRIPCION = MATCHED ? MATCHED.descripcion : "";
+        this.formMercancias.get("descripcionFraccion")?.setValue(DESCRIPCION);
+      });
   }
 
   /**
@@ -849,24 +894,44 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   readonly paisDeProcedenciaBotones = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default uno',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default uno",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("uno");
+          })
+        ].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary uno',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary uno",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("uno");
+          })
+        ].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary uno',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary uno",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("uno");
+          })
+        ].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default uno',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default uno",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("uno");
+          })
+        ].quitar("t"),
     },
   ];
 
@@ -875,24 +940,44 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   readonly paisDeProcedenciaBotonesDuos = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default duos',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default duos",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("duos");
+          })
+        ].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary duos',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary duos",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("duos");
+          })
+        ].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary duos',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary duos",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("duos");
+          })
+        ].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default duos',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default duos",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("duos");
+          })
+        ].quitar("t"),
     },
   ];
 
@@ -901,24 +986,44 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   readonly paisDeProcedenciaBotonesTres = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default tres',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default tres",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("tres");
+          })
+        ].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary tres',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary tres",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("tres");
+          })
+        ].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary tres',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary tres",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("tres");
+          })
+        ].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default tres',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default tres",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("tres");
+          })
+        ].quitar("t"),
     },
   ];
   /**
@@ -926,24 +1031,44 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   readonly paisDeProcedenciaBotonesCuatro = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default cuatro',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default cuatro",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cuatro");
+          })
+        ].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary cuatro',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary cuatro",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cuatro");
+          })
+        ].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary cuatro',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary cuatro",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cuatro");
+          })
+        ].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default cuatro',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default cuatro",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cuatro");
+          })
+        ].quitar("t"),
     },
   ];
 
@@ -952,24 +1077,44 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   readonly paisDeProcedenciaBotonesCinco = [
     {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default cinco',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
+      btnNombre: "Agregar todos",
+      class: "btn-default cinco",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cinco");
+          })
+        ].agregar("t"),
     },
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary cinco',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
+      btnNombre: "Agregar selección",
+      class: "btn-primary cinco",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cinco");
+          })
+        ].agregar(""),
     },
     {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary cinco',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
+      btnNombre: "Restar selección",
+      class: "btn-primary cinco",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cinco");
+          })
+        ].quitar(""),
     },
     {
-      btnNombre: 'Restar todos',
-      class: 'btn-default cinco',
-      funcion: (): void => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
+      btnNombre: "Restar todos",
+      class: "btn-default cinco",
+      funcion: (): void =>
+        this.crossList.toArray()[
+          this.crossList.toArray().findIndex((item, ind) => {
+            return item.botones?.[0]?.class.includes("cinco");
+          })
+        ].quitar("t"),
     },
   ];
 
@@ -986,13 +1131,15 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       });
   }
   /**
-    * @method onClaveScianChange
-    * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
-    * @param {Event} event - Evento de cambio del dropdown.
-    */
+   * @method onClaveScianChange
+   * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
+   * @param {Event} event - Evento de cambio del dropdown.
+   */
   onClaveScianChange(event: Event): void {
     const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
-    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
+    const SELECTED_OPTION = this.estado.find(
+      (item) => item.id === Number(SELECTED_VALUE),
+    );
 
     if (SELECTED_OPTION) {
       this.formAgente.patchValue({
@@ -1008,7 +1155,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerMercanciasDatos(): void {
-    this.mercanciasTablaDatos = this.listaMercancias
+    this.mercanciasTablaDatos = this.listaMercancias;
   }
 
   /**
@@ -1017,17 +1164,25 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   onAvisoCheckboxChange(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;
-    const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
+    const LICENCIA_SANITARIA_CONTROL = this.domicilio.get("licenciaSanitaria");
     if (CHECKBOX.checked) {
       LICENCIA_SANITARIA_CONTROL?.clearValidators();
       LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
       LICENCIA_SANITARIA_CONTROL?.disable();
-      this.servicioDeFormularioService.updateControlValidator('domicilioForm', 'licenciaSanitaria', []);
+      this.servicioDeFormularioService.updateControlValidator(
+        "domicilioForm",
+        "licenciaSanitaria",
+        [],
+      );
     } else {
       LICENCIA_SANITARIA_CONTROL?.setValidators([Validators.required]);
       LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
       LICENCIA_SANITARIA_CONTROL?.enable();
-      this.servicioDeFormularioService.updateControlValidator('domicilioForm', 'licenciaSanitaria', [Validators.required]);
+      this.servicioDeFormularioService.updateControlValidator(
+        "domicilioForm",
+        "licenciaSanitaria",
+        [Validators.required],
+      );
     }
   }
 
@@ -1036,9 +1191,9 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * @method mostrar_colapsable
    */
   mostrar_colapsable(orden: number): void {
-    if(orden === 1) {
+    if (orden === 1) {
       this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
-    } else if(orden === 2) {
+    } else if (orden === 2) {
       this.paisDoneFabricaColapsable = !this.paisDoneFabricaColapsable;
     }
     this.colapsable = !this.colapsable;
@@ -1062,7 +1217,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.paisProveedorColapsable = !this.paisProveedorColapsable;
   }
 
-   /**
+  /**
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableTress
    */
@@ -1074,9 +1229,11 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
    * If the control does not exist, no action is taken.
    */
-  setDescripcionFraccion():void{
-    this.formMercancias.get('descripcionFraccion')?.setValue('descripcionFraccion');
-    this.formMercancias.get('UMT')?.setValue('UMT32131');
+  setDescripcionFraccion(): void {
+    this.formMercancias
+      .get("descripcionFraccion")
+      ?.setValue("descripcionFraccion");
+    this.formMercancias.get("UMT")?.setValue("UMT32131");
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -1087,15 +1244,17 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof DatosDomicilioLegalStore
+    metodoNombre: keyof DatosDomicilioLegalStore,
   ): void {
     const VALOR = form.get(campo)?.value;
     (
       this.datosDomicilioLegalStore[metodoNombre] as (
-        value: string | number | boolean
+        value: string | number | boolean,
       ) => void
     )(VALOR);
-    this.servicioDeFormularioService.setFormValue('domicilioForm', { [campo]: VALOR });
+    this.servicioDeFormularioService.setFormValue("domicilioForm", {
+      [campo]: VALOR,
+    });
   }
 
   agregarMercanciaModal(): void {
@@ -1104,11 +1263,11 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
 
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
-   * 
+   *
    * - Si el formulario `formMercancias` es válido, obtiene los valores actuales del formulario,
    *   crea un nuevo objeto de mercancía y lo agrega a `listaMercancias`.
    * - Luego, imprime la lista actualizada en la consola y reinicia el formulario.
-   * 
+   *
    * @remarks
    * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
    */
@@ -1116,50 +1275,53 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-    
-      const NUEVA_MERCANCIA: MercanciasInfo = {
-      ...RAW,
-      cantidadUmt: RAW.cantidadUMT,
-      cantidadUmc: RAW.cantidadUMC,
-      umc: RAW.UMC,
-      unidadMedidaTarifa: RAW.UMT,
-    };
-    const INDEX = this.listaMercancias.findIndex(
-      item => item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria
-    );
 
-    if (INDEX !== -1) {
-      // Update existing row
-      this.listaMercancias[INDEX] = NUEVA_MERCANCIA;
-    } else {
-      // Add new row
-      this.listaMercancias.push(NUEVA_MERCANCIA);
-    }
+      const NUEVA_MERCANCIA: MercanciasInfo = {
+        ...RAW,
+        cantidadUmt: RAW.cantidadUMT,
+        cantidadUmc: RAW.cantidadUMC,
+        umc: RAW.UMC,
+        unidadMedidaTarifa: RAW.UMT,
+      };
+      const INDEX = this.listaMercancias.findIndex(
+        (item) =>
+          item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria,
+      );
+
+      if (INDEX !== -1) {
+        // Update existing row
+        this.listaMercancias[INDEX] = NUEVA_MERCANCIA;
+      } else {
+        // Add new row
+        this.listaMercancias.push(NUEVA_MERCANCIA);
+      }
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
-      
-       const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
-      MODAL_INSTANCE?.hide();
-       setTimeout(() => {
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.removeProperty('overflow');
-        document.body.style.removeProperty('padding-right');
-      }, 300);  
-    }
+
+      const MODAL_ELEMENT = document.getElementById("modalAddAgentMercancias");
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE =
+          Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE?.hide();
+        setTimeout(() => {
+          document
+            .querySelectorAll(".modal-backdrop")
+            .forEach((el) => el.remove());
+          document.body.classList.remove("modal-open");
+          document.body.style.removeProperty("overflow");
+          document.body.style.removeProperty("padding-right");
+        }, 300);
+      }
       this.tieneFormularioMercanciasEnviado = false;
-    }
-    else{
+    } else {
       this.formMercancias.markAllAsTouched();
     }
   }
 
   /**
-    * Actualiza la paginación de la tabla de establecimientos.
-    * Corta los datos de la tabla según la página actual y el número de elementos por página.
-    */
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
   /**
    * Actualiza la paginación de la tabla de establecimientos.
    * Corta los datos de la tabla según la página actual y el número de elementos por página.
@@ -1168,15 +1330,15 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     const INDICE_INICIAL = (this.paginaActual - 1) * this.elementosPorPagina;
     this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(
       INDICE_INICIAL,
-      INDICE_INICIAL + this.elementosPorPagina
+      INDICE_INICIAL + this.elementosPorPagina,
     );
   }
-/**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
+  /**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
    *   * Si el campo de fracción arancelaria tiene un valor, realiza una solicitud al servicio para obtener
    *   * la descripción asociada y actualiza el formulario con esa información.
    */
   autoCompleteFraccionArancelaria(): void {
-    const FRACCION = this.formMercancias.get('fraccionArancelaria')?.value;
+    const FRACCION = this.formMercancias.get("fraccionArancelaria")?.value;
     if (FRACCION) {
       this.service
         .getFraccionArancelaria()
@@ -1184,16 +1346,16 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         .subscribe((data): void => {
           this.formMercancias.patchValue({
             descripcionFraccion: data?.descripcion,
-            UMT: data?.umt
+            UMT: data?.umt,
           });
         });
     }
   }
 
   /**
-     * Método que se ejecuta cuando se cambia de página en la paginación.
-     * @param {number} page - Número de la página seleccionada.
-     */
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
   /**
    * Método que se ejecuta cuando se cambia de página en la paginación.
    * @param {number} pagina - Número de la página seleccionada.
@@ -1213,13 +1375,12 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.actualizarPaginacion();
   }
 
-
   /**
-  * @method limpiar
-  * @description
-  * Método que limpia el formulario del agente aduanal.
-  * @param {forma}
-  */
+   * @method limpiar
+   * @description
+   * Método que limpia el formulario del agente aduanal.
+   * @param {forma}
+   */
   // eslint-disable-next-line class-methods-use-this
   public limpiar(forma: FormGroup): void {
     if (forma) {
@@ -1244,15 +1405,16 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
   public eliminarScian(): void {
     if (this.personaparas.length > 0) {
       this.nicoTablaDatos = this.nicoTablaDatos.filter(
-        item => !this.personaparas.some(selected =>
-          selected.clave_Scian === item.clave_Scian &&
-          selected.descripcion_Scian === item.descripcion_Scian
-        )
+        (item) =>
+          !this.personaparas.some(
+            (selected) =>
+              selected.clave_Scian === item.clave_Scian &&
+              selected.descripcion_Scian === item.descripcion_Scian,
+          ),
       );
       this.personaparas = [];
     }
   }
-
 
   /**
    * @method eliminarMercancia
@@ -1261,26 +1423,24 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
    */
   public eliminarMercancia(): void {
     if (this.seleccionarlistaMercancias.length > 0) {
-      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
-        (item) => {
-          return !this.seleccionarlistaMercancias.some(selectedItems => 
+      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter((item) => {
+        return !this.seleccionarlistaMercancias.some(
+          (selectedItems) =>
             selectedItems.nombreComercial === item.nombreComercial &&
             selectedItems.nombreComun === item.nombreComun &&
             selectedItems.fraccionArancelaria === item.fraccionArancelaria &&
             selectedItems.objetoImportacion === item.objetoImportacion &&
-            selectedItems.cantidadUmt === item.cantidadUmt
-          );
-        }
-      );
+            selectedItems.cantidadUmt === item.cantidadUmt,
+        );
+      });
       this.listaMercancias = [...this.mercanciasTablaDatos];
       this.seleccionarlistaMercancias = [];
     }
   }
 
- 
   /**
    * @method modificarMercancia
-   * 
+   *
    * @description
    * Método que modifica una mercancía de la lista de mercancías seleccionadas.
    */
@@ -1294,47 +1454,56 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         usoEspecifico: SELECTED.usoEspecifico,
         fraccionArancelaria: SELECTED.fraccionArancelaria,
         descripcionFraccion: SELECTED.descripcionFraccion,
-        cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt ,
-        UMT:  SELECTED.unidadMedidaTarifa,
+        cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
+        UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
         UMC: SELECTED.umc || SELECTED.umc,
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
         clasificacionToxicologica: SELECTED.clasificacionToxicologica,
         objetoImportacion: SELECTED.objetoImportacion,
-        ...(this.formMercancias.contains('numeroRegistro') && { numeroRegistro: "1" })
-       
+        ...(this.formMercancias.contains("numeroRegistro") && {
+          numeroRegistro: "1",
+        }),
       });
     }
   }
   ngAfterViewInit(): void {
-    this.mercanciasTabla = this.idProcedimiento === 260512 || this.idProcedimiento === 260513 ? DATOS_MERCANCIAS : MERCANCIAS_DATA;
-   if(this.identificacion){
-    this.formMercancias.get('nombreComercial')?.setValidators([Validators.required, Validators.maxLength(1000)]);
-    this.formMercancias.get('nombreComun')?.setValidators([Validators.required, Validators.maxLength(250)]);
-    this.formMercancias.get('nombreCientifico')?.setValidators([Validators.required, Validators.maxLength(1000)]);
-    this.formMercancias.get('nombreComercial')?.updateValueAndValidity();
-    this.formMercancias.get('nombreComun')?.updateValueAndValidity();
-    this.formMercancias.get('nombreCientifico')?.updateValueAndValidity();
-   }
-   if(!this.rfcValido){
-this.domicilio.disable();
-   }
-   else{
-    this.domicilio.enable();
-   }
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.formMercancias) {
-      return;
+    this.mercanciasTabla =
+      this.idProcedimiento === 260512 || this.idProcedimiento === 260513
+        ? DATOS_MERCANCIAS
+        : MERCANCIAS_DATA;
+    if (this.identificacion) {
+      this.formMercancias
+        .get("nombreComercial")
+        ?.setValidators([Validators.required, Validators.maxLength(1000)]);
+      this.formMercancias
+        .get("nombreComun")
+        ?.setValidators([Validators.required, Validators.maxLength(250)]);
+      this.formMercancias
+        .get("nombreCientifico")
+        ?.setValidators([Validators.required, Validators.maxLength(1000)]);
+      this.formMercancias.get("nombreComercial")?.updateValueAndValidity();
+      this.formMercancias.get("nombreComun")?.updateValueAndValidity();
+      this.formMercancias.get("nombreCientifico")?.updateValueAndValidity();
     }
-  if (changes['rfcValido']) {
     if (!this.rfcValido) {
       this.domicilio.disable();
     } else {
       this.domicilio.enable();
     }
   }
-}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.formMercancias) {
+      return;
+    }
+    if (changes["rfcValido"]) {
+      if (!this.rfcValido) {
+        this.domicilio.disable();
+      } else {
+        this.domicilio.enable();
+      }
+    }
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

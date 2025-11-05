@@ -783,7 +783,12 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       estadoFisico,
     }));
   }
-
+  public setObjetoImportacionOtro(objetoImportacion: string): void {
+    this.update((state) => ({
+      ...state,
+      objetoImportacion
+    }));
+  }
   /**
    * Establece el estado de fraccionArancelaria.
    * @param fraccionArancelaria - El valor de fraccionArancelaria.
