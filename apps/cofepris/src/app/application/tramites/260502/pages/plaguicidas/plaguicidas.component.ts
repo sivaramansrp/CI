@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { AVISO, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { AVISO, ListaPasosWizard, Notificacion, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -43,7 +43,7 @@ export class PlaguicidasComponent {
    * Se inicializa en 1.
    */
   indice: number = 1;
-
+ isFormValid: boolean = false;
   /**
    * Título del asistente.
    */
@@ -58,7 +58,20 @@ export class PlaguicidasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
+   /**
+   * Actualiza el estado local de validez del formulario.
+   * Este método recibe el valor emitido por el componente hijo.
+   * Se utiliza para saber si el formulario es válido o no desde el componente principal.
+   */
+onFormValidityChange(isValid: boolean):void {
+  this.isFormValid = isValid;
+}
+/**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionContinuarServicios!: Notificacion;
   /**
    * Maneja la acción del botón en el asistente.
    * Cambia el paso actual según la acción del botón.
@@ -66,6 +79,20 @@ export class PlaguicidasComponent {
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
+ if (!this.isFormValid) {
+   this.notificacionContinuarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Si',
+          txtBtnCancelar: 'No',          
+        };
+
+ }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

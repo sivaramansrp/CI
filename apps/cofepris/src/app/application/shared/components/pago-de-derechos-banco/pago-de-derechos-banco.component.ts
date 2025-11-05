@@ -5,7 +5,7 @@ import {
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -36,7 +36,12 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Formulario de la solicitud.
    */
   formSolicitud!: FormGroup;
-
+   /**
+   * Emite el estado de validez del formulario.
+   * Se envía un valor booleano cada vez que cambia la validez del formulario.
+   * Permite comunicar al componente padre si el formulario es válido o no.
+   */
+@Output() formValidityChange = new EventEmitter<boolean>();
   /**
    * Estado de la solicitud de la sección PagoBanco.
    */
@@ -150,6 +155,9 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
         fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
         importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroDecimal]],
       }),
+    });
+       this.formSolicitud.statusChanges.subscribe(status => {
+      this.formValidityChange.emit(this.formSolicitud.valid);
     });
   }
 
