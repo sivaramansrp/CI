@@ -1,5 +1,5 @@
 import { AlertComponent, BtnContinuarComponent, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
@@ -54,7 +54,7 @@ interface AccionBoton {
     PasoFirmaComponent
   ]
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
       /**
    * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
    * const isValid = this.pasoUnoComponent.validateForms();
@@ -367,7 +367,7 @@ getValorIndice(e: AccionBoton): void {
  *   y retorna `false` en caso de que alguno no sea válido.
  *
  */   
-private validarTodosFormulariosPasoUno(): boolean {
+public validarTodosFormulariosPasoUno(): boolean {
      
     if (!this.pasoUnoComponent) {
       return true;
@@ -390,5 +390,21 @@ private validarTodosFormulariosPasoUno(): boolean {
         this.guardar(data);
       });
   }  
+
+  /**
+   * @metodo ngOnDestroy
+   * @descripcion
+   * Se ejecuta cuando el componente va a ser destruido.
+   * 
+   * @tareas
+   * - Cancela todas las suscripciones activas
+   * - Libera recursos para evitar fugas de memoria
+   * 
+   * @implementa OnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
   
 }
