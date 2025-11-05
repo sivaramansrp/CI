@@ -516,14 +516,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar modal de captura de datos.
    */
   datosCapturaModal(): void {
-    if (this.solicitudForm.value.aduana && this.solicitudForm.value.inicialesContenedor && this.solicitudForm.value.numeroContenedor) {
-      if (this.modalElement) {
+    if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
       }
-    } else {
-      this.solicitudForm.markAllAsTouched();
-    }
+    
   }
 
   /**
@@ -669,14 +666,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
           this.mostrarButtons = true;
           this.mostrarAgregarTipoContenedor = false;
+          this.solicitudForm.reset();
+          this.solicitudForm.markAsUntouched();
+          this.solicitudForm.markAsPristine();
           this.solicitudForm.value.inicialesContenedor = '';
           this.solicitudForm.value.numeroContenedor = '';
           this.solicitudForm.value.digitoDeControl = '';
+          this.mostrarAgregarTipoContenedor = false;
+
           // this.solicitudForm.reset();
           // this.solicitudForm.markAsUntouched();
           // this.solicitudForm.markAsPristine();
         }
-        else if(respuesta?.codigo === 'SAT11202-CR02'){
+        else if(respuesta?.codigo === 'SAT11204-CT02'){
             this.datosCapturaModal()
           }
         else{

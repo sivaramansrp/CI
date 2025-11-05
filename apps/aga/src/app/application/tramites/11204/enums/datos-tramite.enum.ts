@@ -1,11 +1,11 @@
 export const FECHA_INGRESO = {
     labelNombre: 'Fecha Ingreso',
-    required: true,
+    required: false,
     habilitado: true,
 };
 export const VIGENCIA = {
     labelNombre: 'Vigencia',
-    required: true,
+    required: false,
     habilitado: true,
 };
 export const ANEXAR = {
