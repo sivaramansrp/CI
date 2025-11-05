@@ -21,6 +21,10 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit, OnDestroy {
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  public guardarIdSolicitud: number = 0;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
