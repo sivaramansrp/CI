@@ -13,8 +13,10 @@
            <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                  <label class="form-label" for="precisa"> Precisa*:</label>
-                  <textarea class="form-control custom-textarea" id="precisa" formControlName="precisa" style="height: 90px;"  (change)="setValoresStore(certificadoForm,'precisa', 'setPrecisa')"></textarea>
+                  <label class="form-label" for="precisa"> Precisa<span [class.label-invalid]="certificadoForm.controls['precisa'].invalid && certificadoForm.controls['precisa'].touched">*</span>:</label>
+                  <textarea class="form-control custom-textarea" 
+                  [class.is-invalid]="certificadoForm.controls['precisa'].invalid && certificadoForm.controls['precisa'].touched"
+                  id="precisa" formControlName="precisa" style="height: 90px;"  (change)="setValoresStore(certificadoForm,'precisa', 'setPrecisa')"></textarea>
                 </div>
               </div>
            </div>
@@ -97,7 +99,7 @@
                   <div class="col-md-12">
                       <div class="form-group">
                           <label class="form-label" for="complemento">Complemento de la descripción:</label>
-                          <input class="form-control" id="complemento" formControlName="complemento" type="text" (change)="setValoresStore(mercanciasForm,'complemento', 'setComplemento')">
+                          <input class="form-control" id="complemento" formControlName="complemento" type="text" (change)="setValoresStore(mercanciasForm,'complemento', 'setComplemento')" maxlength="220">
                       </div>
                   </div>
               </div>
@@ -145,7 +147,7 @@
                           <div *ngIf="mercanciasForm.get('bruta')?.invalid && mercanciasForm.get('bruta')?.touched" 
                           class="text-danger small">
                           <div *ngIf="mercanciasForm.get('bruta')?.errors?.['pattern']">
-                            La masa bruta debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
                           </div>
                           </div>
                         </div>
@@ -177,8 +179,7 @@
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
-                          <label class="form-label" for="fecha">Fecha de la factura:</label>
-                          <input class="form-control" id="fecha" formControlName="fecha" type="text" >
+                        <input-fecha [setFecha]="mercanciasForm.get('fecha')?.value" [datos]="fechaDeLaFacturaInput"></input-fecha>
                       </div>
                   </div>
               </div>

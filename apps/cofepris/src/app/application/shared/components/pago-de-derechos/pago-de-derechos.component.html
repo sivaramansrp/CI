@@ -108,7 +108,7 @@
     <div class="row g-3 mt-2">
       <!-- Llave de pago -->
       <div class="col-md-4">
-        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido">*</span>:</label>
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido"   [ngClass]="(esInvalido('llavePago')||((this.pagoDerechosForm.get('llavePago')?.value=='' || this.pagoDerechosForm.get('llavePago')?.value==null)&& isContinuarButtonClicked && this.pagoDerechosForm.get('llavePago')?.touched)) ? 'text-error' : ''">*</span>:</label>
         <input
           type="text"
           id="llavePago"
@@ -125,15 +125,23 @@
                 "
           (input)="llavePagoCase()"
         />
-        <div *ngIf="(esInvalido('llavePago') && pagoDerechosForm.controls['llavePago'].errors?.['required']) ||((this.pagoDerechosForm.get('llavePago')?.value==='' || this.pagoDerechosForm.get('llavePago')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
-         
-          <small>
-            Todos los campos de pago son requeridos
-          </small>
-          <small *ngIf="pagoDerechosForm.controls['llavePago'].errors?.['pattern']">
-            Existen datos incorrectos que no cumplen con el formato esperado
-          </small>
-          </div>
+     <div *ngIf="pagoDerechosForm.get('llavePago')?.invalid 
+    && (pagoDerechosForm.get('llavePago')?.touched || isContinuarButtonClicked)"
+    class="text-danger">
+    
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['required']">
+    Todos los campos de pago son requeridos
+  </small>
+
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['pattern']">
+    Existen datos incorrectos que no cumplen con el formato esperado
+  </small>
+
+  <small *ngIf="pagoDerechosForm.get('llavePago')?.errors?.['maxlength']">
+    La llave de pago no puede tener más de 30 caracteres
+  </small>
+</div>
+
       </div>
 
       <!-- Fecha de pago -->
@@ -144,13 +152,18 @@
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
         [isDisabled]="formularioDeshabilitado"
         [soloDosPuntosRequeridos]="soloDosPuntosRequeridos"
-        [deshabilitarFuturas]="true"
+       
+        formControlName="fechaPago"
         ></input-fecha>
 
-        <div *ngIf="(esInvalido('fechaPago') && pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada'] && pagoDerechosForm.controls['fechaPago'].touched) ||((this.pagoDerechosForm.get('fechaPago')?.value==='' || this.pagoDerechosForm.get('fechaPago')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
+        <div >
 
-          <small>
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched &&(pagoDerechosForm.get('fechaPago')?.value == '' ||
+          pagoDerechosForm.get('fechaPago')?.value == null)" class="text-danger">
             Todos los campos de pago son requeridos
+          </small>
+          <small *ngIf="(esInvalido('fechaPago') && pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada'] && pagoDerechosForm.controls['fechaPago'].touched)" class="text-danger">
+            La fecha de pago debe ser menor o igual a la fecha actual.
           </small>
           </div>
       </div>

@@ -3,12 +3,17 @@
         <div class="col-md-12">
             <h2>Solicitud prórroga para permisos de importación/exportación</h2>
         </div>
-        <app-wizard [listaPasos]="pasos"></app-wizard>
+        @if(indice === 1 && esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
+  <app-wizard [listaPasos]="PASOS_WIZARD"></app-wizard>
     </div>
     <div class="row">
         @switch (indice) {
         @case (1) {
-          <app-paso-uno></app-paso-uno>
+          <app-paso-uno #pasoUno></app-paso-uno>
         }
         @case (2) {
           <app-paso-dos></app-paso-dos>

@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, ELVALORALERTA, Notificacion, NotificacionesComponent, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
+import { ALIANZA_JUEGOS_SURTIDOS, COSTO_NETO_VALOR_FOB, CatalogoSelectComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, ELVALORALERTA, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_NUMEROS,TIPO_METODO, TIPO_METODO_PANAMA, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent} from '@ng-mf/data-access-user';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
@@ -13,7 +13,7 @@ import { InsumoTratadosRequest } from '../../models/request/validar-insumo-reque
 
 import { INTRODUZCA_NUMERO, REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
-import { Subject,debounceTime,distinctUntilChanged,fromEvent,map, takeUntil } from 'rxjs';
+import { Subject,fromEvent,map, takeUntil, tap } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -27,6 +27,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
 
 import { CampoEvaluar, EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
+import { MensajePantallaService } from '../../services/validaciones-tabs.service';
 
 
 
@@ -40,10 +41,11 @@ import { CampoEvaluar, EvaluarMercanciaResponse } from '../../models/response/me
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   standalone: true,
-  imports: [TituloComponent, CommonModule,CatalogoSelectComponent, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent]
+  imports: [TituloComponent, CommonModule,CatalogoSelectComponent, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent, InputRadioComponent]
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit {
 
+   mostrarCostoNeto = false;
     /**
      * Catálogo de países disponibles para selección en el componente.
      */
@@ -54,6 +56,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
    * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
    */
   mostrarTabla = true;
+
   /**
      * Notificación actual que se muestra en el componente.
      *
@@ -133,7 +136,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
   public tablaDatos: DatosMercanciaModalTabla[] = [];
 
   /** Almacena las filas seleccionadas de la tabla */
-public filasSeleccionadas: DatosMercanciaModalTabla[] = [];
+  public filasSeleccionadas: DatosMercanciaModalTabla[] = [];
+
+  /** Indica si se debe mostrar el campo RFC en el formulario modal */
+  mostrarRFC = false;
 
   /**
    * Configuración de los campos que se muestran en el modal para agregar o editar datos de mercancía.
@@ -156,9 +162,9 @@ public filasSeleccionadas: DatosMercanciaModalTabla[] = [];
    */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({
-    pais: new FormControl(null, Validators.required),
+    pais: new FormControl("", Validators.required),
     rfc: new FormControl(null,Validators.required),
-    fabricante: new FormControl(null)
+    fabricante: new FormControl(null),
   })
   });
 
@@ -192,6 +198,24 @@ get ninoFormGroup(): FormGroup {
    * Este objeto se utiliza para mostrar mensajes de alerta en el componente.
    */
   public TEXTOS = ELVALORALERTA;
+
+  /**
+   * Un objeto que contiene los textos de alerta.
+   * Este objeto se utiliza para mostrar mensajes de alerta en el componente.
+  */
+  public TEXTO_ACUERDO_P_COSTO = COSTO_NETO_VALOR_FOB;
+
+    /**
+   * Un objeto que contiene los textos de alerta.
+   * Este objeto se utiliza para mostrar mensajes de alerta en el componente.
+  */
+  public TEXTO_MOSTRAR_TIPO_METODO = TIPO_METODO;
+
+ /**
+   * Un objeto que contiene los textos de alerta.
+   * Este objeto se utiliza para mostrar mensajes de alerta en el componente.
+  */
+  public TEXTO_MOSTRAR_TIPO_METODO_PANAMA = TIPO_METODO_PANAMA;
   /**
    * Una instancia de FormGroup que representa el formulario para Mercancia (bienes).
    * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
@@ -220,7 +244,7 @@ get ninoFormGroup(): FormGroup {
 /**
    * Indica si el formulario se va editar.
    */
-  public modifcacion: boolean = true;
+  public modifcacion: boolean = false;
   /**
    * Una constante que contiene la cadena de mensaje requerida.
    * Este mensaje se utiliza para indicar que un campo es obligatorio.
@@ -232,6 +256,12 @@ get ninoFormGroup(): FormGroup {
    * Este mensaje se utiliza para indicar que un campo debe ser un número.
    */
   public NUMERO_REQUERIDO = INTRODUZCA_NUMERO;
+
+  /**
+   * Mensaje juegos y surtidos alianza.
+   * Este mensaje se utiliza para indicar que un campo debe ser un número.
+   */
+  public ALIANZA_JUEGOS= ALIANZA_JUEGOS_SURTIDOS;
   /**
    * apiDatosDeRespuesta se utiliza para obtener datos del nombre de archivo JSON ficticio como mercancia.json
    */
@@ -277,6 +307,15 @@ get ninoFormGroup(): FormGroup {
    */
   public mercanciaEvaluarData!: EvaluarMercanciaResponse;
 
+  /** Indica si se debe mostrar el select de peso */
+  public mostrarSelectPeso: boolean = false;
+
+  /** Indica si se debe mostrar mensaje que faltan registros */
+  public validacionInsumo: boolean = false;
+
+  /** Catálogo de unidades de medida comercial */
+  public unidadMedidaComercial: Catalogo[] = [];
+
   /**
    * Configuración de los campos a mostrar en el formulario de evaluación de mercancía.
    */
@@ -309,6 +348,9 @@ get ninoFormGroup(): FormGroup {
   { label: 'Descripción NALADISA 2002', controlName: 'descripcionNALADISA2002Evaluar', placeholder: 'Descripción NALADISA 2002', col: 8 }
 ];
 
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
+
   /**
  * constructor de la clase
  * Fetch the fetchtiposDocumentos datos
@@ -324,7 +366,8 @@ get ninoFormGroup(): FormGroup {
     private datosMercanciaService: DatosMercanciaService,
     private catalogosTramiteService: CatalogosTramiteService,
     private mercanciaSolcitudService: MercanciaSolicitudService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private mensajeService: MensajePantallaService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -343,15 +386,19 @@ get ninoFormGroup(): FormGroup {
    */
 
   ngOnInit(): void {
-     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+    this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
       })).subscribe();
     this.inicializarFormulario();
-
-    if(this.solicitudeState.insumosTablaDatos.length){
+    this.actualizarValidadores();
+    this.formMercancia.get('valorMetodoRadioP')?.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => this.actualizarValidadores());
+    
+    if (this.solicitudeState.insumosTablaDatos?.length || this.solicitudeState.envasesTablaDatos?.length) {
       this.insumosTablaDatos = this.solicitudeState.insumosTablaDatos;
-    }else if(this.solicitudeState.envasesTablaDatos.length){
       this.envasesTablaDatos = this.solicitudeState.envasesTablaDatos;
+      this.catalogoPais();
     }
 
     
@@ -371,6 +418,52 @@ get ninoFormGroup(): FormGroup {
     if(this.esFormularioSoloLectura === true){
       this.mercanciaEvaluar();
     }
+    //Validar tabla aun que este valido formulario
+    if(this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === true){
+       if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
+         if(this.solicitudeState.insumosTablaDatos.length === 0){
+         this.mensajeService.mostrarMensaje(true);
+         this.validacionInsumo = true;
+       }
+      }
+    }
+    //validacion para cuando de tab sin el boton de continuar
+    if (this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === false) {
+      this.formMercancia.markAllAsTouched();
+      this.mensajeService.mostrarMensaje(true);
+      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
+         if(this.solicitudeState.insumosTablaDatos.length === 0){
+         this.mensajeService.mostrarMensaje(true);
+         this.validacionInsumo = true;
+       }
+      }
+      
+    }
+
+    // Inicializa la validación si aún no existe
+    if (this.solicitudeState.validacion_formularios.validacion_tab_mercancia === null) {
+      this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
+    }
+    this.formMercancia.statusChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_value) => {
+          this.validarFormulario = this.formMercancia.valid;
+          this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
+        })
+      )
+      .subscribe();
+
+    this.mensajeService.tocarFormulario$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
+      this.formMercancia.markAllAsTouched();
+      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
+        if(this.solicitudeState.insumosTablaDatos.length === 0){
+        this.validacionInsumo = true;
+       }
+      }
+    });
   }
 
   /**
@@ -380,21 +473,21 @@ get ninoFormGroup(): FormGroup {
    * la vista y sus hijos han sido inicializados.
    */
   ngAfterViewInit(): void {
-    const FRACCIONCONTROL = this.ninoFormGroup.get('fraccionArancelaria');
+    const FRACCIONCONTROL = this.ninoFormGroup.get('fraccionArancelariaModal');
     if (!FRACCIONCONTROL) {
       return;
     }
-    FRACCIONCONTROL.valueChanges
-      .pipe(
-        debounceTime(600),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(valor => {
-        if (valor && valor.trim() !== '') {
-          this.consultaArancelariaPartida(valor);
-        }
-      });
+    const INPUTELEMENT = document.getElementById('fraccionArancelariaModal');
+    if (INPUTELEMENT) {
+      fromEvent(INPUTELEMENT, 'blur')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          const VALOR = FRACCIONCONTROL.value;
+          if (VALOR && VALOR.trim() !== '') {
+            this.consultaArancelariaPartida(VALOR);
+          }
+        });
+    }
   }
 
 
@@ -406,14 +499,155 @@ get ninoFormGroup(): FormGroup {
    */
   public inicializarFormulario(): void {
     this.formMercancia = this.fb.group({
-      nombreComercial: [this.solicitudeState?.nombreComercial, Validators.required],
-      nombreIngles: [this.solicitudeState?.nombreIngles, Validators.required],
-      fraccionArancelaria: [this.solicitudeState?.fraccionArancelaria, [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      valorMetodoRadioUruguayPanama:[this.solicitudeState?.valorMetodoRadioUruguayPanama],
+      valorMetodoRadioPanama:[this.solicitudeState?.valorMetodoRadioPanama],
+      valorMetodoRadioP:[this.solicitudeState?.valorMetodoRadioP],
+      nombreComercial: [this.solicitudeState?.nombreComercial],
+      nombreIngles: [this.solicitudeState?.nombreIngles],
+      fraccionArancelaria: [this.solicitudeState?.fraccionArancelaria],
       descripcion: [{value: this.solicitudeState?.descripcion, disabled: true}],
-      valorTransaccion: [this.solicitudeState?.valorTransaccion, Validators.maxLength(20)],
-      francofabrica:[this.solicitudeState?.francofabrica, Validators.maxLength(20)],
+      clasificacionNaladi: [this.solicitudeState?.clasificacionNaladi],
+      clasificacionNaladi1993: [this.solicitudeState?.clasificacionNaladi1993],
+      clasificacionNaladi1996: [this.solicitudeState?.clasificacionNaladi1996],
+      clasificacionNaladi2002: [this.solicitudeState?.clasificacionNaladi2002],
+      valorTransaccion: [this.solicitudeState?.valorTransaccion],
+      unidadMedidaPeso: [this.solicitudeState?.unidadMedidaPeso],
+      francofabrica:[this.solicitudeState?.francofabrica],
+      costoNetoDolares:[this.solicitudeState?.costoNetoDolares],
+      valorFobDolares:[this.solicitudeState?.valorFobDolares],
     });
   }
+
+  /**
+   * Actualiza dinámicamente los validadores del formulario basándose en la configuración del servicio.
+   * Configura validadores requeridos para campos que deben mostrarse según las banderas de configuración,
+   * y ajusta las validaciones para campos condicionales como FOB y Costo Neto basados en la selección del método.
+   * Finalmente actualiza el estado de validación de todos los controles del formulario.
+   */
+  private actualizarValidadores(): void {
+  const F = this.formMercancia;
+
+  // -----------------------
+  // Método de cálculo de valor
+  // -----------------------
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo === true || this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama_uruguay === true) {
+    F.get('valorMetodoRadioUruguayPanama')?.setValidators([Validators.required]);
+  } else {
+    F.get('valorMetodoRadioUruguayPanama')?.clearValidators();
+  }
+
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama=== true ||
+      this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama_uruguay=== true) {
+    F.get('valorMetodoRadioPanama')?.setValidators([Validators.required]);
+  } else {
+    F.get('valorMetodoRadioPanama')?.clearValidators();
+  }
+
+
+  // -----------------------
+  // Campos de texto
+  // -----------------------
+  F.get('nombreComercial')?.setValidators([Validators.required]);
+
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_nombre_ingles === true) {
+    F.get('nombreIngles')?.setValidators([Validators.required]);
+  } else {
+    F.get('nombreIngles')?.clearValidators();
+  }
+
+  F.get('fraccionArancelaria')?.setValidators([
+    Validators.maxLength(8),
+    Validators.pattern(REGEX_SOLO_NUMEROS),
+    Validators.required
+  ]);
+
+  // descripción siempre está deshabilitada, no requiere validación
+  F.get('descripcion')?.clearValidators();
+
+  // -----------------------
+  // NALADI
+  // -----------------------
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladi === true) {
+    F.get('clasificacionNaladi')?.setValidators([Validators.required]);
+  } else {
+    F.get('clasificacionNaladi')?.clearValidators();
+  }
+
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_93 === true) {
+    F.get('clasificacionNaladi1993')?.setValidators([Validators.required]);
+  } else {
+    F.get('clasificacionNaladi1993')?.clearValidators();
+  }
+
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_96 === true) {
+    F.get('clasificacionNaladi1996')?.setValidators([Validators.required]);
+  } else {
+    F.get('clasificacionNaladi1996')?.clearValidators();
+  }
+
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_02 === true) {
+    F.get('clasificacionNaladi2002')?.setValidators([Validators.required]);
+  } else {
+    F.get('clasificacionNaladi2002')?.clearValidators();
+  }
+
+  // -----------------------
+  // Valor de transacción
+  // -----------------------
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_valor_transaccional_fob === true || F.get('valorMetodoRadioPanama')?.value === 'TIMET.VT' || F.get('valorMetodoRadioUruguayPanama')?.value === 'TIMET.VT') {
+    F.get('valorTransaccion')?.setValidators([Validators.maxLength(20), Validators.required]);
+  } else {
+    F.get('valorTransaccion')?.clearValidators();
+  }
+
+  // -----------------------
+  // Precio franco fábrica
+  // -----------------------
+  if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_precio_franco_fabrica === true) {
+    F.get('francofabrica')?.setValidators([Validators.maxLength(20), Validators.required]);
+  } else {
+    F.get('francofabrica')?.clearValidators();
+  }
+
+  // -----------------------
+  // FOB / Costo Neto
+  // -----------------------
+  const VALORMETODOP = F.get('valorMetodoRadioP')?.value;
+
+  if (VALORMETODOP === 'TIMET.FO' || this.solicitudeState.materiales_fungibles_ap === true) {
+    // Activar validadores de FOB
+    F.get('valorFobDolares')?.setValidators([Validators.maxLength(20), Validators.required]);
+
+    // Desactivar y limpiar costo neto
+    F.get('costoNetoDolares')?.clearValidators();
+    F.get('costoNetoDolares')?.reset();
+    F.get('costoNetoDolares')?.updateValueAndValidity({ emitEvent: true });
+
+  } else if (VALORMETODOP === 'TIMET.CN' || F.get('valorMetodoRadioPanama')?.value === 'TIMET.CN' || F.get('valorMetodoRadioUruguayPanama')?.value === 'TIMET.CN' || this.solicitudeState.respuestaServiceConfiguracion.mostrar_costo_neto_fob === true) {
+    // Activar validadores de Costo Neto
+    F.get('costoNetoDolares')?.setValidators([Validators.maxLength(20), Validators.required]);
+
+    // Desactivar y limpiar FOB
+    F.get('valorFobDolares')?.clearValidators();
+    F.get('valorFobDolares')?.reset();
+    F.get('valorFobDolares')?.updateValueAndValidity({ emitEvent: true });
+
+  } else {
+    // Caso en que no aplica ninguno
+    F.get('valorFobDolares')?.clearValidators();
+    F.get('valorFobDolares')?.reset();
+    F.get('costoNetoDolares')?.clearValidators();
+    F.get('costoNetoDolares')?.reset();
+    F.get('valorFobDolares')?.updateValueAndValidity({ emitEvent: true });
+    F.get('costoNetoDolares')?.updateValueAndValidity({ emitEvent: true });
+  }
+  
+  // -----------------------
+  // Actualizar estado de todos los controles
+  // -----------------------
+  Object.values(F.controls).forEach(ctrl => ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: false }));
+}
+
 
   /**
    * @method inicializarFormularioEvaluar
@@ -455,8 +689,23 @@ get ninoFormGroup(): FormGroup {
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    let VALOR = form.get(campo)?.value;
+  
+  // Para campos decimales, aplicar formato antes de guardar
+  if (campo === 'valorFobDolares' || campo === 'costoNetoDolares' || 
+      campo === 'valorTransaccion' || campo === 'francofabrica') {
+    
+    if (VALOR && typeof VALOR === 'string') {
+      // Aplicar el mismo formato que en el HTML
+      if (VALOR.includes('.')) {
+        VALOR = VALOR.padEnd(VALOR.indexOf('.') + 5, '0');
+      } else if (VALOR) {
+        VALOR = VALOR + '.0000';
+      }
+    }
+  }
+  
+  (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
   /**
    * @method listaDeFilaSeleccionadaInsumos
@@ -490,9 +739,11 @@ get ninoFormGroup(): FormGroup {
    * Abre el modal para agregar mercancías.
    */
   abrirDialogo(event: string): void {
-    this.catalogoPais();
-    if(this.modifcacion === true){
+    this.mostrarRFC = false;
+    this.ninoFormGroup.get('rfc')?.reset();
+    if(this.modifcacion === false){
       this.limpiarDialogo();
+      this.catalogoPais();
     }
       this.tablaDatos = (this.solicitudeState?.respuestaServicioDatosTabla ?? [])
         .filter(item => item.cve_grupo_criterio === 'OTROS')
@@ -587,8 +838,24 @@ get ninoFormGroup(): FormGroup {
  * @returns {void}
  */
   validarInsumoOempaque(tipo: 'Insumo' | 'Empaque'): void {
-   
-    const PAIS_DESC = this.paisOrigen.find(item => item.id === Number(this.ninoFormGroup.get('pais')?.value)) || null;
+   if(this.modifcacion === true){
+    if (tipo === 'Insumo' && this.listaSeleccionadasInsumos.length > 0) {
+    const SELECCIONADO = this.listaSeleccionadasInsumos[0];
+    this.insumosTablaDatos = this.insumosTablaDatos.filter(
+      item => item.nombreTecnico !== SELECCIONADO.nombreTecnico
+           || item.proveedor !== SELECCIONADO.proveedor
+           || item.fraccionArancelaria !== SELECCIONADO.fraccionArancelaria
+    ); 
+     } else if (tipo === 'Empaque' && this.listaSeleccionadasEnvases.length > 0) {
+    const SELECCIONADO = this.listaSeleccionadasEnvases[0];
+    this.envasesTablaDatos = this.envasesTablaDatos.filter(
+      item => item.nombreTecnico !== SELECCIONADO.nombreTecnico
+           || item.proveedor !== SELECCIONADO.proveedor
+           || item.fraccionArancelaria !== SELECCIONADO.fraccionArancelaria
+    );
+  }
+   }
+    const PAIS_DESC = this.paisOrigen.find(item => item.clave === this.ninoFormGroup.get('pais')?.value);
     // Construcción base del payload
     const PAYLOAD: InsumoTratadosRequest = {
       insumo: {
@@ -596,14 +863,14 @@ get ninoFormGroup(): FormGroup {
         nombre: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('nombreTecnico')?.value),
         desc_fabricante_productor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('fabricante')?.value),
         desc_proveedor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('proveedor')?.value),
-        cve_fraccion: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('fraccionArancelaria')?.value),
+        cve_fraccion: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('fraccionArancelariaModal')?.value),
         imp_valor: this.ninoFormGroup.get('valorDolares')?.value,
         ide_tipo_insumo: this.modal === 'Insumo' ? 'TIPIN.02' : 'TIPIN.01',
         //Aveces esta oculto 
-        peso: this.solicitudeState.validacionFraccionArancelaria.peso_requerido,
+        peso: Number(DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('peso')?.value)),
         //Combo
         cve_pais: DatosMercanciaComponent.datoNull(PAIS_DESC?.clave),
-        volumen: this.solicitudeState.validacionFraccionArancelaria.volumen_requerido,
+        volumen: null,
         // Aveces sale
         rfc_fabricante_productor: DatosMercanciaComponent.datoNull(this.ninoFormGroup.get('rfc')?.value),
       
@@ -649,29 +916,33 @@ get ninoFormGroup(): FormGroup {
                 proveedor: this.ninoFormGroup.get('proveedor')?.value ?? '',
                 fabricanteOProductor: this.ninoFormGroup.get('fabricante')?.value ?? '',
                 rfc: this.ninoFormGroup.get('rfc')?.value ?? '',
-                fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelaria')?.value ?? '',
+                fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelariaModal')?.value ?? '',
                 valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value ?? 0,
                 paisDeOrigen: PAIS_DESC?.descripcion ?? '',
                 //No se sabe de donde sale 
                 peso: PAYLOAD.insumo.peso,
-                volumen: PAYLOAD.insumo.volumen
+                volumen: PAYLOAD.insumo.volumen,
+                cvePais: PAIS_DESC?.clave
               });
               this.tramite110101Store.clearInsumos();
               this.tramite110101Store.addInsumo(this.insumosTablaDatos);
               this.tramite110101Store.clearInsumosCriterios();
               this.tramite110101Store.addInsumoCriterios(this.filasSeleccionadas);
+              this.validacionInsumo = false;
+              this.mensajeService.mostrarMensaje(false);
             }else{
               this.envasesTablaDatos.push({
                  nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value ?? '',
                 proveedor: this.ninoFormGroup.get('proveedor')?.value ?? '',
                 fabricanteOProductor: this.ninoFormGroup.get('fabricante')?.value ?? '',
                 rfc: this.ninoFormGroup.get('rfc')?.value ?? '',
-                fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelaria')?.value ?? '',
+                fraccionArancelaria:this.ninoFormGroup.get('fraccionArancelariaModal')?.value ?? '',
                 valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value ?? 0,
                 paisDeOrigen: PAIS_DESC?.descripcion ?? '',
                 //No se sabe de donde sale 
                 peso: PAYLOAD.insumo.peso,
-                volumen: PAYLOAD.insumo.volumen
+                volumen: PAYLOAD.insumo.volumen,
+                cvePais: PAIS_DESC?.clave
               });
               this.tramite110101Store.clearEmpaques();
               this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
@@ -793,25 +1064,25 @@ get ninoFormGroup(): FormGroup {
       tipo_fraccion_arancelaria: 'TIFR.TIGIE',
       mercancia: {
         //Todavia no se sabe 
-        id_descripcion_alterna_ue: 0,
-        id_descripcion_alterna_aelc: 0,
-        id_descripcion_alterna_sgp: 0,
-        id_descripcion_alterna_ace: 0,
+        id_descripcion_alterna_ue: null,
+        id_descripcion_alterna_aelc: null,
+        id_descripcion_alterna_sgp: null,
+        id_descripcion_alterna_ace: null,
         //mandar siempre false de momento
         requiere_juegos_o_surtidos: false,
         peso_es_requerido: false,
         volumen_es_requerido: false,
 
         //nuevos campos flujo alterno
-        fraccion_naladi: '',
-        fraccion_naladisa93: '',
-        fraccion_naladisa96: '',
-        fraccion_naladisa02: '',
+        fraccion_naladi:  this.formMercancia.get('clasificacionNaladi')?.value,
+        fraccion_naladisa93: this.formMercancia.get('clasificacionNaladi1993')?.value,
+        fraccion_naladisa96: this.formMercancia.get('clasificacionNaladi1996')?.value,
+        fraccion_naladisa02: this.formMercancia.get('clasificacionNaladi2002')?.value,
         //ultimo tab
         tipo_proceso_mercancia: '',
         //Mismo campo difenre nombre dependiendo del caso
-        valo_transaccional_fob: this.ninoFormGroup.get('fraccionArancelaria')?.value,
-        costo_neto_ap: 0
+        valo_transaccional_fob: this.ninoFormGroup.get('fraccionArancelariaModal')?.value,
+        costo_neto_ap: null
       },
       tratados_seleccionados: this.solicitudeState?.respuestaServicioDatosTabla.map(item => ({
         cve_grupo_criterio: item.cve_grupo_criterio,
@@ -839,6 +1110,23 @@ get ninoFormGroup(): FormGroup {
             this.tramite110101Store.clearRespuestaServicioValidarFraccionArancelaria();
             this.tramite110101Store.setRespuestaServicioValidarFraccion(response.datos ?? {} as FraccionValidarResponse);
             this.tramite110101Store.setTabProceso(response.datos?.mercancia.proceso_es_requerido ?? false)
+
+            const PASOREQURIDO = response.datos?.mercancia?.peso_es_requerido ?? false;
+            this.mostrarSelectPeso = PASOREQURIDO;
+            if(PASOREQURIDO){
+              this.formMercancia.get('valorTransaccion')?.reset();
+              this.formMercancia.get('valorTransaccion')?.clearValidators();
+              this.formMercancia.get('valorTransaccion')?.updateValueAndValidity();
+
+              this.obtenerUnidadMedidaComercial();
+              this.agregarCampoPeso();
+            }else {
+              this.formMercancia.get('unidadMedidaPeso')?.reset();
+              this.formMercancia.get('unidadMedidaPeso')?.clearValidators();
+              this.formMercancia.get('unidadMedidaPeso')?.updateValueAndValidity();
+
+              this.eliminarCampoPeso();
+            }
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -964,10 +1252,13 @@ get ninoFormGroup(): FormGroup {
       }
       this.ninoFormGroup.patchValue({
         nombreTecnico: this.listaSeleccionadasInsumos?.[0]?.nombreTecnico,
-        fraccionArancelaria: this.listaSeleccionadasInsumos?.[0]?.fraccionArancelaria,
+        fraccionArancelariaModal: this.listaSeleccionadasInsumos?.[0]?.fraccionArancelaria,
         proveedor: this.listaSeleccionadasInsumos?.[0]?.proveedor,
         fabricanteProductor: this.listaSeleccionadasInsumos?.[0]?.fabricanteOProductor,
         valorDolares: this.listaSeleccionadasInsumos?.[0]?.valorEnDolares,
+        pais: this.paisOrigen.find(p => p.descripcion === this.listaSeleccionadasInsumos[0].paisDeOrigen)?.clave ?? '',
+        rfc: this.listaSeleccionadasInsumos?.[0]?.rfc,
+        fabricante:this.listaSeleccionadasInsumos?.[0]?.fabricanteOProductor,
       })
     } else {
       if (!this.listaSeleccionadasEnvases.length) {
@@ -977,14 +1268,21 @@ get ninoFormGroup(): FormGroup {
       }
       this.ninoFormGroup.patchValue({
         nombreTecnico: this.listaSeleccionadasEnvases?.[0]?.nombreTecnico,
-        fraccionArancelaria: this.listaSeleccionadasEnvases?.[0]?.fraccionArancelaria,
+        fraccionArancelariaModal: this.listaSeleccionadasEnvases?.[0]?.fraccionArancelaria,
         proveedor: this.listaSeleccionadasEnvases?.[0]?.proveedor,
         fabricanteProductor: this.listaSeleccionadasEnvases?.[0]?.fabricanteOProductor,
         valorDolares: this.listaSeleccionadasEnvases?.[0]?.valorEnDolares,
+        pais: this.paisOrigen.find(p => p.descripcion === this.listaSeleccionadasEnvases[0].paisDeOrigen)?.clave ?? '',
+        rfc: this.listaSeleccionadasInsumos?.[0]?.rfc,
+        fabricante:this.listaSeleccionadasInsumos?.[0]?.fabricanteOProductor,
       })
     }
+    const VALOR = this.ninoFormGroup.get('fraccionArancelariaModal')?.value;
+    if (VALOR) {
+      this.consultaArancelariaPartida(VALOR);
+    }
     if (event) {
-      this.modifcacion = false;
+      this.modifcacion = true;
       this.abrirDialogo(event);
     }
   }
@@ -1134,7 +1432,118 @@ get ninoFormGroup(): FormGroup {
   }
     return true;
   }
-  
+
+  /**
+   * Maneja el cambio de país en el formulario.
+   *  - Si el país seleccionado es 'MEX', establece `mostrarRFC` como verdadero.
+   *  - Si el país seleccionado es diferente, establece `mostrarRFC` como falso.
+   * Finalmente, actualiza las validaciones del campo RFC en el formulario.
+   *  @param event - Evento de cambio del país.
+   */
+  onPaisChange(event: Event): void {
+    const SELECT_ELEMENT = event.target as HTMLSelectElement;
+    const VALOR = SELECT_ELEMENT.value;
+    this.tramite110101Store.setUnidadMedidaPeso(VALOR);
+    this.mostrarRFC = VALOR === 'MEX';
+    this.actualizarValidacionRFC();
+  }
+
+  /**
+   * Actualiza las validaciones del campo RFC en el formulario `ninoFormGroup`
+   * según el valor de la variable `mostrarRFC`.
+   * 
+   * - Si `mostrarRFC` es verdadero, se establece la validación como requerida.
+   * - Si `mostrarRFC` es falso, se eliminan todas las validaciones y se limpia el valor del campo.
+   * 
+   * Finalmente, se actualiza el estado de validez del control RFC.
+   */
+  private actualizarValidacionRFC(): void {
+    const RFC_CONTROL = this.ninoFormGroup.get('rfc');
+
+    if (this.mostrarRFC) {
+      RFC_CONTROL?.setValidators([Validators.required]);
+    } else {
+      RFC_CONTROL?.clearValidators();
+      RFC_CONTROL?.setValue('');
+    }
+
+    RFC_CONTROL?.updateValueAndValidity();
+  }
+
+  /**
+   * @method obtenerUnidadMedidaComercial
+   * @description
+   * Obtiene la lista de unidades de medida comercial desde el servicio `DatosMercanciaService`.
+   */
+  obtenerUnidadMedidaComercial(): void {
+    this.datosMercanciaService.getUnidadMedidaComercial()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.unidadMedidaComercial = data.datos || [];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.unidadMedidaComercial = [];
+        }
+      });
+  }
+
+  /**
+   * Agrega el campo "Peso" al formulario modal si no existe.
+   * También agrega el control correspondiente al FormGroup `ninoFormGroup` si no está presente.
+   */
+  private agregarCampoPeso(): void {
+    const YA_EXISTE = this.modalFormaDatos.some(campo => campo.id === 'peso');
+    if (!YA_EXISTE) {
+      const INDICE_REFERENCIA = this.modalFormaDatos.findIndex(campo => campo.id === 'descripcionSubpartida');
+
+      const NUEVOCAMPO = {
+        id: 'peso',
+        labelNombre: 'Peso',
+        campo: 'peso',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [{ tipo: 'required' }],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+      };
+
+      if (INDICE_REFERENCIA !== -1) {
+        this.modalFormaDatos.splice(INDICE_REFERENCIA + 1, 0, NUEVOCAMPO);
+      } else {
+        this.modalFormaDatos.push(NUEVOCAMPO);
+      }
+
+      this.modalFormaDatos = [...this.modalFormaDatos]; // refrescar Angular
+    }
+
+    if (!this.ninoFormGroup.get('peso')) {
+      this.ninoFormGroup.addControl('peso', new FormControl('', Validators.required));
+    }
+  }
+
+  /**
+   * Elimina el campo "Peso" del formulario modal si existe.
+   * También elimina el control correspondiente del FormGroup `ninoFormGroup` si está presente.
+   */
+  private eliminarCampoPeso(): void {
+    const INDICE = this.modalFormaDatos.findIndex(campo => campo.id === 'peso');
+    if (INDICE !== -1) {
+      this.modalFormaDatos.splice(INDICE, 1);
+      this.modalFormaDatos = [...this.modalFormaDatos];
+    }
+
+    if (this.ninoFormGroup.get('peso')) {
+      this.ninoFormGroup.removeControl('peso');
+  }
+}
+
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
    * 
