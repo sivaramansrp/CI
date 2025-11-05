@@ -406,10 +406,18 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (keyup)="limpiarNumeroDecimal($event)" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
-                @if (obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida')) {
-                  <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida') }}</div>
-                }
+                <app-catalogo-select 
+                [catalogo]="unidadMedida" 
+                [label]="'Unidad de medida'" 
+                [required]="true" 
+                id="claveUnidadMedida" 
+                formControlName="claveUnidadMedida" 
+                [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" 
+                (keyup)="limpiarNumeroDecimal($event)" 
+                (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" 
+                [isDisabled]="soloLectura"
+                [markTouched]="mercanciaFormulario.get('claveUnidadMedida')?.touched ?? false"
+                ></app-catalogo-select>
               </div>
               <div class="col-md-4 datos-trasladara-cantidad">
                 <label for="valorUSD">Valor USD<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'valorUSD') ? 'text-danger' : ''">*</span>:</label>
