@@ -53,7 +53,10 @@ import {
   COMUN_URL,
   FRACCION_HTS,
   PAIS_DESTINO,
-  UNIDADES_MEDIDA_COMERCIAL
+  UNIDADES_MEDIDA_COMERCIAL,
+  API_PEXIM_FRACCION_ARANCELARIA,
+  API_UNIDADES_MEDIDA_TARIFARIA,
+  API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
 // import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_TRATADOS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_MEXICO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
@@ -416,6 +419,28 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
   const ENDPOINT = `${this.host}${FRACCION_HTS(tramite,id)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+fraccionesArancelariasCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA(tramite, id)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+unidadesMedidaTarifariaCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, 'TITRAC.TA')}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+paisesPorBloqueCatalogo(tramite: string, ID: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_PAISES_POR_BLOQUE(tramite, ID)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+
   /**
    * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
    *

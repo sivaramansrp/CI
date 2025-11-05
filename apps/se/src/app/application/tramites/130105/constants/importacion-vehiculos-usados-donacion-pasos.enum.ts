@@ -18,3 +18,10 @@ export const PASOS_EXPORTACION = [
         completado: false,
     }
 ];
+
+export const PRODUCTO_OPCION = [{
+    label: 'Inicial', value: 'Inicial'
+}]
+
+
+export const idProcedimiento = 130105; 
