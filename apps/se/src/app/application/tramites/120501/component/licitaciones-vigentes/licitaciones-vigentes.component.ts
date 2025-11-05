@@ -24,6 +24,7 @@ import { Validators } from '@angular/forms';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { idProcedimiento } from '../../constantes/cupos-constantes.enum';
 /**
  * Componente para mostrar las licitaciones vigentes.
  *
@@ -166,6 +167,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Indica si se muestra la selección de participante.
    */
   showSeleccionarParticipante: boolean = false;
+
+  idProcedimiento: number = idProcedimiento;
   
   /**
  * Indica si el formulario está en modo solo lectura.
@@ -207,10 +210,8 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    
     this.inicializarEstadoFormulario();
     this.getEntidadFederativa();
-    this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.obtenerDatosDeTabla();
@@ -297,11 +298,15 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas.
    */
   getEntidadFederativa(): void {
-      this.service.getEntidadFederativa().pipe(
+      this.service.entidadesFederativasCatalogo(idProcedimiento.toString()).pipe(
         takeUntil(this.destroyed$)
       ).subscribe(
         (data) => {
-          this.entidadFederativaOptions = data;
+          if(data.codigo === "00") {
+            this.entidadFederativaOptions = data.datos as Catalogo[];
+          }else{
+            
+          }
         }
       );
      
@@ -309,12 +314,14 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 /**
    * Obtiene la lista de representaciones federales.
    */
-getRepresentacionFederal(): void {
-  this.service.getRepresentacionFederal().pipe(
+getRepresentacionFederal(cveEntidad: string): void {
+  this.service.representacionFederalCatalogo(idProcedimiento.toString(), cveEntidad).pipe(
     takeUntil(this.destroyed$)
   ).subscribe(
     (data) => {
-      this.representacionFederalOptions = data;
+      if(data.codigo === "00") {
+        this.representacionFederalOptions = data.datos as Catalogo[];
+      }
     }
   );
 }
@@ -421,6 +428,10 @@ getAdquiriente():void{
 setValoresStore(form: FormGroup, campo: string): void {
   const VALOR = form.get(campo)?.value;
   this.tramite120501Store.actualizarEstado({ [campo]: VALOR });
+  if(campo === 'entidadFederativa' && this.formulario.get('entidadFederativa')?.value) {
+    const CVE_ENTIDAD = this.formulario.get('entidadFederativa')?.value;
+    this.getRepresentacionFederal(CVE_ENTIDAD);
+  }
 }
 
 /**

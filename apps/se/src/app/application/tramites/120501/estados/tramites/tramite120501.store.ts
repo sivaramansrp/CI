@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud120501
  */
 export interface Solicitud120501State {
+  idSolicitud?: number;
   entidadFederativa: string;
   representacionFederal: string;
   numeraDelicitacion: string;
@@ -29,7 +30,7 @@ export interface Solicitud120501State {
 
 export function createInitialState(): Solicitud120501State {
   return{
-      
+      idSolicitud: 0,
       entidadFederativa:'',
       representacionFederal:'',
       numeraDelicitacion: '',
@@ -71,5 +72,15 @@ export class Tramite120501Store extends Store<Solicitud120501State> {
       ...state,
       ...valores,
     }));
+  }
+  
+
+  /**
+   * Resetea el store a su estado inicial.
+   * No recibe parámetros.
+   * @return void
+   */
+  public resetearStore(): void {
+    this.reset();
   }
 }

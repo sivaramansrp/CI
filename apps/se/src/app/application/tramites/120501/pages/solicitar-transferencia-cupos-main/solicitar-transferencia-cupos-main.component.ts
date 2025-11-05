@@ -8,6 +8,9 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { Solicitud120501State } from '../../estados/tramites/tramite120501.store';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
 /**
  *  AccionBoton
  *  Interfaz que describe la estructura de un objeto de acción de botón.
@@ -29,16 +32,28 @@ interface AccionBoton {
 })
 export class SolicitarTransferenciaCuposMainComponent {
   /**
+    * Notificador para destruir los observables y evitar posibles fugas de memoria.
+    * @private
+    * @type {Subject<void>}
+    */
+  destroyNotifier$: Subject<void> = new Subject();
+  /**
    * {ListaPasosWizard[]} pasosSolicitar
    *  Arreglo que contiene los pasos del wizard.
    */
   pasosSolicitar: ListaPasosWizard[] = PASOS;
-  LOGIN:string = "";
+  LOGIN: string = "";
   /**
    * {number} indice
    *  Índice actual del wizard.
    */
   indice: number = 1;
+
+  /**
+     * Identificador numérico de la solicitud actual.
+     * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+     */
+  solicitudState!: Solicitud120501State;
 
   /**
    * {string} texto
@@ -64,11 +79,36 @@ export class SolicitarTransferenciaCuposMainComponent {
   };
 
   /**
+   * Constructor para la clase SolicitarTransferenciaCuposMainComponent.
+   * @param tramiteQuery 
+   * 
+   */
+  constructor(private tramiteQuery: Tramite120501Query) {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
+
+  /**
+   * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe a los cambios en la solicitud del trámite y actualiza el estado local.
+   */
+  ngOnInit(): void {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
+
+  /**
    *  getValorIndice
    *  Método que actualiza el índice del wizard basado en la acción del botón.
    *  {AccionBoton} e - Objeto que contiene la acción y el valor del botón.
    */
-  getValorIndice(e: AccionBoton) :void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -77,5 +117,19 @@ export class SolicitarTransferenciaCuposMainComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+  * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
+  *
+  * Su objetivo es limpiar los recursos utilizados durante la vida del componente,
+  * principalmente las suscripciones a observables.
+  * Para lograrlo, emite un valor (`next()`) y completa (`complete()`)
+  * el `Subject` `destroyNotifier$`, el cual se usa junto con `takeUntil`
+  * en las suscripciones RxJS.
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

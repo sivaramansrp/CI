@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-transferencia-cupos-main/solicitar-transferencia-cupos-main.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const routes: Routes = [
   {
@@ -11,6 +11,12 @@ const routes: Routes = [
     redirectTo: 'cupos-solicitud-transferencia'
   },
   {
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '150102',
+      },
+    },
     path: 'cupos-solicitud-transferencia',
     component: SolicitarTransferenciaCuposMainComponent,
   },

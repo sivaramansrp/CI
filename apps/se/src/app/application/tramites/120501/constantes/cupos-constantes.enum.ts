@@ -1,0 +1,1 @@
+export const idProcedimiento = 120501;

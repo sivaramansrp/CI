@@ -1,26 +1,27 @@
 <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1>Solicitar transferencia cupos</h1>
-        </div>
-  
-        <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
-
-  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Solicitar transferencia cupos</h1>
       </div>
-  
-      <div class="row">
-        @switch(indice){
-            @case(1){
-                <app-paso-solicitante></app-paso-solicitante>
-            }@case(2){
-                <app-paso-dos></app-paso-dos>
-            }@case(3){
-              <app-paso-tres></app-paso-tres>
-            }
-        }
-        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+
+      <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
+
+
+    </div>
+
+    <div class="row">
+      @switch(indice){
+      @case(1){
+      <app-paso-solicitante></app-paso-solicitante>
+      }@case(2){
+      <!-- <app-paso-dos></app-paso-dos> -->
+      }@case(3){
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud || 0" [procedure]="120501"
+        [procedureUrl]="'solicitartransferencia/cupos-solicitud-transferencia'">
+      </paso-firma>
+      }
+      }
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
-  
