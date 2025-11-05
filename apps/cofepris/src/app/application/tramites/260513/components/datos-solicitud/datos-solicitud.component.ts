@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-solicitud.enum';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
+import { ViewChild } from '@angular/core';
 /**
  * Interfaz que define la configuración de visibilidad para diferentes atributos relacionados con países.
  * 
@@ -27,6 +28,8 @@ export interface ConfiguracionVisibilidad {
 })
 export class DatosSolicitudComponent {
   idProcedimiento:number = 260513;
+  @ViewChild(DatosDeLaComponent)
+  datosDeLaComponent!: DatosDeLaComponent;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
@@ -42,5 +45,10 @@ export class DatosSolicitudComponent {
    * deben ser visibles en el componente. Se inicializa con la configuración
    * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
    */
-  configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
+  configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD;
+
+
+  validarClickDeBoton(): boolean {
+    return this.datosDeLaComponent.validarClickDeBoton();
+  }
 }

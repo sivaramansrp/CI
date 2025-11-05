@@ -24,6 +24,7 @@ export interface CertificadoApiData {
   nombre: string;
   observaciones?: string;
   nombreEmbarcacion?: string;
+  mercancias?: MercanciaCertificado[];
 }
 
 export interface MercanciaCertificado {
