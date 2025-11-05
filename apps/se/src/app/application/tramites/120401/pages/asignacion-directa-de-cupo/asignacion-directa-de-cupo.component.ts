@@ -4,7 +4,7 @@
  */
 import { AVISO, FIRMAR } from '@libs/shared/data-access-user/src';
 
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
  
 import { ASIGNACION } from '@ng-mf/data-access-user';
 
@@ -34,7 +34,7 @@ interface AccionBoton {
   selector: 'app-asignacion-directa-de-cupo',
   templateUrl: './asignacion-directa-de-cupo.component.html',
 })
-export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
+export class AsignacionDirectaDeCupoComponent implements OnDestroy {
     /**
    * Reference to the WizardComponent.
    */
@@ -68,7 +68,7 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
   /** Variables para manejo de validaciones */
   mostrarMensajeValidacion: boolean = false;
   mensajeValidacion: string = '';
-  private timeoutId: any;
+  private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * @property {object} TEXTOS - Contiene constantes relacionadas con aviso y firma.
@@ -79,11 +79,7 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
     FIRMAR,
   };
 
-  ngOnInit(): void {
-    // Inicialización del componente
-  }
-
-  /**
+   /**
    * Maneja el evento de continuar del botón y valida antes de avanzar
    * @param e The action button event containing the action and value.
    */
@@ -133,9 +129,9 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns true si todos los campos obligatorios están completos
    */
   private validarPasoUno(): boolean {
-    const camposObligatorios = this.verificarCamposObligatoriosPaso1();
-    
-    if (!camposObligatorios.valido) {
+    const CAMPOSOBLIGATORIOS = this.verificarCamposObligatoriosPaso1();
+
+    if (!CAMPOSOBLIGATORIOS.valido) {
       this.mensajeValidacion = `La Solicitud ha quedado registrada con el número temporal 202768273. Éste no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.`;
       return false;
     }
@@ -147,10 +143,10 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns true si todos los campos obligatorios están completos
    */
   private validarPasoDos(): boolean {
-    const camposObligatorios = this.verificarCamposObligatoriosPaso2();
+    const CAMPOSOBLIGATORIOS = this.verificarCamposObligatoriosPaso2();
     
-    if (!camposObligatorios.valido) {
-      this.mensajeValidacion = `Para continuar es necesario completar los siguientes campos obligatorios: ${camposObligatorios.camposFaltantes.join(', ')}`;
+    if (!CAMPOSOBLIGATORIOS.valido) {
+      this.mensajeValidacion = `Para continuar es necesario completar los siguientes campos obligatorios: ${CAMPOSOBLIGATORIOS.camposFaltantes.join(', ')}`;
       return false;
     }
     return true;
@@ -161,10 +157,10 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns true si todos los campos obligatorios están completos
    */
   private validarPasoTres(): boolean {
-    const camposObligatorios = this.verificarCamposObligatoriosPaso3();
-    
-    if (!camposObligatorios.valido) {
-      this.mensajeValidacion = `Para continuar es necesario completar los siguientes campos obligatorios: ${camposObligatorios.camposFaltantes.join(', ')}`;
+    const CAMPOSOBLIGATORIOS = this.verificarCamposObligatoriosPaso3();
+
+    if (!CAMPOSOBLIGATORIOS.valido) {
+      this.mensajeValidacion = `Para continuar es necesario completar los siguientes campos obligatorios: ${CAMPOSOBLIGATORIOS.camposFaltantes.join(', ')}`;
       return false;
     }
     return true;
@@ -175,16 +171,14 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    */
   private mostrarMensajeConAutoClose(): void {
     this.mostrarMensajeValidacion = true;
+     if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
     
-    // Limpiar timeout anterior si existe
-    // if (this.timeoutId) {
-    //   clearTimeout(this.timeoutId);
-    // }
-    
-    // // Auto-close después de 5 segundos
-    // this.timeoutId = setTimeout(() => {
-    //   this.cerrarMensajeValidacion();
-    // }, 5000);
+    // Auto-close después de 5 segundos
+    this.timeoutId = setTimeout(() => {
+      this.cerrarMensajeValidacion();
+    }, 5000);
   }
 
   /**
@@ -192,15 +186,15 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns objeto con información de validación
    */
   private verificarCamposObligatoriosPaso1(): { valido: boolean; camposFaltantes: string[] } {
-    const camposFaltantes: string[] = [];
+    const COMPOSFALTANTES: string[] = [];
     
     // Para mostrar el mensaje informativo temporal, simular validación fallida
     // Cambiar esta lógica cuando tengas validación real de campos
-    camposFaltantes.push('Campos obligatorios');
+    COMPOSFALTANTES.push('Campos obligatorios');
     
     return {
       valido: false, // Cambiar a true cuando implementes validación real
-      camposFaltantes
+      camposFaltantes: COMPOSFALTANTES
     };
   }
 
@@ -209,18 +203,18 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns objeto con información de validación
    */
   private verificarCamposObligatoriosPaso2(): { valido: boolean; camposFaltantes: string[] } {
-    const camposFaltantes: string[] = [];
-    
+    const COMPOSFALTANTES: string[] = [];
+
     // Implementar validación específica para paso 2
-    const campoEjemplo = this.obtenerValorCampo('campoEjemploPaso2');
-    
-    if (!campoEjemplo || campoEjemplo === '') {
-      camposFaltantes.push('Campo requerido del paso 2');
+    const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso2');
+
+    if (!CAMPOEJEMPLO || CAMPOEJEMPLO === '') {
+      COMPOSFALTANTES.push('Campo requerido del paso 2');
     }
     
     return {
-      valido: camposFaltantes.length === 0,
-      camposFaltantes
+      valido: COMPOSFALTANTES.length === 0,
+      camposFaltantes: COMPOSFALTANTES
     };
   }
 
@@ -229,18 +223,18 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @returns objeto con información de validación
    */
   private verificarCamposObligatoriosPaso3(): { valido: boolean; camposFaltantes: string[] } {
-    const camposFaltantes: string[] = [];
-    
+    const COMPOSFALTANTES: string[] = [];
+
     // Implementar validación específica para paso 3
-    const campoEjemplo = this.obtenerValorCampo('campoEjemploPaso3');
-    
-    if (!campoEjemplo || campoEjemplo === '') {
-      camposFaltantes.push('Campo requerido del paso 3');
+    const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso3');
+
+    if (!CAMPOEJEMPLO || CAMPOEJEMPLO === '') {
+      COMPOSFALTANTES.push('Campo requerido del paso 3');
     }
     
     return {
-      valido: camposFaltantes.length === 0,
-      camposFaltantes
+      valido: COMPOSFALTANTES.length === 0,
+      camposFaltantes: COMPOSFALTANTES
     };
   }
 
@@ -249,11 +243,11 @@ export class AsignacionDirectaDeCupoComponent implements OnInit, OnDestroy {
    * @param nombreCampo Nombre del campo a obtener
    * @returns Valor del campo o null si no existe
    */
-  private obtenerValorCampo(nombreCampo: string): any {
+  private obtenerValorCampo(nombreCampo: string): string | null {
     // Implementar lógica para obtener valores de los formularios
-    const elemento = document.querySelector(`[name="${nombreCampo}"]`) as HTMLInputElement;
-    if (elemento) {
-      return elemento.value;
+    const ELEMENTO = document.querySelector(`[name="${nombreCampo}"]`) as HTMLInputElement;
+    if (ELEMENTO) {
+      return ELEMENTO.value;
     }
     
     return null;

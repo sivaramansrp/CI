@@ -8,10 +8,9 @@
       <!-- Validation messages above wizard -->
       @if (mostrarMensajeValidacion) {
         <div class="col-md-12 mb-3">
-          <div class="alert alert-primary alert-dismissible fade show custom-info-alert" role="alert">
+          <div class="alert alert-primary alert-dismissible fade show custom-info-alert" role="alert" (click)="cerrarMensajeValidacion()">
             {{ mensajeValidacion }}
-            <button (click)="cerrarMensajeValidacion()"></button>
-          </div>
+            </div>
         </div>
       }
       
