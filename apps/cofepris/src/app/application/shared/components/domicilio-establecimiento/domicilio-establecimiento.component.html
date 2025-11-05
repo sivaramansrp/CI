@@ -272,7 +272,10 @@
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              " />
+              "
+                 [ngClass]="
+              isValid(formMercancias, 'nombreComercial') ? 'required' : ''
+            " />
             <div *ngIf="
                 formMercancias.get('nombreComercial')?.invalid &&
                 formMercancias.get('nombreComercial')?.touched
@@ -357,7 +360,10 @@
                   'fraccionArancelaria',
                   'setFraccionArancelaria'
                 )
-              " />
+              " 
+               [ngClass]="
+              isValid(formMercancias, 'fraccionArancelaria') ? 'required' : ''
+            "/>
             <div *ngIf="
                 formMercancias.get('fraccionArancelaria')?.invalid &&
                 formMercancias.get('fraccionArancelaria')?.touched
@@ -382,7 +388,10 @@
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              " />
+              " 
+              [ngClass]="
+              isValid(formMercancias, 'descripcionFraccion') ? 'required' : ''
+            "/>
           </div>
           <div class="row">
             <div class="col-md-6">
@@ -394,7 +403,10 @@
                       'cantidadUMT',
                       'setCantidadUMT'
                     )
-                  " />
+                  "
+                    [ngClass]="
+              isValid(formMercancias, 'cantidadUMT') ? 'required' : ''
+            " />
                 <div *ngIf="
                     formMercancias.get('cantidadUMT')?.invalid &&
                     formMercancias.get('cantidadUMT')?.touched
@@ -431,7 +443,10 @@
                       'cantidadUMC',
                       'setCantidadUMC'
                     )
-                  " />
+                  "
+                  [ngClass]="
+              isValid(formMercancias, 'cantidadUMC') ? 'required' : ''
+            "  />
                 <div *ngIf="
                     formMercancias.get('cantidadUMC')?.invalid &&
                     formMercancias.get('cantidadUMC')?.touched
@@ -468,7 +483,10 @@
                   'denominacionEspecifica',
                   'setDenominacionEspecifica'
                 )
-              " />
+              "
+               [ngClass]="
+              isValid(formMercancias, 'porcentajeConcentracion') ? 'required' : ''
+            "  />
             <div *ngIf="
                 formMercancias.get('porcentajeConcentracion')?.invalid &&
                 formMercancias.get('porcentajeConcentracion')?.touched
@@ -489,7 +507,10 @@
                   'numeroRegistro',
                   'setNumeroRegistro'
                 )
-              " />
+              "
+              [ngClass]="
+              isValid(formMercancias, 'numeroRegistro') ? 'required' : ''
+            " />
             <div *ngIf="
                 formMercancias.get('numeroRegistro')?.invalid &&
                 formMercancias.get('numeroRegistro')?.touched
