@@ -697,8 +697,9 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
         '',
         [
           Validators.required,
-          Validators.pattern(REGEX_SOLO_DIGITOS)],
-        Validators.minLength(8),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+          Validators.minLength(8)],
+       
       ],
 
       descripcionFraccion: [{ value: '', disabled: true }],
@@ -1059,6 +1060,10 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
     this.servicioDeFormularioService.setFormValue('domicilioForm', { [campo]: VALOR });
   }
 
+  agregarMercanciaModal(): void {
+    this.formMercancias.reset();
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    * 
@@ -1081,7 +1086,17 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       umc: RAW.UMC,
       unidadMedidaTarifa: RAW.UMT,
     };
+    const index = this.listaMercancias.findIndex(
+      item => item.fraccionArancelaria === NUEVA_MERCANCIA.fraccionArancelaria
+    );
+
+    if (index !== -1) {
+      // Update existing row
+      this.listaMercancias[index] = NUEVA_MERCANCIA;
+    } else {
+      // Add new row
       this.listaMercancias.push(NUEVA_MERCANCIA);
+    }
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
        const MODAL_ELEMENT = document.getElementById('modalAddAgentMercancias');
@@ -1202,23 +1217,31 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
 
   /**
    * @method modificarMercancia
+   * 
    * @description
    * Método que modifica una mercancía de la lista de mercancías seleccionadas.
    */
   public modificarMercancia(): void {
-    if(this.seleccionarlistaMercancias.length !== 0) {
-      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
-      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
-      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
-      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
-      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
-      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
-      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
-      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
-      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
-      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
-      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
-      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
+    if (this.seleccionarlistaMercancias.length !== 0) {
+      const selected = this.seleccionarlistaMercancias[0];
+      this.formMercancias.patchValue({
+        nombreComercial: selected.nombreComercial,
+        nombreComun: selected.nombreComun,
+        nombreCientifico: selected.nombreCientifico,
+        usoEspecifico: selected.usoEspecifico,
+        fraccionArancelaria: selected.fraccionArancelaria,
+        descripcionFraccion: selected.descripcionFraccion,
+        cantidadUMT: selected.cantidadUmt || selected.cantidadUmt ,
+        UMT:  selected.unidadMedidaTarifa,
+        cantidadUMC: selected.cantidadUmc || selected.cantidadUmc,
+        UMC: selected.umc || selected.umc,
+        porcentajeConcentracion: selected.porcentajeConcentracion,
+        clasificacionToxicologica: selected.clasificacionToxicologica,
+        objetoImportacion: selected.objetoImportacion,
+        // If you have numeroRegistro in your form, add:
+        ...(this.formMercancias.contains('numeroRegistro') && { numeroRegistro: "1" })
+       
+      });
     }
   }
   ngAfterViewInit(): void {

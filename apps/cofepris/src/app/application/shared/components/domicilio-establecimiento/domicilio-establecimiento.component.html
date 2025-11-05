@@ -144,8 +144,9 @@
       [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-         <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+        @if(nicoTablaDatos.length > 0) {
          <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        }
          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
             [disabled]="esFormularioSoloLectura">
          Agregar
@@ -225,7 +226,7 @@
          [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
          }
          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
-            [disabled]="esFormularioSoloLectura">Agregar</button>
+            [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
       </div>
    </div>
    <div class="row" *ngIf="isGarantiasOfrecidasVisible">
