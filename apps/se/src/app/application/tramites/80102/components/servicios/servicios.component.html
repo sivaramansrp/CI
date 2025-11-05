@@ -153,7 +153,6 @@
     <form [formGroup]="formularioEmpresaExtranjera" class="row mb-4">
       @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
       'text') {
-
       <div [ngClass]="item.class">
         <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
         <input

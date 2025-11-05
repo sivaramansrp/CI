@@ -46,6 +46,12 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
      */
     private seccionState!: Tramite110209State;
 
+  /**  
+  * Indica si el formulario ha sido inicializado correctamente.  
+  * Se utiliza para controlar la ejecución de procesos dependientes de la carga inicial.  
+  */
+    private formularioInicializado = false;
+
   /**
    * Constructor para inicializar el formulario con los campos requeridos.
    * 
@@ -121,6 +127,10 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    * Crea el formulario del componente.
    */
   crearFormulario(): void {
+    if (this.formularioInicializado) {
+      return;
+    }
+
     this.obtenerEstadoSolicitud();
     this.domicilioDelDestinatarioForm = this.fb.group({
       calle: [this.seccionState?.calle, [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(100)]],
@@ -130,6 +140,7 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
       fax: [this.seccionState?.fax,[Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
       telefono: [this.seccionState?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
     });
+     this.formularioInicializado = true;
   }
 
  
@@ -137,22 +148,11 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    * Crea el formulario del componente.
    */
-  ngOnInit(): void {
-    this.tramite110209Query.selectTramite110209$.pipe(
-    takeUntil(this.destroyed$),
-  ).subscribe(storeState => {
-    const ESTA_VACIO = !storeState?.nombre && !storeState?.primerApellido && !storeState?.numeroDeRegistroFiscal;
-    if (ESTA_VACIO) {
-      this.service.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe(datos => {
-        this.tramite110209Store.setTramite110209(datos);
-        this.inicializarEstadoFormulario();
-      });
-    } else {
-      this.inicializarEstadoFormulario();
-    }
-  });
-  }
-
+ngOnInit(): void {
+    this.tramite110209Query.selectTramite110209$
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => this.inicializarEstadoFormulario());
+}
 
  
 

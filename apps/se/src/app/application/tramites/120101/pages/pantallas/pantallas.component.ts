@@ -334,6 +334,22 @@ idMecanismo:number=0;
     return this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ?? false;
   }
 
+ 
+
+  /**
+   * Mensaje de error asociado a la fracción uno.
+   * Puede ser indefinido si no existe un error actual para esta fracción.
+   */
+  fraccionErrorUno?:string;
+
+  /**
+   * Indica si ha ocurrido un error relacionado con la fracción.
+   * 
+   * Cuando es `true`, significa que se ha detectado un error en la fracción.
+   * Cuando es `false` o `undefined`, no hay error presente.
+   */
+  fraccionError?:boolean;
+
   /**
    * @method pestanaCambiado
    * @description
@@ -497,6 +513,20 @@ idMecanismo:number=0;
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }
+  }
+
+
+  
+  /**
+   * Maneja el evento de error relacionado con la fracción.
+   * 
+   * @param event Objeto que contiene información sobre el error de fracción.
+   *  - `fraccionErrorUno` (opcional): Mensaje de error específico.
+   *  - `fraccionError` (opcional): Indica si existe un error en la fracción.
+   */
+  fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void { 
+    this.fraccionErrorUno = event.fraccionErrorUno;
+    this.fraccionError = event.fraccionError;
   }
 
   /**

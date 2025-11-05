@@ -401,6 +401,15 @@ export const REGEX_POSTAL = /^\d{5}$/;
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
 
+export const REGEX_TEXTO_CON_SIMBOLOS = /^[a-zA-Z0-9\s\-.,()&]*$/;
+
+export const REGEX_TEXTO_ALFANUMERICO_EXTENDIDO = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.,()\-]+$/;
+
+
+
+
+
+
 /**
  * Expresión regular para reemplazar caracteres no alfanuméricos ni espacios.
  *

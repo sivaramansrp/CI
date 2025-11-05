@@ -1012,7 +1012,7 @@ export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string
  * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
  * Devuelve un string con la ruta completa del recurso en el backend.
  */
-export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
 
 /**
  * Genera la URL del endpoint para obtener la lista de países asociados a un tratado específico.
@@ -1118,3 +1118,13 @@ export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catal
  */
 export const CATALOGO_USOS_ESPECIFICO_MERCANCIA = (TRAMITE: string, PROCEDIMIENTO: string): string =>
   `sat-t${TRAMITE}/catalogo/tramite/usos-especifico-mercancia/${PROCEDIMIENTO}`;
+
+/*
+  * API para obtener la descripción de una fracción arancelaria
+ */
+export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: string): string => `sat-t${TRAMITE}/solicitud/fraccion-descripcion?clave=${CLAVE}&idTipoTramite=${TRAMITE}`;
+
+/*
+  * API para obtener la unidad de medida por fracción arancelaria
+ */
+export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;

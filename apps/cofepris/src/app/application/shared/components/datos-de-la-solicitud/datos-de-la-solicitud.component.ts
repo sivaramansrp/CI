@@ -23,7 +23,8 @@ import {
   REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
-  ENABLE_FIELDS
+  ENABLE_FIELDS,
+  PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -1129,10 +1130,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
-        
-        
         CONTROL?.enable();
-        
         }
        
   
@@ -1887,10 +1885,20 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
    */
   eliminarPedimento(borrar: boolean): void {
+    const CAMPOS_REPRESENTANTE = [
+      'representanteNombre',
+      'apellidoPaterno',
+      'apellidoMaterno'
+    ];
     if (borrar) {
       this.habilitarCamposFormulario(); // Use the new method instead of alternarControlesDeFormulario
       this.mostrarNotificacion = false; // Hide the notification
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+        if (PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE.includes(this.idProcedimiento)) {
+        CAMPOS_REPRESENTANTE.forEach((campo) => {
+          this.datosSolicitudForm.get(campo)?.disable();
+        });
+      }
     }
   }
 

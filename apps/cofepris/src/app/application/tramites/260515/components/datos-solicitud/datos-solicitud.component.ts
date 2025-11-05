@@ -26,6 +26,8 @@ export interface ConfiguracionVisibilidad {
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+
+  idProcedimiento: number = 260515;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
