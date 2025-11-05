@@ -361,18 +361,7 @@ export class DomicilioComponent
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-      estadoFisico: [
-        this.solicitudState?.estadoFisico,
-        [this.estadoValidte ? Validators.required : null],
-      ],
-      estadoFisicoOtro: [
-        this.solicitudState?.estadoFisicoOtro,
-        [Validators.maxLength(100)],
-      ],
-      objetoImportacionOtro: [
-        this.solicitudState?.objetoImportacionOtro,
-        [Validators.maxLength(100)],
-      ],
+   
     });
 
     /**
@@ -529,7 +518,7 @@ export class DomicilioComponent
   /**
    * Tabla de selección de checkbox.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = DATOS_MERCANCIAS;
 
   /**
    * Datos de la tabla de selección de checkbox.
@@ -727,6 +716,8 @@ export class DomicilioComponent
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
+ 
+  
     this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -798,6 +789,18 @@ export class DomicilioComponent
       ],
       clasificacionToxicologica: ["", Validators.required],
       objetoImportacion: ["", Validators.required],
+         estadoFisico: [
+       "",
+    this.estadoValidte ? [Validators.required] : [],
+      ],
+      estadoFisicoOtro: [
+     "",
+        [Validators.maxLength(100)],
+      ],
+      objetoImportacionOtro: [
+       "",
+        [Validators.maxLength(100)],
+      ],
     });
 
     /**
@@ -1468,10 +1471,17 @@ export class DomicilioComponent
     }
   }
   ngAfterViewInit(): void {
-    this.mercanciasTabla =
-      this.idProcedimiento === 260512 || this.idProcedimiento === 260513
-        ? DATOS_MERCANCIAS
-        : MERCANCIAS_DATA;
+      this.formMercancias.valueChanges.subscribe(value => {
+      if(value.estadoFisico === '5' && this.estadoValidte ){
+        this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
+      }
+      if(value.objetoImportacion === '5' && this.estadoValidte){
+        this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
+      }
+          // Perform any actions based on the new value here
+        });
     if (this.identificacion) {
       this.formMercancias
         .get("nombreComercial")
