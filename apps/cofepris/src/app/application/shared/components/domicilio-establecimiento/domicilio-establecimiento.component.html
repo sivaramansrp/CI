@@ -405,7 +405,7 @@
                 (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
                 [isDisabled]="esFormularioSoloLectura"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
             </div>
-              <div class="form-group" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value.toLowerCase() === 'otro'">
+              <div class="form-group" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">
             <label for="estadoFisicoOtro">
              Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('estadoFisicoOtro')?.invalid && formMercancias.get('estadoFisicoOtro')?.touched}">*</span>:
             </label>
@@ -717,7 +717,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
+                <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="objetoImportacion"
                 [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('objetoImportacion')?.markAsTouched();"
                 [isDisabled]="esFormularioSoloLectura"
@@ -725,6 +725,35 @@
                 ></app-catalogo-select>
               </div>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+     <div class="form-group" *ngIf="estadoValidte && formMercancias.get('objetoImportacion')?.value === '5'">
+            <label for="objetoImportacionOtro">
+             Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('objetoImportacionOtro')?.invalid && formMercancias.get('objetoImportacionOtro')?.touched}">*</span>:
+            </label>
+          
+            <input type="text" id="objetoImportacionOtro"  formControlName="objetoImportacionOtro" class="form-control"
+            (change)="
+            setValoresStore(
+            formMercancias,
+            'objetoImportacionOtro',
+            'setEstadoFisicoOtro'
+            );
+            formMercancias.get('objetoImportacionOtro')?.markAsTouched();
+            " />
+            <div *ngIf="
+              formMercancias.get('objetoImportacionOtro')?.invalid &&
+              formMercancias.get('objetoImportacionOtro')?.touched
+              " class="mensaje-error">
+              <small *ngIf="formMercancias.get('objetoImportacionOtro')?.errors?.['required']">
+              Este campo es obligatorio
+              </small>
+            </div>
+          </div>
+              </div>
+              </div>
           </div>
         </form>
       </div>

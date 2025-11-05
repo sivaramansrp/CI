@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns DatosDomicilioLegal
  */
 export interface DatosDomicilioLegalState {
+  objetoImportacionOtro:string;
   estadoFisicoOtro:string;
   /**
    * claveDeReferencia
@@ -218,6 +219,7 @@ export interface DatosDomicilioLegalState {
 
 export function createInitialState(): DatosDomicilioLegalState {
   return {
+    objetoImportacionOtro: '',
     estadoFisicoOtro: '',
     /**
      * claveDeReferencia

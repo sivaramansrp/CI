@@ -331,7 +331,7 @@ export class DomicilioComponent implements OnInit, OnDestroy,AfterViewInit,OnCha
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
       estadoFisico: [this.solicitudState?.estadoFisico],
       estadoFisicoOtro: [this.solicitudState?.estadoFisicoOtro, [Validators.maxLength(100)]],
-      
+      objetoImportacionOtro: [this.solicitudState?.objetoImportacionOtro, [Validators.maxLength(100)]],
 
     });
 
