@@ -226,7 +226,7 @@ export class Tramite260218Store extends Store<Tramite260218State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [...newFabricantes],
     }));
   }
 
@@ -243,7 +243,6 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -259,7 +258,7 @@ export class Tramite260218Store extends Store<Tramite260218State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -273,7 +272,7 @@ export class Tramite260218Store extends Store<Tramite260218State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 
