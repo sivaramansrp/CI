@@ -1271,6 +1271,7 @@ export class DomicilioComponent
   }
 
   agregarMercanciaModal(): void {
+    this.seleccionarlistaMercancias = [];
     this.formMercancias.reset();
     this.openModal();
   }
