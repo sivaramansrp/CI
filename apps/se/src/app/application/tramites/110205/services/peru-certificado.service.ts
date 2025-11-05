@@ -1,7 +1,7 @@
 import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110205 } from '../servers/api-route'; 
 import { Catalogo, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { HistoricoColumnas, MercanciaTabla, MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MercanciasHistorico, ProductorExportador } from '../models/peru-certificado.module';
 import { Observable, map } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../estados/tramite110205.store';
 import { catchError, throwError } from 'rxjs';
@@ -221,5 +221,32 @@ export class PeruCertificadoService {
 
   buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
     return this.httpService.post<{ [key: string]: unknown }>(PROC_110205.BUSCAR, { body: body });
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
+    return data.map(item => ({
+      "nombreCompleto": item.nombreProductor,
+      "rfc": item.numeroRegistroFiscal,
+      "direccionCompleta": item.direccion,
+      "correoElectronico": item.correoElectronico,
+      "telefono": item.telefono,
+      "fax": item.fax
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
+    return data.map(item => ({
+      "fraccionArancelaria": item.fraccionArancelaria,
+      "cantidadComercial": item.cantidad,
+      "descUnidadMedidaComercial": item.unidadMedida,
+      "valorTransaccional": item.valorMercancia,
+      "descFactura": item.fetchFactura,
+      "fechaFactura": item.fetchFactura,
+      "numeroFactura": item.numeroFactura,
+      "complementoDescripcion": item.complementoDescripcion,
+      "rfcProductor": item.rfcProductor1
+    }));
   }
 }
