@@ -1214,12 +1214,7 @@ guardarFabricante(): void {
     this.agregarFabricanteForm.get('tipoPersona')?.enable();
   } else {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
-    // this.agregarFabricanteForm.get('tipoPersona')?.reset();
-    // const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
-    // const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
-    // this.disableLabel=[];
-    //  if(VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
-    // this.elementosDeshabilitados=[];
+   
   }
 
   if (VALOR_FORMULARIO.nacionalidad === 'Extranjero') {
