@@ -4,10 +4,10 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
 import { Tramite110223Store, TramiteState } from "../../estados/Tramite110223.store";
 import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
+import { CARGA_MERCANCIA_EXPORT } from "../../../../shared/constantes/modificacion.enum";
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
-import { HttpErrorResponse } from "@angular/common/http";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
 import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
@@ -16,7 +16,6 @@ import { Modal } from "bootstrap";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
-import { CARGA_MERCANCIA_EXPORT } from "../../../../shared/constantes/modificacion.enum";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
@@ -157,6 +156,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
+
+  /**
+   * @descripcion
+   * Valores actuales del formulario de certificado.
+   */
+  formCertificadoValues!: { [key: string]: unknown };
 
     /**
    * Datos de la bitácora obtenidos desde el servicio.

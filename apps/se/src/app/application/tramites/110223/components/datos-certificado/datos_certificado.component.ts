@@ -1,10 +1,9 @@
 import { Catalogo, ConsultaioQuery } from "@libs/shared/data-access-user/src";
-import { CommonModule } from "@angular/common";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Observable, Subject,map,takeUntil } from "rxjs";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
+import { CommonModule } from "@angular/common";
 import { DatosCertificadoDeComponent } from "../../../../shared/components/datos-certificado-de/datos-certificado-de.component";
-import { FormBuilder } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";

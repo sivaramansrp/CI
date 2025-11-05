@@ -4,14 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { PASOS } from '../../enums/constantes-alertas.enum';
+import { HttpClient } from '@angular/common/http';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PASOS } from '../../enums/constantes-alertas.enum';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110223Query } from '../../query/tramite110223.query';
 
@@ -203,79 +202,79 @@ export class SolicitudPageComponent {
         }
     }
 
-    return new Promise((resolve, reject) => {
-        this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
-          next: (response) => {
-            if (esValidObject(response) && esValidObject(response['datos'])) {
-              const DATOS = response['datos'] as { id_solicitud?: number };
-              if (getValidDatos(DATOS.id_solicitud)) {
-                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-              } else {
-                this.store.setIdSolicitud(0);
-              }
-            }
-            resolve({
-              id: response['id'] ?? 0,
-              descripcion: response['descripcion'] ?? '',
-              codigo: response['codigo'] ?? '',
-              data: response['data'] ?? response['datos'] ?? null,
-              ...response
-            } as JSONResponse);
-          },
-          error: (error) => {
-            reject(error);
-          }
-        });
-      });
-
-    //  return new Promise((resolve, reject) => {      
-    //   const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
-             
-    //   API_CALL.subscribe({
-    //     next: (response) => {
-         
-    //       let idSolicitud: number = 0;
-    //       let responseProcessed = false;
-
-    //       if (esValidObject(response) && esValidObject(response['datos'])) {
-    //         const DATOS = response['datos'] as { idSolicitud?: number };
-    //         if (getValidDatos(DATOS.idSolicitud)) {
-    //           idSolicitud = DATOS.idSolicitud ?? 0;
-    //           responseProcessed = true;
+    // return new Promise((resolve, reject) => {
+    //     this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
+    //       next: (response) => {
+    //         if (esValidObject(response) && esValidObject(response['datos'])) {
+    //           const DATOS = response['datos'] as { id_solicitud?: number };
+    //           if (getValidDatos(DATOS.id_solicitud)) {
+    //             this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+    //           } else {
+    //             this.store.setIdSolicitud(0);
+    //           }
     //         }
-    //       } 
-    //       else if (esValidObject(response) && esValidObject(response['data'])) {
-    //         const DATA = response['data'] as { idSolicitud?: number };
-    //         if (getValidDatos(DATA.idSolicitud)) {
-    //           idSolicitud = DATA.idSolicitud ?? 0;
-    //           responseProcessed = true;
-    //         }
+    //         resolve({
+    //           id: response['id'] ?? 0,
+    //           descripcion: response['descripcion'] ?? '',
+    //           codigo: response['codigo'] ?? '',
+    //           data: response['data'] ?? response['datos'] ?? null,
+    //           ...response
+    //         } as JSONResponse);
+    //       },
+    //       error: (error) => {
+    //         reject(error);
     //       }
-    //       else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
-    //         idSolicitud = response['idSolicitud'] as number;
-    //         responseProcessed = true;
-    //       }
-    //       else if (esValidObject(response) && getValidDatos(response['id'])) {
-    //         idSolicitud = response['id'] as number;
-    //         responseProcessed = true;
-    //       }
-
-    //       if (responseProcessed && idSolicitud > 0) {
-    //         this.store.setIdSolicitud(idSolicitud);
-    //         this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    //       } else if (esValidObject(response)) {
-    //         this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    //       }
-    //       resolve({
-    //         id: response['id'] ?? 0,
-    //         descripcion: response['descripcion'] ?? '',
-    //         codigo: response['codigo'] ?? '',
-    //         data: response['data'] ?? response['datos'] ?? null,
-    //         ...response,          
-    //       } as JSONResponse);
-    //     }
+    //     });
     //   });
-    // });
+
+     return new Promise((resolve, reject) => {      
+      const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
+             
+      API_CALL.subscribe({
+        next: (response) => {
+         
+          let idSolicitud: number = 0;
+          let responseProcessed = false;
+
+          if (esValidObject(response) && esValidObject(response['datos'])) {
+            const DATOS = response['datos'] as { idSolicitud?: number };
+            if (getValidDatos(DATOS.idSolicitud)) {
+              idSolicitud = DATOS.idSolicitud ?? 0;
+              responseProcessed = true;
+            }
+          } 
+          else if (esValidObject(response) && esValidObject(response['data'])) {
+            const DATA = response['data'] as { idSolicitud?: number };
+            if (getValidDatos(DATA.idSolicitud)) {
+              idSolicitud = DATA.idSolicitud ?? 0;
+              responseProcessed = true;
+            }
+          }
+          else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
+            idSolicitud = response['idSolicitud'] as number;
+            responseProcessed = true;
+          }
+          else if (esValidObject(response) && getValidDatos(response['id'])) {
+            idSolicitud = response['id'] as number;
+            responseProcessed = true;
+          }
+
+          if (responseProcessed && idSolicitud > 0) {
+            this.store.setIdSolicitud(idSolicitud);
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+          } else if (esValidObject(response)) {
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+          }
+          resolve({
+            id: response['id'] ?? 0,
+            descripcion: response['descripcion'] ?? '',
+            codigo: response['codigo'] ?? '',
+            data: response['data'] ?? response['datos'] ?? null,
+            ...response,          
+          } as JSONResponse);
+        }
+      });
+    });
   }
 
   /**

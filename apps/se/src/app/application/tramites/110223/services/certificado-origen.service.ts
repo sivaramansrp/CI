@@ -1,15 +1,15 @@
-import { Catalogo, CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciasHistorico, MercanciasHistoricos, MercanciaTabla, SeleccionadasTabla } from '../models/certificado-origen.model';
-import { formatearFechaYyyyMmDd, HttpCoreService, JSONResponse, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable,catchError,map, throwError } from 'rxjs';
-import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/api-route';
-import { ProductorExportador } from '../models/certificado-origen.model';
+import { Catalogo, CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, MercanciasHistorico, MercanciasHistoricos,  SeleccionadasTabla } from '../models/certificado-origen.model';
+import { formatearFechaYyyyMmDd, HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
-import { Tramite110223Query } from '../query/tramite110223.query';
+import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { ProductorExportador } from '../models/certificado-origen.model';
+import { Tramite110223Query } from '../query/tramite110223.query';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -86,13 +86,14 @@ export class CertificadosOrigenService {
   }
 
   /**
-   * @method obtenerProductorPorExportador
+   * @method obtenerProductorNuevo
    * @description
-   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
-   * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
+   * Agrega un nuevo productor/exportador al sistema.
+   * @param body - Objeto que contiene el RFC del solicitante
+   * @returns {Observable<unknown>} Un observable que emite la respuesta del servidor
    */
-  obtenerProductorNuevo(body: { rfc_solicitante: string }): Observable<any> {
-    return this.httpService.post<any>(PROC_110223.AGREGAR_PRODUCTOR, {
+  obtenerProductorNuevo(body: { rfc_solicitante: string }): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110223.AGREGAR_PRODUCTOR, {
       body: body,
     });
   }
