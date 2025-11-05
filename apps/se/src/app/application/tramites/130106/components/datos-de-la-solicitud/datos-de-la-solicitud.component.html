@@ -10,12 +10,12 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
-                    [label]="'Régimen al que se destinará la mercancía'" [required]="true"
+                <app-catalogo-select [catalogo]="regimenesCatalog" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
+                    [label]="'Régimen al que se destinará la mercancía'" [required]="true" (selectionChange)="regimenSeleccion($event)"
                     name="Régimen al que se destinará la mercancía" (change)="onRegimenChange()"></app-catalogo-select>
                 <br>
-                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion" [isDisabled]="esFormularioSoloLectura"
-                    [label]="'Clasificación del régimen'" [required]="true"
+                <app-catalogo-select [catalogo]="clasificacionRegimenesCatalog" formControlName="clasificacion" [isDisabled]="esFormularioSoloLectura"
+                    [label]="'Clasificación del régimen'" [required]="true" (selectionChange)="clasificacionRegimeneSeleccion($event)"
                     name="Clasificación del régimen" (change)="onClasificacionChange()"></app-catalogo-select>
             </div>
         </div>
