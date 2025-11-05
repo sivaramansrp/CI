@@ -239,7 +239,7 @@ export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: Empresas): string | undefined => ele.municipioDelegacion,
+    clave: (ele: Empresas): string | undefined => ele.delegacionMunicipio,
     orden: 8,
   },
   {
@@ -309,12 +309,12 @@ export const CONFIGURACION_PLANTAS_MANUFACTURERAS = [
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: Plantas): string | undefined => ele.municipioDelegacion,
+    clave: (ele: Plantas): string | undefined => ele.delegacionMunicipio,
     orden: 6,
   },
   {
     encabezado: 'Entidad Federativa',
-    clave: (ele: Plantas): string | undefined => ele.estado,
+    clave: (ele: Plantas): string | undefined => ele.entidadFederativa,
     orden: 7,
   },
   {

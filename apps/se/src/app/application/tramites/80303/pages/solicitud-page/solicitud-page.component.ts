@@ -9,6 +9,8 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
+
 /**
  * @decorador @Component
  * @description Decorador que define los metadatos del componente Angular.
@@ -89,7 +91,9 @@ export class SolicitudPageComponent {
   public seleccionaTab(i: number): void {
     this.indice = i;
   }
-
+ constructor(
+    private modificacionService: ModificacionProgramaImmexBajaSubmanufactureraService
+  ) {}
   /**
    * @method getValorIndice
    * @description Controla la navegación del wizard en función
@@ -134,4 +138,6 @@ export class SolicitudPageComponent {
         return TITULOMENSAJE;
     }
   }
+  
+
 }

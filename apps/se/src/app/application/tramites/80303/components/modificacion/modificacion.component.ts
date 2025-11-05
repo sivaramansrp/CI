@@ -78,10 +78,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerModificacionFormDatos();
 
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'submanufacturerasTablaDatos',
-      '/80303/subManufacturerasTablaDatos.json'
-    );
+    this.fetchConfiguracionEmpresasSubmanufacturerasTabla();
 
     this.tramite80303Querry.selectTramiteState$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -126,7 +123,34 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         : 'Baja';
     this.cd.detectChanges();
   }
+/**
+ * Fetches data for `configuracionEmpresasSubmanufacturerasTabla` using the API.
+ */
+fetchConfiguracionEmpresasSubmanufacturerasTabla(): void {
+  const body = {
+    rfc: "AAL0409235E6",
+    tipoPrograma: "TICPSE.IMMEX",
+    folioPrograma: "5",
+    discriminator: "80303"
+  };
 
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarEmpresas(body)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.datosModificacion = response.datos; // Assign the `datos` array to the table data
+          console.log('Empresas Submanufactureras Tabla Datos:', this.datosModificacion);
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Empresas Submanufactureras Tabla Datos:', error);
+      }
+    );
+}
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.

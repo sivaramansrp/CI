@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite80303Store } from '../estados/tramite80303Store.store';
 
+import { PROC_80303 } from '../servers/api-route';
+
 /**
  * Decorador que marca una clase como un servicio que puede ser inyectado en otros componentes o servicios.
  * 
@@ -21,6 +23,7 @@ import { Tramite80303Store } from '../estados/tramite80303Store.store';
   providedIn: 'root',
 })
 export class ModificacionProgramaImmexBajaSubmanufactureraService {
+ 
   /**
    * Constructor de la clase ModificacionProgramaImmexBajaSubmanufactureraService.
    *
@@ -87,4 +90,48 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
       'assets/json/80303/modificacion-datos.json'
     );
   }
+ consultarMercanciasImportacion(idSolicitud: string): Observable<any> {
+    const url = PROC_80303.CONSULTA_MERCANCIAS_IMPORTACION(idSolicitud);
+    return this.httpServicios.get<any>(url);
+     }
+  consultarProductosExportacion(idSolicitud: string): Observable<any> {
+    const url = PROC_80303.CONSULTA_PRODUCTOS_EXPORTACION(idSolicitud);
+    return this.httpServicios.get<any>(url);
+  }
+  consultarFraccionesSensibles(idSolicitud: string): Observable<any> {
+    const url = PROC_80303.CONSULTA_FRACCIONES_SENSIBLES(idSolicitud);
+    return this.httpServicios.get<any>(url);
+  }
+  consultarBitacoraImmex(idPrograma: string): Observable<any> {
+  const url = PROC_80303.CONSULTAR_BITACORA_IMMEX(idPrograma);
+  return this.httpServicios.get<any>(url);
+}
+  consultarPlantasSubmanufactureras(idSolicitud: string): Observable<any> {
+    const url = PROC_80303.CONSULTAR_PLANTAS_SUBMANUFACTURERAS(idSolicitud);
+    return this.httpServicios.get<any>(url);
+  }
+   buscarEmpresaSubmanufacturera(idSolicitud: string): Observable<any> {
+    const url = PROC_80303.BUSCAR_EMPRESA_SUBMANUFACTURERA(idSolicitud);
+    return this.httpServicios.get<any>(url);
+  }
+   consultarServiciosImmex(body: any): Observable<any> {
+    const url = PROC_80303.CONSULTAR_SERVICIOS;
+    return this.httpServicios.post<any>(url, body);
+  }
+   buscarSocioAccionista(body: any): Observable<any> {
+  const url = PROC_80303.BUSCAR_SOCIO_ACCIONISTA;
+  return this.httpServicios.post<any>(url, body);
+}
+ buscarNotariosConsulta(body: any): Observable<any> {
+    const url = PROC_80303.BUSCAR_NOTARIOS_CONSULTA;
+    return this.httpServicios.post<any>(url, body);
+  }
+  consultarPlantas(body: any): Observable<any> {
+    const url = PROC_80303.CONSULTA_PLANTAS;
+    return this.httpServicios.post<any>(url, body);
+  }
+  buscarEmpresas(body: any): Observable<any> {
+  const url = PROC_80303.BUSCAR_EMPRESAS;
+  return this.httpServicios.post<any>(url, body);
+}
 }
