@@ -11,7 +11,6 @@ import { CommonModule } from "@angular/common";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
 import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
-// import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.component";
 import { Modal } from "bootstrap";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
@@ -69,7 +68,6 @@ export const FECHA_FINAL = {
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    // MercanciasModalComponent,
     CertificadoDeOrigenComponent,
     CargaPorArchivoComponent,
     MercanciaComponent,
@@ -235,19 +233,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
   
   /**
-   * Constructor del componente CertificadoOrigen.
-   * @descripcion Inicializa el formulario y configura las dependencias necesarias.
-   * @param fb FormBuilder para crear el formulario reactivo
-   * @param store Almacén para gestionar el estado de datos
-   * @param tramiteQuery Consulta para obtener valores del formulario
-   * @param certificadoService Servicio que gestiona los certificados
-   * @param toastr Servicio para mostrar notificaciones
-   * @param seccionQuery Consulta para el estado de la sección
-   * @param seccionStore Almacén para actualizar la sección
-   */
-  private actualizandoFormulario = false;
-
-  /**
    * @descripcion
    * Indica si el formulario se encuentra en modo solo lectura.
    * Cuando es verdadero, los controles del formulario estarán deshabilitados.
@@ -343,25 +328,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     public consultaQuery: ConsultaioQuery,
     private catalogoServices: CatalogoServices
   ) {
-
-    /**
-     * Suscripción para cargar los valores del formulario desde el store.
-     */
-    this.tramiteQuery.formCertificado$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe(estado => {
-      if (!this.actualizandoFormulario && estado) {
-        this.actualizandoFormulario = true;        
-        // this.formCertificado=estado;
-        this.actualizandoFormulario = false;
-      }
-    });
   
  this.tramiteQuery.select(state => state.selectedMercancia)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((selected) => {
       this.datosSeleccionados = selected as Mercancia;
       });
+
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
      */
@@ -399,8 +372,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * - Inicializa la tabla de datos
    */
   ngOnInit(): void {
-    this.cargarEstados();
-    this.paisOpcion();
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -412,36 +383,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       .subscribe();
 
   this.datosTablaUno$ = this.tramiteQuery.selectmercanciaTablaUno$;
-  }
-
-  /**
-   * Carga la lista de estados desde el servicio y actualiza el store con los datos.
-   */
-  cargarEstados(): void {
-    this.certificadoService
-      .obtenerListaEstado()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setaltaPlanta(data);
-        }
-      );
-
-  }
-
-  /**
-   * Carga la lista de países desde el servicio y actualiza el array pais.
-   */
-  paisOpcion(): void {
-    this.certificadoService.obtenerMenuDesplegable('pais.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.pais = data as Catalogo[];
-      }
-    });
   }
 
   /**
@@ -564,12 +505,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           this.store.setbuscarMercancia(DATOS_MAPEADOS);
           this.busquedaRealizada = true;
           this.datosTablaUno$ = of(DATOS_MAPEADOS || []);
-          
-          // if (DATOS_MAPEADOS.length > 0) {
-            this.mercanciasDisponibles = true;
-          // } else {
-          //   this.mercanciasDisponibles = false;
-          // }
+          this.mercanciasDisponibles = true;
         }
       });
   }

@@ -152,18 +152,11 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private consultaQuery: ConsultaioQuery
   ) {
-    // this.query.selectFormDatosDelDestinatario$
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((estado) => {
-    //     this.formDatosDelDestinatarioValues = estado;
-    //   });
-
-    // this.query.selectFormDestinatario$
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((estado) => {
-    //     this.formDestinatarioValues = estado;
-    //   });
-
+    this.query.selectFormDestinatario$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.formDestinatarioValues = estado;
+      });
 
     this.consultaQuery.selectConsultaioState$
       .pipe(

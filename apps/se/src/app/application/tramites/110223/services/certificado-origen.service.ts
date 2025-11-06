@@ -189,28 +189,6 @@ export class CertificadosOrigenService {
               return this.http
                 .get<MercanciasHistoricos>('assets/json/110221/mercancias-seleccionadas.json');
             }
-      
-      
-        /**
-         * Obtiene la lista de países bloque desde un archivo JSON local.
-         * @method obtenerPaisBloque
-         * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
-         */
-        obtenerPaisBloque(): Observable<Catalogo> {
-          return this.http
-            .get<{ data: Catalogo }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
-            .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-        }
-         /**
-           * Obtiene la lista de estados desde un archivo JSON local.
-           * @method obtenerListaEstado
-           * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
-           */
-          obtenerListaEstado(): Observable<Catalogo[]> {
-            return this.http
-              .get<{ data: Catalogo[] }>('./assets/json/110223/tratado.json') // Solicita los datos del archivo JSON
-              .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-          }
          
             /**
              * Obtiene el catálogo de unidades de medida comercial (UMC).
@@ -399,34 +377,34 @@ export class CertificadosOrigenService {
       complemento_descripcion: item.complementoDescripcion ?? '',
       fecha_factura: item.fechaFactura ?? '',
     }));
-  }
-
-  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  }  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildDestinatario(data: TramiteState): unknown {
+    const formDestinatario = data.formDestinatario || {};
+
     return {
-      "nombre": data.grupoReceptor.nombre,
-      "primer_apellido": data.grupoReceptor.apellidoPrimer || '',
-      "segundo_apellido": data.grupoReceptor.apellidoSegundo || '',
-      "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
-      "razon_social": data.grupoReceptor.razonSocial || '',
+      "nombre": formDestinatario['nombre'] || '',
+      "primer_apellido": formDestinatario['primerApellido'] || '',
+      "segundo_apellido": formDestinatario['segundoApellido'] || '',
+      "numero_registro_fiscal": formDestinatario['numeroRegistroFiscal'] || '',
+      "razon_social": formDestinatario['razonSocial'] || '',
       "domicilio": {
-          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad || '',
-          "calle": data.grupoDeDirecciones.calle || '',
-          "numero_letra": data.grupoDeDirecciones.numeroLetra || '',
-          "lada": data.grupoDeDirecciones.lada || '',
-          "telefono": data.grupoDeDirecciones.telefono || '',
-          "fax": data.grupoDeDirecciones.fax || '',
-          "correo_electronico": data.grupoDeDirecciones.correoElectronico || '',
-          "pais_destino": data.grupoDeDirecciones.pais || ''
+          "ciudad_poblacion_estado_provincia": formDestinatario['ciudad'] || '',
+          "calle": formDestinatario['calle'] || '',
+          "numero_letra": formDestinatario['numeroLetra'] || '',
+          "telefono": formDestinatario['telefono'] || '',
+          "fax": formDestinatario['fax'] || '',
+          "correo_electronico": formDestinatario['correoElectronico'] || '',
+          "pais_destino": formDestinatario['paisDestino'] || ''
       },
       "generalesRepresentanteLegal": {
-          "lugarRegistro": data.grupoRepresentativo.lugar,
-          "nombre": data.grupoRepresentativo.nombreExportador,
-          "razonSocial": data.grupoRepresentativo.empresa,
-          "puesto": data.grupoRepresentativo.cargo,
-          "telefono": data.grupoRepresentativo.telefono,
-          "correoElectronico": data.grupoRepresentativo.correoElectronico
-        }
+          "lugarRegistro": formDestinatario['lugarRegistro'] || '',
+          "nombre": formDestinatario['nombreRepresentante'] || '',
+          "razonSocial": formDestinatario['razonSocialRepresentante'] || '',
+          "puesto": formDestinatario['puestoRepresentante'] || '',
+          "telefono": formDestinatario['telefonoRepresentante'] || '',
+          "correoElectronico": formDestinatario['correoRepresentante'] || ''
+        },
+      "medio_transporte": formDestinatario['medioTransporte'] || "MEDTR.01"
     }
   }
 

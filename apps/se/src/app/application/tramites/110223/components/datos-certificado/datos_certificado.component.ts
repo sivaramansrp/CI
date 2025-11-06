@@ -207,7 +207,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @implementa OnInit
      */
     ngOnInit(): void {
-      this.idiomOpcion();
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -250,32 +249,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
       const { campo: CAMPO, valor: VALOR } = event;
       this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
-    }
-  
-    /**
-     * @metodo idiomOpcion
-     * @descripcion
-     * Obtiene y carga la lista de idiomas disponibles desde el servicio.
-     * 
-     * @proceso
-     * - Realiza una petición al servicio para obtener el catálogo de idiomas
-     * - Almacena los datos en la property idiomaDatos
-     * - En caso de error, inicializa el arreglo vacío
-     */
-    idiomOpcion(): void {
-      this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('idioma.json')
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe({
-          next: (data) => {
-            this.idiomaDatos = data as Catalogo[];
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.idiomaDatos = [];
-          },
-        });
     }
   
     /**

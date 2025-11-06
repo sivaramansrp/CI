@@ -171,7 +171,6 @@ export class SolicitudPageComponent implements OnDestroy {
     const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
     const CERTIFICADO = this.certificadoDeService.buildCertificado(item);
     const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
-    console.log(item);
     const PAYLOAD = {
       idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
@@ -194,7 +193,6 @@ export class SolicitudPageComponent implements OnDestroy {
           telefono: '123456',
         },
       },
-      // solicitud: {},      
       certificado: CERTIFICADO,
       destinatario: DESTINATARIO,      
       solicitud: {
@@ -205,7 +203,6 @@ export class SolicitudPageComponent implements OnDestroy {
           ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
         },
       datos_del_certificado: {
-        // idioma: item.formDatosCertificado['idiomaDates'] || '',
         observaciones: item.formDatosCertificado['observacionesDates'],
         representacion_federal: {
           entidad_federativa:
@@ -214,11 +211,9 @@ export class SolicitudPageComponent implements OnDestroy {
             item.formDatosCertificado['representacionFederalDates'],
         },
       }
-    };
-
-    return new Promise((resolve, reject) => {
-      console.log
-        this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
+    };    
+      return new Promise((resolve, reject) => {
+      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
           next: (response) => {
             if (esValidObject(response) && esValidObject(response['datos'])) {
               const DATOS = response['datos'] as { id_solicitud?: number };
@@ -228,6 +223,8 @@ export class SolicitudPageComponent implements OnDestroy {
                 this.store.setIdSolicitud(0);
               }
             }
+            
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
             resolve({
               id: response['id'] ?? 0,
               descripcion: response['descripcion'] ?? '',
@@ -242,83 +239,6 @@ export class SolicitudPageComponent implements OnDestroy {
         });
       });
 
-    // return new Promise((resolve) => {
-    //   const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
-             
-    //   API_CALL.subscribe({          
-    //     next: (response) => {
-    //       const RESPONSE_OBJ = response as Record<string, unknown>;
-    //       const { ID_SOLICITUD, RESPONSE_PROCESSED } = this.extraerIdSolicitud(RESPONSE_OBJ);
-    //       this.procesarRespuestaYNavegar(RESPONSE_OBJ, ID_SOLICITUD, RESPONSE_PROCESSED);
-    //       resolve(this.construirRespuestaJSON(RESPONSE_OBJ));
-    //     }
-    //   });
-    // });
-  }
-
-  // /**
-  //  * Extrae el ID de solicitud de la respuesta del servidor.
-  //  * @param response Respuesta del servidor
-  //  * @returns Objeto con el ID de solicitud y si fue procesado correctamente
-  //  */
-  // private extraerIdSolicitud(response: Record<string, unknown>): { ID_SOLICITUD: number; RESPONSE_PROCESSED: boolean } {
-  //   let IDSOLICITUD: number = 0;
-  //   let RESPONSEPROCESSED = false;
-
-  //   if (esValidObject(response) && esValidObject(response['datos'])) {
-  //     const DATOS = response['datos'] as { idSolicitud?: number };
-  //     if (getValidDatos(DATOS.idSolicitud)) {
-  //       IDSOLICITUD = DATOS.idSolicitud ?? 0;
-  //       RESPONSEPROCESSED = true;
-  //     }
-  //   } 
-  //   else if (esValidObject(response) && esValidObject(response['data'])) {
-  //     const DATA = response['data'] as { idSolicitud?: number };
-  //     if (getValidDatos(DATA.idSolicitud)) {
-  //       IDSOLICITUD = DATA.idSolicitud ?? 0;
-  //       RESPONSEPROCESSED = true;
-  //     }
-  //   }
-  //   else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
-  //     IDSOLICITUD = response['idSolicitud'] as number;
-  //     RESPONSEPROCESSED = true;
-  //   }
-  //   else if (esValidObject(response) && getValidDatos(response['id'])) {
-  //     IDSOLICITUD = response['id'] as number;
-  //     RESPONSEPROCESSED = true;
-  //   }
-
-  //   return { ID_SOLICITUD: IDSOLICITUD, RESPONSE_PROCESSED: RESPONSEPROCESSED };
-  // }
-
-  /**
-   * Procesa la respuesta del servidor y navega al siguiente paso si es necesario.
-   * @param response Respuesta del servidor
-   * @param idSolicitud ID de la solicitud extraído
-   * @param responseProcessed Indica si la respuesta fue procesada correctamente
-   */
-  private procesarRespuestaYNavegar(response: Record<string, unknown>, idSolicitud: number, responseProcessed: boolean): void {
-    if (responseProcessed && idSolicitud > 0) {
-      this.store.setIdSolicitud(idSolicitud);
-      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    } else if (esValidObject(response)) {
-      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-    }
-  }
-
-  /**
-   * Construye la respuesta JSON final.
-   * @param response Respuesta del servidor
-   * @returns Respuesta JSON procesada
-   */
-  private construirRespuestaJSON(response: Record<string, unknown>): JSONResponse {
-    return {
-      id: response['id'] ?? 0,
-      descripcion: response['descripcion'] ?? '',
-      codigo: response['codigo'] ?? '',
-      data: response['data'] ?? response['datos'] ?? null,
-      ...response,          
-    } as JSONResponse;
   }
 
   /**
@@ -355,13 +275,13 @@ getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
-      // const SKIP_VALIDATION = true;
-      // SKIP_VALIDATION ||
-      // const ISVALID =  this.validarTodosFormulariosPasoUno();
-      // if (!ISVALID) {
-      //   this.esFormaValido = true;
-      //   return;
-      // }
+      const IS_VALIDATION = true;
+      
+      const ISVALID =  IS_VALIDATION || this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
       this.obtenerDatosDelStore();
     }
     else if (e.valor > 0 && e.valor <= this.pasos.length) {
