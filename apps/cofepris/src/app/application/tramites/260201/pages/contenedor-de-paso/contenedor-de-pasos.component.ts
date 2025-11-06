@@ -99,7 +99,7 @@ export class ContenedorDePasosComponent implements OnInit {
    * @description Referencia al componente del wizard.
    * Utilizado para manejar la navegación entre pasos.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild("wizzard") wizardComponent!: WizardComponent;
 
   /**
     * @property {PasoUnoComponent} pasoUnoComponent
