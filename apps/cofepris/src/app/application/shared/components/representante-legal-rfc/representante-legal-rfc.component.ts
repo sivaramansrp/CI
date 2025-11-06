@@ -19,6 +19,11 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  public mostrarErroresRepresentante = {
+  nombre: false,
+  apellidoPaterno: false,
+};
+
   
     @Input() public idProcedimiento!: number;
   /**
@@ -176,6 +181,15 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   }
 validarClickDeBoton(): boolean {
     let ISVALID = true;
+    const FORMVALUE = this.representante.getRawValue();
+    if(FORMVALUE.nombre === '' || FORMVALUE.nombre === null){
+      this.mostrarErroresRepresentante.nombre = true;
+      ISVALID = false;
+    }
+    if(FORMVALUE.apellidoPaterno === '' || FORMVALUE.apellidoPaterno === null){
+      this.mostrarErroresRepresentante.apellidoPaterno = true;
+      ISVALID = false;
+    }
     if(this.representante.invalid){
       this.representante.markAllAsTouched();
       ISVALID = false;
