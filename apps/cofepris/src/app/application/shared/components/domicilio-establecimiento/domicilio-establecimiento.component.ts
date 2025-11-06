@@ -1,5 +1,4 @@
 import {
-  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
@@ -105,8 +104,23 @@ public mostrarErrores = {
   telefono: false,
 };
   @Input() identificacion: boolean = false;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
+  
+  /**
+ * Bandera que indica si el RFC proporcionado desde el componente padre es válido.
+ * Se utiliza para controlar la lógica de validación en el formulario.
+ */
   @Input() rfcValido: boolean = false;
+
+  /**
+ * Bandera que indica si se debe validar el estado dentro del formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es verdadero.
+ */
   @Input() estadoValidte: boolean = true;
 
    /**
@@ -441,7 +455,10 @@ public mostrarErrores = {
   /**
    * Lista de países disponibles para la selección de origen.
    */
-  public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
+  public seleccionarAduanasEntrada: string[] = [];
+
+  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  public aduanaCatalogo: Catalogo[] = [];
 
   /**
    * Botones para gestionar la lista cruzada de países de origen.
@@ -525,10 +542,21 @@ public mostrarErrores = {
    */
   estado: Catalogo[] = [];
 
-  /**
-   * Lista de paises.
+   /**
+   * Control de formulario para la clave scian.
    */
-  public crosListaDePaises = CROSLISTA_DE_PAISES;
+  public claveScianLista: Catalogo[] = [];
+
+  /**
+   * Control de formulario para la clave scian.
+   */
+  public UMCLista: Catalogo[] = [];
+
+  /** Lista de elementos del catálogo de clasificación toxicológica disponibles en el componente. */
+  public clasificacionToxicologicaLista: Catalogo[] = [];
+
+  /** Lista de elementos del catálogo de objeto de importación disponibles para su selección en el formulario. */
+  public objetoImportacionLista: Catalogo[] = [];
 
   /**
    * Tabla de selección de checkbox.
@@ -602,6 +630,18 @@ public mostrarErrores = {
    * @property {boolean} colapsableTress
    */
   colapsableTress: boolean = false;
+
+  /** Lista del catálogo de países disponible para su uso en el componente o formulario. */
+  public paisesCatalogo: Catalogo[] = [];
+
+  /** Arreglo de nombres de países utilizados para operaciones internas o visualización en el componente. */
+  public paises: string[] = [];
+
+  /**
+   * Lista de paises.
+   */
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -779,6 +819,12 @@ public mostrarErrores = {
     this.mostrarErrores.telefono = false;
       })
     this.obtenerEstadoList();
+    this.obtenerClaveSvian();
+    this.obtenerUMCList(); 
+    this.obtenerAduanas();
+    this.obtenerClasificacionToxicologica();
+    this.obtenerObjetoImportacion();
+    this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
 
@@ -1187,13 +1233,119 @@ public mostrarErrores = {
    * @param event
    */
   obtenerEstadoList(): void {
+    if (this.idProcedimiento) {
     this.service
+      .obtenerEstadoList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estado = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.estado = data;
       });
+    }
   }
+
+  /**
+   * Método para obtener el valor de clave scian.
+   * @param event
+   */
+  obtenerClaveSvian(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getClaveSvianList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.claveScianLista = data.datos ?? [];
+      });
+    }
+  }
+
+  /**
+   * Método para obtener el valor de UMC.
+   * @param event
+   */
+  obtenerUMCList(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getUMCList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.UMCLista = data.datos ?? [];
+      });
+    }
+  }
+
+  /**
+   * Método para obtener el valor de aduana.
+   * @param event
+   */
+  obtenerAduanas(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getAduanasList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.aduanaCatalogo = data.datos ?? [];
+        this.seleccionarAduanasEntrada = this.aduanaCatalogo.map(item => item.descripcion);
+      });
+    } else {
+      this.seleccionarAduanasEntrada = CROSLISTA_DE_PAISES;
+    }
+  }
+
+  /**
+   * Método para obtener el valor de clasificacion toxicologica.
+   * @param event
+   */
+  obtenerClasificacionToxicologica(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getClasificacionToxicologicaList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.clasificacionToxicologicaLista = data.datos ?? [];
+      });
+    }
+    
+  }
+
+  /**
+   * Método para obtener el valor de objeto importacion.
+   * @param event
+   */
+  obtenerObjetoImportacion(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getObjetoImportacionList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.objetoImportacionLista = data.datos ?? [];
+      });
+    }
+  }
+
+  /**
+   * Método para obtener el valor de paises.
+   * @param event
+   */
+  obtenerpaisesLista(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getPaisesList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.paisesCatalogo = data.datos ?? [];
+        this.paises = this.paisesCatalogo.map(item => item.descripcion);
+      });
+    }
+  }
+
+
   /**
    * @method onClaveScianChange
    * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
@@ -1201,9 +1353,12 @@ public mostrarErrores = {
    */
   onClaveScianChange(event: Event): void {
     const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
-    const SELECTED_OPTION = this.estado.find(
-      (item) => item.id === Number(SELECTED_VALUE),
-    );
+    let SELECTED_OPTION;
+    if (this.idProcedimiento) {
+      SELECTED_OPTION = this.claveScianLista?.find((item) => Number(item.clave) === Number(SELECTED_VALUE));
+    } else {
+      SELECTED_OPTION = this.estado?.find((item) => item.id === Number(SELECTED_VALUE));
+    }
 
     if (SELECTED_OPTION) {
       this.formAgente.patchValue({

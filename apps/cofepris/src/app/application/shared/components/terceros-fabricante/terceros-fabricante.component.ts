@@ -72,6 +72,11 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+
+  /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
+   * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
+  @Input() idProcedimiento!: number;
+
   /**
    * Expresión regular para validar el RFC de personas físicas.
    * @description Utiliza una expresión regular para verificar el formato del RFC.
@@ -173,7 +178,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las opciones para el selector de países.
    */
-  paisDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.paisSelectData;
+  paisDropdownData: Catalogo[] = [];
 
   /**
    * Datos para el dropdown de localidades.
@@ -374,6 +379,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.dropdownData = data;
       });
+    
+    this.obtenerPaisList();
 
     /**
      * Inicializa los formularios reactivos para agregar terceros.
@@ -389,6 +396,24 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.tercerosForm.markAllAsTouched();
       }
     })
+  }
+
+  /**
+   * Obtiene la lista de países para el desplegable según el procedimiento actual.
+   * Si existe un id de procedimiento, se realiza una petición al servicio para obtener los datos.
+   * En caso contrario, se asigna una lista de países por defecto.
+   */
+  obtenerPaisList(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getPaisList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.paisDropdownData = data.datos ?? [];
+      });
+    } else {
+      this.paisDropdownData = SELECT_OPTIONS_DATA.paisSelectData;
+    }
   }
 
   /**

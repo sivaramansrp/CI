@@ -255,7 +255,7 @@
          <div class="modal-body">
             <form [formGroup]="formAgente">
                <div class="form-group">
-                  <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
+                  <app-catalogo-select [showClave]="idProcedimiento ? true : false" [catalogo]="idProcedimiento ? claveScianLista : estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
                   [required]="true" name="claveScianModal" (change)="
                   onClaveScianChange($event);
                   setValoresStore(
@@ -546,7 +546,7 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group">
-                        <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
+                        <app-catalogo-select [catalogo]="idProcedimiento ? UMCLista : estado" formControlName="UMC" [label]="'UMC'" [required]="true"
                         name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
                         (change)="setValoresStore(formMercancias, 'UMC', 'setUMC'); formMercancias.get('UMC')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"  [markTouched]="!!(formMercancias.get('UMC')?.invalid && formMercancias.get('UMC')?.touched)"></app-catalogo-select>
@@ -638,7 +638,7 @@
                         @if (colapsable) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
                               [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                            </div>
                         </div>
@@ -657,7 +657,7 @@
                         @if (colapsableDuos) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeDondeLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisTres" [label]="paisDeDondeLabel"
                               [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                            </div>
                         </div>
@@ -715,7 +715,7 @@
                <div class="row">
                   <div class="col-md-4">
                      <div class="form-group">
-                        <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
+                        <app-catalogo-select [catalogo]="idProcedimiento ? clasificacionToxicologicaLista : estado" formControlName="clasificacionToxicologica"
                         [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
                         setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"
@@ -726,7 +726,7 @@
                <div class="row">
                   <div class="col-md-4">
                      <div class="form-group">
-                        <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="objetoImportacion"
+                        <app-catalogo-select [catalogo]="idProcedimiento ? objetoImportacionLista : estadoFisicoCatalogo" formControlName="objetoImportacion"
                         [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
                         setValoresStore(formMercancias, 'objetoImportacion', 'setObjetoImportacionOtro'); formMercancias.get('objetoImportacion')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"
