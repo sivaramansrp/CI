@@ -177,6 +177,10 @@ export class CatalogoSelectComponent
  */
   @Input() bgColorDisabled: boolean = false; 
 
+  /**
+ * Bandera que indica si se debe mostrar el campo de clave en el formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
   @Input() showClave: boolean = false; 
   /**
    * @constructor

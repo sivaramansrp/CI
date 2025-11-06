@@ -416,6 +416,7 @@ export class DomicilioComponent
    */
   public seleccionarAduanasEntrada: string[] = [];
 
+  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**

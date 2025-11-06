@@ -73,6 +73,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
+  /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
+   * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
   @Input() idProcedimiento!: number;
 
   /**
