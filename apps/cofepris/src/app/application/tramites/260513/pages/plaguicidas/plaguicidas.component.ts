@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
@@ -21,6 +21,9 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  
+  esFormaValido: boolean = false;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -58,6 +61,7 @@ export class PlaguicidasComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if(this.pasoUnoComponent.validOnButtonClick()){
+      this.esFormaValido = false;
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -66,6 +70,9 @@ export class PlaguicidasComponent {
         this.wizardComponent.atras();
       }
     }
+    }
+    else{
+      this.esFormaValido = true;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
@@ -28,10 +28,9 @@ interface AccionBoton {
 })
 export class PlaguicidasComponent implements OnDestroy {
     @ViewChild(PasoUnoComponent) solicitante!: PasoUnoComponent;
-constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService) {
 
-}
-
+esFormaValido: boolean = false;
+public formErrorAlert = ERROR_FORMA_ALERT;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -63,6 +62,9 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
    * Notificador para destruir observables al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService) {
+
+}
 
   /**
    * Maneja la acción del botón en el asistente.
@@ -72,6 +74,7 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
    */
   getValorIndice(e: AccionBoton): void {
     if(this.solicitante.validOnButtonClick()){
+      this.esFormaValido = false;
     if (e.valor > 0 && e.valor < 5) {
       this.getDatosDomicilioLegalState();
       this.getSolicitudPagoBancoState();
@@ -81,6 +84,9 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
       } else {
         this.wizardComponent.atras();
       }
+    }
+    else{
+      this.esFormaValido = true;
     }
   }
   }

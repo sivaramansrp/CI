@@ -6,6 +6,12 @@
           Permiso de importación de muestras experimentales de sustancias tóxicas
         </h2>
       </div>
+          @if (!esFormaValido && esFormaValido !== undefined) {
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          </div>
+        }
+      
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
