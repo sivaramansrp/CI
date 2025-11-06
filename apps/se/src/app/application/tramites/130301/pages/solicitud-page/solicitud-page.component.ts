@@ -1,6 +1,8 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT } from '../../components/constantes/aviso-enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/130301/modificacion.enum";
+import { PasoUnoComponent } from '../../pages/paso-uno/paso-uno.component';
 
 /**
  * Componente para gestionar la página de la solicitud del trámite.
@@ -28,12 +30,21 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al PasoUnoComponent para validación cruzada.
+   */
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Lista de pasos del asistente.
    * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
    * 
    * @type {ListaPasosWizard[]}
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  /**
+   * Lista de pasos del asistente.
+   * @type {ListaPasosWizard[]}
+   */
+  readonly PASOS_WIZARD: ListaPasosWizard[] = PASOS;
 
   /**
    * Datos de los pasos del asistente.
@@ -41,48 +52,83 @@ export class SolicitudPageComponent {
    * 
    * @type {DatosPasos}
    */
+  /**
+   * Datos de los pasos del asistente.
+   * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación.
+   * @type {DatosPasos}
+   */
   datosPasos: DatosPasos = {
-    /**
-     * Número total de pasos en el asistente.
-     */
-    nroPasos: this.pasos.length,
-    /**
-     * Índice del paso actual.
-     */
+    nroPasos: this.PASOS_WIZARD.length,
     indice: this.indice,
-    /**
-     * Texto del botón "Anterior".
-     */
     txtBtnAnt: 'Anterior',
-    /**
-     * Texto del botón "Continuar".
-     */
     txtBtnSig: 'Continuar',
   };
 
   /**
-   * Obtiene el valor del índice de la acción del botón.
-   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   * 
-   * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   * 
-   * @param {AccionBoton} e Acción del botón (cont o atras) y el valor asociado a la acción.
-   * @returns {void}
+   * Indica si el formulario actual es válido. Se utiliza para mostrar alertas cuando faltan campos por capturar.
+   * @type {boolean}
    */
-  getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+  esFormaValido: boolean = false;
 
-      // Dependiendo de la acción, avanza o retrocede en el wizard
-      if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
+  /**
+   * Mensaje de alerta para campos obligatorios no capturados.
+   * @type {string}
+   */
+  readonly formErrorAlert: string = ERROR_FORMA_ALERT;
+
+  /**
+   * Controla el cambio de paso en el asistente (wizard) según la acción del botón presionado.
+   * Si la acción es 'cont', valida los formularios del paso uno antes de avanzar.
+   * Si la validación falla, bloquea la navegación y muestra una alerta.
+   * @param {AccionBoton} accionBoton - Acción del botón ('cont' o 'ant') y el valor asociado.
+   */
+  getValorIndice(accionBoton: AccionBoton): void {
+    this.esFormaValido = false;
+    
+    // Solo validar cuando se avanza desde el paso 1
+    if (this.indice === 1 && accionBoton.accion === 'cont') {
+      const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+      if (!ES_VALIDO) {
+        this.esFormaValido = true;
+        // Asegurar que datosPasos.indice se mantenga en el paso actual
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+    }
+    
+    // Calcular el índice actualizado basado en la acción
+    let indiceActualizado = this.indice;
+    if (accionBoton.accion === 'cont') {
+      indiceActualizado = this.indice + 1; // Incrementar desde el paso actual
+    } else if (accionBoton.accion === 'ant') {
+      indiceActualizado = this.indice - 1; // Decrementar desde el paso actual
+    }
+    
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.PASOS_WIZARD.length) {
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+      
+      // Navegar en el wizard
+      if (accionBoton.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
-        // Si la acción es 'atras', retrocede al paso anterior
+      } else if (accionBoton.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Valida todos los formularios del PasoUnoComponent.
+   * Retorna verdadero si todos los formularios son válidos, falso si alguno es inválido.
+   * Si no existe la referencia al componente, retorna verdadero por defecto.
+   * @returns {boolean} verdadero si todos los formularios son válidos, falso si alguno es inválido.
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ES_VALIDO = this.pasoUnoComponent.validarTodosFormulariosPasoUno();
+    return Boolean(ES_VALIDO);
   }
 }

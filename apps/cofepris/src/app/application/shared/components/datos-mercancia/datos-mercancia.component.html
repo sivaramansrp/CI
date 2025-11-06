@@ -174,13 +174,14 @@
           [required]="true"
           [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
-            [placeholder]="'Selecciona una opción'"
+          [placeholder]="'Selecciona una opción'"
+          (selectionChange)="onCambioTipoProduct($event)"
         ></app-catalogo-select>
       </div>
     </div>
 
     @if(elementosAnadidos.includes('especifique') &&
-    mercanciaForm.get('tipoProducto')?.value === tipoProductoEspecial){
+    tipoProductoObj?.[0]?.descripcion === 'Otro'){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -219,7 +220,7 @@
           [label]="'Forma farmacéutica'"
           [required]="true"
           name="formaFarmaceutica"
-            [placeholder]="'Selecciona una opción'"
+          [placeholder]="'Selecciona una opción'"
         ></app-catalogo-select>
       </div>
     </div>

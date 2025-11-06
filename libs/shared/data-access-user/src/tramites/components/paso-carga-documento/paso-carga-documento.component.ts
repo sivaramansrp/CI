@@ -115,6 +115,11 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy, OnChanges
   @Input() documentosAdicionales: DocumentoRequerimiento[] = [];
 
   /**
+   * Evento que se emite cuando el catálogo de documentos obligatorios está en blanco.
+   */
+  @Output() enBlancoObligatoria = new EventEmitter<boolean>();
+
+  /**
    * Constructor del componente.
    * 
    * @param catalogosServices Servicio para gestionar los catálogos.
@@ -189,6 +194,15 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy, OnChanges
    */
   manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {
     this.reenviarEventoCarga.emit(existenDocumentosParaCargar);
+  }
+
+  /**
+   * Maneja el evento de documentos obligatorios en blanco y emite un evento con el estado.
+   * @param enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @returns void
+   */
+  blancoObligatoria(enBlanco: boolean): void {
+    this.enBlancoObligatoria.emit(enBlanco);
   }
 
   /**

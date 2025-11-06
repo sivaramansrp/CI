@@ -174,6 +174,15 @@ esMostrarAlerta: boolean = false;
   cargaEnProgreso: boolean = true;
 
   /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
+
+  /**
    * @property {boolean} seccionCargarDocumentos
    * @description
    * Indica si la sección de carga de documentos está activa. Controla la
@@ -536,6 +545,19 @@ anterior(): void {
 }
 
 /**
+ * @method saltar
+ * @description
+ * Método para saltar directamente al paso de firma en el wizard.
+ * Actualiza los índices correspondientes y ejecuta la transición
+ * forward en el componente wizard.
+ */
+saltar(): void {
+  this.indice = 3;
+  this.datosPasos.indice = 3;
+  this.wizardComponent.siguiente();
+}
+
+/**
  * @method onClickCargaArchivos
  * @description
  * Método de manejo de eventos para el click en botón de carga de archivos.
@@ -611,6 +633,17 @@ onClickCargaArchivos(): void {
  onCargaEnProgreso(carga: boolean): void {
   this.cargaEnProgreso = carga;
 }
+
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
 
   /**
    * @method obtenerNombreDelTítulo

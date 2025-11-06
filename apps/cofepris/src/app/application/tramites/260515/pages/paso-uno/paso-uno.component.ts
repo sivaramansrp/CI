@@ -3,6 +3,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
@@ -21,6 +22,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+     @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -117,7 +119,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
-
+  validOnButtonClick():boolean{
+    let isValid = false;
+    if(this.datosSolicitudRef?.validarClickDeBoton()){
+          isValid = true;
+        }
+        else{
+          isValid = false;
+        }
+        return isValid;
+      }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.
