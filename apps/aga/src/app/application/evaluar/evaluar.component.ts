@@ -142,6 +142,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   /** Justificación del requerimiento */
   justificacion!: string;
 
+  /** Alcance del requerimiento */
+  alcanceRequerimiento!: string;
+
   /** Datos del dictamen a generar */
   dataIniciarDictamen!: IniciarDictamenResponse;
 
@@ -192,6 +195,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @property {string[]} tramitesTipoReq
    */
   tramitesTipoReq: string[] = ["5701"];
+
+  /*
+   * Tramites en los que se mostrará la segunda tabla de documentos
+  */
+  tramitesMostrarSegundaTabla: string[] = ["5701"];
+
+
+  /**
+   * @property {boolean} showSegundaTabla
+   *  
+   * @description Bandera que indica si se debe mostrar la segunda tabla de documentos en la sección de solicitud de documentos.
+   */
+   
+  showSegundaTabla: boolean = false;
 
   /**
    * @property {string} conformidadDictamen
@@ -331,6 +348,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
  */
   tabsOpcionEvaluacion: { id: number; nombre: string }[] = [];
 
+  /** Constante que representa el tipo de requerimiento de datos */
+  REQ_TIPO_DATOS = 'INFREQ.D';
+
   /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
@@ -401,6 +421,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
     this.showTipoRequerimiento = this.tramitesTipoReq.includes(this.tramite.toString());
+    this.showSegundaTabla = this.tramitesMostrarSegundaTabla.includes(this.tramite.toString());
     this.getEvaluacionTramite();
     this.getTabs();
   }
@@ -1532,6 +1553,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
   onFormRequerimientoChanged(formValue: any) {
     this.justificacion = formValue.justificacionRequerimiento
+    this.alcanceRequerimiento = formValue.tipoRequerimiento;
   }
 
   /** 
@@ -1545,7 +1567,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
-      alcance_requerimiento: 'X0XX',
+      alcance_requerimiento: this.alcanceRequerimiento || '',
     };
 
     this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1613,7 +1635,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       id_accion: this.guardarDatos.action_id,
       justificacion: this.justificacion,
-      alcance_requerimiento: '',
+      alcance_requerimiento: this.alcanceRequerimiento || '',
       solicitante: {
         nombre: 'Javier',
         apellido_paterno: 'Chávez',

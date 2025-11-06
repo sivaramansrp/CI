@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../core/estados/requerimientos.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CatalogoSelectClaveComponent } from '../catalogo-select-clave/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { SolicitudRequerimientoQuery } from '../../../core/queries/requerimientos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
@@ -13,7 +13,7 @@ import { IniciarRequerimientoResponse } from '../../../core/models/shared/Inicia
 @Component({
   selector: 'app-capturar-requerimiento',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, CatalogoSelectClaveComponent, ReactiveFormsModule],
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.scss',
 })
@@ -82,7 +82,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy, OnChan
   * Método que se ejecuta al inicializar el componente.
   */
   ngOnInit(): void {
-    this.catTipoRequerimiento = data;
+   
     
   }
 
@@ -93,6 +93,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy, OnChan
         areaSolicitante: '',
         justificacionRequerimiento: this.iniciarResponse.justificacion
       });
+       this.catTipoRequerimiento = this.iniciarResponse.alcances_requerimiento as Catalogo[];
     }
   }
 
