@@ -1,6 +1,6 @@
-import { AccionBoton,AlertComponent, NotificacionesComponent, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
+import { AVISO, AccionBoton,AlertComponent, NotificacionesComponent, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
+import { MENSAJE_DE_VALIDACION,MENSAJE_DE_VALIDACION_PAGO_DERECHOS,PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 import { Tramite260203State, Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -41,6 +41,22 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './solicitud-page.component.css',
 })
 export class SolicitudPageComponent implements OnInit {
+     /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+    /**
+   * @property {string} TEXTOS
+   * @description
+   * Texto de aviso utilizado en el componente.
+   */
+  TEXTOS: string = AVISO.Aviso;
+    /**
+   * @property {string} infoAlert
+   * @description
+   * Clase CSS para aplicar estilos a los mensajes de información.
+   */
+  public infoAlert = 'alert-info  text-center';
   /**
    * @property {string} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
@@ -132,6 +148,11 @@ esFormaValido: boolean = false;
    * @property {boolean} mostrarAlerta
    */
 public mostrarAlerta: boolean = false;
+
+  public requiresPaymentData: boolean = false;
+
+  public confirmarSinPagoDeDerechos: number = 0;
+
 
      /**
    * Evento que se emite para cargar archivos.
@@ -238,26 +259,30 @@ public mostrarAlerta: boolean = false;
              if (this.indice === 1 && this.pasoUnoComponent) {
              isValid = this.pasoUnoComponent.validarPasoUno();
            }
-           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-             this.mostrarAlerta=true;
-             this.seleccionarFilaNotificacion = {
-               tipoNotificacion: 'alert',
-               categoria: 'danger',
-               modo: 'action',
-               titulo: '',
-               mensaje: MENSAJE_DE_PAGE,
-               cerrar: true,
-               tiempoDeEspera: 2000,
-               txtBtnAceptar: 'SI',
-               txtBtnCancelar: 'NO',
-             }
+           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
+              this.mostrarAlerta=true;
+              this.confirmarSinPagoDeDerechos = 2;
+              this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
 
            }
            if (!isValid) {
-             this.esFormaValido = true;
-             this.datosPasos.indice = this.indice;
-             return;
+              this.formErrorAlert = this.MENSAJE_DE_ERROR;
+              this.esFormaValido = true;
+              this.datosPasos.indice = this.indice;
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+              return;
            }
      
             const PAYLOAD = GuardarAdapter_260203.toFormPayload(this.solicitudState);
@@ -301,6 +326,15 @@ public mostrarAlerta: boolean = false;
                 this.wizardComponent.atras();
               }
   }
+     cerrarModal(value:boolean): void {
+      if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+      } else {
+        this.mostrarAlerta = false;
+        this.confirmarSinPagoDeDerechos = 4;
+      }
+   }
 
   public static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `
