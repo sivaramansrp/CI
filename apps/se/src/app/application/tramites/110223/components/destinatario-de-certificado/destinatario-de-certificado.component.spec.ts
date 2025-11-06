@@ -49,17 +49,6 @@ describe('DestinatarioDeCertificadoComponent', () => {
     expect(component['store'].setFormValida).toHaveBeenCalledWith({ datosDestinatario: false });
   });
 
-  // it('should call store method with correct value in setValoresStore', () => {
-  //   const mockForm = new FormGroup({
-  //     testField: new FormBuilder().control('testValue'),
-  //   });
-  //   jest.spyOn(component['store'], 'setFormValida');
-
-  //   component.setValoresStore1(mockForm);
-
-  //   expect(component['store'].setFormValida).toHaveBeenCalledWith('testValue');
-  // });
-
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
     jest.spyOn(component['destroyNotifier$'], 'next');
     jest.spyOn(component['destroyNotifier$'], 'complete');
