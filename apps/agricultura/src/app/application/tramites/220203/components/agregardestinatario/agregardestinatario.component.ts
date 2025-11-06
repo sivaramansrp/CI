@@ -83,12 +83,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @type {Catalogo[]}
    * @memberof AgregardestinatarioComponent
    */
-  pairsCatalog: Catalogo[] = [];
+  paisCatalog: Catalogo[] = [];
 
   /**
    * Catálogo de estados o entidades federativas disponibles.
    * Lista de estados correspondientes al país seleccionado.
-   * 
+   *
    * @public
    * @type {Catalogo[]}
    * @memberof AgregardestinatarioComponent
@@ -98,7 +98,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   /**
    * Catálogo de municipios disponibles para selección.
    * Lista de municipios correspondientes al estado seleccionado.
-   * 
+   *
    * @public
    * @type {Catalogo[]}
    * @memberof AgregardestinatarioComponent
@@ -108,7 +108,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   /**
    * Catálogo de colonias disponibles para selección.
    * Lista de colonias correspondientes al municipio seleccionado.
-   * 
+   *
    * @public
    * @type {Catalogo[]}
    * @memberof AgregardestinatarioComponent
@@ -166,7 +166,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly certificadoZoosanitarioServices: ImportacionDeAcuiculturaService,
     private readonly certificadoZoosanitarioQuery: AcuiculturaQuery,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.paisCatalogChange();
+  }
 
   /**
    * Método del ciclo de vida OnInit de Angular.
@@ -185,7 +187,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: ['1', Validators.required],
+      pais: ['MEX', Validators.required],
       codigoPostal: ['', Validators.required],
       estado: ['', Validators.required],
       municipio: [''],
@@ -199,16 +201,33 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     });
     this.certificadoZoosanitarioQuery.seleccionarTerceros$
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data: TercerosrelacionadosdestinoTable) => {
+      .subscribe(async (data: TercerosrelacionadosdestinoTable) => {
         const DESTINATARIO = data;
+        console.log(DESTINATARIO);
         if (DESTINATARIO) {
+
+          let VALOR_EDO:string = "";
+          let VALOR_MUNI:string = "";
+
+          if(DESTINATARIO.estado !== undefined){
+            VALOR_EDO = DESTINATARIO.estado;
+            await this.municipioCatalogChange(VALOR_EDO);
+
+          }
+
+          if(DESTINATARIO.municipio !== undefined){
+            VALOR_MUNI = DESTINATARIO.municipio;
+            await this.coloniaCatalogChange(VALOR_MUNI);
+
+          }
+
           this.destinatarioForm.patchValue({
             tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
             nombre: DESTINATARIO.nombre || '',
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
-            pais: DESTINATARIO.pais || '1',
+            pais: 'MEX',
             codigoPostal: DESTINATARIO.codigoPostal || '',
             estado: DESTINATARIO.estado || '',
             municipio: DESTINATARIO.municipio || '',
@@ -236,82 +255,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @returns {void}
    */
   ngAfterViewInit(): void {
-    this.pairsCatalogChange();
+    this.paisCatalogChange();
     this.estadoCatalogChange();
-    this.municipioCatalogChange();
-    this.coloniaCatalogChange();
-  }
 
-  /**
-   * Método para cargar el catálogo de países de procedencia.
-   * Obtiene la lista de países disponibles desde el servicio de terceros relacionados.
-   * Maneja la subscripción con patrón takeUntil para evitar memory leaks.
-   * 
-   * @public
-   * @method pairsCatalogChange
-   * @memberof AgregardestinatarioComponent
-   * @returns {void}
-   */
-  pairsCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe(data => {
-        this.pairsCatalog = data;
-      });
-  }
-
-  /**
-   * Método para cargar el catálogo de estados o entidades federativas.
-   * Obtiene la lista de estados disponibles desde el servicio de terceros relacionados.
-   * Utilizado para poblar el selector de estados en el formulario de dirección.
-   * 
-   * @public
-   * @method estadoCatalogChange
-   * @memberof AgregardestinatarioComponent
-   * @returns {void}
-   */
-  estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe(data => {
-        this.estadoCatalog = data;
-      });
-  }
-
-  /**
-   * Método para cargar el catálogo de municipios.
-   * Obtiene la lista de municipios disponibles desde el servicio de terceros relacionados.
-   * Utilizado para poblar el selector de municipios basado en el estado seleccionado.
-   * 
-   * @public
-   * @method municipioCatalogChange
-   * @memberof AgregardestinatarioComponent
-   * @returns {void}
-   */
-  municipioCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('municipios.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe(data => {
-        this.municipioCatalog = data;
-      });
-  }
-
-  /**
-   * Método para cargar el catálogo de colonias.
-   * Obtiene la lista de colonias disponibles desde el servicio de terceros relacionados.
-   * Utilizado para poblar el selector de colonias basado en el municipio seleccionado.
-   * 
-   * @public
-   * @method coloniaCatalogChange
-   * @memberof AgregardestinatarioComponent
-   * @returns {void}
-   */
-  coloniaCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('colonias.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe(data => {
-        this.coloniaCatalog = data;
-      });
   }
 
   /**
@@ -390,5 +336,89 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
     }
+  }
+
+  /**
+   * Obtiene el catálogo de países.
+   * @method paisCatalogChange
+   */
+  paisCatalogChange(): void {
+    this.tercerosrelacionadosService
+      .obtieneCatalogoConsultaPaises(220203)
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data) => {
+        this.paisCatalog = data.datos ?? [];
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de estados.
+   * @method estadoCatalogChange
+   */
+  estadoCatalogChange(): void {
+    this.destinatarioForm.get('municipio')?.patchValue('');
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    this.tercerosrelacionadosService
+      .obtieneCatalogoEntidadesFederativasGeneral(220203)
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data) => {
+        this.estadoCatalog = data.datos ?? [];
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de municipios.
+   * @method obtenerMunicipios
+   */
+  obtenerMunicipios(cveEntidad: Catalogo): void {
+    let VALOR:string = "";
+    if(cveEntidad && cveEntidad.clave !== undefined){
+      VALOR = cveEntidad?.clave
+      this.municipioCatalogChange(VALOR);
+    }
+
+  }
+  /**
+   * Obtiene el catálogo de municipios.
+   * @method municipioCatalogChange
+   */
+  async municipioCatalogChange(cveEntidad: string): Promise<void> {
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    this.destinatarioForm.get('municipio')?.patchValue('');
+    await this.tercerosrelacionadosService
+      .obtieneCatalogoEntidadFederativaMunicipios(
+        220203,
+        cveEntidad ?? ''
+      )
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data) => {
+        this.municipioCatalog = data.datos ?? [];
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de colonias.
+   * @method obtenerColonia
+   */
+  obtenerColonia(cveDelegNum: Catalogo): void {
+    let VALOR:string = "";
+    if(cveDelegNum && cveDelegNum.clave !== undefined){
+      VALOR = cveDelegNum?.clave
+      this.coloniaCatalogChange(VALOR);
+    }
+  }
+
+  /**
+   * Obtiene el catálogo de colonias.
+   * @method coloniaCatalogChange
+   */
+  async coloniaCatalogChange(cveDelegNum: string): Promise<void> {
+    this.destinatarioForm.get('colonia')?.patchValue('');
+    await this.tercerosrelacionadosService
+      .obtieneCatalogoColonias(220203, cveDelegNum ?? '')
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data) => {
+        this.coloniaCatalog = data.datos ?? [];
+      });
   }
 }

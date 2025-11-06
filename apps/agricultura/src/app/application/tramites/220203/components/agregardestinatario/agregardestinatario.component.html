@@ -82,8 +82,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true" name="pais"
-                            [isDisabled]="true" formControlName="pais"></app-catalogo-select>
+                        <app-catalogo-select [catalogo]="paisCatalog" [label]="'País'" [required]="true" name="pais"
+                            [isDisabled]="true" formControlName="pais" ></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
@@ -106,7 +106,7 @@
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="estadoCatalog" [label]="'Estado'" [required]="true"
-                            name="estado" [isDisabled]="esFormularioSoloLectura"
+                            name="estado" [isDisabled]="esFormularioSoloLectura" (selectionChange)="obtenerMunicipios($event)"
                             formControlName="estado"></app-catalogo-select>
 
                     </div>
@@ -115,7 +115,7 @@
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="municipioCatalog" [label]="'Municipio o Alcaldía'"
                             [required]="false" name="municipio" [isDisabled]="esFormularioSoloLectura"
-                            formControlName="municipio"></app-catalogo-select>
+                            formControlName="municipio" (selectionChange)="obtenerColonia($event)"></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="coloniaCatalog" [label]="'Colonia'" [required]="false"

@@ -269,6 +269,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalDestinatario(data?: TercerosrelacionadosdestinoTable): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
+    }else {
+      this.certificadoZoosanitarioStore.actualizarSelectedTerceros({} as TercerosrelacionadosdestinoTable);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
