@@ -1048,16 +1048,9 @@ guardarFabricante(): void {
       this.coloniasDatos = DATOS;
     }));
 
-    // this.subscription.add(this.catalogoService.codigoCatalogo(this.tramiteID, evento.clave).pipe(
-    //   takeUntil(this.unsubscribe$)
-    // ).subscribe((data) => {
-    //   const DATOS = data.datos as Catalogo[];
-    //   this.codigosPostalesDatos = DATOS;
-    // }));
   } else {
     this.localidadesDatos = [];
     this.coloniasDatos = [];
-   //this.codigosPostalesDatos = [];
   }
   }
 
