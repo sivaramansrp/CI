@@ -94,11 +94,11 @@ export class AsignacionDirectaDeCupoComponent implements OnDestroy {
           this.cerrarMensajeValidacion();
         }
       } else {
-        // Si hay errores de validación, mostrar mensaje
+      
         this.mostrarMensajeConAutoClose();
       }
     } else {
-      // Para acción "atras", permitir navegación sin validación
+      
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
         this.wizardComponent.atras();
@@ -187,13 +187,11 @@ export class AsignacionDirectaDeCupoComponent implements OnDestroy {
    */
   private verificarCamposObligatoriosPaso1(): { valido: boolean; camposFaltantes: string[] } {
     const COMPOSFALTANTES: string[] = [];
-    
-    // Para mostrar el mensaje informativo temporal, simular validación fallida
-    // Cambiar esta lógica cuando tengas validación real de campos
+  
     COMPOSFALTANTES.push('Campos obligatorios');
     
     return {
-      valido: false, // Cambiar a true cuando implementes validación real
+      valido: false, 
       camposFaltantes: COMPOSFALTANTES
     };
   }
@@ -204,9 +202,7 @@ export class AsignacionDirectaDeCupoComponent implements OnDestroy {
    */
   private verificarCamposObligatoriosPaso2(): { valido: boolean; camposFaltantes: string[] } {
     const COMPOSFALTANTES: string[] = [];
-
-    // Implementar validación específica para paso 2
-    const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso2');
+ const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso2');
 
     if (!CAMPOEJEMPLO || CAMPOEJEMPLO === '') {
       COMPOSFALTANTES.push('Campo requerido del paso 2');
@@ -224,9 +220,7 @@ export class AsignacionDirectaDeCupoComponent implements OnDestroy {
    */
   private verificarCamposObligatoriosPaso3(): { valido: boolean; camposFaltantes: string[] } {
     const COMPOSFALTANTES: string[] = [];
-
-    // Implementar validación específica para paso 3
-    const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso3');
+ const CAMPOEJEMPLO = this.obtenerValorCampo('campoEjemploPaso3');
 
     if (!CAMPOEJEMPLO || CAMPOEJEMPLO === '') {
       COMPOSFALTANTES.push('Campo requerido del paso 3');
@@ -244,8 +238,7 @@ export class AsignacionDirectaDeCupoComponent implements OnDestroy {
    * @returns Valor del campo o null si no existe
    */
   private obtenerValorCampo(nombreCampo: string): string | null {
-    // Implementar lógica para obtener valores de los formularios
-    const ELEMENTO = document.querySelector(`[name="${nombreCampo}"]`) as HTMLInputElement;
+   const ELEMENTO = document.querySelector(`[name="${nombreCampo}"]`) as HTMLInputElement;
     if (ELEMENTO) {
       return ELEMENTO.value;
     }
