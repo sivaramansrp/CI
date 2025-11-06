@@ -1093,9 +1093,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           if (datos.datos) {
             const GUARDAR_VALORES: Movilizacion = {
               transporte: datos.datos.id_transporte,
-              guiaIdentificacion: datos.datos.id_punto_verificacion,
+              puntoVerificacion: datos.datos.id_punto_verificacion,
               empresaTransportista: datos.datos.razon_social,
-              medioTransporte: datos.datos.ide_medio_transporte
+              identificacion: datos.datos.ide_medio_transporte
             };
             (this.agriculturaApiService.updateMovilizacion as (value: Movilizacion) => void)(GUARDAR_VALORES);
           }
