@@ -3,9 +3,12 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 import { Tramite260509Query } from '../../../../estados/queries/260509/tramite260509.query';
 import { Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
 /**
@@ -22,6 +25,22 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosSolicitudComponent', { static: false }) datosSolicitudComponent!: DatosSolicitudComponent;
+
+  /** Referencia al componente 'TercerosRelacionadosFabricanteComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosFabricanteComponent', { static: false }) tercerosRelacionadosFabricanteComponent!: TercerosRelacionadosFabricanteComponent;
+
+  /** Referencia al componente 'PagoDerechosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDerechosComponent;
+  
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
