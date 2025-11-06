@@ -311,8 +311,9 @@ esMostrarAlerta: boolean = false;
           if (this.indice === 1 && this.pasoUnoComponent) {
           isValid = this.pasoUnoComponent.validarPasoUno();
         }
-        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
           this.mostrarAlerta=true;
+          this.confirmarSinPagoDeDerechos = 2;
           this.seleccionarFilaNotificacion = {
             tipoNotificacion: 'alert',
             categoria: 'danger',
@@ -323,6 +324,7 @@ esMostrarAlerta: boolean = false;
             tiempoDeEspera: 2000,
             txtBtnAceptar: 'SI',
             txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar:'flex-row-reverse'
           }
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         }

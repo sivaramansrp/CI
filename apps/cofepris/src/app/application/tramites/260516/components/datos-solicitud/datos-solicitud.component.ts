@@ -1,5 +1,5 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-solicitud.enum';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 /**
@@ -26,11 +26,12 @@ export interface ConfiguracionVisibilidad {
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+    @ViewChild(DatosDeLaComponent) datosSolicitudRef!: DatosDeLaComponent;
   idProcedimiento: number = 260516;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
-  isAvisoLicenciaVisible: boolean = false;
+  isAvisoLicenciaVisible: boolean = true;
 
   /**
    * Indica si se debe mostrar la sección de Aduanas de Entrada
@@ -43,4 +44,16 @@ export class DatosSolicitudComponent {
    * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
    */
   configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
+
+    validOnButtonClick():boolean{
+    let isValid = false;
+    if(this.datosSolicitudRef?.validarClickDeBoton()){
+          isValid = true;
+        }
+        else{
+          isValid = false;
+        }
+        return isValid;
+      }
+  
 }
