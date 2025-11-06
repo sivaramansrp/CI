@@ -82,7 +82,9 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy, OnChan
   * Método que se ejecuta al inicializar el componente.
   */
   ngOnInit(): void {
-   
+   this.catTipoRequerimiento = this.iniciarResponse?.alcances_requerimiento ? 
+       this.iniciarResponse.alcances_requerimiento as Catalogo[] : [];
+   this.isTipoRequerimiento = this.catTipoRequerimiento.length > 0;
     
   }
 
@@ -93,7 +95,9 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy, OnChan
         areaSolicitante: '',
         justificacionRequerimiento: this.iniciarResponse.justificacion
       });
-       this.catTipoRequerimiento = this.iniciarResponse.alcances_requerimiento as Catalogo[];
+       this.catTipoRequerimiento = this.iniciarResponse?.alcances_requerimiento ? 
+         this.iniciarResponse.alcances_requerimiento as Catalogo[] : [];
+       this.isTipoRequerimiento = this.catTipoRequerimiento.length > 0;
     }
   }
 

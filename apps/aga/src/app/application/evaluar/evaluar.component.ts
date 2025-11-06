@@ -190,16 +190,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   opcionesDisponibles: string[] = [];
 
-  /**
-   * Tramites en los que se mostrará el combo tipo de requerimiento
-   * @property {string[]} tramitesTipoReq
-   */
-  tramitesTipoReq: string[] = ["5701"];
 
-  /*
-   * Tramites en los que se mostrará la segunda tabla de documentos
-  */
-  tramitesMostrarSegundaTabla: string[] = ["5701"];
 
 
   /**
@@ -420,8 +411,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-    this.showTipoRequerimiento = this.tramitesTipoReq.includes(this.tramite.toString());
-    this.showSegundaTabla = this.tramitesMostrarSegundaTabla.includes(this.tramite.toString());
+
     this.getEvaluacionTramite();
     this.getTabs();
   }
@@ -1533,6 +1523,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
+          this.showSegundaTabla  = resp.datos?.alcances_requerimiento ? true : false;
         },
         error: (err) => {
           const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
