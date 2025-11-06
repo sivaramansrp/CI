@@ -4,6 +4,7 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  NotificacionesComponent,
   PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
@@ -54,6 +55,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     PasoFirmaComponent,
     SharedModule,
+    NotificacionesComponent
   ],
   providers: [ToastrService]
 })

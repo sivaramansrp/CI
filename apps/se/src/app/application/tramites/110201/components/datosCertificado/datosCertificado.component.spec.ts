@@ -6,9 +6,9 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
-import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { of } from 'rxjs';
+import { Tramites110201Store } from '../../state/tramites110201.store';
+import { Tramites110201Query } from '../../state/tramites110201.query';
 import {
     CatalogoSelectComponent,
   ConsultaioQuery,
@@ -22,14 +22,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Toast } from 'bootstrap';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
-class Tramite110208StoreMock {
+class Tramites110201StoreMock {
   setFormDatosCertificado = jest.fn();
   setIdiomaSeleccion = jest.fn();
   setRepresentacionFederalDatosSeleccion = jest.fn();
   setFormValida = jest.fn();
   obtenerDatosFormulario = jest.fn();
 }
-class Tramite110208QueryMock {
+class Tramites110201QueryMock {
   selectIdiomaDatos$ = of([]);
   selectEntidadFederativas$ = of([])
   selectRepresentacionFederal$ = of({});
@@ -51,7 +51,7 @@ class DatosCertificadoDeComponentMock {
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let store: Tramite110208StoreMock;
+  let store: Tramites110201StoreMock;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -69,8 +69,8 @@ describe('DatosCertificadoComponent', () => {
       providers: [
         FormBuilder,
         ToastrService,
-        { provide: Tramite110208Store, useClass: Tramite110208StoreMock },
-        { provide: Tramite110208Query, useClass: Tramite110208QueryMock },
+        { provide: Tramites110201Store, useClass: Tramites110201StoreMock },
+        { provide: Tramites110201Query, useClass: Tramites110201QueryMock },
         { provide: SeccionLibQuery, useClass: SeccionLibQueryMock },
         { provide: SeccionLibStore, useClass: SeccionLibStoreMock },
         { provide: ConsultaioQuery, useClass: ConsultaioQueryMock },
@@ -85,7 +85,7 @@ describe('DatosCertificadoComponent', () => {
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite110208Store) as any;
+    store = TestBed.inject(Tramites110201Store) as any;
     component.datosCertificadoDeRef =
       new DatosCertificadoDeComponentMock() as any;
     component.formDatosCertificado = new FormGroup({

@@ -177,6 +177,10 @@ export class Solocitud110201Service {
     return {
       observaciones: data.formDatosCertificado['observacionesDates'] ?? '',
       idioma: data.formDatosCertificado['idiomaDates'] ?? 0,
+      desea_obtener_certificado:"false",
+      justificacion:"a",
+      precisa: data.formDatosCertificado['precisaDates'] ?? '',
+      presenta: data.formDatosCertificado['presenta'] ?? '',
       representacion_federal: {
         entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
         representacion_federal: data.formDatosCertificado['representacionFederalDates'] ?? 0

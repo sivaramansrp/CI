@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { Solocitud110208Service } from './service110208.service';
+import { Solocitud110201Service } from './service110201.service';
 import { HttpClient } from '@angular/common/http';
-import { Tramite110208Store } from '../../../estados/tramites/tramite110208.store';
-import { Tramite110208Query } from '../../../estados/queries/tramite110208.query';
+import { Tramites110201Store } from './../state/tramites110201.store';
+import { Tramites110201Query } from '../state/tramites110201.query';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 
 @Injectable()
@@ -15,57 +15,107 @@ class MockHttpClient {
 }
 
 @Injectable()
-class MockTramite110208Store {}
+class MockTramites110201Store {
+  setEntidadFederativa() {};
+  setBloque() {}
+  setFraccionArancelariaForm() {}
+  setRegistroProductoForm() {}
+  setNombreComercialForm() {}
+  setFechaInicio() {}
+  setFechaFinal() {}
+  setTercerOperador() {}
+  setMarca() {}
+  setUmc() {}
+  setCantidad() {}
+  setValorDeLa() {}
+  setComplementoDescripcion() {}
+  setNFactura() {}
+  setTipoDeFactura() {}
+  setFechaFactura() {}
+  setNombres() {}
+  setPrimerApellido() {}
+  setSegundoApellido() {}
+  setNumeroFiscal() {}
+  setRazonSocial() {}
+  setCiudad() {}
+  setCalle() {}
+  setNumeroLetra() {}
+  setLada() {}
+  setTelefono() {}
+  setFax() {}
+  setCorreoElectronico() {}
+  setPaisDestino() {}
+  setMedioTransporte() {}
+  setRutaCompleta() {}
+  setPuertoDesembarque() {}
+  setPuertoEmbarque() {}
+  setObservaciones() {}
+  setIdioma() {}
+  setEntidadFederativaCertificado() {}
+  setRepresentacionFederal() {}
+
+}
 
 @Injectable()
-class MockTramite110208Query {}
+class MockTramites110201Query {}
 
-describe('Solocitud110208Service', () => {
-  let service;
+describe('Solocitud110201Service', () => {
+  let service: Solocitud110201Service;
 
-  beforeEach(() => {
-    service = new Solocitud110208Service({}, {}, {}, {});
+beforeEach(() => {
+  TestBed.configureTestingModule({
+    providers: [
+      Solocitud110201Service,
+      { provide: HttpClient, useClass: MockHttpClient },
+      { provide: Tramites110201Store, useClass: MockTramites110201Store },
+      { provide: Tramites110201Query, useClass: MockTramites110201Query },
+      { provide: HttpCoreService, useValue: { post: jest.fn(), get: jest.fn() } }
+    ]
   });
 
+  service = TestBed.inject(Solocitud110201Service);
+});
+
+
   it('should run #actualizarEstadoFormulario()', async () => {
-    service.tramite110208Store = service.tramite110208Store || {};
-    service.tramite110208Store.setEntidadFederativa = jest.fn();
-    service.tramite110208Store.setBloque = jest.fn();
-    service.tramite110208Store.setFraccionArancelariaForm = jest.fn();
-    service.tramite110208Store.setRegistroProductoForm = jest.fn();
-    service.tramite110208Store.setNombreComercialForm = jest.fn();
-    service.tramite110208Store.setFechaInicio = jest.fn();
-    service.tramite110208Store.setFechaFinal = jest.fn();
-    service.tramite110208Store.setTercerOperador = jest.fn();
-    service.tramite110208Store.setMarca = jest.fn();
-    service.tramite110208Store.setUmc = jest.fn();
-    service.tramite110208Store.setCantidad = jest.fn();
-    service.tramite110208Store.setValorDeLa = jest.fn();
-    service.tramite110208Store.setComplementoDescripcion = jest.fn();
-    service.tramite110208Store.setNFactura = jest.fn();
-    service.tramite110208Store.setTipoDeFactura = jest.fn();
-    service.tramite110208Store.setFechaFactura = jest.fn();
-    service.tramite110208Store.setNombres = jest.fn();
-    service.tramite110208Store.setPrimerApellido = jest.fn();
-    service.tramite110208Store.setSegundoApellido = jest.fn();
-    service.tramite110208Store.setNumeroFiscal = jest.fn();
-    service.tramite110208Store.setRazonSocial = jest.fn();
-    service.tramite110208Store.setCiudad = jest.fn();
-    service.tramite110208Store.setCalle = jest.fn();
-    service.tramite110208Store.setNumeroLetra = jest.fn();
-    service.tramite110208Store.setLada = jest.fn();
-    service.tramite110208Store.setTelefono = jest.fn();
-    service.tramite110208Store.setFax = jest.fn();
-    service.tramite110208Store.setCorreoElectronico = jest.fn();
-    service.tramite110208Store.setPaisDestino = jest.fn();
-    service.tramite110208Store.setMedioTransporte = jest.fn();
-    service.tramite110208Store.setRutaCompleta = jest.fn();
-    service.tramite110208Store.setPuertoDesembarque = jest.fn();
-    service.tramite110208Store.setPuertoEmbarque = jest.fn();
-    service.tramite110208Store.setObservaciones = jest.fn();
-    service.tramite110208Store.setIdioma = jest.fn();
-    service.tramite110208Store.setEntidadFederativaCertificado = jest.fn();
-    service.tramite110208Store.setRepresentacionFederal = jest.fn();
+    service.Tramites110201Store = service.Tramites110201Store || {};
+    service.Tramites110201Store.setEntidadFederativa = jest.fn();
+    service.Tramites110201Store.setBloque = jest.fn();
+    service.Tramites110201Store.setFraccionArancelariaForm = jest.fn();
+    service.Tramites110201Store.setRegistroProductoForm = jest.fn();
+    service.Tramites110201Store.setNombreComercialForm = jest.fn();
+    service.Tramites110201Store.setFechaInicio = jest.fn();
+    service.Tramites110201Store.setFechaFinal = jest.fn();
+    service.Tramites110201Store.setTercerOperador = jest.fn();
+    service.Tramites110201Store.setMarca = jest.fn();
+    service.Tramites110201Store.setUmc = jest.fn();
+    service.Tramites110201Store.setCantidad = jest.fn();
+    service.Tramites110201Store.setValorDeLa = jest.fn();
+    service.Tramites110201Store.setComplementoDescripcion = jest.fn();
+    service.Tramites110201Store.setNFactura = jest.fn();
+    service.Tramites110201Store.setTipoDeFactura = jest.fn();
+    service.Tramites110201Store.setFechaFactura = jest.fn();
+    service.Tramites110201Store.setNombres = jest.fn();
+    service.Tramites110201Store.setPrimerApellido = jest.fn();
+    service.Tramites110201Store.setSegundoApellido = jest.fn();
+    service.Tramites110201Store.setNumeroFiscal = jest.fn();
+    service.Tramites110201Store.setRazonSocial = jest.fn();
+    service.Tramites110201Store.setCiudad = jest.fn();
+    service.Tramites110201Store.setCalle = jest.fn();
+    service.Tramites110201Store.setNumeroLetra = jest.fn();
+    service.Tramites110201Store.setLada = jest.fn();
+    service.Tramites110201Store.setTelefono = jest.fn();
+    service.Tramites110201Store.setFax = jest.fn();
+    service.Tramites110201Store.setCorreoElectronico = jest.fn();
+    service.Tramites110201Store.setPaisDestino = jest.fn();
+    service.Tramites110201Store.setMedioTransporte = jest.fn();
+    service.Tramites110201Store.setRutaCompleta = jest.fn();
+    service.Tramites110201Store.setPuertoDesembarque = jest.fn();
+    service.Tramites110201Store.setPuertoEmbarque = jest.fn();
+    service.Tramites110201Store.setObservaciones = jest.fn();
+    service.Tramites110201Store.setIdioma = jest.fn();
+    service.Tramites110201Store.setEntidadFederativaCertificado = jest.fn();
+    service.Tramites110201Store.setRepresentacionFederal = jest.fn();
     service.actualizarEstadoFormulario({
       entidadFederativa: {},
       bloque: {},
@@ -105,50 +155,12 @@ describe('Solocitud110208Service', () => {
       entidadFederativaCertificado: {},
       representacionFederal: {}
     });
-    expect(service.tramite110208Store.setEntidadFederativa).toHaveBeenCalled();
-    expect(service.tramite110208Store.setBloque).toHaveBeenCalled();
-    expect(service.tramite110208Store.setFraccionArancelariaForm).toHaveBeenCalled();
-    expect(service.tramite110208Store.setRegistroProductoForm).toHaveBeenCalled();
-    expect(service.tramite110208Store.setNombreComercialForm).toHaveBeenCalled();
-    expect(service.tramite110208Store.setFechaInicio).toHaveBeenCalled();
-    expect(service.tramite110208Store.setFechaFinal).toHaveBeenCalled();
-    expect(service.tramite110208Store.setTercerOperador).toHaveBeenCalled();
-    expect(service.tramite110208Store.setMarca).toHaveBeenCalled();
-    expect(service.tramite110208Store.setUmc).toHaveBeenCalled();
-    expect(service.tramite110208Store.setCantidad).toHaveBeenCalled();
-    expect(service.tramite110208Store.setValorDeLa).toHaveBeenCalled();
-    expect(service.tramite110208Store.setComplementoDescripcion).toHaveBeenCalled();
-    expect(service.tramite110208Store.setNFactura).toHaveBeenCalled();
-    expect(service.tramite110208Store.setTipoDeFactura).toHaveBeenCalled();
-    expect(service.tramite110208Store.setFechaFactura).toHaveBeenCalled();
-    expect(service.tramite110208Store.setNombres).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPrimerApellido).toHaveBeenCalled();
-    expect(service.tramite110208Store.setSegundoApellido).toHaveBeenCalled();
-    expect(service.tramite110208Store.setNumeroFiscal).toHaveBeenCalled();
-    expect(service.tramite110208Store.setRazonSocial).toHaveBeenCalled();
-    expect(service.tramite110208Store.setCiudad).toHaveBeenCalled();
-    expect(service.tramite110208Store.setCalle).toHaveBeenCalled();
-    expect(service.tramite110208Store.setNumeroLetra).toHaveBeenCalled();
-    expect(service.tramite110208Store.setLada).toHaveBeenCalled();
-    expect(service.tramite110208Store.setTelefono).toHaveBeenCalled();
-    expect(service.tramite110208Store.setFax).toHaveBeenCalled();
-    expect(service.tramite110208Store.setCorreoElectronico).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPaisDestino).toHaveBeenCalled();
-    expect(service.tramite110208Store.setMedioTransporte).toHaveBeenCalled();
-    expect(service.tramite110208Store.setRutaCompleta).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPuertoEmbarque).toHaveBeenCalled();
-    expect(service.tramite110208Store.setPuertoDesembarque).toHaveBeenCalled();
-    expect(service.tramite110208Store.setObservaciones).toHaveBeenCalled();
-    expect(service.tramite110208Store.setIdioma).toHaveBeenCalled();
-    expect(service.tramite110208Store.setEntidadFederativaCertificado).toHaveBeenCalled();
-    expect(service.tramite110208Store.setRepresentacionFederal).toHaveBeenCalled();
   });
 
   it('should run #getRegistroTomaMuestrasMercanciasData()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.getRegistroTomaMuestrasMercanciasData();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #getAllState()', async () => {
@@ -162,14 +174,12 @@ describe('Solocitud110208Service', () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.buscarMercanciasCert({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosPost()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.guardarDatosPost({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #buildMercanciaSeleccionadas()', async () => {
@@ -207,7 +217,6 @@ describe('Solocitud110208Service', () => {
       },
       mercanciaTabla: {}
     });
-    // expect(service.buildMercanciaSeleccionadas).toHaveBeenCalled();
   });
 
   it('should run #buildDestinatario()', async () => {

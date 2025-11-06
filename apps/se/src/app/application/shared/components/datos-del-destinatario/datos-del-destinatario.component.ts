@@ -120,7 +120,7 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
-      if (this.idProcedimiento === 110212) {
+      if (this.idProcedimiento === 110212 || this.idProcedimiento === 110201) {
       const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formDatosDelDestinatario.get(key)?.clearValidators();
@@ -225,7 +225,7 @@ export class DatosDelDestinatarioComponent
   applyNumeroRegistroFiscalValidation(): void {
     const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
-    const NOMBRES = this.formDatosDelDestinatario.get('nombres'); // Add validation for nombres
+    const NOMBRES = this.formDatosDelDestinatario.get('nombres');
 
     if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
       return;
@@ -238,7 +238,7 @@ export class DatosDelDestinatarioComponent
       ]);
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
       NOMBRES.setValidators([
-        Validators.required, // Add required validation for nombres
+        Validators.required,
         Validators.maxLength(20),
       ]);
     } else {
@@ -247,12 +247,12 @@ export class DatosDelDestinatarioComponent
         Validators.required,
         Validators.maxLength(20),
       ]);
-      NOMBRES.setValidators([Validators.maxLength(20)]); // Optional for other cases
+      NOMBRES.setValidators([Validators.maxLength(20)]);
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
-    NOMBRES.updateValueAndValidity(); // Update validity for nombres
+    NOMBRES.updateValueAndValidity();
   }
 
   /**

@@ -9,14 +9,15 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DestinatarioDeComponent } from './destinatario-de.component';
 import { FormBuilder } from '@angular/forms';
-import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
-import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { Tramites110201Store } from '../../state/tramites110201.store';
+import { Tramites110201Query } from '../../state/tramites110201.query';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinatarioService } from '../../../../shared/services/destinatario.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
-class MockTramite110208Store {
+class MockTramites110201Store {
   setDestinatarioForm() {}
   setFormDatosDelDestinatario() {}
   setFormDestinatario() {}
@@ -25,7 +26,7 @@ class MockTramite110208Store {
 }
 
 @Injectable()
-class MockTramite110208Query {
+class MockTramites110201Query {
   selectDestinatarioForm$ = observableOf({});
   selectFormDestinatario$ = observableOf({});
   selectFormDatosDelDestinatario$ = observableOf({});
@@ -44,12 +45,12 @@ describe('DestinatarioDeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DestinatarioDeComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, DestinatarioDeComponent,HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Tramite110208Store, useClass: MockTramite110208Store },
-        { provide: Tramite110208Query, useClass: MockTramite110208Query },
+        { provide: Tramites110201Store, useClass: MockTramites110201Store },
+        { provide: Tramites110201Query, useClass: MockTramites110201Query },
         SeccionLibQuery,
         SeccionLibStore,
         ConsultaioQuery,

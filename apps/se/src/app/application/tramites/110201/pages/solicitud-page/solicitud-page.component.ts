@@ -1,10 +1,9 @@
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, JSONResponse, ListaPasosWizard, PASOS2, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, PASOS2, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../enum/certificado.enum';
 import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
 import { Subject, map, take, takeUntil } from 'rxjs';
-import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { RegistroService } from '../../services/registro.service';
 import { Solicituds110201State } from '../../state/tramites110201.store';
 import { Solocitud110201Service } from '../../services/service110201.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
@@ -29,26 +28,6 @@ interface AccionBoton {
    */
   valor: number;
 }
-/**
- * Interfaz que define la estructura del resultado de una solicitud.
- */
-interface ResultadoSolicitud {
-  /**
-   * Indica si la solicitud fue exitosa.
-   */
-  exito: boolean;
-
-  /**
-   * Mensaje de error o éxito de la solicitud.
-   */
-  mensaje?: string;
-
-  /**
-   * Errores del modelo, si los hay.
-   */
-  erroresModelo?: { campo: string; errores: string[] }[];
-}
-
 
 /**
  * Componente que representa la página de solicitud.
@@ -60,7 +39,7 @@ interface ResultadoSolicitud {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnInit {
+export class SolicitudPageComponent implements OnInit, OnDestroy {
   /**
    * Texto de alerta que se muestra a los terceros.
    */
@@ -88,7 +67,11 @@ export class SolicitudPageComponent implements OnInit {
     * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
     */
   esFormaValido: boolean = false;
-
+ /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public alertaNotificacion!: Notificacion;
   /**
    * URL de la página actual.
    */
@@ -165,7 +148,6 @@ export class SolicitudPageComponent implements OnInit {
   constructor(
     private tramite110201Store: Tramite110201Store,
     private tramite110201Query: Tramite110201Query,
-    private registroService: RegistroService,
     private solocitud110201Service: Solocitud110201Service,
   ) { }
 
@@ -275,12 +257,25 @@ export class SolicitudPageComponent implements OnInit {
    * Navega a través de los pasos del asistente según la acción del botón.
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
- pasoNavegarPor(e: AccionBoton): void {
+  pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+        if (e.valor > 0 && e.valor < 5) {
+          this.alertaNotificacion = {
+            tipoNotificacion: 'banner',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+
+        }
       } else {
         this.wizardComponent.atras();
       }
@@ -309,7 +304,6 @@ export class SolicitudPageComponent implements OnInit {
    * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
    */
   private validarTodosFormulariosPasoUno(): boolean {
-
     if (!this.pasoUnoComponent) {
       return true;
     }
@@ -382,5 +376,14 @@ export class SolicitudPageComponent implements OnInit {
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
-
+/**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

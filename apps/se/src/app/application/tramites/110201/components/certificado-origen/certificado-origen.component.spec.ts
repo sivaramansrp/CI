@@ -9,21 +9,21 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { Solocitud110208Service } from '../../../110208/services/service110208.service';
-import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
-import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { Solocitud110201Service } from '../../services/service110201.service';
+import { Tramites110201Store } from '../../state/tramites110201.store';
+import { Tramites110201Query } from '../../state/tramites110201.query'
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
-class MockSolocitud110208Service {
+class MockSolocitud110201Service {
   buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({}));
   crearMercanciaCert = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Injectable()
-class MockTramite110208Store {
+class MockTramite110201Store {
   setFormCertificadoGenric = jest.fn();
   setDisponsiblesDatos = jest.fn()
   setEstado = jest.fn();
@@ -36,7 +36,7 @@ class MockTramite110208Store {
 }
 
 @Injectable()
-class MockTramite110208Query {
+class MockTramite110201Query {
   selectSolicitud$ = observableOf({});
   formCertificado$ = observableOf({});
   actualizarEstadoFormulario = jest.fn();
@@ -52,9 +52,9 @@ describe('CertificadoOrigenComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Solocitud110208Service, useClass: MockSolocitud110208Service },
-        { provide: Tramite110208Store, useClass: MockTramite110208Store },
-        { provide: Tramite110208Query, useClass: MockTramite110208Query },
+        { provide: Solocitud110201Service, useClass: MockSolocitud110201Service },
+        { provide: Tramites110201Store, useClass: MockTramite110201Store },
+        { provide: Tramites110201Query, useClass: MockTramite110201Query },
         SeccionLibQuery,
         ConsultaioQuery
       ]

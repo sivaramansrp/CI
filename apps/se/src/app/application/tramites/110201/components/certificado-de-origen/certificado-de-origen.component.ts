@@ -611,24 +611,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * Además, actualiza los catálogos necesarios llamando a los métodos de obtención de catálogos
    */
   buscarMercancias(): void {
-    const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    // const NEW_ROW = {
-    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-    //   nombreTecnico: FORM_VALUES.nombreTecnico,
-    //   nombreComercial: FORM_VALUES.nombreComercial,
-    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
-    //   fechaExpedicion: FORM_VALUES.fechaInicial,
-    //   fechaVencimiento: FORM_VALUES.fechaFinal,
-    // };
-
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6",
-      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.tratado || '' },
-      pais: { cvePais: this.solicitudState.pais || '' }
+      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState?.tratado || '105' },
+      pais: { cvePais: this.solicitudState?.pais || 'ARG' }
     };
 
     this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
-      this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+      this.mercanciaDisponsiblesTablaDatos = Array.isArray(response.data) ? response.data as ColumnasTabla[] : [];
       this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
     });
     this.hayMercanciasDisponibles = true;
