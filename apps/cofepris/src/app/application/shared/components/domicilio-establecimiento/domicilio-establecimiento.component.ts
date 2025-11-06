@@ -10,12 +10,13 @@ import {
   CrossListLable,
   CrosslistComponent,
   Notificacion,
-  NotificacionesComponent, TipoNotificacionEnum ,
+  NotificacionesComponent,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
   REGEX_TEXTO_ALFANUMERICO_EXTENDIDO,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
   ValidacionesFormularioService,
 } from "@libs/shared/data-access-user/src";
@@ -1544,8 +1545,9 @@ export class DomicilioComponent
         tamanioModal: 'modal-sm'
       };
       this.mostrarNotificacion = true;
-      return;
-    }else{
+    }
+    else 
+       {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: 'info',
@@ -1558,9 +1560,7 @@ export class DomicilioComponent
         tamanioModal: 'modal-sm'
       };
       this.confirmEliminar=true;
-      return;
     }
-   
   }
 
   /**
