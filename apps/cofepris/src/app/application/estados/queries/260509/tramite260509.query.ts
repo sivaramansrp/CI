@@ -8,6 +8,11 @@ import { Query } from '@datorama/akita';
 export class Tramite260509Query extends Query<Solicitud260509State> {
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
    * Observable to select the complete state of the solicitud.
    * @returns {Observable<Solicitud260509State>} The complete state of the solicitud.
    */

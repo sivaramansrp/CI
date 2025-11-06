@@ -88,4 +88,8 @@ export class Tramite260509Store extends Store<Solicitud260509State> {
       },
     }));
   }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({ ...state, idSolicitud }));
+  }
 }
