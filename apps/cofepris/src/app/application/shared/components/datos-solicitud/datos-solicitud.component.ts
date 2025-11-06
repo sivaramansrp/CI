@@ -59,6 +59,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
   @ViewChild(ManifiestosComponent) manifiestosComp!: ManifiestosComponent;
   @ViewChild(RepresentanteLegalRfcComponent) representanteLegalRfcComp!: RepresentanteLegalRfcComponent;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
   rfcValido = false;
   @Input() identificacion: boolean = false;

@@ -33,6 +33,11 @@ import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 })
 export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
 
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
 
   /**

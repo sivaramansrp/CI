@@ -93,6 +93,11 @@ export class DomicilioComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
   @Input() identificacion: boolean = false;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
   @Input() rfcValido: boolean = false;
   @Input() estadoValidte: boolean = true;
@@ -505,8 +510,10 @@ export class DomicilioComponent
    */
   public UMCLista: Catalogo[] = [];
 
+  /** Lista de elementos del catálogo de clasificación toxicológica disponibles en el componente. */
   public clasificacionToxicologicaLista: Catalogo[] = [];
 
+  /** Lista de elementos del catálogo de objeto de importación disponibles para su selección en el formulario. */
   public objetoImportacionLista: Catalogo[] = [];
 
   /**
@@ -582,8 +589,10 @@ export class DomicilioComponent
    */
   colapsableTress: boolean = false;
 
+  /** Lista del catálogo de países disponible para su uso en el componente o formulario. */
   public paisesCatalogo: Catalogo[] = [];
 
+  /** Arreglo de nombres de países utilizados para operaciones internas o visualización en el componente. */
   public paises: string[] = [];
 
   /**
@@ -1186,6 +1195,10 @@ export class DomicilioComponent
     }
   }
 
+  /**
+   * Método para obtener el valor de UMC.
+   * @param event
+   */
   obtenerUMCList(): void {
     if (this.idProcedimiento) {
       this.service
@@ -1197,6 +1210,10 @@ export class DomicilioComponent
     }
   }
 
+  /**
+   * Método para obtener el valor de aduana.
+   * @param event
+   */
   obtenerAduanas(): void {
     if (this.idProcedimiento) {
       this.service
@@ -1211,6 +1228,10 @@ export class DomicilioComponent
     }
   }
 
+  /**
+   * Método para obtener el valor de clasificacion toxicologica.
+   * @param event
+   */
   obtenerClasificacionToxicologica(): void {
     if (this.idProcedimiento) {
       this.service
@@ -1223,6 +1244,10 @@ export class DomicilioComponent
     
   }
 
+  /**
+   * Método para obtener el valor de objeto importacion.
+   * @param event
+   */
   obtenerObjetoImportacion(): void {
     if (this.idProcedimiento) {
       this.service
@@ -1234,6 +1259,10 @@ export class DomicilioComponent
     }
   }
 
+  /**
+   * Método para obtener el valor de paises.
+   * @param event
+   */
   obtenerpaisesLista(): void {
     if (this.idProcedimiento) {
       this.service
