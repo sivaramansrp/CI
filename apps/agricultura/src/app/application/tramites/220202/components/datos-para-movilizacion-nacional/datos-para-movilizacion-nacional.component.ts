@@ -132,12 +132,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         },
         Validators.required
       ),
-      medioTransporte: new FormControl({
-        value: this.formulariodataStore.medioTransporte || '',
+      identificacion: new FormControl({
+        value: this.formulariodataStore.identificacion || '',
         disabled: this.esFormularioSoloLectura,
       }),
-      guiaIdentificacion: new FormControl({
-        value: this.formulariodataStore.guiaIdentificacion || '',
+      puntoVerificacion: new FormControl({
+        value: this.formulariodataStore.puntoVerificacion || '',
         disabled: this.esFormularioSoloLectura,
       }),
       empresaTransportista: new FormControl(

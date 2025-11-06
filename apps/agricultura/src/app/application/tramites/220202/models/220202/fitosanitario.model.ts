@@ -191,7 +191,13 @@ export interface Movilizacion {
      * Identificación única de la guía asociada a la movilización.
      * Este valor es utilizado para rastrear y verificar el transporte.
      */
-    guiaIdentificacion: string;
+    identificacion: string;
+
+    /**
+     * Medio específico de transporte utilizado.
+     * Ejemplo: camión, barco, avión, etc.
+     */
+    puntoVerificacion: string;
 
     /**
      * Nombre de la empresa encargada del transporte.
@@ -199,11 +205,7 @@ export interface Movilizacion {
      */
     empresaTransportista: string;
 
-    /**
-     * Medio específico de transporte utilizado.
-     * Ejemplo: camión, barco, avión, etc.
-     */
-    medioTransporte: string;
+
 }
 
 /**
@@ -664,18 +666,9 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
         },
         movilizacion: {
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
-            guiaIdentificacion: getDefaultValue(
-                params.movilizacion?.guiaIdentificacion,
-                ''
-            ),
-            empresaTransportista: getDefaultValue(
-                params.movilizacion?.empresaTransportista,
-                ''
-            ),
-            medioTransporte: getDefaultValue(
-                params.movilizacion?.medioTransporte,
-                ''
-            ),
+            identificacion: getDefaultValue(params.movilizacion?.identificacion, ''),
+            puntoVerificacion: getDefaultValue(params.movilizacion?.puntoVerificacion, ''),
+            empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
         },
         pago: {
             exentoPago: getDefaultValue(params.pago?.exentoPago, ''),

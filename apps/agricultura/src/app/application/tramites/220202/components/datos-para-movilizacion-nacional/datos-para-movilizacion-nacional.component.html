@@ -29,16 +29,16 @@
         >
           <input
             class="form-control mt-1"
-            id="medioTransporte"
+            id="identificacion"
             placeholder=""
             type="text"
-            name="medioTransporte"
-            formControlName="medioTransporte"
+            name="identificacion"
+            formControlName="identificacion"
             maxlength="30"
             (change)="
             setValoresStore(
               forma,
-              'medioTransporte'
+              'identificacion'
             )
           "
           />
@@ -47,17 +47,17 @@
           <app-catalogo-select
             placeholder=" Selecciona un valor"
             [catalogo]="puntoList"
-            formControlName="guiaIdentificacion"
+            formControlName="puntoVerificacion"
             [label]="'Punto de verificación federal'"
             [required]="false"
             [isDisabled]="esFormularioSoloLectura"
-            name="guiaIdentificacion"
+            name="puntoVerificacion"
             [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'"
             (change)="
             setValoresStore(
               forma,
-              'guiaIdentificacion'
+              'puntoVerificacion'
             )
           "
           ></app-catalogo-select>

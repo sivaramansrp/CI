@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
-import { map, takeUntil } from 'rxjs';
+import { map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
+import { FilaSolicitud, ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -143,7 +145,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   constructor(private readonly seccionStore: SeccionLibStore, 
     private agriculturaApiService: AgriculturaApiService,
-    private consultaQuery: ConsultaioQuery) {
+    private consultaQuery: ConsultaioQuery,
+    private registroSolicitudService: RegistroSolicitudService) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
@@ -202,6 +205,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
    */
   public validarFormularios(): { valido: boolean; mensaje?: string } {
+    console.log('entra a alida formulario de los datos de la solicitud');
+    this.guardarSolicitud();
 
     const tabsValidadas = [
       { index: 2, ref: this.datosSolicitudRef },
@@ -210,26 +215,154 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       { index: 5, ref: this.pagoDeDerechosComponentRef }
     ];
 
-    let esValido = true;
+    let esValido = true;   
 
     for (const tab of tabsValidadas) {
 
-      console.log('tab.index', tab.index);
-      console.log('tabCompleto', tab);
-
-      console.log('tab.ref', tab.ref);
       var validaPestañas = tab.ref.validarFormulario();
       if (tab.ref && !validaPestañas.valido) {
         this.indice = tab.index; // mover a la pestaña con error
         esValido = false;
         return { valido: esValido, mensaje: validaPestañas.mensaje! };
       }
-      console.log('indicePestaña', this.indice);
-
     }
-    console.log('salee del loop', esValido);
-
     return { valido: esValido };
+  }
+
+
+  /**
+   * Guarda la solicitud.
+   * @method guardarSolicitud
+   */
+  guardarSolicitud(): void {
+    console.log('guardarSolicitud: inicio');
+
+    this.agriculturaApiService.getAllDatosForma()
+      .pipe(
+        take(1), // solo la primera emisión
+        map(datos => this.crearPayload(datos)), // crear payload
+        tap(payload => console.log('payloadGuardar', JSON.stringify(payload))), // debug
+        switchMap(payload =>
+          this.registroSolicitudService.guardarSolicitud(220202, payload).pipe(take(1))
+        )
+      )
+      .subscribe({
+        next: (data) => {
+          console.log("respuesta de guardar", data);
+        },
+        error: (err) => {
+          console.error("Error guardando solicitud:", err);
+        }
+      });
+  }
+
+  private crearPayload(datos: any): GuardarSolicitud {
+    console.log('datosFormulario', JSON.stringify(datos));
+    return {
+      id_solicitud: null,
+      datos_solicitud: {
+        cve_aduana: datos.datos.aduanaDeIngreso!,
+        oficina_inspeccion_sanidad_agropecuaria: datos.datos.oficinaDeInspeccion,
+        punto_inspeccion: datos.datos.puntoDeInspeccion,
+        numero_autorizacion: datos.datos.numeroDeGuia!,
+        clave_regimen: datos.datos.regimen,
+        numero_carro_ferrocarril: datos.datos.numeroDeCarro!,
+        mercancia: (datos.tablaDatos ?? []).map((t: FilaSolicitud) => ({
+          tipo_requisito: Number(t.tipoRequisito) ?? 0,
+          requisito: t.requisito ?? '',
+          numero_certificado: Number(t.numeroCertificadoInternacional) ?? 0,
+          cve_fraccion: t.fraccionArancelaria ?? '',
+          id_fraccion_gubernamental: 0,
+          clave_nico: t.nico ?? '',
+          descripcion_mercancia: t.descripcion ?? '',
+          cantidad_umt: Number(t.cantidadUMT) ?? 0,
+          clave_unidad_medida: t.umt ?? '',
+          cantidad_umc: Number(t.cantidadUMC) ?? 0,
+          clave_unidad_comercial: t.umc ?? '',
+          id_uso_mercancia_tipo_tramite: Number(t.uso) ?? 0,
+          id_tipo_producto_tipo_tramite: Number(t.tipoDeProducto) ?? 0,
+          numero_lote: t.numeroDeLote ?? 0,
+          clave_paises_origen: t.paisDeOrigen ?? '',
+          clave_paises_procedencia: t.paisDeProcedencia ?? '',
+          idNombreCientifico: '',
+          lista_detalle_mercancia: (t.detalleVidaSilvestre ?? []).map(x => ({
+            id_vida_silvestre: x.idVidaSilvestre
+          }))
+        }))
+      },
+
+      transporte: {
+        ide_medio_transporte: datos.movilizacion.transporte,
+        identificacion_transporte: datos.movilizacion.identificacion,
+        ide_punto_verificacion: datos.movilizacion.puntoVerificacion,
+        razon_social: datos.movilizacion.empresaTransportista
+      },
+
+      terceros: {
+        terceros_exportador: [
+          {
+            tipo_persona_sol: "TIPERS.EXP",
+            persona_moral: false,
+            nombre: "tadeo",
+            apellido_paterno: "guerrero",
+            apellido_materno: "lopez",
+            razon_social: null,
+            pais: "ATA",
+            descripcion_ubicacion: "domicilio",
+            lada: null,
+            telefonos: null,
+            correo: "miriam@gmail.com"
+          }
+        ],
+        terceros_destinatario: [
+          {
+            tipo_persona_sol: "TIPERS.DES",
+            persona_moral: false,
+            num_establ_tif: null,
+            nom_establ_tif: null,
+            nombre: "david",
+            apellido_paterno: "roman",
+            apellido_materno: "casanova",
+            razon_social: null,
+            pais: "MEX",
+            codigo_postal: "24300",
+            cve_entidad: "CAMP",
+            cve_deleg_mun: "04011",
+            cve_colonia: "01124300023",
+            calle: "14",
+            num_exterior: "895",
+            num_interior: "8",
+            lada: null,
+            telefonos: null,
+            correo: "enrique@gmail.com"
+          }
+        ]
+      },
+
+      pago: {
+        exento_pago: false,
+        ide_motivo_exento_pago: null,
+        cve_referencia_bancaria: "454000554",
+        cadena_pago_dependencia: "0003007060CEFI",
+        cve_banco: "9",
+        llave_pago: "9998853",
+        fec_pago: "2024-08-19 00:00:00",
+        imp_pago: 2562
+      },
+
+      solicitante: {
+        rfc: "AAL0409235E6",
+        rol_capturista: "Solicitante",
+        nombre: "Juan Pérez",
+        es_persona_moral: true,
+        certificado_serial_number: 20001000000100001815
+      },
+
+      representacion_federal: {
+        cve_entidad_federativa: "DGO",
+        cve_unidad_administrativa: "1016"
+      }
+    };
   }
 
 

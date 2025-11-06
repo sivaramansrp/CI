@@ -3,14 +3,16 @@ import {
   API_GET_SOLICITUDES_NICO_DESCRIPCION,
   API_GET_SOLICITUDES_RECENTES,
   API_GET_SOLICITUDES_UNIDAD_MEDIDA,
+  API_POST_SOLICITUD_GUARDAR
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../../220201/models/220201/capturar-solicitud.model';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SolicitudFilaTabla } from '../../../models/220202/fitosanitario.model';
+import { GuardarSolicitud } from '../../../models/220202/guardar-solicitud.model';
 
 @Injectable({
   providedIn: 'root'
@@ -87,6 +89,29 @@ export class RegistroSolicitudService {
         return response;
       })
     );
+  }
+
+  guardarSolicitud(tramite: number, solicitud: GuardarSolicitud): Observable<BaseResponse<any>> {
+    const ENDPOINT = `${this.host}` + API_POST_SOLICITUD_GUARDAR(tramite.toString());
+    return this.http
+      .post<BaseResponse<any>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
   }
 
 }

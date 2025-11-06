@@ -137,12 +137,7 @@ export class AgriculturaComponent {
         }
         else {
           this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
-
         }
-
-
-
-
         return;
       }
     }
@@ -159,12 +154,6 @@ export class AgriculturaComponent {
     }
   }
 
-  // ngAfterViewInit() {
-  //   // Aquí ya puedes acceder a sus propiedades o métodos
-  //   console.log('BtnContinuarComponent.habilitarBoton');
-
-  //   this.BtnContinuarComponent.habilitarBoton = true;
-  // }
 
   /**
 * Obtiene los datos del store y los guarda utilizando el servicio.

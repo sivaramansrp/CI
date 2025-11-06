@@ -198,7 +198,6 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {string} 'hidden' si el índice es 1, de lo contrario 'visible'.
    */
   get btnAntVisible(): string {
-    console.log('indiceDelComponenteBoton', this.datos.indice)
     return this.datos.indice === 1 ? 'hidden' : 'visible';
   }
 
