@@ -79,7 +79,7 @@ export const CONFIGURACION_MERCANCIAS = [
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const FECHA_VENCIMIENTO = {
-  labelNombre: 'Fecha de vencimiento',
+  labelNombre: 'Fecha de vencimiento:',
   required: false,
   habilitado: false,
 };
@@ -91,7 +91,7 @@ export const FECHA_VENCIMIENTO = {
  * @property {boolean} habilitado - Indicates whether the date of issuance is enabled.
  */
 export const FECHA_EXPEDICION = {
-  labelNombre: 'Fecha de expedición',
+  labelNombre: 'Fecha de expedición:',
   required: false,
   habilitado: false,
 };

@@ -176,8 +176,9 @@
                         <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
                         <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
                             name="montoAExpedir" [required]="true" aria-label="Monto a expedir"
-                            (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
-                         @if(asignacionForm.controls['montoAExpedir'].invalid &&
+                            (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')"
+                            [disabled]="esFormularioSoloLectura">
+                        @if(asignacionForm.controls['montoAExpedir'].invalid &&
                         asignacionForm.controls['montoAExpedir'].touched) {
                         <div class="d-grid">
                             @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
@@ -194,7 +195,12 @@
                     </div>
                 </div>
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" (click)="enviarMontoFormulario()" [disabled]="esFormularioSoloLectura">Agregar</button>
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            (click)="enviarMontoFormulario()" 
+                            [disabled]="esFormularioSoloLectura || !asignacionForm.get('montoAExpedir')?.value || asignacionForm.get('montoAExpedir')?.invalid">
+                        Agregar
+                    </button>
                 </div>
             </div>
         </div>

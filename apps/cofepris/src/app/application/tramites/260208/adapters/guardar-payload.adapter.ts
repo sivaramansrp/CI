@@ -42,7 +42,7 @@ export class GuardarAdapter_260208 {
           "discriminatorValue": 260208,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "ALTAMIRA",
+          "aduanaAIFA": "",
           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
       },
       "establecimiento": {
@@ -52,7 +52,7 @@ export class GuardarAdapter_260208 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": "09"
+                  "clave": ""
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -75,10 +75,10 @@ export class GuardarAdapter_260208 {
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
               "idMercancia": "",
-              "idClasificacionProducto": "",
-              "nombreClasificacionProducto": mercancia.clasificacionProducto,
-              "ideSubClasificacionProducto": "",
-              "nombreSubClasificacionProducto": mercancia.especificarClasificacionProducto,
+              "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
+              "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
+              "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
+              "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
               "descripcionMercancia": "",
@@ -86,10 +86,10 @@ export class GuardarAdapter_260208 {
               "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
-                  "descripcion": ""
+                  "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.unidadMedidaComercializacion
+                  "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
               "cantidadUMCConComas": mercancia.cantidadUMC,
               "unidadMedidaTarifa": {
@@ -101,7 +101,7 @@ export class GuardarAdapter_260208 {
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -119,7 +119,7 @@ export class GuardarAdapter_260208 {
               "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
               "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
               "booleanFisicaNoContribuyente": "0",
-              "denominacion": fabricante.razonSocial,
+              "denominacion": fabricante.tipoPersona === "Moral" ? fabricante.razonSocial : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
               "razonSocial": fabricante.razonSocial,
               "rfc": fabricante.rfc,
               "curp": fabricante.curp,
@@ -137,24 +137,24 @@ export class GuardarAdapter_260208 {
                   "numeroExterior": fabricante.numeroExterior,
                   "numeroInterior": fabricante.numeroInterior,
                   "pais": {
-                      "clave": "MEX",
-                      "nombre": fabricante.pais
+                      "clave": fabricante.paisObj?.clave,
+                      "nombre": fabricante.paisObj?.descripcion
                   },
                   "colonia": {
-                      "clave": "001",
-                      "nombre": fabricante.colonia
+                      "clave": fabricante.coloniaObj?.clave,
+                      "nombre": fabricante.coloniaObj?.descripcion
                   },
                   "delegacionMunicipio": {
-                      "clave": "015",
-                      "nombre": fabricante.municipioAlcaldia
+                      "clave": fabricante.municipioAlcaldiaObj?.clave,
+                      "nombre": fabricante.municipioAlcaldiaObj?.descripcion
                   },
                   "localidad": {
-                      "clave": "001",
-                      "nombre": fabricante.localidad
+                      "clave": fabricante.localidadObj?.clave,
+                      "nombre": fabricante.localidadObj?.descripcion
                   },
                   "entidadFederativa": {
-                      "clave": "09",
-                      "nombre": fabricante.entidadFederativa
+                      "clave": fabricante.entidadFederativaObj?.clave,
+                      "nombre": fabricante.entidadFederativaObj?.descripcion
                   },
                   "informacionExtra": "",
                   "codigoPostal": fabricante.codigoPostal,
@@ -167,8 +167,8 @@ export class GuardarAdapter_260208 {
         return {
             "idPersonaSolicitud": "",
             "ideTipoTercero": "TIPERS.FAB",
-            "personaMoral": "1",
-            "booleanExtranjero": "0",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
             "booleanFisicaNoContribuyente": "0",
             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
             "razonSocial": destinatario.razonSocial,
@@ -188,24 +188,24 @@ export class GuardarAdapter_260208 {
                 "numeroExterior": destinatario.numeroExterior,
                 "numeroInterior": destinatario.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": destinatario.pais
+                    "clave": destinatario.paisObj?.clave,
+                    "nombre": destinatario.paisObj?.descripcion
                 },
                 "colonia": {
-                    "clave": "",
-                    "nombre": destinatario.colonia
+                    "clave": destinatario.coloniaObj?.clave,
+                    "nombre": destinatario.coloniaObj?.descripcion
                 },
                 "delegacionMunicipio": {
-                    "clave": "",
-                    "nombre": destinatario.municipioAlcaldia
+                    "clave": destinatario.municipioObj?.clave,
+                    "nombre": destinatario.municipioObj?.descripcion
                 },
                 "localidad": {
-                    "clave": "001",
-                    "nombre": destinatario.localidad
+                    "clave": destinatario.localidadObj?.clave,
+                    "nombre": destinatario.localidadObj?.descripcion
                 },
                 "entidadFederativa": {
-                    "clave": "09",
-                    "nombre": "Ciudad de México"
+                    "clave": "",
+                    "nombre": ""
                 },
                 "informacionExtra": "",
                 "codigoPostal": destinatario.codigoPostal,
@@ -239,24 +239,24 @@ export class GuardarAdapter_260208 {
                 "numeroExterior": proveedor.numeroExterior,
                 "numeroInterior": proveedor.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": proveedor.pais
+                    "clave": proveedor.paisObj?.clave,
+                    "nombre": proveedor.paisObj?.descripcion
                 },
                 "colonia": {
                     "clave": "",
-                    "nombre": proveedor.colonia
+                    "nombre": ""
                 },
                 "delegacionMunicipio": {
                     "clave": "",
-                    "nombre": proveedor.municipioAlcaldia
+                    "nombre": ""
                 },
                 "localidad": {
                     "clave": "",
-                    "nombre": proveedor.localidad
+                    "nombre": ""
                 },
                 "entidadFederativa": {
                     "clave": "",
-                    "nombre": proveedor.entidadFederativa
+                    "nombre": ""
                 },
                 "informacionExtra": "",
                 "codigoPostal": proveedor.codigoPostal,
@@ -290,24 +290,24 @@ export class GuardarAdapter_260208 {
               "numeroExterior": facturador.numeroExterior,
               "numeroInterior": facturador.numeroInterior,
               "pais": {
-                  "clave": "",
-                  "nombre": facturador.pais
+                  "clave": facturador.paisObj?.clave,
+                  "nombre": facturador.paisObj?.descripcion
               },
               "colonia": {
                   "clave": "",
-                  "nombre": facturador.colonia
+                  "nombre": ""
               },
               "delegacionMunicipio": {
                   "clave": "",
-                  "nombre": facturador.municipioAlcaldia
+                  "nombre": ""
               },
               "localidad": {
                   "clave": "",
-                  "nombre": facturador.localidad
+                  "nombre": ""
               },
               "entidadFederativa": {
                   "clave": "",
-                  "nombre": facturador.entidadFederativa
+                  "nombre": ""
               },
               "informacionExtra": "",
               "codigoPostal": facturador.codigoPostal,
@@ -318,10 +318,10 @@ export class GuardarAdapter_260208 {
       }),
       "pagoDeDerechos": {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
-          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,GuardarAdapter_260208,
+          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
-              "clave": state.pagoDerechos.banco,
-              "descripcion": ""
+              "clave": state.pagoDerechos.bancoObject?.clave,
+              "descripcion": state.pagoDerechos.bancoObject?.descripcion
           },
           "llaveDePago": state.pagoDerechos.llavePago,
           "fecPago": state.pagoDerechos.fechaPago,

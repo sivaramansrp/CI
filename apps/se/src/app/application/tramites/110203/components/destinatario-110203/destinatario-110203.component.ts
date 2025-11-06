@@ -5,6 +5,7 @@ import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tr
 import { Subject, map, takeUntil } from 'rxjs';
 import { DESTINATARIO_DATOS } from '../../constant/destinatario.enum';
 import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
+import { REGEX_ALFANUMERICO_CON_ESPACIOS } from '@libs/shared/data-access-user/src';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 /**
@@ -181,35 +182,25 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
       segundo: [this.solicitudState.segundo,[Validators.maxLength(20)]],
       fiscal: [this.solicitudState.fiscal,[Validators.maxLength(30),Validators.required]],
       razon: [this.solicitudState.razon,[Validators.maxLength(70)]],
-      calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
-      letra: [this.solicitudState.letra, [Validators.required, Validators.maxLength(30)]],
-      ciudad: [this.solicitudState.ciudad, [Validators.required, Validators.maxLength(50)]],
-      correo: [this.solicitudState.correo, [Validators.required, Validators.email]],
-      fax: [this.solicitudState.fax, [Validators.maxLength(20)]],
-      telefono: [this.solicitudState.telefono],
+      calle: [this.solicitudState.calle, [Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS),Validators.required, Validators.maxLength(100)]],
+      letra: [this.solicitudState.letra, [Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS),Validators.required, Validators.maxLength(30)]],
+      ciudad: [this.solicitudState.ciudad, [Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS),Validators.required, Validators.maxLength(50)]],
+      correo: [this.solicitudState.correo, [Validators.required, Validators.maxLength(70),Validators.email]],
+      fax: [this.solicitudState.fax, [Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS),Validators.maxLength(20)]],
+      telefono: [this.solicitudState.telefono,[Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS),Validators.maxLength(30)]],
     });
-    // this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
-     this.destinatarioForm.get('razon')?.valueChanges.subscribe(value => {
-    if (value && value.trim().length > 0) {
-      // Clear the first 3 fields
-      this.destinatarioForm.get('nombre')?.setValue('');
-      this.destinatarioForm.get('primer')?.setValue('');
-      this.destinatarioForm.get('segundo')?.setValue('');
-
-      // Optionally mark as touched or dirty if needed
-      this.destinatarioForm.get('nombre')?.markAsTouched();
-      this.destinatarioForm.get('primer')?.markAsTouched();
-      this.destinatarioForm.get('segundo')?.markAsTouched();
-
-      // Set a flag so template can bind readonly
-      this.camposNombreSoloLectura = true;
-    } else {
-      this.camposNombreSoloLectura = false;
-    }
-  });
+  if(this.destinatarioForm.get('nombre')?.value){
+    this.destinatarioForm.get('razon')?.disable();
+  } else if(this.destinatarioForm.get('razon')?.value){
+    this.destinatarioForm.get('nombre')?.setValue('');
+    this.destinatarioForm.get('primer')?.setValue('');
+    this.destinatarioForm.get('segundo')?.setValue('');
+    this.destinatarioForm.get('nombre')?.disable();
+    this.destinatarioForm.get('primer')?.disable();
+    this.destinatarioForm.get('segundo')?.disable();
+  }
     });
   }
-
   /**
    * Método para actualizar el store del trámite con el valor de un campo específico del formulario.
    * 

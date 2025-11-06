@@ -116,6 +116,11 @@ export interface MercanciaTabla {
   nombreComercial: string;
   valorMercancia: string;
   rfcProductor: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
 }
 /**
  * @interface MercanciasHistorico

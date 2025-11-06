@@ -1,3 +1,5 @@
+import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src";
+
 /**
  * @constant CUPOS_PASOS
  * @description
@@ -418,7 +420,7 @@ export const CONSULTAR_CUPO = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },{ tipo: 'pattern', valor:REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido.' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -869,7 +871,7 @@ export const FORMULARIO_MODAL_INSUMOS = [
       tipoInput: 'text',
       desactivado: false,
       soloLectura: false,
-      validadores: [{ tipo: 'required' }],
+      validadores: [{ tipo: 'required' },{ tipo: 'pattern', valor:REGEX_SOLO_DIGITOS, mensaje: 'Por favor, escribe un número entero válido.' }],
       marcadorDePosicion: '',
       valorPredeterminado: '',
       marginTop: 0,

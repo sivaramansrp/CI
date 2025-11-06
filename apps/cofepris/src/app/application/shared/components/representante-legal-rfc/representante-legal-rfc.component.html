@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="nombre">Nombre o Razón Social*:</label>
+                    <label class="form-label" for="nombre">Nombre o Razón Social<span  [ngClass]="{'tiene-error':representante.get('nombre')?.invalid && representante.get('nombre')?.touched || mostrarErroresRepresentante.nombre}">*</span>:</label>
                     <input
                         class="form-control"
                         id="nombre"
@@ -46,10 +46,13 @@
                         (change)="setValoresStore(representante,'nombre', 'setNombre')"
                     />
                 </div>
+                 <small  *ngIf="representante.get('nombre')?.touched && representante.get('nombre')?.hasError('required') || mostrarErroresRepresentante.nombre" class="mensaje-error">
+        Este campo es obligatorio.
+    </small >
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+                    <label class="form-label" for="apellidoPaterno">Apellido paterno<span  [ngClass]="{'tiene-error':representante.get('apellidoPaterno')?.invalid && representante.get('apellidoPaterno')?.touched || mostrarErroresRepresentante.apellidoPaterno}">*</span>:</label>
                     <input
                         class="form-control"
                         id="apellidoPaterno"
@@ -59,6 +62,9 @@
                         (change)="setValoresStore(representante,'apellidoPaterno', 'setApellidoPaterno')"
                     />
                 </div>
+                 <small  *ngIf="representante.get('apellidoPaterno')?.touched && representante.get('apellidoPaterno')?.hasError('required') || mostrarErroresRepresentante.apellidoPaterno" class="mensaje-error">
+        Este campo es obligatorio.
+    </small >
             </div>
             <div class="col-md-4">
                 <div class="form-group">

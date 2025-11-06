@@ -3,9 +3,12 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -20,6 +23,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+   @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
+    @ViewChild(TercerosRelacionadosFabricanteComponent) tercerosRelacionadosFabricanteRef!: TercerosRelacionadosFabricanteComponent;
+     @ViewChild(PagoDerechosComponent) pagoDerechosRef!: PagoDerechosComponent;
+
+  
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -116,6 +124,17 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
+  validOnButtonClick():boolean{
+    let isValid = false;
+    if(this.datosSolicitudRef?.validarClickDeBoton()){
+          isValid = true;
+        }
+        else{
+          isValid = false;
+        }
+        return isValid;
+      }
+  
 
   /**
    * Método que se ejecuta cuando el componente se destruye.
