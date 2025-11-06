@@ -9,8 +9,11 @@ import { Component, ViewChild } from '@angular/core';
 import { PASOS, TITULO_MENSAJE } from '../../constants/destinados-donacio.enum';
 import { Subject,takeUntil } from 'rxjs';
 import { EventEmitter } from '@angular/core';
+import { GuardarAdapter_260209 } from '../../adapters/guardar-payload.adapter';
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import {MENSAJE_DE_VALIDACION}from'../../constants/destinados-donacio.enum';
+import { RegistroSolicitudService } from '@ng-mf/data-access-user';
+
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -19,6 +22,7 @@ import { Notificacion } from '@ng-mf/data-access-user';import { ToastrService } 
 
 
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
+
 
 @Component({
   selector: 'app-contenedor-de-pasos',
@@ -166,9 +170,10 @@ export class ContenedorDePasosComponent {
 
   
   constructor(
-    private toastrService: ToastrService,
-    private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService,
-    private tramite260209Query: Tramite260209Query
+  private toastrService: ToastrService,
+  private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService,
+  private tramite260209Query: Tramite260209Query,
+  private registroSolicitudService: RegistroSolicitudService
   ) {}
 
 
@@ -183,7 +188,7 @@ export class ContenedorDePasosComponent {
       if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if (!this.pasoUnoComponent.ValidarPagoDerechos()) {
+      if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent?.validarContenedor()) {
         this.mostrarAlerta = true;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
@@ -196,30 +201,50 @@ export class ContenedorDePasosComponent {
           txtBtnAceptar: 'SI',
           txtBtnCancelar: 'NO',
         };
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        //return;
+       // return;
       }
-      const STATE = this.tramite260209Query.getValue();
-      this.importacionDestinadosDonacioService.guardarTramite(STATE).subscribe({
-        next: () => {
-          this.toastrService.success('Guardado exitosamente');
+      const PAYLOAD = GuardarAdapter_260209.toFormPayload(this.tramite260209Query.getValue());
+      let shouldNavigate = false;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.registroSolicitudService.postGuardarDatos('260209', PAYLOAD).subscribe((response: any) => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          // this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE); // Optionally implement similar error alert
           this.esFormaValido = false;
-          this.indice = e.valor;
-          this.datosPasos.indice = this.indice;
-          this.wizardComponent.siguiente();
-        },
-        error: () => {
-          this.toastrService.error('Error al guardar');
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        if (shouldNavigate) {
+          // Set idSolicitudState from response
+          if (response.datos && response.datos.id_solicitud) {
+            this.idSolicitudState = response.datos.id_solicitud;
+          }
+          const INDICE_ACTUALIZADO = this.indice + 1;
+          this.toastrService.success(response.mensaje);
+          if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
+            this.indice = INDICE_ACTUALIZADO;
+            this.datosPasos.indice = INDICE_ACTUALIZADO;
+            this.esFormaValido = false;
+            this.wizardComponent.siguiente();
+          }
+        } else {
+          this.toastrService.error(response.mensaje);
         }
       });
-      return;
+    } else {
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
-    this.indice = e.valor;
-    this.datosPasos.indice = this.indice;
-    this.wizardComponent.atras();
   }
   
 

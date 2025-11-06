@@ -51,9 +51,9 @@
             <button
               class="btn btn-primary ms-3"
               (click)="
-                seccionCargarDocumentos ? onClickCargaArchivos() : continuarConGuardado()
+                seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
               "
-              [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+              [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
             >
               {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
             </button>

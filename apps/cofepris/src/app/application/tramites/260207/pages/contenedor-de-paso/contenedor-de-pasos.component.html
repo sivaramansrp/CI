@@ -54,7 +54,7 @@
             </button>
             <button
               class="btn btn-primary ms-3"
-              (click)="seccionCargarDocumentos ? onClickCargaArchivos() : getValorIndice({accion: 'cont', valor: indice})"
+              (click)="seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()"
               [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
             >
               {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}

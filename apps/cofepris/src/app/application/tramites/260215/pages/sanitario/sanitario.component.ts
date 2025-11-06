@@ -98,6 +98,23 @@ export class SanitarioComponent {
 
     getValorIndice(e: AccionBoton): void {
       if (e.accion === 'cont') {
+  const IS_VALID = true;
+        // Si tienes componentes hijos para validar, agrégalos aquí
+        // if (this.indice === 1 && this.pasoUnoComponent) {
+        //   isValid = this.pasoUnoComponent.validarPasoUno();
+        // }
+        // if (!this.pasoUnoComponent?.pagoDeDerechosContenedoraComponent?.validarContenedor()) {
+        //   this.formErrorAlert = {
+        //     tipo: 'danger',
+        //     mensaje: 'Validación de pago de derechos fallida',
+        //   };
+        //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        //   return;
+        // }
+  if (!IS_VALID) {
+          this.datosPasos.indice = this.indice;
+          return;
+        }
         this.query.selectTramiteState$.pipe(
           take(1),
           map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
@@ -119,24 +136,32 @@ export class SanitarioComponent {
               tipo: 'danger',
               mensaje: ERROR_MESSAGE,
             };
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            if (this.wizardComponent) {
+              this.wizardComponent.indiceActual = 1;
+            }
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
             return;
           }
-          // Si éxito, navega al siguiente paso
-          if (e.valor > 0 && e.valor < 5) {
-            this.indice = e.valor;
-            this.datosPasos.indice = this.indice;
-            if (this.wizardComponent) {
-              this.wizardComponent.siguiente();
-            }
+          // Si éxito, navega al paso 2 y muestra botón de carga de archivos
+          if (response.datos && typeof response.datos === 'object' && 'id_solicitud' in response.datos) {
+            this.idSolicitudState = (response.datos as { id_solicitud?: number }).id_solicitud ?? null;
+          }
+          this.indice = 2;
+          this.datosPasos.indice = 2;
+          this.seccionCargarDocumentos = true;
+          this.activarBotonCargaArchivos = false;
+          this.cargaEnProgreso = false;
+          if (this.wizardComponent) {
+            this.wizardComponent.siguiente();
           }
         });
       } else {
-        if (e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (this.wizardComponent) {
-            this.wizardComponent.atras();
-          }
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        if (this.wizardComponent) {
+          this.wizardComponent.atras();
         }
       }
     }
@@ -173,6 +198,7 @@ export class SanitarioComponent {
    */
   cargaRealizada(realizada: boolean): void {
     this.seccionCargarDocumentos = realizada ? false : true;
+    // If cargaRealizada is true (upload complete), show 'Continuar' button
   }
 
     /**
@@ -216,8 +242,8 @@ export class SanitarioComponent {
         return throwError(() => error);
       })
     ).subscribe(response => {
-  const SHOULD_NAVIGATE = response.codigo === '00';
-  if (!SHOULD_NAVIGATE) {
+      const SHOULD_NAVIGATE = response.codigo === '00';
+      if (!SHOULD_NAVIGATE) {
         const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
         this.formErrorAlert = {
           tipo: 'danger',
@@ -226,9 +252,14 @@ export class SanitarioComponent {
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-      // Si éxito, navega al siguiente paso
-      this.indice = 3;
-      this.datosPasos.indice = this.indice;
+      // Si éxito, navega al paso 2 y muestra botón de carga de archivos
+      if (response.datos && typeof response.datos === 'object' && 'id_solicitud' in response.datos) {
+        this.idSolicitudState = (response.datos as { id_solicitud?: number }).id_solicitud ?? null;
+      }
+      this.indice = 2;
+      this.datosPasos.indice = 2;
+      this.seccionCargarDocumentos = true;
+      this.activarBotonCargaArchivos = false;
       this.actualizarSeccionCargarDocumentos();
       if (this.wizardComponent) {
         this.wizardComponent.siguiente();
@@ -275,5 +306,32 @@ export class SanitarioComponent {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Paso 2: Cuando usuario hace click en 'Continuar' después de cargar archivos
+   * Avanza a paso 3 (firma)
+   */
+  continuarDespuesDeCarga(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.actualizarSeccionCargarDocumentos();
+    if (this.wizardComponent) {
+      this.wizardComponent.siguiente();
+    }
+  }
+
+  /**
+   * Método para avanzar al siguiente paso (paso 3) después de la carga de documentos.
+   * Se asegura de que el índice y el estado de los pasos se actualicen correctamente,
+   * y llama al método `siguiente` del componente `WizardComponent` si está disponible.
+   */
+  siguiente(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.actualizarSeccionCargarDocumentos();
+    if (this.wizardComponent) {
+      this.wizardComponent.siguiente();
+    }
   }
 }

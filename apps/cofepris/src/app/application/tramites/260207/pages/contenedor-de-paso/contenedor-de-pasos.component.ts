@@ -328,13 +328,17 @@ export class ContenedorDePasosComponent implements OnInit {
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = 2;
           }
           this.toastrService.success(response.mensaje);
           // Ajusta el rango según el número de pasos reales (ejemplo: 1 < indiceActualizado < 4)
           if (indiceActualizado > 0 && indiceActualizado < 4) {
             this.indice = indiceActualizado;
             this.datosPasos.indice = indiceActualizado;
+            // Show document upload section and button like 260215
+            this.seccionCargarDocumentos = true;
+            this.activarBotonCargaArchivos = false;
+            this.cargaEnProgreso = false;
             if (e.accion === 'cont') {
               this.wizardComponent.siguiente();
             }

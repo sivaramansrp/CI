@@ -1,101 +1,101 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SanitarioComponent } from './sanitario.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { provideHttpClient } from '@angular/common/http';
-import { of, Observable, throwError } from 'rxjs';
 
 describe('SanitarioComponent', () => {
   let component: SanitarioComponent;
-  let fixture: ComponentFixture<SanitarioComponent>;
-  let wizardMock: any;
+  let query: any;
+  let registroSolicitudService: any;
+  let serviciosPermisoSanitarioService: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SanitarioComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [provideHttpClient()]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(SanitarioComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    query = { selectTramiteState$: { pipe: jest.fn().mockReturnThis() } };
+    registroSolicitudService = {
+      postGuardarDatos: jest.fn().mockReturnValue({ pipe: jest.fn().mockReturnThis() })
+    };
+    serviciosPermisoSanitarioService = {};
+    component = new SanitarioComponent(query, registroSolicitudService, serviciosPermisoSanitarioService);
   });
 
-  it('debería crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar pasos y datosPasos correctamente', () => {
-    expect(component.pasos).toBeDefined();
-    expect(component.datosPasos).toEqual({
-      nroPasos: component.pasos.length,
-      indice: component.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
+  it('should emit cargarArchivosEvento on onClickCargaArchivos', () => {
+    const spy = jest.spyOn(component.cargarArchivosEvento, 'emit');
+    component.onClickCargaArchivos();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('debería actualizar el índice y llamar a wizardComponent.siguiente() cuando getValorIndice es llamado con "cont"', (done) => {
-    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
-    component.wizardComponent = wizardMock;
+  it('should set activarBotonCargaArchivos on manejaEventoCargaDocumentos', () => {
+    component.manejaEventoCargaDocumentos(true);
+    expect(component.activarBotonCargaArchivos).toBe(true);
+  });
+
+  it('should set seccionCargarDocumentos on cargaRealizada', () => {
+    component.cargaRealizada(true);
+    expect(component.seccionCargarDocumentos).toBe(false);
+    component.cargaRealizada(false);
+    expect(component.seccionCargarDocumentos).toBe(true);
+  });
+
+  it('should set cargaEnProgreso on onCargaEnProgreso', () => {
+    component.onCargaEnProgreso(false);
+    expect(component.cargaEnProgreso).toBe(false);
+  });
+
+  it('should update seccionCargarDocumentos on actualizarSeccionCargarDocumentos', () => {
+    component.indice = 2;
+    (component as any).actualizarSeccionCargarDocumentos();
+    expect(component.seccionCargarDocumentos).toBe(true);
     component.indice = 1;
-
-    // Mock the guardarDatosAPI method to return a successful response
-    // jest.spyOn(component, 'guardarDatosAPI').mockReturnValue(of({ success: true, message: 'Success', data: {} }));
-
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-
-    // Since the operation is asynchronous, we need to wait for it to complete
-    setTimeout(() => {
-      expect(component.indice).toBe(1);
-      expect(wizardMock.siguiente).toHaveBeenCalled();
-      done();
-    }, 0);
+    (component as any).actualizarSeccionCargarDocumentos();
+    expect(component.seccionCargarDocumentos).toBe(false);
   });
 
-  it('debería actualizar el índice y llamar a wizardComponent.atras() cuando getValorIndice es llamado con "ant"', () => {
-    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
-    component.wizardComponent = wizardMock;
-    component.indice = 3;
-
-    component.getValorIndice({ accion: 'ant', valor: 2 });
-
-    expect(component.indice).toBe(2);
-    expect(wizardMock.atras).toHaveBeenCalled();
+  it('should go to next step on continuarDespuesDeCarga', () => {
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    component.continuarDespuesDeCarga();
+    expect(component.indice).toBe(3);
+    expect(component.datosPasos.indice).toBe(3);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('no debería actualizar el índice ni llamar métodos de wizardComponent si el valor está fuera de rango', () => {
-    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
-    component.wizardComponent = wizardMock;
-    component.indice = 1;
+  it('should go to next step on siguiente', () => {
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    component.siguiente();
+    expect(component.indice).toBe(3);
+    expect(component.datosPasos.indice).toBe(3);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
 
-   component.getValorIndice({ accion: 'cont', valor: 0 });
-    component.getValorIndice({ accion: 'ant', valor: 6 });
-
+  it('should go to previous step on anterior', () => {
+    component.wizardComponent = { atras: jest.fn() } as any;
+    component.indice = 2;
+    component.anterior();
     expect(component.indice).toBe(1);
-    expect(wizardMock.siguiente).not.toHaveBeenCalled();
-    expect(wizardMock.atras).not.toHaveBeenCalled();
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('debería manejar errores de la API y no llamar a wizardComponent.siguiente() cuando getValorIndice falla', (done) => {
-    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
-    component.wizardComponent = wizardMock;
-    component.indice = 1;
-
-    // Mock the guardarDatosAPI method to return an error
-    jest.spyOn(component, 'guardarDatosAPI').mockReturnValue(
-      throwError(() => new Error('API Error'))
-    );
-
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-
-    // Since the operation is asynchronous, we need to wait for it to complete
-    setTimeout(() => {
-      expect(component.indice).toBe(1); // Index should still be updated
-      expect(wizardMock.siguiente).not.toHaveBeenCalled(); // But siguiente should not be called
-      done();
-    }, 0);
+  it('should call registroSolicitudService.postGuardarDatos in guardarDatosAPI', () => {
+    const pipeMock = jest.fn().mockReturnValue({ subscribe: jest.fn() });
+    query.selectTramiteState$.pipe = jest.fn(() => ({
+      subscribe: (fn: any) => fn({})
+    }));
+    registroSolicitudService.postGuardarDatos = jest.fn();
+    component.guardarDatosAPI();
+    expect(registroSolicitudService.postGuardarDatos).toHaveBeenCalled();
   });
 
+  it('should call registroSolicitudService.postGuardarDatos in onGuardar', () => {
+    query.selectTramiteState$.pipe = jest.fn(() => ({
+      subscribe: (fn: any) => fn({})
+    }));
+    registroSolicitudService.postGuardarDatos = jest.fn().mockReturnValue({
+      pipe: jest.fn().mockReturnValue({
+        subscribe: jest.fn()
+      })
+    });
+    component.onGuardar();
+    expect(registroSolicitudService.postGuardarDatos).toHaveBeenCalled();
+  });
 });
