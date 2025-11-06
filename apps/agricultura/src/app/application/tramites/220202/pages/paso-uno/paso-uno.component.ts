@@ -256,7 +256,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       });
   }
 
-  private crearPayload(datos: any): GuardarSolicitud {
+  private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
     console.log('datosFormulario', JSON.stringify(datos));
     return {
       id_solicitud: null,
@@ -294,7 +294,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       transporte: {
         ide_medio_transporte: datos.movilizacion.transporte,
         identificacion_transporte: datos.movilizacion.identificacion,
-        ide_punto_verificacion: datos.movilizacion.puntoVerificacion,
+        ide_punto_verificacion: Number(datos.movilizacion.puntoVerificacion),
         razon_social: datos.movilizacion.empresaTransportista
       },
 
@@ -302,39 +302,39 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         terceros_exportador: [
           {
             tipo_persona_sol: "TIPERS.EXP",
-            persona_moral: false,
-            nombre: "tadeo",
-            apellido_paterno: "guerrero",
-            apellido_materno: "lopez",
-            razon_social: null,
-            pais: "ATA",
-            descripcion_ubicacion: "domicilio",
-            lada: null,
-            telefonos: null,
-            correo: "miriam@gmail.com"
+            persona_moral: datos.datosForma[0].tipoMercancia?.toLowerCase() === 'no',
+            nombre: datos.datosForma[0].nombre,
+            apellido_paterno: datos.datosForma[0].primerApellido,
+            apellido_materno: datos.datosForma[0].segundoApellido ?? '',
+            razon_social: datos.datosForma[0].razonSocial,
+            pais: datos.datosForma[0].pais,
+            descripcion_ubicacion: datos.datosForma[0].domicilio ?? '',
+            lada: datos.datosForma[0].lada ?? '',
+            telefonos: datos.datosForma[0].telefono ?? '',
+            correo: datos.datosForma[0].correo ?? ''
           }
         ],
         terceros_destinatario: [
           {
             tipo_persona_sol: "TIPERS.DES",
-            persona_moral: false,
+            persona_moral: datos.tercerosRelacionados[0].tipoMercancia?.toLowerCase() === 'no',
             num_establ_tif: null,
             nom_establ_tif: null,
-            nombre: "david",
-            apellido_paterno: "roman",
-            apellido_materno: "casanova",
-            razon_social: null,
-            pais: "MEX",
-            codigo_postal: "24300",
-            cve_entidad: "CAMP",
-            cve_deleg_mun: "04011",
-            cve_colonia: "01124300023",
-            calle: "14",
-            num_exterior: "895",
-            num_interior: "8",
-            lada: null,
-            telefonos: null,
-            correo: "enrique@gmail.com"
+            nombre: datos.tercerosRelacionados[0].nombre,
+            apellido_paterno: datos.tercerosRelacionados[0].primerApellido,
+            apellido_materno: datos.tercerosRelacionados[0].segundoApellido ?? '',
+            razon_social: datos.tercerosRelacionados[0].razonSocial,
+            pais: datos.tercerosRelacionados[0].pais,
+            codigo_postal: datos.tercerosRelacionados[0].codigoPostal,
+            cve_entidad: datos.tercerosRelacionados[0].estado,
+            cve_deleg_mun: datos.tercerosRelacionados[0].municipio ?? '',
+            cve_colonia: datos.tercerosRelacionados[0].colonia ?? '',
+            calle: datos.tercerosRelacionados[0].calle,
+            num_exterior: datos.tercerosRelacionados[0].numeroExterior,
+            num_interior: datos.tercerosRelacionados[0].numeroInterior ?? '',
+            lada: datos.tercerosRelacionados[0].lada ?? '',
+            telefonos: datos.tercerosRelacionados[0].telefono ?? '',
+            correo: datos.tercerosRelacionados[0].correo ?? ''
           }
         ]
       },
