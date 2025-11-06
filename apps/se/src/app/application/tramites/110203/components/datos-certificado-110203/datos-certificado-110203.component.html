@@ -112,7 +112,13 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="valor">Valor mercancía:</label>
-                          <input class="form-control" id="valor" formControlName="valor" type="text" (blur)="formatDecimal('valor','setValor')" (change)="setValoresStore(mercanciasForm,'valor', 'setValor')">
+                          <input class="form-control" id="valor" formControlName="valor" type="text" (blur)="formatDecimal('valor','setValor')" (change)="setValoresStore(mercanciasForm,'valor', 'setValor')" maxlength="22">
+                          <div *ngIf="mercanciasForm.get('valor')?.invalid && mercanciasForm.get('valor')?.touched" 
+                          class="text-danger small">
+                          <div *ngIf="mercanciasForm.get('valor')?.errors?.['pattern']">
+                            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                          </div>
+                          </div>
                       </div>
                   </div>
                   <div class="col-md-4">
@@ -135,8 +141,14 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="bruta">Masa bruta:</label>
-                          <input class="form-control" id="bruta" formControlName="bruta" type="text"  (blur)="formatDecimal('bruta','setBruta')" (change)="setValoresStore(mercanciasForm,'bruta', 'setBruta')">
-                      </div>
+                          <input class="form-control" id="bruta" formControlName="bruta" type="text"  (blur)="formatDecimal('bruta','setBruta')" (change)="setValoresStore(mercanciasForm,'bruta', 'setBruta')" maxlength="22">
+                          <div *ngIf="mercanciasForm.get('bruta')?.invalid && mercanciasForm.get('bruta')?.touched" 
+                          class="text-danger small">
+                          <div *ngIf="mercanciasForm.get('bruta')?.errors?.['pattern']">
+                            La masa bruta debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                          </div>
+                          </div>
+                        </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
@@ -151,7 +163,7 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="factura">Número de factura:</label>
-                          <input class="form-control" id="factura" formControlName="factura" type="text" (change)="setValoresStore(mercanciasForm,'factura', 'setFactura')">
+                          <input class="form-control" id="factura" formControlName="factura" type="text" (change)="setValoresStore(mercanciasForm,'factura', 'setFactura')" maxlength="50">
                       </div>
                   </div>
                   <div class="col-md-4">
@@ -188,3 +200,10 @@
     </div>
   </div>
 </div>
+
+@if (validationNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="validationNotificacion">
+  </lib-notificaciones>
+</section>
+}

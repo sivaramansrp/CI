@@ -413,7 +413,7 @@ buscarAgregar(): void {
  * Valida que el archivo sea de tipo TXT o CSV.
  * Muestra una notificación de alerta si el archivo no es válido.
  */
-eventoDeCambioDeValor(event: Event, controlName: string): void {
+eventoDeCambioDeValor(event: Event, _controlName: string): void {
   const INPUT = event.target as HTMLInputElement;
   const FILE = INPUT.files?.[0];
 

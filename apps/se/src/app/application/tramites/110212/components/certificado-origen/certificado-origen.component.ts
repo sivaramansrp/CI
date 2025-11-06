@@ -13,21 +13,21 @@ import {
   SeccionLibState,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject, delay, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite110212State,
   Tramite110212Store,
 } from '../../../../estados/tramites/tramite110212.store';
+import { BuscarMercanciasResponse } from '../../constants/validacion-posteriori.enum';
 import { CARGA_MERCANCIA_EXPORT } from '../../../../shared/constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
-import { PeruCertificadoService } from '../../../110205/services/peru-certificado.service';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 
 /**
  * @descripcion
@@ -69,6 +69,15 @@ export class CertificadoOrigenComponent
    * @type {Mercancia[]}
    */
   disponiblesDatos: Mercancia[] = [];
+  /**
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   */
+  @ViewChild(CertificadoDeOrigenComponent)
+  certificadoDeOrigen!: CertificadoDeOrigenComponent;
+  /**
+   * Indica si la tabla de mercancías disponibles está visible.
+   */
+  mercanciasDisponiblesTabla: boolean = false;
 
   /**
    * @descripcion
@@ -191,17 +200,12 @@ export class CertificadoOrigenComponent
    */
   constructor(
     private readonly fb: FormBuilder,
-    private peruCertificadoService: PeruCertificadoService,
+    private peruCertificadoService: ValidacionPosterioriService,
     private store: Tramite110212Store,
     private query: Tramite110212Query,
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
   ) {
-    this.query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
-      .subscribe((estado) => {
-        // this.formCertificadoValues = estado;
-      });
   }
 
   /**
@@ -234,13 +238,11 @@ export class CertificadoOrigenComponent
         map((state: Tramite110212State) => {
           this.certificadoState = state;
           this.datosTablaUno$ = state.disponiblesDatos;
+          this.formCertificadoValues = state.formCertificado;
           this.datosTabla$ = state.mercanciaSeleccionadasTablaDatos;
         })
       )
       .subscribe();
-
-    this.estadoOpcion();
-    this.paisOpcion();
   }
 
   /**
@@ -255,68 +257,48 @@ export class CertificadoOrigenComponent
     storeStateName: string;
   }): void {
     const { campo: CAMPO, valor: VALOR } = event;
-    // this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
 
-  /**
-   * @descripcion
-   * Obtiene la lista de estados disponibles.
-   */
-  estadoOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.estado = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.estado = [];
-        },
-      });
-  }
+
 
   /**
-   * @descripcion
-   * Obtiene la lista de países disponibles.
-   */
-  paisOpcion(): void {
-    this.peruCertificadoService
-      .obtenerMenuDesplegable('pais.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        },
-      });
-  }
-
-  /**
-   * @descripcion
-   * Obtiene los datos disponibles relacionados con mercancías.
+   * Busca la mercancia y actualiza los datos en el store.
    */
   conseguirDisponiblesDatos(): void {
-    this.peruCertificadoService
-      .obtenerTablaDatos('disponibles-datos.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: Mercancia[]) => {
-          if (response && Array.isArray(response)) {
-            this.disponiblesDatos = response as Mercancia[];
-            this.store.setDisponsiblesDatos(this.disponiblesDatos);
-          } else {
-            this.disponiblesDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
-      });
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
+    };
+
+this.peruCertificadoService
+  .buscarMercanciasCert(PAYLOAD)
+  .pipe(takeUntil(this.destroyNotifier$))
+  .subscribe({
+    next: (res) => {
+      const RESPONSE = res as unknown as BuscarMercanciasResponse;
+
+      const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+        id: item.idMercancia,
+        fraccionArancelaria: item.fraccionArancelaria || '',
+        numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+        fechaExpedicion: item.fechaExpedicion || '',
+        fechaVencimiento: item.fechaVencimiento || '',
+        nombreTecnico: item.nombreTecnico || '',
+        nombreComercial: item.nombreComercial || '',
+        criterioParaConferirOrigen: item.criterioOrigen || '',
+        valorDeContenidoRegional: item.valorContenidoRegional || '',
+        normaOrigen: item.normaOrigen || '',
+        nombreIngles: item.nombreIngles || '',
+        numeroRegistroProducto: item.numeroRegistroProducto || '',
+      }));
+
+      this.disponiblesDatos = MAPPED_DATA;
+      this.store.setDisponsiblesDatos(MAPPED_DATA);
+    },
+  });
+
   }
 
   /**
@@ -325,7 +307,7 @@ export class CertificadoOrigenComponent
    * @param estado - El estado seleccionado.
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
-    // this.store.setEstado(estado);
+    this.store.setEstado(estado);
   }
 
   /**
@@ -334,7 +316,7 @@ export class CertificadoOrigenComponent
    * @param estado - El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    // this.store.setBloque([estado]);
+    this.store.setBloque([estado]);
   }
 
   /**
@@ -395,7 +377,7 @@ export class CertificadoOrigenComponent
    * @param valida - El estado de validación del formulario.
    */
   setFormValida(valida: boolean): void {
-    // this.store.setFormValida({ certificado: valida });
+    this.store.setFormValida({ certificado: valida });
   }
 
   /**
@@ -405,6 +387,26 @@ export class CertificadoOrigenComponent
    */
   guardarClicado(evento: Mercancia[]): void {
     this.datosTabla$ = evento;
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**

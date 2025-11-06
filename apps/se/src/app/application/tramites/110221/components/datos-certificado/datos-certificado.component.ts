@@ -78,6 +78,11 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * ```
    */
   idiomaDatos: Catalogo[] = [];
+  /**
+   * @description
+   * Identificador del procedimiento asociado al componente.
+   */
+  public idProcedimiento = 110221;
 
   /**
    * @description
@@ -207,6 +212,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales para el formulario.
    */
   ngOnInit(): void {
+
     this.idiomOpcion();
     this.entidadFederativasOpcion();
     this.representacionFederalOpcion();
@@ -274,42 +280,53 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Obtiene la lista de entidades federativas disponibles.
    */
-  entidadFederativasOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe({
-        next: (data) => {
-          this.entidadFederativas = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.entidadFederativas = [];
-        },
-      });
-  }
-
   /**
-   * @descripcion
-   * Obtiene la lista de representaciones federales disponibles.
-   */
-  representacionFederalOpcion(): void {
-    this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe({
-        next: (data) => {
-          this.representacionFederal = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
+ * @descripcion
+ * Obtiene la lista de entidades federativas disponibles desde el backend API.
+ */
+entidadFederativasOpcion(): void {
+  this.ValidarInicialmenteCertificadoService.obtenerEntidadFederativa()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
+      next: (response) => {
+        if ((response.codigo === '200' || response.codigo === '00') && response.datos) { 
+          this.entidadFederativas = response.datos; 
+        } else {
+          console.error('Error: Código de respuesta no esperado', response);
+          this.entidadFederativas = [];
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener las entidades federativas:', error);
+        this.entidadFederativas = [];
+      },
+    });
+}
+/**
+ * @descripcion
+ * Obtiene la lista de representaciones federales disponibles desde el backend API.
+ */
+representacionFederalOpcion(): void {
+  this.ValidarInicialmenteCertificadoService.obtenerRepresentacionFederal()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
+      next: (response) => {
+        if ((response.codigo === '200' || response.codigo === '00') && response.datos) { 
+          this.representacionFederal = response.datos;
+        } else {
           this.representacionFederal = [];
-        },
-      });
-  }
-
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener Representación Federal:', error);
+        this.representacionFederal = [];
+      },
+    });
+}
   /**
    * @descripcion
    * Actualiza el almacén con los datos del formulario.
@@ -386,8 +403,36 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * }
    * ```
    */
-  validarFormulario(): boolean {
-    return this.datosCertificadoDeRef.validarFormularios();
+  
+  /**
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   * @description
+   * Valida el formulario completo del certificado.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+    validarFormulario(): boolean {
+  let ESVALIDO = true;
+
+  if (this.datosCertificadoDeRef) {
+    if (!this.datosCertificadoDeRef.validarFormularios()) {
+      ESVALIDO = false;
+
+      const FORM = this.datosCertificadoDeRef.formDatosCertificado;
+      if (FORM) {
+        Object.keys(FORM.controls).forEach((field) => {
+          const CONTROL = FORM.get(field);
+          if (CONTROL && CONTROL.invalid) {
+            //
+          }
+        });
+      }
+    } 
+  } else {
+    ESVALIDO = false;
   }
+
+  return ESVALIDO;
+}
  
 }

@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -19,10 +20,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PAIS_CATALOGO, REPRESENTATE_LEGAL_EXPORTADOR_CONFIG } from '../../constantes/representate-legal-exportador-config.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FieldConfig } from '../../models/representate-legal-exportador.model';
-import { REPRESENTATE_LEGAL_EXPORTADOR_CONFIG } from '../../constantes/representate-legal-exportador-config.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ValidarInicialmenteCertificadoService } from '../../../tramites/110221/services/validar-inicialmente-certificado.service';
 
@@ -55,6 +56,9 @@ import { ValidarInicialmenteCertificadoService } from '../../../tramites/110221/
 export class RepresentanteLegalExportadorComponent
   implements OnDestroy, OnInit
 {
+  /** Evento para indicar si el formulario es válido */
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
   /**
    * @property procedimiento
    * @description Identificador del procedimiento actual.
@@ -125,6 +129,7 @@ export class RepresentanteLegalExportadorComponent
    */
   constructor(
     private fb: FormBuilder,
+     private validacionesService: ValidacionesFormularioService,
     private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService
   ) {}
 
@@ -141,14 +146,29 @@ export class RepresentanteLegalExportadorComponent
     this.form = this.fb.group({});
     this.crearFormulario();
 
-    this.obtenerPaisDestinoCatalogo();
+    if (PAIS_CATALOGO.includes(this.procedimiento)) {
+      this.obtenerPaisDestinoCatalogo();
+    }
+  }
+
+    /**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
    /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): void {
-    if (this.form) {
+  public markAllFieldsTouched(): boolean {
+       if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return false;
     }
+    return true;
   }
 
 
@@ -243,6 +263,7 @@ export class RepresentanteLegalExportadorComponent
     metodoNombre: string
   ): void {
     const VALOR = this.form.get(campo)?.getRawValue();
+    this.formaValida.emit(this.form.valid);
     this.formDatosDelDestinatarioEvent.emit({
       formGroupName,
       campo,
@@ -250,7 +271,16 @@ export class RepresentanteLegalExportadorComponent
       METODO_NOMBRE: metodoNombre,
     });
   }
-
+  /**
+   * Valida el formulario y marca los campos como tocados si es inválido
+   */
+   validarFormularios(): boolean {
+     if (this.form.invalid) {
+       this.form.markAllAsTouched();
+       return false;
+     }
+     return true;
+   }
   /**
    * @description
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
@@ -260,4 +290,5 @@ export class RepresentanteLegalExportadorComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

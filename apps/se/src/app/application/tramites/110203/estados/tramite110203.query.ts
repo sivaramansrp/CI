@@ -1,8 +1,8 @@
 
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
-import { Observable } from 'rxjs';
 import { Solicitud110203State, Tramite110203Store } from './tramite110203.store';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Query } from '@datorama/akita';
 
 
 

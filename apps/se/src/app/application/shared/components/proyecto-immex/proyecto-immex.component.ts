@@ -213,7 +213,7 @@ export class ProyectoImmexComponent implements OnInit {
    * Agrega un nuevo proyecto IMMEX a la lista.
    * @returns {void}
    */
-  aggregar(): void {
+  aggregar(): void { 
     this.agregarNotification = {
     tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -234,7 +234,7 @@ export class ProyectoImmexComponent implements OnInit {
         encabezadoFechaFirma: this.proyectoForm.get('fechaDeFirma')?.value,
         encabezadoFechaVigencia:
           this.proyectoForm.get('fechaDeVigencia')?.value,
-        encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
+        encabezadoRfc: typeof this.proyectoForm.get('rfcTaxId')?.value === 'string' ? this.proyectoForm.get('rfcTaxId')?.value.toUpperCase() : this.proyectoForm.get('rfcTaxId')?.value,
         encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
         estatus: this.seleccionList[0].estatus,
         encabezadoFraccion: this.selectedRow?.encabezadoFraccionArancelaria ?? '',
@@ -256,7 +256,7 @@ export class ProyectoImmexComponent implements OnInit {
       encabezadoTipoDocument: this.proyectoForm.get('tipoDeDocumente')?.value,
       encabezadoFechaFirma: this.proyectoForm.get('fechaDeFirma')?.value,
       encabezadoFechaVigencia: this.proyectoForm.get('fechaDeVigencia')?.value,
-      encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
+      encabezadoRfc: typeof this.proyectoForm.get('rfcTaxId')?.value === 'string' ? this.proyectoForm.get('rfcTaxId')?.value.toUpperCase() : this.proyectoForm.get('rfcTaxId')?.value,
       encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
       estatus: false,
       encabezadoFraccion: this.selectedRow?.encabezadoFraccionArancelaria ?? '',

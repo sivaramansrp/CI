@@ -64,7 +64,15 @@ export interface CapturarSolicitud {
   datosForma: DestinatarioForm[];
   seletedTerceros: TercerosrelacionadosdestinoTable;
   seletedExdora: DestinatarioForm;
+
+  idTramite: string | null;
+  firma: string | null;
+  idSolicitud: number | null;
+  procedure: number | null;
+
 }
+
+
 
 /**
  * Representa la información del solicitante principal.
@@ -420,6 +428,11 @@ export interface FilaSolicitud {
  */
 export interface SolicitudData {
   id?: number;
+
+  /**
+   * Identificador de la solicitud.
+   */
+  id_solicitud?: string;
   /**
    * Fecha en la que se creó la solicitud.
    */
@@ -649,12 +662,16 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     selectedDatos: params.selectedDatos || [],
     datosForma: params.datosForma || [],
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
-    seletedExdora: params.seletedExdora || {} as DestinatarioForm
+    seletedExdora: params.seletedExdora || {} as DestinatarioForm,
+    idTramite: params.idTramite || null,
+    firma: params.firma || null,
+    idSolicitud: params.idSolicitud || null,
+    procedure: params.procedure || null
   }
 }
 
-  export interface FraccionArancelariaDecripcionModel {
-    cve_fraccion: string;
-    descripcion: string;
-    id_fraccion: number;
-  }
+export interface FraccionArancelariaDecripcionModel {
+  cve_fraccion: string;
+  descripcion: string;
+  id_fraccion: number;
+}

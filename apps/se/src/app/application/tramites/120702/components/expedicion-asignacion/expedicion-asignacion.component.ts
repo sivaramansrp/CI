@@ -9,7 +9,6 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputFechaComponent,
-  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
@@ -28,19 +27,16 @@ import {
   TablaDatos,
 } from '../../models/expedicion-certificados-frontera.models';
 import { Solicitud120702State, Tramite120702Store } from '../../estados/tramite120702.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject,takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-/**
- * Componente responsable de la sección de asignación de expedición de certificados.
- * 
- * Maneja el formulario de datos de oficio y monto, y realiza operaciones sobre la tabla
- * de montos a expedir. Se comunica con el store del trámite 120702 y un servicio de datos estáticos.
- */
+
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-expedicion-asignacion',
   standalone: true,
@@ -51,7 +47,9 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
     InputFechaComponent,
     ReactiveFormsModule,
     FormasDinamicasComponent,
-    TableComponent,TablaDinamicaComponent
+    TableComponent,
+    TablaDinamicaComponent,
+    CommonModule
   ],
   templateUrl: './expedicion-asignacion.component.html',
   styleUrl: './expedicion-asignacion.component.scss',
@@ -79,6 +77,21 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   public checkbox = TablaSeleccion.CHECKBOX;
     /**
+   * Controla la visibilidad del modal de confirmación
+   */
+  public mostrarModalConfirmacion = false;
+
+  /**
+   * Mensaje de error para mostrar cuando no hay selección
+   */
+  public mensajeError = '';
+
+  /**
+   * Controla la visibilidad del mensaje de error
+   */
+  public mostrarError = false;
+
+  /**
    * Bandera para mostrar u ocultar secciones después del botón "Buscar".
    */
   mostrarSecciones = false;
@@ -235,40 +248,48 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Establece la estructura inicial del formulario reactivo de asignación.
    */
   establecerAsignacionFormGroup(): void {
-      /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
-    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
-    this.tramite120702Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud120702State;
-        })
-      )
-      .subscribe();
-
     this.asignacionForm = this.fb.group({
+      // Existing controls
       anoDelOficio: ['', [Validators.required]],
-      numeroOficio: ['', [Validators.required]],
-      estado: [{ value: 'CHIHUAHUA', disabled: true }],
-      representacionFederal: [{ value: 'CIUDAD JUAREZ', disabled: true }],
-      montoAsignado: [{ value: '500', disabled: true }],
-      montoExpedido: [{ value: '130', disabled: true }],
-      montoDisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      datosNumeroOficio: [{ value: '2', disabled: true }],
-      fechaInicioVigencia: [{ value: '15/11/2024', disabled: true }],
-      fechaFinVigencia: [{ value: '15/11/2025', disabled: true }],
-      montoADisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      montoAExpedir: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
-      totalAExpedir: [{ value: '', disabled: true }],
+      numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoADisponible: [''],
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+      
+      // Missing controls that are causing errors
+      estado: [''],
+      representacionFederal: [''],
+      montoAsignado: [''],
+      montoExpedido: [''],
+      montoDisponible: [''],
+      datosNumeroOficio: [''],
+      totalAExpedir: ['']
     });
 
-    this.asignacionForm.patchValue({
-      anoDelOficio:this.solicitudState.anoDelOficio,
-      numeroOficio:this.solicitudState.numeroOficio,
-      montoAExpedir:this.solicitudState.montoAExpedir,
-      fechaInicioVigencia:this.solicitudState.fechaInicioVigencia,
-      fechaFinVigencia:this.solicitudState.fechaFinVigencia,
-    })
+}
+
+  /**
+   * Método para forzar la validación de todos los campos del formulario
+   */
+  public forzarValidacion(): void {
+    if (this.asignacionForm) {
+      Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      
+  // Log individual control errors
+      Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL && CONTROL.errors) {
+            // El control tiene errores de validación; manejar o registrar si es necesario
+        }
+      });
+    }
   }
 
   /**
@@ -320,11 +341,56 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
  eliminarSeleccionados(): void {
-  if (this.seleccionadaguardarClicado.length > 0) {
-    this.saldo = this.saldo.filter(item => !this.seleccionadaguardarClicado.includes(item));
-    this.seleccionadaguardarClicado = [];
+ // Validar si hay elementos seleccionados
+  if (this.seleccionadaguardarClicado.length === 0) {
+   this.mensajeError = 'Seleccione el monto a eliminar';
+    this.mostrarModalConfirmacion = true;
+    return;
   }
+  this.mensajeError = '¿Estás seguro que deseas eliminar los registros marcados?';
+  this.mostrarModalConfirmacion = true;
 }
+
+  /**
+   * Confirma la eliminación de los registros seleccionados
+   */
+  confirmarEliminacion(): void {
+   
+ if (this.seleccionadaguardarClicado.length > 0) {
+      this.saldo = this.saldo.filter(item => !this.seleccionadaguardarClicado.includes(item));
+       this.seleccionadaguardarClicado = [];
+       this.recalcularTotalAExpedir();
+      }
+    this.cerrarModal();
+  }
+
+  /**
+   * Cancela la eliminación y cierra el modal
+   */
+  cancelarEliminacion(): void {
+   this.cerrarModal();
+  }
+
+  /**
+   * Cierra el modal de confirmación
+   */
+  private cerrarModal(): void {
+   this.mostrarModalConfirmacion = false;
+   this.mensajeError = '';
+  }
+
+  /**
+   * Recalcula el total a expedir basado en los montos restantes
+   */
+  private recalcularTotalAExpedir(): void {
+    const TOTAL = this.saldo.reduce((sum, item) => {
+      return sum + (parseFloat(item.Montoaexpedir) || 0);
+    }, 0);
+
+    this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL);
+    
+  }
+
   /**
    * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
    */

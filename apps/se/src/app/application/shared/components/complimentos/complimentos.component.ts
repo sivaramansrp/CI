@@ -471,13 +471,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @param event Event del input
    * @param maxLength 
    */
-  onInputMaxLength(event: Event, maxLength: number): void {
+  onInputMaxLength(event: Event, maxLength: number, controlPath: string): void {
     const TARGET = event.target as HTMLInputElement;
     let value = TARGET.value;
     value = value.replace(/\D/g, '').slice(0, maxLength);
     TARGET.value = value;
-    this.formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.setValue(value, { emitEvent: false });
-  }
+    this.formaComplimentos.get(controlPath)?.setValue(value, { emitEvent: false });
+}
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
@@ -930,6 +930,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       } else if (VALUE.taxId) {
         this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
+      setTimeout(() => {
+        FORMADATOS_GROUP.reset();
+      }, 0);
+      
     } else {
       this.accionistasExtranjerosNotificacion = {
         tipoNotificacion: 'alert',
@@ -1482,6 +1486,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         }
       }
     );
+     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+     if (RFC_CONTROL?.valid) {   
+    this.formaModificaciones.get('nombreDeRepresentante')?.setValue('Maria Lopez');
+     }
+     else{
+      this.formaModificaciones.get('nombreDeRepresentante')?.setValue('');
+     }
   }
   /**
    * Handles keypress events to allow only letters and common characters

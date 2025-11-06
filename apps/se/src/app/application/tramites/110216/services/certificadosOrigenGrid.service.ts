@@ -1,9 +1,10 @@
+import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { Tramite110216State,Tramite110216Store} from '../../../estados/tramites/tramite110216.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { PROC_110216 } from '../servers/api-route';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CertificadosOrigenGridService {
  * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON locales.
  * @param {Tramite110216Store} store - Store para gestionar el estado del trámite 110216.
  */
-constructor(private http: HttpClient, private store: Tramite110216Store) { }
+constructor(private http: HttpClient, private store: Tramite110216Store, public httpService: HttpCoreService,) { }
   /**
    * Obtiene la lista de estados desde un archivo JSON local.
    * @method obtenerListaEstado
@@ -27,17 +28,6 @@ constructor(private http: HttpClient, private store: Tramite110216Store) { }
   obtenerListaEstado(): Observable<Catalogo[]> {
     return this.http
       .get<{ data: Catalogo[] }>('./assets/json/110216/estado.json') // Solicita los datos del archivo JSON
-      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-  }
-
-  /**
-   * Obtiene la lista de países bloque desde un archivo JSON local.
-   * @method obtenerPaisBloque
-   * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
-   */
-  obtenerPaisBloque(): Observable<Catalogo[]> {
-    return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110216/país-bloque.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
@@ -130,6 +120,15 @@ constructor(private http: HttpClient, private store: Tramite110216Store) { }
     this.store.setFormMercancia(DATOS.mercanciaForm);
     this.store.setBuscarMercancia(DATOS.buscarMercancia);
 
+  }
+
+  /**
+   * Obtiene la lista de mercancías disponibles.
+   * 
+   * @returns {Observable<DisponiblesTabla[]>} Un observable con la lista de mercancías disponibles.
+   */
+  obtenerMercanciasDisponibles(body: Record<string, unknown>): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110216.BUSCAR_MERCANCIAS, { body: body });
   }
 
 }

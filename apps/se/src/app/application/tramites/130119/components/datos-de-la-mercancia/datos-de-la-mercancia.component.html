@@ -3,16 +3,18 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
+                    <label for="descripcion" class="form-label">Descripción de la mercancía<span [ngClass]="{'text-danger': datosDeLaMercanciaForm.get('descripcion')?.invalid && (datosDeLaMercanciaForm.get('descripcion')?.touched || datosDeLaMercanciaForm.get('descripcion')?.dirty)}">*</span>:</label>
                     <textarea id="descripcion" formControlName="descripcion" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'descripcion')"></textarea>
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('descripcion')?.touched && datosDeLaMercanciaForm.get('descripcion')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('descripcion')?.errors?.['required']"
-                            class="text-danger">Este campo es obligatorio.</small>
-                        <small *ngIf="datosDeLaMercanciaForm.get('descripcion')?.errors?.['pattern']"
-                            class="text-danger">Por favor, corrija la descripción.</small>
-                    </div>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'descripcion')" cols="60" rows="5" maxlength="1000"></textarea>
+                    @if (datosDeLaMercanciaForm.get('descripcion')?.invalid && datosDeLaMercanciaForm.get('descripcion')?.touched) {
+                        <div class="text-danger">
+                            @if (datosDeLaMercanciaForm.get('descripcion')?.errors?.['required']) {
+                                <small>Este campo es obligatorio</small>
+                            } @else if (datosDeLaMercanciaForm.get('descripcion')?.errors?.['pattern']) {
+                                <small>Por favor, corrija la descripción</small>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -26,24 +28,24 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="umt" class="form-label">UMT: <span class="bi bi-question-circle-fill" title="Unidad de medida de la tarifa (UMT)"
-                        data-bs-toggle="tooltip"></span></label>
-                    
+                    <label for="umt" class="form-label">UMT: <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa (UMT)" placement="top"></span></label>
                     <input type="text" id="umt" formControlName="umt" class="form-control">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="cantidad" class="form-label">Cantidad*:</label>
+                    <label for="cantidad" class="form-label">Cantidad<span [ngClass]="{'text-danger': datosDeLaMercanciaForm.get('cantidad')?.invalid && (datosDeLaMercanciaForm.get('cantidad')?.touched || datosDeLaMercanciaForm.get('cantidad')?.dirty)}">*</span>:</label>
                     <input type="text" id="cantidad" formControlName="cantidad" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'cantidad')">
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('cantidad')?.touched && datosDeLaMercanciaForm.get('cantidad')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['required']"
-                            class="text-danger">Este campo es obligatorio.</small>
-                        <small *ngIf="datosDeLaMercanciaForm.get('cantidad')?.errors?.['pattern']"
-                            class="text-danger">Por favor, escribe un número entero válido</small>
-                    </div>
+                    @if (datosDeLaMercanciaForm.get('cantidad')?.invalid && datosDeLaMercanciaForm.get('cantidad')?.touched) {
+                        <div class="text-danger">
+                            @if (datosDeLaMercanciaForm.get('cantidad')?.errors?.['required']) {
+                                <small>Este campo es obligatorio</small>
+                            } @else if (datosDeLaMercanciaForm.get('cantidad')?.errors?.['pattern']) {
+                                <small>Por favor, escribe un número entero válido</small>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -51,18 +53,19 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="valorFacturaUSD" class="form-label">Valor factura USD*: <span class="bi bi-question-circle-fill" title="En caso de no contar con valor factura proporciona el valor estimado"
-                        data-bs-toggle="tooltip"></span></label>
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD<span [ngClass]="{'text-danger': datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid && (datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched || datosDeLaMercanciaForm.get('valorFacturaUSD')?.dirty)}">*</span>: <span class="bi bi-question-circle-fill mx-2" tooltip="En caso de no contar con valor factura proporciona el valor estimado" placement="top"></span></label>
                     
                     <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD')">
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched && datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['required']"
-                            class="text-danger">Este campo es obligatorio.</small>
-                        <small *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['pattern']"
-                            class="text-danger">Por favor, escribe un número entero válido</small>
-                    </div>
+                    @if (datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid && datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched) {
+                        <div class="text-danger">
+                            @if (datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['required']) {
+                                <small>Este campo es obligatorio</small>
+                            } @else if (datosDeLaMercanciaForm.get('valorFacturaUSD')?.errors?.['pattern']) {
+                                <small>Por favor, escribe un número entero válido</small>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
@@ -83,16 +86,20 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="numeroFactura" class="form-label">Número de factura*:</label>
+                    <label for="numeroFactura" class="form-label">Número de factura<span [ngClass]="{'text-danger': datosDeLaMercanciaForm.get('numeroFactura')?.invalid && (datosDeLaMercanciaForm.get('numeroFactura')?.touched || datosDeLaMercanciaForm.get('numeroFactura')?.dirty)}">*</span>:</label>
                     <input type="text" id="numeroFactura" formControlName="numeroFactura" class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'numeroFactura')">
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.touched && datosDeLaMercanciaForm.get('numeroFactura')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['required']"
-                            class="text-danger">Este campo es obligatorio.</small>
-                        <small *ngIf="datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['pattern']"
-                            class="text-danger">Por favor, corrija el número de factura.</small>
-                    </div>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'numeroFactura')" maxlength="36">
+                    @if (datosDeLaMercanciaForm.get('numeroFactura')?.invalid && datosDeLaMercanciaForm.get('numeroFactura')?.touched) {
+                        <div class="text-danger">
+                            @if (datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['required']) {
+                                <small>Este campo es obligatorio</small>
+                            } @else if (datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['pattern']) {
+                                <small>Por favor, corrija el número de factura</small>
+                            } @else if (datosDeLaMercanciaForm.get('numeroFactura')?.errors?.['maxlength']) {
+                                <small>Por favor, no escribas más de 36 caractere</small>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
@@ -107,12 +114,7 @@
                 <div class="form-group">
                     <label for="observaciones" class="form-label">Observaciones:</label>
                     <textarea class="form-control" id="observaciones" formControlName="observaciones"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'observaciones')"></textarea>
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('observaciones')?.touched && datosDeLaMercanciaForm.get('observaciones')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('observaciones')?.errors?.['pattern']"
-                            class="text-danger">Por favor, corrija la observaciones.</small>
-                    </div>
+                        (change)="setValoresStore(datosDeLaMercanciaForm,'observaciones')" cols="60" rows="5"></textarea>
                 </div>
             </div>
         </div>

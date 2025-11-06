@@ -1,29 +1,9 @@
-import {
-  BsDatepickerConfig,
-  BsDatepickerModule,
-} from 'ngx-bootstrap/datepicker';
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  ConfiguracionColumna,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConfiguracionColumna, ENVIRONMENT, LoginQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,doDeepCopy, esValidArray, esValidObject, getValidDatos, } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  ProgramasReporte,
-  ReporteFechas,
-} from '../../models/programas-reporte.model';
-import {
-  Solicitud150102State,
-  Solicitud150102Store,
-} from '../../estados/solicitud150102.store';
+import { ProgramasReporte, ReporteFechas } from '../../models/programas-reporte.model';
+import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
@@ -44,6 +24,7 @@ import { SolicitudService } from '../../services/solicitud.service';
     TituloComponent,
     BsDatepickerModule,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './programas-reporte-annual.component.html',
   styleUrl: './programas-reporte-annual.component.scss',
@@ -81,6 +62,10 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
 
   /** Datos de la solicitud en forma de arreglo de programas de reporte */
   solicitudDatos: ProgramasReporte[] = [];
+  /*
+   * Valor del RFC obtenido del estado de login.
+   */
+  public rfcValor: string = '';
 
   /** Configuración de la tabla para mostrar los datos de solicitud */
   solicitudConfiguracionTabla: ConfiguracionColumna<ProgramasReporte>[] = [
@@ -117,6 +102,13 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Se utiliza para identificar o acceder al programa seleccionado en operaciones de edición o visualización.
    */
   indiceDeRegistroDelPrograma!: number;
+    /**
+        * @public
+        * @property {Notificacion} nuevaNotificacion
+        * @description Representa una nueva notificación que se utilizará en el componente.
+        * @command Este campo debe ser inicializado antes de su uso.
+        */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -130,7 +122,8 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     public solicitud150102Store: Solicitud150102Store,
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private loginQuery: LoginQuery, 
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -139,6 +132,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
+    this.obtenerProgramasReporte();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -148,9 +142,6 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
   }
 
   /**
@@ -158,6 +149,15 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Configura el formulario y sincroniza los datos iniciales con el estado.
    */
   ngOnInit(): void {
+    // seleccionarSolicitud
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.rfcValor = seccionState.rfc;
+        })
+      )
+      .subscribe();
     this.inicializarEstadoFormulario();
   }
 
@@ -252,14 +252,34 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Actualiza los datos con los resultados obtenidos del servicio.
    */
   obtenerProgramasReporte(): void {
+    // this.rfcValor
+    const RFC = ENVIRONMENT.RFC;
     this.solicitudService
-      .obtenerProgramasReporte()
+      .obtenerProgramasReporte(RFC)
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (respuesta: ProgramasReporte[]) => {
-          this.solicitudDatos = respuesta;
+        next: (respuesta) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
+            this.solicitud150102Store.actualizarInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+            this.solicitud150102Store.actualizarFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
+            this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
+          }
         },
       });
+  }
+
+  public mapProgramasResponse(datos: unknown[]): ProgramasReporte[] {
+    return datos.map((item: unknown) => {
+      const PROGRAMA = item as ProgramasReporte;
+      return {
+        folioPrograma: PROGRAMA.folioPrograma,
+        modalidad: PROGRAMA.modalidad,
+        tipoPrograma: PROGRAMA.tipoPrograma,
+        estatus: PROGRAMA.estatus,
+        idProgramaCompuesto: PROGRAMA.idProgramaCompuesto
+      };
+    }) || [];
   }
 
   /**
@@ -275,10 +295,40 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     this.solicitud150102Store.actualizarModalidad(evento.modalidad);
     this.solicitud150102Store.actualizarTipoPrograma(evento.tipoPrograma);
     this.solicitud150102Store.actualizarEstatus(evento.estatus);
+    this.solicitud150102Store.actualizarIdProgramaCompuesto(evento.idProgramaCompuesto);
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
   }
+
+  private formatDateToMonthYear(dateString: string) {
+    if(getValidDatos(dateString)) {
+        const DATE = new Date(dateString);
+        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+        const YEAR = DATE.getFullYear();
+        return `${MONTH}-${YEAR}`;
+    }
+    return '';
+  }
+
+    /**
+   * @method showAlert
+   * @description Shows a general alert notification
+   */
+  public showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: 'Programa seleccionado',
+      mensaje: 'Se ha seleccionado un programa correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
 
   /**
    * @description Método que se ejecuta al destruir el componente.

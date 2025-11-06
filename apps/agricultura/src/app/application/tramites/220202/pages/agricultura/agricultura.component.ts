@@ -2,6 +2,7 @@ import { ALERT_TEXTO, PASOS } from '../../constantes/220202/fitosanitario.enums'
 import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -20,7 +21,7 @@ import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
  */
 @Component({
   selector: 'app-agricultura',
-  templateUrl: './agricultura.component.html',
+  templateUrl: './agricultura.component.html'
 })
 export class AgriculturaComponent {
 
@@ -50,6 +51,15 @@ export class AgriculturaComponent {
    */
   @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
 
+  //   /**
+  //  * @description Referencia al componente btn-continuar.
+  //  * Esta referencia permite acceder a los métodos y propiedades del componente btn-continuar,
+  //  *
+  //  * @type {BtnContinuarComponent}
+  //  * @viewChild BtnContinuarComponent
+  //  */
+  @ViewChild(PasoUnoComponent) pasoUnoRef!: PasoUnoComponent;
+
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
    * Este índice se utiliza para determinar qué paso se muestra en cada momento.
@@ -67,6 +77,20 @@ export class AgriculturaComponent {
   public btnGuardarVisible: string = 'visible';
 
   /**
+ * Mensaje de error del formulario para mostrar en el alert.
+ *
+ * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+ */
+  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+
+  /**
+ * Indica si el formulario tiene errores de validación.
+ *
+ * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+ */
+  esFormaInValido: boolean = false;
+
+  /**
    * @description Objeto que contiene los datos de los pasos del formulario.
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número total de pasos, el índice del paso actual
@@ -75,6 +99,7 @@ export class AgriculturaComponent {
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
+
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
@@ -96,13 +121,56 @@ export class AgriculturaComponent {
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
+    // Si estamos en el paso 1, validar antes de continuar
+    console.log('indicePasos', this.indice);
+    if (this.indice === 1) {
+      var validaPestañas = this.pasoUnoRef?.validarFormularios();
+      console.log('validaPestañas', validaPestañas);
+      if (!validaPestañas.valido) {
+        // Detener la navegación si no es válido
+        console.log('no es valido', this.indice);
+        this.datosPasos.indice = this.indice;
+        this.esFormaInValido = true;
+
+        if (validaPestañas.mensaje) {
+          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' + validaPestañas.mensaje;
+        }
+        else {
+          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+
+        }
+
+
+
+
+        return;
+      }
+    }
+    this.esFormaInValido = false;
     if (e.valor > 0 && e.valor < 5) {
+      console.log('e.valor', e.valor);
       this.indice = e.valor;
       if (e.accion === 'cont') {
+        console.log('continuarCod', this.indice);
         this.componenteWizard.siguiente();
       } else {
         this.componenteWizard.atras();
       }
     }
+  }
+
+  // ngAfterViewInit() {
+  //   // Aquí ya puedes acceder a sus propiedades o métodos
+  //   console.log('BtnContinuarComponent.habilitarBoton');
+
+  //   this.BtnContinuarComponent.habilitarBoton = true;
+  // }
+
+  /**
+* Obtiene los datos del store y los guarda utilizando el servicio.
+*/
+  // eslint-disable-next-line class-methods-use-this
+  obtenerDatosDelStore(): void {
+    // Lógica para obtener datos del store y guardarlos
   }
 }

@@ -84,6 +84,12 @@ export const API_GET_CATALOGO_SEXOS_ACTIVOS = (TRAMITE: string) : string => `sat
 export const API_GET_CATALOGO_REGIMENES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/regimenes`;
 
 /**
+ * Servicio que permite consultar vida silvestre.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes
+ */
+export const API_GET_CATALOGO_VIDA_SILVESTRE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tipos-vida-silvestre`;
+
+/**
  * Servicio que permite consultar los régimenes ACTIVOS y VIGENTES.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes_1
  */
@@ -202,6 +208,7 @@ export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA:
  */
 export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
 
+
 /**
  * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
  *
@@ -256,3 +263,71 @@ export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: 
  * @returns La ruta de la API como cadena de texto para cargar el archivo masivo de mercancía animal.
  */
 export const API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL = (TRAMITE: string, archivo: File) : string => `sat-t${TRAMITE}/solicitud/detalle-mercancia-animal/cargar-archivo`;
+
+/**
+ * Genera la ruta de la API para guardar parcialmente una solicitud para un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite relacionado con la solicitud.
+ * @returns La ruta de la API como cadena de texto para guardar parcialmente la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/guardar-parcial
+ */
+export const API_GET_SOLICITUDES_GUARDADO_PARCIAL = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar-parcial`;
+
+
+/**
+ * Genera la ruta de la API para enviar una solicitud relacionada con un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_GET_SOLICITUDES_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
+
+
+/**
+ * Genera una URL para obtener las solicitudes de movilización nacional.
+ *
+ * @param TRAMITE - Identificador del trámite relacionado.
+ * @param esPrellenado - Indica si la solicitud es un prellenado (true) o no (false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns Una cadena de texto que representa la URL generada.
+ */
+export const API_GET_SOLICITUDES_MOVILIZACION_NACIONAL = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/movilizacion-nacional`;
+
+/**
+ * Genera la URL para obtener los terceros relacionados a una solicitud específica.
+ * 
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es un prellenado (true) o no (false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns La URL generada como una cadena de texto.
+ */
+export const API_GET_SOLICITUDES_TERCEROS_RELACIONADOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/terceros-relacionados`;
+
+/**
+ * Genera la URL para obtener las solicitudes de pago de derechos.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es un prellenado (true o false).
+ * @param idSolicitud - Identificador único de la solicitud.
+ * @returns La URL generada como una cadena de texto.
+ */
+export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/pago-derechos`;
+
+
+/**
+ * API para obtener el estado de la solicitud del tramite 220201.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/generar-cadena-original`;
+
+
+/**
+ * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
+
+
+

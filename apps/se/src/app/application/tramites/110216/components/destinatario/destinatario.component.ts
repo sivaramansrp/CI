@@ -54,15 +54,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Tramite110216State & {
-    grupoReceptor?: {
-      nombre?: string;
-      apellidoPrimer?: string;
-      apellidoSegundo?: string;
-      numeroFiscal?: string;
-      razonSocial?: string;
-    };
-  };
+  public solicitudState!: Tramite110216State;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
@@ -262,6 +254,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.store.setFormValidity('destinatario', this.registroFormulario.valid);
   }
 
   /**

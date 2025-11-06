@@ -8,11 +8,11 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ELEMENTOS_REQUERIDOS } from '../../constantes/materias-primas.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
-
-
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -51,6 +51,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Datos de la tabla de facturadores.
    */
   facturadorTablaDatos: Facturador[] = [];
+    @ViewChild(TercerosRelacionadosComponent)
+    tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+       
+  
+
+   /**
+      * @property {string[]} elementosRequeridos
+      * @description
+      * Lista de elementos requeridos para completar el formulario o proceso.
+      */
+     public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
+   
+   
 
   /**
    * @property {Subject<void>} destroy$
@@ -159,5 +172,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

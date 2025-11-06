@@ -98,6 +98,14 @@ export class BtnContinuarComponent implements OnInit {
   @Input() notificacion!: Notificacion;
 
   /**
+ * @property btnHabilitarContinuar
+ * @description Indica si el botón de Continuar debe estar habilitado.
+ * @type {boolean}
+ * @default false
+ */
+  @Input() btnHabilitarContinuar: boolean = false;
+
+  /**
    * @property continuarEvento
    * @description Evento emitido al hacer clic en el botón Continuar.
    * @type {EventEmitter<AccionBoton>}
@@ -164,6 +172,12 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+
+    if (this.btnHabilitarContinuar) {
+      this.habilitarBoton = true;
+    }
+    else {
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -176,6 +190,7 @@ export class BtnContinuarComponent implements OnInit {
       )
       .subscribe();
   }
+  }
 
   /**
    * @method btnAntVisible
@@ -183,6 +198,7 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {string} 'hidden' si el índice es 1, de lo contrario 'visible'.
    */
   get btnAntVisible(): string {
+    console.log('indiceDelComponenteBoton', this.datos.indice)
     return this.datos.indice === 1 ? 'hidden' : 'visible';
   }
 
@@ -201,9 +217,12 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   continuar(): void {
+    console.log('entraContinuarBoton');
     const PUEDE_CONTINUAR =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     let valor = this.datos.indice;
+    console.log('valor1', valor);
+
     if (!PUEDE_CONTINUAR) {
       return;
     }
@@ -216,6 +235,7 @@ export class BtnContinuarComponent implements OnInit {
     if (!this.dePadre) {
       this.wizardService.cambio_indice(valor);
       valor += 1;
+      console.log('valor2', valor);
       this.datos.indice = valor;
     }
     const DATOS_CONTINUAR: AccionBoton = {

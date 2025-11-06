@@ -1,8 +1,4 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, Notificacion, TituloComponent, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
@@ -32,7 +28,7 @@ import { Movilizacion } from '../../models/220202/fitosanitario.model';
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrls: ['./datos-para-movilizacion-nacional.component.scss'],
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, NotificacionesComponent],
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
   
@@ -74,6 +70,24 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @type {boolean}
    */
   esFormularioSoloLectura: boolean = true;
+
+  /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
+  /**
+ * @property moduloEmergente
+ * @description Indica si el módulo emergente está activo.
+ * @type {boolean}
+ * @default false
+ */
+  public moduloEmergente: boolean = false;
+
+  /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
 
   /**
    * @constructor
@@ -196,6 +210,24 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         this.puntoList = data.datos ?? [];
       }
     );
+  }
+
+  /**
+ * @description Valida todos los campos del formulario y marca los campos como touched
+ * para mostrar los errores de validación en los componentes app-catalogo-select
+ * @method validarFormulario
+ * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
+ */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    this.markTouched = true;
+    this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+    console.log('entra a datosmovil', this.forma.valid);
+    // Retornar si el formulario es válido
+    if (!this.forma.valid) {
+      return { valido: false };
+    }
+    return { valido: true };
   }
 
   /**

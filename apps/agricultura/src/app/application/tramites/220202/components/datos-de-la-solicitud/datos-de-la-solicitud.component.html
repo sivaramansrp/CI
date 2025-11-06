@@ -57,6 +57,7 @@
             [isDisabled]="esFormularioSoloLectura"
             name="aduanaDeIngreso"
             (change)="setValoresStore(); catalogoOficinas(forma);"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -69,6 +70,7 @@
                [isDisabled]="esFormularioSoloLectura"
             name="oficinaDeInspeccion"
             (change)="setValoresStore(); obtenerPuntoInspeccion(forma)"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -81,6 +83,7 @@
              [isDisabled]="esFormularioSoloLectura"
             name="puntoDeInspeccion"
             (change)="setValoresStore()"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
 
@@ -111,6 +114,7 @@
             [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             (change)="setValoresStore()"
+            [markTouched]='markTouched'
           ></app-catalogo-select>
         </div>
         </div>
@@ -130,22 +134,49 @@
 
         </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <h5>Mercancías</h5>
-          </div>
-          <div class="col-md-12">
-            <app-tabla-dinamica
-            [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-            [configuracionTabla]="configuracionColumnasoli"
-            [datos]="cuerpoTabla"
-            (listaDeFilaSeleccionada)="seleccionTabla($event)"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          >
-          </app-tabla-dinamica>
+<!--        <div class="row">-->
+<!--          <div class="col-md-12">-->
+<!--            <h5>Mercancías</h5>-->
+<!--          </div>-->
+<!--          <div class="col-md-12">-->
+<!--            <app-tabla-dinamica-->
+<!--            [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"-->
+<!--            [configuracionTabla]="configuracionColumnasoli"-->
+<!--            [datos]="cuerpoTabla"-->
+<!--            (listaDeFilaSeleccionada)="seleccionTabla($event)"-->
+<!--            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"-->
+<!--          >-->
+<!--          </app-tabla-dinamica>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <label for="mercancia">Mercancías</label>
+        </div>
+        <div class="col-md-12">
+          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [nestedContent]="tablauno"
+                              [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="true"
+                              [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event)" #tablaMercancias
+                              (rowExpanded)="onRowExpanded($event)" (listaDeFilaSeleccionada)="onfilasSeleccionadasChange($event)"
+                              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+          <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
           </div>
         </div>
+        <div class="col-md-12">
+          <ng-template #tablauno let-row>
+            <app-tabla-expandida
+              [columns]="nestedColumns"
+              [data]="row.detalleVidaSilvestre"
+              [expandible]="false" [showPagination]="true" [mode]="'client'" #referenciaTabla
+              [totalItems]="row.detalleVidaSilvestre.length"
+              [itemsPerPage]="5">
+            </app-tabla-expandida>
+          </ng-template>
+        </div>
       </div>
+    </div>
     </form>
 
     <div class="row mt-5">

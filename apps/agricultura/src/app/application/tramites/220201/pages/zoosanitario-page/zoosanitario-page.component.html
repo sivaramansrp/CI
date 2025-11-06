@@ -16,23 +16,47 @@
     <div class="row">
       @switch (indice) { @case (1) {
       <app-paso-uno (tabChanged)="enTabChange($event)" #pasoUnoRef></app-paso-uno>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end">
+          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
+            [dePadre]="true" [btnGuardarVisible]="btnGuardarVisible"
+            (btnGuardarClicked)="guardadoParcialSolicitud()"></btn-continuar>
+        </div>
+      </div>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end">
+          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
+            [dePadre]="true" [ocultabotonAnterior]="false" [btnGuardarVisible]="btnGuardarVisible"
+            (btnGuardarClicked)="guardadoParcialSolicitud()"></btn-continuar>
+        </div>
+      </div>
       } @case (3) {
       <app-paso-tres></app-paso-tres>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-end">
+          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"
+            [btnGuardarVisible]="'false'" [ocultabotonAnterior]="false"
+            ></btn-continuar>
+
+        </div>
+      </div>
       }
       @default {
       <app-paso-uno></app-paso-uno>
       }
       }
 
-        
-          <div style="display:flex; gap:8px; align-items:center;">
-            <button type="button" class="btn btn-default">Guardar</button>
-            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true" [dePadre]="true"></btn-continuar>
-          </div>
-      
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <p></p>
           <ng-alert [CONTENIDO]="PRIVACY_NOTICE_CONTENT"></ng-alert>
+          <p></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

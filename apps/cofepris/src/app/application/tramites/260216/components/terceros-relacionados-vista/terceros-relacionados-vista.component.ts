@@ -9,7 +9,7 @@
  * Permite agregar nuevos datos a las tablas de fabricantes, destinatarios finales, proveedores y facturadores.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -18,6 +18,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/medicos-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';
 import { Tramite260216Store } from '../../estados/tramite260216Store.store';
@@ -43,6 +44,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @defaultValue []
    */
   fabricanteTablaDatos: Fabricante[] = [];
+
+  @ViewChild(TercerosRelacionadosComponent)
+      tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+      
 
   /**
    * Datos de la tabla de destinatarios finales.
@@ -71,6 +76,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroy$ = new Subject<void>();
+
+   /**
+       * @property {string[]} elementosRequeridos
+       * @description
+       * Lista de elementos requeridos para completar el formulario o proceso.
+       */
+   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
    * Constructor del componente.
@@ -148,6 +160,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+   validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

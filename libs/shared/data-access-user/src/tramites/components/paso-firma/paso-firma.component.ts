@@ -1,6 +1,6 @@
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { base64ToHex, encodeToISO88591Hex, formatFecha } from '../../../core/utils/utilerias';
+import { base64ToHex, encodeToISO88591Hex, formatFecha, renameKey } from '../../../core/utils/utilerias';
 import { catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '../../../core/models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../core/models/shared/cadena-original-request.model';
@@ -93,6 +93,8 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
    */
   @Input() procedure: number = 0;
 
+   @Input() idMecanismo: number | null = null;
+
   /**
    * URL del procedimiento actual utilizada para la navegación entre pasos del trámite.
    * Se usa para:
@@ -140,7 +142,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       },
       cve_rol_capturista: "CapturistaGubernamental",
       cve_usuario_capturista: "Gubernamental",
-      fecha_firma: "2025-07-01 20:01:25"
+      fecha_firma: formatFecha(new Date())
     };
     this.documentoService.obtenerCadenaOriginal(String(this.idSolicitud), PAYLOAD, this.procedure).subscribe({
       next: (resp) => {
@@ -219,7 +221,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
-          const PAYLOAD: FirmarRequest = {
+          let PAYLOAD: FirmarRequest = {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
@@ -228,9 +230,11 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
-            rfcSolicitante: 'AAL0409235E6'
+            rfc_solicitante: 'AAL0409235E6'
           };
-
+          if(this.idMecanismo){
+            PAYLOAD={...PAYLOAD, id_mecanismo: this.idMecanismo};
+          }
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
         }),
         tap((firmaResponse: BaseResponse<string>) => {

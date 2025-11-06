@@ -7,8 +7,11 @@ import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedo
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ImportacionDestinadosDonacioRoutingModule } from './importacion-destinados-donacio-routing.module';
 import { NgModule } from '@angular/core';
+import{NotificacionesComponent}from'@ng-mf/data-access-user';
+import {PasoCargaDocumentoComponent} from '@ng-mf/data-access-user';
 import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -37,6 +40,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     AnexarDocumentosComponent,
     WizardComponent,
     BtnContinuarComponent,
+    NotificacionesComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [ToastrService],
 })

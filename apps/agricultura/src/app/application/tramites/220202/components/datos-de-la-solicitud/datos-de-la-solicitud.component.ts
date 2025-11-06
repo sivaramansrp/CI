@@ -6,7 +6,7 @@ import {
   ConfiguracionColumna,
   Notificacion,
   NotificacionesComponent,
-  TablaDinamicaComponent,
+  TablaDinamicaComponent, TablaDinamicaExpandidaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -16,9 +16,19 @@ import {
   DatosDeFila,
   DatosForma,
   FilaSolicitud,
+  Movilizacion,
+  PagoDeDerechos,
   RadioOpcion,
+  SolicitudData,
   SolicitudFilaTabla,
+  TercerosrelacionadosExportadorTable,
+  TercerosrelacionadosdestinoTable,
 } from '../../models/220202/fitosanitario.model';
+import {
+  DetallasDatos,
+  DetalleVidaSilvestre,
+  Sensible,
+} from '../../../../shared/models/datos-de-la-solicitue.model';
 import {
   FormBuilder,
   FormGroup,
@@ -29,11 +39,16 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
+import {
+  ColumnConfig
+} from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 import { CommonModule } from '@angular/common';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { PrellenadoSolicitud } from '../../../220202/models/220202/prellenado-solicitud.model';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 /**
  * @description Constructor del componente.
@@ -58,6 +73,7 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
     CommonModule,
     NotificacionesComponent,
     ModalComponent,
+    TablaDinamicaExpandidaComponent,
   ],
 })
 
@@ -227,7 +243,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public eliminarDatosTabla: boolean = false;
 
-    /**
+  /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
    */
@@ -325,19 +341,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Configuración de las columnas de la tabla de solicitudes.
    * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
-   * @type {ConfiguracionColumna<SolicitudFilaTabla>[]}
+   * @type {ConfiguracionColumna<SolicitudData>[]}
    */
-  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudFilaTabla>[] =
-    [
-      {
-        encabezado: 'Fecha Creación',
-        clave: (fila) => fila.fechaCreacion,
-        orden: 1,
-      },
-      { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
-      { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
-      { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
-    ];
+  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudData>[] = [
+    {
+      encabezado: 'Fecha Creación',
+      clave: (fila) => fila.fecha_creacion,
+      orden: 1,
+    },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+    { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
+  ];
 
   /**
    * @description Datos de la tabla principal.
@@ -406,41 +421,73 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarSolicitudTabla: boolean = true;
 
   /**
-   * Arreglo que contiene las filas de la tabla de solicitudes.
-   * @type {SolicitudFilaTabla[]}
+   * @description
+   * Cuerpo de la tabla de solicitudes con datos de ejemplo.
+   * Este arreglo contiene objetos que representan las filas de la tabla.
+   * @type {SolicitudData[]}
    */
-  cuerpoTablaSolicitud: SolicitudFilaTabla[] = [
-    {
-      fechaCreacion: '2025-06-17 10:30:00',
-      mercancia: 'Laptop HP',
-      cantidad: 5,
-      proveedor: 'Tech Solutions Inc.',
-    },
-    {
-      fechaCreacion: '2025-06-16 14:15:30',
-      mercancia: 'Monitor Dell 27"',
-      cantidad: 10,
-      proveedor: 'Global Electronics',
-    },
-    {
-      fechaCreacion: '2025-06-15 09:00:00',
-      mercancia: 'Teclado Mecánico RGB',
-      cantidad: 8,
-      proveedor: 'Peripherals World',
-    },
-    {
-      fechaCreacion: '2025-06-14 17:45:10',
-      mercancia: 'Mouse Inalámbrico Logitech',
-      cantidad: 12,
-      proveedor: 'Tech Accessories Co.',
-    },
-    {
-      fechaCreacion: '2025-06-13 11:20:05',
-      mercancia: 'Impresora Epson EcoTank',
-      cantidad: 3,
-      proveedor: 'Print Masters',
-    },
+  cuerpoTablaSolicitud: SolicitudData[] = [];
+
+  // /**
+  //  * Arreglo que contiene las filas de la tabla de solicitudes.
+  //  * @type {SolicitudFilaTabla[]}
+  //  */
+  // cuerpoTablaSolicitud: SolicitudFilaTabla[] = [
+  //   {
+  //     fechaCreacion: '2025-06-17 10:30:00',
+  //     mercancia: 'Laptop HP',
+  //     cantidad: 5,
+  //     proveedor: 'Tech Solutions Inc.',
+  //   },
+  //   {
+  //     fechaCreacion: '2025-06-16 14:15:30',
+  //     mercancia: 'Monitor Dell 27"',
+  //     cantidad: 10,
+  //     proveedor: 'Global Electronics',
+  //   },
+  //   {
+  //     fechaCreacion: '2025-06-15 09:00:00',
+  //     mercancia: 'Teclado Mecánico RGB',
+  //     cantidad: 8,
+  //     proveedor: 'Peripherals World',
+  //   },
+  //   {
+  //     fechaCreacion: '2025-06-14 17:45:10',
+  //     mercancia: 'Mouse Inalámbrico Logitech',
+  //     cantidad: 12,
+  //     proveedor: 'Tech Accessories Co.',
+  //   },
+  //   {
+  //     fechaCreacion: '2025-06-13 11:20:05',
+  //     mercancia: 'Impresora Epson EcoTank',
+  //     cantidad: 3,
+  //     proveedor: 'Print Masters',
+  //   },
+  // ];
+
+  /**
+   * Configuración para el select de régimen.--220201
+   * @property {Catalogo[]} regimen
+   */
+  regimen: Catalogo[] = [];
+
+  /** Conjunto de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+
+  /**
+   * Constantes de texto.
+   * @property {string} TEXTOS
+   */
+  mensajeErrorTabla: boolean = false;
+
+  nestedColumns: ColumnConfig[] = [
+    { encabezado: 'Nombre cientifico', clave: 'nombreCientifico', width: '25%' },
   ];
+
+  /**
+ * bandera para indicar que el formulario fue tocado
+ */
+  markTouched: boolean = false;
 
   /**
    * @constructor
@@ -455,7 +502,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public activatedRoute: ActivatedRoute,
     public fitosanitarioStore: FitosanitarioStore,
     public catalogosService: CatalogosService,
-    public fitosanitarioQuery: FitosanitarioQuery
+    public fitosanitarioQuery: FitosanitarioQuery,
+    public registroSolicitudService: RegistroSolicitudService
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -464,7 +512,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.formulariodataStore = datos.datos;
         this.cuerpoTabla = datos.tablaDatos;
       });
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -472,8 +519,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
           if (
-            seccionState.parameter ===
-            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
+            seccionState.parameter === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
           ) {
             this.mostrarSolicitudTabla = false;
           }
@@ -509,6 +555,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
   }
 
+  /**
+   * Inicializa el grupo de formularios anidado para los datos de la solicitud.
+   * @method initActionFormBuild
+   */
   initActionFormBuild(): void {
     this.datos = this.fb.group({
       aduanaDeIngreso: ['', Validators.required],
@@ -516,32 +566,55 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       puntoDeInspeccion: ['', Validators.required],
       regimen: ['', Validators.required],
       numeroDeGuia: [''],
-      numeroDeCarro: ['']
+      numeroDeCarro: [''],
     });
     this.forma.setControl('datos', this.datos);
-    this.fitosanitarioQuery.seleccionarDatosForma$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos: DatosForma) => {
-      if (datos) {
-        // carga de catalogos antes de asignar valores
-        const CARGACATALOGOS = async () => {
-          if (datos.aduanaDeIngreso !== undefined && datos.aduanaDeIngreso !== '') {
-            await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
-          }
-          if (datos.oficinaDeInspeccion !== undefined && datos.oficinaDeInspeccion !== '') {
-            await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
-          }
+    this.fitosanitarioQuery.seleccionarDatosForma$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: DatosForma) => {
+        if (datos) {
+          // carga de catalogos antes de asignar valores
+          const CARGACATALOGOS = async () => {
+            if (
+              datos.aduanaDeIngreso !== undefined &&
+              datos.aduanaDeIngreso !== ''
+            ) {
+              await this.obtenerSanidadAgropecuariaList(datos.aduanaDeIngreso);
+            }
+            if (
+              datos.oficinaDeInspeccion !== undefined &&
+              datos.oficinaDeInspeccion !== ''
+            ) {
+              await this.obtenerPuntoInspeccionList(datos.oficinaDeInspeccion);
+            }
+          };
+          CARGACATALOGOS().then(() => {
+            this.datos.patchValue({
+              aduanaDeIngreso: datos.aduanaDeIngreso || '',
+              oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
+              puntoDeInspeccion: datos.puntoDeInspeccion || '',
+              regimen: datos.regimen || '',
+              numeroDeGuia: datos.numeroDeGuia || '',
+              numeroDeCarro: datos.numeroDeCarro || '',
+            });
+          });
         }
-        CARGACATALOGOS().then(() => {
-          this.datos.patchValue({
-            aduanaDeIngreso: datos.aduanaDeIngreso || '',
-            oficinaDeInspeccion: datos.oficinaDeInspeccion || '',
-            puntoDeInspeccion: datos.puntoDeInspeccion || '',
-            regimen: datos.regimen || '',
-            numeroDeGuia: datos.numeroDeGuia || '',
-            numeroDeCarro: datos.numeroDeCarro || ''
-          })
-        })
-      }
-    });
+      });
+  }
+
+  /**
+   * @description Obtiene los datos de la tabla de solicitudes recientes para el
+   * prellenado.
+   * @method obtenerDatosTablaSolicitud
+   * @returns {void}
+   */
+  obtenerDatosTablaSolicitud(): void {
+    this.registroSolicitudService
+      .obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.cuerpoTablaSolicitud = data.datos ?? [];
+      });
   }
 
   /**
@@ -553,7 +626,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
     }
   }
 
@@ -580,7 +652,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   createFromFields(): void {
     this.forma = this.fb.group({
-      datos: this.fb.group({})
+      datos: this.fb.group({}),
     });
     if (this.forma) {
       this.notificationCheck = true;
@@ -659,6 +731,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerTodosLosDatosDeLaLista(): void {
+    this.obtenerDatosTablaSolicitud();
     this.getaduanaLista();
     this.getRegimenLista();
     this.getArancelariaLista();
@@ -683,15 +756,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getaduanaLista(): void {
-    this.catalogosService.obtieneCatalogoAduana(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
+    this.catalogosService
+      .obtieneCatalogoAduana(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
         this.aduanaList = data.datos ?? [];
-      }
-    );
-    
+      });
   }
 
   /**
@@ -773,7 +843,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     (
       this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
     )(VALOR);
-
   }
 
   /**
@@ -799,10 +868,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getRegimenLista
    */
   getRegimenLista(): void {
-
-    this.catalogosService.obtieneCatalogoRegimenesVigentes(220202).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimeList = data.datos ?? [];
-    });
+    this.catalogosService
+      .obtieneCatalogoRegimenesVigentes(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimeList = data.datos ?? [];
+      });
   }
 
   /**
@@ -810,9 +881,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerPuntoInspeccionList
    */
   async obtenerPuntoInspeccionList(valor: string): Promise<void> {
-    this.catalogosService.obtieneCatalogoPuntoInspeccion(220202, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      this.puntoList = data.datos ?? [];
-    });
+    await this.catalogosService
+      .obtieneCatalogoPuntoInspeccion(220202, valor)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.puntoList = data.datos ?? [];
+      });
   }
 
   /**
@@ -821,17 +895,29 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   async obtenerSanidadAgropecuariaList(cveAduana: string): Promise<void> {
     this.agropecuariaList = [];
-    if(cveAduana && cveAduana !== ''){
-      this.catalogosService.obtieneCatalogoOficinasInspeccion(220202, cveAduana)
-        .pipe(
-          takeUntil(this.destroyNotifier$)
-        ).subscribe(
-        (data): void => {
+    if (cveAduana && cveAduana !== '') {
+      await this.catalogosService
+        .obtieneCatalogoOficinasInspeccion(220202, cveAduana)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
           this.agropecuariaList = data.datos ?? [];
-        }
-      );
+        });
     }
+  }
 
+  /**
+   * Obtiene la lista para el select de régimen.
+   * @method obtenerRegimenList
+   */
+  obtenerRegimenList(clave_regimen: string = ''): void {
+    this.catalogosService
+      .obtieneCatalogoRegimenes(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimen = clave_regimen
+          ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
+          : data.datos ?? [];
+      });
   }
 
   /**
@@ -842,22 +928,298 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    *
    * @param event - Objeto de tipo `SolicitudFilaTabla` que representa la fila seleccionada en la tabla.
    */
-  seleccionFila(event: SolicitudFilaTabla): void {
-    if (event) {
-      this.forma.patchValue({
-        aduanaDeIngreso: '1',
-        oficinaDeInspeccion: '1',
-        puntoDeInspeccion: '1',
-        numeroDeGuia: 'GUIA123456',
-        regimen: '1',
-        numeroDeCarro: 'CARRO7890',
-        requisito: 'Certificado Zoosanitario',
-        numeroCertificadoInternacional: 'CERTINTL2024',
-        descripcionFraccion: 'Caballos de raza pura',
-        descripcionNico: 'Caballos para carreras',
-        descripcion: 'Importación de caballos de carreras',
-      });
+  seleccionFila(event: SolicitudData): void {
+    if (event && event.id_solicitud) {
+      // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
+      this.obtenerPrellenadoMovilizacionNacional('202850466');
+      this.obtenerPrellenadoTercerosRelacionados('202850466');
+      this.obtenerPrellenadoPagoDerechos('202850466');
+      this.catalogosService
+        // .obtenSolicitudPrellenado(event.id_solicitud)
+        .obtenSolicitudPrellenado(220202, true, '202850466' ?? '')
+        // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: async (datos) => {
+            if (datos?.datos) {
+              await this.obtenerSanidadAgropecuariaList(
+                datos.datos.cve_aduana || ''
+              );
+              await this.obtenerPuntoInspeccionList(
+                datos.datos.oficina_inspeccion_sanidad_agropecuaria || ''
+              );
+              //Regimen
+              // this.getRegimenLista();
+              this.obtenerRegimenList(datos.datos?.clave_regimen || '');
+              this.datos.patchValue({
+                aduanaDeIngreso: datos.datos.cve_aduana || '',
+                tipoDeMercancia:
+                  datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA'
+                    ? 'no'
+                    : 'yes', //'yes' para animales vivos, 'no' para subproductos
+                oficinaDeInspeccion:
+                  datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
+                puntoDeInspeccion: datos.datos.punto_inspeccion || '',
+                // claveUCON: datos.datos.clave_UCON || '',
+                // establecimientoTIF: datos.datos.establecimiento_TIF || '',
+                // nombreVeterinario: datos.datos.nombre_veterinario || '',
+                regimen: datos.datos.clave_regimen || '',
+                numeroDeGuia: datos.datos.numero_autorizacion || '',
+                numeroDeCarro: datos.datos.numero_carro_ferrocarril || '',
+              });
+              const GUARDAR_VALORES: DatosForma = {
+                aduanaDeIngreso: datos.datos.cve_aduana,
+                numeroDeCarro: datos.datos.numero_carro_ferrocarril,
+                numeroDeGuia: datos.datos.numero_autorizacion,
+                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria,
+                puntoDeInspeccion: datos.datos.punto_inspeccion,
+                regimen: datos.datos.clave_regimen
+              };
+              (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(GUARDAR_VALORES);
+            } else {
+              this.datos.reset();
+            }
+            console.warn('Datos de la solicitud prellenada:', datos);
+            const DETALLE_MERCANCIA =
+              (datos?.datos as PrellenadoSolicitud) || [];
+            if (DETALLE_MERCANCIA.mercancia.length > 0) {
+              const FILAS_SOLICITUD: FilaSolicitud[] = [];
+              // eslint-disable-next-line complexity
+              DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
+                const LISTADETALLEVIDASILVESTRE: DetalleVidaSilvestre[] =
+                  (mercancia.lista_detalle_mercancia?.map((vidaSilvestre) => ({
+                    idDetalleMercancia:
+                      vidaSilvestre.id_detalle_mercancia || '',
+                    idMercanciaGob: vidaSilvestre.id_mercancia_gob || '',
+                    idVidaSilvestre: vidaSilvestre.id_vida_silvestre || '',
+                    nombreCientifico: vidaSilvestre.nombre_cientifico || '',
+                  })) as DetalleVidaSilvestre[]) || [];
+
+                // const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
+                //   noPartida: mercancia.numero_partida.toString(),
+                //   NumeroLote: animal.numero_lote_detalle || '',
+                //   ColorPelaje: animal.color_pelaje_detalle || '',
+                //   EdadAnimal: animal.edad_animal_detalle || '',
+                //   FaseDesarrollo: animal.fase_desarrollo_detalle || '',
+                //   FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
+                //   NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
+                //   Raza: animal.raza_detalle || '',
+                //   Sexo: animal.id_sexo_detalle || '',
+                //   NombreCientifico: animal.nombre_cientifico_detalle || '',
+                //   NombreMercancia: animal.nombre_mercancia_detalle || '',
+                // })) as Sensible[] || [];
+
+                const FILAS: FilaSolicitud = {
+                  id: mercancia.id_mercancia_gob || false,
+                  noPartida: mercancia.numero_partida.toString(),
+                  descripcionTipoRequisito:
+                    mercancia.descripcion_tipo_requisito || '',
+                  tipoRequisito: mercancia.tipo_requisito || '',
+                  requisito: mercancia.requisitos || '',
+                  numeroCertificadoInternacional:
+                    String(mercancia.numero_certificado) || '',
+                  fraccionArancelaria:
+                    mercancia.fraccion_arancelaria_corto || '',
+                  descripcionFraccion:
+                    mercancia.descripcion_fracción_arancelaria || '',
+                  nico: mercancia.clave_nico || '',
+                  descripcionNico: mercancia.descripcion_nico || '',
+                  descripcionUso: mercancia.descripcion_uso || '',
+                  umt: mercancia.clave_unidad_comercial || '',
+                  cantidadUMT: mercancia.cantidad_umt || 0,
+                  umc: mercancia.clave_unidad_medida || '',
+                  descripcionUMT: mercancia.descripcion_umt || '',
+                  descripcionUMC: mercancia.descripcion_umc || '',
+                  cantidadUMC: mercancia.cantidad_umc || 0,
+                  // especie: mercancia.descripcion_especie || '',
+                  uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
+                  paisDeOrigen: mercancia.clave_paises_origen || '',
+                  // paisDeDestino: mercancia.nombre_pais_procedencia || '',
+                  paisDeProcedencia: mercancia.clave_paises_procedencia || '',
+                  descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
+                  descripcionPaisDeProcedencia:
+                    mercancia.nombre_pais_procedencia || '',
+                  // tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
+                  // tipoPlanta: mercancia.descripcion_tipo_planta || '',
+                  // plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
+                  certificadoInternacionalElectronico:
+                    String(mercancia.numero_certificado) || '',
+                  tipoDeProducto: '',
+                  numeroDeLote: mercancia.numero_lote || '',
+                  // sensibles: LISTADETALLESENSIBLES,
+                  // detalleProductos: LISTADETALLEPRODUCTOS,
+                  detalleVidaSilvestre: LISTADETALLEVIDASILVESTRE,
+                  descripcion: mercancia.descripcion_mercancia || '',
+                };
+                FILAS_SOLICITUD.push(FILAS);
+              });
+
+              this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
+            }
+            // this.radioBotonSeleccionado()
+          },
+          error: (error) => {
+            console.error(
+              'Error al obtener los datos de la solicitud prellenada:',
+              error
+            );
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje:
+                'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          },
+        });
     }
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de movilizacion nacional
+   * @param idSolicitud
+   */
+  obtenerPrellenadoMovilizacionNacional(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: Movilizacion = {
+              transporte: datos.datos.id_transporte,
+              guiaIdentificacion: datos.datos.id_punto_verificacion,
+              empresaTransportista: datos.datos.razon_social,
+              medioTransporte: datos.datos.ide_medio_transporte
+            };
+            (this.agriculturaApiService.updateMovilizacion as (value: Movilizacion) => void)(GUARDAR_VALORES);
+          }
+        }
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de terceros relacionados
+   * @param idSolicitud
+   */
+  obtenerPrellenadoTercerosRelacionados(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+              const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] = [];
+            datos.datos.terceros_destinatario.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable = {
+                tipoMercancia: '',
+                nombre: item.nombre,
+                primerApellido: item.apellido_paterno,
+                segundoApellido: item.apellido_materno,
+                razonSocial: item.razon_social,
+                pais: item.pais,
+                codigoPostal: item.codigo_postal,
+                estado: item.cve_entidad,
+                municipio: item.cve_deleg_mun,
+                colonia: item.cve_colonia,
+                calle: item.calle,
+                numeroExterior: item.num_exterior,
+                numeroInterior: item.num_interior,
+                lada: item.lada,
+                telefono: item.telefonos,
+                correo: item.correo,
+                planta: '',
+                domicilio: '',
+                municipioDescripcion: '',
+                estadoDescripcion: '',
+                paisDescripcion: '',
+                coloniaDescripcion: ''
+              };
+              ARRAY_TERCEROS_DESTINO.push(GUARDAR_VALORES_TERCEROS_DESTINO);
+              (this.agriculturaApiService.updateTercerosRelacionado as (value: TercerosrelacionadosdestinoTable[]) => void)(ARRAY_TERCEROS_DESTINO);
+            });
+            const ARRAY_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable[] = [];
+            datos.datos.terceros_exportador.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable = {
+                tipoMercancia: '',
+                nombre: item.nombre,
+                razonSocial: item.razon_social,
+                pais: item.pais,
+                telefono: item.telefonos,
+                domicilio: item.descripcion_ubicacion,
+                correo: item.correo,
+                primerApellido: item.apellido_paterno,
+                segundoApellido: item.apellido_materno,
+                lada: item.lada
+              }
+              ARRAY_TERCEROS_EXPORTADOR.push(GUARDAR_VALORES_TERCEROS_EXPORTADOR);
+              (this.agriculturaApiService.updateTercerosExportador as (value: TercerosrelacionadosExportadorTable[]) => void)(ARRAY_TERCEROS_EXPORTADOR);
+            })
+
+          }
+        }
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de pago de derechos
+   * @param idSolicitud
+   */
+  obtenerPrellenadoPagoDerechos(idSolicitud: string) :void {
+    this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: PagoDeDerechos = {
+              exentoPago: datos.datos.exento_pago,
+              justificacion: datos.datos.ide_motivo_exento_pago,
+              claveReferencia: datos.datos.cve_referencia_bancaria,
+              cadenaDependencia: datos.datos.cadena_pago_dependencia,
+              banco: datos.datos.cve_banco,
+              llavePago: datos.datos.llave_pago,
+              importePago: datos.datos.imp_pago,
+              fechaPago: datos.datos.fec_pago
+            };
+            (this.agriculturaApiService.updatePago as (value: PagoDeDerechos) => void)(GUARDAR_VALORES);
+          }
+        }
+      });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  onRowExpanded(row: any): void {
+    // Aquí puedes cargar los datos para la tabla anidada si es necesario
+    console.warn('Fila expandida:', row);
+  }
+
+  /** Método para manejar el cambio de filas seleccionadas. */
+  onfilasSeleccionadasChange(filasSeleccionadas: FilaSolicitud[]): void {
+    const FS = filasSeleccionadas
+      .map((row) => row.id)
+      .filter((id): id is number => id !== undefined && id !== null);
+    this.filasSeleccionadas = new Set(FS);
+    if (this.filasSeleccionadas.size > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+    }
+
   }
 
   /**
@@ -937,45 +1299,43 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarMercancia(): void {
-      const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
-      const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
 
-      // Verificar si no hay registros en la tabla
-      if (!TABLE_DATA || TABLE_DATA.length === 0) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Verificar si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Verificar si no hay registros seleccionados
-      if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Verificar si no hay registros seleccionados
+    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Si hay más de un registro seleccionado, mostrar mensaje de error
-      if (SELECTED_DATA.length > 1) {
-        this.eliminarMercanciaNotification();
-        this.moduloEmergente = true;
-        return;
-      }
+    // Si hay más de un registro seleccionado, mostrar mensaje de error
+    if (SELECTED_DATA.length > 1) {
+      this.eliminarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
 
-      // Si hay exactamente un registro seleccionado, eliminar directamente
-      if (SELECTED_DATA.length === 1) {
-        const FILTERED_VALOR = TABLE_DATA.filter(
-          (item) => !SELECTED_DATA.includes(item)
-        );
-        this.fitosanitarioStore.update(
-          (state) => ({
-            ...state,
-            tablaDatos: FILTERED_VALOR
-          })
-        );
+    // Si hay exactamente un registro seleccionado, eliminar directamente
+    if (SELECTED_DATA.length === 1) {
+      const FILTERED_VALOR = TABLE_DATA.filter(
+        (item) => !SELECTED_DATA.includes(item)
+      );
+      this.fitosanitarioStore.update((state) => ({
+        ...state,
+        tablaDatos: FILTERED_VALOR,
+      }));
 
-        // Limpiar selección después de eliminar
-        this.seleccionTabla([]);
-      }
+      // Limpiar selección después de eliminar
+      this.seleccionTabla([]);
+    }
   }
 
   /**
@@ -988,7 +1348,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-    /**
+  /**
    * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
    * @method eliminarPedimento
    * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
@@ -1002,10 +1362,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
-  * @method eliminarPedimentoDatos
-  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
-  */
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   * @method eliminarPedimentoDatos
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   */
   eliminarPedimentoDatos(borrar: boolean): void {
     if (borrar) {
       this.eliminarDatosTabla = false;
@@ -1014,19 +1374,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         return;
       }
       const FILTERED_VALOR = VALOR.filter(
-        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+        (item) =>
+          !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
       );
-      this.fitosanitarioStore.update(
-        (state) => ({
-          ...state,
-          tablaDatos: FILTERED_VALOR
-        })
-      );
+      this.fitosanitarioStore.update((state) => ({
+        ...state,
+        tablaDatos: FILTERED_VALOR,
+      }));
 
       // Limpiar selección después de eliminar
       this.seleccionTabla([]);
-    }
-    else {
+    } else {
       this.eliminarDatosTabla = false;
     }
   }
@@ -1106,5 +1464,46 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+  };
+
+  /**
+   * @description Valida todos los campos del formulario y marca los campos como touched
+   * para mostrar los errores de validación en los componentes app-catalogo-select
+   * @method validarFormulario
+   * @returns { valido: boolean; mensaje: string } true si el formulario es válido, false en caso contrario
+   */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    // Marcar los select customizados
+    this.markTouched = true;
+    this.forma.updateValueAndValidity();
+    this.forma.markAllAsTouched();
+
+    // Verificar si hay datos en la tabla
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      return { valido: false, mensaje: 'Debe agregar al menos una mercancía.' };
+    }
+
+    // Retornar si el formulario es válido
+    if (!this.forma.valid) {
+      return { valido: false };
+    }
+
+    return { valido: true };
+  }
+
+  /**
+   * @description Valida formulario
+   * @method validarFormulario
+   * @returns {boolean}
+   */
+  validarFormularioJavi(): boolean {
+    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true : false;
+    if (this.forma.valid) {
+      return this.mensajeErrorTabla;
+    }
+
+    this.forma.markAllAsTouched();
+    return false
   }
 }

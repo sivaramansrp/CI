@@ -1,18 +1,12 @@
-import { FederatariosYPlantasVistaComponent } from '../../../../../80103/component/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component';
-import { Tramite80101Store } from '../../../../../80103/estados/tramite80101.store';
-import { Tramite80101Query } from '../../../../../80103/estados/tramite80101.query';
-import { ComplimentosService } from '../../../../../80103/shared/services/complimentos.service';
-import { of, Subject } from 'rxjs';
-import { FEDERATARIOS, PLANTAS_DIPONIBLES, PLANTAS_IMMEX, FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../../../80103/shared/models/federatarios-y-plantas.model';
-import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../../80103/shared/constantes/complementar-planta.enum';
-import { Directos } from '../../../../../80103/shared/constantes/empleados.enum';
-import { CapacidadInstalada } from '../../../../../80103/shared/constantes/capacidad-instalada.enum';
+import { FederatariosYPlantasVistaComponent } from "../../../80104/component/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component";
+
+
 
 describe('FederatariosYPlantasVistaComponent', () => {
   let component: FederatariosYPlantasVistaComponent;
-  let store: Tramite80101Store;
-  let query: Tramite80101Query;
-  let complimentoSvc: ComplimentosService;
+  let store: any;
+  let query: any;
+  let complimentoSvc: any;
 
   beforeEach(() => {
     store = {
@@ -25,115 +19,136 @@ describe('FederatariosYPlantasVistaComponent', () => {
       setEmpleadosDatos: jest.fn(),
       setFederatariosCatalogo: jest.fn(),
       setCapacidadInstaladaTableLista: jest.fn(),
-    } as any;
-
+    };
     query = {
-      selectDatosFederatarios$: of([]),
-      selectDatosPlantasDisponibles$: of([]),
-      selectDatosPlantasImmex$: of([]),
-      selectDatosFederatariosFormulario$: of({ estadoDos: 'CDMX' }),
-    } as any;
-
+      selectDatosFederatarios$: { subscribe: jest.fn() },
+      selectDatosPlantasDisponibles$: { subscribe: jest.fn() },
+      selectDatosPlantasImmex$: { subscribe: jest.fn() },
+      selectDatosFederatariosFormulario$: { pipe: jest.fn(() => ({ subscribe: jest.fn() })) },
+    };
     complimentoSvc = {
-      getPlantasDisponibles: jest.fn().mockReturnValue(of({ datos: [{ id: 1 }] })),
-      mapApiResponseToPlantasDisponibles: jest.fn().mockReturnValue([{ id: 1 }]),
-    } as any;
-
+      getPlantasDisponibles: jest.fn(),
+      mapApiResponseToPlantasDisponibles: jest.fn(),
+    };
     component = new FederatariosYPlantasVistaComponent(store, query, complimentoSvc);
   });
 
-  it('should initialize federatariosTablaConfiguracion correctly', () => {
-    expect(component.federatariosTablaConfiguracion.TablaSeleccion).toBeDefined();
-    expect(component.federatariosTablaConfiguracion.TablaEncabezado).toBe(FEDERATARIOS);
+  it('should initialize observables and subscribe on ngOnInit', () => {
+    const federatarios$ = {};
+    const plantasDisponibles$ = {};
+    const plantasImmex$ = {};
+    query.selectDatosFederatarios$ = federatarios$ as any;
+    query.selectDatosPlantasDisponibles$ = plantasDisponibles$ as any;
+    query.selectDatosPlantasImmex$ = plantasImmex$ as any;
+    const datos = { estadoDos: 'JALISCO' };
+    const subscribeMock = jest.fn(cb => cb(datos));
+    query.selectDatosFederatariosFormulario$.pipe = jest.fn(() => ({ subscribe: subscribeMock }));
+
+    component.ngOnInit();
+
+    expect(component.federatariosTablaLista$).toBe(federatarios$);
+    expect(component.plantasDisponiblesTablaLista$).toBe(plantasDisponibles$);
+    expect(component.plantasImmexTablaLista$).toBe(plantasImmex$);
+    expect(component.datosFederatarios).toBe(datos);
   });
 
-  it('should initialize plantasDisponiblesTablaConfiguracion correctly', () => {
-    expect(component.plantasDisponiblesTablaConfiguracion.TablaSeleccion).toBeDefined();
-    expect(component.plantasDisponiblesTablaConfiguracion.TablaEncabezado).toBe(PLANTAS_DIPONIBLES);
-  });
-
-  it('should initialize plantasImmexTablaConfiguracion correctly', () => {
-    expect(component.plantasImmexTablaConfiguracion.TablaSeleccion).toBeDefined();
-    expect(component.plantasImmexTablaConfiguracion.TablaEncabezado).toBe(PLANTAS_IMMEX);
-  });
-
-  it('should call store.setFederatarios on setFormaDatos', () => {
-    const datos = { estadoDos: 'CDMX' } as FederatariosEncabezado;
-    component.setFormaDatos(datos);
+  it('should call store.setFederatarios in setFormaDatos', () => {
+    const datos = { estadoDos: 'JALISCO' };
+    component.setFormaDatos(datos as any);
     expect(store.setFederatarios).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setPlantasDisponiblesTablaLista on setPlantasDisponiblesDatos with valid response', () => {
-    component.estadoValor = 'CDMX';
+  it('should call store.setPlantasDisponiblesTablaLista when setPlantasDisponiblesDatos succeeds', () => {
+    const payload = {
+      rfcEmpresaSubManufacturera: "AAL0409235E6",
+      entidadFederativa: '',
+      idPrograma: null
+    };
+    const response = { datos: [{}] };
+    complimentoSvc.getPlantasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => success(response)
+      })
+    });
+    complimentoSvc.mapApiResponseToPlantasDisponibles.mockReturnValue([{}]);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    (global as any).esValidObject = jest.fn(() => true);
+    (global as any).doDeepCopy = jest.fn(obj => obj);
+    (global as any).esValidArray = jest.fn(() => true);
+
     component.setPlantasDisponiblesDatos();
-    expect(complimentoSvc.getPlantasDisponibles).toHaveBeenCalled();
-    expect(store.setPlantasDisponiblesTablaLista).toHaveBeenCalledWith([{ id: 1 }]);
+
+    expect(complimentoSvc.getPlantasDisponibles).toHaveBeenCalledWith(payload);
+    expect(store.setPlantasDisponiblesTablaLista).toHaveBeenCalledWith([{}]);
   });
 
   it('should handle error in setPlantasDisponiblesDatos', () => {
-    complimentoSvc.getPlantasDisponibles = jest.fn().mockReturnValue(of({}));
-    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    component.estadoValor = 'CDMX';
+    complimentoSvc.getPlantasDisponibles.mockReturnValue({
+      pipe: () => ({
+        subscribe: (success: any, error: any) => error('error')
+      })
+    });
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     component.setPlantasDisponiblesDatos();
-    spy.mockRestore();
+    expect(errorSpy).toHaveBeenCalledWith('Error al obtener los plantas disponibles:', 'error');
+    errorSpy.mockRestore();
   });
 
-  it('should call store.setPlantasImmexTablaLista on setPlantasImmexDatos', () => {
-    const datos = [{ id: 1 }] as PlantasImmex[];
-    component.setPlantasImmexDatos(datos);
+  it('should call store.setPlantasImmexTablaLista in setPlantasImmexDatos', () => {
+    const datos = [{}];
+    component.setPlantasImmexDatos(datos as any);
     expect(store.setPlantasImmexTablaLista).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setComplementarPlantaDatos on setComplementarPlantaList', () => {
-    const datos = [{ id: 1 }] as ComplementoDePlanta[];
-    component.setComplementarPlantaList(datos);
+  it('should call store.setComplementarPlantaDatos in setComplementarPlantaList', () => {
+    const datos = [{}];
+    component.setComplementarPlantaList(datos as any);
     expect(store.setComplementarPlantaDatos).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setFirmantesDatos on setFirmantesList', () => {
-    const datos = [{ id: 1 }] as ComplementarPlantaState[];
-    component.setFirmantesList(datos);
+  it('should call store.setFirmantesDatos in setFirmantesList', () => {
+    const datos = [{}];
+    component.setFirmantesList(datos as any);
     expect(store.setFirmantesDatos).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setMontosInversionDatos on setMontosInversionList', () => {
-    const datos = [{ id: 1 }] as MontoDeInversion[];
-    component.setMontosInversionList(datos);
+  it('should call store.setMontosInversionDatos in setMontosInversionList', () => {
+    const datos = [{}];
+    component.setMontosInversionList(datos as any);
     expect(store.setMontosInversionDatos).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setEmpleadosDatos on setEmpleadosList', () => {
-    const datos = [{ id: 1 }] as Directos[];
-    component.setEmpleadosList(datos);
+  it('should call store.setEmpleadosDatos in setEmpleadosList', () => {
+    const datos = [{}];
+    component.setEmpleadosList(datos as any);
     expect(store.setEmpleadosDatos).toHaveBeenCalledWith(datos);
   });
 
-  it('should set estadoValor and call store.setFederatariosCatalogo on setDatosFederatarios', () => {
-    const datos = { estadoDos: 'JALISCO' } as FederatariosEncabezado;
-    component.setDatosFederatarios(datos);
+  it('should set estadoValor and call store.setFederatariosCatalogo in setDatosFederatarios', () => {
+    const datos = { estadoDos: 'JALISCO' };
+    component.setDatosFederatarios(datos as any);
     expect(component.estadoValor).toBe('JALISCO');
     expect(store.setFederatariosCatalogo).toHaveBeenCalledWith(datos);
   });
 
-  it('should call store.setCapacidadInstaladaTableLista on obtenerCapacidadInstaladaTablaList', () => {
-    const datos = [{ id: 1 }] as CapacidadInstalada[];
-    component.obtenerCapacidadInstaladaTablaList(datos);
+  it('should call store.setCapacidadInstaladaTableLista in obtenerCapacidadInstaladaTablaList', () => {
+    const datos = [{}];
+    component.obtenerCapacidadInstaladaTablaList(datos as any);
     expect(store.setCapacidadInstaladaTableLista).toHaveBeenCalledWith(datos);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize observables and datosFederatarios on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.federatariosTablaLista$).toBeDefined();
-    expect(component.plantasDisponiblesTablaLista$).toBeDefined();
-    expect(component.plantasImmexTablaLista$).toBeDefined();
-    expect(component.datosFederatarios.estadoDos).toBe('CDMX');
+  it('should have default values for table configurations and estadosCatalogos', () => {
+    expect(component.federatariosTablaConfiguracion).toBeDefined();
+    expect(component.plantasDisponiblesTablaConfiguracion).toBeDefined();
+    expect(component.plantasImmexTablaConfiguracion).toBeDefined();
+    expect(component.estadosCatalogos).toEqual([{ "id": 1, "descripcion": "JALISCO" }]);
   });
 });

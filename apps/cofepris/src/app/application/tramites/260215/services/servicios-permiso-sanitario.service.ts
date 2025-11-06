@@ -1,16 +1,30 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { HttpCoreService } from '@libs/shared/data-access-user/src/core/services/shared/http/http.service';
+
 import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { Observable, catchError, throwError } from 'rxjs';
-import { PermisoModel, ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
+import { ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+
+/**
+ * Interface para la respuesta de la API.
+ */
+export interface JSONResponse {
+  success: boolean;
+  message: string;
+  data?: unknown;
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +35,13 @@ export class ServiciosPermisoSanitarioService {
    * 
    * @param http - Instancia de HttpClient utilizada para realizar solicitudes HTTP.
    * @param tramite260215Store - Instancia de Tramite260215Store para gestionar el estado relacionado con el trámite 260215.
+   * @param httpService - Instancia de HttpCoreService para operaciones POST/PUT/DELETE.
    */
-  constructor(private http: HttpClient, private tramite260215Store: Tramite260215Store) {
+  constructor(
+    private http: HttpClient, 
+    private tramite260215Store: Tramite260215Store,
+    private httpService: HttpCoreService
+  ) {
     // to be initilized
   }
 
@@ -89,14 +108,7 @@ export class ServiciosPermisoSanitarioService {
     );
   }
 
-  /**
-   * Obtiene una lista de permisos sanitarios desde un archivo JSON local.
-   *
-   * @returns Un observable que emite un arreglo de objetos de tipo `PermisoModel`.
-   */
-  getTable(): Observable<PermisoModel[]> {
-    return this.http.get<PermisoModel[]>('assets/json/260215/terceros.json');
-  }
+
 
   /**
    * Obtiene los datos de terceros relacionados desde un archivo JSON local.
@@ -243,4 +255,58 @@ export class ServiciosPermisoSanitarioService {
           })
         );
     }
+      /**
+       * Obtiene los datos de la tabla de fabricantes como destinatarios desde un archivo JSON local.
+       *
+       * @returns {Observable<Destinatario[]>} Observable que emite un arreglo de objetos `Destinatario`.
+       * @description Este método realiza una petición HTTP para obtener los datos de la tabla de fabricantes como destinatarios.
+       */
+      getFabricanteTablaDatos(): Observable<Fabricante[]> {
+        return this.http.get<Fabricante[]>('assets/json/260214/fabricante.json');
+      }
+      
+        /**
+         * @description
+         * Obtiene la lista de proveedores desde un archivo JSON local.
+         *
+         * @returns {Observable<Proveedor[]>} Un observable que emite un arreglo de proveedores.
+         *
+         * @example
+         * this.miServicio.getProveedorTablaDatos().subscribe((data) => {
+         *   console.log(data);
+         * });
+         */
+        getProveedorTablaDatos(): Observable<Proveedor[]> {
+          return this.http.get<Proveedor[]>('assets/json/260214/proveedor.json');
+        }
+          getDestinatarioTablaDatos(): Observable<Destinatario[]> {
+            return this.http.get<Destinatario[]>(
+              'assets/json/260214/destinatario-final.json'
+            );
+          }
+            getFacturadorTablaDatos(): Observable<Facturador[]> {
+              return this.http.get<Facturador[]>('assets/json/260214/facturador.json');
+            }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST para guardar la solicitud.
+   * OPCION 1: Usa el endpoint estándar SAT (se recomienda usar RegistroSolicitudService)
+   * OPCION 2: Usa el endpoint específico COFEPRIS (como respaldo)
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    // OPCION 1: Usar endpoint estándar SAT (recomendado - mejor usar RegistroSolicitudService)
+    const ENDPOINT_SAT = '/api/sat-t260215/solicitud/guardar';
+    
+    // OPCION 2: Usar endpoint específico COFEPRIS (como respaldo si el servidor está configurado así)
+    // const ENDPOINT_COFEPRIS = '/api/cofepris-t260215/solicitud/guardar';
+    
+    // Usar endpoint estándar SAT por defecto
+    const ENDPOINT = ENDPOINT_SAT;
+    
+    return this.httpService.post<JSONResponse>(ENDPOINT, { body: body });
+  }
+      
 }

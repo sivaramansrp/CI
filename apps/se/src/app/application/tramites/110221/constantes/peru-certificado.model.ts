@@ -79,6 +79,38 @@ export const ELEMENTOS_REQUERIDOS = [
   'calle',
   'numeroLetra'
 ];
-
-
+/**
+ * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento asociado al trámite.
+ */
 export const IDPROCEDIMIENTO = 110221;
+
+/**
+ * @interface Payload
+ * @description Estructura de datos para la respuesta del servidor al guardar una solicitud.
+ */
+export interface Payload { 
+  /** 
+   * Código de respuesta del servidor que indica el resultado de la operación.
+   * @description '00' indica éxito, cualquier otro código indica error.
+   * @example '00' | '01' | '02'
+   */
+  codigo: string; 
+  
+  /** 
+   * Mensaje descriptivo del resultado de la operación.
+   * @description Proporciona información detallada sobre el resultado de la petición.
+   * @example 'Operación exitosa' | 'Error de validación' | 'Servicio no disponible'
+   */
+  mensaje: string; 
+  
+  /** 
+   * Datos adicionales de la respuesta, incluyendo el ID de la solicitud generada.
+   * @description Opcional. Se incluye cuando la operación genera o modifica una solicitud.
+   * @example { id_solicitud: 12345 }
+   */
+  datos?: { 
+    /** Identificador único de la solicitud generada o modificada */
+    id_solicitud: number 
+  } 
+}

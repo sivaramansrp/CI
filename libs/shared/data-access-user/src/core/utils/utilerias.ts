@@ -320,5 +320,117 @@ export function parseToString(value: unknown): string {
   }
   return value.toString();
 }
-    
 
+/**
+ * Renombra una clave de un objeto, manteniendo el resto de las propiedades intactas.
+ * @param obj Objeto al que se le va a renombrar la clave.
+ * @param oldKey Nombre de la clave original.
+ * @param newKey Nuevo nombre para la clave.
+ * @returns El objeto con la clave renombrada.
+ */
+export function renameKey<T extends Record<string, unknown>>(obj: T, oldKey: string, newKey: string): T {
+  if (Object.prototype.hasOwnProperty.call(obj, oldKey)) {
+    const { [oldKey]: OLD, ...REST } = obj;
+    return { ...REST, [newKey]: OLD } as T;
+  }
+  return obj;
+}
+
+ /**
+     * Converts a date string from the format 'DD/MM/YYYY' to 'YYYY-MM-DD 00:00:00'.
+     *
+     * @param dateString - The date string in 'DD/MM/YYYY' format to be converted.
+     * @returns The formatted date string in 'YYYY-MM-DD 00:00:00' format.
+     */
+export function convertDate(dateString: string): string {
+        if (!dateString || typeof dateString !== 'string') {
+            return '';
+        }
+        const parsedDate = moment(dateString, 'DD/MM/YYYY', true);
+        if (!parsedDate.isValid()) {
+            return '';
+        }
+        return parsedDate.format('YYYY-MM-DD 00:00:00');
+    }
+    
+/**
+ * Formatea una cadena de fecha a formato 'YYYY-MM-DD'.
+ * Si la cadena de fecha es vacía o nula, devuelve una cadena vacía.
+ * Convierte la fecha a un objeto Date y obtiene su representación ISO limitada a la parte de fecha.
+ */
+export function formatDateToYYYYMMDD(dateString: string): string {
+  if (!dateString) {return '';}
+  const DATE = new Date(dateString);
+  return DATE.toISOString().split('T')[0];
+}
+
+    /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
+  export function manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }
+
+  /**
+   *  Exporta un archivo Excel a partir de una cadena base64.
+   * 
+   * @param dataFile 
+   */
+  export function exportExcelFile( dataFile: string): void {
+    const BASE64_DATA = dataFile ?? '';
+    const BYTE_CHARACTERS = atob(BASE64_DATA);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+        BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Crear enlace de descarga
+    const LINK = document.createElement('a');
+    LINK.href = window.URL.createObjectURL(BLOB);
+    LINK.download = 'datosRPE.xlsx';
+    LINK.click();
+
+    // Liberar memoria
+            window.URL.revokeObjectURL(LINK.href);
+  
+  }
+
+  /**
+ * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
+ * @param fecha_creacion Fecha en formato ISO (string)
+ * @returns Fecha formateada como string
+ */
+export function formatFechaCreacion(fecha_creacion: string): string {
+    const DATE = new Date(fecha_creacion);
+    if (isNaN(DATE.getTime())) {
+        return fecha_creacion;
+    }
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
+}

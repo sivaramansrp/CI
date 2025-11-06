@@ -751,6 +751,20 @@ guardarComplementarFraccion(): void {
       MODAL.hide();
     }
   } 
+  else if (this.complimentarForm.invalid) {
+    this.complimentarForm.markAllAsTouched();
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action', 
+      titulo: '',
+      mensaje: 'Debe completar todos los campos obligatorios',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 }
 
 
@@ -1173,4 +1187,16 @@ public tipoDeDocumenteCatalog: Catalogo[] = [];
   setProyectoImmex(): void {
     this.obtenerProyectoImmexTablaLista.emit(this.proyectoImmexTablaLista);
 }
+
+  /**
+   * Restringe la entrada del usuario a solo dígitos.
+   * @param event 
+   * @param controlName 
+   */
+  onSoloDigitosInput(event: Event, controlName: string): void {
+    const INPUT = event.target as HTMLInputElement;
+    const DIGITS = INPUT.value.replace(/[^0-9]/g, '');
+    INPUT.value = DIGITS;
+    this.complimentarForm.get(controlName)?.setValue(DIGITS, { emitEvent: false });
+  }
 }

@@ -1,7 +1,9 @@
 import { Tramite260209State, Tramite260209Store } from '../estados/tramite260209Store.store';
+import { GuardarAdapter_260209 } from '../adapters/guardar-payload.adapter';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la importación 
@@ -84,6 +86,16 @@ export class ImportacionDestinadosDonacioService {
       ...DATOS
     }));
   }
+  
+    /**
+     * Realiza la llamada al API para guardar el trámite 260209.
+     * @param {Tramite260209State} state - Estado actual del trámite
+     * @returns {Observable<any>} Respuesta del API
+     */
+    guardarTramite(state: Tramite260209State): Observable<object> {
+      const PAYLOAD = GuardarAdapter_260209.toFormPayload(state);
+      return this.http.post<object>('/api/tramites/260209/guardar', PAYLOAD);
+    }
 
   /**
    * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.

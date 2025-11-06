@@ -51,11 +51,41 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarControldasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-controladas/buscar-datos-grid-plantas-controladoras`,
     buscarTerciarizadasPlantas: `${BASE_URL}${API}${procedure}${SOLICITUD}/empresas-terciarizadas/buscar-datos-grid-plantas`,
     buscarPlantasImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/federatarios-y-plantas/estado`,
+    tratadosAcuerdos: (countryCode: string) => `${BASE_URL}${API}/${procedure}${CATALOGO}/${countryCode}/tratados-acuerdos`,
     buscarPermisoImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/agregar-anexo-premiso`,
-    tratadosAcuerdos:`${BASE_URL}${API}/${procedure}/TITRAC.TA/tratados-acuerdos`,
     paisesBloques:`${BASE_URL}${API}/${procedure}${CATALOGO}/paises/bloques`,
     buscarFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
     buscarfraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/exportacion`,
     buscarfraccionarancelariaImportacion: `${BASE_URL}${API}${procedure}${SOLICITUD}/anexo-uno/fraccion-arancelaria/importacion`,
     buscarSectoresImmex: `${BASE_URL}${API}${procedure}${SOLICITUD}/actividad-tres-rs/sectores-immex`,
+    certificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/mostrar/certificados`,
+    guardarCertificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/guardar`,
+    generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
+    certificadoOrigen:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/obtener-certificado-origen`,
 });
+
+
+/**
+ * Genera la ruta de la API para consultar los datos de cupo en el grid, según el trámite especificado.
+ *
+ * @param TRAMITE - Identificador del trámite a utilizar en la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const BUSCAR_CONSULTAR = (TRAMITE: string): string => `sat-t${TRAMITE}/${SOLICITUD}/consultar-cupo/buscar-datos-grid`;
+
+/**
+ * Construye la URL para guardar una solicitud asociada a un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite para el cual se va a guardar la solicitud.
+ * @returns La URL completa para la operación de guardar solicitud del trámite dado.
+ */
+export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}/${TRAMITE}/solicitud/guardar`;
+
+/**
+ * Construye la URL para buscar instrumentos asociados a un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite para el cual se desean buscar los instrumentos.
+ * @returns La URL completa como cadena de texto para realizar la búsqueda de instrumentos.
+ */
+export const BUSCAR_INSTRUMENTOS = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscarInstrumentos`;
+

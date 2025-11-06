@@ -1,7 +1,10 @@
 <app-terceros-relacionados
+[tramiteID]="'260207'"
 [fabricanteTablaDatos]="(tercerosDatos$ | async)?.fabricanteTablaDatos || []"
 [destinatarioFinalTablaDatos]="(tercerosDatos$ | async)?.destinatarioFinalTablaDatos || []"
 [proveedorTablaDatos]="(tercerosDatos$ | async)?.proveedorTablaDatos || []"
 [facturadorTablaDatos]="(tercerosDatos$ | async)?.facturadorTablaDatos || []"
 [formularioDeshabilitado]="esFormularioSoloLectura"
+[elementosRequeridos]="elementosRequeridos"
+#TercerosRelacionadosComponent
 ></app-terceros-relacionados>

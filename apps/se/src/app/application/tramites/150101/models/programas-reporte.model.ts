@@ -21,6 +21,12 @@ export interface ProgramasReporte {
    * Estatus actual del programa.
    */
   estatus: string;
+
+  
+  /**
+   * Rrograma compuesto id.
+   */
+  idProgramaCompuesto?: number;
 }
 
 /**

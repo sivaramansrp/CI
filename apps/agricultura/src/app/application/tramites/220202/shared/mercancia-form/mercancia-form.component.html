@@ -407,9 +407,10 @@
           >Nombre científico</label
         >
         <crosslist
-          [fechas]="usoCrossListDatos"
+          [fechas]="vidaSilvestreListaTextos"
           [label]="usoNormaSeleccionadaLabel"
           [botones]="aduanasEntradaBotons"
+          (fechasSeleccionadasChange)="valoresCrossLista($event)"
         ></crosslist>
       </div>
     </div>

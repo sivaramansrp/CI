@@ -4,6 +4,9 @@
         <div class="col-md-10">
           <h1>Captura del certificado fitosanitario para importación</h1>
         </div>
+        @if (esFormaInValido) {
+        <div class="alert alert-info alert-danger text-center" [innerHTML]="formErrorAlert"></div>
+        }
         <app-wizard [listaPasos]="pasos"></app-wizard>
       </div>
   
@@ -26,6 +29,7 @@
       [btnGuardar]="btnGuardar"
       [btnGuardarVisible]="btnGuardarVisible"
       (continuarEvento)="getValorIndice($event)"
+      [btnHabilitarContinuar] = "true"
     ></btn-continuar>
 
                     <div class="row">

@@ -2,5 +2,6 @@
     (agregarDatosProductorFormularioEvent)="setValoresStoreAgregarForm($event)" [tramiteState]="tramiteState"
     [agregarDatosProductor]="agregarDatosProductor" [productoresExportador]="productoresExportador || []"
     [mercanciaDatos]="[]" [ocultarFax]="ocultarFax" [esTipoDeSeleccionado]="esTipoDeSeleccionado"
-    [optionsTipoFactura]="optionsTipoFactura ||[]"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"></app-historico-productores>
+    [optionsTipoFactura]="optionsTipoFactura ||[]" [sortMercanciasTablaOrder]="true"
+    [esFormularioSoloLectura]="esFormularioSoloLectura" (formaValida)="formaValida($event)"
+    (emitAgregarExportador)="emitAgregarExportador($event)"></app-historico-productores>

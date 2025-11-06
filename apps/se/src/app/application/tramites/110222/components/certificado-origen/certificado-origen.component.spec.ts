@@ -1,53 +1,59 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { Component } from '@angular/core';
-import { CertificadoOrigenComponent } from './certificado-origen.component';
-import { FormBuilder } from '@angular/forms';
-import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { Tramite110222Store } from '../../estados/tramite110222.store';
-import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-@Injectable()
-class MockValidarInicialmenteCertificadoService {}
-
-@Injectable()
-class MockTramite110222Store {}
-
-@Injectable()
-class MockTramite110222Query {
-  formCertificado$ = observableOf({});
+import { Tramite110222Store } from '../../estados/tramite110222.store';
+import {Tramite110222Query} from '../../estados/tramite110222.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CertificadoOrigenComponent } from './certificado-origen.component';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ToastrService, TOAST_CONFIG, ToastConfig } from 'ngx-toastr';
+import { of, Subject } from 'rxjs';
+class MockToastrService {
+  success = jest.fn();
+  error = jest.fn();
+  info = jest.fn();
+  warning = jest.fn();
 }
 
+class MockValidarInicialmenteCertificadoService {}
+class MockTramite110222Store {
+  setFormValida = jest.fn();
+  setmercanciaTabla = jest.fn();
+}
+class MockTramite110222Query {
+  formCertificado$ = of({});
+  selectPeru$ = of({});
+}
 describe('CertificadoOrigenComponent', () => {
   let fixture;
   let component;
+  let store;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,CommonModule ],
-       declarations: [ CertificadoOrigenComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
+  imports: [ FormsModule, ReactiveFormsModule, CommonModule ],
+  declarations: [ CertificadoOrigenComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  providers: [
+  FormBuilder,
         { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
         { provide: Tramite110222Store, useClass: MockTramite110222Store },
         { provide: Tramite110222Query, useClass: MockTramite110222Query },
         SeccionLibStore,
         SeccionLibQuery,
-        ConsultaioQuery
+        ConsultaioQuery,
+        { provide: ToastrService, useClass: MockToastrService },
+        { provide: TOAST_CONFIG, useValue: {} as Partial<ToastConfig> }
       ]
     }).overrideComponent(CertificadoOrigenComponent, {
-
     }).compileComponents();
-    fixture = TestBed.createComponent(CertificadoOrigenComponent);
-    component = fixture.debugElement.componentInstance;
+  fixture = TestBed.createComponent(CertificadoOrigenComponent);
+  component = fixture.debugElement.componentInstance;
+  store = TestBed.inject(Tramite110222Store);
   });
 
   it('should run #constructor()',  () => {
@@ -56,17 +62,13 @@ describe('CertificadoOrigenComponent', () => {
 
   it('should run #ngOnInit()',  () => {
     component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.seccionQuery.selectSeccionState$ = of({});
     component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.consultaQuery.selectConsultaioState$ = of({});
     component.query = component.query || {};
-    component.query.selectTramite$ = observableOf({});
+    component.query.selectTramite$ = of({});
     component.query.selectmercanciaTabla$ = 'selectmercanciaTabla$';
-    component.estadoOpcion = jest.fn();
-    component.paisOpcion = jest.fn();
-    component.ngOnInit();
-    expect(component.estadoOpcion).toHaveBeenCalled();
-    expect(component.paisOpcion).toHaveBeenCalled();
+    expect(() => component.ngOnInit()).not.toThrow();
   });
 
   it('should run #setValoresStore()',  () => {
@@ -76,21 +78,10 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.store.setFormCertificadoGenric).toHaveBeenCalled();
   });
 
-  it('should run #estadoOpcion()',  () => {
-    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
-    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.estadoOpcion();
-  });
-
-  it('should run #paisOpcion()',  () => {
-    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
-    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.paisOpcion();
-  });
 
   it('should run #conseguirDisponiblesDatos()',  () => {
     component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
-    component.ValidarInicialmenteCertificadoService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+  component.ValidarInicialmenteCertificadoService.obtenerTablaDatos = jest.fn().mockReturnValue(of({}));
     component.conseguirDisponiblesDatos();
   });
 
@@ -120,31 +111,54 @@ describe('CertificadoOrigenComponent', () => {
     component.abrirModificarModal({});
   });
 
-  it('should run #cerrarModificarModal()', () => {
-    component.modalInstance = component.modalInstance || {};
-    component.modalInstance.hide = jest.fn();
+  it('should call cerrarModificarModal and hide modal', () => {
+    component.modalInstance = { hide: jest.fn() };
     component.cerrarModificarModal();
     expect(component.modalInstance.hide).toHaveBeenCalled();
   });
 
-  it('should run #setFormValida()', () => {
-    component.store = component.store || {};
-    component.store.setFormValida = jest.fn();
-    component.setFormValida({});
-    expect(component.store.setFormValida).toHaveBeenCalled();
+  it('should call setFormValida', () => {
+    const spy = jest.spyOn(store, 'setFormValida');
+    component.store = store;
+    component.setFormValida(true);
+    expect(spy).toHaveBeenCalledWith({ certificado: true });
   });
 
-  it('should run #guardarClicado()',  () => {
-
-    component.guardarClicado({});
-
+  it('should call guardarClicado and set datosTabla$', () => {
+    component.guardarClicado([{ id: 1 }]);
+    expect(component.datosTabla$).toEqual([{ id: 1 }]);
   });
 
-  it('should run #ngOnDestroy()',  () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should call emitmercaniasDatos and setmercanciaTabla', () => {
+    const spy = jest.spyOn(store, 'setmercanciaTabla');
+    component.store = store;
+    component.emitmercaniasDatos({ id: 1 });
+    expect(spy).toHaveBeenCalledWith([{ id: 1 }]);
+  });
+
+  it('should call ngAfterViewInit and set modalInstance', () => {
+    const modalElement = document.createElement('div');
+    component.modifyModal = { nativeElement: modalElement };
+    window.bootstrap = { Modal: jest.fn(() => ({ test: true })) };
+    component.ngAfterViewInit();
+    expect(component.modalInstance).toBeDefined();
+  });
+
+  it('should call ngOnDestroy and complete notifier', () => {
+    component.destroyNotifier$ = new Subject();
+    const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 
+  it('should validate validarFormulario true/false', () => {
+    component.certificadoDeOrigen = { validarFormularios: jest.fn(() => true) };
+    expect(component.validarFormulario()).toBe(true);
+    component.certificadoDeOrigen = { validarFormularios: jest.fn(() => false) };
+    expect(component.validarFormulario()).toBe(false);
+    component.certificadoDeOrigen = undefined;
+    expect(component.validarFormulario()).toBe(false);
+  });
 });

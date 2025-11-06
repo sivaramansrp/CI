@@ -36,8 +36,8 @@ import {
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-mercancia-form',
@@ -187,10 +187,30 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    */
   tipoRequisitoList: Catalogo[] = [];
   /**
+   * Arreglo que almacena el catálogo de vida silvestre.
+   */
+  vidaSilvestreLista: Catalogo[] = [];
+
+  /**
+   * Arreglo que almacena la descripcion vida silvestre.
+   */
+  vidaSilvestreListaTextos: string[] = [];
+
+  /**
+   * Arreglo que almacena los elegidos de vida silvestre.
+   */
+  vidaSilvestreElegidos: Catalogo[] = [];
+
+  /**
    * @description Lista de paises.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de paises en el formulario.
    */
   catalogosDatosPaisOrigenList: Catalogo[] = [];
+
+  /**
+   * @description Lista de pais Destino.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de pais Destino en el formulario.
+  */
   catalogosDatosPaisDestinoList: Catalogo[] = [];
 
 
@@ -236,8 +256,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   obtenerCatalogos(): void {
     this.obtenerCatalogoRestricciones();
     this.obtenerCtalogosMercancia();
+    this.obtieneCatalogoVidaSilvestre()
 
-    
   }
 
   /**
@@ -254,6 +274,26 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.tipoRequisitoList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de vida silvestre.
+   * Realiza una llamada al servicio de catálogos para crosslist de vida silvestre
+   * asociadas al trámite 220202.
+   * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+   * La suscripción se cancela automáticamente cuando el componente se destruye
+   * mediante el uso de takeUntil.
+   * @returns void
+   */
+  obtieneCatalogoVidaSilvestre(): void {
+    this.catalogosService.obtieneCatalogoVidaSilvestre(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.vidaSilvestreLista = data.datos ?? [];
+        if(data.datos !== undefined) {
+          this.vidaSilvestreListaTextos = data.datos.map(dt => dt.descripcion) ?? [];
+        }
     });
   }
 
@@ -279,14 +319,15 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
       tipoDeProducto: [''],
-      numeroDeLote: ['']
+      numeroDeLote: [''],
+      detalleVidaSilvestre: [[]]
     });
 
     if (this.formularioSolicitud) {
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
-      
+
       const TIPO_REQUISITO_VALUE = this.formularioSolicitud.tipoRequisito;
       if (TIPO_REQUISITO_VALUE) {
         const SELECTED_TIPO = this.catalogosDatos.tipoRequisitoList?.find(tipo => tipo.id.toString() === TIPO_REQUISITO_VALUE.toString());
@@ -442,15 +483,20 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    */
   agregarAnimales(): void {
     this.formSubmissionAttempted = true;
-    
+
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
       this.esFormaValido = true;
     }
     else {
+      const DATA_FORM = this.mercanciaForm.getRawValue();
+      // this.agregarDatosFormulario.emit(DATA_FORM);
       this.agregarDatosFormulario.emit(
         {
-          formulario: this.mercanciaForm.getRawValue(),
+          formulario: {
+            ...this.mercanciaForm.getRawValue(),
+            nombresCientificos: this.vidaSilvestreElegidos
+          },
           tablaDatos: this.sensiblesTablaDatos
         }
       );
@@ -482,7 +528,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
 
   /**
    * Validador personalizado para verificar si el número tiene más de 12 números enteros
-   * @param control - Control del formulario a validar  
+   * @param control - Control del formulario a validar
    * @returns ValidationErrors si tiene más de 12 números enteros, null si es válido
    */
   static maxWholeNumbersValidator(control: AbstractControl): ValidationErrors | null {
@@ -522,20 +568,22 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.getcatalogosDatospaisDestinoLista()
   }
 
-
-
+/**
+  * Realiza una petición para obtener el catálogo de pais Destino.
+*/
   getcatalogosDatospaisOrigenLista(): void {
-    this.catalogosService.obtieneCatalogoPaises(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
+    this.catalogosService
+      .obtieneCatalogoPaises(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
         this.catalogosDatos.paisOrigenList = data.datos ?? [];
-      }
-    );
-    
+      });
+
   }
 
+  /**
+   * Realiza una petición para obtener el catálogo de pais Destino.
+  */
     getcatalogosDatospaisDestinoLista(): void {
     this.catalogosService.obtieneCatalogoPaisesD(220202)
       .pipe(
@@ -545,8 +593,21 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
       }
     );
-    
+
   }
 
+  valoresCrossLista(event: string[]):void {
+    const ELEGIDOS: Catalogo[] = event.map((elemento:string): Catalogo => {
+      const ENCONTRADO = this.vidaSilvestreLista.find((vida) => vida.descripcion === elemento);
+      if(ENCONTRADO !== undefined) {
+        return ENCONTRADO;
+      }
+      return {} as Catalogo;
+    });
+    console.log(typeof ELEGIDOS);
+    if(ELEGIDOS !== undefined) {
+      this.vidaSilvestreElegidos = ELEGIDOS as Catalogo[];
+    }
+  }
 }
 

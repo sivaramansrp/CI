@@ -47,9 +47,9 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
 
+import { CodigoRespuesta, ProcesoSolicitud } from '../core/enum/se-core-enum';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-documentos-response.model';
 import { FirmarRequest } from '../core/models/atender-requerimiento/request/fimar-request.model';
@@ -459,21 +459,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e?.valor && e.valor > 0 && e.valor < 5) {
+    if (e?.valor && e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;
-      if (this.indice !== 2) {
-        this.consultaioStore.establecerConsultaio(
-          this.guardarDatos?.procedureId,
-          this.guardarDatos?.parameter,
-          this.guardarDatos?.department,
-          this.guardarDatos?.folioTramite,
-          this.guardarDatos?.tipoDeTramite,
-          this.guardarDatos?.estadoDeTramite,
-          true, false, false,
-          this.guardarDatos?.action_id,
-          this.guardarDatos.current_user,
-          this.guardarDatos.id_solicitud);
-      } else {
+      if (this.indice === 2) {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
@@ -484,9 +472,23 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           false, false, true,
           this.guardarDatos?.action_id,
           this.guardarDatos.current_user,
-          this.guardarDatos.id_solicitud);
+          this.guardarDatos.id_solicitud
+        );
+      } else {
+        this.consultaioStore.establecerConsultaio(
+          this.guardarDatos?.procedureId,
+          this.guardarDatos?.parameter,
+          this.guardarDatos?.department,
+          this.guardarDatos?.folioTramite,
+          this.guardarDatos?.tipoDeTramite,
+          this.guardarDatos?.estadoDeTramite,
+          true, false, false,
+          this.guardarDatos?.action_id,
+          this.guardarDatos.current_user,
+          this.guardarDatos.id_solicitud
+        );
       }
-      if (this.indice === 4) {
+      if (this.indice === 3) {
         this.mostrarFirmarAtenderRequerimiento();
       }
       if (e.accion === 'cont') {
@@ -809,7 +811,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @returns {void}
   */
   getTabs(): void {
-    this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
+    this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud, ProcesoSolicitud.ATENDER_REQUERIMIENTO)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {

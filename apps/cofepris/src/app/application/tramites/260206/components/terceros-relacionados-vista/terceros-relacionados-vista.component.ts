@@ -12,7 +12,8 @@ import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitu
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
-
+import {ELEMENTOS_REQUERIDOS} from '../../constantes/maquila-materias-primas.enum'
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de Angular que gestiona la visualización y manipulación de terceros relacionados
@@ -49,6 +50,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura!: boolean; 
 
+
+   @ViewChild(TercerosRelacionadosComponent)
+      tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+         
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * @description Arreglo que almacena los datos de la tabla de fabricantes relacionados al trámite.
@@ -61,6 +66,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @access public
    */
   fabricanteTablaDatos: Fabricante[] = [];
+
+   /**
+        * @property {string[]} elementosRequeridos
+        * @description
+        * Lista de elementos requeridos para completar el formulario o proceso.
+        */
+       public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
@@ -381,6 +393,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   eliminarFacturador(facturador: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(facturador, TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

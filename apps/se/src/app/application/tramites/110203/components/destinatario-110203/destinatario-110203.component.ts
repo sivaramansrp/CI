@@ -170,13 +170,9 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.tramite110203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud110203State;
-        })
-      )
-      .subscribe();
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.solicitudState = seccionState as Solicitud110203State;
 
     // Inicializa el formulario con los valores del destinatario desde el estado de la solicitud
     this.destinatarioForm = this.fb.group({
@@ -185,14 +181,14 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
       segundo: [this.solicitudState.segundo,[Validators.maxLength(20)]],
       fiscal: [this.solicitudState.fiscal,[Validators.maxLength(30),Validators.required]],
       razon: [this.solicitudState.razon,[Validators.maxLength(70)]],
-      calle: [this.solicitudState.calle, Validators.required],
-      letra: [this.solicitudState.letra, Validators.required],
-      ciudad: [this.solicitudState.ciudad, Validators.required],
-      correo: [this.solicitudState.correo, Validators.required],
-      fax: [this.solicitudState.fax],
+      calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
+      letra: [this.solicitudState.letra, [Validators.required, Validators.maxLength(30)]],
+      ciudad: [this.solicitudState.ciudad, [Validators.required, Validators.maxLength(50)]],
+      correo: [this.solicitudState.correo, [Validators.required, Validators.email]],
+      fax: [this.solicitudState.fax, [Validators.maxLength(20)]],
       telefono: [this.solicitudState.telefono],
     });
-    this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
+    // this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
      this.destinatarioForm.get('razon')?.valueChanges.subscribe(value => {
     if (value && value.trim().length > 0) {
       // Clear the first 3 fields
@@ -211,7 +207,7 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
       this.camposNombreSoloLectura = false;
     }
   });
-
+    });
   }
 
   /**
@@ -224,6 +220,25 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110203Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+/**
+ * Valida los campos del formulario de destinatario.
+ * Verifica que los campos 'calle' y 'letra' no estén vacíos ni sean nulos.
+ * Si ambos son válidos, devuelve true; de lo contrario, marca todos los campos como tocados y devuelve false.
+ */
+  validarFormularios(): boolean {
+    if (
+      this.destinatarioForm.get('calle')?.value !== '' &&
+      this.destinatarioForm.get('calle')?.value !== null &&
+      this.destinatarioForm.get('letra')?.value !== '' &&
+      this.destinatarioForm.get('letra')?.value !== null && 
+      this.destinatarioForm.get('correo')?.valid 
+    ) {
+      return true;
+    }
+    this.destinatarioForm.markAllAsTouched();
+    return false;
   }
 
   /**

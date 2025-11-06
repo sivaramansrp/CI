@@ -1,6 +1,9 @@
+import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -10,11 +13,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
 import { CommonModule } from '@angular/common';
-import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
 import { Location } from '@angular/common';
+import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
+
 @Component({
   selector: 'app-detalles-plantas',
   standalone: true,
@@ -22,7 +24,7 @@ import { Location } from '@angular/common';
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
-    CatalogoSelectComponent,
+    CatalogoSelectComponent,NotificacionesComponent
   ],
   templateUrl: './detalles-plantas.component.html',
   styleUrl: './detalles-plantas.component.scss',
@@ -31,6 +33,12 @@ import { Location } from '@angular/common';
  * Componente para gestionar los detalles de las plantas.
  */
 export class DetallesPlantasComponent {
+   /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
   /**
    * Lista de plantas seleccionadas.
    * @property {PlantasSubfabricante[]} plantasSeleccionadas
@@ -50,12 +58,15 @@ export class DetallesPlantasComponent {
   @Output() guadarEvent = new EventEmitter();
 
   /**
+   * Notificación para mostrar mensajes al usuario.
+   * @property {Notificacion} nuevaNotificacion
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
    * Formulario para los datos del subcontratista.
    * @property {FormGroup} formularioDatosPlantas
    */
-
   formularioDatosPlantas!: FormGroup;
-
   /**
    * Catálogo de opciones de sí/no.
    * @property {any} catalogoSiNo
@@ -82,7 +93,7 @@ export class DetallesPlantasComponent {
    * Constructor de la clase ComplementarPlantaComponent.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
-  constructor(private fb: FormBuilder,private ubicaccion: Location,) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location,) {
     this.inicializarFormularioDatosPlantas();
   }
 
@@ -92,8 +103,8 @@ export class DetallesPlantasComponent {
    */
   inicializarFormularioDatosPlantas(): void {
     this.formularioDatosPlantas = this.fb.group({
-      permaneceMercancia: [1, Validators.required],
-      tipoContribuyente: [1, Validators.required],
+      permaneceMercancia: ['', Validators.required],
+      tipoContribuyente: ['', Validators.required],
       opinionSAT: [{ value: 1, disabled: true }, Validators.required],
       fechaOpinion: ['12/03/2025', Validators.required],
     });
@@ -134,10 +145,10 @@ export class DetallesPlantasComponent {
     }
   }
 
-   /**
-   * Vuelve a la ubicación anterior en el historial del navegador.
-   * @returns {void}
-   */
+  /**
+  * Vuelve a la ubicación anterior en el historial del navegador.
+  * @returns {void}
+  */
   regrasar(): void {
     this.ubicaccion.back();
   }
@@ -147,7 +158,21 @@ export class DetallesPlantasComponent {
    *
    * Typically used to signal that the user has requested to save the current state or data.
    */
-  guardar(): void{
+  guardar(): void {
     this.guadarEvent.emit();
+     if (!this.formularioDatosPlantas.valid) {
+         this.notificacionAgregarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',          
+        };
+        this.formularioDatosPlantas.markAllAsTouched();
+  }
   }
 }
