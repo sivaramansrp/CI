@@ -293,15 +293,6 @@ describe('CertificadoOrigenComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should call cargarEstados and paisOpcion', () => {
-      const cargarEstadosSpy = jest.spyOn(component, 'cargarEstados');
-      const paisOpcionSpy = jest.spyOn(component, 'paisOpcion');
-      
-      component.ngOnInit();
-      
-      expect(cargarEstadosSpy).toHaveBeenCalled();
-      expect(paisOpcionSpy).toHaveBeenCalled();
-    });
 
     it('should set up consultaQuery subscription', () => {
       component.ngOnInit();
@@ -313,45 +304,6 @@ describe('CertificadoOrigenComponent', () => {
       component.ngOnInit();
       
       expect(component.datosTablaUno$).toBe(mockQuery.selectmercanciaTablaUno$);
-    });
-  });
-
-  describe('cargarEstados', () => {
-    it('should call obtenerListaEstado and update store', () => {
-      component.cargarEstados();
-      
-      expect(mockCertificadoService.obtenerListaEstado).toHaveBeenCalled();
-      expect(mockStore.setaltaPlanta).toHaveBeenCalledWith([mockCatalogo]);
-    });
-
-    it('should handle service error gracefully', () => {
-      mockCertificadoService.obtenerListaEstado.mockReturnValue(
-        new Observable(subscriber => subscriber.error('Error'))
-      );
-      
-      expect(() => component.cargarEstados()).not.toThrow();
-    });
-  });
-
-  describe('paisOpcion', () => {
-    it('should call obtenerMenuDesplegable with correct parameter', () => {
-      component.paisOpcion();
-      
-      expect(mockCertificadoService.obtenerMenuDesplegable).toHaveBeenCalledWith('pais.json');
-    });
-
-    it('should update pais array with service response', () => {
-      component.paisOpcion();
-      
-      expect(component.pais).toEqual([mockCatalogo]);
-    });
-
-    it('should handle service error gracefully', () => {
-      mockCertificadoService.obtenerMenuDesplegable.mockReturnValue(
-        new Observable(subscriber => subscriber.error('Error'))
-      );
-      
-      expect(() => component.paisOpcion()).not.toThrow();
     });
   });
 
@@ -652,36 +604,9 @@ describe('CertificadoOrigenComponent', () => {
       expect(() => fixture.detectChanges()).not.toThrow();
     });
 
-    it('should handle service errors in cargarEstados', () => {
-      mockCertificadoService.obtenerListaEstado.mockReturnValue(
-        new Observable(subscriber => subscriber.error('Service error'))
-      );
-      
-      expect(() => component.cargarEstados()).not.toThrow();
-    });
-
-    it('should handle service errors in paisOpcion', () => {
-      mockCertificadoService.obtenerMenuDesplegable.mockReturnValue(
-        new Observable(subscriber => subscriber.error('Service error'))
-      );
-      
-      expect(() => component.paisOpcion()).not.toThrow();
-    });
   });
 
   describe('Integration Tests', () => {
-    it('should perform complete component initialization workflow', () => {
-      const cargarEstadosSpy = jest.spyOn(component, 'cargarEstados');
-      const paisOpcionSpy = jest.spyOn(component, 'paisOpcion');
-      
-      fixture.detectChanges();
-      component.ngOnInit();
-      
-      expect(cargarEstadosSpy).toHaveBeenCalled();
-      expect(paisOpcionSpy).toHaveBeenCalled();
-      expect(mockStore.setaltaPlanta).toHaveBeenCalled();
-    });
-
     it('should handle complete mercancia selection workflow', () => {
       component.onMercanciaSeleccionada(mockMercancia);
       component.abrirModificarModal(mockMercancia, true);

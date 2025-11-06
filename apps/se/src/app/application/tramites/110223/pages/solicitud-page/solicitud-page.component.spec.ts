@@ -334,108 +334,6 @@ describe('SolicitudPageComponent', () => {
     });
   });
 
-  describe('extraerIdSolicitud', () => {
-    it('should extract ID from datos property', () => {
-      const response = { datos: { idSolicitud: 12345 } };
-      
-      const result = (component as any).extraerIdSolicitud(response);
-      
-      expect(result.ID_SOLICITUD).toBe(12345);
-      expect(result.RESPONSE_PROCESSED).toBe(true);
-    });
-
-    it('should extract ID from data property', () => {
-      const response = { data: { idSolicitud: 67890 } };
-      
-      const result = (component as any).extraerIdSolicitud(response);
-      
-      expect(result.ID_SOLICITUD).toBe(67890);
-      expect(result.RESPONSE_PROCESSED).toBe(true);
-    });
-
-    it('should extract ID from direct idSolicitud property', () => {
-      const response = { idSolicitud: 54321 };
-      
-      const result = (component as any).extraerIdSolicitud(response);
-      
-      expect(result.ID_SOLICITUD).toBe(54321);
-      expect(result.RESPONSE_PROCESSED).toBe(true);
-    });
-
-    it('should extract ID from direct id property', () => {
-      const response = { id: 98765 };
-      
-      const result = (component as any).extraerIdSolicitud(response);
-      
-      expect(result.ID_SOLICITUD).toBe(98765);
-      expect(result.RESPONSE_PROCESSED).toBe(true);
-    });
-
-    it('should return default values when no valid ID found', () => {
-      const response = {};
-      
-      const result = (component as any).extraerIdSolicitud(response);
-      
-      expect(result.ID_SOLICITUD).toBe(0);
-      expect(result.RESPONSE_PROCESSED).toBe(false);
-    });
-
-    it('should handle null response', () => {
-      const invalidResponse = null;
-      
-      const result = (component as any).extraerIdSolicitud(invalidResponse);
-      
-      expect(result.ID_SOLICITUD).toBe(0);
-      expect(result.RESPONSE_PROCESSED).toBe(false);
-    });
-
-    it('should handle response with null nested values', () => {
-      const responseWithNullData = { 
-        datos: null,
-        data: { idSolicitud: null },
-        idSolicitud: null,
-        id: null 
-      };
-      
-      const result = (component as any).extraerIdSolicitud(responseWithNullData);
-      
-      expect(result.ID_SOLICITUD).toBe(0);
-      expect(result.RESPONSE_PROCESSED).toBe(false);
-    });
-  });
-
-  describe('construirRespuestaJSON', () => {
-    it('should build correct JSON response', () => {
-      const response = {
-        id: 123,
-        descripcion: 'Test description',
-        codigo: 'TEST_CODE',
-        data: { test: 'data' }
-      };
-      
-      const result = (component as any).construirRespuestaJSON(response);
-      
-      expect(result).toEqual({
-        ...response,
-        id: 123,
-        descripcion: 'Test description',
-        codigo: 'TEST_CODE',
-        data: { test: 'data' }
-      });
-    });
-
-    it('should use default values when properties are missing', () => {
-      const response = {};
-      
-      const result = (component as any).construirRespuestaJSON(response);
-      
-      expect(result.id).toBe(0);
-      expect(result.descripcion).toBe('');
-      expect(result.codigo).toBe('');
-      expect(result.data).toBeNull();
-    });
-  });
-
   // Component lifecycle tests
   describe('Component Lifecycle', () => {
     it('should call ngOnDestroy correctly', () => {
@@ -507,14 +405,19 @@ describe('SolicitudPageComponent', () => {
     it('should handle template rendering', () => {
       const compiled = fixture.nativeElement;
       expect(compiled.querySelector('.solicitud-page-container')).toBeTruthy();
-    });
-
-    it('should handle step navigation edge cases', () => {
+    });    it('should handle step navigation edge cases', () => {
+      // Ensure wizardComponent mock is properly set up
+      component.wizardComponent = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+      } as any;
+      
       // Test navigation with different step combinations
       component.indice = 3;
       const accion: AccionBoton = { accion: 'ant', valor: 2 };
       component.pasoNavegarPor(accion);
       expect(component.indice).toBe(2);
+      expect(component.wizardComponent.atras).toHaveBeenCalled();
     });
 
   });

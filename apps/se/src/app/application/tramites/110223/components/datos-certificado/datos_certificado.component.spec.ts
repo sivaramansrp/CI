@@ -1,111 +1,122 @@
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError,Subject } from 'rxjs';
+import { Component } from '@angular/core';
 import { DatosCertificadoComponent } from './datos_certificado.component';
-import { Subject, of } from 'rxjs';
+import { Tramite110223Store } from '../../estados/Tramite110223.store';
+import { Tramite110223Query } from '../../query/tramite110223.query';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+
+class MockTramite110223Store {
+  setFormDatosCertificado = jest.fn();
+  setIdiomaSeleccion = jest.fn();
+  setFormValida = jest.fn();
+}
+
+class MockCertificadosOrigenService {}
+class MockTramite110223Query {
+  formDatosCertificado$ = observableOf({});
+  selectEntidadFederativa$ = observableOf([]);
+  selectrepresentacionFederal$ = observableOf([]);
+}
+class MockConsultaioQuery {
+  selectConsultaioState$ = observableOf({ readonly: false });
+}
 
 describe('DatosCertificadoComponent', () => {
-  let component: DatosCertificadoComponent;
-
-  // Mock all required dependencies
-  const mockFormBuilder = {
-    group: jest.fn()
-  };
-
-  const mockValidarService = {
-    obtenerMenuDesplegable: jest.fn().mockReturnValue(of([
-      { id: 1, descripcion: 'Test' }
-    ]))
-  };
-
-  const mockStore = {
-    setFormDatosCertificado: jest.fn(),
-    setIdiomaSeleccion: jest.fn(),
-    setEntidadFederativaSeleccion: jest.fn(),
-    setRepresentacionFederalDatosSeleccion: jest.fn(),
-    setFormValida: jest.fn()
-  };
-
-  const mockQuery = {
-    formDatosCertificado$: of({
-      idioma: 'ES',
-      entidad: 'CDMX'
-    })
-  };
-
-  const mockConsultaQuery = {
-    selectConsultaioState$: of({
-      readonly: false
-    })
-  };
-
+  let fixture;
+  let component;
+  let store;
+  let tramiteQuery;
+  let consultaQuery;
   beforeEach(() => {
-    // Create component instance with mocked dependencies
-    component = new DatosCertificadoComponent(
-      mockFormBuilder as any,
-      mockValidarService as any,
-      mockStore as any,
-      mockQuery as any
-    );
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, DatosCertificadoComponent, HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        FormBuilder,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: Tramite110223Store, useClass: MockTramite110223Store },
+        { provide: Tramite110223Query, useClass: MockTramite110223Query },
+        { provide: CertificadosOrigenService, useClass: MockCertificadosOrigenService },
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery }
+      ]
+    }).compileComponents();
+    fixture = TestBed.createComponent(DatosCertificadoComponent);
+    component = fixture.componentInstance;    store = TestBed.inject(Tramite110223Store);
+    tramiteQuery = TestBed.inject(Tramite110223Query);
+    consultaQuery = TestBed.inject(ConsultaioQuery);
   });
 
-  // Basic tests that will definitely pass
-  describe('Basic Component Tests', () => {
-    it('should create component', () => {
-      expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-    it('should have initial values', () => {
-      expect(component.idioma).toBe(false);
-      expect(component.idiomaDatos).toEqual([]);
-      expect(component.entidadFederativas$).toEqual([]);
-      expect(component.representacionFederal$).toEqual([]);
-    });
+  it('should call ngOnInit and set esFormularioSoloLectura', () => {
+    component.consultaQuery = consultaQuery;
+    component.ngOnInit();
+    expect(component.esFormularioSoloLectura).toBe(false);
+  });
+  it('should call setValoresStore', () => {
+    const spy = jest.spyOn(store, 'setFormDatosCertificado');
+    component.store = store;
+    component.setValoresStore({ formGroupName: 'test', campo: 'foo', valor: 'bar', storeStateName: 'test' });
+    expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
+  });
 
-    it('should fetch idioma options on idiomOpcion()', () => {
-      component.idiomOpcion();
-      expect(mockValidarService.obtenerMenuDesplegable).toHaveBeenCalledWith('idioma.json');
-    });
+  it('should call idiomaSeleccion', () => {
+    const spy = jest.spyOn(store, 'setIdiomaSeleccion');
+    component.store = store;
+    component.idiomaSeleccion({ id: 1 });
+    expect(spy).toHaveBeenCalledWith({ id: 1 });
+  });
+  it('should call obtenerDatosFormulario', () => {
+    const spy = jest.spyOn(store, 'setFormDatosCertificado');
+    component.store = store;
+    component.obtenerDatosFormulario({ formGroupName: 'test', campo: 'foo', valor: 'bar', storeStateName: 'test' });
+    expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
+  });
+  it('should call validarFormulario', () => {
+    const mockRef = { validarFormularios: jest.fn().mockReturnValue(true) };
+    component.datosCertificadoDeRef = mockRef as any;
+    const result = component.validarFormulario();
+    expect(result).toBe(true);
+    expect(mockRef.validarFormularios).toHaveBeenCalled();
+  });
 
-    it('should update store on setValoresStore', () => {
-      const event = {
-        formGroupName: 'test',
-        campo: 'idioma',
-        valor: undefined,
-        storeStateName: 'test'
-      };
-      component.setValoresStore(event);
-      expect(mockStore.setFormDatosCertificado).toHaveBeenCalled();
-    });
+  it('should call setFormValida', () => {
+    const spy = jest.spyOn(store, 'setFormValida');
+    component.store = store;
+    component.setFormValida(true);
+    expect(spy).toHaveBeenCalledWith({ datos: true });
+  });
+  it('should initialize properties correctly', () => {
+    expect(component.idioma).toBe(false);
+    expect(component.idiomaDatos).toEqual([]);
+    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(component.idProcedimiento).toBe(110223);
+  });
 
+  it('should have observables initialized in constructor', () => {
+    expect(component.entidadFederativas$).toBeDefined();
+    expect(component.representacionFederal$).toBeDefined();
+  });
 
-    it('should return false for validarFormulario when child component is not set', () => {
-      // Set up mock child component
-      component.datosCertificadoDeRef = {
-        validarFormularios: jest.fn().mockReturnValue(false)
-      } as any;
-      expect(component.validarFormulario()).toBe(false);
-    });
-
-    it('should return true for validarFormulario when child component validation passes', () => {
-      // Set up mock child component
-      component.datosCertificadoDeRef = {
-        validarFormularios: jest.fn().mockReturnValue(true)
-      } as any;
-      expect(component.validarFormulario()).toBe(true);
-    });
-
-    it('should set form validation state', () => {
-      component.setFormValida(true);
-      expect(mockStore.setFormValida).toHaveBeenCalledWith({ datos: true });
-    });
-
-    it('should complete destroyNotifier$ on ngOnDestroy', () => {
-      component['destroyNotifier$'] = new Subject<void>();
-      jest.spyOn(component['destroyNotifier$'], 'next');
-      jest.spyOn(component['destroyNotifier$'], 'complete');
-
-      component.ngOnDestroy();
-
-      expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-      expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
-    });
+  it('should call ngOnDestroy and complete notifier', () => {
+    component.destroyNotifier$ = new Subject();
+    const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
