@@ -40,3 +40,9 @@ export const CATALOGO_CLASIFICACION_TOXICOLOGICA = (TRAMITE: string): string => 
  */
 export const CATALOGO_OBJETO_IMPORTACION = (TRAMITE: string): string => `sat-t${TRAMITE}${CATALOGO}/objetoImportacion`;
 
+/*
+ * API para buscar el representante legal por RFC
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/buscar
+ */
+export const RFC_BUSCAR_REPRESENTANTE_LEGAL = (TRAMITE: string): string => `sat-t${TRAMITE}${SOLICITUD}/buscar`;
+
