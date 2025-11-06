@@ -324,6 +324,7 @@ esMostrarAlerta: boolean = false;
             tiempoDeEspera: 2000,
             txtBtnAceptar: 'SI',
             txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar:'flex-row-reverse'
           }
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         }
