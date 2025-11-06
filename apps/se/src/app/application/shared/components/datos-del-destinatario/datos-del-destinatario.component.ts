@@ -126,7 +126,15 @@ export class DatosDelDestinatarioComponent
         this.formDatosDelDestinatario.get(key)?.clearValidators();
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
       });
-    }else{
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else{
       this.applyNumeroRegistroFiscalValidation();
     }
     this.inicializarEstadoFormulario();
@@ -169,6 +177,13 @@ export class DatosDelDestinatarioComponent
     });
     if (this.idProcedimiento === 110212) {
       const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formDatosDelDestinatario.get(key)?.clearValidators();
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });

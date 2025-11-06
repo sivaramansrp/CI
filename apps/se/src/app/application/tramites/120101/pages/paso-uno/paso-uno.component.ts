@@ -107,6 +107,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
+
+    /**
+     * Evento de salida que emite un objeto con posibles mensajes de error relacionados con fracciones.
+     * 
+     * @event
+     * @property {string} [fraccionErrorUno] - Mensaje de error para la primera fracción, si existe.
+     * @property {string} [fraccionErrorDos] - Mensaje de error para la segunda fracción, si existe.
+     */
+    @Output() public fraccionErrorEventEmit =
+    new EventEmitter<{ fraccionErrorUno?: string; fraccionError?: boolean }>();
+
   /**
    * @method ngOnInit
    * @description
@@ -178,6 +189,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.bienFinal?.validarFormulario();
     this.insumos?.validarFormulario();
     this.procesoProductivo?.validarFormulario();
+  }
+
+/**
+ * Emite un evento con información sobre errores relacionados con fracciones.
+ *
+ * @param event - Objeto que puede contener los mensajes de error para las fracciones uno y dos.
+ *   - fraccionErrorUno: Mensaje de error para la primera fracción (opcional).
+ *   - fraccionErrorDos: Mensaje de error para la segunda fracción (opcional).
+ */
+fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void {
+  this.fraccionErrorEventEmit.emit(event);
   }
 
   /**
