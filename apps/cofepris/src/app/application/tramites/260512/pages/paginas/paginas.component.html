@@ -23,7 +23,7 @@
       </div>
       <btn-continuar
       [datos]="datosPasos"
-      [dePadre]="consultaState.readonly ? false : true"
+      [dePadre]="!esFormaValido"
       (continuarEvento)="getValorIndice($event)"
     >
     </btn-continuar>
