@@ -1148,7 +1148,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
              this.obtenerCriterios();
           }
           if(this.vistasModificacion110101.actualizarVista){
-            this.sentidoInputTramite110101 = resp.datos?.sentido_dictamen === "Rechazado" ? false: true;
+            const SENTIDO = resp.datos?.sentido_dictamen;
+
+            if (SENTIDO !== undefined && SENTIDO !== null) {
+              this.sentidoInputTramite110101 = SENTIDO === "Rechazado" ? false : true;
+            }
           }
         }
 

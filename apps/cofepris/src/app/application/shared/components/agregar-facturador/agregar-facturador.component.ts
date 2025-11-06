@@ -190,11 +190,11 @@ export class AgregarFacturadorComponent
       tipoPersona: [this.obtenerValor('tipoPersona'), [Validators.required]],
       nombres: [
         this.obtenerValor('nombres'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [ Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         this.obtenerValor('primerApellido'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [ Validators.pattern(REGEX_NOMBRE)],
       ],
       segundoApellido: [
         this.obtenerValor('segundoApellido'),
@@ -221,7 +221,7 @@ export class AgregarFacturadorComponent
       lada: [this.obtenerValor('lada')],
       denominacionRazon: [
         '',
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [ Validators.pattern(REGEX_NOMBRE)],
       ],
       telefono: [
         {
@@ -403,7 +403,7 @@ guardarFacturador(): void {
 }
   /**
    * @method limpiarFormulario
-   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   * @description Resetea el formulario reactivo `agregarFacturadorForm` para limpiar todos los campos.
    *
    * @returns {void} Este método no retorna ningún valor.
    */
@@ -475,7 +475,56 @@ guardarFacturador(): void {
         }
       );
     }
+    this.updateDenominacionRazonValidation();
+
   }
+
+  
+  /**
+   * Actualiza la validación del campo denominacionRazon basado en el valor de tipoPersona
+   */
+private updateDenominacionRazonValidation(): void {
+   const DENOMINACIONRAZONCONTROL = this.agregarFacturadorForm?.get('denominacionRazon');
+  const NOMBRESCONTROL = this.agregarFacturadorForm?.get('nombres');
+  const PRIMERAPELLIDOCONTROL = this.agregarFacturadorForm?.get('primerApellido');
+
+  if (!DENOMINACIONRAZONCONTROL || !NOMBRESCONTROL || !PRIMERAPELLIDOCONTROL) {
+    return;
+  }
+  
+   const TIPOPERSONAVALUE = this.agregarFacturadorForm?.get('tipoPersona')?.value;
+  
+  if (TIPOPERSONAVALUE === this.tipoPersona.MORAL) {
+    DENOMINACIONRAZONCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+
+  } else if (TIPOPERSONAVALUE === this.tipoPersona.FISICA || TIPOPERSONAVALUE === this.tipoPersona.NO_CONTRIBUYENTE) {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    
+    NOMBRESCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    PRIMERAPELLIDOCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+  } else {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+  }
+  
+  DENOMINACIONRAZONCONTROL.updateValueAndValidity();
+  NOMBRESCONTROL.updateValueAndValidity();
+  PRIMERAPELLIDOCONTROL.updateValueAndValidity();
+}
 
   /**
    * Hook de destrucción del componente. Libera recursos y detiene suscripciones.

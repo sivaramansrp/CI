@@ -153,11 +153,14 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.cargarProductorPorExportador();
     if (this.solicitudState.optionsTipoFactura.length === 0) {
       this.facturaOpcion();
     } else {
       this.optionsTipoFactura = this.solicitudState.optionsTipoFactura;
+    }
+
+    if (this.productoresExportador.length === 0) {
+      this.cargarProductorPorExportador();
     }
   }
 
@@ -212,6 +215,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
               correoElectronico?: string;
               telefono?: string;
               fax?: string;
+              nuevo?: boolean;
             };
             return {
               id: index + 1,
@@ -221,6 +225,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
               correoElectronico: PRODUCTOR.correoElectronico ?? '',
               telefono: PRODUCTOR.telefono ?? '',
               fax: PRODUCTOR.fax ?? '',
+              nuevo: true
             };
           });
 
@@ -230,6 +235,25 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
           //
         },
     });
+  }
+
+  /**
+ * Actualiza la lista de productores exportador en el store si el evento contiene datos.
+ * @param event Arreglo de objetos HistoricoColumnas con los datos de los productores.
+ */
+  emitProductoresExportador(event: HistoricoColumnas[]) {
+    if (event.length > 0) {
+      this.store.setProductoresExportador([]);
+      this.store.setProductoresExportador(event);
+    }
+  }
+
+  /**
+ * Actualiza la lista de productores exportador después de eliminar elementos seleccionados.
+ * @param event Arreglo actualizado de productores exportador después de la eliminación.
+ */
+  eliminarEventoExportador(event: HistoricoColumnas[]): void {
+    this.store.updateAgregarProductoresExportador(event);
   }
 
   /**
@@ -279,6 +303,7 @@ export class HistProductoresComponent implements OnInit, OnDestroy {
           telefono: String((event as HistoricoColumnas).telefono ?? ''),
           fax: String((event as HistoricoColumnas).fax ?? '')
       };
+      this.store.setAgregarProductoresExportador([])
       this.store.setAgregarProductoresExportador([DATOS]);
     } else if (event && typeof event === 'object' && 'numeroRegistroFiscal' in event) {
       const PAYLOAD = {

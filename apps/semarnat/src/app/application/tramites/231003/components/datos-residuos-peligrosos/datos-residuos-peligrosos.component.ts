@@ -728,7 +728,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     if (!FORMS_DATOS_VALID) {
       this.esFormaValido = false;
       this.formularioDatos.get('origenResiduo')?.markAsTouched();
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
     }
     const FORMULARIO_RESIDUO_VALID = this.formularioResiduo.valid;
     if (!FORMULARIO_RESIDUO_VALID) {
@@ -738,7 +737,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
           CONTROL.markAsTouched();
         }
       });
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
     }
     DatosResiduosPeligrososComponent.scrollModalToTop();
     return (FORMS_DATOS_VALID && FORMULARIO_RESIDUO_VALID) ?? false;

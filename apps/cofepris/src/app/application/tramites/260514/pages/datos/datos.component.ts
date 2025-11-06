@@ -4,6 +4,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
+import {ConfiguracionVisibilidad,DEFAULT_CONFIGURACION_VISIBILIDAD} from '../../constantes/datos.enum';
+
 
 /**
  * @component DatosComponent
@@ -64,6 +66,25 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Estado de los datos del domicilio legal, utilizado para manejar información relacionada con el domicilio legal.
    */
   public DatosDomicilioLegalState!: DatosDomicilioLegalState;
+
+  idProcedimiento:number = 260514;
+
+   /**
+     * Indica si se debe mostrar la sección de Aviso de Licencia
+     */
+    isAvisoLicenciaVisible: boolean = true;
+  
+    /**
+     * Indica si se debe mostrar la sección de Aduanas de Entrada
+     */
+    isAduanasEntradaVisible: boolean = true;
+  
+    /**
+     * Configuración de visibilidad utilizada para determinar qué elementos
+     * deben ser visibles en el componente. Se inicializa con la configuración
+     * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
+     */
+    configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
   /**
    * @constructor
