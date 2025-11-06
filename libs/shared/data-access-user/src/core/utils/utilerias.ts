@@ -69,6 +69,25 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
 }
 
 /**
+ * Convierte una cadena hexadecimal a su representación en ISO-8859-1 (Latin-1).
+ * Los bytes fuera del rango ISO-8859-1 (mayores a 255) son reemplazados por '?'.
+ * 
+ * @param hex - La cadena hexadecimal a decodificar
+ * @returns Una cadena de texto que representa los caracteres decodificados en ISO-8859-1
+*/
+export function hexToISO88591(hex: string): string {
+  const BYTES: number[] = [];
+
+  for (let i = 0; i < hex.length; i += 2) {
+    BYTES.push(parseInt(hex.substr(i, 2), 16));
+  }
+
+  // ISO-8859-1 usa un mapeo directo de byte a carácter (0x00–0xFF)
+  return String.fromCharCode(...BYTES);
+}
+
+
+/**
  * Convierte una cadena codificada en Base64 a su representación hexadecimal.
  * 
  * @param base64 - La cadena codificada en Base64 a convertir
