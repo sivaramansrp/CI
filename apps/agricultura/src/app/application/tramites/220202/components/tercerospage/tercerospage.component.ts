@@ -177,7 +177,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   handleEliminarExportador(): void {
     this.datosForma = [];
-    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
+    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosExportadorTable[]);
   }
 
   /**
@@ -198,6 +198,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalExportador(data: any): void { 
     if (data) {
       this.fitosanitarioStore.actualizarSelectedExdora(data);
+    }else {
+      this.fitosanitarioStore.actualizarSelectedExdora({} as any);
     }
     this.modalRef.abrir(AgregarExportadorComponent);
   }

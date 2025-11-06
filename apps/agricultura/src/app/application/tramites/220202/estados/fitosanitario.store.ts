@@ -172,7 +172,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   ): void {
     this.update((state) => ({
       ...state,
-      datosForma: tercerosRelacionados,
+      datosForma: [...tercerosRelacionados],
     }));
   }
   
@@ -181,7 +181,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   * @method actualizarDatosParaMovilizacionNacional
   * @param {TercerosrelacionadosdestinoTable} datosParaMovilizacionNacional Datos de movilización nacional.
   */
-  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosExportadorTable): void {
     this.update(state => ({
       ...state,
       seletedExdora: datosParaMovilizacionNacional

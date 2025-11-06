@@ -327,7 +327,7 @@ export class TercerosrelacionadosComponent {
    * Agrupa ambas funcionalidades: notificación y emisión del evento.
    */
   emitEliminarFinal(): void {
-    this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal); 
+    this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal);
   }
 
   // emitEliminarFinal(): void {
