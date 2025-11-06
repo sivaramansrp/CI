@@ -315,12 +315,12 @@ export class SolicitudDeReporteComponent implements OnInit,OnDestroy{
     const PAYLOAD = {
       "fracciones": [
           {
-              "cveFraccion": "",
+              "cveFraccion": SOLICITUDE.bienesProducidosDatos[0].fraccion,
               "bienesProducidos": {
-                  "descripcionBienProducido": "",
-                  "totalBienesProducidos": 0,
-                  "volumenMercadoNacional": 0,
-                  "olumenExportaciones": 0
+                  "descripcionBienProducido": SOLICITUDE.bienesProducidosDatos[0].bienProducido,
+                  "totalBienesProducidos": SOLICITUDE.bienesProducidosDatos[0].totalBienesProducidos,
+                  "volumenMercadoNacional": SOLICITUDE.bienesProducidosDatos[0].mercadoNacional,
+                  "olumenExportaciones": SOLICITUDE.bienesProducidosDatos[0].exportaciones
               }
           }
       ],
