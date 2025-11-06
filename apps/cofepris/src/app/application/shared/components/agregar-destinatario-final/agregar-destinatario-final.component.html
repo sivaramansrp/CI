@@ -29,16 +29,16 @@
           <span tooltip="Una persona moral es entendida como una empresa con una actividad específica"><i
               class="bi bi-question-circle-fill"></i></span>
         </div>
-          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
-          <small>Este campo es obligatorio</small>
-        </div>
-        @if(mostrarCamposNoContribuyente || idProcedimiento === 260911){
+        @if(mostrarCamposNoContribuyente){
         <div class="form-check">
           <input type="radio" class="form-check-input" formControlName="tipoPersona" value="NoContribyunte"
           (change)="changeNacionalidad()" />
           No Contribyunte
         </div>
         }
+         <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
       </div>
     </div>
  @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' || idProcedimiento === 260911){
