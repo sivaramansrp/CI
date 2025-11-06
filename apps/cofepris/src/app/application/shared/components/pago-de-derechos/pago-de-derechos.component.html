@@ -152,13 +152,18 @@
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
         [isDisabled]="formularioDeshabilitado"
         [soloDosPuntosRequeridos]="soloDosPuntosRequeridos"
-        [deshabilitarFuturas]="true"
+       
+        formControlName="fechaPago"
         ></input-fecha>
 
-        <div *ngIf="(esInvalido('fechaPago') && pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada'] && pagoDerechosForm.controls['fechaPago'].touched) ||((this.pagoDerechosForm.get('fechaPago')?.value==='' || this.pagoDerechosForm.get('fechaPago')?.value===null)&& isContinuarButtonClicked)" class="text-danger">
+        <div >
 
-          <small>
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched &&(pagoDerechosForm.get('fechaPago')?.value == '' ||
+          pagoDerechosForm.get('fechaPago')?.value == null)" class="text-danger">
             Todos los campos de pago son requeridos
+          </small>
+          <small *ngIf="(esInvalido('fechaPago') && pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada'] && pagoDerechosForm.controls['fechaPago'].touched)" class="text-danger">
+            La fecha de pago debe ser menor o igual a la fecha actual.
           </small>
           </div>
       </div>

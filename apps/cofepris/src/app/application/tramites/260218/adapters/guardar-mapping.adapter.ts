@@ -5,20 +5,21 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Tramite260208State } from '../estados/tramite260208Store.store';
-
+import { Tramite260218State } from '../estados/tramite260218Store.store';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuardarAdapter_260208 {
+export class GuardarMappingAdapter {
   /**
    * Convierte del estado de Akita al formato de payload de API usando las mismas claves
    * @param state El estado actual de Akita
    * @returns Payload formateado para la API
    */
-  static toFormPayload(state: Tramite260208State): unknown {
+  
+  static toFormPayload(state: Tramite260218State): unknown {
     return {
+
       "solicitante": {
         "rfc": "AAL0409235E6",
         "nombre": "ACEROS ALVARADO S.A. DE C.V.",
@@ -39,7 +40,7 @@ export class GuardarAdapter_260208 {
         },
       },
       "solicitud": {
-          "discriminatorValue": 260208,
+          "discriminatorValue": 260218,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
@@ -327,6 +328,7 @@ export class GuardarAdapter_260208 {
           "fecPago": state.pagoDerechos.fechaPago,
           "impPago": state.pagoDerechos.importePago
       }
+    
     }
   }
 }

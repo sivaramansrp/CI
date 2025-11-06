@@ -174,7 +174,14 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.representante, campo);
   }
-
+validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.representante.invalid){
+      this.representante.markAllAsTouched();
+      ISVALID = false;
+    }
+    return ISVALID;
+}
   /**
    * Limpia los campos del formulario.
    */

@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
@@ -37,6 +38,8 @@ export class PlaguicidasComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+    @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * Título del asistente.
    */
@@ -54,6 +57,7 @@ export class PlaguicidasComponent {
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    if(this.pasoUnoComponent.validOnButtonClick()){
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -61,6 +65,7 @@ export class PlaguicidasComponent {
       } else {
         this.wizardComponent.atras();
       }
+    }
     }
   }
 }
