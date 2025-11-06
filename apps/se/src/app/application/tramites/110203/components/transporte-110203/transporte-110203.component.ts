@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud110203State, Tramite110203Store } from '../../estados/tramite110203.store';
-import { Tramite110203Query } from '../../estados/tramite110203.query';
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
 
 /**
@@ -68,7 +68,7 @@ export class Transporte110203Component implements OnInit, OnDestroy {
    * Lista de opciones de medios de transporte cargadas desde un archivo JSON.
    * Cada opción representa un medio de transporte que el usuario puede seleccionar.
    */
-  public medio: Catalogo[] = [];
+  public medioOptions: Catalogo[] = [];
 
   /**
    * Estado de la solicitud 110203, que contiene el valor actual del campo 'medio'.
@@ -142,10 +142,8 @@ export class Transporte110203Component implements OnInit, OnDestroy {
    * predeterminados en el formulario y establece la lista de opciones de medio de transporte.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
-    // Se pueden cargar datos adicionales si es necesario (por ejemplo, desde una API o archivo JSON)
-
     this.obtenerMedioTransporte()
+    this.inicializarFormulario();
   }
 
   /**
@@ -196,7 +194,7 @@ export class Transporte110203Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          this.medio = response?.datos ?? [];
+          this.medioOptions = response?.datos ?? [];
         }
       });
   }

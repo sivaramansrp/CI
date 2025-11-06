@@ -245,7 +245,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
+        // ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));

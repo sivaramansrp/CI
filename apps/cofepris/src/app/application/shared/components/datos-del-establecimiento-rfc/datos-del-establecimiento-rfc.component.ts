@@ -245,6 +245,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
         [campo]: VALOR,
       });
   }
+  validatorButtonClick(): boolean {
+    return this.datosDelForm.valid ?? false;
+  }
 
   /**
    * @description
