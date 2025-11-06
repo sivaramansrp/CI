@@ -183,9 +183,8 @@ ngOnChanges(changes: SimpleChanges): void {
    validarPasoUno(): boolean {
     const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO) ? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO) ? true : false
 
     );
   }
