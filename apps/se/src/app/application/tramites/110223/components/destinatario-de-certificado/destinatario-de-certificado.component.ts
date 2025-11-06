@@ -158,11 +158,11 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     //     this.formDatosDelDestinatarioValues = estado;
     //   });
 
-    this.query.selectFormDestinatario$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.formDestinatarioValues = estado;
-      });
+    // this.query.selectFormDestinatario$
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe((estado) => {
+    //     this.formDestinatarioValues = estado;
+    //   });
 
 
     this.consultaQuery.selectConsultaioState$
@@ -249,6 +249,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    */
   setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
 /**

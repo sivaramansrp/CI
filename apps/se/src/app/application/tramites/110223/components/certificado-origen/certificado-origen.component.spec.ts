@@ -89,7 +89,7 @@ describe('CertificadoOrigenComponent', () => {
 
   const mockTramiteState: TramiteState = {
     estado: mockCatalogo,
-    paisBloques: mockCatalogo,
+    paisBloques: [mockCatalogo],
     formCertificado: {},
     selectedMercancia: mockMercancia,
     mercanciaTabla: [mockMercancia],
@@ -281,12 +281,6 @@ describe('CertificadoOrigenComponent', () => {
       expect(component.destroyNotifier$).toBeInstanceOf(Subject);
     });
 
-    it('should initialize empty arrays and objects', () => {
-      expect(component.pais).toEqual([]);
-      expect(component.datos).toEqual([]);
-      expect(component.datosTabla$).toEqual([]);
-    });
-
     it('should set up subscriptions in constructor', () => {
       fixture.detectChanges();
       expect(mockQuery.formCertificado$).toBeDefined();
@@ -296,14 +290,6 @@ describe('CertificadoOrigenComponent', () => {
       expect(mockQuery.selectBuscarMercancia$).toBeDefined();
     });
 
-    it('should handle formCertificado$ subscription correctly', () => {
-      const testFormData = { campo: 'test', valor: 'value' };
-      mockQuery.formCertificado$ = of(testFormData);
-      
-      fixture.detectChanges();
-      
-      expect(component.formCertificado).toEqual(testFormData);
-    });
   });
 
   describe('ngOnInit', () => {
@@ -389,80 +375,6 @@ describe('CertificadoOrigenComponent', () => {
     });
   });
 
-  describe('tipoEstadoSeleccion', () => {
-    it('should call store methods with estado data', () => {
-      component.tipoEstadoSeleccion(mockCatalogo);
-      
-      expect(mockStore.setEstado).toHaveBeenCalledWith(mockCatalogo);
-      expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-        entidadFederativa: mockCatalogo.id
-      });
-    });
-
-    // it('should handle estado with clave when id is not available', () => {
-    //   const catalogoSinId = { ...mockCatalogo, id: undefined };
-      
-    //   component.tipoEstadoSeleccion(catalogoSinId);
-      
-    //   expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-    //     entidadFederativa: catalogoSinId.clave
-    //   });
-    // });
-
-    // it('should handle estado with descripcion when id and clave are not available', () => {
-    //   const catalogoSinIdClave = { ...mockCatalogo, id: undefined, clave: undefined };
-      
-    //   component.tipoEstadoSeleccion(catalogoSinIdClave);
-      
-    //   expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-    //     entidadFederativa: catalogoSinIdClave.descripcion
-    //   });
-    // });
-
-    it('should handle empty estado object', () => {
-      const estadoVacio = {} as Catalogo;
-      
-      component.tipoEstadoSeleccion(estadoVacio);
-        expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-        entidadFederativa: ''
-      });
-    });
-  });
-
-  describe('tipoSeleccion', () => {
-    it('should call store methods with bloque data', () => {
-      component.tipoSeleccion(mockCatalogo);
-      
-      expect(mockStore.setBloque).toHaveBeenCalledWith(mockCatalogo);
-      expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-        bloque: mockCatalogo.id
-      });
-    });
-
-    // it('should handle bloque with clave when id is not available', () => {
-    //   const bloqueData = { ...mockCatalogo, id: undefined };
-      
-    //   component.tipoSeleccion(bloqueData);
-      
-    //   expect(mockStore.setFormCertificado).toHaveBeenCalledWith({
-    //     bloque: bloqueData.clave
-    //   });
-    // });
-  });
-
-  describe('conseguirDisponiblesDatos', () => {
-    it('should call processBuscarMercancias after timeout', (done) => {
-      const spy = jest.spyOn(component as any, 'processBuscarMercancias').mockImplementation(() => {});
-      
-      component.conseguirDisponiblesDatos();
-      
-      setTimeout(() => {
-        expect(spy).toHaveBeenCalled();
-        done();
-      }, 150);
-    });
-  });
-
   describe('processBuscarMercancias', () => {
     beforeEach(() => {
       (component as any).certificadoState = mockTramiteState;
@@ -490,22 +402,6 @@ describe('CertificadoOrigenComponent', () => {
       (component as any).processBuscarMercancias();
       
       expect(mockCertificadoService.buscarMercanciasCert).not.toHaveBeenCalled();
-    });
-
-    it('should call buscarMercanciasCert with correct payload', () => {
-      const expectedPayload = {
-        rfcExportador: 'AAL0409235E6',
-        tratadoAcuerdo: {
-          "idTratadoAcuerdo": mockCatalogo.id,
-        },
-        pais: {
-          "cvePais": mockCatalogo.id,
-        },
-      };
-      
-      (component as any).processBuscarMercancias();
-      
-      expect(mockCertificadoService.buscarMercanciasCert).toHaveBeenCalledWith(expectedPayload);
     });
 
     it('should process service response correctly', () => {

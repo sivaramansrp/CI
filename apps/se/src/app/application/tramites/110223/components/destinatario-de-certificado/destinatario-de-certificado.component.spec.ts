@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DestinatarioDeCertificadoComponent } from './destinatario-de-certificado.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('DestinatarioDeCertificadoComponent', () => {
   let component: DestinatarioDeCertificadoComponent;
@@ -11,7 +12,7 @@ describe('DestinatarioDeCertificadoComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [DestinatarioDeCertificadoComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
-      provider
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DestinatarioDeCertificadoComponent);

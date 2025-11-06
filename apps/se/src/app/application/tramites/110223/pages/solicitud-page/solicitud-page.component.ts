@@ -205,7 +205,7 @@ export class SolicitudPageComponent implements OnDestroy {
           ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
         },
       datos_del_certificado: {
-        idioma: item.formDatosCertificado['idiomaDates'] || '',
+        // idioma: item.formDatosCertificado['idiomaDates'] || '',
         observaciones: item.formDatosCertificado['observacionesDates'],
         representacion_federal: {
           entidad_federativa:

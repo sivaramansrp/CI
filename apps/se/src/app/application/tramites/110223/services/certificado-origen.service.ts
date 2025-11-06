@@ -356,27 +356,27 @@ export class CertificadosOrigenService {
   buildCertificado(data: TramiteState): unknown {
     return {
       "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
-      "pais_bloque": data.formCertificado['bloque'],
-      "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'],
-      "nombre_comercial": data.formCertificado['nombreComercialForm'],
-      "registro_producto": data.formCertificado['registroProductoForm'],
-      "fecha_inicio": formatearFechaYyyyMmDd(data.formCertificado['fechaInicioInput'] as string),
-      "fecha_fin": formatearFechaYyyyMmDd(data.formCertificado['fechaFinalInput'] as string),
-      "realizo_tercer_operador": {
-        "tercer_operador": data.formCertificado['si'] as boolean,
-        "nombre": data.formCertificado['nombres'] as string,
-        "primer_apellido": data.formCertificado['primerApellido'] as string,
-        "segundo_apellido": data.formCertificado['segundoApellido'] as string,
-        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] as string,
-        "razon_social": data.formCertificado['razonSocial'] as string
+      "pais_bloque": data.formCertificado['bloque'] || '',
+      "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'] || '',
+      "nombre_comercial": data.formCertificado['nombreComercialForm'] || '',
+      "registro_producto": data.formCertificado['registroProductoForm'] || '',
+      "fecha_inicio": data.formCertificado['fechaInicio'] || '',
+      "fecha_fin": data.formCertificado['fechaFin'] || '',
+      "realizo_tercer_operador": { 
+        "tercer_operador": data.formCertificado['si'] || false,
+        "nombre": data.formCertificado['nombres'] || '',
+        "primer_apellido": data.formCertificado['primerApellido'] || '',
+        "segundo_apellido": data.formCertificado['segundoApellido'] || '',
+        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] || '',
+        "razon_social": data.formCertificado['razonSocial'] || ''
       },
       "domicilio_tercer_operador": {
-        "pais": data.formCertificado['pais'] as string,
-        "ciudad": data.formCertificado['ciudad'] as string,
-        "calle": data.formCertificado['calle'] as string,
-        "numero_letra": data.formCertificado['numeroLetra'] as string,
-        "telefono": data.formCertificado['telefono'] as string,
-        "correo_electronico": data.formCertificado['correo'] as string
+        "pais": data.formCertificado['pais'] || '',
+        "ciudad": data.formCertificado['ciudad'] || '',
+        "calle": data.formCertificado['calle'] || '',
+        "numero_letra": data.formCertificado['numeroLetra'] || '',
+        "telefono": data.formCertificado['telefono'] || '',
+        "correo_electronico": data.formCertificado['correo'] || ''
       },
       "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
     }
@@ -410,14 +410,14 @@ export class CertificadosOrigenService {
       "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
       "razon_social": data.grupoReceptor.razonSocial || '',
       "domicilio": {
-          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad,
-          "calle": data.grupoDeDirecciones.calle,
-          "numero_letra": data.grupoDeDirecciones.numeroLetra,
-          "lada": data.grupoDeDirecciones.lada,
-          "telefono": data.grupoDeDirecciones.telefono,
+          "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad || '',
+          "calle": data.grupoDeDirecciones.calle || '',
+          "numero_letra": data.grupoDeDirecciones.numeroLetra || '',
+          "lada": data.grupoDeDirecciones.lada || '',
+          "telefono": data.grupoDeDirecciones.telefono || '',
           "fax": data.grupoDeDirecciones.fax || '',
-          "correo_electronico": data.grupoDeDirecciones.correoElectronico,
-          "pais_destino": data.grupoDeDirecciones.pais
+          "correo_electronico": data.grupoDeDirecciones.correoElectronico || '',
+          "pais_destino": data.grupoDeDirecciones.pais || ''
       },
       "generalesRepresentanteLegal": {
           "lugarRegistro": data.grupoRepresentativo.lugar,
@@ -426,8 +426,7 @@ export class CertificadosOrigenService {
           "puesto": data.grupoRepresentativo.cargo,
           "telefono": data.grupoRepresentativo.telefono,
           "correoElectronico": data.grupoRepresentativo.correoElectronico
-        },
-      "medio_transporte": ''
+        }
     }
   }
 

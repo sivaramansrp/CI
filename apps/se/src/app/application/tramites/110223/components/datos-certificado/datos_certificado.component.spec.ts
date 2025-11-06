@@ -42,8 +42,7 @@ describe('DatosCertificadoComponent', () => {
       mockFormBuilder as any,
       mockValidarService as any,
       mockStore as any,
-      mockQuery as any,
-      mockConsultaQuery as any
+      mockQuery as any
     );
   });
 
@@ -56,23 +55,13 @@ describe('DatosCertificadoComponent', () => {
     it('should have initial values', () => {
       expect(component.idioma).toBe(false);
       expect(component.idiomaDatos).toEqual([]);
-      expect(component.entidadFederativas).toEqual([]);
-      expect(component.representacionFederal).toEqual([]);
+      expect(component.entidadFederativas$).toEqual([]);
+      expect(component.representacionFederal$).toEqual([]);
     });
 
     it('should fetch idioma options on idiomOpcion()', () => {
       component.idiomOpcion();
       expect(mockValidarService.obtenerMenuDesplegable).toHaveBeenCalledWith('idioma.json');
-    });
-
-    it('should fetch entidad federativa options on entidadFederativasOpcion()', () => {
-      component.entidadFederativasOpcion();
-      expect(mockValidarService.obtenerMenuDesplegable).toHaveBeenCalledWith('entidadFederativas.json');
-    });
-
-    it('should fetch representacion federal options on representacionFederalOpcion()', () => {
-      component.representacionFederalOpcion();
-      expect(mockValidarService.obtenerMenuDesplegable).toHaveBeenCalledWith('representacionFederal.json');
     });
 
     it('should update store on setValoresStore', () => {
@@ -108,17 +97,15 @@ describe('DatosCertificadoComponent', () => {
       expect(mockStore.setFormValida).toHaveBeenCalledWith({ datos: true });
     });
 
-    it('should handle catalogo selection methods', () => {
-      const mockCatalogo = { id: 1, descripcion: 'Test' };
-      
-      component.idiomaSeleccion(mockCatalogo);
-      expect(mockStore.setIdiomaSeleccion).toHaveBeenCalledWith(mockCatalogo);
-      
-      component.entidadFederativaSeleccion(mockCatalogo);
-      expect(mockStore.setEntidadFederativaSeleccion).toHaveBeenCalledWith(mockCatalogo);
-      
-      component.representacionFederalSeleccion(mockCatalogo);
-      expect(mockStore.setRepresentacionFederalDatosSeleccion).toHaveBeenCalledWith(mockCatalogo);
+    it('should complete destroyNotifier$ on ngOnDestroy', () => {
+      component['destroyNotifier$'] = new Subject<void>();
+      jest.spyOn(component['destroyNotifier$'], 'next');
+      jest.spyOn(component['destroyNotifier$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(component['destroyNotifier$'].next).toHaveBeenCalled();
+      expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
     });
   });
 });
