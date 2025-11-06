@@ -151,9 +151,10 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Configura el formulario para la sección de pago de derechos en banco.
    */
   configurarFormularioPagoBanco(): void {
+      const NOMULTISPACE = /^(?!.* {2,}).*$/;
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9),Validators.pattern(NOMULTISPACE),]],
         cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required, Validators.maxLength(14)]],
         banco: [this.solicitudState?.banco],
         llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],

@@ -1,4 +1,13 @@
 import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
+import {
   AfterViewInit,
   Component,
   Input,
@@ -42,13 +51,6 @@ import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from "../../estados/stores/datos-domicilio-legal.store";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
 import { Subject, map, takeUntil } from "rxjs";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
 import { CommonModule } from "@angular/common";
@@ -357,6 +359,15 @@ public mostrarErrores = {
       .subscribe();
     this.configurarFormularioDomicillio();
   }
+  /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
+  static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    if (!VALOR){ return null}    
+    if (/^\d+$/.test(VALOR) && VALOR.length !== 5) {
+      return { invalidCodigoPostal: true };
+    }
+    return null; 
+  }
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
@@ -366,6 +377,7 @@ public mostrarErrores = {
           Validators.required,
           Validators.maxLength(12),
           Validators.pattern("^[0-9]+$"),
+          DomicilioComponent.codigoPostalValidator
         ],
       ],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -385,7 +397,7 @@ public mostrarErrores = {
         this.solicitudState?.calle,
         [Validators.required, Validators.maxLength(100)],
       ],
-      lada: [this.solicitudState?.lada],
+      lada: [this.solicitudState?.lada,Validators.maxLength(5)],
       telefono: [
         this.solicitudState?.telefono,
         [
@@ -1869,8 +1881,7 @@ onConfirmacionModal(accion: boolean): void {
     this.mostrarErrores.calle = true;
     this.mostrarErrores.telefono = true;
     ISVALID = false;
-   }
-   console.log(this.domicilio.getRawValue(),this.domicilio);
+   }   
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;

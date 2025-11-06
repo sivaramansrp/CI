@@ -19,6 +19,9 @@
                   <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('pattern')">
                   Por favor, escribe un número entero válido
                   </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('invalidCodigoPostal')">
+      El valor capturado no es válido
+    </small>
                </div>
             </div>
          </div>
