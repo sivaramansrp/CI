@@ -99,7 +99,17 @@ export class DomicilioComponent
    * como catálogos o listas asociadas.
    */
   @Input() idProcedimiento!: number;
+  
+  /**
+ * Bandera que indica si el RFC proporcionado desde el componente padre es válido.
+ * Se utiliza para controlar la lógica de validación en el formulario.
+ */
   @Input() rfcValido: boolean = false;
+
+  /**
+ * Bandera que indica si se debe validar el estado dentro del formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es verdadero.
+ */
   @Input() estadoValidte: boolean = true;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
