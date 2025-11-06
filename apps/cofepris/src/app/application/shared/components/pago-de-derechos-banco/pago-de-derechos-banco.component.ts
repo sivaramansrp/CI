@@ -5,7 +5,7 @@ import {
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -32,6 +32,14 @@ import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
   styleUrl: './pago-de-derechos-banco.component.scss',
 })
 export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
+
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  @Input() idProcedimiento!: number;
+
   /**
    * Formulario de la solicitud.
    */
@@ -71,8 +79,6 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private servicio: PagoBancoService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.obtenerDatosBanco();
-
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -136,9 +142,8 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();  
-      
+    this.obtenerDatosBanco();
     this.configurarFormularioPagoBanco();
-
     this.inicializarEstadoFormulario();
   }
 
@@ -178,12 +183,21 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   obtenerDatosBanco(): void {
-    this.servicio
+    if (this.idProcedimiento) {
+      this.servicio
+      .getBancoList(this.idProcedimiento.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.bancoCatalogo.catalogos = data.datos as Catalogo[];
+      });
+    } else {
+      this.servicio
       .consultarDatosBanco()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
+    }
   }
 
   /**
