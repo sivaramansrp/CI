@@ -13,9 +13,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
-import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
+import { DatosCertificadoComponent } from './components/datosCertificado/datosCertificado.component';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from './components/destinatario-de/destinatario-de.component';
 import { NgModule } from '@angular/core';
 import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -43,6 +45,8 @@ import { ToastrService } from 'ngx-toastr';
     TercerosComponent,
     WizardComponent,
     CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent,
+    DestinatarioDeComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
     BtnContinuarComponent,

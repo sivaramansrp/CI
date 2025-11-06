@@ -268,7 +268,7 @@ export const CAMPO_DE_DESTINATARIOS = [110203];
  * Identificadores de procedimientos que requieren campos de representante.
  * @type {number[]}
  */
-export const CAMPO_DE_REPRESENTANTE = [110202, 110223];
+export const CAMPO_DE_REPRESENTANTE = [110202, 110223,110201];
 
 /**
  * Identificadores de procedimientos que requieren campos de transporte.
