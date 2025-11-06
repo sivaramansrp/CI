@@ -6,7 +6,7 @@
           Permiso de importación de muestras experimentales de sustancias tóxicas
         </h2>
       </div>
-          @if (!esFormaValido && esFormaValido !== undefined) {
+          @if (esFormaValido) {
           <div class="col-md-12">
             <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
           </div>
