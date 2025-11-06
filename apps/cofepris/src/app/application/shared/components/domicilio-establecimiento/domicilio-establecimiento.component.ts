@@ -771,6 +771,13 @@ public mostrarErrores = {
         }),
       )
       .subscribe();
+      this.domicilio.valueChanges.subscribe(() => {
+          this.mostrarErrores.codigoPostal = false;
+    this.mostrarErrores.estado = false;
+    this.mostrarErrores.muncipio = false;
+    this.mostrarErrores.calle = false;
+    this.mostrarErrores.telefono = false;
+      })
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
@@ -1666,6 +1673,16 @@ onConfirmacionModal(accion: boolean): void {
     } else {
       this.domicilio.enable();
     }
+    if(!this.isAvisoLicenciaVisible) {
+       this.formMercancias
+        .get("licenciaSanitaria")
+        ?.setValidators([]);
+      this.formMercancias
+        .get("avisoCheckbox")
+        ?.setValidators([]);
+      this.formMercancias.get("licenciaSanitaria")?.updateValueAndValidity();
+      this.formMercancias.get("avisoCheckbox")?.updateValueAndValidity();
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.formMercancias) {
@@ -1689,6 +1706,7 @@ onConfirmacionModal(accion: boolean): void {
     this.mostrarErrores.telefono = true;
     ISVALID = false;
    }
+   console.log(this.domicilio.getRawValue(),this.domicilio);
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;

@@ -74,6 +74,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Inicializa el componente.
    */
   ngOnInit(): void {
+    // this.representante.valueChanges.subscribe(() => {
+    //   this.mostrarErroresRepresentante.nombre = false;
+    //   this.mostrarErroresRepresentante.apellidoPaterno = false;
+    // }
+    // );
     /**
     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
     *

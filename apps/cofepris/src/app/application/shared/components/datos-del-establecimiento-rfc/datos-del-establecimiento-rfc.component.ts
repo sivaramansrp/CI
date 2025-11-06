@@ -174,6 +174,10 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     this.tieneElBotonSeleccionClicado = true;
     this.rfcValidoChange.emit(true); 
     this.datosDomicilioSvc.emitEvent(this.tieneElBotonSeleccionClicado);
+    this.datosDelForm.valueChanges.subscribe(() => {
+        this.mostrarErrores.denominacionRazonSocial = false;
+      this.mostrarErrores.correoElectronico = false;
+    })
   }
 
   /**
