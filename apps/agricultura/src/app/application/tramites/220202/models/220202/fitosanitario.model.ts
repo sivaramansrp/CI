@@ -173,8 +173,8 @@ export interface ListaDeDatosFinal {
      */
     usoCrossListDatos: string[];
 
-    seletedTerceros: TercerosrelacionadosdestinoTable;
-    seletedExdora: TercerosrelacionadosdestinoTable;
+      seletedTerceros: TercerosrelacionadosdestinoTable;
+      seletedExdora: TercerosrelacionadosExportadorTable;
 }
 
 /**
