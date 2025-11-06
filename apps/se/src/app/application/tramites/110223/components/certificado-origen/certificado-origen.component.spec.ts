@@ -3,7 +3,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CertificadoOrigenComponent, FECHA_INICIO, FECHA_FINAL } from './certificado-origen.component';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
@@ -18,6 +19,7 @@ import {
   TablaSeleccion 
 } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
@@ -220,15 +222,16 @@ describe('CertificadoOrigenComponent', () => {
 
     mockCatalogoServices = {
       obtenerCatalogo: jest.fn().mockReturnValue(of([mockCatalogo]))
-    } as any;
-
-    await TestBed.configureTestingModule({
+    } as any;    await TestBed.configureTestingModule({
       imports: [
         CertificadoOrigenComponent,
         ReactiveFormsModule,
-        CommonModule
+        CommonModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot()
       ],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: Tramite110223Store, useValue: mockStore },
         { provide: Tramite110223Query, useValue: mockQuery },
@@ -237,7 +240,8 @@ describe('CertificadoOrigenComponent', () => {
         { provide: SeccionLibQuery, useValue: mockSeccionQuery },
         { provide: SeccionLibStore, useValue: mockSeccionStore },
         { provide: ConsultaioQuery, useValue: mockConsultaQuery },
-        { provide: CatalogoServices, useValue: mockCatalogoServices }
+        { provide: CatalogoServices, useValue: mockCatalogoServices },
+        { provide: 'ToastConfig', useValue: {} }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).overrideTemplate(CertificadoOrigenComponent, '<div>Test Template</div>')

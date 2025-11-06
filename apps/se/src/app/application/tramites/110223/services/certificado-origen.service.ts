@@ -389,7 +389,7 @@ export class CertificadosOrigenService {
     }
     return data.map((item) => ({
       ...item,
-      id: 0,
+      id: item.id ?? '',
       fraccion_arancelaria: item.fraccionArancelaria ?? '',
       cantidad: item.cantidad ?? '',
       unidad_medida: item.umc ?? '',
@@ -405,19 +405,19 @@ export class CertificadosOrigenService {
   buildDestinatario(data: TramiteState): unknown {
     return {
       "nombre": data.grupoReceptor.nombre,
-      "primer_apellido": data.grupoReceptor.apellidoPrimer,
-      "segundo_apellido": data.grupoReceptor.apellidoSegundo,
+      "primer_apellido": data.grupoReceptor.apellidoPrimer || '',
+      "segundo_apellido": data.grupoReceptor.apellidoSegundo || '',
       "numero_registro_fiscal": data.grupoReceptor.numeroFiscal,
-      "razon_social": data.grupoReceptor.razonSocial,
+      "razon_social": data.grupoReceptor.razonSocial || '',
       "domicilio": {
           "ciudad_poblacion_estado_provincia": data.grupoDeDirecciones.ciudad,
           "calle": data.grupoDeDirecciones.calle,
           "numero_letra": data.grupoDeDirecciones.numeroLetra,
-          "lada": "HG",
+          "lada": data.grupoDeDirecciones.lada,
           "telefono": data.grupoDeDirecciones.telefono,
-          "fax": 4444444,
+          "fax": data.grupoDeDirecciones.fax || '',
           "correo_electronico": data.grupoDeDirecciones.correoElectronico,
-          "pais_destino": "IND"
+          "pais_destino": data.grupoDeDirecciones.pais
       },
       "generalesRepresentanteLegal": {
           "lugarRegistro": data.grupoRepresentativo.lugar,
@@ -427,7 +427,7 @@ export class CertificadosOrigenService {
           "telefono": data.grupoRepresentativo.telefono,
           "correoElectronico": data.grupoRepresentativo.correoElectronico
         },
-      "medio_transporte": "MEDTR.01"
+      "medio_transporte": ''
     }
   }
 

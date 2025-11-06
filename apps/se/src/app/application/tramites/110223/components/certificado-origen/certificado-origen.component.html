@@ -5,7 +5,7 @@
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
-    [tableData]="(datos1 | async) ||  []"
+    [tableData]="(datosTablaUno$ | async) ||  []"
     (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
     (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"

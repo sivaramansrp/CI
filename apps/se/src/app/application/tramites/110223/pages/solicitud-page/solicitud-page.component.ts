@@ -195,89 +195,99 @@ export class SolicitudPageComponent implements OnDestroy {
       },
       // solicitud: {},      
       certificado: CERTIFICADO,
-      destinatario: DESTINATARIO,
+      destinatario: DESTINATARIO,      
       solicitud: {
           datosConfidencialesProductor: item.formulario['datosConfidencialesProductor'],
           productorMismoExportador: item.formulario['productorMismoExportador'],
           productoresPorExportador: [...PRODUCTORES_POR_EXPORTADOR],
           mercanciasProductor: [...MERCANCIAS_PRODUCDOR],
           ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
-        }
-    }
+        },
+      datos_del_certificado: {
+        idioma: item.formDatosCertificado['idiomaDates'] || '',
+        observaciones: item.formDatosCertificado['observacionesDates'],
+        representacion_federal: {
+          entidad_federativa:
+            item.formDatosCertificado['EntidadFederativaDates'],
+          representacion_federal:
+            item.formDatosCertificado['representacionFederalDates'],
+        },
+      }
+    };
 
-    // return new Promise((resolve, reject) => {
-    //     this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
-    //       next: (response) => {
-    //         if (esValidObject(response) && esValidObject(response['datos'])) {
-    //           const DATOS = response['datos'] as { id_solicitud?: number };
-    //           if (getValidDatos(DATOS.id_solicitud)) {
-    //             this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-    //           } else {
-    //             this.store.setIdSolicitud(0);
-    //           }
-    //         }
-    //         resolve({
-    //           id: response['id'] ?? 0,
-    //           descripcion: response['descripcion'] ?? '',
-    //           codigo: response['codigo'] ?? '',
-    //           data: response['data'] ?? response['datos'] ?? null,
-    //           ...response
-    //         } as JSONResponse);
-    //       },
-    //       error: (error) => {
-    //         reject(error);
-    //       }
-    //     });
-    //   });
-
-     return new Promise((resolve) => {      
-      const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
-             
-      API_CALL.subscribe({          
-        next: (response) => {
-          const RESPONSE_OBJ = response as Record<string, unknown>;
-          const { ID_SOLICITUD, RESPONSE_PROCESSED } = this.extraerIdSolicitud(RESPONSE_OBJ);
-          this.procesarRespuestaYNavegar(RESPONSE_OBJ, ID_SOLICITUD, RESPONSE_PROCESSED);
-          resolve(this.construirRespuestaJSON(RESPONSE_OBJ));
-        }
+    return new Promise((resolve, reject) => {
+        this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            resolve({
+              id: response['id'] ?? 0,
+              descripcion: response['descripcion'] ?? '',
+              codigo: response['codigo'] ?? '',
+              data: response['data'] ?? response['datos'] ?? null,
+              ...response
+            } as JSONResponse);
+          },
+          error: (error) => {
+            reject(error);
+          }    
+        });
       });
-    });
+
+    // return new Promise((resolve) => {
+    //   const API_CALL = this.certificadoDeService.guardarDatosPost(PAYLOAD);
+             
+    //   API_CALL.subscribe({          
+    //     next: (response) => {
+    //       const RESPONSE_OBJ = response as Record<string, unknown>;
+    //       const { ID_SOLICITUD, RESPONSE_PROCESSED } = this.extraerIdSolicitud(RESPONSE_OBJ);
+    //       this.procesarRespuestaYNavegar(RESPONSE_OBJ, ID_SOLICITUD, RESPONSE_PROCESSED);
+    //       resolve(this.construirRespuestaJSON(RESPONSE_OBJ));
+    //     }
+    //   });
+    // });
   }
 
-  /**
-   * Extrae el ID de solicitud de la respuesta del servidor.
-   * @param response Respuesta del servidor
-   * @returns Objeto con el ID de solicitud y si fue procesado correctamente
-   */
-  private extraerIdSolicitud(response: Record<string, unknown>): { ID_SOLICITUD: number; RESPONSE_PROCESSED: boolean } {
-    let IDSOLICITUD: number = 0;
-    let RESPONSEPROCESSED = false;
+  // /**
+  //  * Extrae el ID de solicitud de la respuesta del servidor.
+  //  * @param response Respuesta del servidor
+  //  * @returns Objeto con el ID de solicitud y si fue procesado correctamente
+  //  */
+  // private extraerIdSolicitud(response: Record<string, unknown>): { ID_SOLICITUD: number; RESPONSE_PROCESSED: boolean } {
+  //   let IDSOLICITUD: number = 0;
+  //   let RESPONSEPROCESSED = false;
 
-    if (esValidObject(response) && esValidObject(response['datos'])) {
-      const DATOS = response['datos'] as { idSolicitud?: number };
-      if (getValidDatos(DATOS.idSolicitud)) {
-        IDSOLICITUD = DATOS.idSolicitud ?? 0;
-        RESPONSEPROCESSED = true;
-      }
-    } 
-    else if (esValidObject(response) && esValidObject(response['data'])) {
-      const DATA = response['data'] as { idSolicitud?: number };
-      if (getValidDatos(DATA.idSolicitud)) {
-        IDSOLICITUD = DATA.idSolicitud ?? 0;
-        RESPONSEPROCESSED = true;
-      }
-    }
-    else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
-      IDSOLICITUD = response['idSolicitud'] as number;
-      RESPONSEPROCESSED = true;
-    }
-    else if (esValidObject(response) && getValidDatos(response['id'])) {
-      IDSOLICITUD = response['id'] as number;
-      RESPONSEPROCESSED = true;
-    }
+  //   if (esValidObject(response) && esValidObject(response['datos'])) {
+  //     const DATOS = response['datos'] as { idSolicitud?: number };
+  //     if (getValidDatos(DATOS.idSolicitud)) {
+  //       IDSOLICITUD = DATOS.idSolicitud ?? 0;
+  //       RESPONSEPROCESSED = true;
+  //     }
+  //   } 
+  //   else if (esValidObject(response) && esValidObject(response['data'])) {
+  //     const DATA = response['data'] as { idSolicitud?: number };
+  //     if (getValidDatos(DATA.idSolicitud)) {
+  //       IDSOLICITUD = DATA.idSolicitud ?? 0;
+  //       RESPONSEPROCESSED = true;
+  //     }
+  //   }
+  //   else if (esValidObject(response) && getValidDatos(response['idSolicitud'])) {
+  //     IDSOLICITUD = response['idSolicitud'] as number;
+  //     RESPONSEPROCESSED = true;
+  //   }
+  //   else if (esValidObject(response) && getValidDatos(response['id'])) {
+  //     IDSOLICITUD = response['id'] as number;
+  //     RESPONSEPROCESSED = true;
+  //   }
 
-    return { ID_SOLICITUD: IDSOLICITUD, RESPONSE_PROCESSED: RESPONSEPROCESSED };
-  }
+  //   return { ID_SOLICITUD: IDSOLICITUD, RESPONSE_PROCESSED: RESPONSEPROCESSED };
+  // }
 
   /**
    * Procesa la respuesta del servidor y navega al siguiente paso si es necesario.
@@ -343,13 +353,13 @@ getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
-      const SKIP_VALIDATION = true;
-
-      const ISVALID = SKIP_VALIDATION || this.validarTodosFormulariosPasoUno();
-      if (!ISVALID) {
-        this.esFormaValido = true;
-        return;
-      }
+      // const SKIP_VALIDATION = true;
+      // SKIP_VALIDATION ||
+      // const ISVALID =  this.validarTodosFormulariosPasoUno();
+      // if (!ISVALID) {
+      //   this.esFormaValido = true;
+      //   return;
+      // }
       this.obtenerDatosDelStore();
     }
     else if (e.valor > 0 && e.valor <= this.pasos.length) {
