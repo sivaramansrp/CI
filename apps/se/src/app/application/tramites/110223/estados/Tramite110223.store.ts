@@ -169,6 +169,7 @@ export interface TramiteState {
   /** Grupo receptor */
   grupoReceptor: GrupoReceptor;
   
+  /** Grupo de direcciones */
   grupoDeDirecciones: {
     ciudad: string;
     numeroLetra: string | number;

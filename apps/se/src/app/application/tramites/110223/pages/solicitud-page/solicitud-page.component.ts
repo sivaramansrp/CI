@@ -165,12 +165,12 @@ export class SolicitudPageComponent implements OnDestroy {
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */    
-  guardar(item: TramiteState): Promise<JSONResponse> {
-    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
+  guardar(item: TramiteState): Promise<JSONResponse> {    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
     const PRODUCTORES_POR_EXPORTADOR = this.certificadoDeService.buildProductoresPorExportador(item.productoresExportador);
     const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
     const CERTIFICADO = this.certificadoDeService.buildCertificado(item);
     const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
+    const DATOS_DEL_CERTIFICADO = this.certificadoDeService.buildDatosDelCertificado(item);
     const PAYLOAD = {
       idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
@@ -202,15 +202,7 @@ export class SolicitudPageComponent implements OnDestroy {
           mercanciasProductor: [...MERCANCIAS_PRODUCDOR],
           ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
         },
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado['observacionesDates'],
-        representacion_federal: {
-          entidad_federativa:
-            item.formDatosCertificado['EntidadFederativaDates'],
-          representacion_federal:
-            item.formDatosCertificado['representacionFederalDates'],
-        },
-      }
+      datos_del_certificado: DATOS_DEL_CERTIFICADO
     };    
       return new Promise((resolve, reject) => {
       this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({

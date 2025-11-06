@@ -1,5 +1,4 @@
 import { Mercancia } from "../../../shared/models/modificacion.enum";
-// import { MercanciaTabla } from "../../../shared/models/certificado-origen.model";
 
 /**
  * Representa las columnas del historial de productores.

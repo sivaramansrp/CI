@@ -301,8 +301,7 @@ export class CertificadosOrigenService {
     return this.tramite110223Query.selectPexim$;
   }
 
-  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
-  // eslint-disable-next-line class-methods-use-this
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
     return data.map(item => ({
       "fraccionArancelaria": item.fraccionArancelaria,
@@ -317,7 +316,7 @@ export class CertificadosOrigenService {
     }));
   }
 
-  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   // eslint-disable-next-line class-methods-use-this
   buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
     return data.map(item => ({
@@ -330,7 +329,7 @@ export class CertificadosOrigenService {
     }));
   }
 
-  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildCertificado(data: TramiteState): unknown {
     return {
       "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
@@ -360,7 +359,7 @@ export class CertificadosOrigenService {
     }
   }
 
-  /** Construye el objeto destinatario a partir del estado del trámite 110214. */
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildCertificadoMercancia(data: Mercancia[]): unknown {
     if (!Array.isArray(data)) {
       return [];
@@ -377,7 +376,20 @@ export class CertificadosOrigenService {
       complemento_descripcion: item.complementoDescripcion ?? '',
       fecha_factura: item.fechaFactura ?? '',
     }));
-  }  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  }  
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildDatosDelCertificado(data: TramiteState): unknown {
+    return {
+      observaciones: data.formDatosCertificado['observacionesDates'],
+      representacion_federal: {
+        entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'],
+        representacion_federal: data.formDatosCertificado['representacionFederalDates'],
+      },
+    };
+  }
+  
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildDestinatario(data: TramiteState): unknown {
     const formDestinatario = data.formDestinatario || {};
 
@@ -403,8 +415,7 @@ export class CertificadosOrigenService {
           "puesto": formDestinatario['puestoRepresentante'] || '',
           "telefono": formDestinatario['telefonoRepresentante'] || '',
           "correoElectronico": formDestinatario['correoRepresentante'] || ''
-        },
-      "medio_transporte": formDestinatario['medioTransporte'] || "MEDTR.01"
+        }
     }
   }
 
