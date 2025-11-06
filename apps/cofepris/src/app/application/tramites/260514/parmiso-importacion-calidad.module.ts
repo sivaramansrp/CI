@@ -1,5 +1,6 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
+import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
@@ -37,7 +38,8 @@ import {PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
     PagoDeDerechosContenedoraComponent,
-    DatosDeLaComponent
+    DatosDeLaComponent,
+    AvisoDePrivacidadComponent,
   ],
   providers: [
     provideHttpClient(),

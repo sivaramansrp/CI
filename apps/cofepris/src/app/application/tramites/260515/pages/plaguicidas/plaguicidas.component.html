@@ -6,7 +6,12 @@
           Permiso de importación de sustancias sujetos a control por SEMARNAT
         </h2>
       </div>
-
+      @if (esFormaValido) {
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+      }
+    
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
@@ -22,6 +27,7 @@
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
+        [dePadre]="true"
       ></btn-continuar>
       <app-aviso-de-privacidad *ngIf="indice === 1"></app-aviso-de-privacidad>
     </div>
