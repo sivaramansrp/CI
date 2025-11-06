@@ -1100,6 +1100,11 @@ export const CATALOGO_LOCALIDADES = (TRAMITE: string, CVE_MUNICIPIO: string): st
  */
 export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: string): string => `sat-t${TRAMITE}/catalogo/municipio-delegacion/${CVE_MUNICIPIO_DELEGACION}/colonias`;
 
+/**
+ *  * API para obtener el catálogo de codigo
+ *  https://api-v30.cloud-ultrasist.net/api/sat-t260203/catalogo/codigo-postal/03005/colonias
+ */
+export const CATALOGO_CODIGO = (TRAMITE: string, CVE_LOCALIDAD: string): string => `sat-t${TRAMITE}/catalogo/codigo-postal/${CVE_LOCALIDAD}/colonias`;
 /*
  * API para obtener el catálogo de bancos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos

@@ -1126,7 +1126,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
-      if(this.idProcedimiento===260209||this.idProcedimiento===260205){
+      if(this.idProcedimiento===260209){
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
@@ -1914,7 +1914,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210||this.idProcedimiento===260205) {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
