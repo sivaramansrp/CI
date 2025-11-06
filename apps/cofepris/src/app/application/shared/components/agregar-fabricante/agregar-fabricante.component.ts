@@ -920,12 +920,6 @@ guardarFabricante(): void {
    * Se desuscribe automáticamente al destruir el componente.
    */
   cargarDatos(tramite: string): void {
-    // this.datosSolicitudService
-    //   .obtenerListaCodigosPostales()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.codigosPostalesDatos = data;
-    //   });
 
        this.subscription.add(
             this.catalogoService
