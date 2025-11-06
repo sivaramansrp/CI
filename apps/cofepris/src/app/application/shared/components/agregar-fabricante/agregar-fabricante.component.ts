@@ -769,6 +769,9 @@ private forzarDeshabilitarPais(): void {
       case 260203:
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;
+      case 260204:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
       case 260207:
       case 260209:
       case 260208:
@@ -790,6 +793,9 @@ private forzarDeshabilitarPais(): void {
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
         break;
+        case 260213:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
         default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
