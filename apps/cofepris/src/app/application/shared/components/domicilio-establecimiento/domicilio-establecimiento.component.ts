@@ -97,6 +97,13 @@ export interface MercanciasTabla {
 export class DomicilioComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
+public mostrarErrores = {
+  codigoPostal: false,
+  estado: false,
+  muncipio: false,
+  calle: false,
+  telefono: false,
+};
   @Input() identificacion: boolean = false;
   @Input() idProcedimiento!: number;
   @Input() rfcValido: boolean = false;
@@ -1393,7 +1400,7 @@ export class DomicilioComponent
     }
   }
 
-  openModal():void {
+openModal():void {
   const MODAL = new Modal(document.getElementById('modalAddAgentMercancias')!);
   MODAL.show();
 }
@@ -1674,6 +1681,14 @@ onConfirmacionModal(accion: boolean): void {
   }
   validatorButtonClick(): boolean {
    let ISVALID = true;
+   if(!this.rfcValido){
+    this.mostrarErrores.codigoPostal = true;
+    this.mostrarErrores.estado = true;
+    this.mostrarErrores.muncipio = true;
+    this.mostrarErrores.calle = true;
+    this.mostrarErrores.telefono = true;
+    ISVALID = false;
+   }
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
