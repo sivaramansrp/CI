@@ -28,6 +28,7 @@
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
+        [dePadre]="!esFormaValido"
       ></btn-continuar>
       <app-aviso-de-privacidad *ngIf="indice === 1"></app-aviso-de-privacidad>
     </div>
