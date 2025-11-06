@@ -311,8 +311,9 @@ esMostrarAlerta: boolean = false;
           if (this.indice === 1 && this.pasoUnoComponent) {
           isValid = this.pasoUnoComponent.validarPasoUno();
         }
-        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
           this.mostrarAlerta=true;
+          this.confirmarSinPagoDeDerechos = 2;
           this.seleccionarFilaNotificacion = {
             tipoNotificacion: 'alert',
             categoria: 'danger',
