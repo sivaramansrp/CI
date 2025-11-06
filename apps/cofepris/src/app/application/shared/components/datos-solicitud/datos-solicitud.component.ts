@@ -59,8 +59,20 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
   @ViewChild(ManifiestosComponent) manifiestosComp!: ManifiestosComponent;
   @ViewChild(RepresentanteLegalRfcComponent) representanteLegalRfcComp!: RepresentanteLegalRfcComponent;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
+
+  /** Bandera que indica si el RFC ingresado es válido. Se utiliza para controlar la validación del campo en el formulario. */
   rfcValido = false;
+
+  /**
+ * Bandera que indica si se debe mostrar u operar con datos de identificación en el formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
   @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -82,7 +94,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
   @Input() tieneDomicilioHabilitar: boolean = false;
 
-    @Input() estadoValidte: boolean = false;
+  /**
+ * Bandera que indica si se debe validar el estado dentro del formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
+  @Input() estadoValidte: boolean = false;
 
   /**
    * Estado de la solicitud.

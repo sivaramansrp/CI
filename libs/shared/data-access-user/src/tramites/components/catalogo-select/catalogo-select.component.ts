@@ -176,6 +176,12 @@ export class CatalogoSelectComponent
  * Indica si se debe aplicar un color de fondo especial cuando el select está deshabilitado.
  */
   @Input() bgColorDisabled: boolean = false; 
+
+  /**
+ * Bandera que indica si se debe mostrar el campo de clave en el formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
+  @Input() showClave: boolean = false; 
   /**
    * @constructor
    * @param fb - Instancia de `FormBuilder` para crear formularios reactivos.
