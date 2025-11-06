@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
  * @returns DatosDomicilioLegal
  */
 export interface DatosDomicilioLegalState {
+  objetoImportacionOtro:string;
+  estadoFisicoOtro:string;
   /**
    * claveDeReferencia
    * @type {string}
@@ -217,6 +219,8 @@ export interface DatosDomicilioLegalState {
 
 export function createInitialState(): DatosDomicilioLegalState {
   return {
+    objetoImportacionOtro: '',
+    estadoFisicoOtro: '',
     /**
      * claveDeReferencia
      * @type {string}
@@ -779,7 +783,12 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       estadoFisico,
     }));
   }
-
+  public setObjetoImportacionOtro(objetoImportacion: string): void {
+    this.update((state) => ({
+      ...state,
+      objetoImportacion
+    }));
+  }
   /**
    * Establece el estado de fraccionArancelaria.
    * @param fraccionArancelaria - El valor de fraccionArancelaria.
@@ -974,6 +983,13 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         this.update((state) => ({
             ...state,
             mensaje,
+        }));
+    }
+
+    public setEstadoFisicoOtro(estadoFisicoOtro: string):void {
+        this.update((state) => ({
+            ...state,
+            estadoFisicoOtro,
         }));
     }
     

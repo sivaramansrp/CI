@@ -1,12 +1,33 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { PagoDeDerechosBancoComponent } from '../../../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
+import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 
 @Component({
   selector: 'app-pago-derechos',
   standalone: true,
-  imports: [CommonModule, PagoDeDerechosBancoComponent],
+  imports: [CommonModule, PagoDeDerechosComponent],
   templateUrl: './pago-derechos.component.html',
   styleUrl: './pago-derechos.component.scss',
 })
-export class PagoDerechosComponent {}
+export class PagoDerechosComponent {
+  idProcedimiento:number = 260516;
+      
+      @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
+        /**
+         * @property {PagoDerechosFormState} pagoDerechos
+         * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
+         */
+        public pagoDerechos!: PagoDerechosFormState;
+    
+        formularioDeshabilitado: boolean = true;
+         /**
+           * @method updatePagoDerechos
+           * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
+           * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
+           * @returns {void} No retorna ningún valor.
+           */
+          updatePagoDerechos(event: PagoDerechosFormState): void {
+            // this.tramiteStore.updatePagoDerechos(event);
+          }
+}
