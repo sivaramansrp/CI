@@ -4,6 +4,7 @@ import { DatosDomicilioLegalService } from '../../../../shared/services/datos-do
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SolicitudPagoBancoState } from '../../../../shared/estados/stores/pago-banco.store';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
@@ -26,6 +27,7 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnDestroy {
+    @ViewChild(PasoUnoComponent) solicitante!: PasoUnoComponent;
 constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService) {
 
 }
@@ -69,6 +71,7 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    if(this.solicitante.validOnButtonClick()){
     if (e.valor > 0 && e.valor < 5) {
       this.getDatosDomicilioLegalState();
       this.getSolicitudPagoBancoState();
@@ -79,6 +82,7 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
         this.wizardComponent.atras();
       }
     }
+  }
   }
 
   /**
