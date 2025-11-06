@@ -15,7 +15,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
 import fractionValues from '@libs/shared/theme/assets/json/130105/fraccion_arancelaria.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130105/unidad_da.json';
-import { idProcedimiento, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
+import { idProcedimiento, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 
 
 /**
@@ -79,7 +79,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * getEstablecimientoTableData
    * Datos de configuración de la tabla obtenidos de un archivo JSON.
    */
-  public getEstablecimientoTableData = PartidasdelaTable;
+  public getEstablecimientoTableData = [];
 
   /**
    * filaSeleccionada
@@ -90,17 +90,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnOpciones para el campo "producto".
    */
-  productoOpciones: ProductoOpción[] = [];
+  productoOpciones: ProductoOpción[] = PRODUCTO_OPCION;
   /**
    * jest.spyOnCatálogo con valores de fracción arancelaria.
    */
 
-  fraccionCatalogo: Catalogo[] = fractionValues;
+  fraccionCatalogo: Catalogo[] = [];
 
   /**
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
@@ -126,7 +126,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnOpciones de solicitud configurables.
    */
-  opcionesSolicitud: ProductoOpción[] = PRODUCTO_OPCION;
+  opcionesSolicitud: ProductoOpción[] = OPINIONES_SOLICITUD;
 
   /**
    * jest.spyOnSujeto para gestionar la destrucción de suscripciones.

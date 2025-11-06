@@ -19,9 +19,20 @@ export const PASOS_EXPORTACION = [
     }
 ];
 
-export const PRODUCTO_OPCION = [{
+export const OPINIONES_SOLICITUD = [{
     label: 'Inicial', value: 'Inicial'
-}]
+}];
+
+export const PRODUCTO_OPCION = [
+    {
+        label: 'Nuevo',
+        value: 'nuevo'
+    },
+    {
+        label: 'Usado',
+        value: 'usado'
+    }
+];
 
 
 export const idProcedimiento = 130105; 
