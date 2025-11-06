@@ -7,6 +7,12 @@
   <ng-template #agregarFabricante>
     <ng-titulo titulo="Agregar fabricante"></ng-titulo>
   </ng-template>
+   @if(mensajeDeError){
+    <ng-alert
+      [CONTENIDO]="mensajeDeError"
+      [CUSTOMECLASS]="'alert-danger text-center'"
+    ></ng-alert>
+  }
   <form [formGroup]="agregarFabricanteForm" *ngIf="agregarFabricanteForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -325,7 +331,7 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            @if((idProcedimiento === 260911 || idProcedimiento === 260201 || idProcedimiento === 260203) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
           </span>:</label>
         <input
           type="text"
@@ -584,6 +590,7 @@
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false"
+          (selectionChange)="cargarLocalidades($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -629,36 +636,35 @@
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label"
-          >Calle@if(agregarFabricanteForm.controls['calle'].errors?.['required']){
-          <span [ngClass]="agregarFabricanteForm.controls['calle'].errors?.['required'] && agregarFabricanteForm.controls['calle'].touched ? 'text-danger' : ''">*</span>
-          }:</label
-        >
-        <span tooltip="Domicilio, calle, número interior, número exterior, lote"
-          ><i class="bi bi-question-circle-fill"></i
-        ></span>
-        <input
-          type="text"
-          [maxlength]="100"
-          class="form-control"
-          formControlName="calle"
-          [ngClass]="esInvalido('calle') ? 'required' : ''"
-        />
-        <div *ngIf="esInvalido('calle')" class="text-danger">
-          <small
-            *ngIf="agregarFabricanteForm.controls['calle'].errors?.['required']"
-          >
-            Este campo es obligatorio
-          </small>
-        </div>
+  <label class="form-label">
+    Calle<span
+      [ngClass]="agregarFabricanteForm.controls['calle'].invalid && agregarFabricanteForm.controls['calle'].touched ? 'text-danger' : 'text-dark'"
+      >*</span
+    >:
+  </label>
+  <span tooltip="Domicilio, calle, número interior, número exterior, lote">
+    <i class="bi bi-question-circle-fill"></i>
+  </span>
+  <input
+    type="text"
+    [maxlength]="100"
+    class="form-control"
+    formControlName="calle"
+    [ngClass]="esInvalido('calle') ? 'required' : ''"
+  />
+  <div *ngIf="esInvalido('calle')" class="text-danger">
+    <small *ngIf="agregarFabricanteForm.controls['calle'].errors?.['required']">
+      Este campo es obligatorio
+    </small>
+  </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label"
-          >Número
-          exterior@if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
-          <span [ngClass]="agregarFabricanteForm.controls['numeroExterior'].errors?.['required'] && agregarFabricanteForm.controls['numeroExterior'].touched ? 'text-danger' : ''">*</span>
-          }:</label
-        >
+        <label class="form-label">
+          Número exterior<span
+            [ngClass]="agregarFabricanteForm.controls['numeroExterior'].invalid && agregarFabricanteForm.controls['numeroExterior'].touched ? 'text-danger' : 'text-dark'"
+            >*</span
+          >:
+        </label>
         <input
           type="text"
           class="form-control"
@@ -667,9 +673,7 @@
           [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
-          <small
-            *ngIf="agregarFabricanteForm.controls['numeroExterior'].errors?.['required']"
-          >
+          <small *ngIf="agregarFabricanteForm.controls['numeroExterior'].errors?.['required']">
             Este campo es obligatorio
           </small>
         </div>

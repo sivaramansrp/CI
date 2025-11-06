@@ -541,6 +541,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         funcion: (): void => this.crossList.toArray()[2].quitar('t'),
       },
     ];
+
+    if( this.mercanciaForm.get('clasificacionProducto')?.value){
+      this.onCambioClasificacionProducto(this.datoSeleccionado?.claveClasificacionProductoObj);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -575,6 +579,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
+              ? SELECTED.paisDeOriginDatos
+              : SELECTED.paisDeOriginDatos
+              ? [SELECTED.paisDeOriginDatos]
+              : [];
+              this.seleccionadasPaisDeOriginDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeOriginDatos));
           }
         })
     );
@@ -587,6 +598,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
+              ? SELECTED.paisDeProcedenciaDatos
+              : SELECTED.paisDeProcedenciaDatos
+              ? [SELECTED.paisDeProcedenciaDatos]
+              : [];
+              this.seleccionadasPaisDeProcedenciaDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeProcedenciaDatos));
           }
         })
     );
@@ -599,6 +617,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
+              ? SELECTED.usoEspecifico
+              : SELECTED.usoEspecifico
+              ? [SELECTED.usoEspecifico]
+              : [];
+              this.seleccionadasUsoEspesificoDatos = JSON.parse(JSON.stringify(this.seleccionadasUsoEspesificoDatos));
           }
         })
     );

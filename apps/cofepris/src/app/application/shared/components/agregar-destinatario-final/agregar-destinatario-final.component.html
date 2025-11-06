@@ -41,7 +41,7 @@
         }
       </div>
     </div>
- @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911){
+ @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' || idProcedimiento === 260911){
     <div class="row mt-5 justify-content-center">
   <div class="col-md-4">
     <label class="form-label">
@@ -223,7 +223,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'"
-          [required]="!requiedField" [placeholder]="'Seleccione una opción'"
+          [required]="!requiedField" [placeholder]="'Seleccione una opción'" (selectionChange)="cargarLocalidades($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('localidad')?.touched ?? false"
           [disabledPrimerOption]="false"
