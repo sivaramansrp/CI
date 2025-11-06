@@ -47,43 +47,9 @@
       </div>
     </div>
 
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
-    <div class="row">
-      <div class="col-md-8">
-        <div class="form-group">
-          <label
-            class="form-label mt-3 mover-izquierda fs-2"
-            for="denominacionRazon"
-            >Denominación/razón social<span 
-            [ngClass]="{'text-danger': agregarFacturadorForm.get('denominacionRazon')?.touched && agregarFacturadorForm.get('denominacionRazon')?.invalid}"
-          >*</span>:</label>
-          <input
-            class="form-control"
-            id="denominacionRazon"
-            type="text"
-            formControlName="denominacionRazon"
-            maxlength="254"
-            [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''"
-          />
-          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
-            <small
-              *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['required']"
-            >
-              Este campo es obligatorio
-            </small>
-            <small
-            *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['pattern']"
-          >
-            Existen datos incorrectos que no cumplen con el formato esperado
-          </small>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
 
     <!-- Datos Personales -->
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA )
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA || agregarFacturadorForm.get('tipoPersona')?.value !== tipoPersona.MORAL)
     {
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
@@ -149,6 +115,40 @@
           >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
+        </div>
+      </div>
+    </div>
+    }
+      @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.MORAL || agregarFacturadorForm.get('tipoPersona')?.value === undefined) {
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label
+            class="form-label mt-3 mover-izquierda fs-2"
+            for="denominacionRazon"
+            >Denominación/razón social<span 
+            [ngClass]="{'text-danger': agregarFacturadorForm.get('denominacionRazon')?.touched && agregarFacturadorForm.get('denominacionRazon')?.invalid}"
+          >*</span>:</label>
+          <input
+            class="form-control"
+            id="denominacionRazon"
+            type="text"
+            formControlName="denominacionRazon"
+            maxlength="254"
+            [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''"
+          />
+          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
+            <small
+              *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+            <small
+            *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+          </div>
         </div>
       </div>
     </div>
