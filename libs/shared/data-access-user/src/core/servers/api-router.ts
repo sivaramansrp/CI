@@ -1128,3 +1128,8 @@ export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: stri
   * API para obtener la unidad de medida por fracción arancelaria
  */
 export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;
+
+/*
+  * API para obtener la tipo de empresa
+ */
+export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;

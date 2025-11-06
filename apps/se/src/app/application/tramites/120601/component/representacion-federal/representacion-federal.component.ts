@@ -2,6 +2,7 @@ import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, DATOS_GENERALES_REP
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
@@ -83,6 +84,17 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  tramites:string='120601';
+
+  /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+  *  Ayuda a prevenir fugas de memoria en flujos observables. */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -102,6 +114,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private store: Tramite120601Store,
     private datosEmpresaService: DatosEmpresaService,
     private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
   ) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -117,8 +130,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.getEntidadFederativa();
-    this.getRepresentacionFederal();
+    // this.getEntidadFederativa();
+    // this.getRepresentacionFederal();
     this.getDatosSocios();
 
     this.query.selectEstado$.pipe(
@@ -137,6 +150,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       })
     })
  
+
+     this.obtenerEstado();
+     this.obtenerRepresentacionFederal()
   }
 
   /**
@@ -212,6 +228,34 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   public validarRepresentacionFederalIDCSECEROR_(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setRepresentacion(this.formulario.get('representacion')?.value);
+  }
+
+/**
+ * @description Obtiene el estado desde el servicio y asigna los datos a la variable `estado`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+  obtenerEstado(): void {
+    this.catalogoService.estadosCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.estado = response?.datos ?? [];
+        }
+      });
+  }
+
+/**
+ * @description Obtiene el representación federal desde el servicio y asigna los datos a la variable `representacion`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+  obtenerRepresentacionFederal(): void {
+    this.catalogoService.representacionFederalCatalogo(this.tramites, "MEX")
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.representacion = response?.datos ?? [];
+        }
+      });
   }
 
   /**

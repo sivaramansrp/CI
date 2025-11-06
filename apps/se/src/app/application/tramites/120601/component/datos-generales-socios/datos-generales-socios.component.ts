@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
@@ -105,12 +106,24 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
    */
   catalogoPaises: Catalogo[] = [];
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  private tramites:string='120601';
+
+  /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+  *  Ayuda a prevenir fugas de memoria en flujos observables. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,private catalogoService: CatalogoServices) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -183,11 +196,12 @@ actualizarEstadoFormulario(): void {
    */
   ngOnInit(): void {
     this.obtenerDatosTablaDeSocios();
-    this.catalogoPaises = [
-    { id: 1, descripcion: 'México' },
-    { id: 2, descripcion: 'Estados Unidos' },
-    { id: 3, descripcion: 'Canadá' },
-  ]
+  //   this.catalogoPaises = [
+  //   { id: 1, descripcion: 'México' },
+  //   { id: 2, descripcion: 'Estados Unidos' },
+  //   { id: 3, descripcion: 'Canadá' },
+  // ]
+  this.obtenerCatalogoPaises();
 
     this.FormSolicitud = this.fb.group({
       datosGeneralesSocios: this.fb.group({
@@ -379,6 +393,20 @@ actualizarEstadoFormulario(): void {
   enCambioCadenaDependencia(): void {
     this.store.setCadenaDependencia(this.FormSolicitud.get(['datosGeneralesSocios','cadenaDependencia'])?.value);
   }
+
+/**
+ * @description Obtiene el catálogo paises desde el servicio y asigna los datos a la variable `catalogoPaises`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+  obtenerCatalogoPaises(): void {
+      this.catalogoService.paisesCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoPaises = response?.datos ?? [];
+        }
+      });
+}
 
   /**
    * Hook del ciclo de vida - se ejecuta cuando el componente se destruye.
