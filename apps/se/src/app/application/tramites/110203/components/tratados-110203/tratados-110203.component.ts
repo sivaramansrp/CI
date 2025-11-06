@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FECHA_EXPEDICION, FECHA_VENCIMIENTO } from '../../constant/destinatario.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent } from "@ng-mf/data-access-user";
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TituloComponent, formatDateToYYYYMMDD } from '@libs/shared/data-access-user/src';
+import { TituloComponent, formatDateToDDMMYYYY } from '@libs/shared/data-access-user/src';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
+
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el trámite 110203.
  * Este componente se encarga de inicializar y gestionar un formulario reactivo con campos específicos
@@ -23,7 +26,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 @Component({
   selector: 'app-tratados-110203',
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule],
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './tratados-110203.component.html',
   styleUrl: './tratados-110203.component.scss'
 })
@@ -71,6 +74,17 @@ export class Tratados110203Component implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Fecha de expedición del certificado.
+     * @type {InputFecha}
+     */
+    fechaDeVencimientoInput: InputFecha = FECHA_VENCIMIENTO;
+    /**
+     * Fecha de vencimiento del certificado.
+     * @type {InputFecha}
+      */
+    fechaDeExpedicionInput: InputFecha = FECHA_EXPEDICION;
+
   /**
    * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias.
    * 
@@ -111,8 +125,8 @@ export class Tratados110203Component implements OnInit, OnDestroy {
           bloque: [this.solicitudState.bloque, Validators.required],
           origen: [this.solicitudState.origen, Validators.required],
           destino: [this.solicitudState.bloque, Validators.required],
-          expedicion: [formatDateToYYYYMMDD(this.solicitudState.expedicion), Validators.required],
-          vencimiento: [formatDateToYYYYMMDD(this.solicitudState.vencimiento), Validators.required],
+          expedicion: [formatDateToDDMMYYYY(this.solicitudState.expedicion), Validators.required],
+          vencimiento: [formatDateToDDMMYYYY(this.solicitudState.vencimiento), Validators.required],
         });
         this.tratadosForm.disable();
       } else {
@@ -121,8 +135,8 @@ export class Tratados110203Component implements OnInit, OnDestroy {
           bloque: this.solicitudState.bloque,
           origen: this.solicitudState.origen,
           destino: this.solicitudState.bloque,
-          expedicion: formatDateToYYYYMMDD(this.solicitudState.expedicion),
-          vencimiento: formatDateToYYYYMMDD(this.solicitudState.vencimiento),
+          expedicion: formatDateToDDMMYYYY(this.solicitudState.expedicion),
+          vencimiento: formatDateToDDMMYYYY(this.solicitudState.vencimiento),
         });  
         this.tratadosForm.disable();
       }

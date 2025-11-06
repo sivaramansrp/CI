@@ -96,3 +96,9 @@ export const API_GET_CAT_FRACCIONES_CALZADOS = (CVEREGIMEN: string, CVECLASIFICA
  * @returns 
  */
 export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/registro/solicitud/monto-conversion/${claveMoneda}`;
+
+/**
+ * Api para consultar un fabricante extranjero por su nombre del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/guardar
+ */
+export const API_POST_GUARDAR_TRAMITE = 'sat-t130120/solicitud/guardar'

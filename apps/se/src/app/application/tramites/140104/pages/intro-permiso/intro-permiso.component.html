@@ -5,7 +5,6 @@
         <h1>{{ tituloMensaje || null }}</h1>
       </div>
       <div class="col-12">
-        <h1>{{esFormaValido}}</h1>
         @if (!esFormaValido) {
         <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
       }
@@ -27,7 +26,7 @@
       (cargaEnProgreso)="onCargaEnProgreso($event)"
       ></app-paso-carga-documento>
       } @case (3) {
-      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="80205" [procedureUrl]="'certificado-registro/registro'"></paso-firma>
+      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="140104" [procedureUrl]="'certificado-registro/registro'"></paso-firma>
       } 
     }
 

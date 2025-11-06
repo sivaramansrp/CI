@@ -1,13 +1,25 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, SharedModule, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { 
+  AlertComponent, 
+  Catalogo, 
+  CatalogoSelectComponent, 
+  ConfiguracionColumna, 
+  InputRadioComponent, 
+  Notificacion, 
+  NotificacionesComponent, 
+  SharedModule, 
+  TablaDinamicaComponent, 
+  TablaDinamicaExpandidaComponent, 
+  TablaSeleccion, 
+  TituloComponent, 
+  convertDate, } from '@libs/shared/data-access-user/src';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DatosParaMovilizacionNacional, FilaSolicitud, PagoDeDerechos, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
-import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
-
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CONFIGURACION_SENSIBLES } from '../../../../shared/constantes/datos-de-la-solicitue.enum';
 import { CatalogosService } from '../../services/220201/catalogos/catalogos.service';
@@ -17,11 +29,18 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { PrellenadoSolicitud } from '../../models/220201/prellenado-solicitud.model';
+
+import { PrellenadoMovilizacion, PrellenadoSolicitud, PrellenadoTercerosRelacionados } from '../../models/220201/prellenado-solicitud.model';
+
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { GuardaSolicitud, Mercancia } from '../../models/220201/guardar-solicitud.model';
+import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/fitosanitario.model';
+
+import { SharedFormService } from '../../services/220201/SharedForm.service';
 
 
 /**
@@ -310,9 +329,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   public procesoModal!: string;
 
+  /**
+   * Referencia ViewChild al componente `TablaDinamicaComponent` que maneja una tabla dinámica
+   * del tipo `Sensible`. Esto permite la interacción con la instancia del componente en la plantilla.
+   * 
+   * @type {TablaDinamicaComponent<Sensible>}
+   */
   @ViewChild('tablaMercancias') tablaMercancias!: TablaDinamicaComponent<Sensible>;
 
+  /**
+   * Objeto que almacena los datos necesarios para la movilización nacional.
+   * @type {DatosParaMovilizacionNacional}
+   */
+  datosParaMovilizacionNacional = {} as DatosParaMovilizacionNacional;
 
+  /**
+   * Objeto que representa los terceros relacionados con el destino.
+   * @type {TercerosrelacionadosdestinoTable}
+   */
+  tercerosRelacionados = {} as TercerosrelacionadosdestinoTable;
+
+  /**
+   * Objeto que representa el pago de derechos asociado a la solicitud.
+   * Se inicializa como un objeto vacío del tipo `PagoDeDerechos`.
+   */
+  pagoDeDerechos = {} as PagoDeDerechos;
 
   /**
    * Constructor del componente.
@@ -333,7 +374,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private catalogoService: CatalogosService,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    private sharedService: SharedFormService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -357,6 +399,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.datos;
+
         //Mantiene ordenados los datos por no de partida
         if (datos.tablaDatos && datos.tablaDatos.length > 0) {
           datos.tablaDatos.sort((a, b) => {
@@ -366,13 +409,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           });
         }
         this.cuerpoTabla = datos.tablaDatos;
-        console.warn('Cuerpo tabla', this.cuerpoTabla);
+        this.datosParaMovilizacionNacional = datos.datosParaMovilizacionNacional;
+        this.tercerosRelacionados = datos.tercerosRelacionados[0] || {};
+        this.pagoDeDerechos = datos.pagoDeDerechos || {};
+
       });
     this.crearFormulario();
     this.initActionFormBuild();
-
     this.nuevaNotificacion = {} as Notificacion;
-
   }
 
   ngAfterViewInit(): void {
@@ -391,9 +435,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.datosDelaSolicitud.get('claveUCON')?.valueChanges
       .pipe(debounceTime(300))
       .subscribe(value => {
-        if (value.length < 5) {
-          this.moduloEmergente = false;
-        } else {
+        this.establecimientoTIF = [];
+        const EXISTE = this.obtenerEstablecimientoTif(value);
+        if (EXISTE) {
+          this.moduloEmergente = EXISTE;
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
           this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
@@ -465,7 +510,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();
-    this.obtenerPuntoInspeccionList();
     this.obtenerRegimenList();
     this.obtenerDatosTablaSolicitud();
   }
@@ -508,8 +552,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList(oisa: string = '34013'): void {
-    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, oisa).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerPuntoInspeccionList(valor: string = ''): void {
+    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.puntoInspeccion = data.datos ?? [];
     });
   }
@@ -518,19 +562,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de establecimiento.
    * @method obtenerEstablecimientoList
    */
-  obtenerEstablecimientoList(): void {
-
-    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7', '220201').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerEstablecimientoTif(cveUcon: string): boolean {
+    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'AAL0409235E6', cveUcon).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.establecimientoTIF = data.datos ?? [];
     });
+    return this.establecimientoTIF.length > 0;
   }
 
   /**
    * Obtiene la lista para el select de veterinario.
    * @method obtenerVeterinarioList
    */
-  obtenerVeterinarioList(): void {
-    this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, '1').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+  obtenerVeterinarioList(CVE_ESTABLECIMIENTO_TIF: string): void {
+    this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, CVE_ESTABLECIMIENTO_TIF).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       this.veterinario = data.datos ?? [];
     });
   }
@@ -539,19 +583,39 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList(clave_regimen: string=''): void {
-
+  obtenerRegimenList(clave_regimen: string = ''): void {
     this.catalogoService.obtieneCatalogoRegimenes(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimen = clave_regimen 
-        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen) 
+      this.regimen = clave_regimen
+        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
         : data.datos ?? [];
     });
   }
 
+  /**
+   * Obtiene los datos de la tabla de solicitud desde el servicio `registroSolicitudService`.
+   * 
+   * @remarks
+   * Este método realiza una llamada al servicio `obtieneDatosDeLaSolicitud` con un ID de trámite
+   * y un identificador específico. Los datos obtenidos se asignan a la propiedad `cuerpoTablaSolicitud`.
+   * 
+   */
   obtenerDatosTablaSolicitud(): void {
     this.registroSolicitudService.obtieneDatosDeLaSolicitud(220201, 'AAL0409235E6').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.cuerpoTablaSolicitud = data.datos ?? [];
     });
+  }
+
+  /**
+   * Recupera el punto de inspección basado en los valores actuales del formulario.
+   * Opcionalmente, se puede proporcionar un grupo de formulario específico como parámetro.
+   *
+   * @param _forma - Una instancia opcional de `FormGroup` para usar en la obtención del punto de inspección.
+   *                 Si no se proporciona, el método utiliza la propiedad `forma` por defecto.
+   * @returns void
+   */
+  obtenerPuntoDeInspeccion(_forma?: FormGroup): void {
+    const VALOR = this.forma.get('datosDelaSolicitud')?.get('oficinaInspeccion')?.value || '';
+    this.obtenerPuntoInspeccionList(VALOR);
   }
 
   /**
@@ -569,7 +633,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia
-    console.warn('Valor del radio button seleccionado:', VALOR);
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila: FilaSolicitud): string => fila.noPartida, orden: 1 },
@@ -664,7 +727,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
-    console.warn('Filas seleccionadas:', this.filasSeleccionadas);
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     const CANTIDAD_REGISTROS = this.cuerpoTabla.length;
     if (VALOR === 'yes') {
@@ -753,40 +815,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     return false
   }
 
+  /**
+   * Maneja el evento de clic en una fila de la tabla de solicitudes.
+   * 
+   * @param event - Objeto que contiene los datos de la solicitud seleccionada.
+   * 
+   * Este método realiza las siguientes acciones:
+   * - Verifica si el evento contiene un `id_solicitud` válido.
+   * - Obtiene los datos prellenados de la solicitud desde el servicio `catalogoService`.
+   * - Actualiza los formularios y listas relacionadas con los datos obtenidos.
+   * - Procesa la información de mercancías, generando listas de detalles y sensibles.
+   * - Actualiza el estado de la tienda `fitosanitarioStore` con las filas procesadas.
+   * - Maneja errores en caso de fallos al obtener los datos.
+   */
   onFilaClic(event: SolicitudData): void {
-    console.warn('Fila clicada:', event);
     if (event && event.id_solicitud) {
       this.catalogoService.obtenSolicitudPrellenado(220201, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (datos) => {
             if (datos?.datos) {
-              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
-              this.obtenerPuntoInspeccionList(datos.datos.punto_inspeccion || '');
+              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');              
+              this.obtenerVeterinarioList(datos.datos.establecimiento_TIF || '');
+              this.obtenerPuntoInspeccionList(datos.datos.oficina_inspeccion_sanidad_agropecuaria || '');
               //Regimen
               this.obtenerRegimenList(datos.datos?.clave_regimen || '');
-              this.datosDelaSolicitud.patchValue({                
+              this.datosDelaSolicitud.patchValue({
                 aduanaIngreso: datos.datos.cve_aduana || '',
                 tipoMercancia: datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA' ? 'no' : 'yes', //'yes' para animales vivos, 'no' para subproductos
                 oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 claveUCON: datos.datos.clave_UCON || '',
                 establecimientoTIF: datos.datos.establecimiento_TIF || '',
+                puntoInspeccion: datos.datos.punto_inspeccion || '',
                 nombreVeterinario: datos.datos.nombre_veterinario || '',
                 regimen: datos.datos.clave_regimen || '',
                 numeroGuia: datos.datos.numero_autorizacion || '',
-              });              
+              });
             } else {
               this.datosDelaSolicitud.reset();
             }
-            console.warn('Datos de la solicitud prellenada:', datos);
             const DETALLE_MERCANCIA = datos?.datos as PrellenadoSolicitud || [];
             if (DETALLE_MERCANCIA.mercancia.length > 0) {
 
               const FILAS_SOLICITUD: FilaSolicitud[] = [];
               // eslint-disable-next-line complexity
               DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
-
-                const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia ?.map((producto) => ({
+                const LISTADETALLEPRODUCTOS: DetallasDatos[] = mercancia.lista_detalle_mercancia?.map((producto) => ({
                   numeroDeLote: producto.numero_lote_detalle || '',
                   fechaElaboracionEmpaqueProceso: producto.fecha_elaboracion || '',
                   fechaProduccionSacrificio: producto.fecha_sacrificio_str || '',
@@ -842,7 +916,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
                   certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
                   tipoDeProducto: '',
-                  numeroDeLote: '', 
+                  numeroDeLote: '',
                   sensibles: LISTADETALLESENSIBLES,
                   detalleProductos: LISTADETALLEPRODUCTOS,
                   descripcion: ''
@@ -854,8 +928,74 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
             }
             this.radioBotonSeleccionado()
           },
-          error: (error) => {
-            console.error('Error al obtener los datos de la solicitud prellenada:', error);
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+
+      this.catalogoService.obtenerMovilizacionPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+          },
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+
+      this.catalogoService.obtenerTerceroRelacionadosPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (response.datos && 'terceros_exportador' in response.datos && 'terceros_destinatario' in response.datos) {
+              this.sharedService.enviarTercerosRelacionadosPrellenado(response.datos as PrellenadoTercerosRelacionados);
+            } else {
+              console.error('Invalid data format for PrellenadoTercerosRelacionados:', response.datos);
+            }
+          },
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        });
+
+      this.catalogoService.obtenerPagoDerechosPrellenado(220201, true, event.id_solicitud ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+          },
+          error: () => {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
@@ -943,10 +1083,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Sexo', clave: (fila: Sensible): string => fila.Sexo, orden: 9 },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
-  onRowExpanded(row: any): void {
+  /** Método que se ejecuta cuando una fila es expandida para mostrar detalles adicionales. */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+  onRowExpanded(row: FilaSolicitud): void {
+
     // Aquí puedes cargar los datos para la tabla anidada si es necesario
-    console.warn('Fila expandida:', row);
   }
 
   /** Método para manejar el cambio de filas seleccionadas. */
@@ -972,6 +1113,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
   }
 
+  /**
+   * Maneja la confirmación de un modal basado en el proceso actual.
+   * @param confirmar - Indica si se confirma la acción en el modal.
+   */
   confirmacionModal(confirmar: boolean): void {
     switch (this.procesoModal) {
       case 'validar_formulario':
@@ -986,6 +1131,308 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  /**
+   * Guarda una solicitud parcial recopilando datos del formulario y la tabla,
+   * construyendo un objeto estructurado y enviándolo al servicio backend.
+   *
+   * Pasos:
+   * 1. Extrae datos del formulario `datosDelaSolicitud`.
+   * 2. Mapea las filas de la tabla `cuerpoTabla` en un arreglo de objetos `Mercancia`.
+   * 3. Construye un objeto `GuardaSolicitud` con los datos recopilados.
+   * 4. Llama al servicio `registroSolicitudService` para guardar la solicitud parcial.
+   *
+   * @returns {void}
+   */
+  // eslint-disable-next-line complexity
+  guardarParcial(): void {
+
+    const FORMULARIO = this.datosDelaSolicitud.value;
+
+    
+    // eslint-disable-next-line complexity
+    const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
+      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_requisito: Number(fila.tipoRequisito) || 0,
+      requisito: fila.requisito || '',
+      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      cve_fraccion: fila.fraccionArancelaria || '',
+      id_fraccion_gubernamental: 0,
+      clave_nico: fila.nico || '',
+      descripcion_mercancia: fila.descripcion || '',
+      cantidad_umt: Number(fila.cantidadUMT) || 0,
+      clave_unidad_medida: fila.umc || '',
+      cantidad_umc: Number(fila.cantidadUMC) || 0,
+      clave_unidad_comercial: fila.umt || '',
+      id_especie: Number(fila.especie) || 0,
+      id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
+      presentacion: fila.tipoPresentacionDescripcion || '',
+      cantidad_presentacion: Number(fila.presentacion) || 0,
+      id_tipo_presentacion: fila.tipoPresentacion || '',
+      id_tipo_planta: fila.tipoPlanta || '',
+      id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
+      clave_paises_origen: fila.paisDeOrigen || '',
+      clave_paises_procedencia: fila.paisDeProcedencia || '',
+      lista_detalle_mercancia: [
+        ...(fila.sensibles?.map((detalle) => ({
+          numero_lote_detalle: detalle.NumeroLote || '',
+          color_pelaje_detalle: detalle.ColorPelaje || '',
+          edad_animal_detalle: detalle.EdadAnimal || '',
+          fase_desarrollo_detalle: detalle.FaseDesarrollo || '',
+          funcion_zootecnica_detalle: detalle.FuncionZootecnica || '',
+          numeroidentificacion_detalle: detalle.NumeroIdentificacion || '',
+          raza_detalle: detalle.Raza || '',
+          id_sexo_detalle: detalle.Sexo || '',
+          nombre_cientifico_detalle: detalle.NombreCientifico || '',
+          nombre_mercancia_detalle: detalle.NombreMercancia || '',
+          fecha_sacrificio: '',
+          fecha_elaboracion: '',
+          fecha_caducidad: '',
+          fecha_elaboracion_fin: '',
+          fecha_caducidad_fin: '',
+          fecha_sacrificio_fin: '',
+        })) || []),
+        ...(fila.detalleProductos?.map((detalleProducto) => ({
+          numero_lote_detalle: detalleProducto.numeroDeLote || '',
+          color_pelaje_detalle: '',
+          edad_animal_detalle: '',
+          fase_desarrollo_detalle: '',
+          funcion_zootecnica_detalle: '',
+          numeroidentificacion_detalle: '',
+          raza_detalle: '',
+          id_sexo_detalle: '',
+          nombre_cientifico_detalle: '',
+          nombre_mercancia_detalle: '',
+          fecha_sacrificio: '',
+          fecha_elaboracion: convertDate(detalleProducto.fechaElaboracionEmpaqueProceso ?? '') || '',
+          fecha_caducidad: convertDate(detalleProducto.fechaCaducidadProducto ?? '') || '',
+          fecha_elaboracion_fin: convertDate(detalleProducto.fechaFinElaboracionEmpaqueProceso ?? '') || '',
+          fecha_caducidad_fin: convertDate(detalleProducto.fechaFinCaducidadProducto ?? '') || '',
+          fecha_sacrificio_fin: convertDate(detalleProducto.fechaFinProduccionSacrificio ?? '') || '',
+        })) || [])
+      ]
+    }));
+
+
+    const SOLICITUDPARCIAL: GuardaSolicitud = {
+      id_solicitud: null,
+      datos_solicitud: {
+        clave_regimen: FORMULARIO.regimen,
+        cve_aduana: FORMULARIO.aduanaIngreso,
+        oficina_inspeccion_sanidad_agropecuaria: FORMULARIO.oficinaInspeccion,
+        punto_inspeccion: FORMULARIO.puntoInspeccion,
+        clave_UCON: FORMULARIO.claveUCON,
+        establecimiento_TIF: FORMULARIO.establecimientoTIF,
+        nombre_veterinario: FORMULARIO.nombreVeterinario,
+        numero_autorizacion: FORMULARIO.numeroGuia,
+        mercancia: FILAS
+      },
+      transporte: {
+        coordenadas: this.datosParaMovilizacionNacional.coordenadas || '',
+        ide_medio_transporte: this.datosParaMovilizacionNacional.medio || '',
+        identificacion_transporte: this.datosParaMovilizacionNacional.transporte || '',
+        id_punto_verificacion: Number(this.datosParaMovilizacionNacional.punto) || 0,
+        razon_social: this.datosParaMovilizacionNacional.nombre || ''
+      },
+      terceros: {
+        terceros_exportador: [{
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          persona_moral: true,
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          descripcion_ubicacion: this.tercerosRelacionados?.coloniaDescripcion || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
+        }],
+        terceros_destinatario: [{
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          persona_moral: true,
+          num_establ_tif: '',
+          nom_establ_tif: '',
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          codigo_postal: this.tercerosRelacionados?.codigoPostal || '',
+          cve_entidad: this.tercerosRelacionados?.estado || '',
+          cve_deleg_mun: this.tercerosRelacionados?.municipio || '',
+          cve_colonia: this.tercerosRelacionados?.colonia || '',
+          calle: this.tercerosRelacionados?.calle || '',
+          num_exterior: this.tercerosRelacionados?.numeroExterior || '',
+          num_interior: this.tercerosRelacionados?.numeroInterior || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
+        }]
+      },
+      pago: {
+        exento_pago: true,
+        ide_motivo_exento_pago: this.pagoDeDerechos?.exentoPago || '',
+        cve_referencia_bancaria: this.pagoDeDerechos?.claveReferencia || '',
+        cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
+        cve_banco: this.pagoDeDerechos?.banco || '',
+        llave_pago: this.pagoDeDerechos?.llavePago || '',
+        fec_pago: this.pagoDeDerechos?.fechaPago || '',
+        imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
+      },
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'AAL0409235E6',
+        es_persona_moral: true,
+        certificado_serial_number: '',
+        rol_capturista: 'SOLICITANTE',
+      },
+      representacion_federal: {
+        cve_entidad_federativa: 'DGO',
+        cve_unidad_administrativa: '1016'
+      }
+    };
+
+    this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
+
+  }
+  
+  // eslint-disable-next-line class-methods-use-this, complexity
+  guardarTotal(): void {
+    // Lógica para guardar la solicitud de forma completa
+    const FORMULARIO = this.datosDelaSolicitud.value;
+
+    // eslint-disable-next-line complexity
+    const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
+      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_requisito: Number(fila.tipoRequisito) || 0,
+      requisito: fila.requisito || '',
+      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      cve_fraccion: fila.fraccionArancelaria || '',
+      id_fraccion_gubernamental: 0,
+      clave_nico: fila.nico || '',
+      descripcion_mercancia: fila.descripcion || '',
+      cantidad_umt: Number(fila.cantidadUMT) || 0,
+      clave_unidad_medida: fila.umc || '',
+      cantidad_umc: Number(fila.cantidadUMC) || 0,
+      clave_unidad_comercial: fila.umt || '',
+      id_especie: Number(fila.especie) || 0,
+      id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
+      presentacion: fila.tipoPresentacionDescripcion || '',
+      cantidad_presentacion: Number(fila.presentacion) || 0,
+      id_tipo_presentacion: fila.tipoPresentacion || '',
+      id_tipo_planta: fila.tipoPlanta || '',
+      id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
+      clave_paises_origen: fila.paisDeOrigen || '',
+      clave_paises_procedencia: fila.paisDeProcedencia || '',
+      lista_detalle_mercancia: (fila.sensibles ?? []).map((detalle) => ({
+        numero_lote_detalle: detalle.NumeroLote || '',
+        color_pelaje_detalle: detalle.ColorPelaje || '',
+        edad_animal_detalle: detalle.EdadAnimal || '',
+        fase_desarrollo_detalle: detalle.FaseDesarrollo || '',
+        funcion_zootecnica_detalle: detalle.FuncionZootecnica || '',
+        numeroidentificacion_detalle: detalle.NumeroIdentificacion || '',
+        raza_detalle: detalle.Raza || '',
+        id_sexo_detalle: detalle.Sexo || '',
+        nombre_cientifico_detalle: detalle.NombreCientifico || '',
+        nombre_mercancia_detalle: detalle.NombreMercancia || '',
+        fecha_sacrificio: '',
+        fecha_elaboracion: '',
+        fecha_caducidad: '',
+        fecha_elaboracion_fin: '',
+        fecha_caducidad_fin: '',
+        fecha_sacrificio_fin: '',
+      })) || fila.detalleProductos?.map((detalleProducto) => ({
+        numeroDeLote: detalleProducto.numeroDeLote || '',
+        fechaElaboracionEmpaqueProceso: convertDate(detalleProducto.fechaElaboracionEmpaqueProceso ?? '') || '',
+        fechaProduccionSacrificio: convertDate(detalleProducto.fechaProduccionSacrificio ?? '') || '',
+        fechaCaducidadProducto: convertDate(detalleProducto.fechaCaducidadProducto ?? '') || '',
+        fechaFinElaboracionEmpaqueProceso: convertDate(detalleProducto.fechaFinElaboracionEmpaqueProceso ?? '') || '',
+        fechaFinProduccionSacrificio: convertDate(detalleProducto.fechaFinProduccionSacrificio ?? '') || '',
+        fechaFinCaducidadProducto: convertDate(detalleProducto.fechaFinCaducidadProducto ?? '') || '',
+      }))
+    }));
+
+    const SOLICITUDPARCIAL: GuardaSolicitud = {
+      id_solicitud: null,
+      datos_solicitud: {
+        clave_regimen: FORMULARIO.clave_regimen,
+        cve_aduana: FORMULARIO.aduanaIngreso,
+        oficina_inspeccion_sanidad_agropecuaria: FORMULARIO.oficinaInspeccion,
+        punto_inspeccion: FORMULARIO.puntoInspeccion,
+        clave_UCON: FORMULARIO.claveUCON,
+        establecimiento_TIF: FORMULARIO.establecimientoTIF,
+        nombre_veterinario: FORMULARIO.nombreVeterinario,
+        numero_autorizacion: FORMULARIO.numeroGuia,
+        mercancia: FILAS
+      },
+      transporte: {
+        coordenadas: this.datosParaMovilizacionNacional.coordenadas || '',
+        ide_medio_transporte: this.datosParaMovilizacionNacional.medio || '',
+        identificacion_transporte: this.datosParaMovilizacionNacional.transporte || '',
+        id_punto_verificacion: Number(this.datosParaMovilizacionNacional.punto) || 0,
+        razon_social: this.datosParaMovilizacionNacional.nombre || ''
+      },
+      terceros: {
+        terceros_exportador: [{
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          persona_moral: true,
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          descripcion_ubicacion: this.tercerosRelacionados?.coloniaDescripcion || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
+        }],
+        terceros_destinatario: [{
+          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          persona_moral: true,
+          num_establ_tif: '',
+          nom_establ_tif: '',
+          nombre: this.tercerosRelacionados?.nombre || '',
+          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
+          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
+          razon_social: this.tercerosRelacionados?.razonSocial || '',
+          pais: this.tercerosRelacionados?.pais || '',
+          codigo_postal: this.tercerosRelacionados?.codigoPostal || '',
+          cve_entidad: this.tercerosRelacionados?.estado || '',
+          cve_deleg_mun: this.tercerosRelacionados?.municipio || '',
+          cve_colonia: this.tercerosRelacionados?.colonia || '',
+          calle: this.tercerosRelacionados?.calle || '',
+          num_exterior: this.tercerosRelacionados?.numeroExterior || '',
+          num_interior: this.tercerosRelacionados?.numeroInterior || '',
+          lada: this.tercerosRelacionados?.lada || '',
+          telefonos: this.tercerosRelacionados?.telefono || '',
+          correo: this.tercerosRelacionados?.correo || ''
+        }]
+      },
+      pago: {
+        exento_pago: true,
+        ide_motivo_exento_pago: this.pagoDeDerechos?.exentoPago || '',
+        cve_referencia_bancaria: this.pagoDeDerechos?.claveReferencia || '',
+        cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
+        cve_banco: this.pagoDeDerechos?.banco || '',
+        llave_pago: this.pagoDeDerechos?.llavePago || '',
+        fec_pago: this.pagoDeDerechos?.fechaPago || '',
+        imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
+      },
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'AAL0409235E6',
+        es_persona_moral: true,
+        certificado_serial_number: '',
+        rol_capturista: 'SOLICITANTE',
+      },
+      representacion_federal: {
+        cve_entidad_federativa: 'DGO',
+        cve_unidad_administrativa: '1016'
+      }
+    };
+
+    this.registroSolicitudService.guardarSolicitud(220201, SOLICITUDPARCIAL).subscribe();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

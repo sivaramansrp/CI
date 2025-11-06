@@ -5,7 +5,7 @@ import {
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -32,11 +32,24 @@ import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
   styleUrl: './pago-de-derechos-banco.component.scss',
 })
 export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
+
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  @Input() idProcedimiento!: number;
+
   /**
    * Formulario de la solicitud.
    */
   formSolicitud!: FormGroup;
-
+   /**
+   * Emite el estado de validez del formulario.
+   * Se envía un valor booleano cada vez que cambia la validez del formulario.
+   * Permite comunicar al componente padre si el formulario es válido o no.
+   */
+@Output() formValidityChange = new EventEmitter<boolean>();
   /**
    * Estado de la solicitud de la sección PagoBanco.
    */
@@ -66,8 +79,6 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private servicio: PagoBancoService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.obtenerDatosBanco();
-
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -131,9 +142,8 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();  
-      
+    this.obtenerDatosBanco();
     this.configurarFormularioPagoBanco();
-
     this.inicializarEstadoFormulario();
   }
 
@@ -141,15 +151,19 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Configura el formulario para la sección de pago de derechos en banco.
    */
   configurarFormularioPagoBanco(): void {
+      const NOMULTISPACE = /^(?!.* {2,}).*$/;
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9),Validators.pattern(NOMULTISPACE),]],
         cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required, Validators.maxLength(14)]],
         banco: [this.solicitudState?.banco],
         llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],
         fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
         importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroDecimal]],
       }),
+    });
+       this.formSolicitud.statusChanges.subscribe(status => {
+      this.formValidityChange.emit(this.formSolicitud.valid);
     });
   }
 
@@ -170,12 +184,21 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   obtenerDatosBanco(): void {
-    this.servicio
+    if (this.idProcedimiento) {
+      this.servicio
+      .getBancoList(this.idProcedimiento.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.bancoCatalogo.catalogos = data.datos as Catalogo[];
+      });
+    } else {
+      this.servicio
       .consultarDatosBanco()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
+    }
   }
 
   /**

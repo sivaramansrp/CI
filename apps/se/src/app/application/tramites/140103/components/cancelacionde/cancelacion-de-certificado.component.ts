@@ -18,18 +18,18 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+
 import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
 
 
 import {
   Solicitud140103State,
   Tramite140103Store,
-} from '../../../../estados/tramites/tramite140103.store';
+} from '../../estados/store/tramite140103.store';
 import { Cupos } from '../../models/detalle';
 import { NUEVO_CUPOS } from '../../constants/detalle.enum';
+import { Tramite140103Query } from '../../estados/query/tramite140103.query';
 
 
 
@@ -80,7 +80,6 @@ import { NUEVO_CUPOS } from '../../constants/detalle.enum';
   imports: [
     CommonModule,
     TituloComponent,
-    OficioComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     FormsModule,
@@ -145,6 +144,8 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * @memberof CancelacionDeCertificadoComponent
    */
    @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
+
+      @Output() selectedCupo = new EventEmitter<Cupo>();
   /**
    * Lista de cupos que contiene los datos necesarios para realizar la cancelación de certificados. Esta propiedad se carga
    * a partir de un archivo JSON, lo que permite a la aplicación manejar múltiples cupos con facilidad.
@@ -152,6 +153,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * @type {Cupo[]}
    */
   Cancelacion: Cupo[] = [];
+  selectedCancelacion: Cupo = {} as Cupo;
   cancelacionForm!: FormGroup;
 
   /**
@@ -359,10 +361,10 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
     regimen: [null, Validators.required],
     mecanismo: [null, Validators.required],
-    tratado: [null, Validators.required],
-    producto: [null, Validators.required],
-    subproducto: [null, Validators.required],
-    representacion: [null, Validators.required],
+    tratado: [null],
+    producto: [null],
+    subproducto: [null],
+    representacion: [null],
   });
 
 /** Suscribe al estado de solicitud 140103 y lo asigna a `solicitudState`.  
@@ -415,7 +417,6 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   });
 
 if (FORM.invalid) {
-    FORM.markAllAsTouched();
     return;
   }
 
@@ -437,7 +438,7 @@ const NUEVO_CUPO: Cupos = {
     tipoCupo: 'General' 
   };
   
-this.Cancelacion = [...this.Cancelacion, NUEVO_CUPO];
+this.Cancelacion = [NUEVO_CUPO];
 }
 /**
  * Devuelve la descripción de un elemento de catálogo dado su ID.
@@ -450,5 +451,10 @@ obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
   const IDCADENA = String(id);
   const CATALOG_ITEM = catalogo.find(i => String(i.id) === IDCADENA);
   return CATALOG_ITEM?.descripcion ?? '';
+}
+
+filaClic(event:Cupo):void{
+  this.selectedCancelacion=event;
+  this.selectedCupo.emit(this.selectedCancelacion);
 }
 }

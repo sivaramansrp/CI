@@ -255,6 +255,9 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
    */
   // guardar(item: any): void {
   guardar(item: Tramite110205State): Promise<JSONResponse> {
+    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.peruCertificadoService.buildProductoresPorExportador(item.agregarProductoresExportador);
+    const PRODUCTORES_POR_EXPORTADOR = this.peruCertificadoService.buildProductoresPorExportador(item.productoresExportador);
+    const MERCANCIAS_PRODUCDOR = this.peruCertificadoService.buildMercanciasProductor(item.mercanciaProductores);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud,
@@ -352,41 +355,11 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
         },
       },
       historico: {
-        datosConfidencialesProductor: true,
-        productorMismoExportador: true,
-        productoresPorExportador: [
-          {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
-        ],
-        ProductoresPorExportadorSeleccionados: [
-          {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
-        ],
-        mercanciasProductor: [
-          {
-            fraccionArancelaria: '',
-            cantidadComercial: '',
-            descUnidadMedidaComercial: '',
-            valorTransaccional: '',
-            descFactura: '',
-            numeroFactura: '',
-            complementoDescripcion: '',
-            fechaFactura: '',
-            rfcProductor: '',
-          },
-        ],
+        datosConfidencialesProductor: item.formulario['datosConfidencialesProductor'],
+        productorMismoExportador: item.formulario['productorMismoExportador'],
+        productoresPorExportador: [...PRODUCTORES_POR_EXPORTADOR],
+        ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
+        mercanciasProductor: [...MERCANCIAS_PRODUCDOR],
       },
     };
 

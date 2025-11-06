@@ -52,7 +52,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -126,7 +126,15 @@ export class DatosDelDestinatarioComponent
         this.formDatosDelDestinatario.get(key)?.clearValidators();
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
       });
-    }else{
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else{
       this.applyNumeroRegistroFiscalValidation();
     }
     this.inicializarEstadoFormulario();
@@ -169,6 +177,13 @@ export class DatosDelDestinatarioComponent
     });
     if (this.idProcedimiento === 110212) {
       const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formDatosDelDestinatario.get(key)?.clearValidators();
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
@@ -266,7 +281,7 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
-    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+    if (changes?.['idProcedimiento']?.currentValue && changes?.['idProcedimiento']) {
       this.updateRequiredValidators();
     }
   }
