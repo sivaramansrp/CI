@@ -33,6 +33,9 @@
         <span class="mensaje-error" *ngIf="formSolicitud.get('datosImportadorExportador.claveDeReferencia')?.errors?.['maxlength']">
           Máximo 9 caracteres permitidos
         </span>
+        <span class="mensaje-error" *ngIf="formSolicitud.get('datosImportadorExportador.claveDeReferencia')?.errors?.['pattern']">
+        Todos los campos de pago son requeridos
+        </span>
       }
           </div>
           <div class="col-md-4">

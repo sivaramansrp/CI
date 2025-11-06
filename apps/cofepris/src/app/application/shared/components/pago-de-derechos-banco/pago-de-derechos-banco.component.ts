@@ -5,7 +5,7 @@ import {
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -44,7 +44,12 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Formulario de la solicitud.
    */
   formSolicitud!: FormGroup;
-
+   /**
+   * Emite el estado de validez del formulario.
+   * Se envía un valor booleano cada vez que cambia la validez del formulario.
+   * Permite comunicar al componente padre si el formulario es válido o no.
+   */
+@Output() formValidityChange = new EventEmitter<boolean>();
   /**
    * Estado de la solicitud de la sección PagoBanco.
    */
@@ -146,15 +151,19 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Configura el formulario para la sección de pago de derechos en banco.
    */
   configurarFormularioPagoBanco(): void {
+      const NOMULTISPACE = /^(?!.* {2,}).*$/;
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9),Validators.pattern(NOMULTISPACE),]],
         cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required, Validators.maxLength(14)]],
         banco: [this.solicitudState?.banco],
         llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],
         fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
         importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroDecimal]],
       }),
+    });
+       this.formSolicitud.statusChanges.subscribe(status => {
+      this.formValidityChange.emit(this.formSolicitud.valid);
     });
   }
 
