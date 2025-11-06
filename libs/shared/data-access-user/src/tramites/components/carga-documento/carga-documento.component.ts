@@ -45,6 +45,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DocumentoRequeridoFirmar } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
 import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
 import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.store';
+import { hexToISO88591 } from '../../../core/utils/utilerias';
 
 @Component({
   selector: 'carga-documento',
@@ -940,10 +941,9 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
             archivo.cargado = true;
             archivo.estatus = 'cargado';
           });
-
           const DOCUMENTOS: DocumentoRequeridoFirmar[] = res.datos.map(doc => ({
           id_documento_seleccionado: doc.idDocumento,
-          hash_documento: doc.firma?.cadenaOriginal,
+          hash_documento: hexToISO88591(doc.firma?.cadenaOriginal),
           sello_documento: ''
           }));
           this.documentosFirmaStore.update({ documentos: DOCUMENTOS });

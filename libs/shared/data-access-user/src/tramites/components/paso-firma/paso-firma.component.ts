@@ -160,7 +160,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
       num_folio_tramite: this.tramiteFolioQuery.getTramite() || null,
       boolean_extranjero: true,
       solicitante: {
-        rfc: "AAL0409235E6",
+        rfc: "LEQI8101314S7",
         nombre: "Juan Pérez",
         es_persona_moral: true,
         certificado_serial_number: "string"
@@ -225,6 +225,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
     // Mezclas los sellos con los documentos de Akita
     const DOCUMENTOS = this.documentosFirma.map((doc, i) => ({
       ...doc,
+      hash_documento: encodeToISO88591Hex(doc.hash_documento),
       sello_documento: base64ToHex(sellos[i] || '')
     }));
 
@@ -269,7 +270,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: this.documentosFirma || response.datos?.documentos_requeridos || [],
-            rfc_solicitante: 'AAL0409235E6'
+            rfc_solicitante: 'LEQI8101314S7'
           };
           if(this.idMecanismo){
             PAYLOAD={...PAYLOAD, id_mecanismo: this.idMecanismo};
