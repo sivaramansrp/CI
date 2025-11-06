@@ -440,6 +440,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -448,6 +449,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
@@ -470,6 +472,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -477,20 +480,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+         Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -498,7 +502,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -506,19 +510,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -529,11 +533,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+         Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */
@@ -573,6 +578,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+         Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -581,13 +587,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl({value:'',disabled:true}, [Validators.required]),
+      nombre: new FormControl({value:'',disabled:true}, [Validators.required,Validators.maxLength(200)]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
@@ -603,6 +610,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -610,20 +618,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -631,7 +640,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -639,19 +648,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -662,11 +671,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+        Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */
@@ -730,6 +740,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -738,6 +749,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
@@ -760,6 +772,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -767,20 +780,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -788,7 +802,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -796,19 +810,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -819,11 +833,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+        Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */

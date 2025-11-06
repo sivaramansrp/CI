@@ -331,7 +331,7 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if((idProcedimiento === 260911 || idProcedimiento === 260201 || idProcedimiento === 260203) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
           </span>:</label>
         <input
           type="text"
@@ -585,12 +585,12 @@
           formControlName="localidad"
           [label]="'Localidad'"
           [placeholder]="'Seleccione una opción'"
-          [required]="!elementosNoRequeridos.includes('localidad') && agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false"
           (selectionChange)="cargarLocalidades($event)"
+          [required]="true"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">

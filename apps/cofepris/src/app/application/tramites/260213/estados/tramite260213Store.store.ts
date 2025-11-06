@@ -159,7 +159,7 @@ export function createInitialState(): Tramite260213State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',

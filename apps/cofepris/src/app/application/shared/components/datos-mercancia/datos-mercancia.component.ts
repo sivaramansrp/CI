@@ -438,6 +438,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Catalogo[] | undefined} tipoProductoObj
+   * @description Objeto(s) de catálogo que representan el tipo de producto seleccionado.
+   * Se utiliza para almacenar la información detallada del tipo de producto en el formulario.
+   */
+  tipoProductoObj: Catalogo[] | undefined;
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -849,7 +856,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosAnadidos = ['especifique','especifiqueForma'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260203:
+        this.elementosAnadidos = ['especifique','especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260204:
+        this.elementosAnadidos = ['especifique','especifiqueForma'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260208:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260209:
        // this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
         this.elementosAnadidos = ['especifique'];
@@ -896,6 +914,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'numeroRegistroSanitario',
           'fechaCaducidad',
         ];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260214:
         this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
@@ -1618,6 +1637,21 @@ public convertToStringArray(value: unknown): string[] {
     this.mercanciaForm.patchValue({
       fechaCaducidad: valor,
     });
+  }
+
+  /**
+   * Maneja el cambio de tipo de producto.
+   * Actualiza el objeto `tipoProductoObj` en el componente con el catálogo correspondiente
+   * al tipo de producto seleccionado en el formulario.
+   *
+   * @param clave - Objeto de catálogo seleccionado para el tipo de producto.
+   */
+  onCambioTipoProduct(clave: Catalogo): void {
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    this.tipoProductoObj = DatosMercanciaComponent.generarCatalogoObjeto(
+      this.tipoProductoDatos,
+      TIPOPRODUCTOID
+    );
   }
 
   /**
