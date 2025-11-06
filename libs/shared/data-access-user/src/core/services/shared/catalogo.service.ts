@@ -876,8 +876,8 @@ bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
  * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
  * @see CATALOGO_BANCOS
  */
-codigoCatalogo(tramite: string, cveLocalidad: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveLocalidad)}`;
+codigoCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveMunicipio)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 /**

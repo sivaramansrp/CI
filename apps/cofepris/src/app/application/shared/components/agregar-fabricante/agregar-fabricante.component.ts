@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  AlertComponent,
   Catalogo,
   Notificacion,
   NotificacionesComponent,
@@ -64,7 +65,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -72,6 +74,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 export class AgregarFabricanteComponent
   implements OnDestroy, OnInit, OnChanges
 {
+  mensajeDeError: string = '';
   /**
    * Función de callback (Input) para propagar la lista de fabricantes.
    * @property {(value: Fabricante[]) => void} guardarFabricanteForm
@@ -810,9 +813,10 @@ guardarFabricante(): void {
       control.markAsTouched();
       control.updateValueAndValidity();
     });
+    this.mensajeDeError = 'Faltan campos por capturar.';
     return;
   }
-
+   this.mensajeDeError = '';  
   const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
   let nombreRazonSocial: string;
@@ -916,12 +920,12 @@ guardarFabricante(): void {
    * Se desuscribe automáticamente al destruir el componente.
    */
   cargarDatos(tramite: string): void {
-    this.datosSolicitudService
-      .obtenerListaCodigosPostales()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.codigosPostalesDatos = data;
-      });
+    // this.datosSolicitudService
+    //   .obtenerListaCodigosPostales()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe((data) => {
+    //     this.codigosPostalesDatos = data;
+    //   });
 
        this.subscription.add(
             this.catalogoService
@@ -1004,7 +1008,26 @@ guardarFabricante(): void {
     this.municipiosDatos = [];
   }
   }
-  
+  /**
+   * Carga la lista de localidades cuando se selecciona un catálogo válido.
+   *
+   * Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   */
+  cargarLocalidades(_evento: Catalogo): void {
+    const MUNICIIO_CLAVE = this.agregarFabricanteForm.get('municipio')?.value;
+
+  if (MUNICIIO_CLAVE) {
+    this.subscription.add(
+      this.catalogoService.codigoCatalogo(this.tramiteID, MUNICIIO_CLAVE)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.codigosPostalesDatos = data.datos as Catalogo[];
+        })
+    );
+  } else {
+    this.codigosPostalesDatos = [];
+  }
+}
   /**
    * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
    *
@@ -1030,9 +1053,17 @@ guardarFabricante(): void {
       const DATOS = data.datos as Catalogo[];
       this.coloniasDatos = DATOS;
     }));
+
+    // this.subscription.add(this.catalogoService.codigoCatalogo(this.tramiteID, evento.clave).pipe(
+    //   takeUntil(this.unsubscribe$)
+    // ).subscribe((data) => {
+    //   const DATOS = data.datos as Catalogo[];
+    //   this.codigosPostalesDatos = DATOS;
+    // }));
   } else {
     this.localidadesDatos = [];
     this.coloniasDatos = [];
+   //this.codigosPostalesDatos = [];
   }
   }
 
