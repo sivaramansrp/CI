@@ -1,12 +1,13 @@
 import {
+  AVISO,
   AccionBoton,
   CategoriaMensaje,
   ConsultaioState,
   DatosPasos,
+  ERROR_FORMA_ALERT,
   ErrorModelo,
   ListaPasosWizard,
   Notificacion,
-  PAGO_DE_DERECHOS,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -59,14 +60,7 @@ export class AvisoReciclajeComponent implements OnInit {
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
-  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
-  <div>
-    <div class="col-md-12">
-      Faltan campos por capturar.
-    </div>
-  </div>
-</div>
-`;
+  public formErrorAlert = ERROR_FORMA_ALERT;
   /**
    * Indica si el formulario actual es válido.
    */
@@ -106,7 +100,7 @@ export class AvisoReciclajeComponent implements OnInit {
   public infoAlert = 'alert-info';
 
   /** Textos utilizados relacionados con el pago de derechos */
-  TEXTOS = PAGO_DE_DERECHOS;
+  TEXTOS = AVISO;
 
   /**
    * Estado local de la solicitud obtenido desde el query/store.

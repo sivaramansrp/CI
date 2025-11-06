@@ -51,6 +51,10 @@ export interface HistoricoColumnas {
    * Fax del productor.
    */
   fax: string;
+
+  /** Indica si el productor es nuevo. */
+  nuevo?: boolean;
+
 }
 
 /**

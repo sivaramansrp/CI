@@ -20,6 +20,7 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
 export interface Tramite260217State {
+  idSolicitud: number;
   
   /**
    * Array of final recipient data for the recipients table
@@ -121,6 +122,7 @@ export interface Tramite260217State {
  */
 export function createInitialState(): Tramite260217State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -227,7 +229,7 @@ export class Tramite260217Store extends Store<Tramite260217State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [...newFabricantes],
     }));
   }
 
@@ -242,7 +244,6 @@ export class Tramite260217Store extends Store<Tramite260217State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -256,7 +257,7 @@ export class Tramite260217Store extends Store<Tramite260217State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -268,7 +269,7 @@ export class Tramite260217Store extends Store<Tramite260217State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 
@@ -332,6 +333,13 @@ export class Tramite260217Store extends Store<Tramite260217State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

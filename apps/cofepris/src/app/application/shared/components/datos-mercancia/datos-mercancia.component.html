@@ -347,15 +347,14 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria <span
+            >Fracción arancelaria<span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
             }"
               >*</span
             >:
-          </label>
-          <span
+          </label>&nbsp;<span
             tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
           >
             <i class="bi bi-question-circle-fill"></i>
@@ -486,15 +485,14 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmt"
-            >UMT <span
+            >UMT<span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
             }"
               >*</span
-            >:
-          </label>
-          <span tooltip="Unidad de medida de la tarifa">
+            >: 
+          </label>&nbsp;<span tooltip="Unidad de medida de la tarifa">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input
