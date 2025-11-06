@@ -11,11 +11,12 @@ import { CommonModule } from "@angular/common";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
 import { MercanciaComponent } from "../../../../shared/components/mercancia/mercancia.component";
-import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.component";
+// import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.component";
 import { Modal } from "bootstrap";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
+import { BuscarMercanciasResponse } from "../../models/certificado-origen.model";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
@@ -68,7 +69,7 @@ export const FECHA_FINAL = {
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    MercanciasModalComponent,
+    // MercanciasModalComponent,
     CertificadoDeOrigenComponent,
     CargaPorArchivoComponent,
     MercanciaComponent,
@@ -351,7 +352,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     ).subscribe(estado => {
       if (!this.actualizandoFormulario && estado) {
         this.actualizandoFormulario = true;        
-        this.formCertificado=estado;
+        // this.formCertificado=estado;
         this.actualizandoFormulario = false;
       }
     });
@@ -381,6 +382,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
         this.certificadoState = state;
+        this.datosTabla$ = state.mercanciaTabla;
+        this.formCertificadoValues = state.formCertificado;
       });
     
   }
@@ -457,9 +460,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.store.setEstado(estado);
-    this.store.setFormCertificado({ 
-      entidadFederativa: estado?.id || estado?.clave || estado?.descripcion || '' 
-    });
   }
 
   /**
@@ -467,10 +467,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param {Catalogo} estado El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque(estado);
-    this.store.setFormCertificado({ 
-      bloque: estado?.id || estado?.clave || estado?.descripcion || '' 
-    });
+    this.store.setBloque([estado]);
   }
 
   /**
@@ -518,12 +515,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
 
     const PAYLOAD = {
       rfcExportador: 'AAL0409235E6',
-      tratadoAcuerdo: {
-        "idTratadoAcuerdo": SELECTED_ESTADO?.id || SELECTED_ESTADO?.clave || '',
-      },
-      pais: {
-        "cvePais": SELECTED_BLOQUE?.id || SELECTED_BLOQUE?.clave || '',
-      },
+      tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
     };
 
     this.certificadoService

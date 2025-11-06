@@ -171,6 +171,7 @@ export class SolicitudPageComponent implements OnDestroy {
     const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
     const CERTIFICADO = this.certificadoDeService.buildCertificado(item);
     const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
+    console.log(item);
     const PAYLOAD = {
       idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
@@ -216,6 +217,7 @@ export class SolicitudPageComponent implements OnDestroy {
     };
 
     return new Promise((resolve, reject) => {
+      console.log
         this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
           next: (response) => {
             if (esValidObject(response) && esValidObject(response['datos'])) {

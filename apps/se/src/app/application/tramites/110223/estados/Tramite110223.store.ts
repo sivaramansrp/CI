@@ -67,7 +67,7 @@ export interface TramiteState {
   umcs: Catalogo[];
 
   /** Lista de catálogos que representan países bloqueados. */
-  paisBloques: Catalogo;
+  paisBloques: Catalogo[];
 
 
   /**
@@ -198,7 +198,7 @@ export const INITIAL_STATE: TramiteState = {
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
   altaPlanta: [],
-  paisBloques: { id: -1, descripcion: '' },
+  paisBloques: [],
   estado: { id: -1, descripcion: '' },
   umc: { id: -1, descripcion: '' },
   umcs: [],
@@ -208,14 +208,25 @@ export const INITIAL_STATE: TramiteState = {
   entidadFederativaSeleccion: { id: -1, descripcion: '' },
   representacionFederalSeleccion: { id: -1, descripcion: '' },
    formCertificado: {
+    si: false,
     entidadFederativa: '',
-    tercerOperador: false,
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    correoElectronico: '',
+    numeroLetra: '',
+    calle: '',
   },
     formulario:{
       datosConfidencialesProductor: false,
@@ -390,7 +401,7 @@ export class Tramite110223Store extends Store<TramiteState> {
    * Establece los bloques de países disponibles.
    * @param paisBloques Lista de catálogos de países por bloque.
    */
-  setBloque(paisBloques: Catalogo): void {
+  setBloque(paisBloques: Catalogo[]): void {
     this.update((state) => ({ ...state, paisBloques }));
   }
 
