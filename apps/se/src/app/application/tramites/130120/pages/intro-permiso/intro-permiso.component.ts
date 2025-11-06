@@ -1,4 +1,4 @@
-import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, formatFecha, formatearFechaSolicitud } from "@ng-mf/data-access-user";
+import { AccionBoton,AcuseComponent, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, TITULO_ACUSE, formatearFechaSolicitud } from "@ng-mf/data-access-user";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_FALTAN } from "../../constants/permiso-importacion-modification.enum";
 import { Subject, map, takeUntil } from "rxjs";
@@ -36,7 +36,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-  imports: [CommonModule, WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoCuatroComponent],
+  imports: [CommonModule, WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoCuatroComponent, AcuseComponent],
   standalone: true,
 })
 export class IntroPermisoComponent implements OnInit {
@@ -128,6 +128,22 @@ export class IntroPermisoComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+   /**
+     * @description Mensaje de alerta que se muestra al usuario en la página de acuse.
+     */
+    txtAlerta!: string;
+  
+    /**
+     * @description Subtítulo que se muestra en la página de acuse.
+     */
+    subtitulo = TITULO_ACUSE;
+  
+    /**
+     * @description Indica si el componente de acuse debe ser visible o no.
+     * Inicialmente es falso y se establece en verdadero después de generar el acuse.
+     */
+    isAcuseVisible: boolean = false;
 
   /**
    * Constructor del componente.
@@ -296,5 +312,18 @@ export class IntroPermisoComponent implements OnInit {
       cve_unidad_administrativa: DATOS_GENERALES.datosFederal.representacion_federal,
       rfc: this.solicitante.rfc_original,
     }
+  }
+
+  /**
+  * Maneja el evento cuando se genera un acuse.
+  * Actualiza el texto de alerta y el estado de visibilidad del acuse en el componente.
+  *
+  * @param event - Objeto que contiene los datos del acuse generado.
+  * @param event.txtAlerta - Texto del mensaje de alerta a mostrar.
+  * @param event.isVisible - Indica si el acuse debe mostrarse o no.
+  */
+  onAcuseGenerado(event: { txtAlerta: string; isVisible: boolean }): void {
+    this.txtAlerta = event.txtAlerta;
+    this.isAcuseVisible = event.isVisible;
   }
 }
