@@ -55,6 +55,21 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud130301State;
 
+  /**
+   * Controla si el campo paisEmisorCertificado debe estar deshabilitado.
+   */
+  public isPaisEmisorCertificadoDisabled: boolean = true;
+
+  /**
+   * Controla si el campo paisDeOrigen debe estar deshabilitado.
+   */
+  public isPaisDeOrigenDisabled: boolean = true;
+
+  /**
+   * Controla si el campo mixed debe estar deshabilitado.
+   */
+  public esMezcladoDesactivado: boolean = true;
+
   /** Lista de nombres de campos del formulario certificadoKimberley. */
   /** Se usan para asignar valores y desactivar controles en el formulario. */
   private readonly kimberleyFields: string[] = [
@@ -69,7 +84,10 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     'numeroEnLetraIngles',
     'numeroFactura',
     'cantidadQuilates',
-    'valorDiamantes'
+    'valorDiamantes',
+    'paisEmisorCertificado',
+    'mixed',
+    'paisDeOrigen'
   ];
 
   /**
@@ -86,6 +104,11 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     private tramite130301Query: Tramite130301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
+    // Inicializar campos como deshabilitados desde el constructor
+    this.isPaisEmisorCertificadoDisabled = true;
+    this.isPaisDeOrigenDisabled = true;
+    this.esMezcladoDesactivado = true;
+    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -101,6 +124,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.esMezcladoDesactivado = true;
     this.inicializarEstadoFormulario();
     this.obtenerEstadoList();
     this.obtenerFormDatos();
@@ -126,12 +150,20 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       Object.keys(this.certificadoKimberley.controls).forEach((key) => {
         this.certificadoKimberley.get(key)?.disable();
       });
+      // También deshabilitar los campos select especiales y mixed
+      this.isPaisEmisorCertificadoDisabled = true;
+      this.isPaisDeOrigenDisabled = true;
+      this.esMezcladoDesactivado = true;
     } else {
+      // Habilitar solo los campos que no están en kimberleyFields
       Object.keys(this.certificadoKimberley.controls).forEach((key) => {
-        this.certificadoKimberley.get(key)?.enable();
+        if (!this.kimberleyFields.includes(key)) {
+          this.certificadoKimberley.get(key)?.enable();
+        }
       });
-
-      this.patchAndDisableKimberleyFields();
+      
+      // Asegurar que los campos específicos estén deshabilitados
+      this.deshabilitarCamposKimberley();
    }
   }
 
@@ -147,6 +179,21 @@ private patchAndDisableKimberleyFields(): void {
     });
   }
 
+/** Desactiva únicamente los campos especificados en kimberleyFields. */
+private deshabilitarCamposKimberley(): void {
+    // Deshabilitar campos select especiales usando propiedades booleanas
+    this.isPaisEmisorCertificadoDisabled = true;
+    this.isPaisDeOrigenDisabled = true;
+    this.esMezcladoDesactivado = true;
+    
+    // Deshabilitar el resto de campos usando el método tradicional
+    this.kimberleyFields.forEach(field => {
+      if (field !== 'paisEmisorCertificado' && field !== 'paisDeOrigen' && field !== 'mixed') {
+        this.certificadoKimberley.get(field)?.disable();
+      }
+    });
+  }
+
  /**
    * Crea y configura un formulario reactivo para gestionar los datos del Certificado Kimberley con campos deshabilitados y validaciones requeridas.
   */
@@ -154,10 +201,10 @@ private patchAndDisableKimberleyFields(): void {
     this.certificadoKimberley = this.fb.group({
       certificadosEmitidos: [{ value: '', disabled: true }],
       numeroCertificadokimberley: [{ value: '', disabled: true }],
-      paisEmisorCertificado: [this.solicitudState?.paisEmisorCertificado],
+      paisEmisorCertificado: [{ value: this.solicitudState?.paisEmisorCertificado, disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
-      mixed: [this.solicitudState?.mixed],
-      paisDeOrigen: [this.solicitudState?.paisDeOrigen],
+      mixed: [{ value: true, disabled: true }],
+      paisDeOrigen: [{ value: this.solicitudState?.paisDeOrigen, disabled: true }],
       nombreExportador: [{ value: '', disabled: true }],
       direccionExportador: [{ value: '', disabled: true }],
       nombreImportador: [{ value: '', disabled: true }, Validators.required],
@@ -192,13 +239,15 @@ private patchAndDisableKimberleyFields(): void {
           numeroFactura: this.certificadoKimberleyDatos[0].numeroFactura,
           cantidadQuilates: this.certificadoKimberleyDatos[0].cantidadQuilates,
           valorDiamantes: this.certificadoKimberleyDatos[0].valorDiamantes,
+          paisEmisorCertificado: this.certificadoKimberleyDatos[0].paisEmisorCertificado || 6,
+          mixed: (this.certificadoKimberleyDatos[0].mixed === undefined || this.certificadoKimberleyDatos[0].mixed === null) ? true : this.certificadoKimberleyDatos[0].mixed,
+          paisDeOrigen: this.certificadoKimberleyDatos[0].paisDeOrigen || 6,
         });
 
-        /** Desactiva los campos del formulario definidos en kimberleyFields. */
-        /** Utiliza disable() en cada control del FormGroup certificadoKimberley si existe. */
-         this.kimberleyFields.forEach(field => {
-          this.certificadoKimberley.get(field)?.disable();
-        });
+        /** Desactiva los campos del formulario definidos en kimberleyFields después de cargar los datos. */
+        if (!this.esFormularioSoloLectura) {
+          this.deshabilitarCamposKimberley();
+        }
       });
   }
 
@@ -236,5 +285,14 @@ private patchAndDisableKimberleyFields(): void {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Marca todos los campos del formulario como tocados para mostrar errores de validación.
+   */
+  public markAllAsTouched(): void {
+    if (this.certificadoKimberley) {
+      this.certificadoKimberley.markAllAsTouched();
+    }
   }
 }

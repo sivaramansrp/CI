@@ -1572,4 +1572,15 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       representacionFederalSeleccion,
     }));
   }
+
+  /**
+ * Actualiza completamente la lista de productores exportador agregados, reemplazando los valores existentes.
+ * @param agregarProductoresExportador Arreglo completo de productores exportador que reemplazará la lista actual.
+ */
+  updateAgregarProductoresExportador(agregarProductoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      agregarProductoresExportador,
+    }));
+  }
 }

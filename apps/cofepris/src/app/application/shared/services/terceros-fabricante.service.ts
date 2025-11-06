@@ -1,4 +1,6 @@
 import {
+  CATALOGO_PAISES,
+  COMUN_URL,
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
@@ -6,6 +8,7 @@ import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -20,13 +23,35 @@ import { TercerosFabricanteState } from '../estados/stores/terceros-fabricante.s
   providedIn: 'root',
 })
 export class TercerosFabricanteService {
+
+  /**
+   * URL base del host para todas las consultas de catálogos.
+   *
+   * Esta propiedad almacena la URL base configurada desde las variables de entorno
+   * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+   *
+   * @type {string}
+   * @readonly
+   * @since 1.0.0
+   */
+  host!: string;
+
   /**
    * Constructor del servicio TercerosFabricanteService.
    *
    * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
    */
   constructor(public http: HttpClient,private query: TercerosFabricanteQuery) {
-    // Constructor del servicio
+    this.host = `${COMUN_URL.BASE_URL}`;
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getPaisList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT); 
   }
 
   /**
