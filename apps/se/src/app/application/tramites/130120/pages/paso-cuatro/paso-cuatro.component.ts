@@ -1,5 +1,5 @@
-import { CategoriaMensaje, DocumentoService, FirmaElectronicaComponent, Notificacion,NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from "@ng-mf/data-access-user";
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CategoriaMensaje, DocumentoService, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TXT_ALERTA_ACUSE, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from "@ng-mf/data-access-user";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { GenerarCadenaResponse } from '../../../120301/models/request/generar-cadena-request.model';
@@ -97,7 +97,22 @@ Mantener la coherencia en la navegación del proceso de trámite
    */
   nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description Mensaje de alerta que se muestra al usuario en la página de acuse.
+   */
+  txtAlerta!: string;
 
+  /**
+   * @description Indica si el componente de acuse debe ser visible o no.
+   * Inicialmente es falso y se establece en verdadero después de generar el acuse.
+   */
+  isAcuseVisible: boolean = false;
+
+  /**
+   * @description Evento que se emite cuando se genera el acuse.
+   * Proporciona el mensaje de alerta y la visibilidad del acuse.
+   */
+  @Output() acuseGenerado = new EventEmitter<{ txtAlerta: string; isVisible: boolean }>();
 
   /**
  * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
@@ -272,8 +287,13 @@ Mantener la coherencia en la navegación del proceso de trámite
             this.idSolicitud ?? 0,
             this.procedure
           );
-         console.log('Estado actual del store:', this.tramiteStore.getValue());
-         this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
+         this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+         this.isAcuseVisible = true;
+
+         this.acuseGenerado.emit({
+          txtAlerta: this.txtAlerta,
+          isVisible: this.isAcuseVisible
+         });
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
