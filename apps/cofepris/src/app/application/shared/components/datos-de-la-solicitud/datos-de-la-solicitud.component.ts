@@ -1475,9 +1475,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   agregarScian(): void {
     if (this.scianLista && this.scianLista.length > 0) {
-    if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
-      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
-    }
     this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
