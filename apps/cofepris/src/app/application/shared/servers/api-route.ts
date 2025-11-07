@@ -44,5 +44,16 @@ export const CATALOGO_OBJETO_IMPORTACION = (TRAMITE: string): string => `sat-t${
  * API para buscar el representante legal por RFC
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/buscar
  */
-export const RFC_BUSCAR_REPRESENTANTE_LEGAL = (TRAMITE: string): string => `sat-t${TRAMITE}${SOLICITUD}/buscar`;
+export const RFC_BUSCAR_REPRESENTANTE_LEGAL = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscar`;
 
+/*
+ * API para obtener la descripción de una fracción arancelaria
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/fraccion-descripcion?clave=01012101&idTipoTramite=260501
+ */
+export const FRACCION_DESCRIPCION = (clave: string, idTipoTramite: string): string => `${BASE_URL}${API}/sat-t${idTipoTramite}${SOLICITUD}/fraccion-descripcion?clave=${clave}&idTipoTramite=${idTipoTramite}`;
+
+/*
+ * API para obtener la unidad de medida de una fracción arancelaria
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/unidad-medida?cveFraccion=01012101
+ */
+export const UNIDAD_MEDIDA = (cveFraccion: string, idTipoTramite: string): string => `${BASE_URL}${API}/sat-t${idTipoTramite}${SOLICITUD}/unidad-medida?cveFraccion=${cveFraccion}`;
