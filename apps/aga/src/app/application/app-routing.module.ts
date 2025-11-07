@@ -290,6 +290,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'cancelar-reporte-mensual',
+    loadChildren: () =>
+      import(
+        './tramites/31907/cancelar-solicitud-reporte-mensual.module'
+      ).then((m) => m.CancelarSolicitudReporteMensualModule),
+  },
+  {
     path: 'desistir-solicitud-informacion-historica',
     loadChildren: () =>
       import(

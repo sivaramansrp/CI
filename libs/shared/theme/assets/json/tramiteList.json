@@ -2177,6 +2177,13 @@
     "department": "aga"
   },
   {
+    "id": 600,
+    "tramite": 31907,
+    "linkDashboard": "/aga/cancelar-reporte-mensual/cancelar",
+    "linkDepartment": "/pago/cancelar-reporte-mensual/cancelar",
+    "department": "aga"
+  },
+  {
     "id": 313,
     "tramite": 420102,
     "linkDashboard": "/aga/concluir-relacion-de/solicitud",
