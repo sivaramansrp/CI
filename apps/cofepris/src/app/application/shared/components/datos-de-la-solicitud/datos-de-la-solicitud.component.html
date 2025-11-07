@@ -644,7 +644,7 @@
 </section>
 } @if (mostrarRfcAlerta) {
 <section>
-  <lib-notificaciones [notificacionInput]="nuevaRfcNotificacion" (confirmacionModal)="obtenerModalDeBuscar($event)">
+  <lib-notificaciones class="rfc-modal-center" [notificacionInput]="nuevaRfcNotificacion" (confirmacionModal)="obtenerModalDeBuscar($event)">
   </lib-notificaciones>
 </section>
 } @if (nuevaNotificacionEliminar && nuevaNotificacionEliminar.cerrar) {
