@@ -241,6 +241,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
                  const API_RESPONSE = doDeepCopy(response);
                  if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
                    if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                      this.folioTemporal = API_RESPONSE.datos.id_solicitud;
                      this.tramite110201Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
                      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
                    } else {
