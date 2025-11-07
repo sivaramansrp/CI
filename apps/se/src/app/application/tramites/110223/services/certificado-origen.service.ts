@@ -1,7 +1,7 @@
 import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/api-route';
 import { Catalogo, CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
+import { HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
@@ -391,30 +391,30 @@ export class CertificadosOrigenService {
   
   /** Construye el objeto destinatario a partir del estado del trámite 110223. */
   buildDestinatario(data: TramiteState): unknown {
-    const formDestinatario = data.formDestinatario || {};
+    const FORM_DESTINATARIO = data.formDestinatario || {};
 
     return {
-      "nombre": formDestinatario['nombre'] || '',
-      "primer_apellido": formDestinatario['primerApellido'] || '',
-      "segundo_apellido": formDestinatario['segundoApellido'] || '',
-      "numero_registro_fiscal": formDestinatario['numeroRegistroFiscal'] || '',
-      "razon_social": formDestinatario['razonSocial'] || '',
+      "nombre": FORM_DESTINATARIO['nombre'] || '',
+      "primer_apellido": FORM_DESTINATARIO['primerApellido'] || '',
+      "segundo_apellido": FORM_DESTINATARIO['segundoApellido'] || '',
+      "numero_registro_fiscal": FORM_DESTINATARIO['numeroRegistroFiscal'] || '',
+      "razon_social": FORM_DESTINATARIO['razonSocial'] || '',
       "domicilio": {
-          "ciudad_poblacion_estado_provincia": formDestinatario['ciudad'] || '',
-          "calle": formDestinatario['calle'] || '',
-          "numero_letra": formDestinatario['numeroLetra'] || '',
-          "telefono": formDestinatario['telefono'] || '',
-          "fax": formDestinatario['fax'] || '',
-          "correo_electronico": formDestinatario['correoElectronico'] || '',
-          "pais_destino": formDestinatario['paisDestino'] || ''
+          "ciudad_poblacion_estado_provincia": FORM_DESTINATARIO['ciudad'] || '',
+          "calle": FORM_DESTINATARIO['calle'] || '',
+          "numero_letra": FORM_DESTINATARIO['numeroLetra'] || '',
+          "telefono": FORM_DESTINATARIO['telefono'] || '',
+          "fax": FORM_DESTINATARIO['fax'] || '',
+          "correo_electronico": FORM_DESTINATARIO['correoElectronico'] || '',
+          "pais_destino": FORM_DESTINATARIO['paisDestino'] || ''
       },
       "generalesRepresentanteLegal": {
-          "lugarRegistro": formDestinatario['lugarRegistro'] || '',
-          "nombre": formDestinatario['nombreRepresentante'] || '',
-          "razonSocial": formDestinatario['razonSocialRepresentante'] || '',
-          "puesto": formDestinatario['puestoRepresentante'] || '',
-          "telefono": formDestinatario['telefonoRepresentante'] || '',
-          "correoElectronico": formDestinatario['correoRepresentante'] || ''
+          "lugarRegistro": FORM_DESTINATARIO['lugarRegistro'] || '',
+          "nombre": FORM_DESTINATARIO['nombreRepresentante'] || '',
+          "razonSocial": FORM_DESTINATARIO['razonSocialRepresentante'] || '',
+          "puesto": FORM_DESTINATARIO['puestoRepresentante'] || '',
+          "telefono": FORM_DESTINATARIO['telefonoRepresentante'] || '',
+          "correoElectronico": FORM_DESTINATARIO['correoRepresentante'] || ''
         }
     }
   }

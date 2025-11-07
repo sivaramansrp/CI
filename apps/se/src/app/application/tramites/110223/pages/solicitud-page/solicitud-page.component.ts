@@ -165,7 +165,8 @@ export class SolicitudPageComponent implements OnDestroy {
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */    
-  guardar(item: TramiteState): Promise<JSONResponse> {    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
+  guardar(item: TramiteState): Promise<JSONResponse> {    
+    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
     const PRODUCTORES_POR_EXPORTADOR = this.certificadoDeService.buildProductoresPorExportador(item.productoresExportador);
     const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
     const CERTIFICADO = this.certificadoDeService.buildCertificado(item);

@@ -15,7 +15,6 @@ import { Modal } from "bootstrap";
 import { OPTIONS_TRATADO } from "../../models/registro.model";
 import { ToastrService } from "ngx-toastr";
 import { Tramite110223Query } from "../../query/tramite110223.query";
-import { BuscarMercanciasResponse } from "../../models/certificado-origen.model";
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente.
