@@ -123,7 +123,7 @@ export const API_GET_CATALOGO_PAISES_SIN_MEXICO = (TRAMITE: string) : string => 
  * Servicio que permite consultar las entidades federativas por medio del pais seleccionado.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas-pais
  */
-export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/pais/${CVEPAIS}/entidades-federativas`;
+export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/entidades-federativas`;
 
 /**
  * Servicio que permite consultar los países destino por tipo de producto y tipo de mercancía.
