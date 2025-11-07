@@ -82,6 +82,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   @Input() datosUsuario!: Usuario;
 
+  /**
+   * ID de la solicitud actual.
+   */
+  @Input() idSolicitud!: string;
+
   /** Carga del progreso del archivo */
   cargaEnProgreso: boolean = true;
 
