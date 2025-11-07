@@ -198,6 +198,11 @@
          (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)" [isDisabled]="esFormularioSoloLectura">
          </crosslist>
       </div>
+        <div
+               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanas"
+               class="mensaje-error">
+               Este campo es obligatorio.
+            </div>
    </div>
    <div class="row">
       <div class="col-md-12 mt-5">

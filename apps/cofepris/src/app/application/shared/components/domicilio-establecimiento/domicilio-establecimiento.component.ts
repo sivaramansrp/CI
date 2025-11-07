@@ -104,7 +104,8 @@ public mostrarErrores = {
   calle: false,
   telefono: false,
   deOrigen: false,
-  deProcedencia: false
+  deProcedencia: false,
+  aduanas:false 
 };
 nombresCampos:boolean = false;
   @Input() identificacion: boolean = false;
@@ -510,6 +511,7 @@ nombresCampos:boolean = false;
    * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
+    this.mostrarErrores.aduanas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
@@ -1521,7 +1523,8 @@ nombresCampos:boolean = false;
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
-      numeroRegistroSanitario:RAW.numeroRegistro
+      numeroRegistroSanitario:RAW.numeroRegistroSanitario,
+      porcentajeConcentracion:RAW.porcentajeConcentracion
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1792,7 +1795,10 @@ onConfirmacionModal(accion: boolean): void {
         objetoImportacion: SELECTED.objetoImportacion,
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
-
+        estadoFisico: SELECTED.estadoFisico,
+         estadoFisicoOtro: SELECTED.estadoFisicoOtro,
+         numeroRegistroSanitario: SELECTED.numeroRegistroSanitario,
+         objetoImportacionOtro: SELECTED.objetoImportacionOtro,
         ...(this.formMercancias.contains("numeroRegistro") && {
           numeroRegistro: SELECTED.numeroRegistroSanitario,
         }),
@@ -1888,6 +1894,10 @@ onConfirmacionModal(accion: boolean): void {
    }
    else{
     this.mercanciasTablaCheck=false;
+   }
+   if(this.seleccionadasAduanasEntradaDatos.length === 0){
+    this.mostrarErrores.aduanas =true;
+     ISVALID = false;
    }
    return ISVALID;
   }
