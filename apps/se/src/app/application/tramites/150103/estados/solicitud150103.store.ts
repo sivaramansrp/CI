@@ -46,6 +46,13 @@ export interface Solicitud150103State {
 
   /** solicitudDato */
   solicitudDato?: ProgramasReporte[];
+
+  /**
+   * Índice del registro del programa.
+   * Este valor numérico representa la posición o el identificador del registro específico
+   * dentro del conjunto de datos del programa.
+   */
+  indiceDeRegistroDelPrograma: number;
   
 }
 
@@ -72,6 +79,7 @@ export function createInitialState(): Solicitud150103State {
     saldo: '0',
     porcentajeExportacion: '0',
     solicitudDato: [],
+    indiceDeRegistroDelPrograma:-1,
   };
 }
 
@@ -165,6 +173,18 @@ export class Solicitud150103Store extends Store<Solicitud150103State> {
     this.update((state) => ({
       ...state,
       solicitudDato,
+    }));
+  }
+
+  /**
+ * Actualiza el índice del registro del programa en el estado.
+ * 
+ * @param indiceDeRegistroDelPrograma - Nuevo valor numérico que representa el índice del registro.
+ */
+  actualizarIndiceDeRegistroDelPrograma(indiceDeRegistroDelPrograma: number): void {
+    this.update((state) => ({
+      ...state,
+      indiceDeRegistroDelPrograma,
     }));
   }
 

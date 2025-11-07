@@ -17,7 +17,7 @@ import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { Subject } from 'rxjs';
 
-import { ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidArray, esValidObject, getValidDatos, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -96,7 +96,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     public informaAnualPrograma: InformeAnualProgramaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.obtenerReporteFechas();
+    // this.obtenerReporteFechas();
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
@@ -153,21 +153,21 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
   }
 
-  /**
-   * @description Método para obtener las fechas de inicio y fin del reporte.
-   * Actualiza el estado con las fechas obtenidas del servicio.
-   */
-  obtenerReporteFechas(): void {
-    this.informaAnualPrograma
-      .obtenerReporteFechas()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (respuesta: ReporteFechas) => {
-          this.solicitud150103Store.actualizarInicio(respuesta.inicio);
-          this.solicitud150103Store.actualizarFin(respuesta.fin);
-        },
-      });
-  }
+  // /**
+  //  * @description Método para obtener las fechas de inicio y fin del reporte.
+  //  * Actualiza el estado con las fechas obtenidas del servicio.
+  //  */
+  // obtenerReporteFechas(): void {
+  //   this.informaAnualPrograma
+  //     .obtenerReporteFechas()
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe({
+  //       next: (respuesta: ReporteFechas) => {
+  //         this.solicitud150103Store.actualizarInicio(respuesta.inicio);
+  //         this.solicitud150103Store.actualizarFin(respuesta.fin);
+  //       },
+  //     });
+  // }
 
   /**
    * @method obtenerProgramasReporte
@@ -182,28 +182,70 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       .obtenerProgramasReporte(this.loginRfc)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (respuesta: Record<string, unknown>) => {
-          const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
-          if (Array.isArray(DATOS) && DATOS.length) {
-            const PROGRAMAS = DATOS.map((item) => {
-              const PROGRAMA = item as ProgramasReporte;
-              return {
-                folioPrograma: PROGRAMA.folioPrograma ?? '',
-                modalidad: PROGRAMA.modalidad ?? '',
-                tipoPrograma: PROGRAMA.tipoPrograma ?? '',
-                estatus: PROGRAMA.estatus ?? '',
-              };
-            });
-            this.solicitudDatos = PROGRAMAS;
-            this.solicitud150103Store.setSolicitusDatos(this.solicitudDatos);
-          } else {
-            this.solicitudDatos = [];
+        next: (respuesta) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
+            this.solicitud150103Store.actualizarInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+            this.solicitud150103Store.actualizarFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
+            this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
-        error: () => {
-        this.solicitudDatos = [];
-      },
+      //   next: (respuesta: Record<string, unknown>) => {
+      //     const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
+      //     if (Array.isArray(DATOS) && DATOS.length) {
+      //       const PROGRAMAS = DATOS.map((item) => {
+      //         const PROGRAMA = item as ProgramasReporte;
+      //         return {
+      //           folioPrograma: PROGRAMA.folioPrograma ?? '',
+      //           modalidad: PROGRAMA.modalidad ?? '',
+      //           tipoPrograma: PROGRAMA.tipoPrograma ?? '',
+      //           estatus: PROGRAMA.estatus ?? '',
+      //         };
+      //       });
+      //       this.solicitudDatos = PROGRAMAS;
+      //       this.solicitud150103Store.setSolicitusDatos(this.solicitudDatos);
+      //     } else {
+      //       this.solicitudDatos = [];
+      //     }
+      //   },
+      //   error: () => {
+      //   this.solicitudDatos = [];
+      // },
       });
+  }
+
+  /**
+   * @method mapProgramasResponse
+   * @description Mapea la respuesta de la API a un arreglo de objetos `ProgramasReporte`.
+   * @param datos Arreglo de datos sin tipar recibido de la API.
+   * @returns Arreglo de objetos `ProgramasReporte` mapeados.
+   */
+  public mapProgramasResponse(datos: unknown[]): ProgramasReporte[] {
+    return datos.map((item: unknown) => {
+      const PROGRAMA = item as ProgramasReporte;
+      return {
+        folioPrograma: PROGRAMA.folioPrograma,
+        modalidad: PROGRAMA.modalidad,
+        tipoPrograma: PROGRAMA.tipoPrograma,
+        estatus: PROGRAMA.estatus
+      };
+    }) || [];
+  }
+
+  /**
+   * @method formatDateToMonthYear
+   * @description Formatea una cadena de fecha al formato "MM-YYYY".
+   * @param dateString Cadena de fecha en formato ISO o similar.
+   * @returns Cadena formateada en "MM-YYYY" o cadena vacía si la entrada no es válida.
+   */
+  private formatDateToMonthYear(dateString: string) {
+    if(getValidDatos(dateString)) {
+        const DATE = new Date(dateString);
+        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+        const YEAR = DATE.getFullYear();
+        return `${MONTH}-${YEAR}`;
+    }
+    return '';
   }
 
   /**
@@ -211,6 +253,10 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param evento Objeto que contiene los datos del programa seleccionado.
    */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
+    const INDEX = this.solicitudDatos.findIndex(
+      (x) => x.folioPrograma === evento.folioPrograma
+    );
+    this.solicitud150103Store.actualizarIndiceDeRegistroDelPrograma(INDEX);
     this.solicitud150103Store.actualizarFolioPrograma(evento.folioPrograma);
     this.solicitud150103Store.actualizarModalidad(evento.modalidad);
     this.solicitud150103Store.actualizarTipoPrograma(evento.tipoPrograma);

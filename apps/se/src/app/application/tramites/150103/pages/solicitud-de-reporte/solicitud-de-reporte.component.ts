@@ -144,36 +144,36 @@ export class SolicitudDeReporteComponent {
     const PAYLOAD = {
         "id_solcitud": 202846846,
         "tipoDeSolicitud": "guardar",
-        "solicitante": {
-          "rfc": "AAL0409235E6",
-          "nombre": "Juan Pérez",
-          "es_persona_moral": true,
-          "certificado_serial_number": "1234"
-        },
-        "representacion_federal": {
-          "cve_entidad_federativa": "DGO",
-          "cve_unidad_administrativa": "1016"
-        },
-        "fracciones": [
-        {
-          "cveFraccion": "",
-          "bienesProducidos": {
-            "descripcionBienProducido": "",
-            "totalBienesProducidos": 0,
-            "volumenMercadoNacional": 0,
-            "olumenExportaciones": 0
-          }
-        }
-        ],
-        "sectores": [
-          {
-            "idConfProgramaSE": 0
-          }
-        ],
-        "ide_generica_1": "01-2024",
-        "ide_generica_2": "12-2024",
-        "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
-        "descripcion_clob_generica_2": "121681,2011-7018",
+        // "solicitante": {
+        //   "rfc": "AAL0409235E6",
+        //   "nombre": "Juan Pérez",
+        //   "es_persona_moral": true,
+        //   "certificado_serial_number": "1234"
+        // },
+        // "representacion_federal": {
+        //   "cve_entidad_federativa": "DGO",
+        //   "cve_unidad_administrativa": "1016"
+        // },
+        // "fracciones": [
+        // {
+        //   "cveFraccion": "",
+        //   "bienesProducidos": {
+        //     "descripcionBienProducido": "",
+        //     "totalBienesProducidos": 0,
+        //     "volumenMercadoNacional": 0,
+        //     "olumenExportaciones": 0
+        //   }
+        // }
+        // ],
+        // "sectores": [
+        //   {
+        //     "idConfProgramaSE": 0
+        //   }
+        // ],
+        // "ide_generica_1": "01-2024",
+        // "ide_generica_2": "12-2024",
+        // "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
+        // "descripcion_clob_generica_2": "121681,2011-7018",
         "reporte_anual": DATOS_REPORTE
       }
 
