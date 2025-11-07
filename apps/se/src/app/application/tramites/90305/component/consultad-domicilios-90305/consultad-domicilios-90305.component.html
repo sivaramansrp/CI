@@ -12,10 +12,8 @@
             formControlName="estadoControl"
             [isDisabled]="esFormularioSoloLectura"
             (change)="getMunicipios()"
+            [markTouched]="formConsulta.get('estadoControl')?.touched ?? false"
           ></app-catalogo-select>
-           <div *ngIf="formConsulta.get('estadoControl')?.invalid && (formConsulta.get('estadoControl')?.touched || formConsulta.get('estadoControl')?.dirty)" class="text-danger">
-          El estado es obligatorio.
-        </div>
         </div>
       </div>
         <div

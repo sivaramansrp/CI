@@ -54,6 +54,7 @@ import { ViewChild } from '@angular/core';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  
 
   @ViewChild(DatosDelEstablecimientoRFCComponent) datosDelEstablecimientoRfcComp!: DatosDelEstablecimientoRFCComponent;
   @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
@@ -343,7 +344,8 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
 
   validarClickDeBoton(): boolean {
     let ISVALID = true;
-    if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === false){
+    console.log(this.datosDelEstablecimientoRfcComp.validatorButtonClick(),this.domicilioComp.validatorButtonClick(),this.manifiestosComp.validarClickDeBoton(),this.representanteLegalRfcComp.validarClickDeBoton());
+    if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === true){
       ISVALID = false;
     }
     if(this.domicilioComp.validatorButtonClick() === false){

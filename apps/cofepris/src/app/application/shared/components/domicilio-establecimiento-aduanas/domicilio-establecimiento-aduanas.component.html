@@ -194,7 +194,7 @@
             <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
             [maxLength]="50"  
             formControlName="licenciaSanitaria" 
-            [ngClass]="{'tiene-invalido': domicilio.controls['licenciaSanitaria']?.invalid && domicilio.controls['licenciaSanitaria']?.touched }"
+            [ngClass]="{'tiene-invalido': domicilio.controls['licenciaSanitaria'].invalid && domicilio.controls['licenciaSanitaria'].touched }"
             (change)="setValoresStore(domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria')" 
             />
          </div>

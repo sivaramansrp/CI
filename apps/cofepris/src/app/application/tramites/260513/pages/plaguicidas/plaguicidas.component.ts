@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
@@ -21,6 +21,9 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  
+  esFormaValido: boolean = false;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -56,16 +59,39 @@ export class PlaguicidasComponent {
    *
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
+
+
   getValorIndice(e: AccionBoton): void {
-    if(this.pasoUnoComponent.validOnButtonClick()){
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+      this.esFormaValido = false;
+      // Validar formularios antes de continuar desde el paso uno
+      if (this.indice === 1 && e.accion === 'cont') {
+        const ISVALID = this.pasoUnoComponent.validOnButtonClick();
+        if (!ISVALID) {
+          this.esFormaValido = true;
+          return; // Detener ejecución si los formularios son inválidos
+        }
+      }
+  
+      // Calcular el nuevo índice basado en la acción
+      let indiceActualizado = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+        indiceActualizado = e.valor + 1;
+      } else if (e.accion === 'ant') {
+        indiceActualizado = e.valor - 1;
+      }
+  
+      // Validar que el nuevo índice esté dentro de los límites permitidos
+      if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+  
+        // Actualizar el índice y datosPasos
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
+  
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant') {
+          this.wizardComponent.atras();
+        }
       }
     }
-    }
-  }
 }

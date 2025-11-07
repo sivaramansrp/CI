@@ -93,6 +93,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   @Output() cargaEnProgreso = new EventEmitter<boolean>();
 
   /**
+   * @description Evento que se emite cuando el catálogo de documentos obligatorios está en blanco.
+   */
+  @Output() enBlancoObligatoria = new EventEmitter<boolean>();
+
+  /**
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
    * @type {DestroyRef}
    */
@@ -239,6 +244,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
+          if (response.datos.documento_tramite.length === 0) {
+            this.enBlancoObligatoria.emit(true);
+          }else{
+            this.enBlancoObligatoria.emit(false);
+          }
           response.datos.documento_tramite.forEach((documento: Documento) => {
             if (documento.tipo_documento) {
               this.catalogoDocumentosObligatorios.push({
@@ -596,7 +606,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
  */
 private validarCompletitudDocumentosObligatorios(): boolean {
   // Si no hay documentos configurados, no podemos continuar
-  if (!this.catalogoDocumentosObligatorios?.length) {
+  if (!this.catalogoDocumentosObligatorios?.length && this.listadoArchivos.length === 0) {
     return false;
   }
 
