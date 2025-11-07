@@ -3,6 +3,7 @@ import { AlertComponent,
   BtnContinuarComponent, 
   FirmaElectronicaComponent, 
   InputFechaComponent, 
+  PasoFirmaComponent,
   SolicitanteComponent, 
   TablaDinamicaComponent, 
   TituloComponent,
@@ -27,8 +28,7 @@ import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
 
-@NgModule({
-  declarations: [
+@NgModule({  declarations: [
     PasoUnoComponent, 
     PasoTresComponent,
     SolicitudDeReporteComponent,
@@ -44,6 +44,7 @@ import { provideHttpClient } from '@angular/common/http';
     BtnContinuarComponent,
     FirmaElectronicaComponent,
     InputFechaComponent,
+    PasoFirmaComponent,
     SolicitanteComponent,
     TituloComponent,
     TablaDinamicaComponent,
