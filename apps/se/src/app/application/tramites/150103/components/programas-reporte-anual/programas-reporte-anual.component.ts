@@ -80,7 +80,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   solicitudConfiguracionTabla = SOLICITUD_CONFIGURACION_TABLA;
 
   // Valor de RFC de ejemplo
-  private loginRfc: string = 'AAL0409235E6';
+  private readonly LOGIN_RFC: string = 'AAL0409235E6';
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -88,14 +88,14 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param solicitud150103Store Servicio para manejar el estado de la solicitud.
    * @param solicitud150103Query Servicio para realizar consultas del estado.
    * @param informaAnualPrograma Servicio para realizar solicitudes relacionadas.
-   */  constructor(
+   */  
+  constructor(
     public fb: FormBuilder,
     public solicitud150103Store: Solicitud150103Store,
     public solicitud150103Query: Solicitud150103Query,
     public informaAnualPrograma: InformeAnualProgramaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Set default dates - today for inicio, yesterday for fin
     this.setDefaultDates();
     
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
@@ -107,18 +107,18 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
 
   /**
    * @method setDefaultDates
-   * @description Sets default dates - today for inicio and yesterday for fin
+   * @description Sets default dates - today's month/year for inicio and -1 month for fin
    */
   private setDefaultDates(): void {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    const CURRENT_DATE = new Date();
+    const MONTH_DATE = new Date(CURRENT_DATE);
+    MONTH_DATE.setMonth(CURRENT_DATE.getMonth() - 1);
     
-    const inicioDate = this.formatDateToMonthYear(today.toISOString());
-    const finDate = this.formatDateToMonthYear(yesterday.toISOString());
+    const FORMATTED_INICIO_DATE = this.formatDateToMonthYear(CURRENT_DATE.toISOString());
+    const FORMATTED_FIN_DATE = this.formatDateToMonthYear(MONTH_DATE.toISOString());
     
-    this.solicitud150103Store.actualizarInicio(inicioDate);
-    this.solicitud150103Store.actualizarFin(finDate);
+    this.solicitud150103Store.actualizarInicio(FORMATTED_INICIO_DATE);
+    this.solicitud150103Store.actualizarFin(FORMATTED_FIN_DATE);
   }
 
   /**
@@ -193,17 +193,14 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * Actualiza la propiedad `solicitudDatos` con los datos obtenidos.
    *
    * @returns {void}
-   */
-  obtenerProgramasReporte(): void {
+   */  obtenerProgramasReporte(): void {
     this.informaAnualPrograma
-      .obtenerProgramasReporte(this.loginRfc)
+      .obtenerProgramasReporte(this.LOGIN_RFC)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (respuesta) => {
+      .subscribe({        next: (respuesta) => {
           const API_RESPONSE = doDeepCopy(respuesta);
           if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
-            this.solicitud150103Store.actualizarInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
-            this.solicitud150103Store.actualizarFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
+            // Don't override the dates - keep the default dates we set
             this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
