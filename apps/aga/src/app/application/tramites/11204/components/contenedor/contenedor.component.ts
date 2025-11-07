@@ -310,7 +310,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
     this.getDatosGenerales(this.RFC);
-    // this.loadDatosTablaData();
     this.solicitudForm.get('archivoSeleccionadoName')?.disable();
     this.datosDelContenedor = this.solicitud11204State.datosDelContenedor || [];
     this.datosDelCsvArchivo = this.solicitud11204State.datosDelCsvArchivo || [];
@@ -675,10 +674,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.value.digitoDeControl = '';
           this.mostrarAgregarTipoContenedor = false;
           this.solicitudForm.get('tipoBusqueda')?.setValue(tipoBusqueda);
-
-          // this.solicitudForm.reset();
-          // this.solicitudForm.markAsUntouched();
-          // this.solicitudForm.markAsPristine();
         }
         else if(respuesta?.codigo === 'SAT11204-CT02'){
             this.datosCapturaModal()
@@ -740,47 +735,47 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.continuarEvento.emit('');
   }
   
-    /**
-     * Guarda la solicitud actual de trámite 11201.
-     *
-     * Selecciona la fuente de datos de contenedores según el valor del campo
-     * "tipoBusqueda" del formulario (puede ser 'Contenedor', 'Archivo CSV' o
-     * 'No. de Manifiesto') y normaliza cada entrada:
-     *  - convierte `existe_en_vucem` de 'Sí'/'No' a booleano,
-     *  - concatena " 00:00:00" a los campos `vigencia` y `fecha_inicio`.
-     *
-     * Construye un payload con:
-     *  - id_solcitud: tomado de `this.solicitud11201State.idSolicitud` o `null`,
-     *  - solicitante: objeto con `rfc` tomado de `this.rfc_original` y demás campos
-     *    de metadatos del solicitante,
-     *  - contenedores: arreglo normalizado según la búsqueda seleccionada.
-     *
-     * Envía el payload a `datosTramiteService.solicitudGuardar(...)` y se suscribe
-     * al observable usando `takeUntil(this.destroyNotifier$)` para manejar el
-     * ciclo de vida del componente. Si la respuesta tiene `codigo === '00'`:
-     *  - actualiza el estado del store con el id de solicitud recibido
-     *    (`this.tramite11201Store.setIdSolicitud(...)`) y
-     *  - invoca `this.continuar()` para avanzar el flujo del trámite.
-     *
-     * Observaciones y efectos secundarios:
-     *  - Modifica el estado del store y puede provocar navegación o cambios en UI
-     *    mediante `continuar()`.
-     *  - No devuelve valor (void). Los errores de la petición deben manejarse
-     *    externamente o ampliando la suscripción para capturar errores.
-     *
-     * @remarks
-     * Este método depende de:
-     *  - `this.solicitudForm` (campo 'tipoBusqueda'),
-     *  - las fuentes de datos `this.datosDelContenedor`, `this.datosTabla`,
-     *    `this.datosTablaManifest`,
-     *  - `this.rfc_original`, `this.solicitud11201State`,
-     *  - `this.datosTramiteService`, `this.tramite11201Store` y `this.continuar()`.
-     *
-     * @returns void
-     */
+ 
 
+    /**
+     * Guarda la solicitud actual construyendo y enviando un payload al servicio de trámite.
+     *
+     * La función:
+     * - Lee el tipo de búsqueda seleccionado desde this.solicitudForm ('tipoBusqueda') y, según
+     *   SearchType, selecciona la fuente de datos adecuada (this.datosDelContenedor o this.datosDelCsvArchivo).
+     * - Normaliza cada elemento de la lista de "contenedores":
+     *   - Convierte el campo existe_en_vucem de la cadena 'Sí' a true (cualquier otro valor se deja como false).
+     *   - Si las propiedades de fecha (fecha_ingreso, fecha_inicio, vigencia) están presentes,
+     *     les concatena " 00:00:00".
+     * - Construye el payload con:
+     *   - id_solcitud: tomado de this.solicitud11204State.idSolicitud o null si no existe.
+     *   - solicitante: objeto con datos del solicitante (en el código actual contiene valores estáticos,
+     *     incluyendo this.rfc_original para el RFC).
+     *   - contenedores: el arreglo ya normalizado.
+     * - Llama a this.datosTramiteService.solicitudGuardar(PAYLOAD) y se subscribe al resultado.
+     *   - La suscripción está gestionada con takeUntil(this.destroyNotifier$) para evitar fugas de memoria.
+     *   - En caso de respuesta exitosa (respuesta?.codigo === '00'), actualiza el store
+     *     this.Tramite11204Store.setIdSolicitud(...) con el id recibido y llama a this.continuar().
+     *
+     * Notas:
+     * - No devuelve valor (void).
+     * - No lanza excepciones explícitas; cualquier manejo de errores dependiente del servicio
+     *   debería implementarse en la suscripción (p.ej. manejador error).
+     * - El campo "solicitante" en el payload contiene valores hardcodeados en la implementación actual;
+     *   considere reemplazarlos por datos dinámicos según corresponda.
+     *
+     * @returns {void} No retorna valor.
+     * @remarks Dependencias internas:
+     * - this.solicitudForm (para obtener tipoBusqueda)
+     * - SearchType enum (para determinar la fuente de datos)
+     * - this.datosDelContenedor | this.datosDelCsvArchivo (orígenes de contenedores)
+     * - this.solicitud11204State.idSolicitud (para id_solcitud)
+     * - this.rfc_original (para solicitante.rfc)
+     * - this.datosTramiteService.solicitudGuardar (llamada al backend)
+     * - this.Tramite11204Store (para persistir id de solicitud)
+     * - this.continuar() (flujo posterior a guardado exitoso)
+     */
     solicitudGuardar(): void {
-      // this.solicitudForm.get('tipoBusqueda')?.value
         const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
         const normalize = (item: any) => ({
             ...item,

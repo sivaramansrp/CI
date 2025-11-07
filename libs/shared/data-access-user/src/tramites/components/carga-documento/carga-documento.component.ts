@@ -93,6 +93,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   @Output() cargaEnProgreso = new EventEmitter<boolean>();
 
   /**
+   * @description Evento que se emite cuando el catálogo de documentos obligatorios está en blanco.
+   */
+  @Output() enBlancoObligatoria = new EventEmitter<boolean>();
+
+  /**
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
    * @type {DestroyRef}
    */
@@ -218,9 +223,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-      if (this.idTipoTRamite === '130118' || this.idTipoTRamite === '11204') {
-        this.getDocumentosDesdeSolicitudById();
-        this.getDocumentosDesdeSolicitudOpcionalesById();
+      if (this.idTipoTRamite === '130118') {
+        this.getDocumentosDesdeSolicitud130118();
+        this.getDocumentosDesdeSolicitud130118Opcionales();
       } else {
         this.getListaDocumentoObligatorios();
         this.getListaDocumentoOpcionales();
@@ -239,6 +244,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
+          if (response.datos.documento_tramite.length === 0) {
+            this.enBlancoObligatoria.emit(true);
+          }else{
+            this.enBlancoObligatoria.emit(false);
+          }
           response.datos.documento_tramite.forEach((documento: Documento) => {
             if (documento.tipo_documento) {
               this.catalogoDocumentosObligatorios.push({
@@ -317,57 +327,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     const ESPECIFICO = false;
     this.catalogoDocumentosService
       .getDocumentosSolicitud130118(ESPECIFICO)
-      .pipe(takeUntilDestroyed(this.destroyRef$))
-      .subscribe({
-        next: (response) => {
-          this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
-            ...doc.tipo_documento,
-            adicionales: [],
-            cargado: false,
-          }));
-        },
-        error: (err) => {
-          console.error('Error obteniendo documentos desde 130118', err);
-        }
-      });
-  }
-
-    /**
-   * Obtiene los documentos desde la solicitud 130118.
-   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud .
-   * @returns {void} No retorna nada.
-   */
-  getDocumentosDesdeSolicitudById(): void {
-    const ESPECIFICO = true;
-    this.catalogoDocumentosService
-      .getDocumentosSolicitudById(ESPECIFICO, this.idTipoTRamite)
-      .pipe(takeUntilDestroyed(this.destroyRef$))
-      .subscribe({
-        next: (response) => {
-          this.catalogoDocumentosObligatorios = response.datos.documento_tramite.map((doc) => ({
-            ...doc.tipo_documento,
-            adicionales: [],
-            cargado: false,
-          }));
-          
-          // Validar estado inicial después de cargar documentos 130118
-          this.actualizarEstadoBotonCargarArchivos();
-        },
-        error: (err) => {
-          console.error('Error obteniendo documentos desde 130118', err);
-        }
-      });
-  }
-
-  /**
-   * Obtiene los documentos opcionales desde la solicitud 130118.
-   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 130118.
-   * @returns {void} No retorna nada.
-   */
-  getDocumentosDesdeSolicitudOpcionalesById(): void {
-    const ESPECIFICO = false;
-    this.catalogoDocumentosService
-      .getDocumentosSolicitudById(ESPECIFICO, this.idTipoTRamite)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {

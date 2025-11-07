@@ -1,4 +1,4 @@
-import { ANEXAR, CARGAR,USUARIO_INFO } from '../../enums/datos-tramite.enum';
+import { ANEXAR, CARGAR } from '../../enums/datos-tramite.enum';
 import { Component, OnInit, ViewChild ,EventEmitter } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard,Usuario } from '@ng-mf/data-access-user';
@@ -30,7 +30,6 @@ export class SolicitantePageComponent implements OnInit {
    */
   indice: number = 1;
 
-  datosUsuario: Usuario = USUARIO_INFO;
 
     /**
  * Indica si la sección de carga de documentos está activa.
