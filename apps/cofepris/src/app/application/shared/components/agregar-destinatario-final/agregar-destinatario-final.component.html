@@ -7,7 +7,12 @@
   <ng-template #agregarDestinatario>
     <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
   </ng-template>
-
+   @if(mensajeDeError){
+    <ng-alert
+      [CONTENIDO]="mensajeDeError"
+      [CUSTOMECLASS]="'alert-danger text-center'"
+    ></ng-alert>
+  }
   <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>

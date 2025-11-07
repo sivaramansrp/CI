@@ -22,6 +22,21 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  CrosslistComponent,
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  REGEX_DECIMAL,
+  SOLO_REGEX_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
   CAMPOS_CLAVE,
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
@@ -38,20 +53,6 @@ import {
   TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
 } from '../../models/datos-solicitud.model';
-import {
-  CatalogoSelectComponent,
-  CrosslistComponent,
-  InputFecha,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  REGEX_DECIMAL,
-  SOLO_REGEX_NUMEROS,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import {
   FECHA_DE_CADUCIDAD_MERCANICA,
@@ -85,6 +86,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TooltipModule,
     NotificacionesComponent,
     InputFechaComponent,
+    AlertComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -450,6 +452,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Se utiliza para controlar la lógica de validación de los campos relacionados con registro sanitario y fechas de vencimiento.
    */
   esValidoRegistroOVencimiento: boolean = false;
+
+  /**
+   * @property {string} mensajeDeError
+   * @description Mensaje de error mostrado cuando el formulario de mercancía no es válido o faltan campos por capturar.
+   */
+  mensajeDeError: string = '';
 
   /**
    * @constructor
@@ -892,6 +900,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'numeroRegistroSanitario',
           'fechaCaducidad',
         ];
+        break;
+      case 260218:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260219:
         this.elementosAnadidos = [
@@ -1441,8 +1453,10 @@ public convertToStringArray(value: unknown): string[] {
     }
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
+      this.mensajeDeError = 'Faltan campos por capturar.';
       return;
     }
+     this.mensajeDeError = '';  
      const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
       // Set additional values
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;

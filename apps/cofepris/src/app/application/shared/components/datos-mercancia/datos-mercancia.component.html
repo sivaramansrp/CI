@@ -1,5 +1,10 @@
   <ng-titulo titulo="Datos mercancía"></ng-titulo>
-
+   @if(mensajeDeError){
+    <ng-alert
+      [CONTENIDO]="mensajeDeError"
+      [CUSTOMECLASS]="'alert-danger text-center'"
+    ></ng-alert>
+  }
   <form [formGroup]="mercanciaForm">
     <div class="row">
       <div class="col-md-10">
