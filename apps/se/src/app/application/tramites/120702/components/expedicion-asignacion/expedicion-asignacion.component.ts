@@ -253,15 +253,13 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   establecerAsignacionFormGroup(): void {
     this.asignacionForm = this.fb.group({
-      // Existing controls
+    
       anoDelOficio: ['', [Validators.required]],
       numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoADisponible: [''],
       fechaInicioVigencia: [''],
       fechaFinVigencia: [''],
-      
-      // Missing controls that are causing errors
       estado: [''],
       representacionFederal: [''],
       montoAsignado: [''],
