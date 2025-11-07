@@ -74,7 +74,7 @@ export const FECHA_FACTURA_REFERENCIA = {
  * IDs de procedimientos para los campos de fracción arancelaria.
  */
 export const FRACCION_ARANCELARIA_IDS = [
-  110205,  110212, 110223, 110222, 110207, 110208, 110214, 110217,110216, 110221, 110211
+  110205, 110212,110201, 110222, 110207, 110208, 110214, 110217,110216, 110221, 110223, 110211
 ];
 
 /**
@@ -105,7 +105,7 @@ export const N_FACTURA_REFERENCIA_IDS = [110221, 110222, 110216];
 /**
  * IDs de procedimientos para el campo “Número de factura”.
  */
-export const N_FACTURA_IDS = [110205,  110212, 110223, 110207, 110208, 110217, 110211,110204];
+export const N_FACTURA_IDS = [110205, 110212,110201, 110207, 110208, 110217,110223, 110211,110204];
 
 /**
  * IDs de procedimientos para el campo “Norma de origen”.
@@ -116,7 +116,7 @@ export const NORMA_ORIGEN_IDS = [110204, ];
  * IDs de procedimientos para el campo “Nombre en inglés”.
  */
 export const NOMBRE_EN_INGLES_IDS = [
-  110205,  110212, 110223, 110207, 110208, 110214, 110217, 110216, 110211
+  110205, 110212,110201, 110207, 110208, 110214, 110217, 110216, 110223, 110211
 ];
 
 /**
@@ -128,7 +128,7 @@ export const OTRAS_INSTANCIAS_IDS = [110205, 110222, 110214, 110217, 110216, 110
  * IDs de procedimientos para el campo “Criterio para conferir origen”.
  */
 export const CRITERIO_PARA_CONFERIR_ORIGEN_IDS = [
-  110205,  110212, 110223, 110207, 110208, 110217, 110216,  
+  110205, 110212,110201, 110207, 110208, 110217, 110216, 110223
 ];
 
 /**
@@ -141,8 +141,7 @@ export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222, 110214, 110221];
  * @type {number[]}
  */
 export const VALOR_MERCANCIA_IDS = [
-  110204, 110205,  110212, 110223, 110222, 110207, 110208, 110214, 110217, 110216, 110221, 110211
-];
+  110204, 110205, 110212,110201, 110222, 110207, 110208, 110214, 110217, 110216, 110221, 110223, 110211];
 
 /**
  * Identificadores asociados al valor del contenido regional.
@@ -154,7 +153,7 @@ export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214, 110221, ];
  * Identificadores asociados a la fecha de la factura.
  * @type {number[]}
  */
-export const FECHA_FACTURA_IDS = [110204, 110205,  110212, 110223, 110207, 110217, 110216, 110208];
+export const FECHA_FACTURA_IDS = [110204, 110205, 110212,110201, 110207, 110217, 110216, 110223,110208];
 
 /**
  * Identificadores asociados a la fecha de la factura de referencia.
@@ -167,7 +166,7 @@ export const FECHA_FACTURA_REFERENCIA_IDS = [110221, 110222,  ];
  * @type {number[]}
  */
 export const TIPO_DE_FACTURA_IDS = [
-  110204, 110205,  110212, 110223, 110207, 110208, 110217, 110216, 110221, 110211
+  110204, 110205, 110212,110201, 110207, 110208, 110217, 110216, 110221, 110223, 110211
 ];
 
 /**
@@ -202,7 +201,7 @@ export const UNIDAD_MEDIDA_COMERCIALIZACION_IDS = [110221];
  */
 export const UMC_IDS = [
   110201, 110202, 110204, 110205, 110207, 110208, 110210, 110211, 110214,
-  110216, 110217, 110219, 110222, 110212, 110223
+  110216, 110217, 110219, 110222, 110223, 110212,110201
 ];
 
 /* =====================================================
@@ -212,12 +211,12 @@ export const UMC_IDS = [
 /**
  * IDs de procedimientos en los que el campo “Fecha de factura” es obligatorio.
  */
-export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205,  110212, 110223, 110208];
+export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212,110201, 110223, 110208];
 
 /**
  * IDs de procedimientos en los que el campo “Cantidad” es obligatorio.
  */
-export const REQUIRED_CANTIDAD: number[] = [110204, 110205,  110212, 110223, 110222, 110211, 110208, 110207];
+export const REQUIRED_CANTIDAD: number[] = [110204, 110205, 110212,110201, 110222, 110211, 110208, 110207, 110223];
 
 /**
  * IDs de procedimientos en los que el campo “UMC” (Unidad de Medida Comercial) es obligatorio.
@@ -228,20 +227,20 @@ export const REQUIRED_UMC: number[] = [110204, 110205, 110211, 110208, 110207];
  * IDs de procedimientos en los que el campo “Valor de mercancía” es obligatorio.
  */
 export const REQUIRED_VALOR_MERCANCIA: number[] = [
-  110204, 110205,  110212, 110223, 110222,110208, 110207
+  110204, 110205, 110212,110201, 110222,110208, 110207, 110223
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Complemento de descripción” es obligatorio.
  */
 export const REQUIRED_COMPLEMENTO_DESCRIPCION: number[] = [
-  110204, 110205,  110212, 110223, 110222, 110211, 110208, 110207
+  110204, 110205, 110212,110201, 110222, 110211, 110208, 110207, 110223
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Número de factura” es obligatorio.
  */
-export const REQUIRED_NUMERO_FACTURA: number[] = [ 110212, 110223, 110211, 110208, 110207];
+export const REQUIRED_NUMERO_FACTURA: number[] = [110212,110201, 110211, 110208, 110207, 110223];
 
 /**
  * IDs de procedimientos en los que el campo “Tipo de factura” es obligatorio.
@@ -261,4 +260,4 @@ export const FECHA_DE_PAGO: number[] = [110211];
 /**
  * IDs de procedimientos en los que el campo “Mercancías seleccionadas” es obligatorio.
  */
-export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207, 110212, 110223, 110211];
+export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207,110212,110201, 110211, 110223];

@@ -1017,8 +1017,8 @@
   {
     "id": 147,
     "tramite": 260213,
-    "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
+    "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal/contenedor-de-pasos",
     "department": "cofepris"
   },
   {

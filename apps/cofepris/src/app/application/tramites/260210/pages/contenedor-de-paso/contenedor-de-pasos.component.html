@@ -24,10 +24,11 @@
       (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
       (reenviarCargaRealizada)="cargaRealizada($event)"
       (cargaEnProgreso)="onCargaEnProgreso($event)"
+      (enBlancoObligatoria)="onBlancoObligatoria($event)"
       ></app-paso-carga-documento>
          }
      @case (3) {
-      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260210" [procedureUrl]="'permiso-sanitario-importacion-medicamentos-pruebas'"></paso-firma>
+      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260210" [procedureUrl]="'permiso-sanitario-importacion-medicamentos-pruebas/contenedor-de-pasos'"></paso-firma>
       
     } }
 
@@ -45,6 +46,16 @@
           >
             Anterior
           </button>
+          
+          @if(isSaltar) {
+            <button
+              type="button"
+              class="btn btn-default ms-3"
+              (click)="saltar()"
+            >
+              Saltar
+            </button>
+          }
 
           <button
             class="btn btn-primary ms-3"

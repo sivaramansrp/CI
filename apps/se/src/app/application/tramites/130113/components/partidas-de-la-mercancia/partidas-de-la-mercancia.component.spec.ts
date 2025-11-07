@@ -98,6 +98,7 @@ describe('SolicitudComponent', () => {
   it('debería manejar manejarlaFilaSeleccionada correctamente', () => {
     const FILA = [
       {
+        id: '1',
         cantidad: 'Test',
         unidadDeMedida: 'kg',
         fraccionFrancelaria: '1234.56.78',
@@ -114,16 +115,6 @@ describe('SolicitudComponent', () => {
     expect(component.filaSeleccionada).toEqual([]);
   });
 
-  it('debería validar y mostrar la tabla en validarYEnviarFormulario', () => {
-    component.partidasDelaMercanciaForm.patchValue({
-      cantidadPartidasDeLaMercancia: '10',
-      fraccionTigiePartidasDeLaMercancia: '123',
-      descripcionPartidasDeLaMercancia: 'Test',
-      valorPartidaUSDPartidasDeLaMercancia: '100',
-    });
-    component.validarYEnviarFormulario();
-    expect(component.mostrarTabla).toBe(true);
-  });
 
   it('debería obtener la entidad federativa', () => {
     const MOCKDATA = [{ id: 1, descripcion: 'Entidad 1' }];

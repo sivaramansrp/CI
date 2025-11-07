@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -18,6 +18,7 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constantes/materias-primas.enum';
 import { Subject } from 'rxjs';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
 
@@ -42,6 +43,11 @@ import { Tramite260203Query } from '../../estados/queries/tramite260203Query.que
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+      /**
+       * @property {number} idProcedimiento
+       * @description Identificador del procedimiento.
+       */
+      public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Notificador para destruir observables y evitar fugas de memoria.
    */
@@ -110,7 +116,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  esFormularioSoloLectura!: boolean;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Lista de elementos que son obligatorios para completar el formulario.
@@ -141,8 +147,19 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260203Query: Tramite260203Query,
     private tramite260203Store: Tramite260203Store,
-    private consultaQuery: ConsultaioQuery
-  ) {}
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((seccionState) => {
+      if(!seccionState.create && seccionState.procedureId === '260203') {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      } 
+    });
+  }
 
   ngOnInit(): void {
     this.tramite260203Query.selectTramiteState$
@@ -153,19 +170,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            seccionState.tablaMercanciasConfigDatos
         })
       )
       .subscribe();
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe((seccionState) => {
-        if(!seccionState.create && seccionState.procedureId === '260203') {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        } 
-      });
   }
 
   /**

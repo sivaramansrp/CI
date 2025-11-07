@@ -357,8 +357,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   @Input() idProcedimiento!: number;
 
+  /** Evento que emite los datos del productor exportador cuando se agrega uno nuevo al sistema. */
   @Output() emitAgregarExportador: EventEmitter<HistoricoColumnas> =
     new EventEmitter<HistoricoColumnas>();
+
+  /** Evento que emite los datos del productor exportador cuando se agrega uno nuevo al sistema. */
+  @Output() eliminarEventoExportador: EventEmitter<HistoricoColumnas[]> =
+    new EventEmitter<HistoricoColumnas[]>();
+
+    /** Evento que emite los datos del productor exportador. */
+  @Output() emitProductoresExportador: EventEmitter<HistoricoColumnas[]> =
+    new EventEmitter<HistoricoColumnas[]>();
 
   /**
    * @description
@@ -505,6 +514,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         this.emitAgregarExportador.emit(ele);
       });
       this.productoresExportador = this.productoresExportador.filter((elementos) => !this.seleccionadoProductoresExportador.some((elementosSecundarios) => elementosSecundarios.id === elementos.id));
+      this.emitProductoresExportador.emit(this.productoresExportador);
       this.seleccionadoProductoresExportador = [];
     } else {
       this.abrirModal("Existen más productores que mercancías");
@@ -516,17 +526,24 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   eliminarProductoresSeleccionados(): void {
     if (this.seleccionadoAgregarProductoresExportador.length !== 0) {
-      this.productoresExportador = [
+      const EXISTING_PRODUCTORES = this.seleccionadoAgregarProductoresExportador.filter(
+        (prod) => !prod.nuevo
+      );
+
+      const PRODUCTORES_EXPORTADOR = [
         ...this.productoresExportador,
-        ...this.seleccionadoAgregarProductoresExportador,
+        ...EXISTING_PRODUCTORES,
       ];
-      this.agregarProductoresExportador =
+      
+      this.emitProductoresExportador.emit(PRODUCTORES_EXPORTADOR);
+      const REMAINING_DATOS =
         this.agregarProductoresExportador.filter(
           (elementos) =>
             !this.seleccionadoAgregarProductoresExportador.some(
               (elementosSecundarios) => elementosSecundarios.id === elementos.id
             )
         );
+      this.eliminarEventoExportador.emit(REMAINING_DATOS);
       this.seleccionadoAgregarProductoresExportador = [];
     } else {
       this.abrirModal('Debes seleccionar un productor');

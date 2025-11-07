@@ -8,8 +8,9 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos del formulario de pago de derechos en el store del trámite.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260213Store } from '../../../estados/tramite260213Store.store';
@@ -46,6 +47,12 @@ import { Tramite260213Store } from '../../../estados/tramite260213Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
+  
+  /**
+   * @property {number} idProcedimiento
+   * @description Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @property {boolean} formularioDeshabilitado
    * @description
@@ -59,6 +66,12 @@ export class PagoDeDerechosContenedoraComponent {
    * Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
   public pagoDerechos: PagoDerechosFormState;
+    /**
+   * Referencia al componente hijo `PagoDeDerechosComponent`.
+   * Permite acceder a las propiedades y métodos del componente hijo desde este componente contenedor.
+   *
+   */
+   @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
 
   /**
    * @constructor
@@ -92,5 +105,14 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+  /**
+ *  Valida el formulario de pago de derechos en el componente hijo.
+ *  Retorna `true` si el formulario es válido, de lo contrario `false`.
+ */
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

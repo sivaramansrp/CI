@@ -1,85 +1,5 @@
 <div class="container">
-  <form [formGroup]="forma">
-    
-    <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
-    <div class="row">
-      <div class="col-md-8"></div>
-      <div class="col-md-4 d-flex justify-content-end">
-        <button
-          type="button"
-          [disabled]="esFormularioSoloLectura"
-          class="btn btn-primary"
-          (click)="abrirModal()"
-        >
-          Seleccionar establecimiento
-        </button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="rfcDel"
-            >RFC del responsable sanitario:</label
-          >
-          <input
-            class="form-control"
-            id="rfcDel"
-            placeholder=""
-            type="text"
-            formControlName="rfcDel"
-            (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
-          />
-          <div *ngIf="forma.get('rfcDel')?.touched && forma.get('rfcDel')?.errors?.['pattern']" class="mensaje-error">
-            El RFC no tiene un formato valido.
-          </div>
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="form-group">
-          <label class="form-label" for="denominacion"
-            >Denominación o razón social*:</label
-          >
-          <input
-            class="form-control"
-            id="denominacion"
-            placeholder=""
-            type="text"
-            formControlName="denominacion"
-            [ngClass]="esValido('denominacion') ? 'required' : ''"
-            (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
-          />
-           <div *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.errors?.['required']" class="mensaje-error">
-            Este campo es obligatorio.
-          </div>
-          <div *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.errors?.['pattern']" class="mensaje-error">
-            El valor capturado no es válido.
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico*: <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span></label>
-          <input
-            class="form-control"
-            id="correo"
-            placeholder=""
-            type="text"
-            formControlName="correo"
-            [ngClass]="esValido('correo') ? 'required' : ''"
-            (change)="setValoresStore(forma, 'correo', 'setCorreo')"
-          />
-           <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['required']" class="mensaje-error">
-            Este campo es obligatorio.
-          </div>
-            <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['pattern']" class="mensaje-error">
-            El valor Ingresado no es una dirección válida de correo electrónico.
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+  <app-datos-del-establecimiento-rfc [idProcedimiento]="idProcedimiento"  (rfcValidoChange)="onRfcValidoChange($event)"></app-datos-del-establecimiento-rfc>
   <app-domicillo 
     [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
     [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
@@ -89,10 +9,14 @@
     [tieneDomicilioHabilitar]="tieneDomicilioHabilitar"
     [mostrarNumeroRegistro]="mostrarNumeroRegistro"
     [tieneUsoEspecifico]="tieneUsoEspecifico"
+    [idProcedimiento]="idProcedimiento"
+    [identificacion]="identificacion"
+    [rfcValido]="rfcValido"
+    [estadoValidte]="estadoValidte"
     >
   </app-domicillo>
-  <app-manifiestos></app-manifiestos>
-  <app-representante-legal-rfc></app-representante-legal-rfc>
+  <app-manifiestos  [idProcedimiento]="idProcedimiento"></app-manifiestos>
+  <app-representante-legal-rfc  [idProcedimiento]="idProcedimiento"></app-representante-legal-rfc>
 </div>
 @if (nuevaNotificacion) {
   <section>

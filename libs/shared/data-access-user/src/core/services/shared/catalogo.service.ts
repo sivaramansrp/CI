@@ -18,6 +18,7 @@ import {
   CATALOGO_ANOS,
   CATALOGO_BANCOS,
   CATALOGO_CLASIFICACION_PRODUCTO,
+  CATALOGO_CODIGO,
   CATALOGO_COLONIAS,
   CATALOGO_ENTIDADES_FEDERATIVAS,
   CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO,
@@ -45,10 +46,8 @@ import {
   CATALOGO_TRATADOS_ACUERDOS,
   CATALOGO_TRATADO_ACUERDO,
   CATALOGO_TRATADO_ACUERDOS,
-  CATALOGO_TRATADO_ACUERDOS_PAIS,
   CATALOGO_TRATADO_ACUERDO_NEW,
   CATALOGO_TRATADO_ACUERDO_PAIS,
-  CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC,
   CATALOGO_UNIDAD_DE_MASA_BRUTA,
   CATALOGO_UNIDAD_MASA_BRUTA,
   CLASIFICACION_REGIMEN,
@@ -674,14 +673,6 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   tratadoCatalogoPais(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    if (tramite === '110214' || tramite === '110216') {
-      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
-      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    }
-    if (tramite === '110217') {
-      const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS_PAIS(tramite)}`;
-      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    }
     const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
@@ -702,8 +693,8 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
  * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
  * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
  */
-  tratadosAcuerdosCatalogoDatosNew(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite, ideTipoTratadoAcuerdo)}`;
+  tratadosAcuerdosCatalogoDatosNew(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -878,6 +869,17 @@ bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de bancos.
+ *
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
+ * @see CATALOGO_BANCOS
+ */
+codigoCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveMunicipio)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 /**
  * Obtiene el catálogo de años disponibles.
  *  

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TELEFONO, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CertificadoApiData, ColumnasTabla, FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
@@ -88,7 +89,27 @@ export class CertificadoDeOrigenComponent
   /**
    * Datos de la tabla de mercancías del certificado.
    */
-  public mercanciaCertificadoTablaDatos: MercanciaCertificado[] = [];
+  public mercanciaCertificadoTablaDatos: MercanciaCertificado[] = [
+    {
+      numeroOrden: '1',
+      fraccionArancelaria: '3926.90.99',
+      nombreTecnico: 'Artículos de plástico',
+      nombreComercial: 'Patitos de hule',
+      nombreIngles: 'Rubber ducklings',
+      complementoDescripcion: 'Juguetes de baño de plástico',
+      marca: 'ToyMark',
+      criterio: 'A',
+      norma: 'NAFTA',
+      cantidadExportar: '1000',
+      unidad: 'Piezas',
+      masaBruta: '500',
+      comercializacion: 'Kilogramos',
+      valorMercancia: '5000.00',
+      numeroFactura: 'FAC-001',
+      fechaFactura: '2024-10-15',
+      registroProductos: 'REG-001'
+    }
+  ];
 
   /**
    * Datos de la tabla de productores asociados.
@@ -364,7 +385,6 @@ export class CertificadoDeOrigenComponent
         [Validators.email]
       ),
     });
-    this.getMercanciaCertificadoTabla();
     this.inicializarEstadoFormulario();
     this.query.selectSolicitud$
       .pipe(

@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoServices, doDeepCopy, esValidArray, esValidObject, ModeloDeFormaDinamica,TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, doDeepCopy, esValidArray, esValidObject, ModeloDeFormaDinamica, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -75,6 +75,16 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     new EventEmitter<InstrumentoCupoTPLForm>();
 
   /**
+   * Evento de salida que emite un objeto con posibles mensajes de error relacionados con las fracciones.
+   * 
+   * @event
+   * @property {string} [fraccionErrorUno] - Mensaje de error para la primera fracción, si existe.
+   * @property {string} [fraccionErrorDos] - Mensaje de error para la segunda fracción, si existe.
+   */
+  @Output() public fraccionErrorEvent =
+    new EventEmitter<{ fraccionErrorUno?: string; fraccionError?: boolean }>();
+
+  /**
    * compo doc
    * @property consultarCupoFormData
    * @description
@@ -144,6 +154,22 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
    * Este valor se utiliza para distinguir el tipo de trámite dentro de la aplicación.
    */
   tramiteId: string = '120101';
+
+  /**
+   * Mensaje de error asociado a la primera fracción.
+   * 
+   * Esta propiedad es opcional y almacena una cadena de texto que describe el error
+   * relacionado con la validación o procesamiento de la primera fracción en el componente.
+   */
+  fraccionErrorUno?: string;
+
+  /**
+   * Indica si existe un error relacionado con la fracción.
+   * 
+   * Cuando es `true`, significa que se ha producido un error en la validación o procesamiento de la fracción.
+   */
+  fraccionError: boolean = false;
+
 
   /**
  * @constructor
@@ -336,21 +362,38 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   obtenerTablaDatos(): void {
     const NANO_FORM = this.forma.get('ninoFormGroup') as FormGroup;
     const NANO_FORM_VALUE = NANO_FORM.value;
+    this.cuerpoTabla=[];
+      this.fraccionError = false;
+        this.fraccionErrorUno = undefined;
+        const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
+        this.fraccionErrorEvent.emit(FRACCION_ERROR);
     const PAYLOAD = {
       instrumentoCupoTPL: {
         idTratadoAcuerdo: NANO_FORM_VALUE.tratado === 118 ? NANO_FORM_VALUE.tratado : 118,
         claveRegimen: NANO_FORM_VALUE.clasificacion === "REG.02" ? NANO_FORM_VALUE.clasificacion : "REG.02",
-        clavePais: NANO_FORM_VALUE.pais==="CAN" ? NANO_FORM_VALUE.pais : "CAN",
-        cveFraccion: "6302530020",
+        clavePais: NANO_FORM_VALUE.pais === "CAN" ? NANO_FORM_VALUE.pais : "CAN",
+        cveFraccion: NANO_FORM_VALUE.fraccionArancelaria ? NANO_FORM_VALUE.fraccionArancelaria : "",
         descripcionFraccion: "",
         idFraccionHtsUsa: ""
       }
     }
     this.solicitudDeRegistroTplService.getBuscarDatos(PAYLOAD).subscribe((resp) => {
-      const TABLA_DATOS = this.ampliacionServiciosAdapter.mapBuscarTablaDatosList(resp.datos);
-      this.tramite120101Store.setDynamicFieldValue('idMecanismo', TABLA_DATOS[0].idMecanismo);
-      this.cuerpoTabla = TABLA_DATOS;
-      this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
+      if (resp.codigo !== "00") {
+        this.fraccionErrorUno = resp.codigo?.length > 1? resp.codigo:resp.causa;
+        this.fraccionError = true;
+        const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
+        this.fraccionErrorEvent.emit(FRACCION_ERROR);
+      } else if (resp.codigo === "00") {
+        this.fraccionError = false;
+        this.fraccionErrorUno = undefined;
+        const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
+        this.fraccionErrorEvent.emit(FRACCION_ERROR);
+        const TABLA_DATOS = this.ampliacionServiciosAdapter.mapBuscarTablaDatosList(resp.datos);
+        this.tramite120101Store.setDynamicFieldValue('idMecanismo', TABLA_DATOS[0].idMecanismo);
+        this.cuerpoTabla = TABLA_DATOS;
+        this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
+      }
+
     });
   }
 
