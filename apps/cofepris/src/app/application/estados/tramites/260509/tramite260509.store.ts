@@ -13,6 +13,7 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud260509State {
     [key: string]: any;
+    idSolicitud: number;
     formValidity?: {
     datosDeLaSolicitud?: boolean;
     terceros?: boolean;
@@ -26,6 +27,7 @@ export interface Solicitud260509State {
  */
 export function createInitialState(): Solicitud260509State {
     return {
+        idSolicitud: 0,
         formValidity: {},
     };
 }

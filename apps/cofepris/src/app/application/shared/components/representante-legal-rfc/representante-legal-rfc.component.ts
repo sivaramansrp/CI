@@ -138,6 +138,9 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       apellidoPaterno: 'Paterno',
       apellidoMaterno: 'Materno',
     });
+    this.DatosDomicilioLegalStore.setNombre(this.representante.get('nombre')?.value);
+    this.DatosDomicilioLegalStore.setApellidoPaterno(this.representante.get('apellidoPaterno')?.value);
+    this.DatosDomicilioLegalStore.setApellidoMaterno(this.representante.get('apellidoMaterno')?.value);
   }
 
   /**

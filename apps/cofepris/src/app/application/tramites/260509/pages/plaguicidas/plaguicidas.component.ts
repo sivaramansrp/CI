@@ -1,13 +1,15 @@
-import { Component, inject, ViewChild } from '@angular/core';
-import { esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ListaPasosWizard, PASOS, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Observable, map, switchMap, take } from 'rxjs';
+import { Solicitud260509State, Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-vegetales-nutrientes.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { map, Observable, switchMap, take } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 import { PermisoVegetalesNutrientesService } from '../../services/permiso-vegetales-nutrientes/permiso-vegetales-nutrientes.service';
-import { Solicitud260509State, Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-vegetales-nutrientes.enum';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260509Query } from '../../../../estados/queries/260509/tramite260509.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
  * Interfaz que define la estructura de los objetos de acción del botón.
@@ -26,7 +28,7 @@ interface AccionBoton {
   selector: 'app-plaguicidas',
   templateUrl: './plaguicidas.component.html',
 })
-export class PlaguicidasComponent {
+export class PlaguicidasComponent implements OnInit {
 
   /**
    * Referencia al componente `PasoUnoComponent`.
@@ -75,11 +77,43 @@ export class PlaguicidasComponent {
     txtBtnSig: 'Continuar',
   };
 
+  public solicitudState!: Solicitud260509State;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
   constructor(
     private toastrService: ToastrService,
     private service: PermisoVegetalesNutrientesService,
-    private store: Tramite260509Store
+    private store: Tramite260509Store,
+    private shared2605Service: Shared2605Service,
+    private query: Tramite260509Query
   ) {}
+
+  ngOnInit(): void {
+    this.query.selectSolicitud$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
+  }
 
   /**
    * Maneja la acción del botón en el asistente.
@@ -134,7 +168,7 @@ export class PlaguicidasComponent {
    * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
    */
     private shouldNavigate$(): Observable<boolean> {
-      return this.service.getAllState().pipe(
+      return this.shared2605Service.getAllState().pipe(
         take(1),
         switchMap(data => this.guardar(data)),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -156,29 +190,8 @@ export class PlaguicidasComponent {
      * @param data - Los datos que se desean guardar y enviar al servidor.
      * @returns void
      */
-    guardar(data: Solicitud260509State): Promise<unknown> {
-      
-      const PAYLOAD = {
-        "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-        "actividadEconomica": "Fabricación de productos de hierro y acero",
-        "correoElectronico": "contacto@acerosalvarado.com",
-        "domicilio": {
-            "pais": "México",
-            "codigoPostal": "06700",
-            "estado": "Ciudad de México",
-            "municipioAlcaldia": "Cuauhtémoc",
-            "localidad": "Centro",
-            "colonia": "Roma Norte",
-            "calle": "Av. Insurgentes Sur",
-            "numeroExterior": "123",
-            "numeroInterior": "Piso 5, Oficina A",
-            "lada": "",
-            "telefono": "123456"
-          }
-        },
-      }
+    guardar(data: Record<string, unknown>): Promise<unknown> {
+      const PAYLOAD = this.shared2605Service.buildPayload(data, 260509);
       return new Promise((resolve, reject) => {
         this.service.guardarDatosPost(PAYLOAD).subscribe({
           next: (response) => {
@@ -196,7 +209,7 @@ export class PlaguicidasComponent {
             reject(error);
           }
         });
-        });
+      });
     }
 
   /**
@@ -208,5 +221,37 @@ export class PlaguicidasComponent {
       return this.pasoUnoComponent?.validarFormularios() ?? true;
     }
     return true;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

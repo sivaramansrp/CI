@@ -274,7 +274,6 @@ export class DomicilioComponent
       this.inicializarFormulario();
     }
     if (this.esFormularioSoloLectura || this.esFormularioActualizacion) {
-      this.obtenerScianTablaDatos();
       this.obtenerDataMercanciasDatos();
     }
   }
@@ -282,14 +281,14 @@ export class DomicilioComponent
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
-  obtenerScianTablaDatos(): void {
-    this.service
-      .getObtenerScianTablaDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
-  }
+  // obtenerScianTablaDatos(): void {
+  //   this.service
+  //     .getObtenerScianTablaDatos()
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe((data): void => {
+  //       this.nicoTablaDatos = data?.data;
+  //     });
+  // }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -322,6 +321,12 @@ export class DomicilioComponent
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          if (seccionState.nicoTabla.length) {
+            this.nicoTablaDatos = seccionState.nicoTabla;
+          }
+          if (seccionState.mercanciaTabla.length) {
+            this.mercanciasTablaDatos = seccionState.mercanciaTabla;
+          }
         }),
       )
       .subscribe();
@@ -922,6 +927,7 @@ export class DomicilioComponent
       if (!EXISTS) {
         this.nicoTablaDatos.push(NUEVO_DATO);
         this.nicoTablaDatos = [...this.nicoTablaDatos];
+        this.datosDomicilioLegalStore.setNicoTabla(this.nicoTablaDatos);
       }
       //this.nicoTablaDatos.push(NUEVO_DATO);
       this.nicoTablaDatos = [...this.nicoTablaDatos];
@@ -1466,6 +1472,7 @@ export class DomicilioComponent
         this.listaMercancias.push(NUEVA_MERCANCIA);
       }
       this.mercanciasTablaDatos = [...this.listaMercancias];
+      this.datosDomicilioLegalStore.setMercanciasTabla(this.mercanciasTablaDatos);
       this.formMercancias.reset();
 
       const MODAL_ELEMENT = document.getElementById("modalAddAgentMercancias");
