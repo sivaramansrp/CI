@@ -15,6 +15,10 @@ import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-
  */
 export interface Tramite130105State {
   /**
+   * ID de la solicitud asociada al trámite.
+   */
+  idSolicitud: number;
+  /**
    * Producto seleccionado en el formulario.
    */
   producto: string;
@@ -140,6 +144,7 @@ export interface Tramite130105State {
  */
 export function createInitialState(): Tramite130105State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
@@ -180,6 +185,18 @@ export function createInitialState(): Tramite130105State {
 export class Tramite130105Store extends Store<Tramite130105State> {
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
      /**

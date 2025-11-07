@@ -4,12 +4,14 @@
  * Este servicio proporciona métodos para obtener datos relacionados con la importación de vehículos usados por donación.
  */
 import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
-import { Catalogo, CatalogoServices } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { Tramite130105Query } from '../../../estados/queries/tramite130105.query';
+import { PROC_130105 } from '../servers/api-route';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -24,8 +26,16 @@ export class ImportacionVehiculosUsadosDonacionService {
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient, private tramite130105Store: Tramite130105Store, private catalogoServices: CatalogoServices) {
+  constructor(private http: HttpClient, private tramite130105Store: Tramite130105Store, private tramite130105Query: Tramite130105Query, private catalogoServices: CatalogoServices) {
     //
+  }
+
+  /**
+     * Obtiene todos los datos del estado almacenado en el store.
+     * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+     */
+  getAllState(): Observable<Tramite130105State> {
+    return this.tramite130105Query.selectSolicitud$;
   }
 
   /**
@@ -111,6 +121,16 @@ export class ImportacionVehiculosUsadosDonacionService {
   }
 
   /**
+     * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+     *
+     * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+     * @returns Observable con la respuesta de la solicitud POST.
+     */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_130105.GUARDAR, body);
+  }
+
+  /**
     * Obtiene el catálogo de tratados/acuerdos asociados a un trámite.
     * @param tramitesID - Identificador del trámite
     * @param tratadoAsociado - Clave del tratado asociado
@@ -153,6 +173,12 @@ export class ImportacionVehiculosUsadosDonacionService {
 
   getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<any[]> {
     return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  getTodosPaisesSeleccionados(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.todosPaisesSeleccionados(ID).pipe(
       map(res => res?.datos ?? [])
     );
   }

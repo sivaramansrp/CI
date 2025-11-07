@@ -104,6 +104,12 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
   @Output() bloqueCambiar = new EventEmitter<number>();
 
   /**
+   * Evento emitido cuando se seleccionan todos los países.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() todosPaisesSeleccionadosEvent = new EventEmitter<boolean>(false);
+
+  /**
    * Indica si se debe mostrar la notificación de ayuda.
    */
   mostrarAyuda = false;
@@ -299,5 +305,13 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  /**
+   * Emite un evento para seleccionar todos los países.
+   * @type {EventEmitter<boolean>}
+   */
+  seleccionarTodosPaises(): void {
+    this.todosPaisesSeleccionadosEvent.emit(true);
   }
 }

@@ -495,7 +495,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * Identificador del bloque seleccionado.
   */
   enCambioDeBloque(bloqueId: number): void {
-    // this.fetchPaisesPorBloque(bloqueId);
     this.getPaisesPorBloque(bloqueId.toString());
   }
   /**
@@ -592,6 +591,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.importacionVehiculosUsadosDonacionService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
     });
+  }
+
+  todosPaisesSeleccionados(evento: boolean): void {
+    if (evento) {
+      this.importacionVehiculosUsadosDonacionService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
+        this.paisesPorBloque = data as Catalogo[];
+      });
+    }
   }
 
   /**
