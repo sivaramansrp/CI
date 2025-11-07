@@ -38,6 +38,7 @@ import {
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,
+  NOMBRES_CAMPOS,
 } from "../../models/datos-domicilio-legal.model";
 import {
   DatosDomicilioLegalState,
@@ -102,7 +103,10 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
+  deOrigen: false,
+  deProcedencia: false
 };
+nombresCampos:boolean = false;
   @Input() identificacion: boolean = false;
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
@@ -886,6 +890,7 @@ public mostrarErrores = {
       ],
       paisDeOriginDatos:[ this.seleccionadasPaisDeOriginDatos, Validators.required],
       paisDeProcedenciaDatos:[ this.seleccionadasPaisDeProcedenciaDatos, Validators.required],
+      numeroRegistroSanitario:[],
     });
 
     /**
@@ -1835,6 +1840,13 @@ onConfirmacionModal(accion: boolean): void {
       this.formMercancias.get("licenciaSanitaria")?.updateValueAndValidity();
       this.formMercancias.get("avisoCheckbox")?.updateValueAndValidity();
     }
+    this.nombresCampos = NOMBRES_CAMPOS.includes(this.idProcedimiento ?? 0) ? true : false;
+    if(this.nombresCampos){
+      this.formMercancias.get("numeroRegistroSanitario")?.setValidators([Validators.required]);
+      this.formMercancias.get("numeroRegistroSanitario")?.updateValueAndValidity();
+      this.formMercancias.get("numeroRegistro")?.setValidators([]);   
+      this.formMercancias.get("numeroRegistro")?.updateValueAndValidity();
+     }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.formMercancias) {
@@ -1858,7 +1870,6 @@ onConfirmacionModal(accion: boolean): void {
     this.mostrarErrores.telefono = true;
     ISVALID = false;
    }
-   console.log(this.domicilio.getRawValue(),this.domicilio);
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;

@@ -307,7 +307,7 @@
                <ng-titulo titulo="Identificación del producto"></ng-titulo>
                <div class="form-group">
                   <label for="nombreCientifico">
-                  Nombre científico<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
+                  Nombre comercial<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
                   </label>
                   <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
                      setValoresStore(
@@ -566,6 +566,61 @@
                      </div>
                   </div>
                </div>
+               @if(nombresCampos){
+              <div class="form-group">
+                  <label for="numeroRegistroSanitario">
+                 Número CAS<span [ngClass]="{'tiene-error':formMercancias.get('numeroRegistroSanitario')?.invalid && formMercancias.get('numeroRegistroSanitario')?.touched}">*</span>:
+                  </label>
+                  <input type="text" id="numeroRegistroSanitario" formControlName="numeroRegistroSanitario"
+                     class="form-control" (change)="
+                     setValoresStore(
+                     formMercancias,
+                     'numeroRegistroSanitario',
+                     'setDenominacionEspecifica'
+                     );
+                     formMercancias.get('numeroRegistroSanitario')?.markAsTouched();
+                     " 
+                     [maxlength]="20"
+                     />
+                  <div *ngIf="
+                     formMercancias.get('numeroRegistroSanitario')?.invalid &&
+                     formMercancias.get('numeroRegistroSanitario')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('numeroRegistroSanitario')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     <small *ngIf="formMercancias.get('numeroRegistroSanitario')?.errors?.['maxlength']">
+                     Máximo 100 caracteres permitidos
+                     </small>
+                  </div>
+               </div>
+               <div class="form-group" *ngIf="mostrarNumeroRegistro">
+                  <label for="numeroRegistro">
+                   Porcentaje de concentración<span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
+                  </label>
+                  <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion" class="form-control" (change)="
+                     setValoresStore(
+                     formMercancias,
+                     'numeroRegistro',
+                     'setNumeroRegistro'
+                     );
+                     formMercancias.get('porcentajeConcentracion')?.markAsTouched();
+                     " 
+                      [maxlength]="100"/>
+                  <div *ngIf="
+                     formMercancias.get('porcentajeConcentracion')?.invalid &&
+                     formMercancias.get('porcentajeConcentracion')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     <small *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['maxlength']">
+                     Máximo 50 caracteres permitidos
+                     </small>
+                  </div>
+               </div>
+               }
+               @else{
                <div class="form-group">
                   <label for="porcentajeConcentracion">
                   Porcentaje de concentración<span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
@@ -602,7 +657,8 @@
                      'setNumeroRegistro'
                      );
                      formMercancias.get('numeroRegistro')?.markAsTouched();
-                     " />
+                     "
+                      [maxlength]="100" />
                   <div *ngIf="
                      formMercancias.get('numeroRegistro')?.invalid &&
                      formMercancias.get('numeroRegistro')?.touched
@@ -615,6 +671,7 @@
                      </small>
                   </div>
                </div>
+            }
                @if (configuracionVisibilidad.paisOrigen) {
                <div class="form-group mt-5">
                   <div class="panel-group ficha-collapse" id="accordion">
@@ -635,6 +692,15 @@
                            </div>
                         </div>
                         }
+                    
+                     </div>
+                          <div *ngIf="
+                     formMercancias.get('paisDeOriginDatos')?.invalid &&
+                     formMercancias.get('paisDeOriginDatos')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('paisDeOriginDatos')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
                      </div>
                   </div>
                </div>
@@ -722,7 +788,16 @@
                         </div>
                         }
                      </div>
+                       <div *ngIf="
+                     formMercancias.get('paisDeProcedenciaDatos')?.invalid &&
+                     formMercancias.get('paisDeProcedenciaDatos')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('paisDeProcedenciaDatos')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     </div>
                   </div>
+                 
                </div>
                }
                <div class="row">

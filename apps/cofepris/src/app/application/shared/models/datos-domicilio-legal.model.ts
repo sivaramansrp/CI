@@ -275,3 +275,5 @@ export interface PermisoModel {
     descripcion: string;
     umt: string;
   }
+
+  export const NOMBRES_CAMPOS = [260512,260513,260516];
