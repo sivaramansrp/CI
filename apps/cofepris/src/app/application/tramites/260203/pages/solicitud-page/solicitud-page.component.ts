@@ -157,8 +157,18 @@ esFormaValido: boolean = false;
    */
 public mostrarAlerta: boolean = false;
 
+  /**
+   * @property {boolean} requiresPaymentData
+   * @description
+   * Indica si se requieren datos de pago para continuar con el trámite.
+   */
   public requiresPaymentData: boolean = false;
 
+    /**
+   * @property {number} confirmarSinPagoDeDerechos
+   * @description
+   * Indica si se ha confirmado la continuación sin pago de derechos.
+   */
   public confirmarSinPagoDeDerechos: number = 0;
 
 
@@ -261,16 +271,23 @@ public mostrarAlerta: boolean = false;
    */
   getValorIndice(e: AccionBoton): void {
 
-      if (e.accion === 'cont') {
-           let isValid = true;
-     
-             if (this.indice === 1 && this.pasoUnoComponent) {
-             isValid = this.pasoUnoComponent.validarPasoUno();
-           }
-           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
-              this.mostrarAlerta=true;
-              this.confirmarSinPagoDeDerechos = 2;
-              this.seleccionarFilaNotificacion = {
+            if (e.accion === 'cont') {
+          let isValid = true;
+ 
+          if (this.indice === 1 && this.pasoUnoComponent) {
+          isValid = this.pasoUnoComponent.validarPasoUno();
+        }
+       
+        if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+            this.confirmarSinPagoDeDerechos = 2;
+          }else {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
+ 
+        if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+            this.mostrarAlerta=true;
+            this.seleccionarFilaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
@@ -283,56 +300,69 @@ public mostrarAlerta: boolean = false;
               alineacionBtonoCerrar:'flex-row-reverse'
             }
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-
-           }
-           if (!isValid) {
-              this.formErrorAlert = this.MENSAJE_DE_ERROR;
-              this.esFormaValido = true;
-              this.datosPasos.indice = this.indice;
-              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-              return;
-           }
-     
-            const PAYLOAD = GuardarAdapter_260203.toFormPayload(this.solicitudState);
-                let shouldNavigate = false;
-                this.registroSolicitudService.postGuardarDatos('260203', PAYLOAD).subscribe(response => {
-                  shouldNavigate = response.codigo === '00';
-                  if (!shouldNavigate) {
-                    const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-                    this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
-                    this.esFormaValido = false;
-                    this.indice = 1;
-                    this.datosPasos.indice = 1;
-                    this.wizardComponent.indiceActual = 1;
-                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-                    return;
-                  }
-                  if(shouldNavigate) {
-                    if(esValidObject(response) && esValidObject(response.datos)) {
-                      const DATOS = response.datos as { id_solicitud?: number };
-                      if(getValidDatos(DATOS.id_solicitud)) {
-                        this.tramiteStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
-                      } else {
-                        this.tramiteStore.setIdSolicitud(0);
-                      }
-                    }
-                    const INDICE_ACTUALIZADO = this.indice + 1;
-                    this.toastrService.success(response.mensaje);
-                    if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
-                      this.indice = INDICE_ACTUALIZADO;
-                      this.datosPasos.indice = INDICE_ACTUALIZADO;
-                      this.esFormaValido = false;
-                      this.wizardComponent.siguiente();
-                    }
-                  } else {
-                    this.toastrService.error(response.mensaje);
-                  }
-                });
-              }else{
-                this.indice = e.valor;
-                this.datosPasos.indice = this.indice;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
+      }
+ 
+        if (!isValid) {
+          this.formErrorAlert = this.MENSAJE_DE_ERROR;
+          this.esFormaValido = true;
+          this.datosPasos.indice = this.indice;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+ 
+        const PAYLOAD = GuardarAdapter_260203.toFormPayload(this.solicitudState);
+        let shouldNavigate = false;
+        this.registroSolicitudService.postGuardarDatos('260203', PAYLOAD).subscribe(response => {
+          shouldNavigate = response.codigo === '00';
+          if (!shouldNavigate) {
+            const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+            this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          if(shouldNavigate) {
+            if(esValidObject(response) && esValidObject(response.datos)) {
+              this.esFormaValido = false;
+              const DATOS = response.datos as { id_solicitud?: number };
+              const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+              this.idSolicitudState = ID_SOLICITUD;
+              this.tramiteStore.setIdSolicitud(ID_SOLICITUD);
+            }
+            // Calcular el nuevo índice basado en la acción
+            let indiceActualizado = e.valor;
+            if (e.accion === 'cont') {
+              indiceActualizado = e.valor;
+            }
+            this.toastrService.success(response.mensaje);
+            if (indiceActualizado > 0 && indiceActualizado < 5) {
+              this.indice = indiceActualizado;
+              this.datosPasos.indice = indiceActualizado;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
                 this.wizardComponent.atras();
               }
+            }
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+        });
+      }else{
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        this.wizardComponent.atras();
+      }
+
+    
   }
      cerrarModal(value:boolean): void {
       if(value){
