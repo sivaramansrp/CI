@@ -88,20 +88,37 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param solicitud150103Store Servicio para manejar el estado de la solicitud.
    * @param solicitud150103Query Servicio para realizar consultas del estado.
    * @param informaAnualPrograma Servicio para realizar solicitudes relacionadas.
-   */
-  constructor(
+   */  constructor(
     public fb: FormBuilder,
     public solicitud150103Store: Solicitud150103Store,
     public solicitud150103Query: Solicitud150103Query,
     public informaAnualPrograma: InformeAnualProgramaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // this.obtenerReporteFechas();
+    // Set default dates - today for inicio, yesterday for fin
+    this.setDefaultDates();
+    
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
       this.obtenerProgramasReporte();
     }
+  }
+
+  /**
+   * @method setDefaultDates
+   * @description Sets default dates - today for inicio and yesterday for fin
+   */
+  private setDefaultDates(): void {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    
+    const inicioDate = this.formatDateToMonthYear(today.toISOString());
+    const finDate = this.formatDateToMonthYear(yesterday.toISOString());
+    
+    this.solicitud150103Store.actualizarInicio(inicioDate);
+    this.solicitud150103Store.actualizarFin(finDate);
   }
 
   /**
