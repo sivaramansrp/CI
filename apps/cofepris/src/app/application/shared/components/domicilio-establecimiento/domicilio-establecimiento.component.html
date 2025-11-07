@@ -316,7 +316,9 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreComercial')?.markAsTouched();
-                     " />
+                     " 
+                     [maxlength]="256"
+                     />
                   <div *ngIf="
                      formMercancias.get('nombreComercial')?.invalid &&
                      formMercancias.get('nombreComercial')?.touched
@@ -340,7 +342,8 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreComun')?.markAsTouched();
-                     " />
+                     "
+                      [maxlength]="256" />
                   <div *ngIf="
                      formMercancias.get('nombreComun')?.invalid &&
                      formMercancias.get('nombreComun')?.touched
@@ -364,7 +367,8 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreCientifico')?.markAsTouched();
-                     " />
+                     " 
+                      [maxlength]="256"/>
                   <div *ngIf="
                      formMercancias.get('nombreCientifico')?.invalid &&
                      formMercancias.get('nombreCientifico')?.touched
@@ -389,7 +393,8 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('usoEspecifico')?.markAsTouched();
-                     "></textarea>
+                     "
+                     [maxlength]="5000"></textarea>
                   <div *ngIf="
                      formMercancias.get('usoEspecifico')?.invalid &&
                      formMercancias.get('usoEspecifico')?.touched
@@ -446,7 +451,8 @@
                   'setFraccionArancelaria'
                   );
                   formMercancias.get('fraccionArancelaria')?.markAsTouched();
-                  " />
+                  " 
+                  [maxlength]="8"/>
                   <div *ngIf="
                      formMercancias.get('fraccionArancelaria')?.invalid &&
                      formMercancias.get('fraccionArancelaria')?.touched
@@ -489,7 +495,8 @@
                            'setCantidadUMT'
                            );
                            formMercancias.get('cantidadUMT')?.markAsTouched();
-                           " />
+                           " 
+                           [maxlength]="20"/>
                         <div *ngIf="
                            formMercancias.get('cantidadUMT')?.invalid &&
                            formMercancias.get('cantidadUMT')?.touched
@@ -531,7 +538,8 @@
                            'setCantidadUMC'
                            );
                            formMercancias.get('cantidadUMC')?.markAsTouched();
-                           " />
+                           " 
+                           [maxlength]="20"/>
                         <div *ngIf="
                            formMercancias.get('cantidadUMC')?.invalid &&
                            formMercancias.get('cantidadUMC')?.touched
