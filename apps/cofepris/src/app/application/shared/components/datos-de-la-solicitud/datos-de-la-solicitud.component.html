@@ -426,14 +426,13 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-
-          <button type="button" name="eliminarMercancias" class="btn btn-danger" (click)="eliminarMercancias()"
-            [disabled]="formularioDeshabilitado">
-            Eliminar
-          </button>
-          <button type="button" name="modificarMercancias" class="btn btn-default ms-2" (click)="modificarDatos()"
+          <button *ngIf="tablaMercanciasConfig.datos.length > 0" type="button" name="modificarMercancias" class="btn btn-default ms-2" (click)="modificarDatos()"
             [disabled]="formularioDeshabilitado">
             Modificar
+          </button>
+          <button *ngIf="tablaMercanciasConfig.datos.length > 0" type="button" name="eliminarMercancias" class="btn btn-danger" (click)="eliminarMercancias()"
+            [disabled]="formularioDeshabilitado">
+            Eliminar
           </button>
           <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="agregarMercancias()"
             [disabled]="formularioDeshabilitado">

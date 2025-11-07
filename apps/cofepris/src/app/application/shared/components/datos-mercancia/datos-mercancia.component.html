@@ -175,6 +175,7 @@
           [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
           [placeholder]="'Selecciona una opción'"
+          [markTouched]="mercanciaForm.get('tipoProducto')?.touched??false"
           (selectionChange)="onCambioTipoProduct($event)"
         ></app-catalogo-select>
       </div>
@@ -221,6 +222,7 @@
           [required]="true"
           name="formaFarmaceutica"
           [placeholder]="'Selecciona una opción'"
+          [markTouched]="mercanciaForm.get('formaFarmaceutica')?.touched??false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -269,6 +271,7 @@
             [markUntouched]="mercanciaForm.get('estadoFisico')?.errors?.['required'] && mercanciaForm.get('estadoFisico')?.touched ? true : false"
           name="estadoFisico"
           [placeholder]="'Selecciona una opción'"
+          [markTouched]="mercanciaForm.get('estadoFisico')?.touched??false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -368,7 +371,12 @@
             formControlName="fraccionArancelaria"
             (change)="cambiarFraccionArancelaria()"
             (keydown)="validarFraccionArancelaria()"
-          />
+            [ngClass]="{
+            'is-invalid':
+            mercanciaForm.get('fraccionArancelaria')?.invalid &&
+            mercanciaForm.get('fraccionArancelaria')?.touched
+          }"
+          />  
 
           <div
             class="mensaje-error"
@@ -428,6 +436,11 @@
             disable
             type="text"
             formControlName="descripcionFraccion"
+            [ngClass]="{
+            'is-invalid':
+            mercanciaForm.get('descripcionFraccion')?.invalid &&
+            mercanciaForm.get('descripcionFraccion')?.touched
+            }"
           />
           <div
             class="mensaje-error"
@@ -501,7 +514,11 @@
             id="cantidadUmt"
             type="text"
             formControlName="cantidadUmt"
-            [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''"
+           [ngClass]="{
+          'is-invalid':
+          mercanciaForm.get('cantidadUmt')?.invalid &&
+          mercanciaForm.get('cantidadUmt')?.touched
+          }"
           />
           <div
             class="mensaje-error"
@@ -592,6 +609,11 @@
           class="form-control height t-area"
           rows="5"
           formControlName="presentacion"
+          [ngClass]="{
+          'is-invalid':
+          mercanciaForm.get('presentacion')?.invalid &&
+          mercanciaForm.get('presentacion')?.touched
+          }"
         ></textarea>
         <div
           class="mensaje-error"
@@ -603,7 +625,7 @@
     </div>
     }
 
-    <div class="row">
+    <div class="row" *ngIf="!esValidoRegistroOVencimiento">
       @if(!elementosNoValidos.includes('numeroRegistroSanitario') && !requiedField) {
       <div class="col-md-5">
         <div class="form-group">

@@ -1148,3 +1148,10 @@ export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];
  * Cada clave en el objeto representa un identificador de procedimiento, y su valor asociado es un arreglo
  */
 export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205];
+
+/**
+ * @const ES_VALIDO_REGISTRO_O_VENCIMIENTO
+ * @description Lista de identificadores de procedimientos para los cuales es válido el registro o vencimiento.
+ * @type {number[]}
+ */
+export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [260208];
