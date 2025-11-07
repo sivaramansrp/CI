@@ -1022,7 +1022,7 @@ export const MOSTRAR_NOTIFICACION = [
   260209, 260205, 260204,260203, 260202,
 ];
 
-export const ENABLE_FIELDS = [ 260209, 260210, 260208 ];
+export const ENABLE_FIELDS = [ 260209, 260210, 260208, 260218 ];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
@@ -1131,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218];
 
 
 
@@ -1154,4 +1154,4 @@ export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205
  * @description Lista de identificadores de procedimientos para los cuales es válido el registro o vencimiento.
  * @type {number[]}
  */
-export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [260208];
+export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [260208, 260218];
