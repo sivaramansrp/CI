@@ -14,8 +14,10 @@ import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
-import { MSG_REGISTRO_EXITOSO, USUARIO_INFO } from '../../enum/enum-130118';
+import { MSG_REGISTRO_EXITOSO } from '../../enum/enum-130118';
+
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { USUARIO_INFO } from '../../../../shared/enum/datos-usuario-documentos';
 
 /**
  * Interfaz que define la estructura de una acción de botón.

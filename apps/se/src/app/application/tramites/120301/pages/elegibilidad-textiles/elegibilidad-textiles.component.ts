@@ -33,7 +33,9 @@ import { Solicitud120301State } from '../../estados/tramites/tramite120301.store
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { USUARIO_INFO } from '../../../130118/enum/enum-130118';
+import { USUARIO_INFO } from '../../../../shared/enum/datos-usuario-documentos';
+
+
 
 
 /**
