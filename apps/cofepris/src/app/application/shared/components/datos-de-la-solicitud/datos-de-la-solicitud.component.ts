@@ -2003,6 +2003,10 @@ marcarTodosLosCamposComoTocados(): void {
   
     }
   });
+  if (this.idProcedimiento === 260203 && this.datosSolicitudForm.get('rfcSanitario')) {
+    this.datosSolicitudForm.get('rfcSanitario')?.markAsTouched();
+    this.datosSolicitudForm.get('rfcSanitario')?.updateValueAndValidity();
+  }
 
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
