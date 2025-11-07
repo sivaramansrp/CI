@@ -10,7 +10,7 @@
     <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
       data-bs-target="#modalAddAgentMercancias">Modificar</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState.readonly">Agregar</button>
+      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState.readonly" (click)="agregar()">Agregar</button>
   </div>
 </div>
 
