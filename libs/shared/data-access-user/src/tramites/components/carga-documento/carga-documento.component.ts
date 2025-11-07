@@ -915,7 +915,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
   // }
 
 cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario): void {
-  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario).pipe(
+  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario, this.idSolicitud).pipe(
     switchMap((res: UploadDocumentResponse) => {
       if (res.error && res.codigo === 'UPSER001') {
         this.PDF_ERRORS = res.errores_modelo ?? [];
@@ -935,7 +935,7 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
       const REFERENCIA = res?.datos?.referenciaSolicitud;
       return interval(3000).pipe(
         switchMap(() => this.cargarDocumentoService.documentosreferenciaSolicitud(REFERENCIA)),
-        takeWhile((statusResponse) => !(statusResponse.datos.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")), true),
+        takeWhile((statusResponse) => !(statusResponse.datos.every((doc) => doc.carga_estado_kafka === "ARCHIVO_SUBIDO_MINIO")), true),
         catchError((err) => {
           console.error('Polling error', err);
           return of(null);
@@ -945,15 +945,15 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
     takeUntil(this.destroy$)
   ).subscribe({
     next: (res) => {
-      const FILESTATUS = res?.datos?.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")
+      const FILESTATUS = res?.datos?.every((doc) => doc.carga_estado_kafka === "ARCHIVO_SUBIDO_MINIO")
       if (res?.codigo === '00' && FILESTATUS) {
           this.listadoArchivos.forEach((archivo) => {
             archivo.cargado = true;
             archivo.estatus = 'cargado';
           });
           const DOCUMENTOS: DocumentoRequeridoFirmar[] = res.datos.map(doc => ({
-          id_documento_seleccionado: doc.idDocumento,
-          hash_documento: hexToISO88591(doc.firma?.cadenaOriginal),
+          id_documento_seleccionado: doc.id_documento,
+          hash_documento: hexToISO88591(doc.cadena_original),
           sello_documento: ''
           }));
           this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
