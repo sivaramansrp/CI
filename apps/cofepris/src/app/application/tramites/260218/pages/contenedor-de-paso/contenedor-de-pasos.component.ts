@@ -322,9 +322,14 @@ esMostrarAlerta: boolean = false;
           if (this.indice === 1 && this.pasoUnoComponent) {
           isValid = this.pasoUnoComponent.validarPasoUno();
         }
+        if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          }else {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
+          
         if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
-          this.mostrarAlerta=true;
-          this.confirmarSinPagoDeDerechos = 2;
+          this.mostrarAlerta=true; 
           this.seleccionarFilaNotificacion = {
             tipoNotificacion: 'alert',
             categoria: 'danger',
@@ -338,6 +343,10 @@ esMostrarAlerta: boolean = false;
             alineacionBtonoCerrar:'flex-row-reverse'
           }
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 2;
+        } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor() && !this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 3;
         }
         if (!isValid) {
           this.formErrorAlert = this.MENSAJE_DE_ERROR;
