@@ -109,6 +109,28 @@ export class ContenedorDePasosComponent {
 
 
 
+  /**
+   * Indica si se requieren datos de pago para el trámite actual.
+   * @remarks
+   * Esta propiedad controla la visualización y el manejo de información relacionada con pagos en el componente.
+   */
+  public requiresPaymentData: boolean = false;
+
+  /**
+   * Indica si la confirmación sin pago de derechos está activa.
+   * Valor 0 significa que no está confirmada, otros valores pueden indicar diferentes estados.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
+
+   /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
+
 
         /**
      * Valor del aviso de privacidad.
@@ -188,19 +210,21 @@ export class ContenedorDePasosComponent {
       if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent?.validarContenedor()) {
-        this.mostrarAlerta = true;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
-        };
+      if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData) {
+              this.mostrarAlerta = true;
+              this.confirmarSinPagoDeDerechos = 2;
+              this.seleccionarFilaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: '',
+                mensaje: MENSAJE_DE_VALIDACION,
+                cerrar: true,
+                tiempoDeEspera: 2000,
+                txtBtnAceptar: 'SI',
+                txtBtnCancelar: 'NO',
+                alineacionBtonoCerrar: 'flex-row-reverse'
+              };
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
@@ -247,6 +271,47 @@ export class ContenedorDePasosComponent {
     }
   }
   
+   /**
+   * Cierra el modal y realiza acciones según el valor proporcionado.
+   *
+   * @param value - Indica si se debe proceder con el pago de derechos. Si es `true`, se oculta la alerta y se requiere información de pago. Si es `false`, se oculta la alerta y se establece la confirmación sin pago de derechos.
+   */
+  cerrarModal(value: boolean): void {
+    if (value) {
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
+  }
+
+
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
+
+
 
 /**
    * @method cargaRealizada
