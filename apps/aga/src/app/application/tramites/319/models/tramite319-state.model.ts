@@ -1,4 +1,4 @@
-import { Solicitar } from "./personas.module";
+import { Solicitar } from "./personas";
 
 /**
  * @fileoverview

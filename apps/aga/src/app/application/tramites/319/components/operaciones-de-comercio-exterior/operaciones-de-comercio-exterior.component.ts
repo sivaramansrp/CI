@@ -1,8 +1,37 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AfterViewInit, Component, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
-import { CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, MENOR_TEXTO, PERIODO_ERROR, PERIODO_TEXTO, REGISTRO_TEXTO, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
-import { Personas, Solicitar } from '../../models/personas.module';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_FECHA_MES_ANO,
+  SeccionLibStore,
+  SharedModule,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  CONFIGURACION_PERSONAS_COLUMNAS,
+  CONFIGURACION_SOLICITAR_COLUMNAS,
+  INFO_ALERT,
+  MENOR_TEXTO,
+  PERIODO_ERROR,
+  PERIODO_TEXTO,
+  REGISTRO_TEXTO,
+  TEXTOS,
+} from '../../constantes/operaciones-de-comercio-exterior.enum';
+import { Personas, Solicitar } from '../../models/personas';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -18,8 +47,6 @@ import { Tramite319Store } from '../../estados/tramite319Store.store';
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
  * @module OperacionesDeComercioExteriorComponent
  */
-
-
 
 /**
  * Componente para el formulario de operaciones de comercio exterior.
@@ -40,10 +67,11 @@ import { Tramite319Store } from '../../estados/tramite319Store.store';
     TituloComponent,
     ReactiveFormsModule,
     NotificacionesComponent,
-    forwardRef(() => SoloLetrasNumerosDirective),
-  ]
+  ],
 })
-export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OperacionesDeComercioExterioComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   /**
    * Formulario principal para operaciones.
    * @property {FormGroup} miformulario
@@ -84,7 +112,8 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * Configuración de columnas para la tabla de personas.
    * @property {ConfiguracionColumna<Personas>[]} configuracionPersonasColumnas
    */
-  public configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = CONFIGURACION_PERSONAS_COLUMNAS;
+  public configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] =
+    CONFIGURACION_PERSONAS_COLUMNAS;
 
   /**
    * Tipo de selección para la tabla de solicitudes.
@@ -96,7 +125,8 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * Configuración de columnas para la tabla de solicitudes.
    * @property {ConfiguracionColumna<Solicitar>[]} configuracionSolicitarColumnas
    */
-  public configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = CONFIGURACION_SOLICITAR_COLUMNAS;
+  public configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] =
+    CONFIGURACION_SOLICITAR_COLUMNAS;
 
   /**
    * Lista de acciones disponibles.
@@ -227,7 +257,8 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
     this.miformulario = this.fb.group({
       operacion: [this.tramite319Query.operacion || '', Validators.required],
     });
-    this.cuerpoSolicitarTablaFila = this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
+    this.cuerpoSolicitarTablaFila =
+      this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
   }
 
   /**
@@ -247,9 +278,12 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method getOperacionList
    */
   public getOperacionList(): void {
-    this.operacionService.obtenerSelectorList('optionsPais.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.optionsPaisList = data;
-    });
+    this.operacionService
+      .obtenerTipoOperacion<Catalogo[]>('319', 'AAL981209G67')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.optionsPaisList = data.datos || [];
+      });
   }
 
   /**
@@ -257,9 +291,12 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method getperiodoList
    */
   public getperiodoList(): void {
-    this.operacionService.obtenerSelectorList('periodo.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.periodoList = data;
-    });
+    this.operacionService
+      .obtenerSelectorList('periodo.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.periodoList = data;
+      });
   }
 
   /**
@@ -267,9 +304,12 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method getPersonasTablaData
    */
   public getPersonasTablaData(): void {
-    this.operacionService.obtenerTablerList('personas.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.cuerpoPersonasTablaFila = data;
-    });
+    this.operacionService
+      .obtenerPersonas<Personas[]>('319', 'AAL0409235E6')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.cuerpoPersonasTablaFila = data.datos || [];
+      });
   }
 
   /**
@@ -283,8 +323,22 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
     if (status) {
       this.periodoForm = this.fb.group({
         periodo: ['', [Validators.required]],
-        periodoInicial: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/), Validators.maxLength(7)]],
-        periodoFinal: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/), Validators.maxLength(7)]],
+        periodoInicial: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/),
+            Validators.maxLength(7),
+          ],
+        ],
+        periodoFinal: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/),
+            Validators.maxLength(7),
+          ],
+        ],
       });
     }
   }
@@ -297,7 +351,6 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
   public agregarPersona(): void {
     if (this.periodoForm.valid) {
       this.PeriodoError();
-      
     } else {
       this.periodoForm.markAllAsTouched();
     }
@@ -310,121 +363,179 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method PeriodoError
    */
   public PeriodoError(): void {
-    
-    const SELECTEDPERIODODESC = this.periodoList.find(item => item.id === Number(this.periodoForm.value.periodo))?.descripcion || '';
-    if (this.cuerpoSolicitarTablaFila.some(item => item.periodo !== SELECTEDPERIODODESC)) {
+    const SELECTEDPERIODODESC =
+      this.periodoList.find(
+        (item) => item.id === Number(this.periodoForm.value.periodo)
+      )?.descripcion || '';
+    if (
+      this.cuerpoSolicitarTablaFila.some(
+        (item) => item.periodo !== SELECTEDPERIODODESC
+      )
+    ) {
       this.vistaAlerta = true;
       this.textos = PERIODO_ERROR;
     }
     // Check if the fechas_sobre_el_periodo already exists in cuerpoSolicitarTablaFila
     else if (
       this.cuerpoSolicitarTablaFila.some(
-      item =>
-        item.fechas_sobre_el_periodo ===
-        (this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal),
+        (item) =>
+          item.fechas_sobre_el_periodo ===
+          this.periodoForm.value.periodoInicial +
+            ' al ' +
+            this.periodoForm.value.periodoFinal
       )
     ) {
       this.vistaAlerta = true;
       this.textos = REGISTRO_TEXTO;
-    }
-    else {
+    } else {
       this.valorValido();
     }
-    }
+  }
 
-    /**
-     * Valida que los valores del periodo sean correctos según las reglas de negocio.
-     * Verifica si el periodo está fuera de rango, si las fechas son futuras o si la fecha final es anterior a la inicial.
-     * Si todas las validaciones pasan, agrega el periodo a la tabla de solicitudes.
-     * @method valorValido
-     */
-    public valorValido(): void {
-      const [INITIALMONTH, INITIALYEAR] = (this.periodoForm.value.periodoInicial || '').split('/').map(Number);
-      const [FINALMONTH, FINALYEAR] = (this.periodoForm.value.periodoFinal || '').split('/').map(Number);
-      const NOW = new Date();
-      const CURRENTMONTH = NOW.getMonth() + 1;
-      const CURRENTYEAR = NOW.getFullYear();
-      const PERIODOSELECCIONADO = this.periodoList.find(item => item.id === Number(this.periodoForm.value.periodo));
+  /**
+   * Valida que los valores del periodo sean correctos según las reglas de negocio.
+   * Verifica si el periodo está fuera de rango, si las fechas son futuras o si la fecha final es anterior a la inicial.
+   * Si todas las validaciones pasan, agrega el periodo a la tabla de solicitudes.
+   * @method valorValido
+   */
+  public valorValido(): void {
+    const [INITIALMONTH, INITIALYEAR] = (
+      this.periodoForm.value.periodoInicial || ''
+    )
+      .split('/')
+      .map(Number);
+    const [FINALMONTH, FINALYEAR] = (this.periodoForm.value.periodoFinal || '')
+      .split('/')
+      .map(Number);
+    const NOW = new Date();
+    const CURRENTMONTH = NOW.getMonth() + 1;
+    const CURRENTYEAR = NOW.getFullYear();
+    const PERIODOSELECCIONADO = this.periodoList.find(
+      (item) => item.id === Number(this.periodoForm.value.periodo)
+    );
 
-      if (OperacionesDeComercioExterioComponent.isPeriodoOutOfRange(PERIODOSELECCIONADO, INITIALYEAR, FINALYEAR)) {
-        this.vistaAlerta = true;
-        this.textos = PERIODO_TEXTO;
-      }
-      else if (OperacionesDeComercioExterioComponent.isFinalDateInFutureOrPresent(FINALYEAR, FINALMONTH, CURRENTYEAR, CURRENTMONTH)) {
-        this.vistaAlerta = true;
-        this.textos = `<p style="text-align: center;">${TEXTOS} ${this.periodoForm.value.periodoFinal}</p>`;
-      }
-      else if (OperacionesDeComercioExterioComponent.isFinalDateBeforeInitial(FINALYEAR, INITIALYEAR, FINALMONTH, INITIALMONTH)) {
-        this.vistaAlerta = true;
-        this.textos = MENOR_TEXTO;
-      }
-      else {
-        this.cuerpoSolicitarTablaFila.push({
-          id: this.cuerpoSolicitarTablaFila.length > 0
-            ? (this.cuerpoSolicitarTablaFila[this.cuerpoSolicitarTablaFila.length - 1]?.id ?? 0) + 1
+    if (
+      OperacionesDeComercioExterioComponent.isPeriodoOutOfRange(
+        PERIODOSELECCIONADO,
+        INITIALYEAR,
+        FINALYEAR
+      )
+    ) {
+      this.vistaAlerta = true;
+      this.textos = PERIODO_TEXTO;
+    } else if (
+      OperacionesDeComercioExterioComponent.isFinalDateInFutureOrPresent(
+        FINALYEAR,
+        FINALMONTH,
+        CURRENTYEAR,
+        CURRENTMONTH
+      )
+    ) {
+      this.vistaAlerta = true;
+      this.textos = `<p style="text-align: center;">${TEXTOS} ${this.periodoForm.value.periodoFinal}</p>`;
+    } else if (
+      OperacionesDeComercioExterioComponent.isFinalDateBeforeInitial(
+        FINALYEAR,
+        INITIALYEAR,
+        FINALMONTH,
+        INITIALMONTH
+      )
+    ) {
+      this.vistaAlerta = true;
+      this.textos = MENOR_TEXTO;
+    } else {
+      this.cuerpoSolicitarTablaFila.push({
+        id:
+          this.cuerpoSolicitarTablaFila.length > 0
+            ? (this.cuerpoSolicitarTablaFila[
+                this.cuerpoSolicitarTablaFila.length - 1
+              ]?.id ?? 0) + 1
             : 1,
-          periodo: this.periodoList.find(item => item.id === Number(this.periodoForm.value.periodo))?.descripcion || '',
-          fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
-        });
-        this.modalEmergente = true;
-        this.abrirAlertaSeleccionModal();
-        this.seccionStore.establecerFormaValida([true]);
-        this.seccionStore.establecerSeccion([true]);
-      }
+        periodo:
+          this.periodoList.find(
+            (item) => item.id === Number(this.periodoForm.value.periodo)
+          )?.descripcion || '',
+        fechas_sobre_el_periodo:
+          this.periodoForm.value.periodoInicial +
+          ' al ' +
+          this.periodoForm.value.periodoFinal,
+      });
+      this.modalEmergente = true;
+      this.abrirAlertaSeleccionModal();
+      this.seccionStore.establecerFormaValida([true]);
+      this.seccionStore.establecerSeccion([true]);
     }
+  }
 
-    /**
-     * Verifica si el periodo seleccionado está fuera del rango permitido.
-     * Compara los años inicial y final con los límites del periodo seleccionado.
-     * @method isPeriodoOutOfRange
-     * @param {PeriodoCatalogo | undefined} PERIODOSELECCIONADO - El periodo seleccionado del catálogo
-     * @param {number} INITIALYEAR - Año inicial del periodo a validar
-     * @param {number} FINALYEAR - Año final del periodo a validar
-     * @returns {boolean} True si el periodo está fuera de rango, false en caso contrario
-     */
-    public static isPeriodoOutOfRange(PERIODOSELECCIONADO: PeriodoCatalogo | undefined, INITIALYEAR: number, FINALYEAR: number): boolean {
-      return Boolean(
-        PERIODOSELECCIONADO &&
+  /**
+   * Verifica si el periodo seleccionado está fuera del rango permitido.
+   * Compara los años inicial y final con los límites del periodo seleccionado.
+   * @method isPeriodoOutOfRange
+   * @param {PeriodoCatalogo | undefined} PERIODOSELECCIONADO - El periodo seleccionado del catálogo
+   * @param {number} INITIALYEAR - Año inicial del periodo a validar
+   * @param {number} FINALYEAR - Año final del periodo a validar
+   * @returns {boolean} True si el periodo está fuera de rango, false en caso contrario
+   */
+  public static isPeriodoOutOfRange(
+    PERIODOSELECCIONADO: PeriodoCatalogo | undefined,
+    INITIALYEAR: number,
+    FINALYEAR: number
+  ): boolean {
+    return Boolean(
+      PERIODOSELECCIONADO &&
         typeof PERIODOSELECCIONADO.inicial === 'number' &&
         typeof PERIODOSELECCIONADO.final === 'number' &&
         (INITIALYEAR < PERIODOSELECCIONADO.inicial ||
           INITIALYEAR > PERIODOSELECCIONADO.final ||
           FINALYEAR > PERIODOSELECCIONADO.final ||
           FINALYEAR < PERIODOSELECCIONADO.inicial)
-      );
-    }
+    );
+  }
 
-    /**
-     * Verifica si la fecha final está en el futuro o es la fecha presente.
-     * Compara el año y mes final con la fecha actual.
-     * @method isFinalDateInFutureOrPresent
-     * @param {number} FINALYEAR - Año final del periodo
-     * @param {number} FINALMONTH - Mes final del periodo
-     * @param {number} CURRENTYEAR - Año actual
-     * @param {number} CURRENTMONTH - Mes actual
-     * @returns {boolean} True si la fecha final es futura o presente, false en caso contrario
-     */
-    static isFinalDateInFutureOrPresent(FINALYEAR: number, FINALMONTH: number, CURRENTYEAR: number, CURRENTMONTH: number): boolean {
-      return (
-        FINALYEAR > CURRENTYEAR ||
-        (FINALYEAR === CURRENTYEAR && FINALMONTH > CURRENTMONTH) ||
-        (FINALYEAR === CURRENTYEAR && FINALMONTH === CURRENTMONTH)
-      );
-    }
+  /**
+   * Verifica si la fecha final está en el futuro o es la fecha presente.
+   * Compara el año y mes final con la fecha actual.
+   * @method isFinalDateInFutureOrPresent
+   * @param {number} FINALYEAR - Año final del periodo
+   * @param {number} FINALMONTH - Mes final del periodo
+   * @param {number} CURRENTYEAR - Año actual
+   * @param {number} CURRENTMONTH - Mes actual
+   * @returns {boolean} True si la fecha final es futura o presente, false en caso contrario
+   */
+  static isFinalDateInFutureOrPresent(
+    FINALYEAR: number,
+    FINALMONTH: number,
+    CURRENTYEAR: number,
+    CURRENTMONTH: number
+  ): boolean {
+    return (
+      FINALYEAR > CURRENTYEAR ||
+      (FINALYEAR === CURRENTYEAR && FINALMONTH > CURRENTMONTH) ||
+      (FINALYEAR === CURRENTYEAR && FINALMONTH === CURRENTMONTH)
+    );
+  }
 
-    /**
-     * Verifica si la fecha final es anterior a la fecha inicial.
-     * Compara los años y meses para determinar si el rango de fechas es válido.
-     * @method isFinalDateBeforeInitial
-     * @param {number} FINALYEAR - Año final del periodo
-     * @param {number} INITIALYEAR - Año inicial del periodo
-     * @param {number} FINALMONTH - Mes final del periodo
-     * @param {number} INITIALMONTH - Mes inicial del periodo
-     * @returns {boolean} True si la fecha final es anterior a la inicial, false en caso contrario
-     */
-    static isFinalDateBeforeInitial(FINALYEAR: number, INITIALYEAR: number, FINALMONTH: number, INITIALMONTH: number): boolean {
-      return (FINALYEAR < INITIALYEAR) || (FINALYEAR === INITIALYEAR && FINALMONTH < INITIALMONTH);
-    }
+  /**
+   * Verifica si la fecha final es anterior a la fecha inicial.
+   * Compara los años y meses para determinar si el rango de fechas es válido.
+   * @method isFinalDateBeforeInitial
+   * @param {number} FINALYEAR - Año final del periodo
+   * @param {number} INITIALYEAR - Año inicial del periodo
+   * @param {number} FINALMONTH - Mes final del periodo
+   * @param {number} INITIALMONTH - Mes inicial del periodo
+   * @returns {boolean} True si la fecha final es anterior a la inicial, false en caso contrario
+   */
+  static isFinalDateBeforeInitial(
+    FINALYEAR: number,
+    INITIALYEAR: number,
+    FINALMONTH: number,
+    INITIALMONTH: number
+  ): boolean {
+    return (
+      FINALYEAR < INITIALYEAR ||
+      (FINALYEAR === INITIALYEAR && FINALMONTH < INITIALMONTH)
+    );
+  }
 
   /**
    * Elimina un elemento de la tabla de pedimento si se confirma la acción.
@@ -454,21 +565,23 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method eliminarPeriodoPorId
    */
   public eliminarPeriodoPorId(): void {
-    if(this.cuerpoSolicitarTablaFila.length === 0){
-      this.mostrarAlerta = true
+    if (this.cuerpoSolicitarTablaFila.length === 0) {
+      this.mostrarAlerta = true;
       this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Sin informacion.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    }
-    else if(this.cuerpoSolicitarTablaFila.length > 0 && this.listaDeTablasSeleccionadas.length === 0){
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Sin informacion.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else if (
+      this.cuerpoSolicitarTablaFila.length > 0 &&
+      this.listaDeTablasSeleccionadas.length === 0
+    ) {
       this.mostrarAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -481,8 +594,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    }
-    else {
+    } else {
       this.mostrarAlerta = false;
       this.mostrarInfo = true;
       this.nuevaNotificacionInfo = {
@@ -495,7 +607,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar',
-      }
+      };
     }
   }
 
@@ -504,11 +616,15 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
   }
 
   aceptarInfo(event: boolean): void {
-    if(event){
+    if (event) {
       this.mostrarInfo = false;
-      this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila?.filter(item =>
-        this.listaDeTablasSeleccionadas?.some(seleccionado => seleccionado?.id === item?.id) === false
-      ) ?? [];
+      this.cuerpoSolicitarTablaFila =
+        this.cuerpoSolicitarTablaFila?.filter(
+          (item) =>
+            this.listaDeTablasSeleccionadas?.some(
+              (seleccionado) => seleccionado?.id === item?.id
+            ) === false
+        ) ?? [];
       if (this.cuerpoSolicitarTablaFila?.length === 0) {
         this.seccionStore.establecerFormaValida([false]);
         this.seccionStore.establecerSeccion([true]);
@@ -517,8 +633,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
         this.seccionStore.establecerSeccion([true]);
       }
       this.periodoView = false;
-    }
-    else{
+    } else {
       this.mostrarInfo = false;
     }
   }
@@ -528,7 +643,9 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method actualizarOperacionDesdeSeleccion
    */
   public actualizarOperacionDesdeSeleccion(): void {
-    this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion || '');
+    this.tramite319Store.actualizarOperacion(
+      this.miformulario?.value?.operacion || ''
+    );
   }
 
   /**
@@ -546,45 +663,45 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
- * @method formatPeriodoInicial
- * @description
- * Formatea automáticamente el campo de periodo inicial agregando una barra diagonal (/)
- * después de ingresar 2 dígitos para seguir el formato MM/YYYY.
- * 
- * @param {Event} event - Evento del input que contiene el valor del campo.
- * @returns {void}
- */
-formatPeriodoInicial(event: Event): void {
-  const INPUT = event.target as HTMLInputElement;
-  let value = INPUT.value.replace(/\D/g, ''); // Remove non-digits
+   * @method formatPeriodoInicial
+   * @description
+   * Formatea automáticamente el campo de periodo inicial agregando una barra diagonal (/)
+   * después de ingresar 2 dígitos para seguir el formato MM/YYYY.
+   *
+   * @param {Event} event - Evento del input que contiene el valor del campo.
+   * @returns {void}
+   */
+  formatPeriodoInicial(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    let value = INPUT.value.replace(/\D/g, ''); // Remove non-digits
 
-  if (value.length >= 2) {
-    value = value.substring(0, 2) + '/' + value.substring(2, 6);
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 6);
+    }
+
+    // Update the form control value
+    this.periodoForm.patchValue({
+      periodoInicial: value,
+    });
   }
-  
-  // Update the form control value
-  this.periodoForm.patchValue({
-    periodoInicial: value
-  });
-}
 
-formatPeriodoFinal(event: Event): void {
-  const INPUT = event.target as HTMLInputElement;
-  let value = INPUT.value.replace(/\D/g, ''); // Remove non-digits
+  formatPeriodoFinal(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    let value = INPUT.value.replace(/\D/g, ''); // Remove non-digits
 
-  if (value.length >= 2) {
-    value = value.substring(0, 2) + '/' + value.substring(2, 6);
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 6);
+    }
+
+    // Update the form control value
+    this.periodoForm.patchValue({
+      periodoFinal: value,
+    });
   }
-  
-  // Update the form control value
-  this.periodoForm.patchValue({
-    periodoFinal: value
-  });
-}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

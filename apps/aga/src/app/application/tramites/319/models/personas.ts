@@ -1,12 +1,4 @@
 /**
- * @fileoverview
- * Modelos de datos para el trámite 319 de operaciones de comercio exterior.
- * Incluye la definición de las interfaces para personas y solicitudes.
- * Cobertura compodoc 100%: cada interfaz y propiedad está documentada.
- * @module PersonasModule
- */
-
-/**
  * @interface Personas
  * @description
  * Representa el modelo de datos para una persona en el trámite 319.
@@ -14,8 +6,8 @@
  * @property {string} rfc - Registro Federal de Contribuyentes de la persona.
  * @property {string} curp - Clave Única de Registro de Población de la persona.
  * @property {string} nombre - Nombre de la persona.
- * @property {string} primer_apellido - Primer apellido de la persona.
- * @property {string} segundo_apellido - Segundo apellido de la persona.
+ * @property {string} apellido_paterno - Primer apellido de la persona.
+ * @property {string} apellido_materno - Segundo apellido de la persona.
  * @property {string} correo_electronico - Dirección de correo electrónico de la persona.
  */
 export interface Personas {
@@ -39,16 +31,16 @@ export interface Personas {
   nombre: string;
   /**
    *  Primer apellido de la persona.
-   * @property {string} primer_apellido
+   * @property {string} apellido_paterno
    * @description Primer apellido de la persona.
    */
-  primer_apellido: string;
+  apellido_paterno: string;
   /**
    * Segundo apellido de la persona.
-   * @property {string} segundo_apellido
+   * @property {string} apellido_materno
    * @description Segundo apellido de la persona.
    */
-  segundo_apellido: string;
+  apellido_materno: string;
   /**
    * Dirección de correo electrónico de la persona.
    * @property {string} correo_electronico

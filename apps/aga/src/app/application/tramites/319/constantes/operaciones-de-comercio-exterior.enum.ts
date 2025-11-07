@@ -1,4 +1,4 @@
-import { Personas, Solicitar } from "../models/personas.module";
+import { Personas, Solicitar } from "../models/personas";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 /**
@@ -62,8 +62,8 @@ export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] =
   { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
   { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
   { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
-  { encabezado: 'Primer apellido', clave: (fila) => fila.primer_apellido, orden: 4 },
-  { encabezado: 'Segundo apellido', clave: (fila) => fila.segundo_apellido, orden: 5 },
+  { encabezado: 'Primer apellido', clave: (fila) => fila.apellido_paterno, orden: 4 },
+  { encabezado: 'Segundo apellido', clave: (fila) => fila.apellido_materno, orden: 5 },
   { encabezado: 'Correo electrónico', clave: (fila) => fila.correo_electronico, orden: 6 },
 ];
 
