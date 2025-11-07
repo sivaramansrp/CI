@@ -1,39 +1,66 @@
-<div class="container">
-    <ng-titulo titulo="Datos del trámite a realizar" />
-    <form [formGroup]="formulario">
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="solicitud" class="form-label">Solicitud*:</label>
-                <div>
-                    <input type="radio" id="solicitudInicial" formControlName="solicitud" name="solicitud"
-                        value="inicial" checked (change)="setValoresStore(formulario,'solicitud', 'setSolicitud')"> Inicial
-                </div>
-            </div>
-            <div class="col-md-8">
-                <app-catalogo-select [catalogo]="regimenesCatalog" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
-                    [label]="'Régimen al que se destinará la mercancía'" [required]="true" (selectionChange)="regimenSeleccion($event)"
-                    name="Régimen al que se destinará la mercancía" (change)="onRegimenChange()"></app-catalogo-select>
-                <br>
-                <app-catalogo-select [catalogo]="clasificacionRegimenesCatalog" formControlName="clasificacion" [isDisabled]="esFormularioSoloLectura"
-                    [label]="'Clasificación del régimen'" [required]="true" (selectionChange)="clasificacionRegimeneSeleccion($event)"
-                    name="Clasificación del régimen" (change)="onClasificacionChange()"></app-catalogo-select>
-            </div>
-        </div>
-    </form>
-    <ng-titulo titulo="Datos de la mercancía" />
-    <form [formGroup]="formulario">
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="producto" class="form-label">Producto*:</label>
-                <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"
-                     [layout]="'vertical'" formControlName="producto"
-                     (change)="setValoresStore(formulario, 'producto', 'setProducto')" ></app-input-radio>
-            </div>
-            <div class="col-md-8">
-                <label for="descripcion">Descripción de la mercancía*:</label>
-                <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
-                    formControlName="solicitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'solicitudDescripcion', 'setSolicitudDescripcion')"></textarea>
-            </div>
-        </div>
-    </form>
-</div>
+<app-datos-del-tramite
+  [form]="formDelTramite"
+  [inputFields]="datosInputFields"
+  [catalogosArray]="catalogosArray"
+  [solicitudOpciones]="opcionesSolicitud"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
+  (setValoresStoreEvent)="setValoresStore($event)"
+></app-datos-del-tramite>
+
+<app-datos-de-la-mercancia
+  [form]="mercanciaForm"
+  [productoOpciones]="productoOpciones"
+  [fraccionCatalogo]="fraccionCatalogo"
+  [unidadCatalogo]="unidadCatalogo"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresMercancia"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
+></app-datos-de-la-mercancia>
+
+
+<app-partidas-de-la-mercancia
+  [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
+  [formForTotalCount]="formForTotalCount"
+  [tableHeaderData]="tableHeaderData"
+  [tableBodyData]="tableBodyData"
+  [mostrarTabla]="mostrarTabla"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
+  [disabled]="disabledModificar()"
+  (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (partidaModificada)="onPartidaModificada($event)" 
+></app-partidas-de-la-mercancia>
+
+
+<app-pais-procendencia
+[paisForm]="paisForm"
+[elementosDeBloque]="elementosDeBloque"
+[paisesPorBloque]="paisesPorBloque"
+[selectRangoDias]="selectRangoDias"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
+(bloqueCambiar)="enCambioDeBloque($event)"
+(setValoresStoreEvent)="setValoresStore($event)"
+></app-pais-procendencia>
+
+<app-representacion 
+[frmRepresentacionForm]="frmRepresentacionForm"
+[entidadFederativa]="entidadFederativa"
+[representacionFederal]="representacionFederal"
+[TEXTOS]="TEXTOS"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
+(setValoresStoreEvent)="setValoresStore($event)">
+</app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

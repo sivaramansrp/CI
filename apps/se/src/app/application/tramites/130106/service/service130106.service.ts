@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 
 import { Solicitud130106State, Tramite130106Store } from '../../../estados/tramites/tramite130106.store';
 import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -65,7 +66,7 @@ export class Solocitud130106Service {
     );
   }
   getClasificacionRegimen(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.clasificacionRegimenCatalogo(this.tramiteId, { tramite: 'TITPEX.130110', id: "01" }).pipe(
+    return this.catalogoServices.clasificacionRegimenCatalogo(this.tramiteId, { tramite: 'TITPEX.130106', id: "01" }).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -83,5 +84,63 @@ export class Solocitud130106Service {
   //         }
   //       });
   //   }
+
+   /**
+     * Obtiene las opciones de solicitud desde un archivo JSON.
+     * @returns {Observable<ProductoResponse>}
+     */
+    getSolicitudeOptions(): Observable<ProductoResponse> {
+      return this.http.get<ProductoResponse>(
+        'assets/json/130202/solicitude-options.json'
+      );
+    }
+
+    
+  /**
+   * Obtiene las opciones de producto desde un archivo JSON.
+   * @returns {Observable<ProductoResponse>}
+   */
+  getProductoOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(
+      'assets/json/130202/producto-options.json'
+    );
+  }
+
+   /**
+   * Obtiene la lista de entidades federativas desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>}
+   */
+  getEntidadFederativa(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      '/assets/json/130202/entidad-federativa.json'
+    );
+  }
+  /**
+   * Obtiene la lista de representaciones federales desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>}
+   */
+  getRepresentacionFederal(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      '/assets/json/130202/representacion-federal.json'
+    );
+  }
+
+   /**
+   * Obtiene la lista de países disponibles desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>}
+   */
+  getListaDePaisesDisponibles(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+  }
+  /**
+   * Obtiene la lista de países por bloque desde un archivo JSON.
+   * @param {number} _bloqueId - El ID del bloque.
+   * @returns {Observable<Catalogo[]>}
+   */
+  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      '/assets/json/130202/paises-por-bloque.json'
+    );
+  }
   
 }
