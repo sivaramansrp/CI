@@ -32,7 +32,7 @@
       {{ placeholder ? placeholder : 'Seleccione una opción' }}
     </option>
     <option *ngFor="let option of catalogo; trackBy: trackByOption" [value]="option.id || option.clave">
-      {{ option.descripcion }}
+      {{ showClave ? option.clave : option.descripcion }}
     </option>
   </select>
   <div *ngIf="mostrarErrores && isInvalid()" class="mensaje-error">

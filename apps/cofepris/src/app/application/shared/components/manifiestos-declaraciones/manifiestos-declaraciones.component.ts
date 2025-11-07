@@ -181,7 +181,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         [campo]: VALOR,
       });
   }
-
+validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.manifiestos.invalid){
+     this.manifiestos.markAllAsTouched();
+     ISVALID = false;
+    }
+    return ISVALID;
+}
   /**
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

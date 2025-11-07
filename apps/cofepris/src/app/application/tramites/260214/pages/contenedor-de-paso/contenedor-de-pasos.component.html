@@ -15,7 +15,7 @@
 
   <div class="row">
     @switch (indice) { @case (1) {
-    <app-paso-uno #PasoUnoComponent></app-paso-uno>
+    <app-paso-uno [confirmarSinPagoDeDerechos]="confirmarSinPagoDeDerechos" #PasoUnoComponent></app-paso-uno>
     } @case (2) {
     <app-paso-carga-documento 
           [idSolicitud]="storeData.idSolicitud"
@@ -65,7 +65,7 @@
 </div>
 @if(mostrarAlerta){
 <section>
-  <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="mostrarAlerta = false">
+  <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
   </lib-notificaciones>
 </section>
 }

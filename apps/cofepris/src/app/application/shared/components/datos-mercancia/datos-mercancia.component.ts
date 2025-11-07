@@ -26,6 +26,7 @@ import {
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  ES_VALIDO_REGISTRO_O_VENCIMIENTO,
   FEACCION_AFRACCION_ARANCELARIA_CATALOG,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
@@ -438,6 +439,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Catalogo[] | undefined} tipoProductoObj
+   * @description Objeto(s) de catálogo que representan el tipo de producto seleccionado.
+   * Se utiliza para almacenar la información detallada del tipo de producto en el formulario.
+   */
+  tipoProductoObj: Catalogo[] | undefined;
+
+  /**
+   * Indica si el registro o vencimiento es válido para el procedimiento actual.
+   * Se utiliza para controlar la lógica de validación de los campos relacionados con registro sanitario y fechas de vencimiento.
+   */
+  esValidoRegistroOVencimiento: boolean = false;
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -541,6 +555,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         funcion: (): void => this.crossList.toArray()[2].quitar('t'),
       },
     ];
+
+    if( this.mercanciaForm.get('clasificacionProducto')?.value){
+      this.onCambioClasificacionProducto(this.datoSeleccionado?.claveClasificacionProductoObj);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -557,6 +575,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
     this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
+    this.esValidoRegistroOVencimiento = ES_VALIDO_REGISTRO_O_VENCIMIENTO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
@@ -575,6 +594,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
+              ? SELECTED.paisDeOriginDatos
+              : SELECTED.paisDeOriginDatos
+              ? [SELECTED.paisDeOriginDatos]
+              : [];
+              this.seleccionadasPaisDeOriginDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeOriginDatos));
           }
         })
     );
@@ -587,6 +613,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
+              ? SELECTED.paisDeProcedenciaDatos
+              : SELECTED.paisDeProcedenciaDatos
+              ? [SELECTED.paisDeProcedenciaDatos]
+              : [];
+              this.seleccionadasPaisDeProcedenciaDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeProcedenciaDatos));
           }
         })
     );
@@ -599,6 +632,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
+              ? SELECTED.usoEspecifico
+              : SELECTED.usoEspecifico
+              ? [SELECTED.usoEspecifico]
+              : [];
+              this.seleccionadasUsoEspesificoDatos = JSON.parse(JSON.stringify(this.seleccionadasUsoEspesificoDatos));
           }
         })
     );
@@ -824,7 +864,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosAnadidos = ['especifique','especifiqueForma'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260203:
+        this.elementosAnadidos = ['especifique','especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260204:
+        this.elementosAnadidos = ['especifique','especifiqueForma'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260208:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260209:
        // this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
         this.elementosAnadidos = ['especifique'];
@@ -871,6 +922,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'numeroRegistroSanitario',
           'fechaCaducidad',
         ];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260214:
         this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
@@ -1593,6 +1645,21 @@ public convertToStringArray(value: unknown): string[] {
     this.mercanciaForm.patchValue({
       fechaCaducidad: valor,
     });
+  }
+
+  /**
+   * Maneja el cambio de tipo de producto.
+   * Actualiza el objeto `tipoProductoObj` en el componente con el catálogo correspondiente
+   * al tipo de producto seleccionado en el formulario.
+   *
+   * @param clave - Objeto de catálogo seleccionado para el tipo de producto.
+   */
+  onCambioTipoProduct(clave: Catalogo): void {
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    this.tipoProductoObj = DatosMercanciaComponent.generarCatalogoObjeto(
+      this.tipoProductoDatos,
+      TIPOPRODUCTOID
+    );
   }
 
   /**
