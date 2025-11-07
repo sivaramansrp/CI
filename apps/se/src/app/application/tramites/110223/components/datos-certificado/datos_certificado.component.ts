@@ -1,11 +1,9 @@
 import { Catalogo, ConsultaioQuery } from "@libs/shared/data-access-user/src";
-import { CommonModule } from "@angular/common";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Observable, Subject,map,takeUntil } from "rxjs";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
+import { CommonModule } from "@angular/common";
 import { DatosCertificadoDeComponent } from "../../../../shared/components/datos-certificado-de/datos-certificado-de.component";
-import { FormBuilder } from "@angular/forms";
-import { HttpErrorResponse } from "@angular/common/http";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
@@ -208,7 +206,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @implementa OnInit
      */
     ngOnInit(): void {
-      this.idiomOpcion();
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -251,32 +248,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
       const { campo: CAMPO, valor: VALOR } = event;
       this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
-    }
-  
-    /**
-     * @metodo idiomOpcion
-     * @descripcion
-     * Obtiene y carga la lista de idiomas disponibles desde el servicio.
-     * 
-     * @proceso
-     * - Realiza una petición al servicio para obtener el catálogo de idiomas
-     * - Almacena los datos en la property idiomaDatos
-     * - En caso de error, inicializa el arreglo vacío
-     */
-    idiomOpcion(): void {
-      this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('idioma.json')
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe({
-          next: (data) => {
-            this.idiomaDatos = data as Catalogo[];
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.idiomaDatos = [];
-          },
-        });
     }
   
     /**

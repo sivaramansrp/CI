@@ -283,8 +283,8 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
             if (!response || typeof response !== 'object') {
               return;
             }
-            const responseObj = response as { datos?: unknown[] };
-            const DATOS = responseObj.datos;
+            const RESPONSE_OBJ = response as { datos?: unknown[] };
+            const DATOS = RESPONSE_OBJ.datos;
             
             if (!DATOS || !Array.isArray(DATOS)) {
               this.store.setAgregarProductoresExportador([]);
@@ -312,7 +312,7 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
             });
             this.store.setAgregarProductoresExportador(RESULT);
           },
-          error: (error) => {
+          error: () => {
             this.store.setAgregarProductoresExportador([]);
           },
         });
