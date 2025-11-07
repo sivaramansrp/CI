@@ -29,19 +29,19 @@
           <span tooltip="Una persona moral es entendida como una empresa con una actividad específica"><i
               class="bi bi-question-circle-fill"></i></span>
         </div>
-          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
-          <small>Este campo es obligatorio</small>
-        </div>
-        @if(mostrarCamposNoContribuyente || idProcedimiento === 260911){
+        @if(mostrarCamposNoContribuyente){
         <div class="form-check">
           <input type="radio" class="form-check-input" formControlName="tipoPersona" value="NoContribyunte"
           (change)="changeNacionalidad()" />
-          No Contribyunte
+          No contribuyente
         </div>
         }
+         <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
       </div>
     </div>
- @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' || idProcedimiento === 260911){
+ @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte'){
     <div class="row mt-5 justify-content-center">
   <div class="col-md-4">
     <label class="form-label">
@@ -104,33 +104,9 @@
     </div>
   }
 
-    @if(agregarDestinatarioFinal?.get('tipoPersona')?.value ===
-    tipoPersona.MORAL) {
-    <div class="row">
-      <div class="col-md-8">
-        <div class="form-group">
-          <label class="form-label mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social@if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
-            <span *ngIf="esInvalido('denominacionRazon')" class="text-danger">*</span>
-          <span *ngIf="!esInvalido('denominacionRazon')">*</span>
-            }:</label>
-          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
-            [maxlength]="254" [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''" />
-          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
-            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']">
-              Este campo es obligatorio
-            </small>
-            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['pattern']">
-              Existen datos incorrectos que no cumplen con el formato esperado.
-            </small>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
-
     <!-- Datos Personales -->
     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA || agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911 ) {
+    tipoPersona.FISICA || agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' || agregarDestinatarioFinal.get('tipoPersona')?.value === undefined) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
@@ -169,7 +145,32 @@
         </div>
       </div>
     </div>
-    } @if (idProcedimiento === 260102) {
+    }
+     @if(agregarDestinatarioFinal?.get('tipoPersona')?.value ===
+    tipoPersona.MORAL || agregarDestinatarioFinal.get('tipoPersona')?.value === undefined) {
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social@if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
+            <span *ngIf="esInvalido('denominacionRazon')" class="text-danger">*</span>
+          <span *ngIf="!esInvalido('denominacionRazon')">*</span>
+            }:</label>
+          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
+            [maxlength]="254" [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''" />
+          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
+            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['pattern']">
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    
+    @if (idProcedimiento === 260102) {
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4 px-5">
