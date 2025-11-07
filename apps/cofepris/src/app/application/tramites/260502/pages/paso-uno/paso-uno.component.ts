@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
@@ -21,7 +21,20 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
+  /**
+   * Emite el estado de validez del formulario.
+   * Se envía un valor booleano cada vez que cambia la validez del formulario.
+   * Permite comunicar al componente padre si el formulario es válido o no.
+   */
+  @Output() formValidityChange = new EventEmitter<boolean>();
+ /**
+   * Actualiza el estado local de validez del formulario.
+   * Este método recibe el valor emitido por el componente hijo.
+   * Se utiliza para saber si el formulario es válido o no desde el componente principal.
+   */
+  onFormValidityChange(isValid: boolean):void {
+    this.formValidityChange.emit(isValid);
+  }
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent

@@ -23,7 +23,8 @@ import {
   REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
-  ENABLE_FIELDS
+  ENABLE_FIELDS,
+  PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -79,16 +80,15 @@ import {
   TablaScianConfig,
 } from '../../models/datos-solicitud.model';
 import { CatalogoServices, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
+import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
-
 import { ScianDataService } from '../../services/scian-data.service';
 import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
+import { ToastrService } from 'ngx-toastr';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
-import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../../services/datos-solicitud.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -1126,14 +1126,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
-      if(this.idProcedimiento===260209||this.idProcedimiento===260205){
+      if(this.idProcedimiento===260209){
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
-        
-        
         CONTROL?.enable();
-        
         }
        
   
@@ -1271,8 +1268,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Procesa los datos del representante obtenidos de la API
    */
   private procesarDatosRepresentante(data: RepresentanteData): void {
-    // Determinar el campo de nombre según el procedimiento
-    const NOMBRE_FIELD = this.esProcedimiento260210 ? data.nombreORazonSocial : data.nombre;
+    // Usar el mismo campo de nombre para todos los procedimientos
+    const NOMBRE_FIELD = data.nombre;
     
     // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
     const DATOS_FORMULARIO = {
@@ -1478,9 +1475,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   agregarScian(): void {
     if (this.scianLista && this.scianLista.length > 0) {
-    if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
-      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
-    }
     this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
@@ -1888,10 +1882,20 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
    */
   eliminarPedimento(borrar: boolean): void {
+    const CAMPOS_REPRESENTANTE = [
+      'representanteNombre',
+      'apellidoPaterno',
+      'apellidoMaterno'
+    ];
     if (borrar) {
       this.habilitarCamposFormulario(); // Use the new method instead of alternarControlesDeFormulario
       this.mostrarNotificacion = false; // Hide the notification
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+        if (PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE.includes(this.idProcedimiento)) {
+        CAMPOS_REPRESENTANTE.forEach((campo) => {
+          this.datosSolicitudForm.get(campo)?.disable();
+        });
+      }
     }
   }
 
@@ -1907,7 +1911,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210||this.idProcedimiento===260205) {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
@@ -1931,6 +1935,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    *                Puede ser una cadena o un número.
    */
   public cambioDeValorIndique(value: string | number): void {
+    this.datosSolicitudForm.get('publico')?.setValue(value);
+    this.datosSolicitudForm.get('publico')?.markAsTouched();
+    this.datosSolicitudForm.get('publico')?.updateValueAndValidity();
     this.predeterminadoSeleccionar = value;
   }
 
@@ -1995,7 +2002,6 @@ marcarTodosLosCamposComoTocados(): void {
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
   
-  console.log('All fields marked as touched. Form valid:', this.datosSolicitudForm.valid);
 }
 
 /**

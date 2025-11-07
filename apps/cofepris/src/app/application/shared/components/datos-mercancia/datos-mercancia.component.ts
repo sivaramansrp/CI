@@ -14,6 +14,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -88,7 +89,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges {
+export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
    /**
    * Event emitter to notify parent component to close the modal
@@ -437,6 +438,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Catalogo[] | undefined} tipoProductoObj
+   * @description Objeto(s) de catálogo que representan el tipo de producto seleccionado.
+   * Se utiliza para almacenar la información detallada del tipo de producto en el formulario.
+   */
+  tipoProductoObj: Catalogo[] | undefined;
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -473,7 +481,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * `agregar()` o `quitar()` según corresponda.
    */
   ngAfterViewInit(): void {
-    this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
+    //this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
     this.paisDeProcedenciaBotonsUno = [
       {
         btnNombre: 'Agregar todos',
@@ -540,6 +548,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         funcion: (): void => this.crossList.toArray()[2].quitar('t'),
       },
     ];
+
+    if( this.mercanciaForm.get('clasificacionProducto')?.value){
+      this.onCambioClasificacionProducto(this.datoSeleccionado?.claveClasificacionProductoObj);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -574,6 +586,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
+              ? SELECTED.paisDeOriginDatos
+              : SELECTED.paisDeOriginDatos
+              ? [SELECTED.paisDeOriginDatos]
+              : [];
+              this.seleccionadasPaisDeOriginDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeOriginDatos));
           }
         })
     );
@@ -586,6 +605,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
+              ? SELECTED.paisDeProcedenciaDatos
+              : SELECTED.paisDeProcedenciaDatos
+              ? [SELECTED.paisDeProcedenciaDatos]
+              : [];
+              this.seleccionadasPaisDeProcedenciaDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeProcedenciaDatos));
           }
         })
     );
@@ -598,6 +624,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
             this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
+            const SELECTED = this.mercanciaForm.getRawValue();
+            this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
+              ? SELECTED.usoEspecifico
+              : SELECTED.usoEspecifico
+              ? [SELECTED.usoEspecifico]
+              : [];
+              this.seleccionadasUsoEspesificoDatos = JSON.parse(JSON.stringify(this.seleccionadasUsoEspesificoDatos));
           }
         })
     );
@@ -823,7 +856,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosAnadidos = ['especifique','especifiqueForma'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260203:
+        this.elementosAnadidos = ['especifique','especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260204:
+        this.elementosAnadidos = ['especifique','especifiqueForma'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260208:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260209:
        // this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
         this.elementosAnadidos = ['especifique'];
@@ -832,6 +876,14 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       case 260207:
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260217:
+        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
+        this.elementosNoValidos = [
+          'formaFarmaceutica',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
         break;
       case 260219:
         this.elementosAnadidos = [
@@ -862,8 +914,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'numeroRegistroSanitario',
           'fechaCaducidad',
         ];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260214:
+        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
         this.elementosNoValidos = [
           'formaFarmaceutica',
           'numeroRegistroSanitario',
@@ -1397,23 +1451,23 @@ public convertToStringArray(value: unknown): string[] {
 
     const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
     const ESPECIFICARCLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.especificarClasificacionProductoDatos, ESPECIFICARCLASIFICACIONID);
-    VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.especificarClasificacionObj = ESPECIFICARCLASIFICACIONOBJ?.[0] ?? undefined;
 
     const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
     const TIPOPRODUCTOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.tipoProductoDatos, TIPOPRODUCTOID);
-    VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.tipoProductoObj = TIPOPRODUCTOOBJ?.[0] ?? undefined;
 
     const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
     const FORMAFARMACEUTICAOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.formaFarmaceuticaDatos, FORMAFARMACEUTICAID);
-    VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.formaFarmaceuticaObj = FORMAFARMACEUTICAOBJ?.[0] ?? undefined;
 
     const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
     const ESTADOFISICOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.estadoFisicoDatos, ESTADOFISICOID);
-    VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.estadoFisicoObj = ESTADOFISICOOBJ?.[0] ?? undefined;
 
     const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
     const UMCOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.cantidadUmcDatos, UMCID);
-    VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
 
     // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
@@ -1501,12 +1555,30 @@ public convertToStringArray(value: unknown): string[] {
       if (isNaN(Number(FRACCION))) {
         this.abrirModal();
       } else {
-        this.mercanciaForm
-          .get('descripcionFraccion')
-          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-        this.mercanciaForm
-          .get('cantidadUmt')
-          ?.setValue(UMT_DESHABILITADO_VALOR);
+        this.datosSolicitudService.obtenerFraccionesArancelarias(this.idProcedimiento, FRACCION)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(
+          (response) => {
+            if (response.codigo === "00") {
+              const DATOS_FRACCION = response.datos as { descripcionAlternativa: string };
+              this.mercanciaForm.get('descripcionFraccion')?.setValue(DATOS_FRACCION.descripcionAlternativa);
+            } else {
+              this.abrirModal();
+            }
+          }
+        );
+        this.datosSolicitudService.obtenerUMT(this.idProcedimiento, FRACCION)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(
+          (response) => {
+            if (response.codigo === "00") {
+              const DATOS_UMT = response.datos as { descripcion: string };
+              this.mercanciaForm.get('cantidadUmt')?.setValue(DATOS_UMT.descripcion);
+            } else {
+              this.abrirModal();
+            }
+          }
+        );
       }
     }
   }
@@ -1568,6 +1640,21 @@ public convertToStringArray(value: unknown): string[] {
   }
 
   /**
+   * Maneja el cambio de tipo de producto.
+   * Actualiza el objeto `tipoProductoObj` en el componente con el catálogo correspondiente
+   * al tipo de producto seleccionado en el formulario.
+   *
+   * @param clave - Objeto de catálogo seleccionado para el tipo de producto.
+   */
+  onCambioTipoProduct(clave: Catalogo): void {
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    this.tipoProductoObj = DatosMercanciaComponent.generarCatalogoObjeto(
+      this.tipoProductoDatos,
+      TIPOPRODUCTOID
+    );
+  }
+
+  /**
    * Método que se llama cuando se envía el formulario.
    * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
    */
@@ -1586,6 +1673,11 @@ public convertToStringArray(value: unknown): string[] {
     };
 
     this.elementoParaEliminar = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 

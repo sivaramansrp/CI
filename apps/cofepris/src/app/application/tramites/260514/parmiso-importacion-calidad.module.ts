@@ -1,7 +1,9 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
+import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
@@ -14,6 +16,7 @@ import { RepresentanteLegalRfcComponent } from '../../shared/components/represen
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago-derechos/shared-pago-derechos.component';
+import {PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, PasoDosComponent, PasoTresComponent
@@ -34,6 +37,9 @@ import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
+    PagoDeDerechosContenedoraComponent,
+    DatosDeLaComponent,
+    AvisoDePrivacidadComponent,
   ],
   providers: [
     provideHttpClient(),

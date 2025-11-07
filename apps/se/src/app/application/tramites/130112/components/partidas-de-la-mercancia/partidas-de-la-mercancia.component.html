@@ -2,7 +2,7 @@
   <form [formGroup]="partidasDelaMercanciaForm">
     <div>
       <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
-      <ng-alert [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
+      <ng-alert class="text-center" [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -210,7 +210,10 @@
       <div *ngIf="mostrarTabla">
         <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [tipoSeleccionTabla]="CHECKBOX"
-          (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+          (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)"
+          [styleCenter]="true"
+          [isInvalida]="mostrarErrores && tableBodyData.length === 0"
+          >
         </app-tabla-dinamica>
       </div>
 

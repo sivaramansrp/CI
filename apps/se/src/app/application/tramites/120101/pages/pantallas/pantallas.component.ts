@@ -3,14 +3,22 @@ import {
   AVISO,
   AccionBoton,
   DatosPasos,
+  JSONResponse,
   ListaPasosWizard,
   WizardComponent,
   WizardService,
+  doDeepCopy
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
+import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 /**
  * @component PantallasComponent
  * @description
@@ -30,6 +38,12 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
   templateUrl: './pantallas.component.html',
 })
 export class PantallasComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
   /**
    *
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -152,6 +166,38 @@ export class PantallasComponent implements OnInit, OnDestroy {
   */
   public consultaState!: ConsultaioState;
 
+ /**
+   * Estado de la solicitud de la sección 120101.
+   * @type {SolicitudDeRegistroTpl120101State}
+   * @memberof BienFinalComponent
+   */
+  public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
+
+  /**
+   * Indica si el botón padre está habilitado o visible.
+   * 
+   * @default true
+   */
+  padreBtn: boolean = true;
+
+/**
+ * Identificador numérico de la solicitud actual.
+ * 
+ * Este valor se utiliza para referenciar de manera única una solicitud dentro del sistema.
+ * Por defecto, se inicializa en 0 hasta que se asigne un identificador válido.
+ */
+idSolicitud:number=0;
+
+/**
+ * Identificador numérico del mecanismo seleccionado.
+ * 
+ * @remarks
+ * Este valor se utiliza para determinar el mecanismo actual en uso dentro del componente.
+ * 
+ * @defaultValue 0
+ */
+idMecanismo:number=0;
+
   /**
  * @constructor
  * @description
@@ -160,7 +206,14 @@ export class PantallasComponent implements OnInit, OnDestroy {
  */
   constructor(
     public servicioDeFormularioService: ServicioDeFormularioService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter,
+    private toastrService: ToastrService,
+    private tramite120101Store:Tramite120101Store,
+    private tramite120101Query: Tramite120101Query
+    
+    
   ) {
     //
   }
@@ -182,15 +235,34 @@ export class PantallasComponent implements OnInit, OnDestroy {
  */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.consultaState = seccionState;
-            if (this.consultaState.readonly) {
-              this.pestanaDosFormularioValido = true
-            }
-          })
-        ).subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.readonly) {
+            this.pestanaDosFormularioValido = true
+          }
+        })
+      ).subscribe();
+
+       this.tramite120101Query.selectSolicitudDeRegistroTpl$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState) => {
+                this.solicitudDeRegistroState = seccionState;
+      
+                if (
+                  this.solicitudDeRegistroState &&
+                  typeof this.solicitudDeRegistroState === 'object' 
+                ) {
+                  this.idSolicitud = this.solicitudDeRegistroState['idSolicitud'] as number;
+                  this.idMecanismo = this.solicitudDeRegistroState['idMecanismo'] as number;
+                }
+              })
+            )
+            .subscribe();
+      
+
   }
 
   /**
@@ -200,10 +272,8 @@ export class PantallasComponent implements OnInit, OnDestroy {
  * @returns {boolean} - Indica si todos los formularios son válidos.
  */
   verificarLaValidezDelFormulario(): boolean {
-    return (
+     return (
       (this.servicioDeFormularioService.isFormValid('bienFinalForm') ??
-        false) &&
-      (this.servicioDeFormularioService.isFormValid('consultarCupoForm') ??
         false) &&
       (this.servicioDeFormularioService.isFormValid('representacionFederalForm') ??
         false) &&
@@ -264,19 +334,35 @@ export class PantallasComponent implements OnInit, OnDestroy {
     return this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ?? false;
   }
 
-/**
- * @method pestanaCambiado
- * @description
- * Maneja el evento de cambio de pestaña en el wizard.
- * 
- * Funcionalidad:
- * - Actualiza el índice de la subpestaña seleccionada con el valor proporcionado por el evento.
- * 
- * @param {number} event - El índice de la nueva subpestaña seleccionada.
- * 
- * @example
- * this.pestanaCambiado(2); // Cambia a la subpestaña con índice 2.
- */
+ 
+
+  /**
+   * Mensaje de error asociado a la fracción uno.
+   * Puede ser indefinido si no existe un error actual para esta fracción.
+   */
+  fraccionErrorUno?:string;
+
+  /**
+   * Indica si ha ocurrido un error relacionado con la fracción.
+   * 
+   * Cuando es `true`, significa que se ha detectado un error en la fracción.
+   * Cuando es `false` o `undefined`, no hay error presente.
+   */
+  fraccionError?:boolean;
+
+  /**
+   * @method pestanaCambiado
+   * @description
+   * Maneja el evento de cambio de pestaña en el wizard.
+   * 
+   * Funcionalidad:
+   * - Actualiza el índice de la subpestaña seleccionada con el valor proporcionado por el evento.
+   * 
+   * @param {number} event - El índice de la nueva subpestaña seleccionada.
+   * 
+   * @example
+   * this.pestanaCambiado(2); // Cambia a la subpestaña con índice 2.
+   */
   public pestanaCambiado(event: number): void {
     if (event) {
       this.subpestanaSeleccionada = event;
@@ -291,30 +377,109 @@ export class PantallasComponent implements OnInit, OnDestroy {
    */
   public getValorIndice(e: AccionBoton): void {
     if (!this.consultaState.readonly) {
+      
+      if (this.esBienFinalFormValid && this.esRepresentacionFederalFormValid) {
+        this.mostrarAplicacionRegistradaAlerta = true;
+        this.pestanaDosFormularioValido = true;
+      } 
+
       this.esFormaValido = this.verificarLaValidezDelFormulario();
-      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      if (!this.esFormaValido) {
+        this.pasoUnoComponent.validarFormularios();
+        return;
+      }
+
+      if (this.esFormaValido) {
+        if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+          const NEXT_INDEX =
+            e.accion === 'cont' ? e.valor + 1 :
+            e.accion === 'ant' ? e.valor - 1 :
+            e.valor;
           if (e.accion === 'cont') {
-              this.continuar(e);
-          } else if (e.accion === 'ant' && this.esFormaValido) {
-              this.indice = e.valor - 1;
-              this.datosPasos.indice = e.valor - 1;
-              this.wizardComponent.atras();
-          } else if (!this.esFormaValido) {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
+            this.shouldNavigate$()
+              .subscribe((shouldNavigate) => {
+                if (shouldNavigate) {
+                
+                  this.indice = NEXT_INDEX;
+                  this.datosPasos.indice = NEXT_INDEX;
+                  this.wizardService.cambio_indice(NEXT_INDEX);
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.indice = e.valor;
+                  this.datosPasos.indice = e.valor;
+                }
+              });
+          } else {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardComponent.atras();
           }
-      }
-    } else {
-      if (e.valor > 0 && this.pantallasPasos.length) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+        }
       }
     }
+  }
+
+
+  /**
+   * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+   *
+   * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+   * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+   * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+   * hacia adelante o atrás según el tipo de acción.
+   *
+   * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+   */
+    private shouldNavigate$(): Observable<boolean> {
+      return this.solicitudDeRegistroTplService.getAllState().pipe(
+        take(1),
+        switchMap(data => this.guardar(data)),
+        map(response => {
+          const DATOS = doDeepCopy(response);
+          const OK = response.codigo === '00';
+          if (OK) {
+            this.toastrService.success(DATOS.mensaje);
+          } else {
+            this.padreBtn = true;
+            this.toastrService.error(DATOS.mensaje);
+          }
+          return OK;
+        })
+      );
     }
-}
+
+  /**
+   * Guarda los datos de la solicitud de registro utilizando el adaptador y servicio correspondiente.
+   * 
+   * @param data - Estado actual de la solicitud de registro de tipo `SolicitudDeRegistroTpl120101State`.
+   * @returns Una promesa que se resuelve con la respuesta JSON del API (`JSONResponse`) o se rechaza con un error.
+   * 
+   * El método transforma los datos recibidos en el formato requerido por el backend, realiza la petición de guardado,
+   * y actualiza el store con el identificador de la solicitud retornado por el API.
+   */
+  guardar(data: SolicitudDeRegistroTpl120101State): Promise<JSONResponse> {
+    const PAYLOAD = this.ampliacionServiciosAdapter.toFormGuardarPayload(data);
+    return new Promise((resolve, reject) => {
+      this.solicitudDeRegistroTplService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        const API_RESPONSE = doDeepCopy(response);
+        this.tramite120101Store.setDynamicFieldValue('idSolicitud', API_RESPONSE.datos.id_solicitud);
+        resolve(API_RESPONSE);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.solicitudDeRegistroTplService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
+  }
 
   /**
  * @method continuar
@@ -333,7 +498,10 @@ export class PantallasComponent implements OnInit, OnDestroy {
  * this.continuar({ valor: 2, accion: 'cont' });
  */
   public continuar(e: AccionBoton): void {
-    if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
+    if(this.esBienFinalFormValid === false){
+      this.servicioDeFormularioService.markFormAsTouched('consultarCupoForm');
+    }
+     if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid ) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;
     } else if (this.esFormaValido) {
@@ -345,6 +513,20 @@ export class PantallasComponent implements OnInit, OnDestroy {
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }
+  }
+
+
+  
+  /**
+   * Maneja el evento de error relacionado con la fracción.
+   * 
+   * @param event Objeto que contiene información sobre el error de fracción.
+   *  - `fraccionErrorUno` (opcional): Mensaje de error específico.
+   *  - `fraccionError` (opcional): Indica si existe un error en la fracción.
+   */
+  fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void { 
+    this.fraccionErrorUno = event.fraccionErrorUno;
+    this.fraccionError = event.fraccionError;
   }
 
   /**

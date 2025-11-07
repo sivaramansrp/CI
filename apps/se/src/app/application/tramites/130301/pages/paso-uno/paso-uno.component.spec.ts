@@ -10,7 +10,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
   template: '',
 })
 class MockSolicitanteComponent {
-  obtenerTipoPersona = jest.fn();
+  obtenerTipoPersona = jest.fn().mockImplementation(() => {});
 }
 
 describe('PasoUnoComponent', () => {
@@ -29,7 +29,6 @@ describe('PasoUnoComponent', () => {
     component = fixture.componentInstance;
     mockSolicitante = TestBed.createComponent(MockSolicitanteComponent).componentInstance;
     component.solicitante = mockSolicitante as unknown as SolicitanteComponent;
-    fixture.detectChanges();
   });
 
   it('debe crear el componente', () => {

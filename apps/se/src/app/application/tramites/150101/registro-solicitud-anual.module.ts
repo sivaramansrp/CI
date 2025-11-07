@@ -1,4 +1,4 @@
-import { AcuseComponent, AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, PasoFirmaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AcusePageComponent } from './components/acuse-page/acuse-page.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
@@ -20,8 +20,6 @@ import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
     SolicitudDeReporteComponent,
-    ProgramasReporteAnnualComponent,
-    DatosDeReporteAnnualComponent,
     DatosComponent,
     PasoTresComponent,
   ],
@@ -40,7 +38,11 @@ import { provideHttpClient } from '@angular/common/http';
     AcuseComponent,
     AcusePageComponent,
     BsDatepickerModule.forRoot(),
-    NotificacionesComponent,AlertComponent
+    NotificacionesComponent,
+    AlertComponent,
+    ProgramasReporteAnnualComponent,
+    DatosDeReporteAnnualComponent,
+    PasoFirmaComponent
   ],
   providers: [provideHttpClient(), ToastrService],
 })

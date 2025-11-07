@@ -4,7 +4,7 @@
     <div class="row">
       @if(indice ===1) {
       <div class="col-md-12">
-        <h1>Registro de solicitud de Cancelación IMMEX</h1>
+        <h1>Registro de solicitud de cancelación PROSEC</h1>
       </div>
       }
       @if(indice !==1) {
@@ -31,7 +31,7 @@
       <app-pantallas [idTipoTramite]="idTipoTramite" #datosComponent></app-pantallas>
       }
       @case (2) {
-      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="140102" [procedureUrl]="'solicitud-de-cancelacion/solicitante'"></paso-firma>
+      <paso-firma [idSolicitud]="idSolicitudState" [procedure]="140102" [procedureUrl]="'registro-solicitudModule/pantallas'"></paso-firma>
       }
 
 

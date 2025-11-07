@@ -128,6 +128,15 @@ export class ContenedorDePasosComponent implements OnInit {
   cargaEnProgreso: boolean = true;
 
   /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
+
+  /**
  * Indica si el botón para cargar archivos está habilitado.
  */
   activarBotonCargaArchivos: boolean = false;
@@ -212,8 +221,21 @@ export class ContenedorDePasosComponent implements OnInit {
         this.datosPasos.indice = this.indice;
         return;
       }
+      this.esFormaValido = false;
+      this.postGuardarDatos(e);
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+    }
+  }
 
-      const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
+  /**
+   * Método que se ejecuta después de guardar los datos.
+   * Actualmente no realiza ninguna acción.
+   */
+  postGuardarDatos(e: AccionBoton): void {
+    const PAYLOAD = GuardarAdapter_260201.toFormPayload(this.storeData);
       let shouldNavigate = false;
       this.registroSolicitudService.postGuardarDatos('260201', PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
@@ -239,7 +261,7 @@ export class ContenedorDePasosComponent implements OnInit {
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = e.valor;
           }
           this.toastrService.success(response.mensaje);
           if (indiceActualizado > 0 && indiceActualizado < 5) {
@@ -255,11 +277,6 @@ export class ContenedorDePasosComponent implements OnInit {
           this.toastrService.error(response.mensaje);
         }
       });
-    }else{
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
-    }
   }
 
   /**
@@ -350,6 +367,30 @@ export class ContenedorDePasosComponent implements OnInit {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
   }
 
 }

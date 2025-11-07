@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
@@ -19,6 +19,13 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  public mostrarErroresRepresentante = {
+  nombre: false,
+  apellidoPaterno: false,
+};
+
+  
+    @Input() public idProcedimiento!: number;
   /**
    * Estado de la solicitud.
    */
@@ -67,6 +74,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Inicializa el componente.
    */
   ngOnInit(): void {
+    // this.representante.valueChanges.subscribe(() => {
+    //   this.mostrarErroresRepresentante.nombre = false;
+    //   this.mostrarErroresRepresentante.apellidoPaterno = false;
+    // }
+    // );
     /**
     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
     *
@@ -101,7 +113,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.representante = this.fb.group({
-      rfc: [this.solicitudState?.rfc, Validators.required],
+   rfc: [this.solicitudState?.rfc, [Validators.required]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
@@ -172,7 +184,23 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.representante, campo);
   }
-
+validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    const FORMVALUE = this.representante.getRawValue();
+    if(FORMVALUE.nombre === '' || FORMVALUE.nombre === null){
+      this.mostrarErroresRepresentante.nombre = true;
+      ISVALID = false;
+    }
+    if(FORMVALUE.apellidoPaterno === '' || FORMVALUE.apellidoPaterno === null){
+      this.mostrarErroresRepresentante.apellidoPaterno = true;
+      ISVALID = false;
+    }
+    if(this.representante.invalid){
+      this.representante.markAllAsTouched();
+      ISVALID = false;
+    }
+    return ISVALID;
+}
   /**
    * Limpia los campos del formulario.
    */

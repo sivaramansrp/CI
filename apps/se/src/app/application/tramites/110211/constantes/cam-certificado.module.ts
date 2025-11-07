@@ -29,9 +29,25 @@ export const PASOS = [
     completado: true,
   },
   {
+    /**
+     * @descripcion
+     * Índice del paso en el proceso.
+     */
     indice: 2,
+    /**
+     * @descripcion
+     * Título descriptivo del paso.
+     */
     titulo: 'Firmar solicitud',
+    /**
+     * @descripcion
+     * Indica si el paso está activo.
+     */
     activo: false,
+    /**
+     * @descripcion
+     * Indica si el paso ha sido completado.
+     */ 
     completado: false,
   },
 ];

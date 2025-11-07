@@ -1,7 +1,12 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { BienFinalComponent } from '../../components/bien-final/bien-final.component';
 import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultarCupoComponent } from '../../components/consultar-cupo/consultar-cupo.component';
 import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
+import { InsumosComponent } from '../../components/insumos/insumos.component';
+import { ProcesoProductivoComponent } from '../../components/proceso-productivo/proceso-productivo.component';
+import { RepresentacionFederalComponent } from '../../components/representacion-federal/representacion-federal.component';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 /**
  * @component PasoUnoComponent
@@ -68,6 +73,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public elementoDeTablaSeleccionado!: InstrumentoCupoTPLForm;
 
   /**
+   * Referencia al componente hijo `ConsultarCupoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('consultarCupo') consultarCupo!: ConsultarCupoComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('representacionFederal') representacionFederal!: RepresentacionFederalComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('bienFinal') bienFinal!: BienFinalComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('insumos') insumos!: InsumosComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('procesoProductivo') procesoProductivo!: ProcesoProductivoComponent;
+
+  /**
   * @constructor
   * @description Inicializa una instancia del `DatosComponent`.
   */
@@ -76,6 +106,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
+
+
+    /**
+     * Evento de salida que emite un objeto con posibles mensajes de error relacionados con fracciones.
+     * 
+     * @event
+     * @property {string} [fraccionErrorUno] - Mensaje de error para la primera fracción, si existe.
+     * @property {string} [fraccionErrorDos] - Mensaje de error para la segunda fracción, si existe.
+     */
+    @Output() public fraccionErrorEventEmit =
+    new EventEmitter<{ fraccionErrorUno?: string; fraccionError?: boolean }>();
 
   /**
    * @method ngOnInit
@@ -140,6 +181,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     if (event) {
       this.elementoDeTablaSeleccionado = event;
     }
+  }
+
+  validarFormularios(): void {
+    this.consultarCupo?.validarFormulario();
+    this.representacionFederal?.validarFormulario();
+    this.bienFinal?.validarFormulario();
+    this.insumos?.validarFormulario();
+    this.procesoProductivo?.validarFormulario();
+  }
+
+/**
+ * Emite un evento con información sobre errores relacionados con fracciones.
+ *
+ * @param event - Objeto que puede contener los mensajes de error para las fracciones uno y dos.
+ *   - fraccionErrorUno: Mensaje de error para la primera fracción (opcional).
+ *   - fraccionErrorDos: Mensaje de error para la segunda fracción (opcional).
+ */
+fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void {
+  this.fraccionErrorEventEmit.emit(event);
   }
 
   /**

@@ -563,7 +563,7 @@ export const IDTRAMITEFOLIO= '{idTramiteFolio}';
  * API para Consultar detalle  del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Registro-Solicitud/consulta-detalle-by-numFolioTramite
  */
-export const API_GET_TRAMITE_DETALLE = (TRAMITE: string, IDTRAMITEFOLIO: string) : string =>  `sat-t${TRAMITE}/tramite/${IDTRAMITEFOLIO}/detalle`
+export const API_GET_TRAMITE_DETALLE = (TRAMITE: string, IDTRAMITEFOLIO: string) : string => `sat-t${TRAMITE}/tramite/${IDTRAMITEFOLIO}/detalle`
 
 /**
  * Id resolucion que se utilizará en las consultas.
@@ -823,6 +823,7 @@ export const CATALOGO_TIPO_FACTURA = (TRAMITE: string): string => `sat-t${TRAMIT
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/unidad-medida-masa-bruta
  */
 export const CATALOGO_UNIDAD_MASA_BRUTA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/unidades-medidas`;
+
 /*
  * API para obtener el catálogo de países
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises/bloques
@@ -864,8 +865,25 @@ export const CATALOGO_ENTIDADES_FEDERATIVAS = (TRAMITE: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
  */
 export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
- 
 
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tratados-acuerdos
+ */
+export const CATALOGO_TRATADO_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/tratados-o-acuerados/${IDETIPOTRATADOACUERDO}`;
+
+
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
+ */
+export const PAIS_DESTINO = (TRAMITE: string, PAYLOAD_DATOS: { cveTratado: string , cvePais: string}): string => `sat-t${TRAMITE}/catalogo/paises-destino/${PAYLOAD_DATOS.cveTratado}/${PAYLOAD_DATOS.cvePais}`;
+ 
+/*
+ * API para obtener el catálogo de tratados y acuerdos
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises-destino
+ */
+export const CLASIFICACION_REGIMEN = (TRAMITE: string, PAYLOAD_DATOS: { tramite: string , id: string}): string => `sat-t${TRAMITE}/catalogo/tramite/${PAYLOAD_DATOS.tramite}/regimenes/${PAYLOAD_DATOS.id}/clasificacion`;
 
 /**
  * Genera dinámicamente la ruta para el catálogo de tratados/acuerdos de la UE por bloque.
@@ -890,6 +908,24 @@ export const CATALOGO_TRATADOS_ACUERDOS = (TRAMITE: string, IDETIPOTRATADOACUERD
  * @author Sistema VUCEM
  */
 export const CATALOGO_TRATADO_ACUERDO = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/tratado-acuerdo/${IDETIPOTRATADOACUERDO}/bloque`;
+
+/**
+ * Genera la ruta de la API para obtener el catálogo de países de México según el trámite especificado.
+ *
+ * @param TRAMITE - El identificador del trámite para el cual se requiere el catálogo.
+ * @returns La ruta de la API como una cadena de texto.
+ */
+export const CATALOGO_PAISES_MEXICO = (TRAMITE: string,IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/paises-maxico/${IDETIPOTRATADOACUERDO}`;
+
+/**
+ * Genera la ruta de la API para obtener la descripción de la fracción HTS de EE.UU. 
+ * según el trámite y el tipo de tratado/acuerdo especificados.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param IDETIPOTRATADOACUERDO - Identificador del tipo de tratado o acuerdo.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const FRACCION_HTS = (TRAMITE: string, IDETIPOTRATADOACUERDO: string): string => `sat-t${TRAMITE}/catalogo/fraccion-hts-usa/${IDETIPOTRATADOACUERDO}/descripcion`;
 
 /**
  * Construye la ruta para el catálogo de medios de transporte disponibles.
@@ -976,7 +1012,7 @@ export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string
  * Recibe como parámetros el tipo de trámite (`TRAMITE`) y el ID del tipo de tratado/acuerdo (`IDETIPOTRATADOACUERDO`).
  * Devuelve un string con la ruta completa del recurso en el backend.
  */
-export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string, IDETIPOTRATADOACUERDO: string) : string => `sat-t${TRAMITE}/catalogo/${IDETIPOTRATADOACUERDO}/tratados-acuerdos`;
+export const CATALOGO_TRATADO_ACUERDO_NEW = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tratados-acuerdos`;
 
 /**
  * Genera la URL del endpoint para obtener la lista de países asociados a un tratado específico.
@@ -992,6 +1028,11 @@ export const CATALOGO_ACUERDOS = (TRAMITE: string, IDTRATADO: string) : string =
  */
 export const CATALOGO_ACUERDOS_PAIS = (TRAMITE: string, CVEPAIS: string) : string => `sat-t${TRAMITE}/catalogo/pais/${CVEPAIS}/tratados-acuerdos`;
 
+/**
+ *API para obtener los documentos del tramite generico
+ */
+
+export const API_GET_DOCUMENTOS = (TRAMITE: string, ESPECIFICO: boolean) : string => `sat-t${TRAMITE}/solicitud/documentos?especifico=${ESPECIFICO}`;
 
 /*
  * API para obtener el catálogo de SCIAN
@@ -1059,6 +1100,11 @@ export const CATALOGO_LOCALIDADES = (TRAMITE: string, CVE_MUNICIPIO: string): st
  */
 export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: string): string => `sat-t${TRAMITE}/catalogo/municipio-delegacion/${CVE_MUNICIPIO_DELEGACION}/colonias`;
 
+/**
+ *  * API para obtener el catálogo de codigo
+ *  https://api-v30.cloud-ultrasist.net/api/sat-t260203/catalogo/codigo-postal/03005/colonias
+ */
+export const CATALOGO_CODIGO = (TRAMITE: string, CVE_MUNICIPIO: string): string => `sat-t${TRAMITE}/catalogo/codigo-postal/${CVE_MUNICIPIO}/colonias`;
 /*
  * API para obtener el catálogo de bancos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
@@ -1077,3 +1123,13 @@ export const CATALOGO_ANOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catal
  */
 export const CATALOGO_USOS_ESPECIFICO_MERCANCIA = (TRAMITE: string, PROCEDIMIENTO: string): string =>
   `sat-t${TRAMITE}/catalogo/tramite/usos-especifico-mercancia/${PROCEDIMIENTO}`;
+
+/*
+  * API para obtener la descripción de una fracción arancelaria
+ */
+export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: string): string => `sat-t${TRAMITE}/solicitud/fraccion-descripcion?clave=${CLAVE}&idTipoTramite=${TRAMITE}`;
+
+/*
+  * API para obtener la unidad de medida por fracción arancelaria
+ */
+export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;

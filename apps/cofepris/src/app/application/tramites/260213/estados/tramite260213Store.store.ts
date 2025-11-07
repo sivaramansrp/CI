@@ -21,6 +21,8 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * proveedores, fabricantes, mercancías, formularios y más.
  **/
 export interface Tramite260213State {
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number;
   /**
    * @property destinatarioFinalTablaDatos
    * @description Arreglo de destinatarios finales para el trámite.
@@ -134,6 +136,8 @@ export interface Tramite260213State {
  */
 export function createInitialState(): Tramite260213State {
   return {
+      /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -155,7 +159,7 @@ export function createInitialState(): Tramite260213State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -362,6 +366,16 @@ export class Tramite260213Store extends Store<Tramite260213State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+  
+ /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
+   */
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

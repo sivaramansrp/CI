@@ -1,23 +1,29 @@
 import {
-  AccionBoton,
   AVISO,
+  AccionBoton,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 
 import { PASOS, TITULO_MENSAJE } from '../../constants/destinados-donacio.enum';
-import {MENSAJE_DE_VALIDACION}from'../../constants/destinados-donacio.enum';
+import { Subject,takeUntil } from 'rxjs';
 import { EventEmitter } from '@angular/core';
+import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
+import {MENSAJE_DE_VALIDACION}from'../../constants/destinados-donacio.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { Notificacion } from '@ng-mf/data-access-user';import { ToastrService } from 'ngx-toastr';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject,takeUntil } from 'rxjs';
+
+
+import { Tramite260209Query } from '../../estados/tramite260209Query.query';
+
 @Component({
   selector: 'app-contenedor-de-pasos',
   templateUrl: './contenedor-de-pasos.component.html',
-  styleUrl: './contenedor-de-paso.component.scss',
+  styleUrls: ['./contenedor-de-paso.component.scss'],
 })
 export class ContenedorDePasosComponent {
   /**
@@ -159,7 +165,11 @@ export class ContenedorDePasosComponent {
 
 
   
-  constructor(private toastrService: ToastrService,) {}
+  constructor(
+    private toastrService: ToastrService,
+    private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService,
+    private tramite260209Query: Tramite260209Query
+  ) {}
 
 
   /**
@@ -168,43 +178,48 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Objeto con la acción y valor del botón
    */
   getValorIndice(e: AccionBoton): void {
-     if (e.accion === 'cont') {
-         let isValid = true;
-   
-           if (this.indice === 1 && this.pasoUnoComponent) {
-           isValid = this.pasoUnoComponent.validarPasoUno();
-         }
-         if(!this.pasoUnoComponent.ValidarPagoDerechos()){
-           this.mostrarAlerta=true;
-           this.seleccionarFilaNotificacion = {
-             tipoNotificacion: 'alert',
-             categoria: 'danger',
-             modo: 'action',
-             titulo: '',
-             mensaje: MENSAJE_DE_VALIDACION,
-             cerrar: true,
-             tiempoDeEspera: 2000,
-             txtBtnAceptar: 'SI',
-             txtBtnCancelar: 'NO',
-           }
-         }
-         if (!isValid) {
-           this.esFormaValido = true;
-           this.datosPasos.indice = this.indice;
-           return;
-         }
-   
-         this.esFormaValido = false;
-         this.indice = e.valor;
-         this.datosPasos.indice = this.indice;
-   
-         this.wizardComponent.siguiente();
-         return;
-       }
-   
-         this.indice = e.valor;
-       this.datosPasos.indice = this.indice;
-       this.wizardComponent.atras();
+    if (e.accion === 'cont') {
+      let isValid = true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
+      }
+      if (!this.pasoUnoComponent.ValidarPagoDerechos()) {
+        this.mostrarAlerta = true;
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
+        };
+      }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        //return;
+      }
+      const STATE = this.tramite260209Query.getValue();
+      this.importacionDestinadosDonacioService.guardarTramite(STATE).subscribe({
+        next: () => {
+          this.toastrService.success('Guardado exitosamente');
+          this.esFormaValido = false;
+          this.indice = e.valor;
+          this.datosPasos.indice = this.indice;
+          this.wizardComponent.siguiente();
+        },
+        error: () => {
+          this.toastrService.error('Error al guardar');
+        }
+      });
+      return;
+    }
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
   
 

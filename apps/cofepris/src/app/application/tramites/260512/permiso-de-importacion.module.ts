@@ -2,19 +2,20 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Firma
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
 import { PaginasComponent } from './pages/paginas/paginas.component';
+import {PagoDeDerechosComponent} from '../../shared/components/pago-de-derechos/pago-de-derechos.component'
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PermisoDeImportacionRoutingModule } from './permiso-de-importacion-routing.module';
 import { RepresentanteLegalRfcComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
-import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago-derechos/shared-pago-derechos.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago
     AnexarDocumentosComponent, 
     AlertComponent,
     FirmaElectronicaComponent,
-    SharedPagoDerechosComponent
+    PagoDeDerechosComponent,
+    DatosDeLaComponent
   ],
   providers: [
     provideHttpClient(),

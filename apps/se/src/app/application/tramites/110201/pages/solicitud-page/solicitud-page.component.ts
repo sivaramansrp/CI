@@ -1,10 +1,11 @@
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS2, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, PASOS2, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../enum/certificado.enum';
 import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
 import { Subject, map, take, takeUntil } from 'rxjs';
-import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { RegistroService } from '../../services/registro.service';
+import { Solicituds110201State } from '../../state/tramites110201.store';
+import { Solocitud110201Service } from '../../services/service110201.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 
 /**
@@ -27,26 +28,6 @@ interface AccionBoton {
    */
   valor: number;
 }
-/**
- * Interfaz que define la estructura del resultado de una solicitud.
- */
-interface ResultadoSolicitud {
-  /**
-   * Indica si la solicitud fue exitosa.
-   */
-  exito: boolean;
-
-  /**
-   * Mensaje de error o éxito de la solicitud.
-   */
-  mensaje?: string;
-
-  /**
-   * Errores del modelo, si los hay.
-   */
-  erroresModelo?: { campo: string; errores: string[] }[];
-}
-
 
 /**
  * Componente que representa la página de solicitud.
@@ -58,7 +39,7 @@ interface ResultadoSolicitud {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnInit {
+export class SolicitudPageComponent implements OnInit, OnDestroy {
   /**
    * Texto de alerta que se muestra a los terceros.
    */
@@ -86,7 +67,11 @@ export class SolicitudPageComponent implements OnInit {
     * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
     */
   esFormaValido: boolean = false;
-
+ /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public alertaNotificacion!: Notificacion;
   /**
    * URL de la página actual.
    */
@@ -155,11 +140,15 @@ export class SolicitudPageComponent implements OnInit {
  * Estado del tramite Folio
  */
   public folioTemporal: number = 0;
-
+  /**
+   * Indica si ya se cargaron los datos de respuesta para mostrar en el formulario.
+   */
+  public esDatosRespuesta: boolean = false;
+  
   constructor(
     private tramite110201Store: Tramite110201Store,
     private tramite110201Query: Tramite110201Query,
-    private registroService: RegistroService
+    private solocitud110201Service: Solocitud110201Service,
   ) { }
 
   /**
@@ -206,129 +195,87 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
 
-  /**
-   * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
-   * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
-   * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
-   * */
-buildMercanciaSeleccionadas(arr: any[]): any[] {
-return arr.map((item: any) => ({
-  id: item.id,
-  fraccion_arancelaria: item.fraccionArancelaria,
-  cantidad: item.cantidad,
-  unidad_medida: item.unidadMedida,
-  valor_mercancia: item.valorMercancia,
-  nombreTecnico: item.nombreTecnico,
-  nombre_comercial: item.nombreComercial,
-  registro_producto: item.numeroRegistroProducto,
-  fechaExpedicion: item.fechaExpedicion,
-  fechaVencimiento: item.fechaVencimiento,
-  tipo_factura: item.tipoFactura,
-  num_factura: item.numFactura,
-  complemento_descripcion: item.complementoDescripcion,
-  fecha_factura: item.fechaFactura,
-  umc:item.umc,
-}));
-
-}
-
-  /**
-   * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
-   * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
-   *
-   * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
-   *
-   * @remarks
-   * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
-   * La llamada al servicio actualmente está comentada.
-   */
-  guardar(item: any): void {
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
-    const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud || 0,
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "ACEROS ALVARADO S.A. DE C.V.",
-        actividad_economica: "Fabricación de productos de hierro y acero",
-        correo_electronico: "contacto@acerosalvarado.com",
-        domicilio: {
-          pais: "México",
-          codigo_postal: "06700",
-          estado: "Ciudad de México",
-          municipio_alcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Insurgentes Sur",
-          numero_exterior: "123",
-          numero_interior: "Piso 5, Oficina A",
-          lada: "",
-          telefono: "123456"
-        }
-      },
-      certificado: {
-        tratado_acuerdo: item.tratado || '',
-        pais_bloque: item.pais,
-        fraccion_arancelaria: item.fraccionArancelaria,
-        registro_producto: item.registroProducto,
-        nombre_comercial: item.nombreComercial,
-        fecha_inicio: item.fechaFinal,
-        fecha_fin: item.fechaInicial,
-        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
-      },
- 
-      destinatario: {
-        nombre: item.nombre,
-        primer_apellido: item.apellidoPrimer,
-        segundo_apellido: item.apellidoSegundo,
-        numero_registro_fiscal: item.numeroFiscal,
-        razon_social: item.razonSocial,
-        domicilio: {
-          ciudad_poblacion_estado_provincia: item.ciudad,
-          calle: item.calle,
-          numero_letra: item.numeroLetra,
-          lada: item.lada,
-          telefono: item.telefono,
-          fax: item.fax,
-          correo_electronico: item.correoElectronico,
-          pais_destino: item.nacion
-        },
-        medio_transporte: item.transporte
-      },
- 
-      datos_del_certificado: {
-        observaciones: item.observaciones,
-        precisa: item.presica,
-        presenta: item.presenta,
-        idioma: item.idioma,
-        representacion_federal: {
-          entidad_federativa: item.entidad,
-          representacion_federal: item.representacion
-        },
-        desea_obtener_certificado: item.casillaVerificacion,
-        justificacion: item.justificacion
+      /**
+    * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
+    * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
+    *
+    * @param item - Objeto que contiene todos los datos necesarios para el payload, incluyendo información del certificado, destinatario y detalles adicionales.
+    *
+    * @remarks
+    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
+    * La llamada al servicio actualmente está comentada.
+    */
+     guardar(data: Solicituds110201State): Promise<JSONResponse> {
+     const CERTIFICADO = this.solocitud110201Service.buildCertificado(data);
+      const DATOS_CERTIFICADO = this.solocitud110201Service.buildDatosCertificado(data);
+      const DESTINATARIO = this.solocitud110201Service.buildDestinatario(data);
+      const PAYLOAD = {
+          rfc_solicitante: 'AAL0409235E6',
+          idSolicitud: this.solicitudState.idSolicitud || 0,
+          solicitante: {
+            rfc: "AAL0409235E6",
+            nombre: "ACEROS ALVARADO S.A. DE C.V.",
+            actividad_economica: "Fabricación de productos de hierro y acero",
+            correo_electronico: "contacto@acerosalvarado.com",
+            domicilio: {
+              pais: "México",
+              codigo_postal: "06700",
+              estado: "Ciudad de México",
+              municipio_alcaldia: "Cuauhtémoc",
+              localidad: "Centro",
+              colonia: "Roma Norte",
+              calle: "Av. Insurgentes Sur",
+              numero_exterior: "123",
+              numero_interior: "Piso 5, Oficina A",
+              lada: "",
+              telefono: "123456"
+            }
+          },
+          certificado: CERTIFICADO,
+          destinatario: DESTINATARIO,
+          datos_del_certificado: DATOS_CERTIFICADO
+        };
+    
+         return new Promise((resolve, reject) => {
+               this.solocitud110201Service.guardarDatosPost(PAYLOAD).subscribe(response => {
+                 const API_RESPONSE = doDeepCopy(response);
+                 if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+                   if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                     this.tramite110201Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
+                     this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                   } else {
+                     this.tramite110201Store.setIdSolicitud(0);
+                   }
+                 }
+                 resolve(response);
+               }, error => {
+                 reject(error);
+               });
+               });
       }
-    };
- 
-    this.registroService.guardarDatosPost(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          this.tramite110201Store.setIdSolicitud(response.datos.id_solicitud || 0);
-          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-        }
-      },
-    });
-  }
   /**
    * Navega a través de los pasos del asistente según la acción del botón.
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
- pasoNavegarPor(e: AccionBoton): void {
+  pasoNavegarPor(e: AccionBoton): void {
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+        if (e.valor > 0 && e.valor < 5) {
+          this.alertaNotificacion = {
+            tipoNotificacion: 'banner',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+
+        }
       } else {
         this.wizardComponent.atras();
       }
@@ -339,7 +286,7 @@ return arr.map((item: any) => ({
   * Obtiene los datos del store y los guarda utilizando el servicio.
   */
   obtenerDatosDelStore(): void {
-    this.registroService.getAllState()
+    this.solocitud110201Service.getAllState()
       .pipe(take(1))
       .subscribe(data => {
         this.guardar(data);
@@ -357,11 +304,10 @@ return arr.map((item: any) => ({
    * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
    */
   private validarTodosFormulariosPasoUno(): boolean {
-
     if (!this.pasoUnoComponent) {
       return true;
     }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validateAll();
     if (!ISFORM_VALID_TOUCHED) {
       return false;
     }
@@ -430,5 +376,14 @@ return arr.map((item: any) => ({
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
-
+/**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

@@ -5,6 +5,27 @@
                 <h3>Para UE/AELC,ALADI,SGP,Japon,Peru,Uruguay,Panama y para el certificado de articulos,mexicanos(CAM),y para el caracter de exportador autorizado para UE/AELC, para productor</h3>
             </div>
             <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+            <div id="dvMessage" *ngIf="mostrarMensaje">
+            <div class="row">
+                <div class="col-md-12">
+                <div class="alert alert-danger">Faltan campos por capturar.</div>
+                </div>
+            </div>
+            </div>
+            <div id="dvMessage" *ngIf="mostrarMensajeServicio">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger">
+                            <p class="text-center fw-bold mb-2">Corrija los siguientes errores:</p>
+                            <ol class="mb-0 mt-2">
+                                <li *ngFor="let error of mensajeErrores">
+                                    {{ error }}
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             @switch (indice) {
