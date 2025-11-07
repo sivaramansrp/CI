@@ -276,19 +276,24 @@
                </div>
             </form>
          </div>
-         <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" (click)="limpiarScianForm()"
-            [disabled]="esFormularioSoloLectura">
-            Limpiar
-            </button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-            Cancelar
-            </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="guardarScian()"
-            [disabled]="esFormularioSoloLectura">
-            Agregar
-            </button>
-         </div>
+          <div class="modal-footer custom-footer" style="justify-content: space-between;display: flex;">
+            <div>
+               * Campos obligatorios
+            </div>
+            <div class="d-flex gap-2">
+               <button type="button" class="btn btn-default" (click)="limpiarScianForm()"
+               [disabled]="esFormularioSoloLectura">
+               Limpiar
+               </button>
+               <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
+               Cancelar
+               </button>
+               <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="guardarScian()"
+               [disabled]="esFormularioSoloLectura">
+               Agregar
+               </button>
+            </div>
+          </div>
       </div>
    </div>
 </div>

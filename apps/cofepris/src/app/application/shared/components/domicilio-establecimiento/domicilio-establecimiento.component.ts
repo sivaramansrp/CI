@@ -789,8 +789,6 @@ public mostrarErrores = {
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
- 
-  
     this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -827,7 +825,6 @@ public mostrarErrores = {
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
-
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
