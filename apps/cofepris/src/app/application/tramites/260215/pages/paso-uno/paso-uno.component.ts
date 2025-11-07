@@ -1,9 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+
 
 /**
  * Componente para el paso uno del trámite.
@@ -18,6 +23,36 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  
+    /**
+      * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+      * @description
+      * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+      * mediante el decorador `@ViewChild`.
+      */
+  
+    @ViewChild(ContenedorDeDatosSolicitudComponent)
+    contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+     /**
+       * @property {TercerosRelacionadosVistaComponent} tercerosRelacionadosVistaComponent
+       * @description
+       * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+       * mediante el decorador `@ViewChild`.
+       */
+      @ViewChild(TercerosRelacionadosVistaComponent)
+      tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+   /**
+     * @property {PagoDeDerechosContenedoraComponent} pagoDeDerechosContenedoraComponent
+     * @description
+     * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
+  
+    @ViewChild(PagoDeDerechosContenedoraComponent)
+    pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
 
   /**
    * Estado actual de la consulta para el componente.
@@ -55,7 +90,18 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-
+ /**
+   * Valida los datos del paso uno del formulario.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent?.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent?.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
+    );
+  }
 
   /**
      * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.

@@ -1,15 +1,24 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component';
+import { ListaPasosWizard, Notificacion, PASOS } from '@libs/shared/data-access-user/src';
+import { MENSAJE_DE_VALIDACION, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { Observable, catchError, map, switchMap, take, throwError } from 'rxjs';
 
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+// import removed: PagoDeDerechosContenedoraComponent
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 import { RegistroSolicitudService } from '@libs/shared/data-access-user/src/core/services/shared/registro-solicitud.service';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+
+import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { ToastrService } from 'ngx-toastr';
+
 
 interface AccionBoton {
   accion: string;
@@ -19,15 +28,21 @@ interface AccionBoton {
 @Component({
   selector: 'app-sanitario',
   templateUrl: './sanitario.component.html',
+  standalone: true,
+  imports: [
+    NotificacionesComponent,
+    WizardComponent,
+    // Add other required components here
+  ],
 })
-export class SanitarioComponent {
+export class SanitarioComponent implements OnInit {
   /**
-   * Alerta de error para mostrar mensajes en el formulario
-   */
-  formErrorAlert: { tipo: string; mensaje: string } | null = null;
-   /**
-   * ID del tipo de trámite.
-   */
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlert!: string;
+  /**
+  * ID del tipo de trámite.
+  */
   idTipoTramite: string = '260215';
 
   /**
@@ -36,25 +51,25 @@ export class SanitarioComponent {
    */
   private enableAPICall: boolean = true;
 
- /**
-   * Evento para cargar archivos.
-   */
+  /**
+    * Evento para cargar archivos.
+    */
   cargarArchivosEvento: EventEmitter<void> = new EventEmitter<void>();
-    /**
-   * Control para activar botón de carga de archivos.
-   */
+  /**
+ * Control para activar botón de carga de archivos.
+ */
   activarBotonCargaArchivos: boolean = false;
 
-    /**
-   * Control de sección de carga de documentos.
-   */
+  /**
+ * Control de sección de carga de documentos.
+ */
   seccionCargarDocumentos: boolean = false;
 
   /**
        * Indica si la carga de documentos está en progreso.
        * @type {boolean}
        */
-      cargaEnProgreso: boolean = true;
+  cargaEnProgreso: boolean = true;
 
   /**
    * @property {ListaPasosWizard[]} pasos - Lista de pasos para el asistente (wizard) del trámite sanitario.
@@ -84,88 +99,207 @@ export class SanitarioComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-    /**
-   * ID de la solicitud.
-   */
+  /**
+ * ID de la solicitud.
+ */
   idSolicitudState: number | null = null;
 
-   constructor (private query : Tramite260215Query,
-               private registroSolicitudService: RegistroSolicitudService,
-               private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+
+  /**
+ * @property {boolean} isSaltar
+ * @description
+ * Indica si se debe saltar al paso de firma. Controla la navegación
+ * directa al paso de firma en el wizard.
+ * @default false - No salta por defecto
+ */
+  isSaltar: boolean = false;
+  /**
+     * Controla la visibilidad del modal de alerta.
+     * @property {boolean} mostrarAlerta
+     */
+  public mostrarAlerta: boolean = false;
+
+  /**
+       * @property {PasoUnoComponent} pasoUnoComponent
+       * @description
+       * Referencia al componente hijo `PasoUnoComponent` mediante
+       * `@ViewChild`. Permite acceder a sus métodos y propiedades
+       * desde este componente padre.
+       */
+  @ViewChild(PasoUnoComponent)
+  pasoUnoComponent!: PasoUnoComponent;
+
+  // Removed direct ViewChild for PagoDeDerechosContenedoraComponent
+
+  /**
+   * Indica si se requieren datos de pago para el trámite actual.
+   * @remarks
+   * Esta propiedad controla la visualización y el manejo de información relacionada con pagos en el componente.
+   */
+  public requiresPaymentData: boolean = false;
+
+  /**
+   * Indica si la confirmación sin pago de derechos está activa.
+   * Valor 0 significa que no está confirmada, otros valores pueden indicar diferentes estados.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
+
+
+  private _esFormaValido: boolean = false;
+
+  /**
+   * Estado del formulario de registro IMMEX.
+   */
+  storeData!: Solicitud260215State;
+
+  constructor(private query: Tramite260215Query,
+    private tramite260215Store: Tramite260215Store,
+    private registroSolicitudService: RegistroSolicitudService,
+    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService,
+    private toastrService: ToastrService
   ) {
 
   }
 
-    getValorIndice(e: AccionBoton): void {
-      if (e.accion === 'cont') {
-  const IS_VALID = true;
-        // Si tienes componentes hijos para validar, agrégalos aquí
-        // if (this.indice === 1 && this.pasoUnoComponent) {
-        //   isValid = this.pasoUnoComponent.validarPasoUno();
-        // }
-        // if (!this.pasoUnoComponent?.pagoDeDerechosContenedoraComponent?.validarContenedor()) {
-        //   this.formErrorAlert = {
-        //     tipo: 'danger',
-        //     mensaje: 'Validación de pago de derechos fallida',
-        //   };
-        //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        //   return;
-        // }
-  if (!IS_VALID) {
-          this.datosPasos.indice = this.indice;
+  ngOnInit(): void {
+    this.query.selectTramiteState$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+  }
+
+
+  getValorIndice(e: AccionBoton): void {
+    if (e.accion === 'cont') {
+      let IS_VALID = true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        IS_VALID = this.pasoUnoComponent.validarPasoUno();
+      }
+  if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent?.validarContenedor() && !this.requiresPaymentData) {
+        this.mostrarAlerta = true;
+        this.confirmarSinPagoDeDerechos = 2;
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
+          alineacionBtonoCerrar: 'flex-row-reverse'
+        };
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+
+      if (!IS_VALID) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        // return;
+      }
+
+      const PAYLOAD = AmpliacionServiciosAdapter.toFormPayload(this.storeData);
+      let shouldNavigate = false;
+      this.registroSolicitudService.postGuardarDatos('260207', PAYLOAD).subscribe(response => {
+        shouldNavigate = response.codigo === '00';
+        if (!shouldNavigate) {
+          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          this.formErrorAlert = SanitarioComponent.generarAlertaDeError(ERROR_MESSAGE);
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
-        this.query.selectTramiteState$.pipe(
-          take(1),
-          map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
-          switchMap(FORM_PAYLOAD => this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD)),
-          catchError(error => {
-            console.error('Error al guardar:', error);
-            this.formErrorAlert = {
-              tipo: 'danger',
-              mensaje: 'Error al guardar: ' + (error?.message || 'Error desconocido'),
-            };
-            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-            return throwError(() => error);
-          })
-        ).subscribe(response => {
-          const SHOULD_NAVIGATE = response.codigo === '00';
-          if (!SHOULD_NAVIGATE) {
-            const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-            this.formErrorAlert = {
-              tipo: 'danger',
-              mensaje: ERROR_MESSAGE,
-            };
-            this.indice = 1;
-            this.datosPasos.indice = 1;
-            if (this.wizardComponent) {
-              this.wizardComponent.indiceActual = 1;
+        if (shouldNavigate) {
+          if (response && response.datos) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if (DATOS.id_solicitud && typeof DATOS.id_solicitud === 'number') {
+              this.idSolicitudState = DATOS.id_solicitud ?? 0;
+            } else {
+              this.idSolicitudState = 0;
             }
-            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-            return;
           }
-          // Si éxito, navega al paso 2 y muestra botón de carga de archivos
-          if (response.datos && typeof response.datos === 'object' && 'id_solicitud' in response.datos) {
-            this.idSolicitudState = (response.datos as { id_solicitud?: number }).id_solicitud ?? null;
+          // Calcular el nuevo índice basado en la acción
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = 2;
           }
-          this.indice = 2;
-          this.datosPasos.indice = 2;
-          this.seccionCargarDocumentos = true;
-          this.activarBotonCargaArchivos = false;
-          this.cargaEnProgreso = false;
-          if (this.wizardComponent) {
-            this.wizardComponent.siguiente();
+          this.toastrService.success(response.mensaje);
+          // Ajusta el rango según el número de pasos reales (ejemplo: 1 < indiceActualizado < 4)
+          if (indiceActualizado > 0 && indiceActualizado < 4) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            // Show document upload section and button like 260215
+            this.seccionCargarDocumentos = true;
+            this.activarBotonCargaArchivos = false;
+            this.cargaEnProgreso = false;
+            if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            }
           }
-        });
-      } else {
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        if (this.wizardComponent) {
-          this.wizardComponent.atras();
+        } else {
+          this.toastrService.error(response.mensaje);
         }
-      }
+      });
+    } else {
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
+  }
+  /**
+  * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+  */
+  set esFormaValido(val: boolean) {
+    this._esFormaValido = val;
+  }
+  get esFormaValido(): boolean {
+    return this._esFormaValido;
+  }
+  /**
+   * Cierra el modal y realiza acciones según el valor proporcionado.
+   *
+   * @param value - Indica si se debe proceder con el pago de derechos. Si es `true`, se oculta la alerta y se requiere información de pago. Si es `false`, se oculta la alerta y se establece la confirmación sin pago de derechos.
+   */
+  cerrarModal(value: boolean): void {
+    if (value) {
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
+  }
 
+
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
   /**
    * Guarda los datos del formulario utilizando el servicio estándar compartido.
    * Convierte el estado actual a payload y envía los datos al servidor.
@@ -186,89 +320,45 @@ export class SanitarioComponent {
     );
   }
 
-   /**
-   * Maneja el evento de carga de documentos
-   */
+  /**
+  * Maneja el evento de carga de documentos
+  */
   manejaEventoCargaDocumentos(event: boolean): void {
     this.activarBotonCargaArchivos = event;
   }
 
-      /**
-   * Maneja cuando la carga se ha realizado
-   */
+  /**
+* Maneja cuando la carga se ha realizado
+*/
   cargaRealizada(realizada: boolean): void {
     this.seccionCargarDocumentos = realizada ? false : true;
     // If cargaRealizada is true (upload complete), show 'Continuar' button
   }
 
-    /**
-   * Maneja el progreso de carga
-   */
+  /**
+ * Maneja el progreso de carga
+ */
   onCargaEnProgreso(carga: boolean): void {
     // Implementar lógica de progreso si es necesario
-     this.cargaEnProgreso = carga;
+    this.cargaEnProgreso = carga;
   }
-   /**
-   * Actualiza la sección de carga de documentos según el paso actual
-   */
+  /**
+  * Actualiza la sección de carga de documentos según el paso actual
+  */
   private actualizarSeccionCargarDocumentos(): void {
     this.seccionCargarDocumentos = this.indice === 2;
   }
-  
+
   /**
    * Maneja el clic en cargar archivos
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
   }
- /**
-   * Botón siguiente para paso 2
-   */
+
   /**
-   * Maneja el click en 'Continuar': guarda datos y navega si éxito, muestra error si falla
-   */
-  continuarConGuardado(): void {
-    this.query.selectTramiteState$.pipe(
-      take(1),
-      map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
-      switchMap(FORM_PAYLOAD => this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD)),
-      catchError(error => {
-        console.error('Error al guardar:', error);
-        this.formErrorAlert = {
-          tipo: 'danger',
-          mensaje: 'Error al guardar: ' + (error?.message || 'Error desconocido'),
-        };
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        return throwError(() => error);
-      })
-    ).subscribe(response => {
-      const SHOULD_NAVIGATE = response.codigo === '00';
-      if (!SHOULD_NAVIGATE) {
-        const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-        this.formErrorAlert = {
-          tipo: 'danger',
-          mensaje: ERROR_MESSAGE,
-        };
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        return;
-      }
-      // Si éxito, navega al paso 2 y muestra botón de carga de archivos
-      if (response.datos && typeof response.datos === 'object' && 'id_solicitud' in response.datos) {
-        this.idSolicitudState = (response.datos as { id_solicitud?: number }).id_solicitud ?? null;
-      }
-      this.indice = 2;
-      this.datosPasos.indice = 2;
-      this.seccionCargarDocumentos = true;
-      this.activarBotonCargaArchivos = false;
-      this.actualizarSeccionCargarDocumentos();
-      if (this.wizardComponent) {
-        this.wizardComponent.siguiente();
-      }
-    });
-  }
- /**
-   * Botón anterior para paso 2
-   */
+    * Botón anterior para paso 2
+    */
   anterior(): void {
     this.indice = 1;
     this.datosPasos.indice = this.indice;
@@ -334,4 +424,39 @@ export class SanitarioComponent {
       this.wizardComponent.siguiente();
     }
   }
+
+  public static generarAlertaDeError(mensajes: string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+    return ALERTA;
+  }
+
+  /**
+     * @method obtenerNombreDelTítulo
+     * @description Devuelve el título correspondiente al paso actual.
+     * @param {number} valor - Índice del paso.
+     * @returns {string} Título del paso.
+     */
+    static obtenerNombreDelTítulo(valor: number): string {
+      switch (valor) {
+        case 1:
+          return TITULOMENSAJE;
+        case 2:
+          return 'Cargar archivos';
+        case 3:
+          return 'Firmar';
+        default:
+          return TITULOMENSAJE;
+      }
+    }
 }
