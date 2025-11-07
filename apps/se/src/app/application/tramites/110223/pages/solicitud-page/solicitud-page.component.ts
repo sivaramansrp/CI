@@ -268,9 +268,8 @@ getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
-      const SKIP_VALIDATION = true;
 
-      const ISVALID = SKIP_VALIDATION || this.validarTodosFormulariosPasoUno();
+      const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
         return;
