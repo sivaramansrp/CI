@@ -63,3 +63,10 @@
             <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
         }
 </div>
+
+@if(mostrarAlerta){
+  <section>
+    <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
+    </lib-notificaciones>
+  </section>
+}

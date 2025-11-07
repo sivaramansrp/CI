@@ -10,7 +10,7 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
-import { MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
+import { MENSAJE_DE_VALIDACION, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS, TITULOMENSAJE } from '../../constants/psicotropicos-poretorno.enum';
 import { Tramite260201State, Tramite260201Store } from '../../estados/tramite260201Store.store';
 import { GuardarAdapter_260201 } from '../../adapters/guardar-payload.adapter';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -170,6 +170,10 @@ export class ContenedorDePasosComponent implements OnInit {
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
 
+  public requiresPaymentData: boolean = false;
+
+  public confirmarSinPagoDeDerechos: number = 0;
+
   constructor(private tramite260201Query: Tramite260201Query, private tramite260201Store: Tramite260201Store, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
@@ -201,18 +205,20 @@ export class ContenedorDePasosComponent implements OnInit {
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
         this.mostrarAlerta=true;
+        this.confirmarSinPagoDeDerechos = 2;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
           titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
+          mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
           cerrar: true,
           tiempoDeEspera: 2000,
           txtBtnAceptar: 'SI',
           txtBtnCancelar: 'NO',
+          alineacionBtonoCerrar:'flex-row-reverse'
         }
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
@@ -391,6 +397,16 @@ export class ContenedorDePasosComponent implements OnInit {
     this.indice = 3;
     this.datosPasos.indice = 3;
     this.wizardComponent.siguiente();
+  }
+
+  cerrarModal(value:boolean): void {
+    if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
   }
 
 }
