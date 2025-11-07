@@ -60,12 +60,27 @@ export class PasoUnoComponent implements OnDestroy, OnInit, OnChanges {
     @ViewChild(ContenedorDeDatosSolicitudComponent)
     contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
 
+    /**
+     * @ViewChild(PagoDeDerechosContenedoraComponent)
+     * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(PagoDeDerechosContenedoraComponent)
     pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
 
+    /**
+     * @ViewChild(TercerosRelacionadosVistaComponent)
+     * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(TercerosRelacionadosVistaComponent)
     tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
+    /**
+     * @property {number} confirmarSinPagoDeDerechos
+     * @description
+     * Indica si se ha confirmado la continuación sin pago de derechos.
+     */
     @Input() confirmarSinPagoDeDerechos: number = 0;
 
   /**

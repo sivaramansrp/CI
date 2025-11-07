@@ -154,8 +154,18 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   public mostrarAlerta: boolean = false;
 
+  /**
+   * @property {boolean} requiresPaymentData
+   * @description
+   * Indica si se requieren datos de pago para continuar con el trámite.
+   */
   public requiresPaymentData: boolean = false;
 
+    /**
+   * @property {number} confirmarSinPagoDeDerechos
+   * @description
+   * Indica si se ha confirmado la continuación sin pago de derechos.
+   */
   public confirmarSinPagoDeDerechos: number = 0;
 
    /** Nueva notificación relacionada con el RFC. */
@@ -322,32 +332,36 @@ esMostrarAlerta: boolean = false;
           if (this.indice === 1 && this.pasoUnoComponent) {
           isValid = this.pasoUnoComponent.validarPasoUno();
         }
-        if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+        
+        if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
             this.confirmarSinPagoDeDerechos = 2;
           }else {
             this.confirmarSinPagoDeDerechos = 3;
           }
-          
-        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
-          this.mostrarAlerta=true; 
-          this.seleccionarFilaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: '',
-            mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
-            cerrar: true,
-            tiempoDeEspera: 2000,
-            txtBtnAceptar: 'SI',
-            txtBtnCancelar: 'NO',
-            alineacionBtonoCerrar:'flex-row-reverse'
+
+        if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+            this.mostrarAlerta=true; 
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 3;
           }
-          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-        } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.requiresPaymentData) {
-          this.confirmarSinPagoDeDerechos = 2;
-        } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor() && !this.requiresPaymentData) {
-          this.confirmarSinPagoDeDerechos = 3;
-        }
+      }
+
         if (!isValid) {
           this.formErrorAlert = this.MENSAJE_DE_ERROR;
           this.esFormaValido = true;
@@ -687,8 +701,12 @@ onClickCargaArchivos(): void {
     }
   }
 
-
-   cerrarModal(value:boolean): void {
+/**   * @method cerrarModal
+   * @description
+   * Maneja el cierre del modal de alerta y actualiza el estado según la respuesta del usuario.
+   * @param {boolean} value - Indica si se confirmó la acción (true) o se canceló (false).
+   */
+  cerrarModal(value:boolean): void {
     if(value){
     this.mostrarAlerta = false;
     this.requiresPaymentData = true;
@@ -697,7 +715,8 @@ onClickCargaArchivos(): void {
       this.confirmarSinPagoDeDerechos = 4;
     }
   }
-        /**
+
+  /**
    * Genera una alerta de error con los mensajes proporcionados.
    * @param mensajes Mensajes de error a mostrar en la alerta.
    * @returns HTML de la alerta de error.
