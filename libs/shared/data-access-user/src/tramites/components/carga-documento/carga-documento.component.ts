@@ -606,7 +606,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
  */
 private validarCompletitudDocumentosObligatorios(): boolean {
   // Si no hay documentos configurados, no podemos continuar
-  if (!this.catalogoDocumentosObligatorios?.length) {
+  if (!this.catalogoDocumentosObligatorios?.length && this.listadoArchivos.length === 0) {
     return false;
   }
 
