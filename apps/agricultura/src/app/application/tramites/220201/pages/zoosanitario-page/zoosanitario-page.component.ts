@@ -1,5 +1,5 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,8 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { EventEmitter } from '@angular/core';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -30,7 +32,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent, AcuseComponent],
 })
 export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
@@ -113,9 +115,42 @@ export class ZoosanitarioPageComponent implements OnInit {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
+  /**
+   * Estado de la solicitud zoosanitario.
+   * @type {ZoosanitarioStore}
+   */
   public solicitudState!: ZoosanitarioStore;
 
+  /**
+   * Un subject utilizado como notificador para señalar la destrucción del componente.
+   * Esto se utiliza típicamente para desuscribirse de observables y prevenir fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Mensaje mostrado como alerta para informar al usuario que el acuse de recibo
+   * no es un comprobante fiscal.
+   */
+  txtAlerta: string = 'Este acuse de recibo no es un comprobante fiscal.';
+
+  /**
+   * Un mensaje de subtítulo que indica que la solicitud del usuario se ha enviado correctamente
+   * y actualmente está siendo procesada.
+   */
+  subtitulo: string = 'Su solicitud se ha enviado correctamente y se encuentra en proceso.';
+
+  /**
+   * Representa el identificador único para la solicitud.
+   * Esta propiedad se utiliza para almacenar y gestionar el número de solicitud
+   * asociado con el proceso zoosanitario actual.
+   */
+  numeroSolicitud: string = '';
+
+  /**
+   * Indica si la sección "Acuse" es visible en la página.
+   * Esta propiedad se utiliza para alternar la visibilidad de la sección "Acuse".
+   */
+  isAcuseVisible: boolean = false;
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
@@ -140,7 +175,6 @@ export class ZoosanitarioPageComponent implements OnInit {
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
-        this.guardadoTotalSolicitud();
         return; // Detener ejecución si los formularios son inválidos
       }
     }
@@ -160,8 +194,11 @@ export class ZoosanitarioPageComponent implements OnInit {
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
 
+      if (this.indice === 2) {
+        this.guardadoTotalSolicitud();
+      }
+
       if (e.accion === 'cont') {
-        
         this.wizardComponent.siguiente();
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
@@ -235,18 +272,32 @@ export class ZoosanitarioPageComponent implements OnInit {
     this.guardadoParcial.guardaSolicitudParcial();
   }
 
+  /**
+   * Llama al método `guardadoTotal` para guardar completamente la solicitud.
+   */
   guardadoTotalSolicitud(): void {
     this.guardadoTotal.guardadoTotal();
   }
 
-  ngOnInit(): void {
-    this.tramite220201Query.seleccionarTodo$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = { ...this.solicitudState, ...seccionState } as unknown as ZoosanitarioStore;
-        })
-      ).subscribe();
+  recibirRespuesta(valor: boolean): void {
+    console.warn('El hijo envió:', valor);
+    this.isAcuseVisible = valor;
   }
 
+  ngOnInit(): void {
+    if (this.isAcuseVisible) {
+      this.tramite220201Query.seleccionarTodo$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            if (seccionState !== undefined) {
+              this.solicitudState = { ...(this.solicitudState || {}), ...seccionState } as unknown as ZoosanitarioStore;
+              const IDSOLICITUD = this.solicitudState.getValue() ? this.solicitudState.getValue() : 0;
+              this.numeroSolicitud = IDSOLICITUD.toString();
+
+            }
+          })
+        ).subscribe();
+    }
+  }
 }

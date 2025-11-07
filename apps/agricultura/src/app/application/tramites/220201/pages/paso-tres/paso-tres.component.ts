@@ -8,11 +8,10 @@ import {
   TramiteFolioStore,
   base64ToHex,
   encodeToISO88591Hex,
-  formatFecha,
   formatearFechaConMoment
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, catchError, switchMap, take, takeUntil, tap, throwError } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, catchError, take, takeUntil, tap, throwError } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CadenaOriginal220201Service } from '../../services/220201/cadenaoriginal220201.service';
@@ -23,6 +22,9 @@ import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/sha
 import { Router } from '@angular/router';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
+
 
 
 
@@ -74,9 +76,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
 
   nuevaNotificacion!: Notificacion;
 
-  private destroy$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   idSolicitud: number | null = null;
+
+  isAcuseVisible: boolean = false;
+
+  @Output() isAcuseVisibleChange = new EventEmitter<boolean>();
 
   datosFirmaReales!: {
     firma: string;
@@ -94,17 +100,20 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private tramite220201Store: ZoosanitarioStore,
     private documentoService: DocumentoService,
     private cadena: CadenaOriginal220201Service,
+    private firmatramite: RegistroSolicitudService
   ) { }
 
   ngOnInit(): void {
-    const URL_ACTUAL = this.router.url;
-    const URL_SEPARADA = URL_ACTUAL.split('/');
-    this.url = URL_SEPARADA.slice(0, 3).join('/');
+
     this.idSolicitud = this.tramite220201Query.getValue().idSolicitud;
     console.warn('ID SOLICITUD EN PASO TRES:', this.idSolicitud);
     this.obtenerCadenaOriginal();
 
-
+    // Obtener la URL actual y separar los segmentos
+    const URL_ACTUAL = this.router.url;
+    const URL_SEPARADA = URL_ACTUAL.split('/');
+    this.url = URL_SEPARADA.slice(0, 3).join('/');
+    console.warn('URL EN PASO TRES:', this.url);
   }
 
   obtenerCadenaOriginal(): void {
@@ -112,7 +121,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       num_folio_tramite: '0105700100020252336300007',
       documento_requerido: []
     };
-    this.cadena.obtenerCadenaOriginal('225591', PAYLOAD).subscribe({
+    this.cadena.obtenerCadenaOriginal('225591', PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
       next: (resp) => {
         if (resp.codigo !== '00') {
           this.nuevaNotificacion = {
@@ -163,50 +172,51 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     }
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
-    this.documentoService
-      .obtenerDatosFirma<FirmarRequest>()
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((response) => {
-          const PAYLOAD: FirmarRequest = {
-            id_solicitud: Number(this.idSolicitud ?? 0),
-            cadena_original: CADENAHEX,
-            cert_serial_number: this.datosFirmaReales.certSerialNumber,
-            clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: formatearFechaConMoment(new Date().toISOString()),
-            clave_rol: 'Solicitante',
-            sello: FIRMAHEX,
-            fecha_fin_vigencia: formatearFechaConMoment(this.datosFirmaReales.fechaFin),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
-          };
-          return this.firma.enviarFirma<string>(PAYLOAD).pipe(
-            tap((firmaResponse: BaseResponse<string>) => {
-              if (firmaResponse.datos) {
-                this.folio = firmaResponse.datos;
-              }
-            }),
-            switchMap(() => this.tramiteFolioServices.obtenerTramite(19))
-          );
-        }),
-        tap((tramite) => {
-          this.tramiteStore.establecerTramite(
-            tramite.data,
-            firma,
-            this.idSolicitud ?? 0
-          );
-          this.router.navigate([`${this.url}/acuse`]);
-        }),
-        catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
-          return throwError(() => error);
-        })
-      )
-      .subscribe();
+
+    const PAYLOAD: FirmarRequest = {
+      id_solicitud: Number(this.idSolicitud ?? 0),
+      cadena_original: CADENAHEX,
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: formatearFechaConMoment(new Date().toISOString()),
+      clave_rol: 'Solicitante',
+      sello: FIRMAHEX,
+      fecha_fin_vigencia: formatearFechaConMoment(this.datosFirmaReales.fechaFin),
+      documentos_requeridos: [],
+    };
+
+    if (this.idSolicitud !== null) {
+      this.firmatramite.firmarsolicitud<string>('220201', this.idSolicitud, PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
+        next: (resp) => {
+          if (resp.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: resp.error || 'Error al firmar la solicitud.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+          if(resp.codigo === '00') {
+            this.folio = resp.datos || '';
+            this.mostrarAcuse();
+          }
+        }
+      });
+  }
+}
+
+  mostrarAcuse(): void {
+    this.isAcuseVisibleChange.emit(true);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

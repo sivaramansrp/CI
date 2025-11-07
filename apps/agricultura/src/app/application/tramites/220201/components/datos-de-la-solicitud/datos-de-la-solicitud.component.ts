@@ -1161,7 +1161,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       tipo_mercancia: fila.tipoDeProducto || '',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
-      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
       id_fraccion_gubernamental: 0,
       clave_nico: fila.nico || '',
@@ -1218,7 +1218,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         })) || [])
       ]
     }));
-
 
     const SOLICITUDPARCIAL: GuardaSolicitud = {
       id_solicitud: null,
@@ -1298,9 +1297,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         cve_unidad_administrativa: '1016'
       }
     };
-
     this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
-
   }
   
   // eslint-disable-next-line class-methods-use-this, complexity
@@ -1313,7 +1310,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       tipo_mercancia: fila.tipoDeProducto || '',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
-      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
       id_fraccion_gubernamental: 0,
       clave_nico: fila.nico || '',

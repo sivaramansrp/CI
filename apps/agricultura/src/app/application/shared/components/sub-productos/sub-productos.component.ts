@@ -390,9 +390,9 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         descripcionUMT: this.productosForm.get('umt')?.value || '',
         descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
         tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
-        tipoPlanta: this.catalogosDatos.tipoPlantaList.find(item => item.clave === this.productosForm.get('tipoPlanta')?.value)?.descripcion || '',
-        plantaAutorizadaOrigen: this.catalogosDatos.plantaAutorizadaOrigenList.find(item => item.clave === this.productosForm.get('plantaAutorizadaOrigen')?.value)?.descripcion || '',
-        tipoPresentacionDescripcion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+        tipoPlanta: this.productosForm.get('tipoPlanta')?.value || '',
+        plantaAutorizadaOrigen: this.productosForm.get('plantaAutorizadaOrigen')?.value || '',
+        tipoPresentacionDescripcion: this.productosForm.get('tipoPresentacion')?.value || '',
         cantidadUMC: cantidadUMCValue,
         modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
         detalleProductos: this.detalleTablaDatos

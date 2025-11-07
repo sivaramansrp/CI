@@ -117,7 +117,10 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private catalogoService: CatalogosService
-  ) { }
+  ) 
+  { 
+      
+  }
 
   /**
    * Inicializa el formulario y carga datos si existe un destinatario seleccionado.
@@ -130,7 +133,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: ['1', Validators.required],
+      pais: ['', Validators.required],
       codigoPostal: ['', Validators.required],
       estado: ['', Validators.required],
       municipio: [''],
@@ -175,6 +178,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       numeroEstablecimiento: ['']
     });
 
+    this.pairsCatalogChange();
+
   }
 
   /**
@@ -182,7 +187,6 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method ngAfterViewInit
    */
   ngAfterViewInit(): void {
-    this.pairsCatalogChange();
     this.estadoCatalogChange();
     this.municipioCatalogChange();
     this.coloniaCatalogChange();

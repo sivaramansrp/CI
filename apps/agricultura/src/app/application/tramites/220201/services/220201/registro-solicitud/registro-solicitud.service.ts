@@ -5,15 +5,18 @@ import {
     API_GET_SOLICITUDES_NICO_DESCRIPCION,
     API_GET_SOLICITUDES_RECENTES,
     API_GET_SOLICITUDES_UNIDAD_MEDIDA,
+    API_POST_FIRMA,
     API_POST_GUARDAR
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT, formatFechaCreacion } from "@libs/shared/data-access-user/src";
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../models/220201/capturar-solicitud.model';
 import { GuardaSolicitud, RespuestaGuardarSolicitud } from '../../../models/220201/guardar-solicitud.model';
-import { Observable, map } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 
 
 @Injectable({
@@ -125,4 +128,22 @@ export class RegistroSolicitudService {
         return this.http.post<BaseResponse<RespuestaGuardarSolicitud>>(ENDPOINT, payload);
     }
 
-}
+    /**
+     * Firma una solicitud específica para un trámite dado.
+     * 
+     * @param tramite - Identificador numérico del trámite.
+     * @param idsolicitud - Identificador de la solicitud a firmar.
+     * @returns Un observable que emite la respuesta base con los datos de la solicitud guardada.
+     */
+    firmarsolicitud<T>(tramite: string, idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
+        const ENDPOINT = `${this.host}` + API_POST_FIRMA(tramite, String(idSolicitud));
+        return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
+            map(response => response),
+            catchError(() => {
+                const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+                return throwError(() => ERROR);
+            })
+        );
+
+    }
+    }
