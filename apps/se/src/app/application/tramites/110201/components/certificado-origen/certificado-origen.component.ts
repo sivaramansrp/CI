@@ -11,7 +11,6 @@ import {
   ConfiguracionColumna,
   SeccionLibQuery,
   SeccionLibState,
-  formatearFechaDdMmYyyy,
   formatearFechaYyyyMmDd,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
