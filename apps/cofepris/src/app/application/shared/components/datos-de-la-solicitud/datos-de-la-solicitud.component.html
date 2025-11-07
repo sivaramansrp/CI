@@ -199,7 +199,7 @@
           <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle" (change)="actualizarStore()"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''" />
           <div class="mensaje-error" *ngIf="(datosSolicitudForm.get('calle')?.errors?.['required'] 
-          || datosSolicitudForm.get('representanteNombre')?.value===''|| datosSolicitudForm.get('representanteNombre')?.value===null) && datosSolicitudForm.get('representanteNombre')?.touched">
+          || datosSolicitudForm.get('calle')?.value===''|| datosSolicitudForm.get('calle')?.value===null) && datosSolicitudForm.get('calle')?.touched">
             Este campo es obligatorio.
           </div>
         </div>
@@ -426,14 +426,13 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-
-          <button type="button" name="eliminarMercancias" class="btn btn-danger" (click)="eliminarMercancias()"
-            [disabled]="formularioDeshabilitado">
-            Eliminar
-          </button>
-          <button type="button" name="modificarMercancias" class="btn btn-default ms-2" (click)="modificarDatos()"
+          <button *ngIf="tablaMercanciasConfig.datos.length > 0" type="button" name="modificarMercancias" class="btn btn-default ms-2" (click)="modificarDatos()"
             [disabled]="formularioDeshabilitado">
             Modificar
+          </button>
+          <button *ngIf="tablaMercanciasConfig.datos.length > 0" type="button" name="eliminarMercancias" class="btn btn-danger" (click)="eliminarMercancias()"
+            [disabled]="formularioDeshabilitado">
+            Eliminar
           </button>
           <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="agregarMercancias()"
             [disabled]="formularioDeshabilitado">
