@@ -198,6 +198,11 @@ export class PantallasComponent implements OnInit, OnDestroy {
    */
   idMecanismo: number = 0;
 
+  /**
+   * Indica si el elemento "obtenor" es visible en la interfaz de usuario.
+   * 
+   * @default false El elemento no es visible por defecto.
+   */
   obtenorVisibile: boolean = false;
 
   /**
