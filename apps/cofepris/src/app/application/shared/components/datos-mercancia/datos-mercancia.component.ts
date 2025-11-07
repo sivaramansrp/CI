@@ -901,6 +901,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'fechaCaducidad',
         ];
         break;
+      case 260218:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260219:
         this.elementosAnadidos = [
           'especifique',
