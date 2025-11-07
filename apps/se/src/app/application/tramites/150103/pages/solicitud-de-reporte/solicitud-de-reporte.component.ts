@@ -129,52 +129,53 @@ export class SolicitudDeReporteComponent {
       .subscribe(data => {
         this.guardar(data);
       });
-  }
-
+  }  
+  
   /**
    * Guarda los datos proporcionados construyendo un objeto payload y enviándolo al servicio backend.
    * El payload incluye información del solicitante y datos del reporte anual.
    *
    * @param data - Objeto que contiene todos los datos necesarios para el payload.
    * @returns Promise con la respuesta del servidor.
-   */
+   */  
   guardar(data: Solicitud150103State): Promise<JSONResponse> {
-    const DATOS_REPORTE = this.informeAnualService.buildDatosReporte(data);
-    
+    const REPORTE_ANUAL = this.informeAnualService.buildDatosReporte(data);
     const PAYLOAD = {
-        "id_solcitud": 202846846,
+        "id_solcitud": data.idSolicitud,
         "tipoDeSolicitud": "guardar",
-        // "solicitante": {
-        //   "rfc": "AAL0409235E6",
-        //   "nombre": "Juan Pérez",
-        //   "es_persona_moral": true,
-        //   "certificado_serial_number": "1234"
-        // },
+        "solicitante": {
+          "rfc": "AAL0409235E6",
+          "nombre": "Juan Pérez",
+          "es_persona_moral": true,
+          "certificado_serial_number": "1234"
+        },
         // "representacion_federal": {
         //   "cve_entidad_federativa": "DGO",
         //   "cve_unidad_administrativa": "1016"
         // },
-        // "fracciones": [
-        // {
-        //   "cveFraccion": "",
-        //   "bienesProducidos": {
-        //     "descripcionBienProducido": "",
-        //     "totalBienesProducidos": 0,
-        //     "volumenMercadoNacional": 0,
-        //     "olumenExportaciones": 0
-        //   }
-        // }
-        // ],
-        // "sectores": [
-        //   {
-        //     "idConfProgramaSE": 0
-        //   }
-        // ],
-        // "ide_generica_1": "01-2024",
-        // "ide_generica_2": "12-2024",
-        // "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
-        // "descripcion_clob_generica_2": "121681,2011-7018",
-        "reporte_anual": DATOS_REPORTE
+        "fracciones": [
+          {
+            "cveFraccion": "",
+            "bienesProducidos": {
+              "descripcionBienProducido": "",
+              "totalBienesProducidos": 0,
+              "volumenMercadoNacional": 0,
+              "olumenExportaciones": 0
+            }
+          }
+        ],
+        "sectores": [
+          {
+            "idConfProgramaSE": data.folioPrograma ? parseInt(data.folioPrograma.split(',')[0].split('-')[1]) : 0
+          }
+        ],
+        "reporte_anual": REPORTE_ANUAL,
+        "observaciones": data.folioPrograma,
+        "descripcion": data.folioPrograma,
+        "ide_generica_1": data.inicio,
+        "ide_generica_2": data.fin,
+        "descripcion_clob_generica_1": data.modalidad,
+        "descripcion_clob_generica_2": data.folioPrograma
       }
 
     return new Promise((resolve, reject) => {
@@ -188,13 +189,13 @@ export class SolicitudDeReporteComponent {
             this.store.setIdSolicitud(0);
           }
         }
-        const JSON_RESP: JSONResponse = {
+        const JSON_RESPONSE: JSONResponse = {
           id: API_RESPONSE.id ?? API_RESPONSE.datos?.id_solicitud ?? API_RESPONSE.datos?.idSolicitud ?? 0,
           descripcion: API_RESPONSE.descripcion ?? '',
           codigo: API_RESPONSE.codigo ?? '',
           data: API_RESPONSE.datos ?? {}
         };
-        resolve(JSON_RESP);
+        resolve(JSON_RESPONSE);
       }, error => {
         reject(error);
       });
