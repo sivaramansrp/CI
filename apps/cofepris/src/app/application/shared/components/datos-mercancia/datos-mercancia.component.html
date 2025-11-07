@@ -421,33 +421,24 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="descripcionFraccion"
-            >Descripción de la fracción arancelaria<span
-              [ngClass]="
-            {
-              'text-danger': mercanciaForm.get('descripcionFraccion')?.errors?.['required'] && mercanciaForm.get('descripcionFraccion')?.touched
-            }"
-              >*</span
-            >:</label
-          >
+          <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria</label>
+          <span class="form-label" [ngClass]="((isValid(mercanciaForm, 'descripcionFraccion') && mercanciaForm.get('descripcionFraccion')?.touched)|| ((mercanciaForm.get('descripcionFraccion')?.errors?.['required']|| mercanciaForm.get('denominacionRazon')?.value===''|| mercanciaForm.get('descripcionFraccion')?.value===null) && mercanciaForm.get('descripcionFraccion')?.touched)) ? 'text-danger' : ''" >*</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="descripcionFraccion"
-            disable
+            [readonly]="elementosDeshabilitados.includes('descripcionFraccion')"
             type="text"
             formControlName="descripcionFraccion"
-            [ngClass]="{
-            'is-invalid':
-            mercanciaForm.get('descripcionFraccion')?.invalid &&
-            mercanciaForm.get('descripcionFraccion')?.touched
-            }"
+            [ngClass]="isValid(mercanciaForm, 'descripcionFraccion') ? 'required' : ''"
           />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('descripcionFraccion')?.errors?.['required'] && mercanciaForm.get('descripcionFraccion')?.touched"
-          >
-            Este campo es obligatorio.
-          </div>
+          <div class="mensaje-error" *ngIf="(
+           (mercanciaForm.get('descripcionFraccion')?.errors?.['required'] && mercanciaForm.get('descripcionFraccion')?.touched)
+           || 
+           (mercanciaForm.get('descripcionFraccion')?.touched && elementosDeshabilitados.includes('descripcionFraccion') && !mercanciaForm.get('descripcionFraccion')?.value)
+         )">
+          Este campo es obligatorio.
+        </div>
         </div>
       </div>
     </div>
@@ -520,12 +511,13 @@
           mercanciaForm.get('cantidadUmt')?.touched
           }"
           />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched"
-          >
-            Este campo es obligatorio.
-          </div>
+        <div class="mensaje-error" *ngIf="(
+           (mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched)
+           || 
+           (mercanciaForm.get('cantidadUmt')?.touched && elementosDeshabilitados.includes('cantidadUmt') && !mercanciaForm.get('cantidadUmt')?.value)
+         )">
+          Este campo es obligatorio.
+        </div>
         </div>
       </div>
     </div>

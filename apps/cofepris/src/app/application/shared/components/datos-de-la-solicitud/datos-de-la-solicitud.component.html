@@ -199,7 +199,7 @@
           <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle" (change)="actualizarStore()"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''" />
           <div class="mensaje-error" *ngIf="(datosSolicitudForm.get('calle')?.errors?.['required'] 
-          || datosSolicitudForm.get('representanteNombre')?.value===''|| datosSolicitudForm.get('representanteNombre')?.value===null) && datosSolicitudForm.get('representanteNombre')?.touched">
+          || datosSolicitudForm.get('calle')?.value===''|| datosSolicitudForm.get('calle')?.value===null) && datosSolicitudForm.get('calle')?.touched">
             Este campo es obligatorio.
           </div>
         </div>

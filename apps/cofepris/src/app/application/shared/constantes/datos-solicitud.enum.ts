@@ -1022,7 +1022,7 @@ export const MOSTRAR_NOTIFICACION = [
   260209, 260205, 260204, 260202,
 ];
 
-export const ENABLE_FIELDS = [ 260209, 260210];
+export const ENABLE_FIELDS = [ 260209, 260210, 260208 ];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
