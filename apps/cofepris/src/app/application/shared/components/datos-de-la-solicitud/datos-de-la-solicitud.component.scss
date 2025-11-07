@@ -1,3 +1,12 @@
+/* Center the RFC modal message text */
+.rfc-modal-center .mensaje-error,
+.rfc-modal-center .notificacion-mensaje,
+.rfc-modal-center .modal-body {
+  text-align: center !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
 .municipio-label {
   word-spacing: 0.2rem;
 }

@@ -3,15 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { RegistroService } from './registro.service';
 import { Tramite110201Store } from '../state/Tramite110201.store';
+import { Tramite110201Query } from '../state/Tramite110201.query';
 
 describe('RegistroService', () => {
   let service: RegistroService;
   let httpMock: any;
   let storeMock: any;
+    let queryMock: any;
 
   beforeEach(() => {
     httpMock = {
       get: jest.fn()
+    };
+    queryMock = {
+      select: jest.fn().mockReturnValue(of({})),
+      getValue: jest.fn().mockReturnValue({})
     };
     storeMock = {
       setTratado: jest.fn(),
@@ -65,6 +71,7 @@ describe('RegistroService', () => {
       providers: [
         RegistroService,
         { provide: HttpClient, useValue: httpMock },
+        { provide: Tramite110201Query, useValue: queryMock },
         { provide: Tramite110201Store, useValue: storeMock }
       ]
     });
@@ -155,7 +162,6 @@ describe('RegistroService', () => {
     httpMock.get.mockReturnValue(of([]));
     service.getSolicitudesDataTabla().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/110201/mercancia-seleccionadas.json');
-    // Error branch
     httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
     service.getSolicitudesDataTabla().subscribe({ error: () => expect(true).toBeTruthy() });
   });
