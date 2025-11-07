@@ -32,7 +32,6 @@ import {
   Notificacion,
   NotificacionesComponent,
   PasoCargaDocumentoComponent,
-  PasoFirmaComponent,
   RegistroSolicitudService,
   esValidObject,
   getValidDatos
@@ -43,6 +42,7 @@ import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { GuardarAdapter_260216 } from '../../adapters/guardar-payload.adapter';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';

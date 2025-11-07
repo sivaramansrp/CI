@@ -118,6 +118,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     @Output() public fraccionErrorEventEmit =
     new EventEmitter<{ fraccionErrorUno?: string; fraccionError?: boolean }>();
 
+    /**
+     * Evento de salida que emite un valor booleano para indicar la visibilidad de un elemento.
+     * 
+     * @event
+     * @type {EventEmitter<boolean>}
+     * @description Emite `true` o `false` para controlar la visibilidad desde el componente padre.
+     */
+    @Output() public obtenorVisible =
+    new EventEmitter<boolean>();
+
   /**
    * @method ngOnInit
    * @description
@@ -183,6 +193,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Valida los formularios asociados a los diferentes componentes del paso uno.
+   * 
+   * Llama al método `validarFormulario()` de cada uno de los componentes:
+   * - consultarCupo
+   * - representacionFederal
+   * - bienFinal
+   * - insumos
+   * - procesoProductivo
+   * 
+   * Si algún componente no está definido, su validación se omite.
+   */
   validarFormularios(): void {
     this.consultarCupo?.validarFormulario();
     this.representacionFederal?.validarFormulario();
@@ -201,6 +223,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void {
   this.fraccionErrorEventEmit.emit(event);
   }
+
+/**
+ * Emite un evento para indicar si el elemento debe ser visible o no.
+ *
+ * @param event - Valor booleano que representa la visibilidad del elemento.
+ */
+obtenerVisible(event:boolean):void{
+this.obtenorVisible.emit(event);
+}
+
 
   /**
  * @method ngOnDestroy

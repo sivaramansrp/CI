@@ -102,7 +102,7 @@ export class ProcesoProductivoComponent implements OnInit, OnDestroy {
  * @description
  * Constructor del componente `ProcesoProductivoComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
  * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
- * @param {SolicitudDeRegistroTplService} solicitudDeRegistroTplService - Servicio para obtener datos del proceso productivo.
+ * @param {SolicitudDeRegindicaristroTplService} solicitudDeRegistroTplService - Servicio para obtener datos del proceso productivo.
  * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
  */
   constructor(
@@ -165,7 +165,7 @@ export class ProcesoProductivoComponent implements OnInit, OnDestroy {
    */
   public inicializarFormulario(): void {
     this.procesoProductivoForm = this.fb.group({
-      indicar: [this.solicitudDeRegistroState?.['indicar'] ? this.solicitudDeRegistroState?.['indicar'] : this.opcionesDeRadioIndicar[0]?.value, Validators.required],
+      indicar: [this.solicitudDeRegistroState?.['indicar'] ? this.solicitudDeRegistroState?.['indicar'] :null, Validators.required],
     });
     this.obtenerDatosEstados();
     if (this.solicitudDeRegistroState?.['indicar']) {

@@ -10,7 +10,8 @@ export interface ProsecModificacionModel {
   municipioOAlcaldia:string;
   entidadFederativa:string;
   pais:string;
-  telefono:string;
+  razonSocial:string;
+  rfc:string;
   }
 
 

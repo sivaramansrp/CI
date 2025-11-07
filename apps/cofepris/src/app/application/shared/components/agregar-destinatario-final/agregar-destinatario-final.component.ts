@@ -8,6 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import {
+  AlertComponent,
   Catalogo,
   CatalogoServices,
   Notificacion,
@@ -58,6 +59,7 @@ import { takeUntil } from 'rxjs/operators';
     TituloComponent,
     TooltipModule,
     NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -252,6 +254,12 @@ export class AgregarDestinatarioFinalComponent
      * Suscripción para manejar observables.
      */
     private subscription: Subscription = new Subscription();
+
+  /**
+   * Mensaje de error para mostrar en el formulario.
+   * @property {string} mensajeDeError
+   */
+  mensajeDeError: string = '';
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -562,10 +570,11 @@ private guardarDestinatarioModal(): void {
       Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
+        this.mensajeDeError = 'Faltan campos por capturar.';
       });
       return;
     }
-    
+    this.mensajeDeError = '';
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     
     const NUEVO_DESTINATARIO: Destinatario = VALOR_FORMULARIO as Destinatario;
