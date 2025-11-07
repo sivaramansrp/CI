@@ -200,7 +200,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             firma,
             ID_SOLICITUD ?? 0
           );
-          //this.router.navigate([`${this.url}/acuse`]);
+
           this.router.navigate([this.router.url.replace('/autorizar-dictamen', '/acuse')]);
           this.tramite5701Store.limpiarSolicitud();
         }),

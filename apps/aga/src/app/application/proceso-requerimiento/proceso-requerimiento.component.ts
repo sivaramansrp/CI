@@ -383,7 +383,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Inicializa el componente y obtiene datos necesarios.
    */
   ngOnInit(): void {
-    console.log('Datos guardados al iniciar:', this.tipoRequerimiento);
+
     /**
      * Verifica si existe un trámite previamente seleccionado.
      * Si existe, se selecciona automáticamente.
@@ -434,7 +434,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   async loadComponent(li: ListaComponentes): Promise<void> {
     if (!li.componentPath) {
-      console.error('Component not found in registry:');
+
       return;
     }
     this.viewChild = (await li.componentPath()) as Type<unknown>;
@@ -553,7 +553,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * de error en caso de fallas y guarda los datos recibidos en la propiedad `iniciarAtenderRequerimientoData`.
    */
   iniciarAtenderRequerimiento(): void {
-    console.log('Datos guardados:', this.guardarDatos);
     const NUMFOLIO = this.guardarDatos.folioTramite;
     this.atenderRequerimientoService.getIniciarAtenderRequerimiento(this.tramite, NUMFOLIO).subscribe({
       next: (response) => {
