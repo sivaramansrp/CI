@@ -26,6 +26,7 @@ import {
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  ES_VALIDO_REGISTRO_O_VENCIMIENTO,
   FEACCION_AFRACCION_ARANCELARIA_CATALOG,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
@@ -445,6 +446,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   tipoProductoObj: Catalogo[] | undefined;
 
   /**
+   * Indica si el registro o vencimiento es válido para el procedimiento actual.
+   * Se utiliza para controlar la lógica de validación de los campos relacionados con registro sanitario y fechas de vencimiento.
+   */
+  esValidoRegistroOVencimiento: boolean = false;
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -568,6 +575,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
     this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
+    this.esValidoRegistroOVencimiento = ES_VALIDO_REGISTRO_O_VENCIMIENTO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
