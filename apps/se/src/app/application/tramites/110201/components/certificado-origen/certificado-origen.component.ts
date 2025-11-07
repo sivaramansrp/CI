@@ -11,6 +11,8 @@ import {
   ConfiguracionColumna,
   SeccionLibQuery,
   SeccionLibState,
+  formatearFechaDdMmYyyy,
+  formatearFechaYyyyMmDd,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -255,6 +257,11 @@ export class CertificadoOrigenComponent
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || '105' },
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] || "ARG" },
+      fraccionArancelaria: this.certificadoState.formCertificado['fraccionArancelariaForm'] || '',
+      numeroRegistro: this.certificadoState.formCertificado['numeroRegistroForm'] || null,
+      nombreComercial: this.certificadoState.formCertificado['nombreComercialForm'] || '',
+      fechaInicio: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaInicioInput'] as string) || "",
+      fechaFin: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaFinalInput'] as string) || "",
     };
 
  this.solicitudService
