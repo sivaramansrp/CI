@@ -29,7 +29,7 @@ import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/s
 
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CatalogoTipoDocumento, CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, DocumentosEspecificosResponse, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-dictamen-response.model';
@@ -65,6 +65,7 @@ import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-req
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
 
 import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
+import { DocumentosEspecificosRequest } from '../core/models/atender-requerimiento/request/documentos-especificos.model';
 
 /**
  * @component
@@ -284,6 +285,15 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Indica si los dictamenes ya han sido cargados.
    */
   yaCargoDictamenes = false;
+
+    /** Lista de tipos de requerimiento */
+  documentosEscpecificos: DocumentosEspecificosResponse[] = [];
+
+  /** Listado de documentos específicos seleccionados para el requerimiento */
+  listadoDocumentosEspecificos: number[] = [];
+
+  /** Listado de documentos específicos guardados para el requerimiento */
+  listadoDocumentosGuardados: CatalogoTipoDocumento[] = [];
 
   /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
@@ -1298,6 +1308,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (resp.codigo === CodigoRespuesta.EXITO) {
             this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
             this.cadenaOriginal = resp.datos?.cadena_original;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1456,7 +1477,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
-            this.router.navigate(['bandeja-de-tareas-pendientes']);
+            setTimeout(() => {
+              this.router.navigate(['bandeja-de-tareas-pendientes']);
+            }, 3000);
+          
           }
 
         }),
@@ -1524,6 +1548,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (resp) => {
           this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
           this.showSegundaTabla  = resp.datos?.alcances_requerimiento ? true : false;
+          if(this.showSegundaTabla){
+            this.postDocumentosEspecificos();
+          }
         },
         error: (err) => {
           const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
@@ -1540,6 +1567,117 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+    /**
+   * Realiza una petición para obtener los documentos específicos asociados a un requerimiento.
+   * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
+   */
+  postDocumentosEspecificos(): void {
+    const PAYLOAD: DocumentosEspecificosRequest = {
+      id_pexim: 0,
+      list_fraccion_arancelarias: [],
+      list_mecanismo_asignaciones: [],
+      list_tratamientos: [],
+      clave_tipo_accion_mecanismo: '',
+      descripcion_tipo_accion_mecanismo: '',
+      esquema_regla_octava: 0
+    };
+    const IDREQUERMIENTO = this.dataIniciarRequerimiento?.id_requerimiento;
+    const IDSOLICITUD = this.guardarDatos.id_solicitud;
+
+    this.guardarRequerimientoService.postDocumentosEspecificos(this.tramite, IDSOLICITUD, false, IDREQUERMIENTO, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            this.documentosEscpecificos = resp.datos ?? [];
+
+            if (IDREQUERMIENTO) {
+              this.cargarDocumentosGuardados(IDREQUERMIENTO, IDSOLICITUD, PAYLOAD);
+            }
+
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al recuperar documentos específicos.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Error al recuperar documentos específicos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al recuperar documentos específicos.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+    /**
+   * Carga los documentos específicos previamente guardados para un requerimiento.
+   * Realiza una petición al servicio `GuardarRequerimientoService` y actualiza
+   * el listado de documentos guardados si la respuesta es exitosa.
+   * Maneja errores mostrando notificaciones adecuadas.
+   * @param idRequerimiento - Identificador del requerimiento.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @param payload - Objeto con los parámetros necesarios para la petición.
+   */
+  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest): void {
+    this.guardarRequerimientoService
+      .postDocumentosEspecificos(this.tramite, idSolicitud, true, idRequerimiento, payload)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            const DOCUMENTOS_PREVIOS = (resp.datos ?? []).map(doc => ({
+              id: doc.id_tipo_documento,
+              description: doc.documento,
+            }));
+            this.listadoDocumentosGuardados = DOCUMENTOS_PREVIOS;
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al recuperar documentos específicos.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        },
+      });
+  }
+
+  /**
+   * Actualiza el listado de documentos específicos seleccionados.
+   *
+   * @param listado - Arreglo de objetos que contienen el identificador de cada documento.
+   *                   Se extrae únicamente la propiedad `id` de cada elemento.
+   */
+  onDocumentosActualizados(listado: { id: number }[]): void {
+    this.listadoDocumentosEspecificos = listado.map(item => item.id);
+  }
+
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
   onFormRequerimientoChanged(formValue: any) {
