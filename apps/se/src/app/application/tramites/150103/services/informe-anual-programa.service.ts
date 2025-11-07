@@ -34,18 +34,6 @@ export class InformeAnualProgramaService {
    
   }
 
-  // /**
-  //  * Obtiene las fechas de inicio y fin del reporte desde un archivo JSON.
-  //  * 
-  //  * Este método realiza una solicitud HTTP para obtener las fechas del reporte.
-  //  * @returns Un observable que emite un objeto de tipo `ReporteFechas`.
-  //  */
-  // obtenerReporteFechas(): Observable<ReporteFechas> {
-  //   return this.http.get<ReporteFechas>(
-  //     'assets/json/150103/reporte-fechas.json'
-  //   );
-  // }
-
  /**
  * @method getRegistroData
  * @description Método que obtiene los datos de registro desde un archivo JSON.

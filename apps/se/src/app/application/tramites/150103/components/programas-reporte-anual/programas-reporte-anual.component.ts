@@ -170,22 +170,6 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
   }
 
-  // /**
-  //  * @description Método para obtener las fechas de inicio y fin del reporte.
-  //  * Actualiza el estado con las fechas obtenidas del servicio.
-  //  */
-  // obtenerReporteFechas(): void {
-  //   this.informaAnualPrograma
-  //     .obtenerReporteFechas()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe({
-  //       next: (respuesta: ReporteFechas) => {
-  //         this.solicitud150103Store.actualizarInicio(respuesta.inicio);
-  //         this.solicitud150103Store.actualizarFin(respuesta.fin);
-  //       },
-  //     });
-  // }
-
   /**
    * @method obtenerProgramasReporte
    * @description
@@ -204,27 +188,6 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
             this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
-      //   next: (respuesta: Record<string, unknown>) => {
-      //     const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
-      //     if (Array.isArray(DATOS) && DATOS.length) {
-      //       const PROGRAMAS = DATOS.map((item) => {
-      //         const PROGRAMA = item as ProgramasReporte;
-      //         return {
-      //           folioPrograma: PROGRAMA.folioPrograma ?? '',
-      //           modalidad: PROGRAMA.modalidad ?? '',
-      //           tipoPrograma: PROGRAMA.tipoPrograma ?? '',
-      //           estatus: PROGRAMA.estatus ?? '',
-      //         };
-      //       });
-      //       this.solicitudDatos = PROGRAMAS;
-      //       this.solicitud150103Store.setSolicitusDatos(this.solicitudDatos);
-      //     } else {
-      //       this.solicitudDatos = [];
-      //     }
-      //   },
-      //   error: () => {
-      //   this.solicitudDatos = [];
-      // },
       });
   }
 

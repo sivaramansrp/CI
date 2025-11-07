@@ -149,10 +149,7 @@ export class SolicitudDeReporteComponent {
           "es_persona_moral": true,
           "certificado_serial_number": "1234"
         },
-        // "representacion_federal": {
-        //   "cve_entidad_federativa": "DGO",
-        //   "cve_unidad_administrativa": "1016"
-        // },
+        "representacion_federal": {},
         "fracciones": [
           {
             "cveFraccion": "",
