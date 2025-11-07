@@ -37,6 +37,7 @@
           <app-paso-dos
           [idTipoTRamite]="'130118'"
           [datosUsuario]="datosUsuario"
+          [idSolicitud]="solicitudState.idSolicitud!.toString()"
           [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"
