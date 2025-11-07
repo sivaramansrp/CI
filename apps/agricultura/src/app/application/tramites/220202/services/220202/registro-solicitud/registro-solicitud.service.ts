@@ -71,7 +71,7 @@ export class RegistroSolicitudService {
        *
        * @param tramite - El identificador numérico del trámite.
        * @param rfc - El RFC asociado a la solicitud.
-       * @returns Un observable que emite la respuesta base con un arreglo de catálogos relacionados a la solicitud.
+       * @returns Un observable que emite la respuesta de solicitudes recientes.
        */
   obtieneDatosDeLaSolicitud(tramite: number, rfc: string): Observable<BaseResponse<SolicitudData[]>> {
     const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_RECENTES(tramite.toString(), rfc)}`;
