@@ -410,7 +410,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
             this.contenedores = [...this.contenedores, respuesta.datos];
             (this.contenedorStore.setContenedores as (valor: GridContenedores[]) => void)(this.contenedores);
-            // this.solicitudForm.get('datosContenedor.tipoContenedor').markAsUntouched();
             this.solicitudForm.reset();
             this.solicitudForm.markAsUntouched();
             this.solicitudForm.markAsPristine();
@@ -447,8 +446,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             formData.append('archivo', FILE);
             formData.append('rfc', this.rfc_original);
             formData.append('aduana', this.solicitudForm.value.datosGenerales.aduana);
-            // formData.append('fingreso', convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
-
             this.datosTramiteService
                 .validarArchivoCsv(formData)
                 .pipe(takeUntil(this.destroyNotifier$))
