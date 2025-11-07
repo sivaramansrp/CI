@@ -70,7 +70,6 @@ export class FirmaElectronicaService {
       TEMP_PASSWORD_INPUT.type = 'password';
       TEMP_PASSWORD_INPUT.value = password;
       
-      // Opcional: agregarlo al DOM temporalmente (algunas librerías lo requieren)
       TEMP_PASSWORD_INPUT.style.display = 'none';
       document.body.appendChild(TEMP_PASSWORD_INPUT);
 
