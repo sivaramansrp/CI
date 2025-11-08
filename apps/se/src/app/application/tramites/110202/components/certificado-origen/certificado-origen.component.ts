@@ -225,7 +225,7 @@ export class CertificadoOrigenComponent
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state: TramiteState) => {
-          this.certificadoState = state;
+          this.certificadoState = state;          
           this.datosTabla$ = state.mercanciaTabla;
           this.datosTablaUno$ = state.disponiblesDatos;
         })
@@ -348,7 +348,7 @@ export class CertificadoOrigenComponent
    * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o editada.
    */
   emitmercaniasDatos(evento: Mercancia): void {
-    // this.store.setmercanciaTabla([evento]);
+    this.store.setmercanciaTabla([evento]);
   }
 
   /**

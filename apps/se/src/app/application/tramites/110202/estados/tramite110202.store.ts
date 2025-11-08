@@ -369,6 +369,7 @@ export const INITIAL_STATE: TramiteState = {
     observacionesDates: '',
     idiomaDates: '',
     precisaDates: '',
+    presentaDates: '',
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },

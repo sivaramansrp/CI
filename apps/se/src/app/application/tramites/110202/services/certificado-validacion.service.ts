@@ -332,4 +332,105 @@ getAllState(): Observable<TramiteState> {
     return this.httpService.post<JSONResponse>(this.apiRoutes.GUARDAR, { body: body });
   }
 
+  
+    /**
+    * Construye un arreglo de mercancías seleccionadas a partir de los datos proporcionados.
+    * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
+    * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
+    * */
+    buildMercanciaSeleccionadas(array: unknown[]): unknown[] {
+      const RESULT: unknown[] = [];
+  
+      array.forEach((arr) => {
+        const ITEM = arr as {
+          id?: number;
+          fraccionArancelaria?: string;
+          nombreTecnico?: string;
+          nombreComercial?: string;
+          numeroDeRegistrodeProductos?: string;
+          fechaExpedicion?: string;
+          fechaVencimiento?: string;
+          tipoFactura?: string;
+          numFactura?: string;
+          complementoDescripcion?: string;
+          fechaFactura?: string;
+          cantidad?: string;
+          umc?: string;
+          unidadMedida?: string;
+          valorMercancia?: string;
+        };
+  
+        RESULT.push({
+          id: ITEM.id,
+          fraccion_arancelaria: ITEM.fraccionArancelaria,
+          cantidad: ITEM.cantidad,
+          unidad_medida: ITEM.unidadMedida,
+          valor_mercancia: ITEM.valorMercancia,
+          nombreTecnico: ITEM.nombreTecnico,
+          nombre_comercial: ITEM.nombreComercial,
+          registro_producto: ITEM.numeroDeRegistrodeProductos,
+          fechaExpedicion: ITEM.fechaExpedicion,
+          fechaVencimiento: ITEM.fechaVencimiento,
+          tipo_factura: ITEM.tipoFactura,
+          num_factura: ITEM.numFactura,
+          complemento_descripcion: ITEM.complementoDescripcion,
+          fecha_factura: ITEM.fechaFactura,
+          umc: ITEM.umc,
+        });
+      });
+  
+      return RESULT;
+    }
+  
+    /** Construye el objeto datos del certificado a partir del estado del trámite TramiteState. */
+    buildDatosCertificado(data: TramiteState): unknown {
+      return {
+        observaciones: data.formDatosCertificado['observacionesDates'] ?? '',
+        idioma: data.formDatosCertificado['idiomaDates'] ?? 0,
+        desea_obtener_certificado:"false",
+        justificacion:"a",
+        precisa: data.formDatosCertificado['precisaDates'] ?? '',
+        presenta: data.formDatosCertificado['presentaDates'] ?? '',
+        representacion_federal: {
+          entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'] ?? 0,
+          representacion_federal: data.formDatosCertificado['representacionFederalDates'] ?? 0
+        },
+        
+      }
+    }
+    /** Construye el objeto certificado a partir del estado del trámite TramiteState. */
+    buildCertificado(item: TramiteState): unknown {
+      return {
+        tratado_acuerdo: item.formCertificado['entidadFederativa'] || '',
+        pais_bloque: item.formCertificado['bloque'] || '',
+        fraccion_arancelaria: item.formCertificado['fraccionArancelaria'] || '',
+        nombre_comercial: item.formCertificado['nombreComercial'] || '',
+        fecha_inicio: item.formCertificado['fechaInicio'] || '',
+        fecha_fin: item.formCertificado['fechaFin'] || '',
+        registro_producto: item.formCertificado['registroProducto'] || '',
+        mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaTabla),
+      };
+    }
+    /** Construye el objeto destinatario a partir del estado del trámite TramiteState. */
+    buildDestinatario(data: TramiteState): unknown {
+      return {
+          nombre: data.formDatosDelDestinatario['nombres'],
+          primer_apellido: data.formDatosDelDestinatario['primerApellido'],
+          segundo_apellido: data.formDatosDelDestinatario['segundoApellido'],
+          numero_registro_fiscal: data.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+          razon_social: data.formDatosDelDestinatario['razonSocial'],
+          domicilio: {
+            ciudad_poblacion_estado_provincia: data.formDestinatario['ciudad'],
+            calle: data.formDestinatario['calle'],
+            numero_letra: data.formDestinatario['numeroLetra'],
+            lada: data.formDestinatario['lada'],
+            telefono: data.formDestinatario['telefono'],
+            fax: data.formDestinatario['fax'],
+            correo_electronico: data.formDestinatario['correoElectronico'],
+            pais_destino: data.formDestinatario['paisDestin']
+          },
+           medio_transporte: data.medioDeTransporteSeleccion?.clave || '',
+        }
+      }
+
 }

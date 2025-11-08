@@ -166,9 +166,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       isValid = false;
     }
     if(this.certificadoOrigenComponent){
-      // if (!this.certificadoOrigenComponent.validarFormulario()) {
-      //   isValid = false
-      // }
+      if (!this.certificadoOrigenComponent.validateAll()) {
+        isValid = false
+      }
     }
     else{
       isValid = false

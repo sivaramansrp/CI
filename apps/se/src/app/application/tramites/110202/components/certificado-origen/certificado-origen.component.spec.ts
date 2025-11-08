@@ -9,21 +9,21 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { Solocitud110201Service } from '../../services/service110201.service';
-import { Tramites110201Store } from '../../state/tramites110201.store';
-import { Tramites110201Query } from '../../state/tramites110201.query'
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
+import { Tramite110202Store } from '../../estados/tramite110202.store';
+import { Tramite110202Query } from '../../estados/tramite110202.query'
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
-class MockSolocitud110201Service {
+class MockCertificadoValidacionService {
   buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({}));
   crearMercanciaCert = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Injectable()
-class MockTramite110201Store {
+class MockTramite110202Store {
   setFormCertificadoGenric = jest.fn();
   setDisponsiblesDatos = jest.fn()
   setEstado = jest.fn();
@@ -36,7 +36,7 @@ class MockTramite110201Store {
 }
 
 @Injectable()
-class MockTramite110201Query {
+class MockTramite110202Query {
   selectSolicitud$ = observableOf({});
   formCertificado$ = observableOf({});
   actualizarEstadoFormulario = jest.fn();
@@ -52,9 +52,9 @@ describe('CertificadoOrigenComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Solocitud110201Service, useClass: MockSolocitud110201Service },
-        { provide: Tramites110201Store, useClass: MockTramite110201Store },
-        { provide: Tramites110201Query, useClass: MockTramite110201Query },
+        { provide: CertificadoValidacionService, useClass: MockCertificadoValidacionService },
+        { provide: Tramite110202Store, useClass: MockTramite110202Store },
+        { provide: Tramite110202Query, useClass: MockTramite110202Query },
         SeccionLibQuery,
         ConsultaioQuery
       ]

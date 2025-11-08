@@ -1,10 +1,11 @@
-import { AlertComponent, BtnContinuarComponent, doDeepCopy, ERROR_FORMA_ALERT, esValidObject, getValidDatos, JSONResponse, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, JSONResponse, Notificacion, NotificacionesComponent, PAGO_DE_DERECHOS, SeccionLibStore, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
+import { MSG_REGISTRO_EXITOSO, PASOS } from '../../constantes/modificacion.enum';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite110202Store, TramiteState } from '../../estados/tramite110202.store';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
-import { PASOS } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 /**
@@ -30,8 +31,10 @@ interface AccionBoton {
     BtnContinuarComponent,
     PasoUnoComponent,
     PasoFirmaComponent,
-    AlertComponent
-  ],
+    AlertComponent,
+    NotificacionesComponent,
+    CommonModule
+],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
 })
@@ -48,7 +51,11 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
    * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
    */
   pasos: ListaPasosWizard[] = PASOS;
-
+ /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public alertaNotificacion!: Notificacion;
   /**
    * Índice del paso actual.
    * Este valor se utiliza para determinar qué paso está activo en el wizard.
@@ -131,12 +138,6 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
 
 
   ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([res]);
-    });
         this.tramiteQuery.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -196,6 +197,19 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+        if (e.valor > 0 && e.valor < 5) {
+          this.alertaNotificacion = {
+            tipoNotificacion: 'banner',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+
+        }
       } else {
         this.wizardComponent.atras();
       }
@@ -246,32 +260,6 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
       });
   }
   
-/**
- * Transforma un array de objetos en un nuevo formato.
- * @param arr - array de objetos a transformar
- * @returns array de objetos transformados
- */
-buildMercanciaSeleccionadas(arr: any[]): any[] {
-return arr.map((item: any) => ({
-  id: item.id,
-  fraccion_arancelaria: item.fraccionArancelaria,
-  cantidad: item.cantidad,
-  unidad_medida: item.unidadMedida,
-  valor_mercancia: item.valorMercancia,
-  nombre_tecnico: item.nombreTecnico,
-  nombre_comercial: item.nombreComercial,
-  registro_producto: item.numeroRegistroProducto,
-  fecha_expedicion: item.fechaExpedicion,
-  fecha_vencimiento: item.fechaVencimiento,
-  tipo_factura: item.tipoFactura,
-  num_factura: item.numFactura,
-  complemento_descripcion: item.complementoDescripcion,
-  fecha_factura: item.fechaFactura,
-  umc:item.umc,
-}));
-
-}
-
   /**
    * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
    * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
@@ -282,95 +270,55 @@ return arr.map((item: any) => ({
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */
-     guardar(item: TramiteState): Promise<JSONResponse> {
-    const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
-    const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState?.idSolicitud || 0,
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "ACEROS ALVARADO S.A. DE C.V.",
-        actividad_economica: "Fabricación de productos de hierro y acero",
-        correo_electronico: "contacto@acerosalvarado.com",
-        domicilio: {
-          pais: "México",
-          codigo_postal: "06700",
-          estado: "Ciudad de México",
-          municipio_alcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Insurgentes Sur",
-          numero_exterior: "123",
-          numero_interior: "Piso 5, Oficina A",
-          lada: "",
-          telefono: "123456"
-        }
-      },
-      certificado: {
-        tratado_acuerdo:  item.formCertificado['tratadoAcuerdoForm'] || '',
-        pais_bloque:  item.formCertificado['paisBloqueForm'] || '',
-        fraccion_arancelaria:  item.formCertificado['fraccionArancelariaForm'] || '',
-        registro_producto: item.formCertificado['registroProductoForm'] || '',
-        nombre_comercial:  item.formCertificado['nombreComercialForm'] || '',
-        fecha_inicio:  item.formCertificado['fechaInicioForm'] || '',
-        fecha_fin: item.formCertificado['fechaFinForm'] || '',
-        numero_letra: item.formCertificado['numeroLetra1'] || '',
-        calle:item.calle1,
-        mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
-      },
- 
-      destinatario: {
-        nombre: item.formDatosDelDestinatario['nombres'],
-        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
-        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-        numero_registro_fiscal: item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
-        razon_social: item.formDatosDelDestinatario['razonSocial'],
-        domicilio: {
-          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
-          calle: item.formDestinatario['calle'],
-          numero_letra: item.formDestinatario['numeroLetra'],
-          lada: item.formDestinatario['lada'],
-          telefono: item.formDestinatario['telefono'],
-          fax: item.formDestinatario['fax'],
-          correo_electronico: item.formDestinatario['correoElectronico'],
-          pais_destino: item.formDestinatario['paisDestin']
-        },
-        medio_transporte: item.medioDeTransporteSeleccion.clave
-
-      },
- 
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado['observacionesDates'],
-        precisa: item.formDatosCertificado['precisaDates'],
-        presenta: item.formDatosCertificado['precisaDates'],
-        idioma: item.formDatosCertificado['idiomaDates'],
-        representacion_federal: {
-          entidad_federativa: item.formDatosCertificado['EntidadFederativaDates'],
-          representacion_federal: item.formDatosCertificado['representacionFederalDates']
-        },
-        desea_obtener_certificado: "true",
-        justificacion: "nbhh"
-      }
-    };
- 
-        return new Promise((resolve, reject) => {
-                  this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe(response => {
-                    const API_RESPONSE = doDeepCopy(response);
-                    if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
-                      if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
-                         this.folioTemporal = API_RESPONSE.datos.id_solicitud;
-                        this.tramite110202Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
-                        this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-                      } else {
-                        this.tramite110202Store.setIdSolicitud(0);
-                      }
+   guardar(data: TramiteState): Promise<JSONResponse> {
+      const CERTIFICADO = this.certificadoValidacionService.buildCertificado(data);
+       const DATOS_CERTIFICADO = this.certificadoValidacionService.buildDatosCertificado(data);
+       const DESTINATARIO = this.certificadoValidacionService.buildDestinatario(data);
+       const PAYLOAD = {
+           rfc_solicitante: 'AAL0409235E6',
+           idSolicitud: this.solicitudState.idSolicitud || 0,
+           solicitante: {
+             rfc: "AAL0409235E6",
+             nombre: "ACEROS ALVARADO S.A. DE C.V.",
+             actividad_economica: "Fabricación de productos de hierro y acero",
+             correo_electronico: "contacto@acerosalvarado.com",
+             domicilio: {
+               pais: "México",
+               codigo_postal: "06700",
+               estado: "Ciudad de México",
+               municipio_alcaldia: "Cuauhtémoc",
+               localidad: "Centro",
+               colonia: "Roma Norte",
+               calle: "Av. Insurgentes Sur",
+               numero_exterior: "123",
+               numero_interior: "Piso 5, Oficina A",
+               lada: "",
+               telefono: "123456"
+             }
+           },
+           certificado: CERTIFICADO,
+           destinatario: DESTINATARIO,
+           datos_del_certificado: DATOS_CERTIFICADO
+         };
+     
+          return new Promise((resolve, reject) => {
+                this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe(response => {
+                  const API_RESPONSE = doDeepCopy(response);
+                  if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+                    if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                       this.folioTemporal = API_RESPONSE.datos.id_solicitud;
+                      this.tramite110202Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud));
+                      this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                    } else {
+                      this.tramite110202Store.setIdSolicitud(0);
                     }
-                    resolve(response);
-                  }, error => {
-                    reject(error);
-                  });
-                  });
-         }
+                  }
+                  resolve(response);
+                }, error => {
+                  reject(error);
+                });
+                });
+       }
   }
 
 
