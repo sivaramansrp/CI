@@ -1,4 +1,11 @@
-import { Acuicultura,FormularioMovilizacion, PagoDeDerechos, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import {
+  Acuicultura,
+  FilaSolicitud,
+  FormularioMovilizacion,
+  MercanciaGroup,
+  PagoDeDerechos,
+  RealizarGroup,
+} from '../../models/220203/importacion-de-acuicultura.module';
 import { RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { HttpClient } from '@angular/common/http';
@@ -98,8 +105,6 @@ export class ImportacionDeAcuiculturaService {
     this.acuiculturaStore.actualizarDatosMercancia(realizarGroup);
   }
 
-
-
   /**
    * Restablecer el formulario a su estado inicial.
    * @method limpiarFormulario
@@ -154,6 +159,6 @@ export class ImportacionDeAcuiculturaService {
       getAllDatosForma(): Observable<Acuicultura> {
         return this.acuiculturaStore._select(state => state); // Select the entire state
       }
-    
-  
+
+
 }

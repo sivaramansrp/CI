@@ -160,10 +160,10 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
   configuracionColumnasExportador: ConfiguracionColumna<DestinatarioForm>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
-    { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
+    { encabezado: 'Domicilio', clave: (fila) => fila.domicilio, orden: 4 },
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
   /**

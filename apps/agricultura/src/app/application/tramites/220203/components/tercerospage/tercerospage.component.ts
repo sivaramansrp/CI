@@ -289,6 +289,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalExportador(data: DestinatarioForm): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
+    }else {
+      this.certificadoZoosanitarioStore.actualizarSelectedExdora({} as DestinatarioForm);
     }
     this.modalRef.abrir(AgregardestinatariofinalComponent);
   }

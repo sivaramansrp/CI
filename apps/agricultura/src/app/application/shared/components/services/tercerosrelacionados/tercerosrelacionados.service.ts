@@ -83,11 +83,12 @@ export class TercerosrelacionadosService {
    * @returns Un observable que emite la respuesta base con el arreglo de entidades federativas (`Catalogo[]`).
    */
   obtieneCatalogoEntidadesFederativasGeneral(
-    tramite: number
+    tramite: number,
+    cvePais: string = 'MEX'
   ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${
       this.host
-    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString())}`;
+    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString(), cvePais)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

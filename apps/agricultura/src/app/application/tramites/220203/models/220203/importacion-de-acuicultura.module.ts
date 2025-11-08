@@ -212,10 +212,10 @@ export interface Consulta {
  * @memberof importacionDeAcuiculturaModule
  * @property {FormularioMovilizacion} formularioMovilizacion - Datos del formulario de movilización de mercancías
  * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación de la mercancía
- * @property {Fila[]} mercanciaGroup - Lista de filas de mercancía del trámite
+ * @property {FilaSolicitud[]} mercanciaGroup - Lista de filas de mercancía del trámite
  * @property {TercerosrelacionadosdestinoTable[]} tercerosRelacionados - Lista de terceros relacionados al trámite
  * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos
- * @property {Fila} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
+ * @property {FilaSolicitud} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
  * @property {DestinatarioForm[]} datosForma - Lista de formularios de destinatarios
  * @property {TercerosrelacionadosdestinoTable} selectedTerceros - Tercero relacionado actualmente seleccionado
  * @property {DestinatarioForm} seletedExdora - Destinatario exportador seleccionado
@@ -223,10 +223,10 @@ export interface Consulta {
 export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     realizarGroup: RealizarGroup;
-    mercanciaGroup: Fila[];
+    mercanciaGroup: FilaSolicitud[];
   tercerosRelacionados: TercerosrelacionadosdestinoTable[];
     pagoDeDerechos:PagoDeDerechos;
-    selectedmercanciaGroupDatos:Fila;
+    selectedmercanciaGroupDatos:FilaSolicitud;
     datosForma: DestinatarioForm[];
   selectedTerceros: TercerosrelacionadosdestinoTable;
   seletedExdora: DestinatarioForm;
@@ -268,7 +268,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             fechaPago: ''
         },
         mercanciaGroup: params?.mercanciaGroup || [],
-        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
+        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as FilaSolicitud,
         tercerosRelacionados: params.tercerosRelacionados || [],
         datosForma: params.datosForma || [] as DestinatarioForm[],
         selectedTerceros: params.selectedTerceros || {} as TercerosrelacionadosdestinoTable,
@@ -342,7 +342,7 @@ export interface DatoTabla {
 
 /**
  * Interfaz para los datos de las filas de mercancía en el trámite de importación de acuicultura.
- * @interface Fila
+ * @interface FilaSolicitud
  * @memberof importacionDeAcuiculturaModule
  * @property {string} noPartida - Número de partida arancelaria.
  * @property {string} tipoRequisito - Tipo de requisito sanitario aplicable.
@@ -369,7 +369,7 @@ export interface DatoTabla {
  * @property {string} [descripcionFraccionArancelaria] - Descripción detallada de la fracción arancelaria (opcional).
  * @property {string} [umt] - Unidad de medida de tarifa (opcional).
  */
-export interface Fila {
+export interface FilaSolicitud {
   noPartida: string;
   tipoRequisito: string;
   requisito: string;
@@ -394,11 +394,20 @@ export interface Fila {
   numeroOficioCasoEspecial?:string;
   descripcionFraccionArancelaria?: string;
   umt?:string;
+  id?:number;
+  descripcionTipoRequisito?:string;
+  descripcionUso?:string;
+  descripcionUMT?:string;
+  descripcionUMC?:string;
+  descripcionPaisDeOrigen?:string;
+  descripcionPaisDeProcedencia?:string;
+  certificadoInternacionalElectronico?:string;
+  tipoDeProducto?:string;
 }
 
 /**
  * Interfaz para los datos de la tabla de solicitudes.
- * @interface FilaSolicitud
+ * @interface SolicitudData
  * @memberof importacionDeAcuiculturaModule
  * @property {string} solicitud - Número de solicitud.
  * @property {string} fechaCreacion - Fecha de creación de la solicitud.
@@ -406,11 +415,13 @@ export interface Fila {
  * @property {number} cantidad - Cantidad de mercancía.
  * @property {string} proveedor - Nombre del proveedor.
  */
-export interface FilaSolicitud {
-  fechaCreacion: string;
+export interface SolicitudData {
+  fecha_creacion: string;
   mercancia: string;
   cantidad: number;
   proveedor: string;
+  id?: number;
+  id_solicitud?: string;
 }
 /**
  * Interfaz que define la estructura de datos de catálogos utilizados en el trámite de acuicultura.

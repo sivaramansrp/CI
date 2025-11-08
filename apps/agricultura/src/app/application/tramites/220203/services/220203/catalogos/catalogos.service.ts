@@ -13,8 +13,10 @@ import { API_GET_CATALOGO_CONSULTA_PAISES,
   API_GET_CATALOGO_PUNTOS_VERIFICACION,
   API_GET_CATALOGO_MEDIO_TRANSPORTE,
   API_GET_CATALOGO_BANCOS,
-  API_GET_CATALOGO_JUSTIFICACIONES_PAGO
+  API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
+  API_GET_DATOS_SOLICITUD
 } from 'apps/agricultura/src/app/application/core/server/api-router';
+import { PrellenadoSolicitud } from '../../../models/220203/prellenado-solicitud.model';
 
 @Injectable({
   providedIn: 'root'
@@ -209,5 +211,18 @@ export class CatalogosService {
     obtieneCatalogoJustificacionesPago(tramite: number): Observable<BaseResponse<Catalogo[]>> {
       const ENDPOINT = `${this.host}${API_GET_CATALOGO_JUSTIFICACIONES_PAGO(tramite.toString())}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-    }    
+    }
+
+  /**
+   * Obtiene una solicitud prellenada basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
+   */
+  obtenSolicitudPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitud>> {
+    const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
+  }
 }

@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoData, Detalles, Fila } from '../../models/220203/importacion-de-acuicultura.module';
+import { CatalogoData, Detalles, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -49,10 +49,10 @@ export class MercanciaSolicitudComponent implements OnInit {
 
   /**
    * Datos de la mercancía almacenados en el store.
-   * @type {Fila}
+   * @type {FilaSolicitud}
    * @memberof MercanciaSolicitudComponent
    */
-  datosMercanciaStore: Fila = {} as Fila;
+  datosMercanciaStore: FilaSolicitud = {} as FilaSolicitud;
 
   /**
    * Grupo de formularios para los datos principales de la mercancía.
@@ -154,7 +154,7 @@ export class MercanciaSolicitudComponent implements OnInit {
     // this.obtenerCatalogosTransporte();
     // this.obtenerUMCCatalogosTransporte();
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as Fila;
+      this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as FilaSolicitud;
     })
   }
   /**
@@ -439,11 +439,11 @@ export class MercanciaSolicitudComponent implements OnInit {
    * 
    * @private
    * @method buildMercanciaFormGroup
-   * @param {Fila} MERCANCIA_DATA - Los datos de mercancía para inicializar el formulario
+   * @param {FilaSolicitud} MERCANCIA_DATA - Los datos de mercancía para inicializar el formulario
    * @memberof MercanciaSolicitudComponent
    * @returns {FormGroup} El grupo de formularios construido con validaciones
    */
-  private buildMercanciaFormGroup(MERCANCIA_DATA: Fila): FormGroup {
+  private buildMercanciaFormGroup(MERCANCIA_DATA: FilaSolicitud): FormGroup {
     if (MERCANCIA_DATA.fraccionArancelaria !== undefined && MERCANCIA_DATA.fraccionArancelaria !== '') {
       this.getNicoFraccionArancelariaLista(MERCANCIA_DATA.fraccionArancelaria);
     }
@@ -519,9 +519,9 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   agregarFila(): void {
-    const NUEVO_DETALLE: Fila = this.mercanciaGroup.getRawValue(); 
+    const NUEVO_DETALLE: FilaSolicitud = this.mercanciaGroup.getRawValue();
     const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
-    let FILTERED_VALOR: Fila[] = [];
+    let FILTERED_VALOR: FilaSolicitud[] = [];
     
     if (this.datosMercanciaStore) {
       FILTERED_VALOR = ESTADO_ACTUAL.filter(
