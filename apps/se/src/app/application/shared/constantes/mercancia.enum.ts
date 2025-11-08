@@ -193,7 +193,7 @@ export const MARCA_IDS = [110207, 110208];
  * Identificadores correspondientes a las unidades de medida utilizadas para la comercialización.
  * Estos valores se emplean para validar o asociar mercancías con su unidad de medida comercial.
  */
-export const UNIDAD_MEDIDA_COMERCIALIZACION_IDS = [110221,110202];
+export const UNIDAD_MEDIDA_COMERCIALIZACION_IDS = [110221];
 
 /**
  * @description
