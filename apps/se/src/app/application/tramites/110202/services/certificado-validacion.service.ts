@@ -36,6 +36,7 @@ export class CertificadoValidacionService {
    */
   private _procedureNo: string = '';
 
+  /** Constructor del servicio CertificadoValidacionService */
   constructor(
     private http: HttpClient,
     public tramite110202Store: Tramite110202Store,
@@ -305,6 +306,11 @@ getAllState(): Observable<TramiteState> {
     );
   }
 
+  /**
+    * Recupera la lista de "Mercancías Seleccionadas" desde un archivo JSON.
+    * @returns {Observable<SeleccionadasTabla[]>} Un observable que contiene un array de objetos SeleccionadasTabla.
+    * @throws Lanzará un error si la solicitud HTTP falla.
+    */
   public getSolicitudesDataTabla(): Observable<SeleccionadasTabla[]> {
     return this.http.get<SeleccionadasTabla[]>('assets/json/110201/mercancia-seleccionadas.json').pipe(
       catchError((error) => {
@@ -363,9 +369,9 @@ getAllState(): Observable<TramiteState> {
         RESULT.push({
           id: ITEM.id,
           fraccion_arancelaria: ITEM.fraccionArancelaria,
-          cantidad: ITEM.cantidad,
+          cantidad: ITEM.cantidad ? Math.floor(Number(ITEM.cantidad)) : 0,
           unidad_medida: ITEM.unidadMedida,
-          valor_mercancia: ITEM.valorMercancia,
+          valor_mercancia: ITEM.valorMercancia ? Math.floor(Number(ITEM.valorMercancia)) : 0,
           nombreTecnico: ITEM.nombreTecnico,
           nombre_comercial: ITEM.nombreComercial,
           registro_producto: ITEM.numeroDeRegistrodeProductos,
@@ -411,6 +417,7 @@ getAllState(): Observable<TramiteState> {
         mercancias_seleccionadas: this.buildMercanciaSeleccionadas(item.mercanciaTabla),
       };
     }
+    
     /** Construye el objeto destinatario a partir del estado del trámite TramiteState. */
     buildDestinatario(data: TramiteState): unknown {
       return {

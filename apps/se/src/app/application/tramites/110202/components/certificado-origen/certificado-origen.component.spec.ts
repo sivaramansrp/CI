@@ -87,7 +87,7 @@ describe('CertificadoOrigenComponent', () => {
     component.setValoresStore({});
   });
 
-  it('should run #conseguirDisponiblesDatos()', async () => {
+  it('should run #buscarMercancias()', async () => {
     component.certificadoState = component.certificadoState || {};
     component.certificadoState.formCertificado = {
       'entidadFederativa': {},
@@ -97,7 +97,7 @@ describe('CertificadoOrigenComponent', () => {
     component.solicitudService.buscarMercanciasCert = jest.fn().mockReturnValue(observableOf({}));
     component.store = component.store || {};
     component.store.setDisponsiblesDatos = jest.fn();
-    component.conseguirDisponiblesDatos();
+    component.buscarMercancias();
   });
 
   it('should run #tipoEstadoSeleccion()', async () => {
