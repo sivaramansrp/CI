@@ -7,7 +7,12 @@
   <ng-template #agregarDestinatario>
     <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
   </ng-template>
-
+   @if(mensajeDeError){
+    <ng-alert
+      [CONTENIDO]="mensajeDeError"
+      [CUSTOMECLASS]="'alert-danger text-center'"
+    ></ng-alert>
+  }
   <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -146,7 +151,7 @@
       </div>
     </div>
     }
-     @if(agregarDestinatarioFinal?.get('tipoPersona')?.value ===
+     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
     tipoPersona.MORAL || agregarDestinatarioFinal.get('tipoPersona')?.value === undefined) {
     <div class="row">
       <div class="col-md-8">

@@ -32,36 +32,18 @@ export interface DocumentoProcesadoResponse {
 }
 
 export interface DocumentoProcesado {
-  idDocumento: number;
+  id_documento: number;
   nombre: string;
-  tipoDocumento: DocumentoTipo;
-  persona: PersonaDocumento;
-  estadoDocumento: string;
-  fechaCreacion: string;
-  inicioVigencia: string;
-  finVigencia: string;
-  rutaArchivo: string;
-  firma: Firma;
-  mensajesDigitalizacion: string[];
-  rolCapturista: string;
-  mensajeGuardado: string;
-  documentoUuid: string;
-  edocument: string;
-  cargaEstadoKafka:string;
-}
-
-export interface DocumentoTipo {
-  idTipoDocumento: number;
-  descripcion: string | null;
-}
-
-export interface PersonaDocumento {
-  claveUsuario: string;
-}
-
-export interface Firma {
-  cadenaOriginal: string;
-  fechaFirma: string;
+  estado_documento: string;
+  fecha_creacion: string;
+  inicio_vigencia: string;
+  fin_vigencia: string;
+  ruta_archivo: string;
+  e_documento: string;
+  mensaje_guardado: string;
+  documento_uuid: string;
+  carga_estado_kafka: string;
+  cadena_original: string;
 }
 
 export interface Usuario {

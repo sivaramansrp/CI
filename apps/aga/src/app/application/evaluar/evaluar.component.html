@@ -49,7 +49,7 @@
                                 (keydown.space)="seleccionaTabRequerimiento(1)" role="button" tabindex="0">Capturar
                                 requerimiento</a>
                         </li>
-                        <li [ngClass]="indiceDictamen === 2 ? 'active' : ''">
+                        <li [ngClass]="alcanceRequerimiento === REQ_TIPO_DATOS ? 'disabled' : indiceDictamen === 2 ? 'active' : ''">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
                                 (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Seleccionar
@@ -68,8 +68,10 @@
                         </app-capturar-requerimiento>
                         }
                         @case (2) {
-                        <app-solicitar-documentos 
-                        [isSegundaTabla]="false">
+                        <app-solicitar-documentos [isSegundaTabla]="showSegundaTabla"
+                            [documentosEspecificos]="documentosEscpecificos"
+                            [documentosIniciales]="listadoDocumentosGuardados"
+                            (documentosActualizados)="onDocumentosActualizados($event)">
                         </app-solicitar-documentos>
                         }
                         }

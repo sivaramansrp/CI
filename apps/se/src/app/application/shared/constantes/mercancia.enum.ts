@@ -80,22 +80,22 @@ export const FRACCION_ARANCELARIA_IDS = [
 /**
  * IDs de procedimientos para la clasificación NALADI.
  */
-export const CLASIFICACION_NALADI_IDS = [110204, 110223];
+export const CLASIFICACION_NALADI_IDS = [110204];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 1993.
  */
-export const CLASIFICACION_NALADISA_1993_IDS = [110204, 110223];
+export const CLASIFICACION_NALADISA_1993_IDS = [110204];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 1996.
  */
-export const CLASIFICACION_NALADISA_1996_IDS = [110204, 110223];
+export const CLASIFICACION_NALADISA_1996_IDS = [110204];
 
 /**
  * IDs de procedimientos para la clasificación NALADISA 2002.
  */
-export const CLASIFICACION_NALADISA_2002_IDS = [110204, 110223];
+export const CLASIFICACION_NALADISA_2002_IDS = [110204];
 
 /**
  * IDs de procedimientos para el campo “Número de factura de referencia”.
@@ -110,7 +110,7 @@ export const N_FACTURA_IDS = [110205, 110212,110201,110202, 110207, 110208, 1102
 /**
  * IDs de procedimientos para el campo “Norma de origen”.
  */
-export const NORMA_ORIGEN_IDS = [110204,110223];
+export const NORMA_ORIGEN_IDS = [110204, ];
 
 /**
  * IDs de procedimientos para el campo “Nombre en inglés”.
@@ -141,14 +141,13 @@ export const CRITERIO_PARA_TRATO_PREFERENCIAL_IDS = [110222, 110214, 110221];
  * @type {number[]}
  */
 export const VALOR_MERCANCIA_IDS = [
-  110204, 110205, 110212,110201,110202, 110222, 110207, 110208, 110214, 110217, 110216, 110221, 110223, 110211
-];
+  110204, 110205, 110212,110201, 110222, 110207, 110208, 110214, 110217, 110216, 110221, 110223, 110211];
 
 /**
  * Identificadores asociados al valor del contenido regional.
  * @type {number[]}
  */
-export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214, 110221,110223];
+export const VALOR_CONTENIDO_REGIONAL_IDS = [110222, 110214, 110221, ];
 
 /**
  * Identificadores asociados a la fecha de la factura.
@@ -160,7 +159,7 @@ export const FECHA_FACTURA_IDS = [110204, 110205, 110212,110201,110202, 110207, 
  * Identificadores asociados a la fecha de la factura de referencia.
  * @type {number[]}
  */
-export const FECHA_FACTURA_REFERENCIA_IDS = [110221, 110222, 110223];
+export const FECHA_FACTURA_REFERENCIA_IDS = [110221, 110222];
 
 /**
  * Identificadores asociados al tipo de factura.
@@ -217,7 +216,7 @@ export const REQUIRED_FECHA_FACTURA: number[] = [110204, 110205, 110212,110201,1
 /**
  * IDs de procedimientos en los que el campo “Cantidad” es obligatorio.
  */
-export const REQUIRED_CANTIDAD: number[] = [110204, 110205, 110212,110201,110202, 110222, 110211, 110208, 110207];
+export const REQUIRED_CANTIDAD: number[] = [110204, 110205, 110212,110201, 110222, 110211, 110208, 110207, 110223];
 
 /**
  * IDs de procedimientos en los que el campo “UMC” (Unidad de Medida Comercial) es obligatorio.
@@ -228,20 +227,20 @@ export const REQUIRED_UMC: number[] = [110204, 110205, 110211, 110208, 110207];
  * IDs de procedimientos en los que el campo “Valor de mercancía” es obligatorio.
  */
 export const REQUIRED_VALOR_MERCANCIA: number[] = [
-  110204, 110205, 110212,110201,110202, 110222,110208, 110207
+  110204, 110205, 110212,110201, 110222,110208, 110207, 110223
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Complemento de descripción” es obligatorio.
  */
 export const REQUIRED_COMPLEMENTO_DESCRIPCION: number[] = [
-  110204, 110205, 110212,110201,110202, 110222, 110211, 110208, 110207
+  110204, 110205, 110212,110201, 110222, 110211, 110208, 110207, 110223
 ];
 
 /**
  * IDs de procedimientos en los que el campo “Número de factura” es obligatorio.
  */
-export const REQUIRED_NUMERO_FACTURA: number[] = [110212,110201,110202, 110211, 110208, 110207];
+export const REQUIRED_NUMERO_FACTURA: number[] = [110212,110201, 110211, 110208, 110207, 110223];
 
 /**
  * IDs de procedimientos en los que el campo “Tipo de factura” es obligatorio.
@@ -261,4 +260,4 @@ export const FECHA_DE_PAGO: number[] = [110211];
 /**
  * IDs de procedimientos en los que el campo “Mercancías seleccionadas” es obligatorio.
  */
-export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207,110212,110201,110202, 110211];
+export const MERCANCIA_SELECCIONADAS_REQUIRED = [110207,110212,110201, 110211, 110223];

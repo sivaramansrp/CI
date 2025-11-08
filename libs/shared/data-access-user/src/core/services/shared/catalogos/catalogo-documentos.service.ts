@@ -1,4 +1,4 @@
-import { API_GET_DOCUMENTOS130118, API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../servers/api-router";
+import { API_GET_DOCUMENTOS_OBLIGATORIOS, API_GET_DOCUMENTOS_SOLICITUD, TRAMITE } from "../../../servers/api-router";
 import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
@@ -41,16 +41,16 @@ export class CatalogoDocumentosService {
      * @param idSolicitud ID de la solicitud (opcional).
      * @returns Observable con la respuesta del catálogo de documentos.
      */
-    getDocumentosSolicitud130118(especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
+    getDocumentosSolicitud(tramite: number, especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
         let params = new HttpParams().set('especifico', String(especifico));
 
         if (idSolicitud) {
             params = params.set('idSolicitud', idSolicitud);
         }
 
-        const URL = `${this.host}/${API_GET_DOCUMENTOS130118}`;
+        const ENDPOINT = `${this.host}/${API_GET_DOCUMENTOS_SOLICITUD(tramite.toString())}`;
 
-        return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
+        return this.http.get<CatalogoDocumentosResponse>(ENDPOINT, { params }).pipe(
             map((response) => response),
             catchError((error) => {
                 console.error('Error en getDocumentosSolicitud:', error);
@@ -58,6 +58,4 @@ export class CatalogoDocumentosService {
             })
         );
     }
-
-
 }
