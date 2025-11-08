@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, ERROR_FORMA_ALERT, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, doDeepCopy, ERROR_FORMA_ALERT, esValidObject, getValidDatos, JSONResponse, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PasoFirmaComponent,WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
@@ -85,7 +85,10 @@ export class CartificadoValidacionPageComponent implements OnDestroy {
    * Se utiliza para interactuar con el wizard y controlar su flujo (pasar a siguiente paso, ir al anterior, etc.).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
+ /**
+ * Estado del tramite Folio
+ */
+  public folioTemporal: number = 0;
   
   /**
    * URL de la página actual.
@@ -279,7 +282,7 @@ return arr.map((item: any) => ({
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */
-  guardar(item: any): void {
+     guardar(item: TramiteState): Promise<JSONResponse> {
     const MERCANCIA_SELECCIONADAS = this.buildMercanciaSeleccionadas(item.mercanciaSeleccionadasTablaData);
     const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
@@ -304,60 +307,70 @@ return arr.map((item: any) => ({
         }
       },
       certificado: {
-        tratado_acuerdo: item.tratado || '',
-        pais_bloque: item.pais,
-        fraccion_arancelaria: item.fraccionArancelaria,
-        registro_producto: item.registroProducto,
-        nombre_comercial: item.nombreComercial,
-        fecha_inicio: item.fechaFinal,
-        fecha_fin: item.fechaInicial,
-        numero_letra: item.numeroLetra1,
+        tratado_acuerdo:  item.formCertificado['tratadoAcuerdoForm'] || '',
+        pais_bloque:  item.formCertificado['paisBloqueForm'] || '',
+        fraccion_arancelaria:  item.formCertificado['fraccionArancelariaForm'] || '',
+        registro_producto: item.formCertificado['registroProductoForm'] || '',
+        nombre_comercial:  item.formCertificado['nombreComercialForm'] || '',
+        fecha_inicio:  item.formCertificado['fechaInicioForm'] || '',
+        fecha_fin: item.formCertificado['fechaFinForm'] || '',
+        numero_letra: item.formCertificado['numeroLetra1'] || '',
         calle:item.calle1,
         mercancias_seleccionadas: MERCANCIA_SELECCIONADAS
       },
  
       destinatario: {
-        nombre: item.formDatosDelDestinatario.nombres,
-        primer_apellido: item.formDatosDelDestinatario.primerApellido,
-        segundo_apellido: item.formDatosDelDestinatario.segundoApellido,
-        numero_registro_fiscal: item.formDatosDelDestinatario.numeroDeRegistroFiscal,
-        razon_social: item.formDatosDelDestinatario.razonSocial,
+        nombre: item.formDatosDelDestinatario['nombres'],
+        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
+        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
+        numero_registro_fiscal: item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
+        razon_social: item.formDatosDelDestinatario['razonSocial'],
         domicilio: {
-          ciudad_poblacion_estado_provincia: item.formDestinatario.ciudad,
-          calle: item.formDestinatario.calle,
-          numero_letra: item.formDestinatario.numeroLetra,
-          lada: item.formDestinatario.lada,
-          telefono: item.formDestinatario.telefono,
-          fax: item.formDestinatario.fax,
-          correo_electronico: item.formDestinatario.correoElectronico,
-          pais_destino: item.formDestinatario.paisDestin
+          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
+          calle: item.formDestinatario['calle'],
+          numero_letra: item.formDestinatario['numeroLetra'],
+          lada: item.formDestinatario['lada'],
+          telefono: item.formDestinatario['telefono'],
+          fax: item.formDestinatario['fax'],
+          correo_electronico: item.formDestinatario['correoElectronico'],
+          pais_destino: item.formDestinatario['paisDestin']
         },
         medio_transporte: item.medioDeTransporteSeleccion.clave
 
       },
  
       datos_del_certificado: {
-        observaciones: item.formDatosCertificado.observacionesDates,
-        precisa: item.formDatosCertificado.precisaDates,
-        presenta: item.formDatosCertificado.precisaDates,
-        idioma: item.formDatosCertificado.idiomaDates,
+        observaciones: item.formDatosCertificado['observacionesDates'],
+        precisa: item.formDatosCertificado['precisaDates'],
+        presenta: item.formDatosCertificado['precisaDates'],
+        idioma: item.formDatosCertificado['idiomaDates'],
         representacion_federal: {
-          entidad_federativa: item.formDatosCertificado.EntidadFederativaDates,
-          representacion_federal: item.formDatosCertificado.representacionFederalDates
+          entidad_federativa: item.formDatosCertificado['EntidadFederativaDates'],
+          representacion_federal: item.formDatosCertificado['representacionFederalDates']
         },
         desea_obtener_certificado: "true",
         justificacion: "nbhh"
       }
     };
  
-    this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
-          this.tramite110202Store.setIdSolicitud(response.datos.id_solicitud || 0);
-          this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-        }
-      },
-    });
+        return new Promise((resolve, reject) => {
+                  this.certificadoValidacionService.guardarDatosPost(PAYLOAD).subscribe(response => {
+                    const API_RESPONSE = doDeepCopy(response);
+                    if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+                      if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
+                         this.folioTemporal = API_RESPONSE.datos.id_solicitud;
+                        this.tramite110202Store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
+                        this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+                      } else {
+                        this.tramite110202Store.setIdSolicitud(0);
+                      }
+                    }
+                    resolve(response);
+                  }, error => {
+                    reject(error);
+                  });
+                  });
+         }
   }
 
-}
+

@@ -313,17 +313,23 @@ getAllState(): Observable<TramiteState> {
     );
   }
 
-  buscarMercanciasCert(body: any): Observable<any> {
-    return this.httpService.post<any>(this.apiRoutes.BUSCAR, { body: body });
+  /**
+   * 
+   * @param body - Objeto que contiene los datos para buscar mercancías.
+   * @returns 
+   */
+  buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(this.apiRoutes.BUSCAR, { body: body });
   }
 
-/**
- * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
- * 
- * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
- * @returns Observable con la respuesta de la solicitud POST.
- */
-guardarDatosPost(body: any): Observable<any> {
-  return this.httpService.post<any>(this.apiRoutes.GUARDAR, { body: body });
-}
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(this.apiRoutes.GUARDAR, { body: body });
+  }
+
 }

@@ -2,7 +2,7 @@ import { ColumnasTabla, SeleccionadasTabla } from '../constantes/modificacion.en
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/configuracion-columna.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 
 
@@ -103,8 +103,17 @@ export interface TramiteState {
   /** Lista de mercancías encontradas en la búsqueda */
   buscarMercancia: Mercancia[];
 
-  /** Lista de mercancías mostradas en la tabla */
-  mercanciaTabla: Mercancia[];
+    /**
+     * @description
+     * Tabla que contiene las mercancías agregadas o registradas en el formulario.
+     */
+    mercanciaTabla: Mercancia[];
+
+   /**
+     * @description
+     * Lista de mercancías disponibles para seleccionar o procesar.
+     */
+    disponiblesDatos: Mercancia[];
 
   /** Datos generales del destinatario en formulario dinámico */
   destinatarioForm: { [key: string]: unknown };
@@ -297,6 +306,7 @@ export interface Solicitud110202State {
  * @property destinatarioForm Formulario adicional para el destinatario.
  */
 export const INITIAL_STATE: TramiteState = {
+      disponiblesDatos: [],
   numeroLetra1: '',
   calle1:'',
   mercancias_disponibles: [],
@@ -976,18 +986,42 @@ constructor() {
       buscarMercancia,
     }));
   }
-
-
   /**
- * Actualiza el estado con una nueva tabla de mercancías.
- * @param {Mercancia[]} mercanciaTabla - Un arreglo de objetos de tipo Mercancia que representa la tabla de mercancías a establecer.
- * @returns {void} - No retorna ningún valor.
- */
-  setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
     this.update((state) => ({
       ...state,
-      mercanciaTabla,
+      disponiblesDatos,
     }));
+  }
+ /**
+   * @method setmercanciaTabla
+   * @description
+   * Actualiza la tabla de mercancías en el almacén.
+   * @param mercanciaTabla Array de objetos `Mercancia` que representa la tabla de mercancías.
+   */
+  public setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((STATE) => {
+      const LISTAEXISTENTE = STATE.mercanciaTabla || [];
+      const NUEVOARTICULO = { ...mercanciaTabla[0] };
+
+      if (NUEVOARTICULO.id === 0) {
+        // Agregar nuevo elemento con una identificación generada
+        NUEVOARTICULO.id = (LISTAEXISTENTE.length || 0) + 1;
+        const UPDATEDLIST = [...LISTAEXISTENTE, NUEVOARTICULO];
+        return { ...STATE, mercanciaTabla: UPDATEDLIST };
+      }
+
+      // Actualizar el elemento existente cuando id > 0
+      const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
+        ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
+      );
+      return { ...STATE, mercanciaTabla: UPDATEDLIST };
+    });
   }
 
   /**
@@ -1267,7 +1301,7 @@ constructor() {
    * Establece el catálogo de unidades de medida comercial (UMC).
    * @param umc Lista de objetos de tipo `Catalogo`.
    */
-  public setUMC(umc: any):void {
+  public setUMC(umc: Catalogo):void {
     this.update((state) => ({
       ...state,
       umc,
@@ -1347,7 +1381,7 @@ constructor() {
    * Establece el valor de la masa bruta de la mercancía.
    * @param masaBruta Cadena que representa la masa bruta.
    */
-  public setmasabruta(masaBruta: any):void {
+  public setmasabruta(masaBruta: Catalogo[]):void {
     this.update((state) => ({
       ...state,
       masaBruta,
