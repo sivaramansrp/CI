@@ -13,6 +13,7 @@ import {
   FECHA_FACTURA_REFERENCIA_IDS,
   FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
+  MARCA_BRUTA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
   NORMA_ORIGEN_IDS,
@@ -30,6 +31,7 @@ import {
   TIPO_DE_FACTURA_IDS,
   TIPO_DE_FACTURA_REFERENCIA_IDS,
   UMC_IDS,
+  UMC_MARCA_BRUTA_IDS,
   UNIDAD_MEDIDA_COMERCIALIZACION_IDS,
   VALOR_CONTENIDO_REGIONAL_IDS,
   VALOR_MERCANCIA_IDS,
@@ -187,6 +189,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Lista de facturas disponibles.
    */
   factura: Catalogo[] = [];
+
+/**
+   * @descripcion
+   * Lista de unidades de medida y clasificación (UMC) disponibles para la marca bruta.
+   */
+  umcMarcaBrutaCatalogo: Catalogo[] = [];
 
   /**
    * @descripcion
@@ -360,6 +368,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores asociados a la marca bruta.
+   * @type {number[]}
+   */
+  MARCA_BRUTA: number[] = MARCA_BRUTA_IDS;
+
+  /**
+   * Contiene los identificadores en los que el campo "UMC Marca Bruta" es obligatorio.
+   */
+  UMC_MARCA_BRUTA: number[] = UMC_MARCA_BRUTA_IDS;
+  /**
    * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
    */
   CRITERIO_PARA_CLASIFICATION: number[] = CRITERIO_PARA_CLASIFICATION;
@@ -411,6 +429,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((s) => (this.seccionState = s));
     if (this.UNIDAD_MEDIDA_COMERCIALIZACION.includes(this.idProcedimiento)) {
       this.getUmc();
+    }
+    if (this.UMC_MARCA_BRUTA.includes(this.idProcedimiento)) {
+      this.getUumcMarcaBruta();
     }
     this.getUnidadesMedidaComercial();
     this.getTipoFactura();
@@ -522,6 +543,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       umc: [
         this.datosSeleccionados?.umc ? this.datosSeleccionados?.umc : '',
         REQUIRED_UMC.includes(this.idProcedimiento)
+          ? [Validators.required]
+          : null,
+      ],
+        marcaBruta: [
+        this.datosSeleccionados?.marcaBruta ? this.datosSeleccionados?.marcaBruta : '',
+        MARCA_IDS.includes(this.idProcedimiento)
+          ? [Validators.required]
+          : null,
+      ],
+      umcMarcaBruta: [
+        this.datosSeleccionados?.umcMarcaBruta ? this.datosSeleccionados?.umcMarcaBruta : '',
+        UMC_MARCA_BRUTA_IDS.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
@@ -773,6 +806,19 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @descripcion
+   * Actualiza el valor del control 'marcaBruta' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona una marca bruta del catálogo.
+   * 
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionUmcMarcaBruta(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      umcMarcaBruta: evento.descripcion,
+    });
+  }
+
+  /**
+   * @descripcion
    * Actualiza el valor del control 'umc' en el formulario reactivo
    * 'mercanciaForm' cuando el usuario selecciona una unidad de medida del catálogo.
    *
@@ -833,6 +879,20 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
         this.factura = res.datos ?? [];
+      });
+  }
+
+  /**
+   * @description
+   * Obtiene el catálogo de Unidades de Medida de Masa Bruta (UUMC) para la marca bruta
+   **/
+  getUumcMarcaBruta(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .unidadMasaBrutaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.umcMarcaBrutaCatalogo = res.datos ?? [];
       });
   }
 
