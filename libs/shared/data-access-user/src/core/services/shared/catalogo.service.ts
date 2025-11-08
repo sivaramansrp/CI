@@ -18,6 +18,7 @@ import {
   CATALOGO_ANOS,
   CATALOGO_BANCOS,
   CATALOGO_CLASIFICACION_PRODUCTO,
+  CATALOGO_CODIGO,
   CATALOGO_COLONIAS,
   CATALOGO_ENTIDADES_FEDERATIVAS,
   CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO,
@@ -868,6 +869,17 @@ bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de bancos.
+ *
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
+ * @see CATALOGO_BANCOS
+ */
+codigoCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveMunicipio)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 /**
  * Obtiene el catálogo de años disponibles.
  *  

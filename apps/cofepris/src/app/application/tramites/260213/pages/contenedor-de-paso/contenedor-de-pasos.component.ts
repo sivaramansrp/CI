@@ -41,6 +41,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent implements OnInit {
+      /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
   /**
    * @property {string} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
@@ -459,5 +467,27 @@ getValorIndice(e: AccionBoton): void {
       default:
         return TITULO_MENSAJE;
     }
+  }
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+  /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
   }
 }

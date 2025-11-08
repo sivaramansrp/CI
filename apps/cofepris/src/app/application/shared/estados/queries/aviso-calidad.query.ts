@@ -21,6 +21,11 @@ import { Query } from '@datorama/akita'; // Importa Query de Akita para realizar
 export class AvisocalidadQuery extends Query<SolicitudState> {
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
    * @property selectSolicitud$
    * Observable para seleccionar el estado completo de la solicitud.
    * @returns {Observable<SolicitudState>} El estado completo de la solicitud.

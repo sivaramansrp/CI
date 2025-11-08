@@ -4,38 +4,37 @@
  */
 import {
   AccionBoton,
-  AcuseComponent,
-  AnexarDocumentosComponent,
-  BodyTablaAcuse,
-  BtnContinuarComponent,
-  CATALOGOS_ID, Catalogo,
-  CatalogosService,
-  CategoriaMensaje,
-  ConsultaioQuery,
-  ConsultaioState,
-  ConsultaioStore,
-  DatosPasos,
-  DesplazarseHaciaArribaService,
-  EncabezadoRequerimientoComponent,
-  FirmaElectronicaComponent,
-  ListaPasosWizard,
-  Notificacion,
-  NotificacionesComponent,
-  PASOS_REQUERIMIENTOS,
-  RequerimientoInformacionComponent,
-  TITULO_ACUSE,
-  TXT_ALERTA_ACUSE_RECIBO,
-  TramiteFolioQueries,
-  WizardComponent,
-  base64ToHex,
-  encodeToISO88591Hex
-} from '@ng-mf/data-access-user';
+  AcuseComponent, 
+  BodyTablaAcuse, 
+  BtnContinuarComponent, 
+  CATALOGOS_ID, 
+  Catalogo, 
+  CatalogosService, 
+  CategoriaMensaje, 
+  ConsultaioQuery, ConsultaioState, 
+  ConsultaioStore, 
+  DatosPasos, 
+  DesplazarseHaciaArribaService, 
+  EncabezadoRequerimientoComponent, 
+  FirmaElectronicaComponent, 
+  ListaPasosWizard, 
+  Notificacion, 
+  NotificacionesComponent, 
+  PASOS_REQUERIMIENTOS, 
+  PasoCargaDocumentoComponent,
+  RequerimientoInformacionComponent, 
+  TITULO_ACUSE, 
+  TXT_ALERTA_ACUSE_RECIBO, 
+  TramiteFolioQueries, 
+  WizardComponent, 
+  base64ToHex, 
+  encodeToISO88591Hex} from '@ng-mf/data-access-user';
 import {
   AccuseComponentes,
   ListaComponentes,
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { AtenderRequerimientoService } from '../core/services/atender-requerimiento/atender-requerimiento.service';
 import { CommonModule } from '@angular/common';
@@ -84,12 +83,12 @@ import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/s
     ReviewersTabsComponent,
     WizardComponent,
     BtnContinuarComponent,
-    AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     AcuseComponent,
     forwardRef(() => EncabezadoRequerimientoComponent),
     forwardRef(() => RequerimientoInformacionComponent),
-    NotificacionesComponent
+    NotificacionesComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [AtenderRequerimientoService],
   templateUrl: './proceso-requerimiento.component.html',
@@ -105,6 +104,26 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Índice actual del paso en el wizard.
    */
   indice: number = 1;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+  * Indica si el botón para cargar archivos está habilitado.
+  */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /** Carga del progreso del archivo */
+  cargaEnProgreso: boolean = true;
 
   /** 
    * Datos de respuesta al iniciar un requerimiento
@@ -1232,6 +1251,71 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     if (indice === 5 && !this.yaCargoAcuses) {
       this.yaCargoAcuses = true;
       this.getAcusesResolucion();
+    }
+  }
+
+  /**
+* Método para manejar el evento de carga de documentos.
+* Actualiza el estado del botón de carga de archivos.
+*  carga - Indica si la carga de documentos está activa o no.
+* {void} No retorna ningún valor.
+*/
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+    /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+    /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+    /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de continuar en el wizard.
+   * Navega al siguiente paso o inicia la carga de archivos según el estado actual.
+   * {void} No retorna ningún valor.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onContinuarClick() {
+    if (this.seccionCargarDocumentos) {
+      this.onClickCargaArchivos();
+    } else {
+      this.wizardComponent.siguiente();
+      this.indice = this.wizardComponent.indiceActual + 1;
+      this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+      // Creamos un objeto AccionBoton como lo hacía btn-continuar
+      const ACCION: AccionBoton = {
+        valor: this.indice,
+        accion: 'cont'
+      };
+      this.getValorIndice(ACCION);
     }
   }
 

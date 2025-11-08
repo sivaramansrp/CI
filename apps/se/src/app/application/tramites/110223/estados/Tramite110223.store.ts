@@ -1,5 +1,5 @@
 import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../models/registro.model';
-import { GrupoRepresentativo, HistoricoColumnas } from '../models/certificado-origen.model';
+import { GrupoDeDirecciones, GrupoReceptor, GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/certificado-origen.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
@@ -67,7 +67,7 @@ export interface TramiteState {
   umcs: Catalogo[];
 
   /** Lista de catálogos que representan países bloqueados. */
-  paisBloques: Catalogo;
+  paisBloques: Catalogo[];
 
 
   /**
@@ -160,11 +160,34 @@ export interface TramiteState {
 
   /** Historial de productores exportador agregados. */
   agregarProductoresExportador: HistoricoColumnas[];
- 
+
+  /** Lista de mercancías disponibles */
+  disponiblesDatos: Mercancia[];
+
+  /** Lista de mercancías asociadas a los productores en el estado del trámite. */
+  mercanciaProductores: MercanciaTabla[];
+  /** Grupo receptor */
+  grupoReceptor: GrupoReceptor;
+  
+  /** Grupo de direcciones */
+  grupoDeDirecciones: {
+    ciudad: string;
+    numeroLetra: string | number;
+    lada: string | number;
+    telefono: string | number;
+    fax: string | number | null;
+    correoElectronico: string;
+    calle?: string;
+    numeroExterior?: string;
+    numeroInterior?: string;
+    colonia?: string;
+    localidad?: string;
+    municipio?: string;
+    estado?: string;
+    pais?: string;
+    cp?: string;
+  };
 }
-
-
-
 
 /**
  * Estado inicial que se utiliza para crear el store con valores por defecto.
@@ -176,7 +199,7 @@ export const INITIAL_STATE: TramiteState = {
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
   altaPlanta: [],
-  paisBloques: { id: -1, descripcion: '' },
+  paisBloques: [],
   estado: { id: -1, descripcion: '' },
   umc: { id: -1, descripcion: '' },
   umcs: [],
@@ -186,14 +209,25 @@ export const INITIAL_STATE: TramiteState = {
   entidadFederativaSeleccion: { id: -1, descripcion: '' },
   representacionFederalSeleccion: { id: -1, descripcion: '' },
    formCertificado: {
+    si: false,
     entidadFederativa: '',
-    tercerOperador: false,
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    correoElectronico: '',
+    numeroLetra: '',
+    calle: '',
   },
     formulario:{
       datosConfidencialesProductor: false,
@@ -246,6 +280,13 @@ export const INITIAL_STATE: TramiteState = {
       numeroDeRegistroFiscal: '',
       razonSocial: '',
     },
+  grupoReceptor: {
+    nombre: '',
+    apellidoPrimer: '',
+    apellidoSegundo: '',
+    numeroFiscal: '',
+    razonSocial: '',
+  },
   formDestinatario: {
       paisDestin: '',
       ciudad: '',
@@ -268,14 +309,17 @@ export const INITIAL_STATE: TramiteState = {
     },
   grupoRepresentativo: {
       lugar: '',
-      nombre: '',
+      nombreExportador: '',
       empresa: '',
       cargo: '',
       registroFiscal: '',
       telefono: '',
       fax: '',
-      correo: '',
+      correoElectronico: '',
     },
+  disponiblesDatos: [],
+  mercanciaProductores: [],
+  grupoDeDirecciones: {} as GrupoDeDirecciones,
 };
 
 /**
@@ -358,7 +402,7 @@ export class Tramite110223Store extends Store<TramiteState> {
    * Establece los bloques de países disponibles.
    * @param paisBloques Lista de catálogos de países por bloque.
    */
-  setBloque(paisBloques: Catalogo): void {
+  setBloque(paisBloques: Catalogo[]): void {
     this.update((state) => ({ ...state, paisBloques }));
   }
 
@@ -677,6 +721,23 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   }
 
   /**
+     * @method setGrupoReceptor
+     * @description Actualiza la información del receptor en el estado del trámite.
+     *
+     * Este método permite establecer los datos del receptor en el grupo receptor del estado.
+     *
+     * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
+     *
+     * @returns {void}
+     */
+    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+      this.update((state) => ({
+        ...state,
+        grupoReceptor,
+      }));
+    }
+
+  /**
    * @descripcion
    * Actualiza los datos del formulario de destinatario en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
@@ -702,6 +763,103 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
         ...values,
       },
     }));
+  }
+
+  /**
+  * @method setDatosConfidencialesProductor
+  * @description
+  * Actualiza el estado de datos confidenciales del productor en el almacén.
+  * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+  * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+   * Actualiza el nombre del grupo receptor.
+   *
+   * @param {string} nombre - Nombre del grupo receptor.
+   */
+  public setGrupoReceptorNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, nombre },
+    }));
+  }
+
+  /**
+   * Actualiza el primer apellido del grupo receptor.
+   *
+   * @param {string} apellidoPrimer - Primer apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoPrimer },
+    }));
+  }
+
+  /**
+   * Actualiza el segundo apellido del grupo receptor.
+   *
+   * @param {string} apellidoSegundo - Segundo apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoSegundo },
+    }));
+  }
+
+  /**
+   * Actualiza el número fiscal del grupo receptor.
+   *
+   * @param {string} numeroFiscal - Número fiscal del grupo receptor.
+   */
+  public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, numeroFiscal },
+    }));
+  }
+
+  /**
+   * Actualiza la razón social del grupo receptor.
+   *
+   * @param {string} razonSocial - Razón social del grupo receptor.
+   */
+  public setGrupoReceptorRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, razonSocial },
+    }));
+  }
+
+  /**
+   * @method setGrupoDeDirecciones
+   * @description
+   * Actualiza la información de las direcciones en el estado del trámite.
+   *
+   * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+   *
+   * @returns {void}
+   */
+  public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({ ...state, grupoDeDirecciones }));
   }
 
 }
