@@ -367,8 +367,15 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   MARCA: number[] = MARCA_IDS;
 
+  /**
+   * Contiene los identificadores asociados a la marca bruta.
+   * @type {number[]}
+   */
   MARCA_BRUTA: number[] = MARCA_BRUTA_IDS;
 
+  /**
+   * Contiene los identificadores en los que el campo "UMC Marca Bruta" es obligatorio.
+   */
   UMC_MARCA_BRUTA: number[] = UMC_MARCA_BRUTA_IDS;
   /**
    * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
@@ -875,6 +882,10 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
+  /**
+   * @description
+   * Obtiene el catálogo de Unidades de Medida de Masa Bruta (UUMC) para la marca bruta
+   **/
   getUumcMarcaBruta(): void {
     const TRAMITES_ID = this.idProcedimiento.toString();
     this.catalogoServices
