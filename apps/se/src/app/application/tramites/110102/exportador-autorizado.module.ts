@@ -16,6 +16,8 @@ import { TablaDinamicaComponent } from "@ng-mf/data-access-user";
 
 import { AlertComponent,AnexarDocumentosComponent,FirmaElectronicaComponent ,TituloComponent,WizardComponent} from "@ng-mf/data-access-user";
 import { BsModalService } from "ngx-bootstrap/modal";
+import { ExportadorAutorizadoComponent } from "./components/exportador-autorizado/exportador-autorizado.component";
+import { InformacionOpcionalComponent } from "./components/informacion-opcional/informacion-opcional.component";
 
 
 
@@ -40,7 +42,9 @@ import { BsModalService } from "ngx-bootstrap/modal";
     FirmaElectronicaComponent,
     AlertComponent,
     TituloComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    ExportadorAutorizadoComponent,
+    InformacionOpcionalComponent
 ],
 providers: [BsModalService],
 })

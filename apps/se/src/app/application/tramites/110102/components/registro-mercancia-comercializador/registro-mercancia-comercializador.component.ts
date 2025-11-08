@@ -55,6 +55,14 @@ mostrarDatosMercanciaProductor: boolean = false;
         clave: [{ value: '', disabled: true }],
         descripcion: [{ value: '', disabled: true }]
       }),
+      clasificacionNaladi: [{value: '', disable: true}],
+      descripcionNaladi: [{value: '', disable: true}],
+      clasificacionNaladi1993: [{value: '', disable: true}],
+      descripcionNaladi1993: [{value: '', disable: true}],
+      clasificacionNaladi1996: [{value: '', disable: true}],
+      descripcionNaladi1996: [{value: '', disable: true}],
+      clasificacionNaladi2002: [{value: '', disable: true}],
+      descripcionNaladi2002: [{value: '', disable: true}],
       unidadAdministrativaRepresentacionFederal: this.fb.group({
         clave: ['']
       })
@@ -93,6 +101,14 @@ mostrarDatosMercanciaProductor: boolean = false;
             clave: data.Formdata.fraccionArancelaria.clave,
             descripcion: data.Formdata.fraccionArancelaria.descripcion
           },
+          clasificacionNaladi: data.Formdata.clasificacionNaladi,
+          descripcionNaladi: data.Formdata.clasificacionNaladi,
+          clasificacionNaladi1993: data.Formdata.clasificacionNaladi1993,
+          descripcionNaladi1993: data.Formdata.clasificacionNaladi1993,
+          clasificacionNaladi1996: data.Formdata.clasificacionNaladi1996,
+          descripcionNaladi1996: data.Formdata.clasificacionNaladi1996,
+          clasificacionNaladi2002: data.Formdata.clasificacionNaladi2002,
+          descripcionNaladi2002: data.Formdata.clasificacionNaladi2002,
           unidadAdministrativaRepresentacionFederal: {
             clave: data.Formdata.unidadAdministrativaRepresentacionFederal.clave
           }
