@@ -1,5 +1,5 @@
-import { Personas, Solicitar } from "../models/personas";
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { Personas, Solicitar } from '../models/personas';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 /**
  * @fileoverview
@@ -35,6 +35,19 @@ export const PASOS = [
 ];
 
 /**
+ * Identificador del trámite para operaciones de comercio exterior.
+ * @const TRAMITE_ID
+ * @description Identificador único del trámite utilizado en las operaciones de comercio exterior.
+ */
+export const TRAMITE_ID = '319';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado registrada con el número temporal ${
+    numeroSolicitud ?? ''
+  }. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+
+/**
  *  Ruta relativa a los archivos JSON utilizados para las operaciones de comercio exterior.
  * @const URL
  * @description Ruta relativa a los archivos JSON utilizados para las operaciones de comercio exterior.
@@ -58,14 +71,27 @@ export const URL = '../../../../../assets/json/319/';
  *   console.log(columna.encabezado);
  * });
  */
-export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] = [
-  { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
-  { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
-  { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
-  { encabezado: 'Primer apellido', clave: (fila) => fila.apellido_paterno, orden: 4 },
-  { encabezado: 'Segundo apellido', clave: (fila) => fila.apellido_materno, orden: 5 },
-  { encabezado: 'Correo electrónico', clave: (fila) => fila.correo_electronico, orden: 6 },
-];
+export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] =
+  [
+    { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
+    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
+    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
+    {
+      encabezado: 'Primer apellido',
+      clave: (fila) => fila.apellido_paterno,
+      orden: 4,
+    },
+    {
+      encabezado: 'Segundo apellido',
+      clave: (fila) => fila.apellido_materno,
+      orden: 5,
+    },
+    {
+      encabezado: 'Correo electrónico',
+      clave: (fila) => fila.correo_electronico,
+      orden: 6,
+    },
+  ];
 
 /**
  * El orden
@@ -81,15 +107,20 @@ export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] =
  *   console.log(columna.encabezado);
  * });
  */
-export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[] = [
-  { encabezado: 'Periodo', clave: (fila) => fila.periodo, orden: 1 },
-  { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.fechas_sobre_el_periodo, orden: 2 },
-];
+export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[] =
+  [
+    { encabezado: 'Periodo', clave: (fila) => fila.periodo_desc, orden: 1 },
+    {
+      encabezado: 'Fechas sobre el periodo',
+      clave: (fila) => fila.fechas_periodo,
+      orden: 2,
+    },
+  ];
 
 /**
  * La fecha
  * @const TEXTOS
- * @description La constante `TEXTOS` contiene un mensaje de texto que indica que la fecha proporcionada no es válida 
+ * @description La constante `TEXTOS` contiene un mensaje de texto que indica que la fecha proporcionada no es válida
  * porque aún no ha concluido el período especificado.
  * @type {string}
  * @example
@@ -101,7 +132,7 @@ export const TEXTOS = `La fecha indicada NO es correcta por que aún no concluye
 /**
  * Mensaje de error para fechas que no corresponden al periodo seleccionado.
  * @const PERIODO_TEXTO
- * @description Constante que contiene un mensaje HTML indicando que las fechas proporcionadas 
+ * @description Constante que contiene un mensaje HTML indicando que las fechas proporcionadas
  * no corresponden al periodo seleccionado. El mensaje está centrado mediante CSS inline.
  * @type {string}
  * @example
@@ -125,7 +156,7 @@ export const REGISTRO_TEXTO = `<p style="text-align: center;">El registro ya fue
 /**
  * Mensaje de error para periodo final menor al inicial.
  * @const MENOR_TEXTO
- * @description Constante que contiene un mensaje HTML indicando que el periodo final 
+ * @description Constante que contiene un mensaje HTML indicando que el periodo final
  * es menor al periodo inicial. El mensaje está centrado mediante CSS inline.
  * @type {string}
  * @example
@@ -137,7 +168,7 @@ export const MENOR_TEXTO = `<p style="text-align: center;">Periodo final es meno
 /**
  * Mensaje de error para fechas de diferentes periodos.
  * @const PERIODO_ERROR
- * @description Constante que contiene un mensaje HTML indicando que se deben capturar 
+ * @description Constante que contiene un mensaje HTML indicando que se deben capturar
  * fechas del mismo periodo. El mensaje está centrado mediante CSS inline.
  * @type {string}
  * @example
@@ -155,4 +186,4 @@ export const PERIODO_ERROR = `<p style="text-align: center;">Debe capturar fecha
  * @remarks Esta constante se utiliza para aplicar una clase CSS que representa un mensaje de alerta de tipo peligro.
  * @since Versión inicial.
  */
-export const INFO_ALERT = "alert-danger";
+export const INFO_ALERT = 'alert-danger';

@@ -9,7 +9,7 @@
           <div class="col-md-4">
             <app-catalogo-select
               [catalogo]="optionsPaisList"
-              [label]="'Operación 2'"
+              [label]="'Operación'"
               [required]="true"
               id="operacion"
               formControlName="operacion"
@@ -82,6 +82,7 @@
         <div class="col-md-12">
           <div class="col-md-4">
             <app-catalogo-select
+              [markTouched]="periodoForm.get('periodo')?.touched || false"
               [catalogo]="periodoList"
               [label]="'Periodo'"
               [required]="true"

@@ -4,9 +4,8 @@
  * @param rfc - El RFC para el cual se desea obtener el tipo de operación.
  * @returns La ruta de la API como una cadena de texto.
  */
-export const API_GET_TIPO_OPERACION = (tramite: string, rfc: string): string =>
-  `sat-t${tramite}/solicitud/rfc/${rfc}/tipo-operacion`;
-
+export const API_GET_TIPO_OPERACION = (rfc: string): string =>
+  `sat-t319/solicitud/rfc/${rfc}/tipo-operacion`;
 
 /**
  * @description
@@ -15,5 +14,26 @@ export const API_GET_TIPO_OPERACION = (tramite: string, rfc: string): string =>
  * @param rfc - El RFC para el cual se desea obtener las personas.
  * @returns La ruta de la API como una cadena de texto.
  */
-export const API_GET_PERSONAS = (tramite: string, rfc: string): string =>
-  `sat-t${tramite}/solicitud/rfc/${rfc}/personas-oir-recibir-notificaciones`;
+export const API_GET_PERSONAS = (rfc: string): string =>
+  `sat-t319/solicitud/rfc/${rfc}/personas-oir-recibir-notificaciones`;
+
+/**
+ * Devuelve la ruta para obtener los períodos de un trámite específico.
+ * @param tramite - El identificador del trámite.
+ * @returns La ruta de la API como una cadena de texto.
+ */
+export const API_GET_PERIODOS = `sat-t319/catalogo/periodos-ce`;
+
+
+/**
+ * Devuelve la ruta para obtener el período histórico actual.
+ * @returns La ruta de la API como una cadena de texto.
+ */
+export const API_GET_PERIODOS_HISTORICO_ACTUAL = `sat-t319/solicitud/clave-periodo-historico-actual`;
+
+/**
+ * Devuelve la ruta para guardar una solicitud de trámite 319.
+ * @return La ruta de la API como una cadena de texto.
+ */
+export const API_POST_GUARDAR_SOLICITUD = `sat-t319/solicitud/guardar`
+

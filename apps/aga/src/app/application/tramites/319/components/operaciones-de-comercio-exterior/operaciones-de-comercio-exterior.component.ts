@@ -92,7 +92,7 @@ export class OperacionesDeComercioExterioComponent
 
   /**
    * Lista de periodos para el select.
-   * @property {PeriodoCatalogo[]} periodoList
+   * @property {Catalogo[]} periodoList
    */
   public periodoList: PeriodoCatalogo[] = [];
 
@@ -259,6 +259,7 @@ export class OperacionesDeComercioExterioComponent
     });
     this.cuerpoSolicitarTablaFila =
       this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
+    this.obtenerPeriodoHistoricoActual();
   }
 
   /**
@@ -279,7 +280,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getOperacionList(): void {
     this.operacionService
-      .obtenerTipoOperacion<Catalogo[]>('319', 'AAL981209G67')
+      .obtenerTipoOperacion<Catalogo[]>('AAL981209G67')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.optionsPaisList = data.datos || [];
@@ -292,10 +293,10 @@ export class OperacionesDeComercioExterioComponent
    */
   public getperiodoList(): void {
     this.operacionService
-      .obtenerSelectorList('periodo.json')
+      .obtenerPeriodoList<PeriodoCatalogo[]>()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
-        this.periodoList = data;
+        this.periodoList = data.datos || [];
       });
   }
 
@@ -305,7 +306,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getPersonasTablaData(): void {
     this.operacionService
-      .obtenerPersonas<Personas[]>('319', 'AAL0409235E6')
+      .obtenerPersonas<Personas[]>('AAL0409235E6')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.cuerpoPersonasTablaFila = data.datos || [];
@@ -365,7 +366,7 @@ export class OperacionesDeComercioExterioComponent
   public PeriodoError(): void {
     const SELECTEDPERIODODESC =
       this.periodoList.find(
-        (item) => item.id === Number(this.periodoForm.value.periodo)
+        (item) => item.clave === this.periodoForm.value.periodo
       )?.descripcion || '';
     if (
       this.cuerpoSolicitarTablaFila.some(
@@ -379,7 +380,7 @@ export class OperacionesDeComercioExterioComponent
     else if (
       this.cuerpoSolicitarTablaFila.some(
         (item) =>
-          item.fechas_sobre_el_periodo ===
+          item.fechas_periodo ===
           this.periodoForm.value.periodoInicial +
             ' al ' +
             this.periodoForm.value.periodoFinal
@@ -411,11 +412,21 @@ export class OperacionesDeComercioExterioComponent
     const CURRENTMONTH = NOW.getMonth() + 1;
     const CURRENTYEAR = NOW.getFullYear();
     const PERIODOSELECCIONADO = this.periodoList.find(
-      (item) => item.id === Number(this.periodoForm.value.periodo)
+      (item) => item.clave === this.periodoForm.value.periodo
+    );
+    const INITIALSELECTED = this.obtieneAnioDelPeriodo(
+      PERIODOSELECCIONADO?.descripcion || '',
+      true
+    );
+    const FINALSELECTED = this.obtieneAnioDelPeriodo(
+      PERIODOSELECCIONADO?.descripcion || '',
+      false
     );
 
     if (
       OperacionesDeComercioExterioComponent.isPeriodoOutOfRange(
+        INITIALSELECTED,
+        FINALSELECTED,
         PERIODOSELECCIONADO,
         INITIALYEAR,
         FINALYEAR
@@ -445,20 +456,19 @@ export class OperacionesDeComercioExterioComponent
       this.textos = MENOR_TEXTO;
     } else {
       this.cuerpoSolicitarTablaFila.push({
-        id:
-          this.cuerpoSolicitarTablaFila.length > 0
-            ? (this.cuerpoSolicitarTablaFila[
-                this.cuerpoSolicitarTablaFila.length - 1
-              ]?.id ?? 0) + 1
-            : 1,
-        periodo:
+        id_periodo_solicitud: null,
+        id_solicitud: null,
+        periodo_desc:
           this.periodoList.find(
-            (item) => item.id === Number(this.periodoForm.value.periodo)
+            (item) => item.clave === this.periodoForm.value.periodo
           )?.descripcion || '',
-        fechas_sobre_el_periodo:
+        fechas_periodo:
           this.periodoForm.value.periodoInicial +
           ' al ' +
           this.periodoForm.value.periodoFinal,
+        periodo_inicio: this.periodoForm.value.periodoInicial,
+        periodo_fin: this.periodoForm.value.periodoFinal,
+        periodo: this.periodoForm.value.periodo,
       });
       this.modalEmergente = true;
       this.abrirAlertaSeleccionModal();
@@ -471,24 +481,28 @@ export class OperacionesDeComercioExterioComponent
    * Verifica si el periodo seleccionado está fuera del rango permitido.
    * Compara los años inicial y final con los límites del periodo seleccionado.
    * @method isPeriodoOutOfRange
+   * @param {number} INITIALSELECTED - Año inicial del periodo seleccionado
+   * @param {number} FINALSELECTED - Año final del periodo seleccionado
    * @param {PeriodoCatalogo | undefined} PERIODOSELECCIONADO - El periodo seleccionado del catálogo
    * @param {number} INITIALYEAR - Año inicial del periodo a validar
    * @param {number} FINALYEAR - Año final del periodo a validar
    * @returns {boolean} True si el periodo está fuera de rango, false en caso contrario
    */
   public static isPeriodoOutOfRange(
+    INITIALSELECTED: number,
+    FINALSELECTED: number,
     PERIODOSELECCIONADO: PeriodoCatalogo | undefined,
     INITIALYEAR: number,
     FINALYEAR: number
   ): boolean {
     return Boolean(
       PERIODOSELECCIONADO &&
-        typeof PERIODOSELECCIONADO.inicial === 'number' &&
-        typeof PERIODOSELECCIONADO.final === 'number' &&
-        (INITIALYEAR < PERIODOSELECCIONADO.inicial ||
-          INITIALYEAR > PERIODOSELECCIONADO.final ||
-          FINALYEAR > PERIODOSELECCIONADO.final ||
-          FINALYEAR < PERIODOSELECCIONADO.inicial)
+        typeof INITIALSELECTED === 'number' &&
+        typeof FINALSELECTED === 'number' &&
+        (INITIALYEAR < INITIALSELECTED ||
+          INITIALYEAR > FINALSELECTED ||
+          FINALYEAR > FINALSELECTED ||
+          FINALYEAR < INITIALSELECTED)
     );
   }
 
@@ -622,7 +636,7 @@ export class OperacionesDeComercioExterioComponent
         this.cuerpoSolicitarTablaFila?.filter(
           (item) =>
             this.listaDeTablasSeleccionadas?.some(
-              (seleccionado) => seleccionado?.id === item?.id
+              (seleccionado) => seleccionado?.periodo === item?.periodo
             ) === false
         ) ?? [];
       if (this.cuerpoSolicitarTablaFila?.length === 0) {
@@ -689,6 +703,15 @@ export class OperacionesDeComercioExterioComponent
     });
   }
 
+  /**
+   * @method formatPeriodoFinal
+   * @description
+   * Formatea automáticamente el campo de periodo inicial agregando una barra diagonal (/)
+   * después de ingresar 2 dígitos para seguir el formato MM/YYYY.
+   *
+   * @param {Event} event - Evento del input que contiene el valor del campo.
+   * @returns {void}
+   */
   formatPeriodoFinal(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     let value = INPUT.value.replace(/\D/g, ''); // Remove non-digits
@@ -703,6 +726,18 @@ export class OperacionesDeComercioExterioComponent
     });
   }
 
+  obtenerPeriodoHistoricoActual(): void {
+    this.operacionService
+      .obtenerPeriodoHistoricoActual<Catalogo[]>()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tramite319Store.actualizarCampo(
+          'clave_per_historico_actual',
+          data.datos?.[0]?.clave || ''
+        );
+      });
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa el `Subject` para evitar fugas de memoria en las suscripciones.
@@ -711,6 +746,38 @@ export class OperacionesDeComercioExterioComponent
   public ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Obtiene el año inicial o final del periodo dado.
+   * @method obtieneAnioDelPeriodo
+   * @param {string} periodo - Descripción del periodo.
+   * @param {boolean} esInicial - Indica si se desea obtener el año inicial (true) o final (false).
+   * @returns {number} El año inicial o final del periodo.
+   * @throws {Error} Si el formato del periodo no es reconocido o si no se encuentra el año inicial.
+   */
+  public obtieneAnioDelPeriodo(periodo: string, esInicial: boolean): number {
+    const CURRENT_YEAR = new Date().getFullYear();
+    const NORMALIZED = periodo.toLowerCase();
+
+    if (NORMALIZED.includes('a la fecha')) {
+      const MATCH = periodo.match(/\d{4}/);
+      if (!MATCH) {
+        throw new Error('No se encontró año inicial');
+      }
+
+      const START_YEAR = parseInt(MATCH[0], 10);
+      return esInicial ? START_YEAR : CURRENT_YEAR;
+    }
+
+    const MATCH = periodo.match(/(\d{4}).*?(\d{4})/);
+    if (MATCH) {
+      const START_YEAR = parseInt(MATCH[1], 10);
+      const END_YEAR = parseInt(MATCH[2], 10);
+      return esInicial ? START_YEAR : END_YEAR;
+    }
+
+    throw new Error('Formato no reconocido');
   }
 }
 

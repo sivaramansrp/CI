@@ -56,7 +56,7 @@ export interface Personas {
  * Cada objeto de esta interfaz define la información de una solicitud.
  * @property {number} [id] - Identificador único opcional de la solicitud.
  * @property {string} periodo - Periodo de tiempo asociado a la solicitud.
- * @property {string} fechas_sobre_el_periodo - Fechas relacionadas con el periodo de la solicitud.
+ * @property {string} fechas_periodo - Fechas relacionadas con el periodo de la solicitud.
  */
 export interface Solicitar {
   /**
@@ -64,7 +64,14 @@ export interface Solicitar {
    * @property {number} [id]
    * @description Identificador único de la solicitud.
    */
-  id?: number;
+  id_solicitud: number | null;
+
+  /**
+   * Identificador del periodo.
+   * @property {number} id_periodo
+   * @description Identificador del periodo.
+   */
+  id_periodo_solicitud: number | null;
   /**
    * Periodo de tiempo para la solicitud.
    * @property {string} periodo
@@ -73,8 +80,28 @@ export interface Solicitar {
   periodo: string;
   /**
    *  Fechas relacionadas con el periodo de la solicitud.
-   * @property {string} fechas_sobre_el_periodo
+   * @property {string} fechas_periodo
    * @description Fechas relacionadas con el periodo de la solicitud.
    */
-  fechas_sobre_el_periodo: string;
+  fechas_periodo: string;
+
+  /**
+   * Fecha de inicio del periodo.
+   * @property {string} periodo_inicio
+   * @description Fecha de inicio del periodo.
+   */
+  periodo_inicio: string;
+  /**
+   * Fecha de fin del periodo.
+   * @property {string} periodo_fin
+   * @description Fecha de fin del periodo.
+   */
+  periodo_fin: string;
+
+  /**
+   * Descripción del periodo.
+   * @property {string} periodo_desc
+   * @description Descripción del periodo.
+   */
+  periodo_desc: string;
 }

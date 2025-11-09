@@ -1,15 +1,17 @@
-import { API_GET_PERSONAS, API_GET_TIPO_OPERACION } from '../server/api-routes';
 import {
-  COMUN_URL,
-  RespuestaCatalogos,
-} from '@libs/shared/data-access-user/src';
-import {
-  FinalDataToSend,
-  PeriodoCatalogo,
-} from '../models/tramite319-state.model';
-import { Observable, map } from 'rxjs';
+  API_GET_PERIODOS,
+  API_GET_PERIODOS_HISTORICO_ACTUAL,
+  API_GET_PERSONAS,
+  API_GET_TIPO_OPERACION,
+  API_POST_GUARDAR_SOLICITUD,
+} from '../server/api-routes';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { HttpClient } from '@angular/common/http';
+import { COMUN_URL } from '@libs/shared/data-access-user/src';
+import { FinalDataToSend } from '../models/tramite319-state.model';
+import { GuardarResponse } from '../models/guardar-solicitud-response';
+import { GuardarSolicitudT319 } from '../models/guardar-solicitud.model';
 import { Injectable } from '@angular/core';
 import { Tramite319Store } from '../estados/tramite319Store.store';
 
@@ -53,29 +55,21 @@ export class OperacionService {
   ) {}
 
   /**
-   * Obtiene una lista de catálogos desde un archivo específico.
-   *
-   * @param fileName - Nombre del archivo que contiene los datos del catálogo.
-   * @returns Un observable que emite una lista de catálogos.
+   * Obtiene una lista de períodos desde el backend.
+   * @returns Un observable que emite una lista de períodos.
    */
-  obtenerSelectorList(fileName: string): Observable<PeriodoCatalogo[]> {
-    const BASEURL = this.url + fileName;
-    return this.http
-      .get<RespuestaCatalogos>(BASEURL)
-      .pipe(map((response) => response.data));
+  obtenerPeriodoList<T>(): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.url}${API_GET_PERIODOS}`;
+    return this.http.get<BaseResponse<T>>(ENDPOINT);
   }
 
   /**
    * Obtiene el tipo de operación para un trámite específico y RFC dado.
-   * @param tramite - El identificador del trámite.
    * @param rfc - El RFC para el cual se desea obtener el tipo de operación.
    * @returns Un observable que emite el tipo de operación.
    */
-  obtenerTipoOperacion<T>(
-    tramite: string,
-    rfc: string
-  ): Observable<BaseResponse<T>> {
-    const ENDPOINT = `${this.url}${API_GET_TIPO_OPERACION(tramite, rfc)}`;
+  obtenerTipoOperacion<T>(rfc: string): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.url}${API_GET_TIPO_OPERACION(rfc)}`;
     return this.http.get<BaseResponse<T>>(ENDPOINT);
   }
 
@@ -86,14 +80,21 @@ export class OperacionService {
    * @param tramite
    * @returns Un observable que emite una lista de personas.
    */
-  obtenerPersonas<T>(
-    tramite: string,
-    rfc: string
-  ): Observable<BaseResponse<T>> {
-    const BASEURL = `${this.url}${API_GET_PERSONAS(tramite, rfc)}`;
+  obtenerPersonas<T>(tramite: string): Observable<BaseResponse<T>> {
+    const BASEURL = `${this.url}${API_GET_PERSONAS(tramite)}`;
     return this.http
       .get<BaseResponse<T>>(BASEURL)
       .pipe(map((response) => response));
+  }
+
+  /**
+   * @description
+   * Obtiene el período histórico actual desde el backend.
+   * @returns Un observable que emite el período histórico actual.
+   */
+  obtenerPeriodoHistoricoActual<T>(): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.url}${API_GET_PERIODOS_HISTORICO_ACTUAL}`;
+    return this.http.get<BaseResponse<T>>(ENDPOINT);
   }
   /**
    * @description
@@ -109,6 +110,36 @@ export class OperacionService {
   ): Observable<FinalDataToSend> {
     const BASEURL = this.url + fileName;
     return this.http.get<FinalDataToSend>(BASEURL);
+  }
+
+  /**
+   * @description
+   * Envía una solicitud POST al endpoint `/solicitud` del backend.
+   * @returns
+   */
+  postSolicitud(
+    solicitud: GuardarSolicitudT319
+  ): Observable<BaseResponse<GuardarResponse>> {
+    const ENDPOINT = `${this.url}${API_POST_GUARDAR_SOLICITUD}`;
+    return this.http
+      .post<BaseResponse<GuardarResponse>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
   }
   /**
    * @method actualizarEstadoFormulario
@@ -129,7 +160,7 @@ export class OperacionService {
    * this.actualizarEstadoFormulario(nuevosDatos);
    */
   actualizarEstadoFormulario(resp: FinalDataToSend): void {
-    this.solocitud319Service.actualizarOperacion(resp.operacion);
+    this.solocitud319Service.actualizarOperacion(resp.numero_registro);
     this.solocitud319Service.actualizarTodo(resp);
   }
 }
