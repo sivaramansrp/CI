@@ -5,21 +5,29 @@
       </div>
     </div>
 
-  
+    <!-- Error message for search validation -->
     <div class="col-md-12 mt-2" *ngIf="showBuscarError">
-<ng-alert [CONTENIDO]="alertContent" [CUSTOMECLASS]="infoAlert"></ng-alert>
-      </div>
+      <ng-alert [CONTENIDO]="alertContent" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+
+    <!-- Error message for form validation -->
+    <div class="col-md-12 mt-2" *ngIf="showValidationError">
+      <ng-alert [CONTENIDO]="validationAlertContent" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
 
     <app-wizard [listaPasos]="pasos"></app-wizard>
    @switch (indice) {
     @case (1) {
-     <app-solicitante-entidad (buscarIntento)="onBuscarIntento($event)"></app-solicitante-entidad>
+     <app-solicitante-entidad 
+       (buscarIntento)="onBuscarIntento($event)"
+       (formValidation)="onFormValidation($any($event))">
+     </app-solicitante-entidad>
      }
     @case (2) {
-   <app-paso-dos></app-paso-dos>
+   <app-paso-dos (formValidation)="onFormValidation($any($event))"></app-paso-dos>
     }
     @case (3) {
-      <app-paso-tres></app-paso-tres>
+      <app-paso-tres (formValidation)="onFormValidation($any($event))"></app-paso-tres>
     }
   }    
  <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> 
