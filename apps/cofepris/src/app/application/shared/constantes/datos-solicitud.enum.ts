@@ -1019,7 +1019,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  */
 export const MOSTRAR_NOTIFICACION = [
   260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301,
-  260209, 260205, 260204,260203, 260202,
+  260209, 260205, 260204, 260202,
 ];
 
 export const ENABLE_FIELDS = [ 260209, 260210, 260208, 260218 ];
@@ -1131,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218, 260216];
 
 
 
@@ -1147,7 +1147,7 @@ export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];
  * @description Mapeo de procedimientos a los campos que deben ser deshabilitados al eliminar un pedimento.
  * Cada clave en el objeto representa un identificador de procedimiento, y su valor asociado es un arreglo
  */
-export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205];
+export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205, 260206];
 
 /**
  * @const ES_VALIDO_REGISTRO_O_VENCIMIENTO

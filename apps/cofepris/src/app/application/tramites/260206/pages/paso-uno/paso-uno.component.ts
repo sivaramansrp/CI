@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,7 +10,6 @@ import { SECCIONES_TRAMITE_260206 } from '../../constantes/maquila-materias-prim
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
-import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -24,7 +23,9 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy{
+export class PasoUnoComponent implements OnInit, OnDestroy, OnChanges {
+
+  @Input() confirmarSinPagoDeDerechos: number = 0;
 
   /**
    * @private
@@ -100,6 +101,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     }); 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+        const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+        if (CONFIRMAR_VALOR) {
+          this.seleccionaTab(CONFIRMAR_VALOR);
+        }
+      }
+    }
+
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -148,11 +158,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * - `false`: si el contenedor no es válido o no está disponible.
    */
    validarPasoUno(): boolean {
-    const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-    const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
     return (
-      (esTabValido && esTercerosValido&& esPagoValido)? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO)? true : false
 
     );
   }
