@@ -141,7 +141,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @description
    * Lista de elementos requeridos para completar el formulario o proceso.
    */
-  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR;
+  public readonly elementosRequeridos = [];
 
   /**
    * @constructor
