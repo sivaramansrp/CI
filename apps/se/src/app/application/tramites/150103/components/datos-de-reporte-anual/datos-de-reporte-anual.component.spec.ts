@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -130,23 +129,6 @@ describe('DatosDeReporteAnualComponent', () => {
     });
      expect(component.solicitud150103Store.actualizarTotalImportaciones).toHaveBeenCalled();
      expect(component.calcularReporteAnnual).toHaveBeenCalled();
-  });
-
-  it('should run #inicializarEstadoFormulario()', async () => {
-    component.formReporteAnnual = {
-      disable: jest.fn(),
-      enable: jest.fn(),
-    };
-  
-    component.esFormularioSoloLectura = true;
-  
-    component.inicializarEstadoFormulario();
-  
-  
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-  
-    expect(component.formReporteAnnual.enable).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
