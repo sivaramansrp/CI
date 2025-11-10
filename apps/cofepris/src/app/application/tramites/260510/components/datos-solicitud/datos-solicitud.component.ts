@@ -28,4 +28,10 @@ export class DatosSolicitudComponent {
    * Indica si se debe mostrar la sección de isGarantiasOfrecidasVisible
    */
    isGarantiasOfrecidasVisible: boolean = true;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260510;
 }
