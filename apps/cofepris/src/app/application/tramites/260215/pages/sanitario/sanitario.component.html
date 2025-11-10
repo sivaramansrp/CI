@@ -23,6 +23,7 @@
             (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
             (reenviarCargaRealizada)="cargaRealizada($event)"
             (cargaEnProgreso)="onCargaEnProgreso($event)"
+            (enBlancoObligatoria)="onBlancoObligatoria($event)"
           ></app-paso-carga-documento>
         } @case (3) {
           <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260215" [procedureUrl]="'permiso-sanitario-importacion/sanitario'"></paso-firma>

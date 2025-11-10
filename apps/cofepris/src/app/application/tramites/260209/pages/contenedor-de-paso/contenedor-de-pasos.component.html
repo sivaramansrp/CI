@@ -24,6 +24,7 @@
       (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
       (reenviarCargaRealizada)="cargaRealizada($event)"
       (cargaEnProgreso)="onCargaEnProgreso($event)"
+      (enBlancoObligatoria)="onBlancoObligatoria($event)"
       ></app-paso-carga-documento>
     } @case (3) {
       <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260209" [procedureUrl]="'importacion-destinados-donacio/contenedor-de-pasos'"></paso-firma>

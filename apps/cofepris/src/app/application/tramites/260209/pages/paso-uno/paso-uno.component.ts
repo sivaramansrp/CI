@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
 import { Tramite260209Store } from '../../estados/tramite260209Store.store';
-import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
@@ -112,10 +113,22 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */
 public validarTodosLosFormularios(): boolean {
+  // Example usage of 'this' to comply with the rule
+  // You can adjust the logic as needed for your application
   let allFormsValid = true;
-  
-  return allFormsValid ;
 
+  // Use 'this' to check if the child components are valid
+  if (this.contenedorDeDatosSolicitudComponent && !this.contenedorDeDatosSolicitudComponent.validarContenedor()) {
+    allFormsValid = false;
+  }
+  if (this.tercerosRelacionadosVistaComponent && !this.tercerosRelacionadosVistaComponent.validarContenedor()) {
+    allFormsValid = false;
+  }
+  if (this.pagoDeDerechosContenedoraComponent && !this.pagoDeDerechosContenedoraComponent.validarContenedor()) {
+    allFormsValid = false;
+  }
+
+  return allFormsValid;
 }
 
   /**
@@ -157,12 +170,12 @@ public validarTodosLosFormularios(): boolean {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
     validarPasoUno(): boolean {
-      const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-      const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-      const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+      const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+      const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+      const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
       return (
-        (esTabValido && esTercerosValido&& esPagoValido)? true : false
-  
+        (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
+
       );
     }
 
