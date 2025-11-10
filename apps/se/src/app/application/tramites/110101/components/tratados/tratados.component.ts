@@ -93,6 +93,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   @Output() habilitarPestana = new EventEmitter<void>();
 
+
+  /**
+   * @property otrasInstancias - Referencia al componente `OtrasInstanciasComponent` que maneja
+   *                             la lógica y validación de las instancias asociadas dentro del paso actual.
+   * @command El decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('otrasInstancias') otrasInstancias!: OtrasInstanciasComponent;
+
   /**
    * Evento que se emite para deshabilitar o cerrar una pestaña en el flujo del trámite.
    * Se utiliza para notificar al componente padre que la pestaña debe desactivarse.
@@ -294,6 +302,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
     }
     if(this.consultaState.create === true){
         this.getCatalogoPaisBloques();
+    }
+
+    if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false){
+      this.validarFormulario();
     }
   }
 
@@ -1104,19 +1116,7 @@ configurarPaisesInstancias(config: CriterioConfiguracionResponse): void {
   };
 
 
-  /**
-   * **Ciclo de vida: OnDestroy**
-   * 
-   * Este método se ejecuta cuando el componente se destruye. 
-   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
-   * 
-   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
-   * - Completa `destroy$` para liberar los recursos asociados.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
 /**
  * 
@@ -1555,6 +1555,35 @@ eliminarTratado(): void {
   }
 
  /**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * Verifica que existan datos en la tabla y que los formularios asociados sean válidos.
+ * @method validarFormulario
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+  validarFormulario(): boolean {
+    // Si no hay datos en la tabla → inválido
+    if (this.solicitudeState.respuestaServicioDatosTabla.length === 0) {
+      return false;
+    }
+    //  Si el componente otrasInstancias no existe → no avanzar, pero sin error
+    if (!this.otrasInstancias) {
+      return true;
+    }
+
+    // Si el formulario dentro de otrasInstancias no existe → no avanzar
+    if (!this.otrasInstancias.formularioInstancias) {
+      return true;
+    }
+
+    // Si el formulario de otras instancias no es válido → inválido
+    if (this.otrasInstancias.formularioInstancias.valid === false) {
+      this.otrasInstancias.formularioInstancias.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
+
+ /**
    * Cierra el modal de agregar o editar mercancías.
    * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
    *
@@ -1566,4 +1595,18 @@ eliminarTratado(): void {
     this.modalInstance?.hide();
   }
 
+  /**
+   * **Ciclo de vida: OnDestroy**
+   * 
+   * Este método se ejecuta cuando el componente se destruye. 
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   * 
+   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
+   * - Completa `destroy$` para liberar los recursos asociados.
+   */
+  ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario() || null);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

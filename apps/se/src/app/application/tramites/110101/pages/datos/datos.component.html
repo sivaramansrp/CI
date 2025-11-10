@@ -65,13 +65,13 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados [esCalificacionBandera]="esDictaminadorBandera" (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
+            <app-tratados #tratadosRef [esCalificacionBandera]="esDictaminadorBandera" (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
             }
             @case (3) {
-            <app-datos-mercancia></app-datos-mercancia>
+            <app-datos-mercancia #mercanciaRef></app-datos-mercancia>
             }
             @case (4) {
-            <app-datos-adicionales></app-datos-adicionales>
+            <app-datos-adicionales #datosAdicionalesRef></app-datos-adicionales>
             }
             @case (5) {
              @if (this.solicitudeState.tab_procesos === true) {

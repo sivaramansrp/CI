@@ -418,52 +418,21 @@ get ninoFormGroup(): FormGroup {
     if(this.esFormularioSoloLectura === true){
       this.mercanciaEvaluar();
     }
-    //Validar tabla aun que este valido formulario
-    if(this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === true){
-       if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-    }
-    //validacion para cuando de tab sin el boton de continuar
-    if (this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === false) {
-      this.formMercancia.markAllAsTouched();
-      this.mensajeService.mostrarMensaje(true);
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-      
-    }
 
-    // Inicializa la validación si aún no existe
-    if (this.solicitudeState.validacion_formularios.validacion_tab_mercancia === null) {
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
+     if(this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false){
+      this.formMercancia.markAllAsTouched();
+      this.validarFormularioMercancia();
     }
+  
     this.formMercancia.statusChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((_value) => {
           this.validarFormulario = this.formMercancia.valid;
-          this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
         })
       )
       .subscribe();
 
-    this.mensajeService.tocarFormulario$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-      this.formMercancia.markAllAsTouched();
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-        if(this.solicitudeState.insumosTablaDatos.length === 0){
-        this.validacionInsumo = true;
-       }
-      }
-    });
   }
 
   /**
@@ -1544,6 +1513,32 @@ get ninoFormGroup(): FormGroup {
   }
 }
 
+ /**
+ * @description Valida el formulario de mercancía antes de continuar con el proceso.
+ * Si la configuración requiere mostrar insumos, verifica que existan registros en la tabla.
+ * En caso contrario, marca los campos del formulario y detiene el avance.
+ * @method validarFormularioMercancia
+ * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
+ */
+  validarFormularioMercancia(): boolean {
+    if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true) {
+      if (this.solicitudeState.insumosTablaDatos.length === 0) {
+         if (this.formMercancia.valid === false) {
+            this.formMercancia.markAllAsTouched();
+         }
+        this.validacionInsumo = true;
+        this.cd.detectChanges();
+         return false;
+      }
+    }
+    if (this.formMercancia.valid === false) {
+     this.formMercancia.markAllAsTouched();
+      this.cd.detectChanges();
+      return false;
+    }
+    return true
+  }
+
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
    * 
@@ -1552,6 +1547,7 @@ get ninoFormGroup(): FormGroup {
    * - Este método se ejecuta automáticamente cuando el componente se destruye, asegurando una gestión eficiente de las suscripciones.
    */
   ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormularioMercancia() ?? null);
     this.destroy$.next();
     this.destroy$.complete();
   }
