@@ -1,5 +1,5 @@
 <ng-titulo titulo="Datos del establecimiento" />
-<form [formGroup]="datosDelForm">
+<form [formGroup]="datosDelForm" *ngIf="datosDelForm">
   <div class="text-end">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
       (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">Seleccionar establecimiento</button>

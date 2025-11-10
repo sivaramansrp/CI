@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, REGEX_RFC, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Shared2605Service } from '../../services/shared2605/shared2605.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente principal para gestionar el formulario de representante.
@@ -21,6 +21,7 @@ import { Shared2605Service } from '../../services/shared2605/shared2605.service'
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   public mostrarErroresRepresentante = {
+    rfc:false,
   nombre: false,
   apellidoPaterno: false,
 };
@@ -64,6 +65,17 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private sharedSvc: Shared2605Service
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
+    this.DatosDomicilioLegalQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          if(!this.representante){
+          this.configurarGrupoForm();
+        }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -76,11 +88,10 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Inicializa el componente.
    */
   ngOnInit(): void {
-    // this.representante.valueChanges.subscribe(() => {
-    //   this.mostrarErroresRepresentante.nombre = false;
-    //   this.mostrarErroresRepresentante.apellidoPaterno = false;
-    // }
-    // );
+    if(!this.representante){
+      this.configurarGrupoForm();
+    }
+ 
     /**
     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
     *
@@ -92,9 +103,16 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
+          if(seccionState){
           this.esFormularioSoloLectura = seccionState.readonly;
           this.updateDatos = seccionState.update;
-          this.configurarGrupoForm(); // Configura el formulario reactivo.
+           this.representante.patchValue({
+          rfc: this.solicitudState?.rfc || '',
+          nombre: this.solicitudState?.nombre || '',
+          apellidoPaterno: this.solicitudState?.apellidoPaterno || '',
+          apellidoMaterno: this.solicitudState?.apellidoMaterno || '',
+        });
+          }
         })
       )
       .subscribe();
@@ -105,21 +123,13 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    */
   configurarGrupoForm(): void // Configura el formulario reactivo.
   {
-     this.DatosDomicilioLegalQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.representante = this.fb.group({
-   rfc: [this.solicitudState?.rfc, [Validators.required]],
-      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
-    });
+const STATE = this.solicitudState ?? {};
+   this.representante = this.fb.group({
+    rfc: [STATE['rfc'] || '', [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]],
+    nombre: [{ value: STATE['nombre'] || '', disabled: true }, Validators.required],
+    apellidoPaterno: [{ value: STATE['apellidoPaterno'] || '', disabled: true }, Validators.required],
+    apellidoMaterno: [{ value: STATE['apellidoMaterno'] || '', disabled: true }],
+  });
 
     this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
@@ -145,6 +155,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
   obtenerValor(): void {
+ 
     const PROCEDIMIENTO = String(this.idProcedimiento);
     const PAYLOAD = {
       "rfcRepresentanteLegal": this.representante.get('rfc')?.value
@@ -155,11 +166,17 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         const DATOS = doDeepCopy(response);
         if(esValidArray(DATOS.datos)) {
+        this.mostrarErroresRepresentante.nombre = false;
+        this.mostrarErroresRepresentante.apellidoPaterno = false;
           this.representante.patchValue({
               nombre: getValidDatos(DATOS.datos[0].nombre) ? DATOS.datos[0].nombre : '',
               apellidoPaterno: getValidDatos(DATOS.datos[0].apellidoPaterno) ? DATOS.datos[0].apellidoPaterno : '',
               apellidoMaterno: getValidDatos(DATOS.datos[0].apellidoMaterno) ? DATOS.datos[0].apellidoMaterno : '',
           });
+        }
+        else{
+             this.mostrarErroresRepresentante.nombre = true;
+      this.mostrarErroresRepresentante.apellidoPaterno = true;
         }
 
       }, (error) => {

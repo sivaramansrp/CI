@@ -1,11 +1,11 @@
 <ng-titulo titulo="Representante legal"></ng-titulo>
-<form [formGroup]="representante">
+<form  [formGroup]="representante" *ngIf="representante">
     <div class="form">
         <div class="row align-item-end">
             <div class="col-md-4">
                <div class="form-group">
     <label class="form-label" for="rfc">RFC<span
-  [ngClass]="{'tiene-error':representante.get('rfc')?.invalid && representante.get('rfc')?.touched}"
+  [ngClass]="{'tiene-error': representante.controls['rfc'].invalid && representante.controls['rfc'].touched }"
 >*</span>:</label>
     <input
         class="form-control"
@@ -15,14 +15,24 @@
         formControlName="rfc"
         [ngClass]="{
             'required': esValido('rfc'),
-            'tiene-invalido': representante.get('rfc')?.invalid && representante.get('rfc')?.touched
+            'tiene-invalido': representante.controls['rfc'].invalid && representante.controls['rfc'].touched
         }"
           [maxlength]="13"
         (change)="setValoresStore(representante,'rfc', 'setRfc')"
     />
-    <small  *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="mensaje-error">
+     <div class="d-grid">
+    <div *ngIf="representante.controls['rfc'].invalid && representante.controls['rfc'].touched ">
+      <span *ngIf="representante.controls['rfc'].errors?.['required']" class="mensaje-error">
         Este campo es obligatorio.
-    </small >
+      </span>
+      <span *ngIf="representante.controls['rfc'].errors?.['maxlength']" class="mensaje-error">
+        El texto excede el límite de caracteres permitido.
+      </span>
+      <span *ngIf="representante.controls['rfc'].errors?.['pattern']" class="mensaje-error">
+       El valor capturado no es válido.
+      </span>
+    </div>
+</div>
 
 </div>
     

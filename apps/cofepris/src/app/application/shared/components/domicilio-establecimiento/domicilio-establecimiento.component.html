@@ -1,5 +1,5 @@
 <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
-<form [formGroup]="domicilio">
+<form *ngIf="domicilio"[formGroup]="domicilio">
    <div class="row">
       <div class="col-md-4">
          <div class="form-group">
@@ -185,7 +185,8 @@
             'licenciaSanitaria',
             'setLicenciaSanitaria'
             )
-            " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"/>
+            " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"
+            [maxlength]="50"/>
             <div
                *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required']"
                class="mensaje-error">
@@ -261,7 +262,7 @@
             <h4 class="modal-title">Clave S.C.I.A.N.</h4>
          </div>
          <div class="modal-body">
-            <form [formGroup]="formAgente">
+            <form [formGroup]="formAgente" *ngIf="formAgente">
                <div class="form-group">
                   <app-catalogo-select [showClave]="idProcedimiento ? true : false" [catalogo]="idProcedimiento ? claveScianLista : estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
                   [required]="true" name="claveScianModal" (change)="
@@ -310,7 +311,7 @@
    <div class="modal-dialog modal-dialog-centered modal-datos-generales">
       <div class="modal-content">
          <div class="modal-body modal-height">
-            <form [formGroup]="formMercancias">
+            <form [formGroup]="formMercancias" *ngIf="formMercancias">
                <ng-titulo titulo="Datos mercancía"></ng-titulo>
                <ng-titulo titulo="Identificación del producto"></ng-titulo>
                <div class="form-group">
