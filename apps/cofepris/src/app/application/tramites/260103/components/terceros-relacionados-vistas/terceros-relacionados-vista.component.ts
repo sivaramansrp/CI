@@ -5,14 +5,11 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-
-import { ELEMENTOS_REQUERIDOS_TR } from '../../../260212/constants/medicos-uso.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-retorno-sanitario.enum';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
