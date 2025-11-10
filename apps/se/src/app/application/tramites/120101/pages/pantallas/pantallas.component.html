@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <h2>
-        Registro TPL Solicitud de inscipción en el Registro de bienes textiles y
+        Registro TPL Solicitud de inscripción en el Registro de bienes textiles y
         prendas de vestir no originarios elegibles para recibir trato de
         preferencia arancelaria conforme al Tratado entre los Estados Unidos
         Mexicanos, los Estados Unidos de América y Canadá
@@ -30,12 +30,13 @@
   </div>
   <div class="row">
     @switch (indice) { @case (1) {
-    <paso-uno #pasoUnoRef [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)" (fraccionErrorEventEmit)="fraccionErrorEvent($event)"></paso-uno>
+    <paso-uno #pasoUnoRef [consultaState]="consultaState" [pestanaDosFormularioValido]="pestanaDosFormularioValido" (pestanaCambiado)="pestanaCambiado($event)" (fraccionErrorEventEmit)="fraccionErrorEvent($event)" (obtenorVisible)="obtenerVisible($event)"></paso-uno>
     } @case (2) {
     <paso-firma [idSolicitud]="idSolicitud" [procedure]="120101" [idMecanismo]="idMecanismo" [procedureUrl]="'solicitud-de-registro-tpl/pantallas'"></paso-firma>
     } }
   </div>
   <btn-continuar
+  *ngIf="obtenorVisibile"
     [datos]="datosPasos"
     [dePadre]="consultaState.readonly ? false : true"
     (continuarEvento)="getValorIndice($event)"

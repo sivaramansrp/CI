@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 
 /**
  * Componente principal para gestionar el formulario de representante.
@@ -59,7 +60,8 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private sharedSvc: Shared2605Service
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -143,11 +145,26 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
   obtenerValor(): void {
-    this.representante.patchValue({
-      nombre: 47875,
-      apellidoPaterno: 'Paterno',
-      apellidoMaterno: 'Materno',
-    });
+    const PROCEDIMIENTO = String(this.idProcedimiento);
+    const PAYLOAD = {
+      "rfcRepresentanteLegal": this.representante.get('rfc')?.value
+    }
+    this.sharedSvc
+      .getRepresentanteLegala(PAYLOAD, PROCEDIMIENTO)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const DATOS = doDeepCopy(response);
+        if(esValidArray(DATOS.datos)) {
+          this.representante.patchValue({
+              nombre: getValidDatos(DATOS.datos[0].nombre) ? DATOS.datos[0].nombre : '',
+              apellidoPaterno: getValidDatos(DATOS.datos[0].apellidoPaterno) ? DATOS.datos[0].apellidoPaterno : '',
+              apellidoMaterno: getValidDatos(DATOS.datos[0].apellidoMaterno) ? DATOS.datos[0].apellidoMaterno : '',
+          });
+        }
+
+      }, (error) => {
+        console.error('Error al obtener los representantes legala:', error);
+      });
   }
 
   /**

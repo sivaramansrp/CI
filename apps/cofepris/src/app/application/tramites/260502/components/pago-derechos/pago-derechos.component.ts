@@ -10,6 +10,12 @@ import { PagoDeDerechosBancoComponent } from '../../../../shared/components/pago
   styleUrl: './pago-derechos.component.scss',
 })
 export class PagoDerechosComponent {
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260502;
    /**
    * Emite el estado de validez del formulario.
    * Se envía un valor booleano cada vez que cambia la validez del formulario.

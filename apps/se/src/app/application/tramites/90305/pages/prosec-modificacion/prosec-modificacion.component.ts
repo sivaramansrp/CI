@@ -8,7 +8,8 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PROSEC_MODIFICACION } from '../../constantes/prosec-modificacion.enum';
 
 import { Subject ,map,takeUntil } from 'rxjs';
