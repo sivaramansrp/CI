@@ -10,10 +10,7 @@ const BASE_URL = ENVIRONMENT.API_HOST;
  * API nombre
  */
 const API = ENVIRONMENT.API;
-/**
- * Catálogo de la API
- */
-const CATALOGO = ENVIRONMENT.CATALOGO_URL;
+
 /**
  * Procedimiento de la API
  */

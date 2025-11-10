@@ -33,6 +33,11 @@ class MockSolicitud150103Store {
    * 
    */
   actualizarFin = jest.fn();
+  actualizarFolioPrograma = jest.fn();
+  actualizarModalidad = jest.fn();
+  actualizarTipoPrograma = jest.fn();
+  actualizarEstatus = jest.fn();
+  actualizarIndiceDeRegistroDelPrograma = jest.fn();
 }
 
 /**
@@ -138,16 +143,13 @@ describe('ProgramasReporteAnualComponent', () => {
      expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should run #obtenerReporteFechas()', async () => {
+  it('should run #obtenerProgramasReporte()', async () => {
     const informeAnualPrograma = TestBed.inject(InformeAnualProgramaService);
-    const storeSpy = jest.spyOn(component.solicitud150103Store, 'actualizarInicio');
-    const storeSpyFin = jest.spyOn(component.solicitud150103Store, 'actualizarFin');
-
-    component.obtenerReporteFechas();
-
-    expect(informeAnualPrograma.obtenerReporteFechas).toHaveBeenCalled();
-    expect(storeSpy).toHaveBeenCalledWith('2023-01-01');
-    expect(storeSpyFin).toHaveBeenCalledWith('2023-12-31');
+    informeAnualPrograma.obtenerProgramasReporte = jest.fn().mockReturnValue(observableOf({ datos: [{ folioPrograma: 'FP', modalidad: 'MOD', tipoPrograma: 'TP', estatus: 'EST' }] }));
+    (component as any).solicitudDatos = [];
+    component.obtenerProgramasReporte();
+    expect(informeAnualPrograma.obtenerProgramasReporte).toHaveBeenCalled();
+    expect((component as any).solicitudDatos).toEqual([{ folioPrograma: 'FP', modalidad: 'MOD', tipoPrograma: 'TP', estatus: 'EST' }]);
   });
 
   it('should run #actualizarProgramasReporte()', async () => {

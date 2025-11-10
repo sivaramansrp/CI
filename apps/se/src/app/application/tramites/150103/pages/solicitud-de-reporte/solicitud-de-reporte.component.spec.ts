@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Injectable } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,7 +22,8 @@ const mockSolicitudState: Solicitud150103State = {
   totalExportaciones: '500',
   totalImportaciones: '300',
   saldo: '200',
-  porcentajeExportacion: '50'
+  porcentajeExportacion: '50',
+  indiceDeRegistroDelPrograma: 0
 };
 
 // Mock Services
@@ -39,7 +39,7 @@ class MockInformeAnualProgramaService {
     id: 12345,
     descripcion: 'Success',
     codigo: '200',
-    datos: { idSolicitud: 12345 }
+    datos: { idSolicitud: 12345, id_solicitud: 12345 }
   }));
 }
 

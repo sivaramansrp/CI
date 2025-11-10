@@ -1,14 +1,14 @@
-
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { take, takeUntil } from 'rxjs/operators';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { take } from 'rxjs/operators';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
@@ -35,7 +35,7 @@ interface AccionBoton {
  
 })
 
-export class SolicitudDeReporteComponent {
+export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
 
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
   /**
@@ -88,6 +88,14 @@ export class SolicitudDeReporteComponent {
   public solicitudState!: Solicitud150103State;
 
   /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   *
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
    */
@@ -96,11 +104,20 @@ export class SolicitudDeReporteComponent {
     private store: Solicitud150103Store,
     private query: Solicitud150103Query
   ) {
+    
+  }
+
+  /**
+   * @description Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y sincroniza los datos iniciales con el estado.
+   */
+  ngOnInit(): void {
     this.query.seleccionarSolicitud$
-      .pipe(take(1))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
       });
+
   }
   
   /**
@@ -129,20 +146,19 @@ export class SolicitudDeReporteComponent {
       .subscribe(data => {
         this.guardar(data);
       });
-  }
-
+  }  
+  
   /**
    * Guarda los datos proporcionados construyendo un objeto payload y enviándolo al servicio backend.
    * El payload incluye información del solicitante y datos del reporte anual.
    *
    * @param data - Objeto que contiene todos los datos necesarios para el payload.
    * @returns Promise con la respuesta del servidor.
-   */
+   */  
   guardar(data: Solicitud150103State): Promise<JSONResponse> {
-    const DATOS_REPORTE = this.informeAnualService.buildDatosReporte(data);
-    
+    const REPORTE_ANUAL = this.informeAnualService.buildDatosReporte(data);
     const PAYLOAD = {
-        "id_solcitud": 202846846,
+        "id_solcitud": data.idSolicitud,
         "tipoDeSolicitud": "guardar",
         "solicitante": {
           "rfc": "AAL0409235E6",
@@ -150,51 +166,50 @@ export class SolicitudDeReporteComponent {
           "es_persona_moral": true,
           "certificado_serial_number": "1234"
         },
-        "representacion_federal": {
-          "cve_entidad_federativa": "DGO",
-          "cve_unidad_administrativa": "1016"
-        },
+        "representacion_federal": {},
         "fracciones": [
-        {
-          "cveFraccion": "",
-          "bienesProducidos": {
-            "descripcionBienProducido": "",
-            "totalBienesProducidos": 0,
-            "volumenMercadoNacional": 0,
-            "olumenExportaciones": 0
+          {
+            "cveFraccion": "",
+            "bienesProducidos": {
+              "descripcionBienProducido": "",
+              "totalBienesProducidos": 0,
+              "volumenMercadoNacional": 0,
+              "olumenExportaciones": 0
+            }
           }
-        }
         ],
         "sectores": [
           {
-            "idConfProgramaSE": 0
+            "idConfProgramaSE": data.folioPrograma ? parseInt(data.folioPrograma.split(',')[0].split('-')[1], 10) : 0
           }
         ],
-        "ide_generica_1": "01-2024",
-        "ide_generica_2": "12-2024",
-        "descripcion_clob_generica_1": "PROGRAMA NUEVO PRODUCTOR DIRECTO-ALTEX EXPORTADOR DIRECTO",
-        "descripcion_clob_generica_2": "121681,2011-7018",
-        "reporte_anual": DATOS_REPORTE
+        "reporte_anual": REPORTE_ANUAL,
+        "observaciones": data.folioPrograma,
+        "descripcion": data.folioPrograma,
+        "ide_generica_1": data.inicio,
+        "ide_generica_2": data.fin,
+        "descripcion_clob_generica_1": data.modalidad,
+        "descripcion_clob_generica_2": data.folioPrograma
       }
 
     return new Promise((resolve, reject) => {
       this.informeAnualService.guardarDatosPost(PAYLOAD).subscribe(response => {
         const API_RESPONSE = doDeepCopy(response);
         if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
-          if(getValidDatos(API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud)) {
-            this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud));
+          if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud));
             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
           } else {
             this.store.setIdSolicitud(0);
           }
         }
-        const JSON_RESP: JSONResponse = {
+        const JSON_RESPONSE: JSONResponse = {
           id: API_RESPONSE.id ?? API_RESPONSE.datos?.id_solicitud ?? API_RESPONSE.datos?.idSolicitud ?? 0,
           descripcion: API_RESPONSE.descripcion ?? '',
           codigo: API_RESPONSE.codigo ?? '',
           data: API_RESPONSE.datos ?? {}
         };
-        resolve(JSON_RESP);
+        resolve(JSON_RESPONSE);
       }, error => {
         reject(error);
       });
@@ -216,4 +231,16 @@ export class SolicitudDeReporteComponent {
       }
     }
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

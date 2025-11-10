@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReporteFechas } from '../models/programas-reporte.model';
 import { Solicitud150103Query } from '../estados/solicitud150103.query';
 
 @Injectable({
@@ -34,18 +33,6 @@ export class InformeAnualProgramaService {
    
   }
 
-  /**
-   * Obtiene las fechas de inicio y fin del reporte desde un archivo JSON.
-   * 
-   * Este método realiza una solicitud HTTP para obtener las fechas del reporte.
-   * @returns Un observable que emite un objeto de tipo `ReporteFechas`.
-   */
-  obtenerReporteFechas(): Observable<ReporteFechas> {
-    return this.http.get<ReporteFechas>(
-      'assets/json/150103/reporte-fechas.json'
-    );
-  }
-
  /**
  * @method getRegistroData
  * @description Método que obtiene los datos de registro desde un archivo JSON.
@@ -65,7 +52,6 @@ getRegistroData(): Observable<Solicitud150103State> {
   guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
     return this.httpService.post<Record<string, unknown>>(PROC_150103.GUARDAR, { body: body });
   }
-
   /**
    * Construye el objeto de datos del reporte basado en el estado actual.
    * @param data - Estado actual de la solicitud 150103.
@@ -73,40 +59,15 @@ getRegistroData(): Observable<Solicitud150103State> {
    */
   buildDatosReporte(data: Solicitud150103State): Record<string, unknown> {
     return {
-      rfc_solicitante: 'AAL0409235E6', // This should be obtained from user session
-      idSolicitud: data.idSolicitud || 0,
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "EMPRESA EJEMPLO S.A. DE C.V.",
-        actividad_economica: "Actividad económica ejemplo",
-        correo_electronico: "contacto@empresa.com",
-        domicilio: {
-          pais: "México",
-          codigo_postal: "06700",
-          estado: "Ciudad de México",
-          municipio_alcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Ejemplo",
-          numero_exterior: "123",
-          numero_interior: "Piso 1",
-          lada: "",
-          telefono: "123456"
-        }
-      },
-      reporte_anual: {
-        fecha_inicio: data.inicio,
-        fecha_fin: data.fin,
-        folio_programa: data.folioPrograma,
-        modalidad: data.modalidad,
-        tipo_programa: data.tipoPrograma,
-        estatus: data.estatus,
-        total_importaciones: parseFloat(data.totalImportaciones) || 0,
-        saldo: parseFloat(data.saldo) || 0,
-        porcentaje_exportacion: parseFloat(data.porcentajeExportacion) || 0
-      },
-      fracciones: [],
-      sectores: []
+      "saldo": data.saldo,
+      "porcentaje": data.porcentajeExportacion,
+      "ventasTotales": parseFloat(data.ventasTotales),
+      "totalExportaciones": parseFloat(data.totalExportaciones),
+      "totalImportaciones": parseFloat(data.totalImportaciones),
+      "totalPersonalAdmin1": 0,
+      "totalPersonalAdmin2": 0,
+      "totalPersonalObrero1": 0,
+      "totalPersonalObrero2": 0
     };
   }
   
