@@ -774,11 +774,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     if (this.materiasPrimas.length === 0) {
       // Mostrar mensaje de error si no hay materias primas
       this.esFormaValido = false;
-      this.alertaErrorFormulario = this.MATERIA_FALTANTE;
       return false;
     }
     this.esFormaValido = true;
-    this.alertaErrorFormulario = '';
     return true;
   }
 
