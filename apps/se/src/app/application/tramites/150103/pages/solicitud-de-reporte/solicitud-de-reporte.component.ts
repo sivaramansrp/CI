@@ -118,11 +118,6 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
         this.solicitudState = solicitud;
       });
 
-      //  this.tramiteQuery.selectSolicitud$
-      // .pipe(takeUntil(this.destroyNotifier$))
-      // .subscribe((solicitud) => {
-      //   this.solicitudState = solicitud;
-      // });
   }
   
   /**

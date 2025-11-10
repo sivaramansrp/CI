@@ -95,16 +95,17 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method setDefaultDates
-   * @description Sets default dates - today's month/year for inicio and -1 month for fin
+   * @description Establece las fechas predeterminadas de inicio y fin en el store.
+   * La fecha de inicio se establece en el mes y año actuales,
+   * mientras que la fecha de fin se establece en el mes anterior del mismo año.
    */
   private setDefaultDates(): void {
-    const CURRENT_DATE = new Date();
-    const MONTH_DATE = new Date(CURRENT_DATE);
-    MONTH_DATE.setMonth(CURRENT_DATE.getMonth() - 1);
+    const FECHA_ACTUAL = new Date();
+    const MES_FECHA = new Date(FECHA_ACTUAL);
+    MES_FECHA.setMonth(FECHA_ACTUAL.getMonth() - 1);
     
-    const FORMATTED_INICIO_DATE = this.formatDateToMonthYear(CURRENT_DATE.toISOString());
-    const FORMATTED_FIN_DATE = this.formatDateToMonthYear(MONTH_DATE.toISOString());
+    const FORMATTED_INICIO_DATE = this.formatDateToMonthYear(FECHA_ACTUAL.toISOString());
+    const FORMATTED_FIN_DATE = this.formatDateToMonthYear(MES_FECHA.toISOString());
     
     this.solicitud150103Store.actualizarInicio(FORMATTED_INICIO_DATE);
     this.solicitud150103Store.actualizarFin(FORMATTED_FIN_DATE);
