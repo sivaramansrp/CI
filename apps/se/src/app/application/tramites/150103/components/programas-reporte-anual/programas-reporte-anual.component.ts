@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidArray, esValidObject, getValidDatos, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, TablaSeleccion, doDeepCopy, esValidArray, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';

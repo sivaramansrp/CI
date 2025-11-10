@@ -97,7 +97,8 @@ consultaDatos!: ConsultaioState;
           disabled: true,
         },
       ],
-    });    this.solicitud150103Query.seleccionarSolicitud$
+    });    
+    this.solicitud150103Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud150103State) => {
