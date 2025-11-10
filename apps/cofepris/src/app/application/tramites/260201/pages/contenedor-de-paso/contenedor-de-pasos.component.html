@@ -12,7 +12,7 @@
       </div>
     }
     <ng-container *ngIf="indice === 2"> </ng-container>
-    <app-wizard [listaPasos]="pasos"></app-wizard>
+    <app-wizard #wizzard [listaPasos]="pasos"></app-wizard>
   </div>
 
   <div class="row">
@@ -82,3 +82,10 @@
     </div>
     }
 </div>
+
+@if(mostrarAlerta){
+  <section>
+    <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
+    </lib-notificaciones>
+  </section>
+}
