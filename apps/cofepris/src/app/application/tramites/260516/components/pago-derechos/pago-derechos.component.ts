@@ -30,4 +30,11 @@ export class PagoDerechosComponent {
           updatePagoDerechos(event: PagoDerechosFormState): void {
             // this.tramiteStore.updatePagoDerechos(event);
           }
+          validOnButtonClick(): boolean {
+            let isValid: boolean = false;
+            if(this.pagoDeDerechosComponent.formularioSolicitudValidacion()){
+                  isValid = true;
+            }
+            return isValid;
+          }
 }

@@ -7,6 +7,7 @@ import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 
 /**
  * Componente que representa el primer paso del proceso de solicitud.
@@ -23,6 +24,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
     @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
+    @ViewChild(PagoDerechosComponent) pagoDerechosRef!:PagoDerechosComponent;
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -121,12 +123,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
   validOnButtonClick():boolean{
     let isValid = false;
-    if(this.datosSolicitudRef?.validOnButtonClick()){
+    if(this.datosSolicitudRef?.validOnButtonClick() && this.pagoDerechosRef?.validOnButtonClick()){
           isValid = true;
         }
-        else{
+        else {
           isValid = false;
         }
+  
         return isValid;
       }
   

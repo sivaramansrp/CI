@@ -118,7 +118,7 @@
       <div class="col-md-3">
          <div class="form-group">
             <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'tiene-error': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched || mostrarErrores.telefono}">*</span>:</label>
-            <input class="form-control" id="telefono" placeholder="" type="text" [maxlength]="24" size="29"
+            <input class="form-control" id="telefono" placeholder="" type="text" [maxlength]="idProcedimiento === 260516 ? 30 : 24" size="29"
             [ngClass]="{'tiene-invalido': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched}"
             formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
             <div class="d-grid">
