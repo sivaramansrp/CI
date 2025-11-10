@@ -14,8 +14,10 @@ import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
-import { MSG_REGISTRO_EXITOSO, USUARIO_INFO } from '../../enum/enum-130118';
+import { MSG_REGISTRO_EXITOSO } from '../../enum/enum-130118';
+
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { USUARIO_INFO } from '../../../../shared/enum/datos-usuario-documentos';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -169,6 +171,9 @@ export class SolicitudPageComponent implements OnInit {
    * Se utiliza para determinar qué campos mostrar en el formulario.
    */
   esPersonaMoral: boolean = false;
+
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true; 
 
   /**
    * Notificación que se muestra al usuario.
@@ -381,7 +386,7 @@ export class SolicitudPageComponent implements OnInit {
         apellido_materno: DATOS_PRODUCTO.apellidoMaterno || null,
         razon_social: DATOS_PRODUCTO.razonSocial ?? '',
         descripcion_ubicacion: DATOS_PRODUCTO.domicilio,
-        rfc: 'AAL0409235E6',
+        rfc: 'LEQI8101314S7',
         pais: DATOS_MERCANCIA.paisOrigen
       },
 
@@ -502,6 +507,16 @@ anterior(): void {
   this.indice = this.wizardComponent.indiceActual + 1;
   this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
 }
+
+  /**
+    * Maneja el evento de carga en progreso emitido por un componente hijo.
+    * Actualiza el estado de cargaEnProgreso según el valor recibido.
+    * @param cargando Valor booleano que indica si la carga está en progreso.
+    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
 
 /**
  * Emite un evento para cargar archivos.

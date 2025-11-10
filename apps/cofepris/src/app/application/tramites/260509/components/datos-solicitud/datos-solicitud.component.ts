@@ -34,4 +34,10 @@ export class DatosSolicitudComponent {
    * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
    */
   tieneDomicilioHabilitar: boolean = true;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260509;
 }

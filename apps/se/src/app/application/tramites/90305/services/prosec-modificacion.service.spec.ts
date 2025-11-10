@@ -13,6 +13,10 @@ describe('ProsecModificacionServiceTsService', () => {
   beforeEach(() => {
     tramiteStoreMock = {
       setSelectedEstado: jest.fn(),
+      setRegistroFederalContribuyentes: jest.fn(),
+      setRepresentacionFederal: jest.fn(),
+      setTipoModificacion: jest.fn(),
+      setModificacionPrograma: jest.fn(),
     } as any;
 
     TestBed.configureTestingModule({
@@ -123,13 +127,25 @@ describe('ProsecModificacionServiceTsService', () => {
   });
 
   it('should call setSelectedEstado if selectedEstado is present', () => {
-    const mockState: Tramite90305State = { selectedEstado: 'AGS' };
+    const mockState: Tramite90305State = { 
+      selectedEstado: 'AGS',
+      registroFederalContribuyentes: '',
+      representacionFederal: '',
+      tipoModificacion: '',
+      modificacionPrograma: ''
+    };
     service.actualizarEstadoFormulario(mockState);
     expect(tramiteStoreMock.setSelectedEstado).toHaveBeenCalledWith('AGS');
   });
 
-  it('should not call setSelectedEstado if selectedEstado is null', () => {
-    const mockState: Tramite90305State = { selectedEstado: null };
+  it('should not call setSelectedEstado if selectedEstado is empty', () => {
+    const mockState: Tramite90305State = { 
+      selectedEstado: '',
+      registroFederalContribuyentes: '',
+      representacionFederal: '',
+      tipoModificacion: '',
+      modificacionPrograma: ''
+    };
     service.actualizarEstadoFormulario(mockState);
     expect(tramiteStoreMock.setSelectedEstado).not.toHaveBeenCalled();
   });

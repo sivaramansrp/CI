@@ -52,7 +52,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211,110201];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211,110201,110202];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -120,7 +120,7 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
-      if (this.idProcedimiento === 110212 || this.idProcedimiento === 110201) {
+      if (this.idProcedimiento === 110212 || this.idProcedimiento === 110201 || this.idProcedimiento === 110202) {
       const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formDatosDelDestinatario.get(key)?.clearValidators();

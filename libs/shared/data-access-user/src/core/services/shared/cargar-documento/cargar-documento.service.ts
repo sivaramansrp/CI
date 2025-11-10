@@ -52,7 +52,7 @@ export class CargarDocumentoService {
  * para la carga de documentos. El cuerpo de la petición incluye datos del usuario, información de la firma electrónica
  * y los metadatos de los documentos a cargar.
  */
-public cargarDocumentos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario): Observable<UploadDocumentResponse> {
+public cargarDocumentos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario, idSolicitud: string): Observable<UploadDocumentResponse> {
     const ENDPOINT = `${this.host}${API_POST_CARGAR_DOCUMENTOS}`;
     const FORMDATA = new FormData();
     const FILEINFO: FileTipoDocumento[] = [];
@@ -72,7 +72,7 @@ public cargarDocumentos(archivosCargando: DocumentosParaCargar[], datosUsuario: 
             },
             "rolActual": datosUsuario.rolActual,
             "rfcSolicitante": datosUsuario.rfcSolicitante,
-            "idSolicitud": datosUsuario.idSolicitud,
+            "idSolicitud": idSolicitud|| datosUsuario.idSolicitud,
             "referenciaSolicitud": datosUsuario.referenciaSolicitud
           };
     for (const ARCHIVO of archivosCargando) {

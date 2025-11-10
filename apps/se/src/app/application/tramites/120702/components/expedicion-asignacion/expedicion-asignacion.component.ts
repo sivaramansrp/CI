@@ -253,15 +253,13 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   establecerAsignacionFormGroup(): void {
     this.asignacionForm = this.fb.group({
-      // Existing controls
+    
       anoDelOficio: ['', [Validators.required]],
       numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoADisponible: [''],
       fechaInicioVigencia: [''],
       fechaFinVigencia: [''],
-      
-      // Missing controls that are causing errors
       estado: [''],
       representacionFederal: [''],
       montoAsignado: [''],
@@ -286,8 +284,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
         }
       });
       
-  // Log individual control errors
-      Object.keys(this.asignacionForm.controls).forEach(key => {
+  Object.keys(this.asignacionForm.controls).forEach(key => {
         const CONTROL = this.asignacionForm.get(key);
         if (CONTROL && CONTROL.errors) {
             // El control tiene errores de validación; manejar o registrar si es necesario
@@ -429,11 +426,48 @@ this.calcularTotalAExpedir();
   }
 /**
  * Método que se ejecuta al hacer clic en el botón "Buscar".
+ * Valida que los campos requeridos tengan valores antes de mostrar las secciones.
  */
 onBuscarClick(): void {
-  this.mostrarSecciones = true; // Muestra el contenido que está debajo
+ 
+  this.asignacionForm.get('anoDelOficio')?.markAsTouched();
+  this.asignacionForm.get('numeroOficio')?.markAsTouched();
+
+  
+  const ANODELOFICIO = this.asignacionForm.get('anoDelOficio')?.value;
+  const NUMEROOFICIO = this.asignacionForm.get('numeroOficio')?.value;
+  const ISANOOFICIOVALID = ANODELOFICIO && ANODELOFICIO.trim() !== '';
+  const ISNUMEROOFICIOVALID = NUMEROOFICIO && 
+    NUMEROOFICIO.trim() !== '' && 
+    this.asignacionForm.get('numeroOficio')?.valid;
+
+  if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
+    this.mostrarSecciones = true; 
+    
+  this.cargarDatosAsignacion();
+  } else {
+   this.mostrarSecciones = false; 
+  }
 }
-  /**
+
+/**
+ * Carga los datos de la asignación cuando la búsqueda es exitosa.
+ * Este método puede ser expandido para cargar datos reales desde un servicio.
+ */
+private cargarDatosAsignacion(): void {
+  
+  this.asignacionForm.patchValue({
+    estado: 'Estado ejemplo',
+    representacionFederal: 'Representación ejemplo',
+    montoAsignado: 1000,
+    montoExpedido: 630,
+    montoDisponible: this.defaultMontoDisponible,
+    datosNumeroOficio: this.asignacionForm.get('numeroOficio')?.value,
+    montoADisponible: this.defaultMontoDisponible
+  });
+}
+
+/**
    * Método del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera las suscripciones activas.
    */

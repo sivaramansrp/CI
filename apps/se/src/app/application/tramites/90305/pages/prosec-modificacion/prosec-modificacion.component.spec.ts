@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProsecModificacionComponent } from './prosec-modificacion.component';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock WizardComponent used in ViewChild
 @Component({
@@ -20,6 +21,7 @@ describe('ProsecModificacionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProsecModificacionComponent, MockWizardComponent],
+      imports: [HttpClientTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
