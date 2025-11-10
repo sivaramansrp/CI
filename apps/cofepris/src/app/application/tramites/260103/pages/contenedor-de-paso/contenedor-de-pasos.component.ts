@@ -34,6 +34,17 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+  
+    /**
+   * @property {string} MENSAJE_DE_ERROR
+   * @description
+   * Propiedad usada para almacenar el mensaje de error actual.
+   * Se inicializa como cadena vacía y se actualiza en función
+   * de las validaciones o errores capturados en el flujo.
+   */
+     MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+  
+    infoError = 'alert-danger text-center';
      /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
