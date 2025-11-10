@@ -1,6 +1,7 @@
 import {
   CatalogosService,
   InicioSesionService,
+  PasoFirmaComponent,
   SubirDocumentoService,
 } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
@@ -28,7 +29,7 @@ import { provideHttpClient } from '@angular/common/http';
     PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    PlaguicidasComponent,
+    PlaguicidasComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +44,7 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
+    PasoFirmaComponent
   ],
   providers: [
     ToastrService,
