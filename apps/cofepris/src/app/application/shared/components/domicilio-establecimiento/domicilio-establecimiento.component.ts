@@ -1,25 +1,4 @@
 import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from "@angular/forms";
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
-} from "@angular/core";
-import {
-  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
@@ -39,7 +18,31 @@ import {
   TipoNotificacionEnum,
   TituloComponent,
   ValidacionesFormularioService,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
 } from "@libs/shared/data-access-user/src";
+
+ import {AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
+} from "@angular/core";
+
 import {
   ConfiguracionVisibilidad,
   DATOS_MERCANCIAS,
@@ -51,7 +54,8 @@ import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from "../../estados/stores/datos-domicilio-legal.store";
-import { Subject, map, takeUntil } from "rxjs";
+
+import { Subject, map, switchMap, takeUntil } from "rxjs";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
 import { CommonModule } from "@angular/common";
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
@@ -61,6 +65,7 @@ import Modal from "bootstrap/js/dist/modal";
 import { ServicioDeFormularioService } from "../../services/forma-servicio/servicio-de-formulario.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
+import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 
 export interface RespuestaTabla {
   code: number;
@@ -281,6 +286,7 @@ public mostrarErrores = {
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
     private validacionesService: ValidacionesFormularioService,
+    private sharedSvc: Shared2605Service
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -1470,10 +1476,36 @@ public mostrarErrores = {
    * If the control does not exist, no action is taken.
    */
   setDescripcionFraccion(): void {
-    this.formMercancias
-      .get("descripcionFraccion")
-      ?.setValue("descripcionFraccion");
-    this.formMercancias.get("UMT")?.setValue("UMT32131");
+    if(this.formMercancias.get("fraccionArancelaria")?.invalid) {
+      return;
+    }
+    const CLAVE_OBJ = {
+      clave: this.formMercancias.get("fraccionArancelaria")?.value,
+      idProcedimiento: String(this.idProcedimiento)
+    }
+    this.sharedSvc.getFraccionDescripcion(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento)
+    .pipe(takeUntil(this.destroyNotifier$),
+      switchMap((fraccionResponse) => {
+        if (esValidObject(fraccionResponse)) {
+          const DATOS = doDeepCopy(fraccionResponse);
+          if(esValidObject(DATOS.datos)) {
+              this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
+          }
+        }
+        throw new Error('Fracción call failed');
+      })
+    ).subscribe({
+      next: (unidadResponse) => {
+        const UNIDAD_DATOS = doDeepCopy(unidadResponse);
+        if(esValidObject(UNIDAD_DATOS.datos)) {
+          this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.

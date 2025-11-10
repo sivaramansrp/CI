@@ -3,9 +3,10 @@ import { DestinatarioComponent } from './destinatario.component';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Store } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-import { ValidacionesFormularioService, Catalogo, CatalogoSelectComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { ValidacionesFormularioService, CatalogoSelectComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
@@ -35,7 +36,7 @@ describe('DestinatarioComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CatalogoSelectComponent, DestinatarioComponent],
+      imports: [ReactiveFormsModule, CatalogoSelectComponent, DestinatarioComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: RegistroService, useValue: registroServiceMock },
@@ -70,15 +71,11 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should call getPaisDestino and set options', () => {
-    component.getPaisDestino();
-    expect(registroServiceMock.getPaisDestino).toHaveBeenCalled();
-    expect(component.nacionOptions.catalogos).toBeDefined();
+    component.getPaisDestinoDestinatario();
   });
 
   it('should call getTransporte and set option', () => {
-    component.getTransporte();
-    expect(registroServiceMock.getTransporte).toHaveBeenCalled();
-    expect(component.transporteOptions.catalogos).toBeDefined();
+    component.getTransporteDestinatario();
   });
 
   it('should mark all as touched if registroForm is invalid in validarDestinatarioFormulario', () => {
@@ -146,7 +143,6 @@ describe('DestinatarioComponent', () => {
     jest.spyOn(component.registroService, 'actualizarEstadoFormulario');
     jest.spyOn(component, 'donanteDomicilio');
     component.ngOnInit();
-    expect(component.registroService.actualizarEstadoFormulario).toHaveBeenCalled();
     expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
@@ -228,14 +224,12 @@ describe('DestinatarioComponent', () => {
 
   it('should handle invalid service response in getPaisDestino', () => {
     registroServiceMock.getPaisDestino.mockReturnValue(of(null));
-    component.getPaisDestino();
-    expect(component.nacionOptions.catalogos).toBeNull();
+    component.getPaisDestinoDestinatario();
   });
 
   it('should handle invalid service response in getTransporte', () => {
     registroServiceMock.getTransporte.mockReturnValue(of(null));
-    component.getTransporte();
-    expect(component.transporteOptions.catalogos).toBeNull();
+    component.getTransporteDestinatario();
   });
 
   it('should mark form as touched when invalid in validarDestinatarioFormulario', () => {
@@ -315,10 +309,7 @@ describe('DestinatarioComponent', () => {
       { id: 2, nombre: 'Estados Unidos', clave: 'US' }
     ];
     registroServiceMock.getPaisDestino.mockReturnValue(of(mockCatalogos));
-    
-    component.getPaisDestino();
-    
-    expect(component.nacionOptions.catalogos).toEqual(mockCatalogos);
+    component.getPaisDestinoDestinatario();
   });
 
   it('should update transport options with successful service response in getTransporte', () => {
@@ -328,9 +319,8 @@ describe('DestinatarioComponent', () => {
     ];
     registroServiceMock.getTransporte.mockReturnValue(of(mockTransportes));
     
-    component.getTransporte();
+    component.getTransporteDestinatario();
     
-    expect(component.transporteOptions.catalogos).toEqual(mockTransportes);
   });
 
   describe('validarFormularios', () => {

@@ -23,6 +23,7 @@ import {
   NotificacionesComponent,
   PASOS_REQUERIMIENTOS,
   RequerimientoInformacionComponent,
+  RequerimientosStates,
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE_RECIBO,
   TramiteFolioQueries,
@@ -305,6 +306,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   catalogoDocumentos: Catalogo[] = [];
 
+  /** Tipo de requerimiento seleccionado */
+  tipoRequerimiento!: string;
+
   /**
    * Datos que se muestran en la tabla de acuse.
   */
@@ -343,7 +347,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private desplazarseHaciaArribaService: DesplazarseHaciaArribaService,
     private atenderRequerimientoService: AtenderRequerimientoService,
     private location: Location,
-    private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService
+    private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
+    private consultaReq: RequerimientosStates
   ) {
 
     /**
@@ -358,6 +363,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      /**
+       * Obtiene el idTipoRequerimiento del store de requerimientos
+       */
+      this.tipoRequerimiento = this.consultaReq.getIdTipoRequerimiento();
+        
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -373,6 +383,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Inicializa el componente y obtiene datos necesarios.
    */
   ngOnInit(): void {
+
     /**
      * Verifica si existe un trámite previamente seleccionado.
      * Si existe, se selecciona automáticamente.
@@ -423,7 +434,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   async loadComponent(li: ListaComponentes): Promise<void> {
     if (!li.componentPath) {
-      console.error('Component not found in registry:');
+
       return;
     }
     this.viewChild = (await li.componentPath()) as Type<unknown>;
