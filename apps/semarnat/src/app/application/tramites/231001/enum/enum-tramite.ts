@@ -2,7 +2,7 @@
 export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
   `<p>La solicitud ha quedado registrada con el número temporal ${
     numeroSolicitud ?? ''
-  }. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que esta sea firmada.</p>`;
+  }. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
 
 /**
  * Códigos de respuesta para las operaciones de la aplicación.
