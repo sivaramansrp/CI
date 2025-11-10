@@ -23,7 +23,8 @@ const mockSolicitudState: Solicitud150103State = {
   totalExportaciones: '500',
   totalImportaciones: '300',
   saldo: '200',
-  porcentajeExportacion: '50'
+  porcentajeExportacion: '50',
+  indiceDeRegistroDelPrograma: 0
 };
 
 // Mock Services

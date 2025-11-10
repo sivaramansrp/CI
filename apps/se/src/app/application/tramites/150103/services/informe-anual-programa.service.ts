@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReporteFechas } from '../models/programas-reporte.model';
 import { Solicitud150103Query } from '../estados/solicitud150103.query';
 
 @Injectable({

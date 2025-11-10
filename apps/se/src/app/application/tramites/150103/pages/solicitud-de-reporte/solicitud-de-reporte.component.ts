@@ -1,15 +1,14 @@
-
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { take, takeUntil } from 'rxjs/operators';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
@@ -36,7 +35,7 @@ interface AccionBoton {
  
 })
 
-export class SolicitudDeReporteComponent {
+export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
 
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
   /**
@@ -186,7 +185,7 @@ export class SolicitudDeReporteComponent {
         ],
         "sectores": [
           {
-            "idConfProgramaSE": data.folioPrograma ? parseInt(data.folioPrograma.split(',')[0].split('-')[1]) : 0
+            "idConfProgramaSE": data.folioPrograma ? parseInt(data.folioPrograma.split(',')[0].split('-')[1], 10) : 0
           }
         ],
         "reporte_anual": REPORTE_ANUAL,

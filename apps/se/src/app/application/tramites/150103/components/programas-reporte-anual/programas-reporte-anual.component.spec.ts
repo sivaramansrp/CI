@@ -145,7 +145,7 @@ describe('ProgramasReporteAnualComponent', () => {
 
     component.obtenerReporteFechas();
 
-    expect(informeAnualPrograma.obtenerReporteFechas).toHaveBeenCalled();
+    expect(informeAnualPrograma.obtenerProgramasReporte).toHaveBeenCalled();
     expect(storeSpy).toHaveBeenCalledWith('2023-01-01');
     expect(storeSpyFin).toHaveBeenCalledWith('2023-12-31');
   });

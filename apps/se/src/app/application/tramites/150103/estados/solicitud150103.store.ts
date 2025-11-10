@@ -163,7 +163,6 @@ export class Solicitud150103Store extends Store<Solicitud150103State> {
   /** Actualiza el ID de la solicitud. */
   setIdSolicitud(idSolicitud: number): void {
     this.update(state => ({ ...state, idSolicitud }));
-    console.log('ID de solicitud actualizado en el store:', idSolicitud);
   }
 
   /**

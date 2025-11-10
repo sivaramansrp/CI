@@ -1,25 +1,14 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidArray, esValidObject, getValidDatos, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
-import { ReporteFechas } from '../../models/programas-reporte.model';
+import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
-
-import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
-
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
-import { Subject } from 'rxjs';
-
-import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidArray, esValidObject, getValidDatos, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @description Componente para gestionar el reporte anual de programas.
@@ -177,14 +166,15 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * Actualiza la propiedad `solicitudDatos` con los datos obtenidos.
    *
    * @returns {void}
-   */  obtenerProgramasReporte(): void {
+   */  
+  obtenerProgramasReporte(): void {
     this.informaAnualPrograma
       .obtenerProgramasReporte(this.LOGIN_RFC)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({        next: (respuesta) => {
+      .subscribe({        
+        next: (respuesta) => {
           const API_RESPONSE = doDeepCopy(respuesta);
           if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
-            // Don't override the dates - keep the default dates we set
             this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
@@ -215,7 +205,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param dateString Cadena de fecha en formato ISO o similar.
    * @returns Cadena formateada en "MM-YYYY" o cadena vacía si la entrada no es válida.
    */
-  private formatDateToMonthYear(dateString: string) {
+  private formatDateToMonthYear(dateString: string): string {
     if(getValidDatos(dateString)) {
         const DATE = new Date(dateString);
         const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');

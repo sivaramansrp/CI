@@ -28,7 +28,8 @@ import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
 
-@NgModule({  declarations: [
+@NgModule({  
+  declarations: [
     PasoUnoComponent, 
     PasoTresComponent,
     SolicitudDeReporteComponent,
