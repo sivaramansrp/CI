@@ -3,9 +3,12 @@ import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { PASOS, TITULOMENSAJE } from '../../constants/importacion-retorno-sanitario.enum';
+import { MENSAJE_DE_VALIDACION } from '../../../260212/constants/medicos-uso.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component
@@ -31,6 +34,26 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+     /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+    /** Nueva notificación relacionada con el RFC. */
+    public seleccionarFilaNotificacion!: Notificacion;
+    /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+  
+    /**
+      * @property {PasoUnoComponent} pasoUnoComponent
+      * @description
+      * Referencia al componente hijo `PasoUnoComponent` mediante
+      * `@ViewChild`. Permite acceder a sus métodos y propiedades
+      * desde este componente padre.
+    */
+    @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
   
   /**
    *
@@ -98,19 +121,58 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(
-        e.valor
-      );
-
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+          let isValid = true;
+    
+            if (this.indice === 1 && this.pasoUnoComponent) {
+            isValid = this.pasoUnoComponent.validarPasoUno();
+          }
+          if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+            this.mostrarAlerta=true;
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          }
+          if (!isValid) {
+            this.esFormaValido = true;
+            this.datosPasos.indice = this.indice;
+            return;
+          }
+          this.esFormaValido = false;
+          this.postGuardarDatos(e);
+        }else{
+          this.indice = e.valor;
+          this.datosPasos.indice = this.indice;
+          this.wizardComponent.atras();
+        }
   }
+
+    postGuardarDatos(e: AccionBoton): void {
+            // Calcular el nuevo índice basado en la acción
+            let indiceActualizado = e.valor;
+            if (e.accion === 'cont') {
+              indiceActualizado = e.valor;
+            }
+            if (indiceActualizado > 0 && indiceActualizado < 5) {
+              this.indice = indiceActualizado;
+              this.datosPasos.indice = indiceActualizado;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          }
+    
 
   /**
    * @method obtenerNombreDelTítulo
