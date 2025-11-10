@@ -203,7 +203,9 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           }
           if(resp.codigo === '00') {
             this.folio = resp.datos || '';
-            this.mostrarAcuse();
+      
+
+            //this.mostrarAcuse();
           }
         }
       });

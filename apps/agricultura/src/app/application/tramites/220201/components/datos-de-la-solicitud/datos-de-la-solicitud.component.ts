@@ -1158,18 +1158,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_mercancia:'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
       numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
-      id_fraccion_gubernamental: 0,
+      id_fraccion_gubernamental: Number(fila.fraccionArancelaria) || 0,
       clave_nico: fila.nico || '',
       descripcion_mercancia: fila.descripcion || '',
       cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
       cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.umt || '',
+      clave_unidad_comercial: fila.clave_umt || '',
       id_especie: Number(fila.especie) || 0,
       id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',
@@ -1307,18 +1307,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_mercancia: 'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
       numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
-      id_fraccion_gubernamental: 0,
+      id_fraccion_gubernamental: Number(fila.fraccionArancelaria) || 0,
       clave_nico: fila.nico || '',
       descripcion_mercancia: fila.descripcion || '',
       cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
       cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.umt || '',
+      clave_unidad_comercial: fila.clave_umt || '',
       id_especie: Number(fila.especie) || 0,
       id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',

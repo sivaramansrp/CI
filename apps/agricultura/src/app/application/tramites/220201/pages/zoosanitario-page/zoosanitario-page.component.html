@@ -34,7 +34,7 @@
         </div>
       </div>
       } @case (3) {
-      <app-paso-tres (isAcuseVisibleChange)="recibirRespuesta($event)"></app-paso-tres>
+      <paso-firma [idSolicitud]="+this.numeroSolicitud" [procedure]="220201" [procedureUrl]="'solicitud'"></paso-firma>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
           <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"

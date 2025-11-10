@@ -15,6 +15,10 @@ export const ROUTES_ZOOSANITARIO: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: 'zoosanitario',
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
   }
 
 ];

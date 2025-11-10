@@ -1,5 +1,5 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
@@ -32,7 +32,7 @@ import { EventEmitter } from '@angular/core';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent, AcuseComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent,BtnContinuarComponent, AlertComponent, AcuseComponent, PasoFirmaComponent],
 })
 export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;

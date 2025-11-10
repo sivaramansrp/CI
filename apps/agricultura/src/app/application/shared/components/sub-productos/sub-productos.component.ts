@@ -395,6 +395,11 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         tipoPresentacionDescripcion: this.productosForm.get('tipoPresentacion')?.value || '',
         cantidadUMC: cantidadUMCValue,
         modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
+        fraccionArancelaria: this.productosForm.get('fraccionArancelaria')?.value || '',
+        nico: this.productosForm.get('nico')?.value || '',
+        umt: this.productosForm.get('umt')?.value || '',
+        umc: this.productosForm.get('umc')?.value || '',
+        clave_umt: this.catalogosDatos.umtList.find(item => item.descripcion === this.productosForm.get('clave_umt')?.value)?.clave || '',
         detalleProductos: this.detalleTablaDatos
       };
 
@@ -476,6 +481,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
         if (response && response.codigo === '00' && response.datos) {
           this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+          this.productosForm.get('clave_fraccion')?.setValue(response.datos.id_fraccion);
         } else {
           this.productosForm.get('descripcionFraccion')?.setValue('');
         }
