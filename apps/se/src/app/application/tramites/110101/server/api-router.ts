@@ -201,3 +201,13 @@ export const API_GET_MERCANCIA_EVALUAR = (IDSOLICITUD: string): string => `sat-t
  */
 export const API_GET_PROTESTO_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/declaraciones`;
 
+/**
+ * URLs de Tab Exportador autorizado
+ */
+
+/**
+ * API para consultar el exportador autorizado de UE y JPN
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-exportador-by-id-solicitud
+ */
+export const API_GET_EXPORTADOR_AUTORIZADO = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/exportador`;
+

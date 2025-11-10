@@ -14,6 +14,17 @@ export const RADIO_OPCIONS = [
 ];
 
 /**
+ * @constant RADIO_OPCIONS_EXP_AUT
+ * @description Opciones de radio para exportador autorizado.
+ */
+export const RADIO_OPCIONS_EXP_AUT = [
+  { label: 'Mercancia Exportador Autorizado Programa Immex', value: 'CEXPA.01' },
+  { label: 'Mercancia Exportador Autorizado Dolares Exportados', value: 'CEXPA.02' },
+  { label: 'Mercancia Exportador Autorizado Producto Perecedero', value: 'CEXPA.03' },
+  { label: 'Mercancia Exportador Autorizado Producto Artesanal', value: 'CEXPA.04' }
+];
+
+/**
  * @constant OPCIONES
  * @description Opciones de selección si/no.
  */
