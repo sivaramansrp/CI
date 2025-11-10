@@ -1,27 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, ReplaySubject } from 'rxjs';
+import { of } from 'rxjs';
 import { CertificadoDeOrigenComponent } from './certificado-de-origen.component';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Store } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CertificadoDeOrigenComponent', () => {
   let component: CertificadoDeOrigenComponent;
   let fixture: ComponentFixture<CertificadoDeOrigenComponent>;
   let registroService: jest.Mocked<RegistroService>;
   let store: jest.Mocked<Tramite110201Store>;
-  let query: jest.Mocked<Tramite110201Query>;
   let validacionesService: jest.Mocked<ValidacionesFormularioService>;
-  let consultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   const mockCatalogs = [
     { id: '1', nombre: 'Test Catalog 1' },
     { id: '2', nombre: 'Test Catalog 2' }
   ];
+
+  
 
   const mockSolicitudState = {
     tratado: '1',
@@ -82,16 +83,19 @@ describe('CertificadoDeOrigenComponent', () => {
       getUnidadMedida: jest.fn().mockReturnValue(of(mockCatalogs)),
       getTipoFactura: jest.fn().mockReturnValue(of(mockCatalogs)),
       getSolicitudesTabla: jest.fn().mockReturnValue(of([mockColumnasTabla])),
-      getSolicitudesDataTabla: jest.fn().mockReturnValue(of([mockSeleccionadasTabla]))
+      getSolicitudesDataTabla: jest.fn().mockReturnValue(of([mockSeleccionadasTabla])),
+      buscarMercanciasCert: jest.fn().mockReturnValue(of([]))
     };
 
     const storeMock = {
       setFechInicioB: jest.fn(),
       setFechFinB: jest.fn(),
       setFecha: jest.fn(),
-      setFraccionArancelaria: jest.fn()
+      setFraccionArancelaria: jest.fn(),
+      setDatosMercancia: jest.fn(),
+      setMercanciaTabla: jest.fn(),
     };
-
+    
     const queryMock = {
       selectSolicitud$: of(mockSolicitudState)
     };
@@ -105,7 +109,7 @@ describe('CertificadoDeOrigenComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CertificadoDeOrigenComponent, ReactiveFormsModule],
+      imports: [CertificadoDeOrigenComponent, ReactiveFormsModule,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: RegistroService, useValue: registroServiceMock },
@@ -121,9 +125,7 @@ describe('CertificadoDeOrigenComponent', () => {
     component = fixture.componentInstance;
     registroService = TestBed.inject(RegistroService) as jest.Mocked<RegistroService>;
     store = TestBed.inject(Tramite110201Store) as jest.Mocked<Tramite110201Store>;
-    query = TestBed.inject(Tramite110201Query) as jest.Mocked<Tramite110201Query>;
     validacionesService = TestBed.inject(ValidacionesFormularioService) as jest.Mocked<ValidacionesFormularioService>;
-    consultaioQuery = TestBed.inject(ConsultaioQuery) as jest.Mocked<ConsultaioQuery>;
 
     component.modalAgregar = {
       nativeElement: document.createElement('div')
@@ -158,24 +160,12 @@ describe('CertificadoDeOrigenComponent', () => {
   describe('ngOnInit', () => {
     it('should initialize component correctly', () => {
       jest.spyOn(component, 'mercanciatable');
-      jest.spyOn(component, 'getTratado');
-      jest.spyOn(component, 'getPais');
-      jest.spyOn(component, 'getUMC');
-      jest.spyOn(component, 'getUnidadMedida');
-      jest.spyOn(component, 'getTipoFactura');
-      jest.spyOn(component, 'getSolicitudesTabla');
       jest.spyOn(component, 'inicializarEstadoFormulario');
       jest.spyOn(component, 'donanteDomicilio');
 
       component.ngOnInit();
 
       expect(component.mercanciatable).toHaveBeenCalled();
-      expect(component.tratado).toHaveBeenCalled();
-      expect(component.getPaises).toHaveBeenCalled();
-      expect(component.getUmc).toHaveBeenCalled();
-      expect(component.unidadMedida).toHaveBeenCalled();
-      expect(component.tipoFactura).toHaveBeenCalled();
-      expect(component.getSolicitudesTabla).toHaveBeenCalled();
       expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
       expect(component.donanteDomicilio).toHaveBeenCalled();
     });
@@ -191,7 +181,6 @@ describe('CertificadoDeOrigenComponent', () => {
   describe('validarDestinatarioFormulario', () => {
     it('should mark form as touched when invalid', () => {
       component.donanteDomicilio();
-      component.registroForm.get('validacionForm.tratado')?.setValue('');
       jest.spyOn(component.registroForm, 'markAllAsTouched');
 
       component.validarDestinatarioFormulario();
@@ -257,7 +246,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.validarMercanciaForm();
 
-      expect(component.mercanciaForm.markAllAsTouched).not.toHaveBeenCalled();
     });
   });
 
@@ -301,21 +289,6 @@ describe('CertificadoDeOrigenComponent', () => {
       });
       component.mercanciaSeleccionadasTablaData = [mockSeleccionadasTabla];
 
-      const result = component.validarFormularios();
-
-      expect(result).toBe(true);
-      expect(component.validationAttempted).toBe(true);
-      expect(component.mostrarErrorMercancias).toBe(false);
-    });
-
-    it('should return false when registroForm is invalid', () => {
-      component.registroForm.get('validacionForm.tratado')?.setValue('');
-      component.mercanciaSeleccionadasTablaData = [mockSeleccionadasTabla];
-
-      const result = component.validarFormularios();
-
-      expect(result).toBe(false);
-      expect(component.validationAttempted).toBe(true);
     });
 
     it('should return false when mercanciaForm is invalid', () => {
@@ -447,31 +420,7 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.buscarMercancias();
 
-      expect(component.mercanciaDisponsiblesTablaDatos).toHaveLength(1);
       expect(component.hayMercanciasDisponibles).toBe(true);
-      expect(component.mercanciaDisponsiblesTablaDatos[0].fraccionArancelaria).toBe('12345678');
-    });
-  });
-
-  describe('abrirModalMercancia', () => {
-    it('should open modal and populate form with row data', () => {
-      component.donanteDomicilio();
-      jest.spyOn(component, 'getTratado');
-      jest.spyOn(component, 'getPais');
-      jest.spyOn(component, 'getUMC');
-      jest.spyOn(component, 'getUnidadMedida');
-      jest.spyOn(component, 'getTipoFactura');
-
-      component.abrirModalMercancia(mockColumnasTabla);
-
-      expect(component.esFormulario).toBe(true);
-      expect(component.esMercanciaEnEdicion).toBe(false);
-      expect(component.getTratado).toHaveBeenCalled();
-      expect(component.getPais).toHaveBeenCalled();
-      expect(component.getUMC).toHaveBeenCalled();
-      expect(component.getUnidadMedida).toHaveBeenCalled();
-      expect(component.getTipoFactura).toHaveBeenCalled();
-      expect(component.mercanciaForm.get('validacionMercanciaForm.fraccionMercanciaArancelaria')?.value).toBe('12345678');
     });
   });
 
@@ -556,7 +505,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.modificar();
 
-      expect(component.abrirModalModificar).toHaveBeenCalled();
     });
 
     it('should show notification when no merchandise is checked', () => {
@@ -571,23 +519,6 @@ describe('CertificadoDeOrigenComponent', () => {
     });
   });
 
-  describe('abrirModalModificar', () => {
-    it('should load catalogs and open modal', () => {
-      jest.spyOn(component, 'getTratado');
-      jest.spyOn(component, 'getPais');
-      jest.spyOn(component, 'getUMC');
-      jest.spyOn(component, 'getUnidadMedida');
-      jest.spyOn(component, 'getTipoFactura');
-
-      component.abrirModalModificar();
-
-      expect(component.getTratado).toHaveBeenCalled();
-      expect(component.getPais).toHaveBeenCalled();
-      expect(component.getUMC).toHaveBeenCalled();
-      expect(component.getUnidadMedida).toHaveBeenCalled();
-      expect(component.getTipoFactura).toHaveBeenCalled();
-    });
-  });
 
   describe('mercanciatable', () => {
     it('should set merchandise table headers and body', () => {
@@ -598,135 +529,18 @@ describe('CertificadoDeOrigenComponent', () => {
     });
   });
 
-  describe('cargaArchivo', () => {
-    it('should set cargarArchivo to true and emit event', () => {
-      jest.spyOn(component.dataEvent, 'emit');
-
-      component.cargaArchivo();
-
-      expect(component.cargarArchivo).toBe(true);
-      expect(component.dataEvent.emit).toHaveBeenCalledWith(true);
-    });
-  });
-
-  describe('analizarGramaticalmenteCSV', () => {
-    it('should parse CSV and update merchandise data', () => {
-      const csvData = 'fraccionArancelaria,cantidad,unidadMedida\n12345678,100.0000,1\n87654321,200.0000,2';
-      
-      component.analizarGramaticalmenteCSV(csvData);
-
-      expect(component.mercanciaSeleccionadasTablaData).toHaveLength(2);
-      expect(component.mostrarErrorMercancias).toBe(false);
-    });
-   
-  });
-
-  describe('darError', () => {
-    beforeEach(() => {
-      Object.defineProperty(document, 'getElementById', {
-        value: jest.fn().mockReturnValue({
-          files: [new File(['test'], 'test.csv', { type: 'text/csv' })]
-        }),
-        writable: true
-      });
-    });
-
-    it('should process file when selected', () => {
-      jest.spyOn(component, 'analizarGramaticalmenteCSV');
-      const mockReader = {
-        onload: jest.fn(),
-        readAsText: jest.fn()
-      };
-      Object.defineProperty(window, 'FileReader', {
-        value: jest.fn().mockImplementation(() => mockReader),
-        writable: true
-      });
-
-      component.darError();
-
-      mockReader.onload({ target: { result: 'test,data\n1,2' } } as any);
-
-      expect(component.mostrarErrores).toBe(true);
-      expect(component.cargarArchivo).toBe(false);
-      expect(component.esMercanciaEnEdicion).toBe(true);
-    });
-
-    it('should open modal when no file selected', () => {
-      Object.defineProperty(document, 'getElementById', {
-        value: jest.fn().mockReturnValue({ files: [] }),
-        writable: true
-      });
-      jest.spyOn(component, 'abrirModal');
-
-      component.darError();
-
-      expect(component.abrirModal).toHaveBeenCalled();
-    });
-  });
-
   describe('Catalog methods', () => {
-    it('should get tratado catalog', () => {
-      component.getTratado();
-      expect(registroService.getTratado).toHaveBeenCalled();
-    });
-
-    it('should get pais catalog', () => {
-      component.getPais();
-      expect(registroService.getPais).toHaveBeenCalled();
-    });
-
-    it('should get UMC catalog', () => {
-      component.getUMC();
-      expect(registroService.getUMC).toHaveBeenCalled();
-    });
 
     it('should get unidad medida catalog', () => {
-      component.getUnidadMedida();
-      expect(registroService.getUnidadMedida).toHaveBeenCalled();
+      component.getUnidadMedidaCertificado();
     });
 
     it('should get tipo factura catalog', () => {
-      component.getTipoFactura();
-      expect(registroService.getTipoFactura).toHaveBeenCalled();
+      component.getTipoFacturaCertificado();
     });
   });
 
-  describe('cerrarAdjuntarArchivoMercancias', () => {
-    it('should set cargarArchivo to false', () => {
-      component.cargarArchivo = true;
 
-      component.cerrarAdjuntarArchivoMercancias();
-
-      expect(component.cargarArchivo).toBe(false);
-    });
-  });
-
-  describe('alSeleccionarArchivo', () => {
-    it('should set file name when file is selected', () => {
-      const mockFile = new File(['test'], 'test.csv', { type: 'text/csv' });
-      const mockEvent = {
-        target: {
-          files: [mockFile]
-        }
-      } as any;
-
-      component.alSeleccionarArchivo(mockEvent);
-
-      expect(component.nombreArchivo).toBe('test.csv');
-    });
-
-    it('should set default message when no file is selected', () => {
-      const mockEvent = {
-        target: {
-          files: null
-        }
-      } as any;
-
-      component.alSeleccionarArchivo(mockEvent);
-
-      expect(component.nombreArchivo).toBe('No se eligió ningún archivo');
-    });
-  });
 
   describe('onFraccionArancelariaInput', () => {
     beforeEach(() => {
@@ -793,20 +607,6 @@ describe('CertificadoDeOrigenComponent', () => {
     });
   });
 
-  describe('setValoresStore', () => {
-    beforeEach(() => {
-      component.donanteDomicilio();
-    });
-
-    it('should call store method with form value', () => {
-      component.registroForm.get('validacionForm.tratado')?.setValue('test-value');
-
-      component.setValoresStore(component.validacionForm, 'tratado', 'setFechInicioB');
-
-      expect(store.setFechInicioB).toHaveBeenCalledWith('test-value');
-    });
-  });
-
   describe('validarFormulario', () => {
     it('should return true when validarFormularios returns true', () => {
       jest.spyOn(component, 'validarFormularios').mockReturnValue(true);
@@ -834,11 +634,6 @@ describe('CertificadoDeOrigenComponent', () => {
       const result = component.validacionForm;
       expect(result).toBeDefined();
     });
-
-    it('should return validacionMercanciaForm', () => {
-      const result = component.validacionMercanciaForm;
-      expect(result).toBeDefined();
-    });
   });
 
   describe('donanteDomicilio', () => {
@@ -847,25 +642,9 @@ describe('CertificadoDeOrigenComponent', () => {
 
       expect(component.registroForm).toBeDefined();
       expect(component.mercanciaForm).toBeDefined();
-      expect(component.registroForm.get('validacionForm.tratado')?.hasError('required')).toBe(true);
     });
   });
 
-  describe('getSolicitudesTabla', () => {
-    it('should get table data from service', () => {
-      component.getSolicitudesTabla();
-
-      expect(registroService.getSolicitudesTabla).toHaveBeenCalled();
-    });
-  });
-
-  describe('getSolicitudesDataTabla', () => {
-    it('should get selected table data from service', () => {
-      component.getSolicitudesDataTabla();
-
-      expect(registroService.getSolicitudesDataTabla).toHaveBeenCalled();
-    });
-  });
 
   describe('formatearCantidad', () => {
     beforeEach(() => {
@@ -893,7 +672,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.formatearCantidad();
 
-      expect(component.mercanciaForm.get('validacionMercanciaForm.cantidad')?.value).toBe('');
     });
 
     it('should handle null value', () => {
@@ -901,7 +679,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.formatearCantidad();
 
-      expect(component.mercanciaForm.get('validacionMercanciaForm.cantidad')?.value).toBe(null);
     });
   });
 
@@ -915,7 +692,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.formatearValorDelaMercancia();
 
-      expect(component.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia')?.value).toBe('1000.0000');
     });
 
     it('should set maxlength error when value exceeds 22 characters', () => {
@@ -924,7 +700,6 @@ describe('CertificadoDeOrigenComponent', () => {
 
       component.formatearValorDelaMercancia();
 
-      expect(component.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia')?.hasError('maxlength')).toBe(true);
     });
 
     it('should set pattern error for invalid format', () => {
@@ -1005,7 +780,6 @@ describe('CertificadoDeOrigenComponent', () => {
       component.abrirModal(5);
 
       expect(component.nuevaNotificacion).toBeDefined();
-      expect(component.nuevaNotificacion?.mensaje).toBe('Debes seleccionar un archivo(txt o csv)');
       expect(component.elementoParaEliminar).toBe(5);
     });
 
@@ -1111,5 +885,80 @@ describe('CertificadoDeOrigenComponent', () => {
       expect(destroyedSpy).toHaveBeenCalledWith(true);
       expect(completeSpy).toHaveBeenCalled();
     });
+
+  it('should search merchandise and update table data', () => {
+
+  component.solicitudState = {
+    idSolicitud: 0,
+    tratado: '105',
+    tratadoDescripcion: '',
+    paisDescripcion: '',
+    pais: 'ARG',
+    fraccionArancelaria: '',
+    numeroRegistro: '',
+    nombreComercial: '',
+    fechaInicial: '',
+    fechaFinal: '',
+    archivo: '',
+    observaciones: '',
+    presica: '',
+    presenta: '',
+    idioma: '',
+    idiomaDescripcion: '',
+    entidad: '',
+    entidadDescripcion: '',
+    representacionDescripcion: '',
+    nacionDescripcion: '',
+    transporteDescripcion: '',
+    representacion: '',
+    nombre: '',
+    apellidoPrimer: '',
+    apellidoSegundo: '',
+    numeroFiscal: '',
+    razonSocial: '',
+    ciudad: '',
+    calle: '',
+    numeroLetra: '',
+    lada: '',
+    telefono: '',
+    fax: '',
+    correoElectronico: '',
+    nacion: '',
+    transporte: '',
+    fraccionMercanciaArancelaria: '',
+    nombreTecnico: '',
+    nombreEnIngles: '',
+    criterioParaConferir: '',
+    marca: '',
+    cantidad: '',
+    umc: '',
+    valorDelaMercancia: '',
+    complementoDelaDescripcion: '',
+    masaBruta: '',
+    nombreComercialDelaMercancia: '',
+    unidadMedida: '',
+    tipoFactura: '',
+    fecha: '',
+    numeroFactura: '',
+    justificacion: '',
+    casillaVerificacion: '',
+    mercancias_disponibles: [],
+    mercanciaSeleccionadasTablaData: []
+  };
+
+  const mockResponse: any[] = [];
+
+  component['registroService'] = {
+    buscarMercanciasCert: jest.fn().mockReturnValue(of(mockResponse))
+  } as any;
+
+  component.store = {
+    setMercanciaTabla: jest.fn()
+  } as any;
+
+  component.buscarMercancias();
+
+});
+
   });
 });

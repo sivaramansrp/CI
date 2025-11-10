@@ -48,15 +48,10 @@
     </ul>
 
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante #Solicitante></solicitante>
-      } @case (2) {
-      <app-datos-solicitud></app-datos-solicitud>
-      } @case (3) {
-      <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
-      } @case (4) {
-      <app-pago-derechos></app-pago-derechos>
-      } }
+      <solicitante #Solicitante *ngIf="indice === 1"></solicitante>
+      <app-datos-solicitud *ngIf="indice === 2"></app-datos-solicitud>
+      <app-terceros-relacionados-fabricante *ngIf="indice === 3"></app-terceros-relacionados-fabricante>
+      <app-pago-derechos *ngIf="indice === 4"></app-pago-derechos>
     </ng-container>
   </div>
 </div>

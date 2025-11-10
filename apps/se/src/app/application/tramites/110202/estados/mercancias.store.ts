@@ -2,6 +2,8 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 
+/**  Interfaz que define la estructura del estado para el store de Mercancias110202.
+ */
 export interface Mercancias110202State {
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
@@ -23,6 +25,10 @@ export interface Mercancias110202State {
    
 }
 
+/**
+ * Crea el estado inicial para el store de Mercancias110202.
+ * @returns {Mercancias110202State} El estado inicial con valores predeterminados.
+ */
 export function createInitialState(): Mercancias110202State {
   return {
     fraccionArancelaria: '',

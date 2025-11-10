@@ -69,6 +69,25 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
 }
 
 /**
+ * Convierte una cadena hexadecimal a su representación en ISO-8859-1 (Latin-1).
+ * Los bytes fuera del rango ISO-8859-1 (mayores a 255) son reemplazados por '?'.
+ * 
+ * @param hex - La cadena hexadecimal a decodificar
+ * @returns Una cadena de texto que representa los caracteres decodificados en ISO-8859-1
+*/
+export function hexToISO88591(hex: string): string {
+  const BYTES: number[] = [];
+
+  for (let i = 0; i < hex.length; i += 2) {
+    BYTES.push(parseInt(hex.substr(i, 2), 16));
+  }
+
+  // ISO-8859-1 usa un mapeo directo de byte a carácter (0x00–0xFF)
+  return String.fromCharCode(...BYTES);
+}
+
+
+/**
  * Convierte una cadena codificada en Base64 a su representación hexadecimal.
  * 
  * @param base64 - La cadena codificada en Base64 a convertir
@@ -352,16 +371,29 @@ export function convertDate(dateString: string): string {
         }
         return parsedDate.format('YYYY-MM-DD 00:00:00');
     }
-    
+
 /**
- * Formatea una cadena de fecha a formato 'YYYY-MM-DD'.
- * Si la cadena de fecha es vacía o nula, devuelve una cadena vacía.
- * Convierte la fecha a un objeto Date y obtiene su representación ISO limitada a la parte de fecha.
+ * **Convierte una fecha en formato ISO a 'DD/MM/YYYY'.**
+ * 
+ * Ejemplo:
+ *  Entrada: "2025-02-18T18:16:05.000-06:00"
+ *  Salida:  "18/02/2025"
+ * 
+ * @param dateString - Cadena de fecha en formato ISO o similar.
+ * @returns La fecha formateada como "DD/MM/YYYY".
  */
-export function formatDateToYYYYMMDD(dateString: string): string {
-  if (!dateString) {return '';}
+export function formatDateToDDMMYYYY(dateString: string): string {
+  if (!dateString) {
+    return '';
+  }
+
   const DATE = new Date(dateString);
-  return DATE.toISOString().split('T')[0];
+
+  const DAY = String(DATE.getDate()).padStart(2, '0');
+  const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+  const YEAR = DATE.getFullYear();
+
+  return `${DAY}/${MONTH}/${YEAR}`;
 }
 
 /**  
@@ -439,6 +471,30 @@ export function formatFechaDDMMYYYY(fechaStr: string): string {
   }
 
   /**
+ * **Convierte una fecha con zona horaria ISO a formato 'YYYY-MM-DD HH:mm:ss.s'**
+ * 
+ * Ejemplo:
+ *  Entrada: "2025-02-18T18:16:05.000-06:00"
+ *  Salida:  "2025-02-18 18:16:05.0"
+ * 
+ * @param fechaStr - Cadena de fecha en formato ISO con zona horaria.
+ * @returns La fecha formateada como "YYYY-MM-DD HH:mm:ss.s".
+ */
+export function formatFechaCustom(fechaStr: string): string {
+  const FECHA = new Date(fechaStr);
+
+  const YEAR = FECHA.getFullYear();
+  const MONTH = String(FECHA.getMonth() + 1).padStart(2, "0");
+  const DAY = String(FECHA.getDate()).padStart(2, "0");
+  const HOURS = String(FECHA.getHours()).padStart(2, "0");
+  const MINUTES = String(FECHA.getMinutes()).padStart(2, "0");
+  const SECONDS = String(FECHA.getSeconds()).padStart(2, "0");
+
+  // Agrega ".0" al final según el formato requerido
+  return `${YEAR}-${MONTH}-${DAY} ${HOURS}:${MINUTES}:${SECONDS}.0`;
+}
+
+/**
  * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
  * @param fecha_creacion Fecha en formato ISO (string)
  * @returns Fecha formateada como string

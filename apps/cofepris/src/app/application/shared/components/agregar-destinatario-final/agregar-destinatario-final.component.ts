@@ -8,6 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import {
+  AlertComponent,
   Catalogo,
   CatalogoServices,
   Notificacion,
@@ -58,6 +59,7 @@ import { takeUntil } from 'rxjs/operators';
     TituloComponent,
     TooltipModule,
     NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -252,6 +254,12 @@ export class AgregarDestinatarioFinalComponent
      * Suscripción para manejar observables.
      */
     private subscription: Subscription = new Subscription();
+
+  /**
+   * Mensaje de error para mostrar en el formulario.
+   * @property {string} mensajeDeError
+   */
+  mensajeDeError: string = '';
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -562,10 +570,11 @@ private guardarDestinatarioModal(): void {
       Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
+        this.mensajeDeError = 'Faltan campos por capturar.';
       });
       return;
     }
-    
+    this.mensajeDeError = '';
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     
     const NUEVO_DESTINATARIO: Destinatario = VALOR_FORMULARIO as Destinatario;
@@ -847,13 +856,6 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
    * destrucción usando `takeUntil(this.unsubscribe$)`.
    */
   cargarDatos(tramite: string): void {
-    this.datosSolicitudService
-      .obtenerListaCodigosPostales()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.codigosPostalesDatos = data;
-      });
-
     this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
         takeUntil(this.unsubscribe$)
       ).subscribe((data) => {
@@ -1296,7 +1298,6 @@ changeNacionalidad(): void {
     this.municipiosDatos = [];
   }
   }
-
   /**
    * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
    *
@@ -1315,17 +1316,42 @@ changeNacionalidad(): void {
       const DATOS = data.datos as Catalogo[];
       this.localidadesDatos = DATOS;
     }));
-
     this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, evento.clave).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe((data) => {
       const DATOS = data.datos as Catalogo[];
       this.coloniasDatos = DATOS;
     }));
-  } else {
-    this.localidadesDatos = [];
-    this.coloniasDatos = [];
+    } else {
+      this.localidadesDatos = [];
+      this.coloniasDatos = [];
+    }
+
   }
+
+  /**
+   * Carga la lista de códigos postales cuando se selecciona una localidad.
+   *
+   * @param _evento Objeto de tipo `Catalogo` que contiene la información seleccionada de la localidad.
+   *
+   * ### Descripción:
+   * - Obtiene el municipio seleccionado del formulario.
+   * - Si el formulario contiene el campo 'municipio', solicita los códigos postales asociados al municipio seleccionado.
+   * - Asigna la lista recibida a la propiedad `codigosPostalesDatos`.
+   * - Si no existe el campo 'municipio', limpia la lista de códigos postales.
+   */
+  cargarLocalidades(_evento: Catalogo): void {
+    const MUNICIPIO_SELECCIONADO = this.agregarDestinatarioFinal.get('municipio')?.value;
+    if (this.agregarDestinatarioFinal.contains('municipio')) {
+      this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, MUNICIPIO_SELECCIONADO).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.codigosPostalesDatos = DATOS;
+      }));
+    } else {
+      this.codigosPostalesDatos = [];
+    }
   }
 
   /**

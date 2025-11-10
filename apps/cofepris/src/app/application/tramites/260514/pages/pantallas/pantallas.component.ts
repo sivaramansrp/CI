@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos,ERROR_FORMA_ALERT, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@ng-mf/data-access-user';
+import {DatosComponent} from '../datos/datos.component';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
 /**
@@ -37,6 +38,11 @@ export class PantallasComponent {
    * Índice del paso actual en el wizard.
    */
   public indice: number = 1;
+
+  @ViewChild(DatosComponent) pasoUnoComponent!:DatosComponent ;
+  public esFormaValido: boolean = false;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
  
   /**
    * @property wizardComponent
@@ -71,13 +77,33 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e && e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      this.indice = e.valor;
-      this.datosPasos.indice = e.valor;
- 
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.pasoUnoComponent.validOnButtonClick();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
+
+    // Calcular el nuevo índice basado en la acción
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pantallasPasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
