@@ -924,21 +924,39 @@ usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observa
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de fracciones arancelarias.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de fracciones arancelarias
+ * @see API_FRACCIONES_ARANCELARIAS
+ */
 getFraccionesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+/**
+ * Obtiene el catálogo de Unidades de Medida de Transporte de Carga (UMT) según el trámite y régimen especificados.
+ * @param tramite - Identificador del trámite
+ * @param cveRegimen - Clave del régimen aduanero
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de UMT
+ * @see API_UMT
+ */
 
 getUMTCatalogo(tramite: string, cveRegimen: string): Observable<BaseResponse<Catalogo[]>> {
   const ENDPOINT = `${this.host}${API_UMT(tramite).replace(CLASIFICACION, cveRegimen)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
+/**
+ * Obtiene el catálogo de países por bloque comercial según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de países por bloque comercial
+ * @see PAISES_POR_BLOQUE
+ */
 getpaisesBloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   const ENDPOINT = `${this.host}${PAISES_POR_BLOQUE(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
-
-
 
 }
