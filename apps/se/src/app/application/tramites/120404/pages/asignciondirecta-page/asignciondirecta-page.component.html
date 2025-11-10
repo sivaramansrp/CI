@@ -4,15 +4,16 @@
         <h1>Asignación directa de cupo personas morales (ampliación)</h1>
       </div>
     </div>
-
-    <!-- Error message for search validation -->
-    <div class="col-md-12 mt-2" *ngIf="showBuscarError">
-      <ng-alert [CONTENIDO]="alertContent" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  <div class="col-md-12 mt-2" *ngIf="showBuscarError">
+      <ng-alert [CONTENIDO]="buscarAlertText" [CUSTOMECLASS]="infoAlert"></ng-alert>
     </div>
 
-    <!-- Error message for form validation -->
-    <div class="col-md-12 mt-2" *ngIf="showValidationError">
-      <ng-alert [CONTENIDO]="validationAlertContent" [CUSTOMECLASS]="infoAlert"></ng-alert>
+   <div class="col-md-12 mt-2" *ngIf="showValidationError && validationErrorsList.length">
+      <div class="alert alert-danger" role="alert">
+        <div style="text-align: center;">
+          <strong style="color: #585051ff">Faltan campos por capturar.</strong>
+        </div>
+       </div>
     </div>
 
     <app-wizard [listaPasos]="pasos"></app-wizard>

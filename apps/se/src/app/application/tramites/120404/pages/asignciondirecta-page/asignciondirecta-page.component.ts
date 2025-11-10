@@ -107,49 +107,16 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * Método para manejar la validación del formulario desde componentes hijos
    * @param event - Objeto que contiene el estado de validación del formulario
    */
-  onFormValidation(event: {isValid: boolean, errors: string[]}): void {
-    this.showValidationError = !event.isValid;
-    this.validationErrors = event.errors || [];
+  onFormValidation(event: any): void {
+    if (event && typeof event === 'object' && 'isValid' in event) {
+      this.showValidationError = !event.isValid;
+      this.validationErrors = event.errors || [];
+    } else {
+      this.showValidationError = false;
+      this.validationErrors = [];
+    }
   }
-
-  /**
-   * Genera el contenido HTML para mostrar mensajes de error de validación
-   */
-  get validationAlertContent(): string {
-    if (this.validationErrors.length === 0) return '';
-    
-    const ERRORLIST = this.validationErrors
-      .map((error, index) => `<span style="color: #d1776b">${index + 1}. ${error}</span>`)
-      .join('<br>');
-    
-    return `
-      <div style="text-align: center;">
-        <strong style="color: #585051ff">Corrija los siguientes errores:</strong><br>
-      </div>
-      <div style="text-align: left; margin-top: 5px;">
-        ${ERRORLIST}
-      </div>
-    `;
-  }
-
-  /**
- * Genera el contenido HTML para mostrar un mensaje de error
- * que incluye el número de trámite con estilo personalizado.
- * Se usa para alertar sobre valores inválidos en el formulario.
- */
-get alertContent(): string {
-  return `
-    <div style="text-align: center;">
-      <strong style="color: #585051ff"> Corrija los siguientes errores:</strong><br>
-    </div>
-    <div style="text-align: left; margin-top: 5px;">
-      <span style="color: #d1776b">
-        1.<span style="padding-left: 320px;">El valor (<strong>${this.numTramite}</strong>) debe ser un número válido.</span>
-      </span>
-    </div>
-  `;
-}
-
+ 
   /**
    * Maneja la acción del botón de navegación en el wizard.
    * @param e - Objeto que contiene la acción y el valor asociado.
@@ -157,11 +124,9 @@ get alertContent(): string {
   public getValorIndice(e: AccionBoton): void {
     this.showBuscarError = false;
     this.showValidationError = false;
-
-    // Validate current step before proceeding
-    if (e.accion === 'cont') {
+     if (e.accion === 'cont') {
       if (!this.validateCurrentStep()) {
-        return; // Stop navigation if validation fails
+        return; 
       }
     }
 
@@ -173,6 +138,20 @@ get alertContent(): string {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Getter para la lista de errores (usado por la plantilla)
+   */
+  get validationErrorsList(): string[] {
+    return this.validationErrors || [];
+  }
+
+  /**
+   * Texto plano para la alerta de búsqueda (usado por la plantilla)
+   */
+  get buscarAlertText(): string {
+    return this.numTramite ? `El valor (${this.numTramite}) debe ser un número válido.` : '';
   }
 
   /**
@@ -207,16 +186,10 @@ get alertContent(): string {
    */
   private validateStep1(): boolean {
     let isValid = true;
-    
-    // Add validation logic for step 1
-    if (!this.numTramite || this.numTramite.trim() === '') {
+ if (!this.numTramite || this.numTramite.trim() === '') {
       this.validationErrors.push('El número de trámite es requerido.');
       isValid = false;
     }
-    
-    // Add more validation rules as needed for step 1
-    // Example: Check if entity is selected, required fields are filled, etc.
-    
     return isValid;
   }
 
@@ -226,11 +199,7 @@ get alertContent(): string {
    */
   private validateStep2(): boolean {
     let isValid = true;
-    
-    // Add validation logic for step 2
-    // Example: Check required fields, selections, etc.
-    
-    return isValid;
+     return isValid;
   }
 
   /**
@@ -239,10 +208,6 @@ get alertContent(): string {
    */
   private validateStep3(): boolean {
     let isValid = true;
-    
-    // Add validation logic for step 3
-    // Example: Check required fields, confirmations, etc.
-    
-    return isValid;
+     return isValid;
   }
 }
