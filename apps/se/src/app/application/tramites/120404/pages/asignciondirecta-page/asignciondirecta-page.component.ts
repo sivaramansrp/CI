@@ -107,7 +107,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * Método para manejar la validación del formulario desde componentes hijos
    * @param event - Objeto que contiene el estado de validación del formulario
    */
-  onFormValidation(event: any): void {
+  onFormValidation(event: { isValid?: boolean; errors?: string[] } | null | undefined): void {
     if (event && typeof event === 'object' && 'isValid' in event) {
       this.showValidationError = !event.isValid;
       this.validationErrors = event.errors || [];
@@ -198,8 +198,8 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * @returns {boolean} - true si es válido, false en caso contrario
    */
   private validateStep2(): boolean {
-    let isValid = true;
-     return isValid;
+    const ISVALID = true;
+     return ISVALID;
   }
 
   /**
@@ -207,7 +207,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * @returns {boolean} - true si es válido, false en caso contrario
    */
   private validateStep3(): boolean {
-    let isValid = true;
-     return isValid;
+    const ISVALID = true;
+     return ISVALID;
   }
 }
