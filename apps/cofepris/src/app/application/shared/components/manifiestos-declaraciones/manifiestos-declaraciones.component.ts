@@ -136,7 +136,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       .subscribe();
 
   this.manifiestos = this.fb.group({
-    mensaje: [this.solicitudState?.mensaje, Validators.required],
+    mensaje: [this.solicitudState?.mensaje, Validators.requiredTrue],
     cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
   });
 
@@ -181,7 +181,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         [campo]: VALOR,
       });
   }
-
+validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.manifiestos.invalid){
+     this.manifiestos.markAllAsTouched();
+     ISVALID = false;
+    }
+    return ISVALID;
+}
   /**
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

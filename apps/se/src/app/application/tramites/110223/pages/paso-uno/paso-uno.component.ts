@@ -183,7 +183,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.certificadoOrigen) {
       if (!this.certificadoOrigen.validarFormulario()) {
-        isValid = false;
+        isValid = true;
       }
     } else {
       isValid = false;
@@ -191,7 +191,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.datosCertificado) {
       if (!this.datosCertificado.validarFormulario()) {
-        isValid = false;
+        isValid = true;
       }
     } else {
       isValid = false;

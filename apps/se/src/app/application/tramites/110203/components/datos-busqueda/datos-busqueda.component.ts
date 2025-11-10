@@ -1,4 +1,4 @@
-import { CatalogoServices,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent, formatFechaCustom } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponse, CertificadoData, TablaRow } from '../../models/datos-tramite.model';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
+import {ENVIRONMENT} from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
@@ -34,6 +35,22 @@ import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.
   styleUrl: './datos-busqueda.component.css',
 })
 export class DatosBusquedaComponent implements OnInit, OnDestroy {
+/**
+ * Constante que define los tipos de búsqueda disponibles, 
+ * incluyendo la búsqueda por número de certificado y por tratado o país/bloque.
+ */
+  private readonly SEARCH_TYPE_ID = {
+    CERTIFICADO: 0, // "Por número de certificado"
+    PAIS_DEL_TRATADO: 1 // "Por Tratado/Acuerdo País/Bloque"
+  } as const;
+
+/**
+ * Obtiene el índice de la opción seleccionada en el grupo de radios,
+ * comparando el valor actual seleccionado con las opciones disponibles.
+ */
+  private getSelectedOptionIndex(): number {
+    return this.radioOptions.findIndex(option => option.value === this.valorSeleccionado);
+  }
 
   /**
   * Almacena el valor seleccionado, que puede ser un string o un número.
@@ -272,9 +289,11 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     
     this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
     
-    if (valor) {
+    if (valor && valor.trim() !== '') {
       this.obtenerPaisesPorTratado(valor);
-    } 
+    } else {
+      this.paisBloque = [];
+    }
   });
 
     /** 
@@ -289,12 +308,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
-
-    this.tramite110203Query.selectSolicitud$
-  .pipe(takeUntil(this.unsubscribe$))
-  .subscribe((state) => {
-    this.certificadoState = state;
-  });
     
     this.obtenerTratadoAcuerdo();
   }
@@ -331,16 +344,18 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * - Clears validators if no condition matches.
    */
   private validadoresActualización(): void {
+    const SELECCIONADO_INDICE = this.getSelectedOptionIndex();
+    
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.setValidators(
-      this.valorSeleccionado === 'Por número de certificado' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.CERTIFICADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('paisBloque')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.updateValueAndValidity();
@@ -354,39 +369,51 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
   /** 
    * Método para realizar la búsqueda y mostrar la tabla de resultados.
    */
-public buscar(): void {
-  if (!this.datosBusquedaFormulario.valid) {
-    if (this.valorSeleccionado === 'Por número de certificado') {
+  public buscar(): void {
+    if (!this.datosBusquedaFormulario.valid) {
+      const INDICE = this.getSelectedOptionIndex();
+      
+      let mensaje = 'Datos requeridos';
+      if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+        mensaje = 'El número de certificado es requerido';
+      } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+        mensaje = 'La selección de un país/bloque es requerida';
+      }
+
       this.alertaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'El número de certificado es requerido',
+        mensaje,
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    } else if (this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque') {
-      this.alertaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'La selección de un país/bloque es requerida',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+    } else {
+      this.verTabla = true;
+      this.buscarDatos();
     }
-  } else {
-    this.verTabla = true;
-    this.buscarDatos();
   }
+
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por número de certificado.
+ * @returns `true` si la opción seleccionada es "Por número de certificado", de lo contrario `false`.
+ */
+busquedaDeCertificado(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.CERTIFICADO;
 }
 
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por tratado, país o bloque.
+ * @returns `true` si la opción seleccionada es "Por Tratado/País/Bloque", de lo contrario `false`.
+ */
+busquedaDeTratadoPais(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO;
+}
 
   /**
    * Restores form values from global state.
@@ -437,7 +464,7 @@ public buscar(): void {
    * el componente se destruye, evitando fugas de memoria.
    */
   obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites,"TITRAC.TA")
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -472,11 +499,7 @@ obtenerPaisesPorTratado(tratadoId: string): void {
     .subscribe({
       next: (response) => {        
         if (response?.datos && response.datos.length > 0) {
-          // Extract the first país clave from the response
-          const PAIS_CLAVE = response.datos[0].clave;
-          if (PAIS_CLAVE !== undefined) {
-            this.obtenerTratadosAcuerdosPorPais(PAIS_CLAVE);
-          }
+          this.paisBloque = response.datos;
         } else {
           this.paisBloque = [];
         }
@@ -489,38 +512,35 @@ obtenerPaisesPorTratado(tratadoId: string): void {
 }
 
 /**
- * Obtiene los tratados y acuerdos asociados a un país específico.
- *
- * @param cvePais - Clave o código del país para filtrar tratados y acuerdos.
- */
-obtenerTratadosAcuerdosPorPais(cvePais: string): void {
-  this.catalogoService.getTratadosAcuerdosPorPais(this.tramites, cvePais)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-        this.paisBloque = response?.datos ?? [];
-      },
-      error: (error) => {
-        console.error('Error obteniendo tratados-acuerdos por país:', error);
-        this.paisBloque = [];
-      }
-    });
-}
-
-/**
  * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
  */
 buscarDatos(): void {
-    const PAYLOAD = {
-      numeroCertificado: "25402500186802", 
-      // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
-      rfcSolicitante: "AAL0409235E6"
-    };
+
+    type CertificadoPayload =
+      | { numeroCertificado: string; rfcSolicitante: string }
+      | { cvePaisSeleccionado: string; cveTratadoAcuerdoSeleccionado: string; rfcSolicitante: string };
+
+    let PAYLOAD: CertificadoPayload;
+    const INDICE = this.getSelectedOptionIndex();
+
+    if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+      PAYLOAD = {
+        numeroCertificado: this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || '',
+        rfcSolicitante: ENVIRONMENT.RFC
+      };
+    } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+      PAYLOAD = {
+        cvePaisSeleccionado: `P-${this.datosBusquedaFormulario.get('paisBloque')?.value || ''}`,
+        cveTratadoAcuerdoSeleccionado: this.datosBusquedaFormulario.get('tratadoAcuerdo')?.value || '',
+        rfcSolicitante: ENVIRONMENT.RFC
+      };
+    } else {
+      return;
+    }
 
     this.Solocitud110203Service.buscarCertificado(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: unknown) => {
-        // const DATOS = (response as any).datos ?? [];
       const API_RESPONSE = response as ApiResponse;
       const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
 
@@ -600,10 +620,10 @@ private actualizarDatosMercancias(data: CertificadoData): void {
 private actualizarTabla(datos: CertificadoData[]): void {
     const CUERPO_TABLA = datos.map((item: CertificadoData) => ({
       numeroDeCertificado: item.numeroCertificado,
-      expedicion: item.fechaExpedicion,
-      vencimiento: item.fechaVencimiento,
+      expedicion: formatFechaCustom(item.fechaExpedicion),
+      vencimiento: formatFechaCustom(item.fechaVencimiento),
     }));
-
+    
     this.establecimientoBodyData = [];
     CUERPO_TABLA.forEach((row: TablaRow) => {
       const TABLE_ROW: TableBodyData = { tbodyData: [] };

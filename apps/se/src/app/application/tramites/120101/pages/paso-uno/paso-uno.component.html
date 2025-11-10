@@ -29,7 +29,7 @@
                 }
                 @case (2) {
                      @if (esDatosRespuesta) {
-                        <consultar-cupo #consultarCupo [consultaState]="consultaState" (emitirFilaClicControlador)="archivoHagaClicControlador($event)"></consultar-cupo>
+                        <consultar-cupo #consultarCupo [consultaState]="consultaState" (emitirFilaClicControlador)="archivoHagaClicControlador($event)" (fraccionErrorEvent)="fraccionErrorEvent($event)" (obtenerVisible)="obtenerVisible($event)"></consultar-cupo>
                         @if (elementoDeTablaSeleccionado) {
                             <descripcion-del-cupo #descripcionDelCupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
                             <representacion-federal #representacionFederal [consultaState]="consultaState"></representacion-federal>
