@@ -609,6 +609,12 @@ export const DOCUMENTOMINIO= '{documentoMinio}';
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * API para Consultar url de descarga de documentos.
+ * @see  https://api-v30.cloud-ultrasist.net/api/digitalizacion/swagger-ui/index.html#/Carga-Documento/DownloadDocument
+ */
+export const API_GET_DESCARGAR_DOCUMENTOS= `digitalizacion/descargar/${DOCUMENTOMINIO}`
  
 /**
  * IDREQUERIMIENTO para detalle de requerimiento.
