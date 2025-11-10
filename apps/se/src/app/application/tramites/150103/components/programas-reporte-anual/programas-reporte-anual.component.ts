@@ -1,25 +1,14 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TablaSeleccion, doDeepCopy, esValidArray, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
-import { ReporteFechas } from '../../models/programas-reporte.model';
+import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
-
-import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
-
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
-import { Subject } from 'rxjs';
-
-import { ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @description Componente para gestionar el reporte anual de programas.
@@ -80,7 +69,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   solicitudConfiguracionTabla = SOLICITUD_CONFIGURACION_TABLA;
 
   // Valor de RFC de ejemplo
-  private loginRfc: string = 'AAL0409235E6';
+  private readonly LOGIN_RFC: string = 'AAL0409235E6';
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -88,7 +77,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param solicitud150103Store Servicio para manejar el estado de la solicitud.
    * @param solicitud150103Query Servicio para realizar consultas del estado.
    * @param informaAnualPrograma Servicio para realizar solicitudes relacionadas.
-   */
+   */  
   constructor(
     public fb: FormBuilder,
     public solicitud150103Store: Solicitud150103Store,
@@ -96,12 +85,30 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     public informaAnualPrograma: InformeAnualProgramaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.obtenerReporteFechas();
+    this.setDefaultDates();
+    
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
       this.obtenerProgramasReporte();
     }
+  }
+
+  /**
+   * @description Establece las fechas predeterminadas de inicio y fin en el store.
+   * La fecha de inicio se establece en el mes y año actuales,
+   * mientras que la fecha de fin se establece en el mes anterior del mismo año.
+   */
+  private setDefaultDates(): void {
+    const FECHA_ACTUAL = new Date();
+    const MES_FECHA = new Date(FECHA_ACTUAL);
+    MES_FECHA.setMonth(FECHA_ACTUAL.getMonth() - 1);
+    
+    const FORMATTED_INICIO_DATE = this.formatDateToMonthYear(FECHA_ACTUAL.toISOString());
+    const FORMATTED_FIN_DATE = this.formatDateToMonthYear(MES_FECHA.toISOString());
+    
+    this.solicitud150103Store.actualizarInicio(FORMATTED_INICIO_DATE);
+    this.solicitud150103Store.actualizarFin(FORMATTED_FIN_DATE);
   }
 
   /**
@@ -154,56 +161,59 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Método para obtener las fechas de inicio y fin del reporte.
-   * Actualiza el estado con las fechas obtenidas del servicio.
-   */
-  obtenerReporteFechas(): void {
-    this.informaAnualPrograma
-      .obtenerReporteFechas()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (respuesta: ReporteFechas) => {
-          this.solicitud150103Store.actualizarInicio(respuesta.inicio);
-          this.solicitud150103Store.actualizarFin(respuesta.fin);
-        },
-      });
-  }
-
-  /**
    * @method obtenerProgramasReporte
    * @description
    * Método para obtener la lista de programas de reporte anual desde el servicio.
    * Actualiza la propiedad `solicitudDatos` con los datos obtenidos.
    *
    * @returns {void}
-   */
+   */  
   obtenerProgramasReporte(): void {
     this.informaAnualPrograma
-      .obtenerProgramasReporte(this.loginRfc)
+      .obtenerProgramasReporte(this.LOGIN_RFC)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (respuesta: Record<string, unknown>) => {
-          const DATOS = respuesta?.['datos'] as Array<unknown> | undefined;
-          if (Array.isArray(DATOS) && DATOS.length) {
-            const PROGRAMAS = DATOS.map((item) => {
-              const PROGRAMA = item as ProgramasReporte;
-              return {
-                folioPrograma: PROGRAMA.folioPrograma ?? '',
-                modalidad: PROGRAMA.modalidad ?? '',
-                tipoPrograma: PROGRAMA.tipoPrograma ?? '',
-                estatus: PROGRAMA.estatus ?? '',
-              };
-            });
-            this.solicitudDatos = PROGRAMAS;
-            this.solicitud150103Store.setSolicitusDatos(this.solicitudDatos);
-          } else {
-            this.solicitudDatos = [];
+      .subscribe({        
+        next: (respuesta) => {
+          const API_RESPONSE = doDeepCopy(respuesta);
+          if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
+            this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
-        error: () => {
-        this.solicitudDatos = [];
-      },
       });
+  }
+
+  /**
+   * @method mapProgramasResponse
+   * @description Mapea la respuesta de la API a un arreglo de objetos `ProgramasReporte`.
+   * @param datos Arreglo de datos sin tipar recibido de la API.
+   * @returns Arreglo de objetos `ProgramasReporte` mapeados.
+   */
+  public mapProgramasResponse(datos: unknown[]): ProgramasReporte[] {
+    return datos.map((item: unknown) => {
+      const PROGRAMA = item as ProgramasReporte;
+      return {
+        folioPrograma: PROGRAMA.folioPrograma,
+        modalidad: PROGRAMA.modalidad,
+        tipoPrograma: PROGRAMA.tipoPrograma,
+        estatus: PROGRAMA.estatus
+      };
+    }) || [];
+  }
+
+  /**
+   * @method formatDateToMonthYear
+   * @description Formatea una cadena de fecha al formato "MM-YYYY".
+   * @param dateString Cadena de fecha en formato ISO o similar.
+   * @returns Cadena formateada en "MM-YYYY" o cadena vacía si la entrada no es válida.
+   */
+  private formatDateToMonthYear(dateString: string): string {
+    if(getValidDatos(dateString)) {
+        const DATE = new Date(dateString);
+        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+        const YEAR = DATE.getFullYear();
+        return `${MONTH}-${YEAR}`;
+    }
+    return '';
   }
 
   /**
@@ -211,6 +221,10 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * @param evento Objeto que contiene los datos del programa seleccionado.
    */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
+    const INDEX = this.solicitudDatos.findIndex(
+      (x) => x.folioPrograma === evento.folioPrograma
+    );
+    this.solicitud150103Store.actualizarIndiceDeRegistroDelPrograma(INDEX);
     this.solicitud150103Store.actualizarFolioPrograma(evento.folioPrograma);
     this.solicitud150103Store.actualizarModalidad(evento.modalidad);
     this.solicitud150103Store.actualizarTipoPrograma(evento.tipoPrograma);
