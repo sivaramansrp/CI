@@ -670,7 +670,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
  *              para elementos de tabla en la aplicación.
  * @type {number[]}
  */
-export const OCULTAR_PROVEEDOR = [260102, 260101];
+export const OCULTAR_PROVEEDOR = [260102, 260101,260103];
 
 /**
  * @const OCULTAR_FACTURADOR
@@ -678,7 +678,7 @@ export const OCULTAR_PROVEEDOR = [260102, 260101];
  *
  * @type {number[]}
  */
-export const OCULTAR_FACTURADOR = [260102, 260101];
+export const OCULTAR_FACTURADOR = [260102, 260101,260103];
 
 /**
  * @const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE

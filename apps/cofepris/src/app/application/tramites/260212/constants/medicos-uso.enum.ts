@@ -35,5 +35,6 @@ export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan ca
  * @description Lista de elementos requeridos para el trámite.
  */
 export const ELEMENTOS_REQUERIDOS_TR = [
-  'fabricante'
+  'fabricante',
+  'destinoFinal',
 ];
