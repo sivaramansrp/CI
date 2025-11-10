@@ -182,22 +182,22 @@ export class ModificarMercanciasComponent implements OnChanges, OnInit, OnDestro
   paisDeOrigenBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
@@ -208,22 +208,22 @@ export class ModificarMercanciasComponent implements OnChanges, OnInit, OnDestro
   paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[1].quitar('t'),
     },
   ];
@@ -234,22 +234,22 @@ export class ModificarMercanciasComponent implements OnChanges, OnInit, OnDestro
   usoEspecificoBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[2].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[2].quitar('t'),
     },
   ];
