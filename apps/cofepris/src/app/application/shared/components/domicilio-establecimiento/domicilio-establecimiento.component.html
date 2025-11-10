@@ -19,6 +19,9 @@
                   <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('pattern')">
                   Por favor, escribe un número entero válido
                   </small>
+                  <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('invalidCodigoPostal')">
+      El valor capturado no es válido
+    </small>
                </div>
             </div>
          </div>
@@ -399,7 +402,9 @@
                      );
                      formMercancias.get('usoEspecifico')?.markAsTouched();
                      "
-                     [maxlength]="5000"></textarea>
+                       [ngClass]="
+              isValid(formMercancias, 'usoEspecifico') ? 'required' : ''"
+              [maxlength]="5000"></textarea>
                   <div *ngIf="
                      formMercancias.get('usoEspecifico')?.invalid &&
                      formMercancias.get('usoEspecifico')?.touched
@@ -457,7 +462,11 @@
                   );
                   formMercancias.get('fraccionArancelaria')?.markAsTouched();
                   " 
-                  [maxlength]="8"/>
+                  [ngClass]="
+              isValid(formMercancias, 'fraccionArancelaria') ? 'required' : ''
+            "
+            [maxlength]="8"
+            />
                   <div *ngIf="
                      formMercancias.get('fraccionArancelaria')?.invalid &&
                      formMercancias.get('fraccionArancelaria')?.touched
@@ -500,8 +509,11 @@
                            'setCantidadUMT'
                            );
                            formMercancias.get('cantidadUMT')?.markAsTouched();
-                           " 
-                           [maxlength]="20"/>
+                           "
+                           [ngClass]="
+              isValid(formMercancias, 'cantidadUMT') ? 'required' : ''
+            "
+            [maxlength]="20" />
                         <div *ngIf="
                            formMercancias.get('cantidadUMT')?.invalid &&
                            formMercancias.get('cantidadUMT')?.touched
@@ -543,8 +555,11 @@
                            'setCantidadUMC'
                            );
                            formMercancias.get('cantidadUMC')?.markAsTouched();
-                           " 
-                           [maxlength]="20"/>
+                           "
+                           [ngClass]="
+              isValid(formMercancias, 'cantidadUMC') ? 'required' : ''
+            " 
+                [maxlength]="20"/>
                         <div *ngIf="
                            formMercancias.get('cantidadUMC')?.invalid &&
                            formMercancias.get('cantidadUMC')?.touched
@@ -638,7 +653,9 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('porcentajeConcentracion')?.markAsTouched();
-                     " />
+                     "[ngClass]="
+              isValid(formMercancias, 'porcentajeConcentracion') ? 'required' : ''
+            " />
                   <div *ngIf="
                      formMercancias.get('porcentajeConcentracion')?.invalid &&
                      formMercancias.get('porcentajeConcentracion')?.touched

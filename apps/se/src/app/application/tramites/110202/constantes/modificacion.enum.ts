@@ -452,3 +452,32 @@ export const DESPACHO_LDA = {
   required: false,
   alfanumerico: true,
 };
+/** Interfaz que define la estructura de un ítem de mercancía en la respuesta de búsqueda.
+ */
+export interface MercanciaResponseItem {
+  idMercancia: number;
+  fraccionArancelaria?: string;
+  numeroRegistroProducto?: string;
+  fechaExpedicion?: string;
+  fechaVencimiento?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  criterioOrigen?: string;
+  valorContenidoRegional?: string;
+  normaOrigen?: string;
+  nombreIngles?: string;
+}
+
+/** Interfaz que define la estructura de la respuesta de búsqueda de mercancías.
+ */
+export interface BuscarMercanciasResponse {
+  datos?: MercanciaResponseItem[];
+}
+
+
+/** Genera el mensaje HTML para registro exitoso
+ * @param numeroSolicitud Número de solicitud a incluir en el mensaje
+ * @returns Mensaje HTML formateado para registro exitoso
+ */
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string): string =>
+  `<p>La solicitud ha quedado registrada con el número temporal ${numeroSolicitud ?? ''}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;

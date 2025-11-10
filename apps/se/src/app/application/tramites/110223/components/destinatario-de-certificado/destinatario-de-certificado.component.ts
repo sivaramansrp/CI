@@ -110,6 +110,9 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /** Indica si el país de destino está habilitado. */
+  paisDestino = true;
+
   /**
    * @descripcion
    * Identificador único del procedimiento asociado al formulario.
@@ -149,18 +152,11 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.query.selectFormDatosDelDestinatario$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((estado) => {
-        this.formDatosDelDestinatarioValues = estado;
-      });
-
     this.query.selectFormDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formDestinatarioValues = estado;
       });
-
 
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -246,6 +242,7 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    */
   setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
     this.store.setFormDestinatario({ [CAMPO]: VALOR });
   }
 /**
@@ -266,13 +263,13 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     this.registroFormulario = this.fb.group({
       grupoRepresentativo: this.fb.group({
         lugar: [this.exportadoState?.grupoRepresentativo?.lugar, [Validators.required]],
-        nombre: [this.exportadoState?.grupoRepresentativo?.nombre, [Validators.required]],
+        nombre: [this.exportadoState?.grupoRepresentativo?.nombreExportador, [Validators.required]],
         empresa: [this.exportadoState?.grupoRepresentativo?.empresa, [Validators.required]],
         cargo: [this.exportadoState?.grupoRepresentativo?.cargo, [Validators.required]],
         registroFiscal: [this.exportadoState?.grupoRepresentativo?.registroFiscal, []],
         telefono: [this.exportadoState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         fax: [this.exportadoState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correo: [this.exportadoState?.grupoRepresentativo?.correo, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
+        correo: [this.exportadoState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
     });
   }

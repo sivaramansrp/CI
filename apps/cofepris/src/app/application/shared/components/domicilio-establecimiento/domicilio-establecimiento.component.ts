@@ -18,8 +18,18 @@ import {
   TipoNotificacionEnum,
   TituloComponent,
   ValidacionesFormularioService,
+  doDeepCopy,
+  esValidObject,
 } from "@libs/shared/data-access-user/src";
 
+ import {AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
 import {
   AfterViewInit,
   Component,
@@ -37,21 +47,15 @@ import {
   DATOS_MERCANCIAS,
   MercanciasInfo,
   NICO_TABLA,
-  NicoInfo,
   NOMBRES_CAMPOS,
+  NicoInfo,
 } from "../../models/datos-domicilio-legal.model";
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from "../../estados/stores/datos-domicilio-legal.store";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { Subject, map, takeUntil } from "rxjs";
+
+import { Subject, map, switchMap, takeUntil } from "rxjs";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
 import { CommonModule } from "@angular/common";
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
@@ -59,6 +63,7 @@ import { DatosDomicilioLegalQuery } from "../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from "../../services/datos-domicilio-legal.service";
 import Modal from "bootstrap/js/dist/modal";
 import { ServicioDeFormularioService } from "../../services/forma-servicio/servicio-de-formulario.service";
+import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
@@ -285,6 +290,7 @@ nombresCampos:boolean = false;
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
     private validacionesService: ValidacionesFormularioService,
+    private sharedSvc: Shared2605Service
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -363,6 +369,15 @@ nombresCampos:boolean = false;
       .subscribe();
     this.configurarFormularioDomicillio();
   }
+  /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
+  static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    if (!VALOR){ return null}    
+    if (/^\d+$/.test(VALOR) && VALOR.length !== 5) {
+      return { invalidCodigoPostal: true };
+    }
+    return null; 
+  }
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
@@ -372,6 +387,7 @@ nombresCampos:boolean = false;
           Validators.required,
           Validators.maxLength(12),
           Validators.pattern("^[0-9]+$"),
+          DomicilioComponent.codigoPostalValidator
         ],
       ],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -391,7 +407,7 @@ nombresCampos:boolean = false;
         this.solicitudState?.calle,
         [Validators.required, Validators.maxLength(100)],
       ],
-      lada: [this.solicitudState?.lada],
+      lada: [this.solicitudState?.lada,Validators.maxLength(5)],
       telefono: [
         this.solicitudState?.telefono,
         [
@@ -916,6 +932,16 @@ nombresCampos:boolean = false;
     this.inicializarEstadoFormulario();
   }
 
+/**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
   /**
    * @method cerrarModalScian
    * @description Oculta el modal relacionado con el catálogo SCIAN.
@@ -1453,10 +1479,36 @@ nombresCampos:boolean = false;
    * If the control does not exist, no action is taken.
    */
   setDescripcionFraccion(): void {
-    this.formMercancias
-      .get("descripcionFraccion")
-      ?.setValue("descripcionFraccion");
-    this.formMercancias.get("UMT")?.setValue("UMT32131");
+    if(this.formMercancias.get("fraccionArancelaria")?.invalid) {
+      return;
+    }
+    const CLAVE_OBJ = {
+      clave: this.formMercancias.get("fraccionArancelaria")?.value,
+      idProcedimiento: String(this.idProcedimiento)
+    }
+    this.sharedSvc.getFraccionDescripcion(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento)
+    .pipe(takeUntil(this.destroyNotifier$),
+      switchMap((fraccionResponse) => {
+        if (esValidObject(fraccionResponse)) {
+          const DATOS = doDeepCopy(fraccionResponse);
+          if(esValidObject(DATOS.datos)) {
+              this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
+          }
+        }
+        throw new Error('Fracción call failed');
+      })
+    ).subscribe({
+      next: (unidadResponse) => {
+        const UNIDAD_DATOS = doDeepCopy(unidadResponse);
+        if(esValidObject(UNIDAD_DATOS.datos)) {
+          this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.

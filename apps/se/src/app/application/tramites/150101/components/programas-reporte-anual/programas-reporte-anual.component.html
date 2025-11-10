@@ -1,4 +1,3 @@
-<div class="container">
   <form [formGroup]="periodoReporteAnual">
     <ng-titulo titulo="Periodo que cubre reporte anual" />
 
@@ -87,7 +86,8 @@
         />
       </div>
     </div>
-    <div class="row mt-3">
+    <!-- Commented now for future validation use -->
+    <!-- <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label" for="ventasTotales">Ventas totales (a):</label>
         <input
@@ -96,12 +96,11 @@
           class="form-control"
           formControlName="ventasTotales"
           [disabled]="formularioDeshabilitado"
+          [class.is-invalid]="!isValid(periodoReporteAnual, 'ventasTotales')"
         />
-        <!-- Commented now for future validation use -->
-        <!-- [class.is-invalid]="!isValid(periodoReporteAnual, 'ventasTotales')" -->
-        <!-- <div class="invalid-feedback" *ngIf="!isValid(periodoReporteAnual, 'ventasTotales')">
+        <div class="invalid-feedback" *ngIf="!isValid(periodoReporteAnual, 'ventasTotales')">
           Por favor ingrese un número entero válido.
-        </div> -->
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="totalExportaciones">Total exportaciones (b):</label>
@@ -111,16 +110,14 @@
           class="form-control"
           formControlName="totalExportaciones"
           [disabled]="formularioDeshabilitado"
+          [class.is-invalid]="!isValid(periodoReporteAnual, 'totalExportaciones')"
         />
-        <!-- Commented now for future validation use -->
-        <!-- [class.is-invalid]="!isValid(periodoReporteAnual, 'totalExportaciones')"
         <div class="invalid-feedback" *ngIf="!isValid(periodoReporteAnual, 'totalExportaciones')">
           Por favor ingrese un número entero válido.
-        </div> -->
+        </div>
       </div>
-    </div>
+    </div> -->
   </form>
-</div>
 @if(nuevaNotificacion){
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
 }
