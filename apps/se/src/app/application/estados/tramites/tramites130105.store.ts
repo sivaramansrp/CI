@@ -138,6 +138,17 @@ export interface Tramite130105State {
    * Lista de partidas a mostrar.
    */
   mostrarPartidas: MostrarPartidas[];
+
+  modificarPartidasDelaMercanciaForm: {
+    cantidadPartidasDeLaMercancia: string;
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    descripcionPartidasDeLaMercancia: string;
+  };
+
+  cantidadTotal: string;
+  valorTotalUSD: string;
+
+  fechasSeleccionadas: string[];
 }
 
 /**
@@ -156,12 +167,12 @@ export function createInitialState(): Tramite130105State {
     solicitud: '',
     fraccion: '',
     defaultSelect: 'TISOL.I',
-    producto: '',
+    producto: 'CONDMER.U',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
-    defaultProducto: 'CONDMER.N',
+    defaultProducto: 'CONDMER.U',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
@@ -175,6 +186,14 @@ export function createInitialState(): Tramite130105State {
     entidad: '',
     representacion: '',
     mostrarPartidas: [],
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
+    cantidadTotal: '',
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
   };
 }
 
@@ -206,14 +225,21 @@ export class Tramite130105Store extends Store<Tramite130105State> {
     }));
   }
 
-     /**
-   * Actualiza el estado del store con los valores proporcionados.
-   * Valores a actualizar en el estado.
-   */
+  /**
+* Actualiza el estado del store con los valores proporcionados.
+* Valores a actualizar en el estado.
+*/
   public actualizarEstado(valores: Partial<Tramite130105State>): void {
     this.update((state) => ({
       ...state,
       ...valores,
     }));
+  }
+
+  /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
   }
 }

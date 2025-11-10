@@ -1,8 +1,8 @@
 
-import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { ALERTARCHIVOMSG, PARTIDAS_SELECCIONADAS_REQUIRED, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -32,7 +32,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges{
+export class PartidasDeLaMercanciaComponent implements OnChanges {
   /**
    * Textos utilizados en el componente.
    * @type {typeof TEXTOS}
@@ -42,7 +42,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   /*
    * @descripcion Mensaje de alerta para el archivo.
    */
-  ALERTARCHIVOMSG = ALERTARCHIVOMSG ;
+  ALERTARCHIVOMSG = ALERTARCHIVOMSG;
   /*
    * @descripcion Indica si se debe mostrar una notificación.
    */
@@ -114,18 +114,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string }>();
 
-    /**
-   * Tipo de selección de la tabla dinámica.
-   * Define el tipo de selección que se utilizará en la tabla dinámica (por ejemplo, checkbox).
-   */
-    CHECKBOX: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+ * Tipo de selección de la tabla dinámica.
+ * Define el tipo de selección que se utilizará en la tabla dinámica (por ejemplo, checkbox).
+ */
+  CHECKBOX: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de las columnas de la tabla dinámica.
    * Este campo define las columnas que se mostrarán en la tabla, incluyendo encabezados y claves.
    */
   @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
-    PARTIDASDELAMERCANCIA_TABLA;
+  PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * Datos que se mostrarán en la tabla dinámica.
@@ -148,7 +148,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * @ViewChild('cargarArchivo') cargarArchivoElemento
    * Referencia al elemento del DOM para el modal de carga de archivos.
    */
-  @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;		
+  @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;
 
   /**
    * selectedRows
@@ -204,6 +204,8 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Evento emitido cuando se modifica una partida seleccionada.
    */
   @Output() partidaModificada = new EventEmitter<PartidasDeLaMercanciaModelo>();
+
+  @Input() isInvalidaPartidas: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -220,16 +222,24 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
      *
      * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
      */
-    ngOnChanges(changes: SimpleChanges): void {
-      // Verifica si el formulario ha cambiado y actualiza su estado
-      if (changes['esFormularioSoloLectura']) {
-        if (this.esFormularioSoloLectura) {
+  ngOnChanges(changes: SimpleChanges): void {
+    // Verifica si el formulario ha cambiado y actualiza su estado
+    if (changes['esFormularioSoloLectura']) {
+      if (this.esFormularioSoloLectura) {
         this.partidasDelaMercanciaForm.disable();
-    }else if (!this.esFormularioSoloLectura) {
-       this.partidasDelaMercanciaForm.enable();
-    }
+      } else if (!this.esFormularioSoloLectura) {
+        this.partidasDelaMercanciaForm.enable();
       }
     }
+    // if (changes['modificarPartidasDelaMercanciaForm'] && changes['modificarPartidasDelaMercanciaForm']?.currentValue) {
+    //   const VALORES_ANTERIORES = changes['modificarPartidasDelaMercanciaForm'].currentValue;
+    //   this.modificarPartidasDelaMercanciaForm.patchValue({
+    //     cantidadPartidasDeLaMercancia: VALORES_ANTERIORES.cantidadPartidasDeLaMercancia,
+    //     descripcionPartidasDeLaMercancia: VALORES_ANTERIORES.descripcionPartidasDeLaMercancia,
+    //     valorPartidaUSDPartidasDeLaMercancia: VALORES_ANTERIORES.valorPartidaUSDPartidasDeLaMercancia
+    //   });
+    // }
+  }
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -237,23 +247,23 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * boolean Verdadero si el control es inválido, falso en caso contrario.
    */
   esInvalido(nombreControl: string): boolean {
-  const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
+    const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
- }
-/*
-
-*/
-/**
- * Verifica si un control específico dentro del formulario `modificarPartidasDelaMercanciaForm` es inválido y ha sido tocado o modificado.
- * El nombre del control dentro del formulario a validar.
- * true si el control es inválido y ha sido tocado o modificado; de lo contrario, `false`.
- */
- esInvalidoModal(nombreControl: string): boolean {
-  const CONTROL = this.modificarPartidasDelaMercanciaForm.get(nombreControl);
-  return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
-}
+  }
+  /*
+  
+  */
+  /**
+   * Verifica si un control específico dentro del formulario `modificarPartidasDelaMercanciaForm` es inválido y ha sido tocado o modificado.
+   * El nombre del control dentro del formulario a validar.
+   * true si el control es inválido y ha sido tocado o modificado; de lo contrario, `false`.
+   */
+  esInvalidoModal(nombreControl: string): boolean {
+    const CONTROL = this.modificarPartidasDelaMercanciaForm.get(nombreControl);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
 
   /**
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
@@ -261,6 +271,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
     this.selectedRows = event;
+    if(this.selectedRows.length > 0) {
+      this.isInvalidaPartidas = false;
+    }
     this.filaSeleccionadaChange.emit(event);
   }
 
@@ -275,7 +288,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-       if (!this.selectedRows || this.selectedRows.length === 0) {
+    if (!this.selectedRows || this.selectedRows.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: 'info',
@@ -285,7 +298,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-        tamanioModal:'modal-sm'
+        tamanioModal: 'modal-sm'
       };
       this.mostrarNotificacion = true;
       return;
@@ -300,7 +313,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-        tamanioModal:'modal-sm'
+        tamanioModal: 'modal-sm'
       };
       this.mostrarNotificacion = true;
       return;
@@ -316,151 +329,151 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
     }
   }
 
-/**
- * Muestra una notificación para confirmar la eliminación de las partidas seleccionadas.
- * Si no hay elementos seleccionados, muestra una alerta informando al usuario que debe seleccionar al menos un elemento.
- * Si hay elementos seleccionados, muestra una notificación de confirmación para proceder con la eliminación.
- */
-confirmarEliminarPartida(): void {
-  if (!this.selectedRows || this.selectedRows.length === 0) {
+  /**
+   * Muestra una notificación para confirmar la eliminación de las partidas seleccionadas.
+   * Si no hay elementos seleccionados, muestra una alerta informando al usuario que debe seleccionar al menos un elemento.
+   * Si hay elementos seleccionados, muestra una notificación de confirmación para proceder con la eliminación.
+   */
+  confirmarEliminarPartida(): void {
+    if (!this.selectedRows || this.selectedRows.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Selecciona un registro a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      this.confirmandoEliminarPartida = false;
+      return;
+    }
     this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
       categoria: 'info',
       modo: '',
       titulo: '',
-      mensaje: 'Selecciona un registro a eliminar.',
-      cerrar: true,
+      mensaje: '¿Está seguro que desea eliminar los registros marcados?',
+      cerrar: false,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
+      txtBtnCancelar: 'Cancelar',
+      tamanioModal: 'modal-md'
     };
     this.mostrarNotificacion = true;
-    this.confirmandoEliminarPartida = false;
-    return;
+    this.confirmandoEliminarPartida = true;
   }
-  this.nuevaNotificacion = {
-    tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    categoria: 'info',
-    modo: '',
-    titulo: '',
-    mensaje: '¿Está seguro que desea eliminar los registros marcados?',
-    cerrar: false,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
-    tamanioModal: 'modal-md'
-  };
-  this.mostrarNotificacion = true;
-  this.confirmandoEliminarPartida = true;
-}
 
-/**
- * Maneja la confirmación del modal para eliminar partidas seleccionadas.
- * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
- * y restablece la bandera. Además, oculta la notificación.
- */
-onConfirmacionModal(accion: boolean): void {
-  if (this.confirmandoEliminarPartida && accion === true) {
-    this.eliminarPartidasSeleccionadas();
-    this.confirmandoEliminarPartida = false;
+  /**
+   * Maneja la confirmación del modal para eliminar partidas seleccionadas.
+   * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
+   * y restablece la bandera. Además, oculta la notificación.
+   */
+  onConfirmacionModal(accion: boolean): void {
+    if (this.confirmandoEliminarPartida && accion === true) {
+      this.eliminarPartidasSeleccionadas();
+      this.confirmandoEliminarPartida = false;
+    }
+    this.mostrarNotificacion = false;
   }
-  this.mostrarNotificacion = false;
-}
 
-/**
- * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
- * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
- * limpia la selección de filas.
- */
-eliminarPartidasSeleccionadas(): void {
+  /**
+   * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
+   * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
+   * limpia la selección de filas.
+   */
+  eliminarPartidasSeleccionadas(): void {
     if (this.selectedRows && this.selectedRows.length > 0) {
-    const IDS_ELIMINAR = this.selectedRows.map(row => row.id);
-    this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
-    this.selectedRows = [];
-    this.partidasEliminadas.emit(IDS_ELIMINAR); 
+      const IDS_ELIMINAR = this.selectedRows.map(row => row.id);
+      this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
+      this.selectedRows = [];
+      this.partidasEliminadas.emit(IDS_ELIMINAR);
+    }
   }
-}
   /**
    * Cancela la modificación de una partida específica, cerrando el modal.
    */
   modalCancelar(): void {
-  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
-    const MODAL_INSTANCIA = Modal.getInstance(
-      this.modificarPartidaElemento.nativeElement
-    );
-    if (MODAL_INSTANCIA) {
-      MODAL_INSTANCIA.hide();
+    if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+      const MODAL_INSTANCIA = Modal.getInstance(
+        this.modificarPartidaElemento.nativeElement
+      );
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
+      }
+    }
+    Object.values(this.partidasDelaMercanciaForm.controls).forEach(control => {
+      control.markAsUntouched();
+      control.markAsPristine();
+    });
+  }
+  /**
+   * Emite un evento para almacenar valores en el store.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+   * Valida los campos del formulario antes de modificar una partida.
+   */
+  validarModificarPartida(): void {
+
+    if (this.modificarPartidasDelaMercanciaForm.invalid) {
+      this.mostrarErroresModal = true;
+      this.modificarPartidasDelaMercanciaForm.markAllAsTouched();
+      return;
+    }
+    this.mostrarErroresModal = false;
+    const PREV = this.selectedRows[0];
+    if (!PREV) { return; }
+
+    this.partidaModificada.emit({
+      id: PREV.id,
+      cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+      descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+      totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+      unidadDeMedida: PREV.unidadDeMedida,
+      fraccionFrancelaria: PREV.fraccionFrancelaria,
+      precioUnitarioUSD: PREV.precioUnitarioUSD
+    });
+
+    if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+      const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
+      }
     }
   }
-  Object.values(this.partidasDelaMercanciaForm.controls).forEach(control => {
-    control.markAsUntouched();
-    control.markAsPristine();
-  });
-}
-/**
- * Emite un evento para almacenar valores en el store.
- */
-setValoresStore(form: FormGroup, campo: string): void {
-  this.setValoresStoreEvent.emit({ form, campo });
-}
-
-/**
- * Valida los campos del formulario antes de modificar una partida.
- */
-validarModificarPartida(): void {
+  /*
   
-  if (this.modificarPartidasDelaMercanciaForm.invalid) {
-    this.mostrarErroresModal = true;
-    this.modificarPartidasDelaMercanciaForm.markAllAsTouched();
-    return;
-  }
-  this.mostrarErroresModal = false;
-   const PREV = this.selectedRows[0];
-  if (!PREV) { return; }
-
-  this.partidaModificada.emit({
-    id: PREV.id,
-    cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-    descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-    totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-    unidadDeMedida: PREV.unidadDeMedida,
-    fraccionFrancelaria: PREV.fraccionFrancelaria,
-    precioUnitarioUSD: PREV.precioUnitarioUSD
-  });
-  
-  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
-    const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
-    if (MODAL_INSTANCIA) {
-      MODAL_INSTANCIA.hide();
+  */
+  /**
+   * Método que gestiona la carga de un archivo desde un input HTML. 
+   * Verifica que el archivo seleccionado exista y que su extensión sea `.csv`. 
+   * Si no se selecciona ningún archivo o la extensión no es válida, muestra una notificación de error.
+   * Si el archivo es válido, oculta la notificación y cierra el modal de carga.
+   */
+  enviarArchivo(): void {
+    const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
+    if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
+      this.alertaArchivo = true;
+      this.mostrarNotificacion = false;
+      return;
     }
-  }
-}
-/*
-
-*/
-/**
- * Método que gestiona la carga de un archivo desde un input HTML. 
- * Verifica que el archivo seleccionado exista y que su extensión sea `.csv`. 
- * Si no se selecciona ningún archivo o la extensión no es válida, muestra una notificación de error.
- * Si el archivo es válido, oculta la notificación y cierra el modal de carga.
- */
-enviarArchivo(): void {
-  const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
-  if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
-    this.alertaArchivo = true;
+    const FILE = INPUT_FILE.files[0];
+    const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
+    if (EXTENSION !== 'csv') {
+      this.mostrarNotificacion = true;
+      this.alertaArchivo = false;
+      return;
+    }
     this.mostrarNotificacion = false;
-    return;
+    this.alertaArchivo = false;
+    this.cerrarCargarArchivoModal();
   }
-  const FILE = INPUT_FILE.files[0];
-  const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
-  if (EXTENSION !== 'csv') {
-    this.mostrarNotificacion = true;
-    this.alertaArchivo = false; 
-    return;
-  }
-  this.mostrarNotificacion = false;
-  this.alertaArchivo = false;
-  this.cerrarCargarArchivoModal();
-}
   /**
    * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
    * @param evento Evento de cambio del input de archivo.
@@ -478,9 +491,9 @@ enviarArchivo(): void {
    * Abre el modal para cargar un archivo.
    */
   abrirCargarArchivoModal(): void {
-  this.validarAntesDeCargarArchivo.emit();
+    this.validarAntesDeCargarArchivo.emit();
   }
-  
+
   /**
    * Abre un modal para cargar un archivo utilizando el elemento referenciado en `cargarArchivoElemento`.
    * Si el elemento existe, se crea una instancia de `Modal` con la opción de fondo deshabilitada (`backdrop: false`)
@@ -495,18 +508,18 @@ enviarArchivo(): void {
       MODAL_INSTANCIA.show();
     }
   }
-/*
- * Cierra el modal para cargar un archivo.
- */
-cerrarCargarArchivoModal(): void {
-  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
-    const MODAL_INSTANCIA = Modal.getInstance(
-      this.cargarArchivoElemento.nativeElement
-    );
-    if (MODAL_INSTANCIA) {
-      MODAL_INSTANCIA.hide();
+  /*
+   * Cierra el modal para cargar un archivo.
+   */
+  cerrarCargarArchivoModal(): void {
+    if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+      const MODAL_INSTANCIA = Modal.getInstance(
+        this.cargarArchivoElemento.nativeElement
+      );
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
+      }
     }
   }
-}
 
 }

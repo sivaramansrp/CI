@@ -8,13 +8,10 @@ import { HttpClient } from '@angular/common/http';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130105/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
-import fractionValues from '@libs/shared/theme/assets/json/130105/fraccion_arancelaria.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130105/unidad_da.json';
 import { idProcedimiento, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src/core/models/shared/mostrar-partidas';
 
@@ -48,6 +45,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para capturar los totales de las partidas.
    */
   formForTotalCount!: FormGroup;
+
+  isInvalidaPartidas: boolean = false;
+
   /**
    * Formulario reactivo para la selección de países.
    */
@@ -56,6 +56,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para la representación.
    */
   frmRepresentacionForm!: FormGroup;
+
+  modificarPartidasDelaMercanciaForm!: FormGroup;
   /**
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
@@ -200,13 +202,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.configuracionFormularioSuscripciones();
-    // this.opcionesDeBusqueda();
-    this.formularioTotalCount();
-    // this.obtenerTablaDatos();
-    // this.fetchEntidadFederativa();
-    // this.fetchRepresentacionFederal();
-    // this.listaDePaisesDisponibles();
-
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
     this.getEntidadesFederativasCatalogo();
@@ -224,13 +219,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
-      solicitud: [this.seccionState?.solicitud, Validators.required],
+      solicitud: [this.seccionState?.defaultSelect, Validators.required],
       regimen: [this.seccionState?.regimen, Validators.required],
       clasificacion: [this.seccionState?.clasificacion, Validators.required],
     });
 
     this.mercanciaForm = this.fb.group({
-      producto: [],
+      producto: [this.seccionState?.defaultProducto],
       descripcion: [
         this.seccionState?.descripcion,
         [
@@ -294,30 +289,62 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       entidad: [this.seccionState?.entidad, Validators.required],
       representacion: [this.seccionState?.representacion, Validators.required],
     });
+
+    this.modificarPartidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.cantidadPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.maxLength(18),
+        ],
+      ],
+      descripcionPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.descripcionPartidasDeLaMercancia,
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.valorPartidaUSDPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
+
+    this.formForTotalCount = this.fb.group({
+      cantidadTotal: [{ value: this.seccionState?.cantidadTotal, disabled: true }],
+      valorTotalUSD: [{ value: this.seccionState?.valorTotalUSD, disabled: true }],
+    });
   }
 
   validarFormulario(): boolean {
+    let isValid = true;
     if (this.formDelTramite.invalid) {
       this.formDelTramite.markAllAsTouched();
-      return false;
+      isValid = false;
     }
     if (this.mercanciaForm.invalid) {
-      this.formDelTramite.markAllAsTouched();
-      return false;
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
     }
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.formDelTramite.markAllAsTouched();
-      return false;
+    if (this.filaSeleccionada.length === 0) {
+      this.isInvalidaPartidas = true;
+      isValid = false;
+    } else if (this.filaSeleccionada.length > 0) {
+      this.isInvalidaPartidas = false;
     }
     if (this.paisForm.invalid) {
-      this.formDelTramite.markAllAsTouched();
-      return false;
+      this.paisForm.markAllAsTouched();
+      isValid = false;
     }
     if (this.frmRepresentacionForm.invalid) {
-      this.formDelTramite.markAllAsTouched();
-      return false;
+      this.frmRepresentacionForm.markAllAsTouched();
+      isValid = false;
     }
-    return true;
+    return isValid;
   }
 
   /**
@@ -328,18 +355,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
           this.seccionState = seccionState;
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-
-          });
+          // this.partidasDelaMercanciaForm.patchValue({
+          //   cantidadPartidasDeLaMercancia:
+          //     seccionState.cantidadPartidasDeLaMercancia,
+          //   valorPartidaUSDPartidasDeLaMercancia:
+          //     seccionState.valorPartidaUSDPartidasDeLaMercancia,
+          //   descripcionPartidasDeLaMercancia:
+          //     seccionState.descripcionPartidasDeLaMercancia,
+          // });
 
           this.formDelTramite.patchValue({
-            solicitud: seccionState.solicitud,
+            solicitud: seccionState.defaultSelect,
             regimen: seccionState.regimen,
             clasificacion: seccionState.clasificacion,
           });
@@ -366,55 +392,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             representacion: seccionState.representacion,
           });
         })
-      )
-
-      .subscribe();
-
+      ).subscribe();
   }
 
-  /**
-   * formularioTotalCount
-   * Crea el formulario reactivo para capturar los totales de las partidas.
-   */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
-    });
-  }
-
-  /**
-   * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
-   */
-  // opcionesDeBusqueda(): void {
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getSolicitudeOptions()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.opcionesSolicitud = data.options;
-  //         this.tramite130105Store.actualizarEstado({
-  //           solicitud: data.options[0]?.value || '',
-  //           defaultSelect: data.defaultSelect || 'Inicial',
-  //         });
-  //       },
-  //       error: (error) =>
-  //         console.error('Error loading solicitude options:', error),
-  //     });
-
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getProductoOptions()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.productoOpciones = data.options;
-  //         this.tramite130105Store.actualizarEstado({
-  //           producto: data.options[0]?.value || 'Nuevo',
-  //           defaultProducto: data.options[0]?.value || 'Nuevo',
-  //         });
-  //       },
-  //     });
-  // }
   /**
    * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -428,25 +408,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130105Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
     }
   }
-  /**
-   * Método para obtener los datos de la tabla dinámica.
-   * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
-   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
-   * 
-   * - Actualiza `tableBodyData` con los datos obtenidos.
-   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
-   * 
-   */
-  // obtenerTablaDatos(): void {
-  //   this.importacionVehiculosUsadosDonacionService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-  //     this.tableBodyData = data;
-  //     this.formForTotalCount.patchValue({
-  //       cantidadTotal: data[0].cantidad,
-  //       valorTotalUSD: data[0].totalUSD
-  //     });
-  //   });
-  // }
 
   /**
    * validarYEnviarFormulario
@@ -458,21 +419,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.mostrarTabla = true;
       this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
+      const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
           "id": this.tableBodyData.length + 1 + "",
           "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
-          "unidadDeMedida": this.seccionState?.unidadMedida || "",
+          "unidadDeMedida": UMT || "",
           "fraccionFrancelaria": this.seccionState?.fraccion || "",
           "descripcion": this.seccionState?.descripcion || "",
-          "precioUnitarioUSD": ((Number(this.seccionState?.valorFacturaUSD) % Number(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia)).toFixed(4).toString()) || "",
+          "precioUnitarioUSD": ((Number(this.seccionState?.valorFacturaUSD) % Number(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia)).toFixed(3).toString()) || "",
           "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.partidasDelaMercanciaForm.reset();
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad), 0);
+      const TOTAL_lUSD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
       this.formForTotalCount.patchValue({
-        cantidadTotal: DATOS[0].cantidad,
-        valorTotalUSD: this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0)
+        cantidadTotal: CANTIDAD_TOTAL,
+        valorTotalUSD: TOTAL_lUSD,
       });
     }
   }
@@ -488,54 +453,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
   /**
-   * Método para obtener la lista de entidades federativas.
-   */
-  // fetchEntidadFederativa(): void {
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getEntidadFederativa()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data) => {
-  //       this.entidadFederativa = data;
-  //     });
-  // }
-  /**
-  * Método para obtener la lista de representaciones federales.
-  */
-  // fetchRepresentacionFederal(): void {
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getRepresentacionFederal()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data) => {
-  //       this.representacionFederal = data;
-  //     });
-  // }
-  /**
-  * Método para obtener la lista de países disponibles.
-  */
-  // listaDePaisesDisponibles(): void {
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getListaDePaisesDisponibles()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data) => {
-  //       this.elementosDeBloque = data;
-  //     });
-  // }
-  /**
-  * Método para obtener la lista de países por bloque.
-  * Identificador del bloque.
-  */
-  // fetchPaisesPorBloque(_bloqueId: number): void {
-  //   this.importacionVehiculosUsadosDonacionService
-  //     .getPaisesPorBloque(_bloqueId)
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe((data) => {
-  //       this.paisesPorBloque = data;
-  //       this.selectRangoDias = this.paisesPorBloque.map(
-  //         (pais: Catalogo) => pais.descripcion
-  //       );
-  //     });
-  // }
-  /**
   * Maneja el cambio de bloque seleccionado.
   * Identificador del bloque seleccionado.
   */
@@ -549,9 +466,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
     this.tramite130105Store.actualizarEstado({ [$event.campo]: VALOR });
-    // if ($event.campo === 'fraccion') {
-    //   this.tramite130105Store.actualizarEstado({ 'unidadMedida': '1' });
-    // }
     if ($event.campo === 'regimen') {
       const VALOR = this.formDelTramite.get('regimen')?.value;
       this.getClasificacionRegimenCatalogo(VALOR);
@@ -580,6 +494,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
 
+  modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+    this.modificarPartidasDelaMercanciaForm.patchValue({
+      cantidadPartidasDeLaMercancia: evento.cantidad,
+      valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
+      descripcionPartidasDeLaMercancia: evento.descripcion,
+    });
+  }
+
+  partidaModificada(evento: PartidasDeLaMercanciaModelo): void {
+    this.tableBodyData = this.tableBodyData.map(item => {
+      if (item.id === evento.id) {
+        return {
+          ...item,
+          cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+          totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+          descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+        };
+      }
+      return item;
+    });
+  }
+
   /**
   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
   *
@@ -604,13 +540,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   getFraccionCatalogo(): void {
     this.importacionVehiculosUsadosDonacionService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
-      this.fraccionCatalogo = data as Catalogo[];
+      this.fraccionCatalogo = data?.map(item => ({
+        ...item,
+        descripcion: `${item.clave} - ${item.descripcion}`
+      }));
     });
   }
 
   getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
     this.importacionVehiculosUsadosDonacionService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data as Catalogo[];
+      if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130105Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
     });
   }
 
@@ -648,9 +591,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   getMostrarPartidas(): void {
     this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
-        this.mostrarPartidas = data as MostrarPartidas[];  
-        this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
-      });
+      this.mostrarPartidas = data as MostrarPartidas[];
+      this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+    });
+  }
+
+  fechasSeleccionadas(evento: string[]): void {
+    console.log(evento);
+    this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 
   /**

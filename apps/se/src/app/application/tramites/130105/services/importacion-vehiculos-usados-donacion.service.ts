@@ -153,7 +153,7 @@ export class ImportacionVehiculosUsadosDonacionService {
   }
 
   getFraccionCatalogoService(ID: string): Observable<any[]> {
-    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130118')
+    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130116')
       .pipe(
         map(res => res?.datos ?? [])
       );

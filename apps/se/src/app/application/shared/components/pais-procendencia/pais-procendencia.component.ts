@@ -110,6 +110,12 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
   @Output() todosPaisesSeleccionadosEvent = new EventEmitter<boolean>(false);
 
   /**
+   * Evento emitido cuando se seleccionan fechas.
+   * @type {EventEmitter<string[]>}
+   */
+  @Output() fechasSeleccionadas = new EventEmitter<string[]>();
+
+  /**
    * Indica si se debe mostrar la notificación de ayuda.
    */
   mostrarAyuda = false;
@@ -316,6 +322,12 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
   }
 
   fechasSeleccionadasChange(evento: string[]): void {
-    console.log(evento);
+    const CLAVE_LIST: string[] = evento.map((paisSeleccionado: string) => {
+      const encontrado = this.paisesPorBloque.find(
+        (pais: Catalogo) => pais.descripcion === paisSeleccionado
+      );
+      return typeof encontrado?.clave === 'string' ? encontrado.clave : paisSeleccionado;
+    });
+    this.fechasSeleccionadas.emit(CLAVE_LIST);
   }
 }

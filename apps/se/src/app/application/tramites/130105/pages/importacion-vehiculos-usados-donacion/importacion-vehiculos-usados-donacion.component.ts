@@ -1,9 +1,9 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
-import { DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO, DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 
 import { AccionBoton } from '../../enums/accionbotton.enum';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
@@ -44,8 +44,8 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  @ViewChild(PasoUnoComponent, { static: false}) pasoUnoComponent!: PasoUnoComponent;
-  
+  @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
+
   /**
 * Indica si el botón para cargar archivos está habilitado.
 */
@@ -78,6 +78,26 @@ export class ImportacionVehiculosUsadosDonacionComponent {
   solicitudState!: Tramite130105State;
 
   /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+     <b>¡Error de registro!</b> Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`
+
+  /**
+      * Constante que almacena el valor de la nota de privacidad.
+      * 
+      * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
+      * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
+      */
+  AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
+  /**
     * Evento que se emite para cargar archivos.
     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
     */
@@ -94,6 +114,8 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    */
   cargaEnProgreso: boolean = true;
 
+  private destroyed$ = new Subject<void>();
+
   /**
    * @description
    * Constructor de la clase.
@@ -101,7 +123,7 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    * @param tramite130105Store
    */
   constructor(private importacionVehiculosUsadosDonacionService: ImportacionVehiculosUsadosDonacionService, private tramite130105Store: Tramite130105Store, private tramite130105Query: Tramite130105Query) {
-    this.tramite130105Query.selectSolicitud$.pipe(take(1)).subscribe((solicitudState) => {
+    this.tramite130105Query.selectSolicitud$.pipe(takeUntil(this.destroyed$)).subscribe((solicitudState) => {
       this.solicitudState = solicitudState;
     });
   }
@@ -118,12 +140,12 @@ export class ImportacionVehiculosUsadosDonacionComponent {
     this.esFormaValido = false;
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
-    const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
-    if (!ISVALID) {
-      this.esFormaValido = true;
-      return;
-    }
-    this.obtenerDatosDelStore();
+      const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+      this.obtenerDatosDelStore();
     } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
       this.pasoNavegarPor(e);
     }
@@ -159,7 +181,7 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         "cantidadComercial": Number(item.cantidadPartidasDeLaMercancia),
         "cantidadTarifaria": Number(item.cantidad),
         "valorFacturaUSD": Number(item.valorFacturaUSD),
-        "condicionMercancia": item.producto,
+        "condicionMercancia": item.defaultProducto,
         "descripcion": item.descripcion,
         "usoEspecifico": item.usoEspecifico,
         "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
@@ -168,14 +190,14 @@ export class ImportacionVehiculosUsadosDonacionComponent {
           "clave": item.unidadMedida
         },
         "fraccionArancelaria": {
-          "cveFraccion": 87012101
+          "cveFraccion": item.fraccion
         },
         "partidasMercancia": [
           {
             "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
             "unidadesAutorizadas": Number(item.cantidad),
             "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
-            "descripcionAutorizada": item.descripcion,
+            "descripcionAutorizada": item.descripcionPartidasDeLaMercancia,
             "importeUnitarioUSD": Number(item.filaSeleccionada[0].precioUnitarioUSD),
             "importeTotalUSD": Number(item.filaSeleccionada[0].totalUSD),
             "autorizada": true,
@@ -212,11 +234,69 @@ export class ImportacionVehiculosUsadosDonacionComponent {
       "entidades_federativas": {
         "cveEntidad": "SIN"
       },
-      "lista_paises": [
-        "USA",
-        "CAN"
-      ]
+      "lista_paises": item.fechasSeleccionadas
     };
+    // const PAYLOAD = {
+    //   "tipoDeSolicitud": "guardar",
+    //   "mercancia": {
+    //     "cantidadComercial": 0,
+    //     "cantidadTarifaria": 12,
+    //     "valorFacturaUSD": Number(item.valorFacturaUSD),
+    //     "condicionMercancia": item.producto,
+    //     "descripcion": item.descripcion,
+    //     "usoEspecifico": item.usoEspecifico,
+    //     "justificacionImportacionExportacion":item.justificacionImportacionExportacion,
+    //     "observaciones": item.observaciones,
+    //     "unidadMedidaTarifaria": {
+    //       "clave": item.unidadMedida
+    //     },
+    //     "fraccionArancelaria": {
+    //       "cveFraccion": item.fraccion
+    //     },
+    //     "partidasMercancia": [
+    //       {
+    //         "unidadesSolicitadas": 12,
+    //         "unidadesAutorizadas": 12,
+    //         "descripcionSolicitada": "eswa",
+    //         "descripcionAutorizada": "eswa",
+    //         "importeUnitarioUSD": 1,
+    //         "importeTotalUSD": 12,
+    //         "autorizada": true,
+    //         "importeUnitarioUSDAutorizado": 1,
+    //         "importeTotalUSDAutorizado": 12,
+    //         "fraccionArancelariaClave": "87012101",
+    //         "unidadMedidaClave": "6"
+    //       }
+    //     ]
+    //   },
+    //   "id_solcitud": 202859165,
+    //   "cve_regimen": item.regimen,
+    //   "cve_clasificacion_regimen": item.clasificacion,
+    //   "productor": {
+    //     "tipo_persona": true,
+    //     "nombre": "Juan",
+    //     "apellido_materno": "López",
+    //     "apellido_paterno": "Norte",
+    //     "razon_social": "Aceros Norte",
+    //     "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
+    //     "rfc": "AAL0409235E6",
+    //     "pais": "SIN"
+    //   },
+    //   "solicitante": {
+    //     "rfc": "AAL0409235E6",
+    //     "nombre": "Juan Pérez",
+    //     "es_persona_moral": true,
+    //     "certificado_serial_number": "string"
+    //   },
+    //   "representacion_federal": {
+    //     "cve_entidad_federativa": item.entidad,
+    //     "cve_unidad_administrativa": item.representacion
+    //   },
+    //   "entidades_federativas": {
+    //     "cveEntidad": "SIN"
+    //   },
+    //   "lista_paises": item.fechasSeleccionadas
+    // };
     return new Promise((resolve, reject) => {
       this.importacionVehiculosUsadosDonacionService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
@@ -288,5 +368,11 @@ export class ImportacionVehiculosUsadosDonacionComponent {
 
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    this.tramite130105Store.resetStore();
   }
 }
