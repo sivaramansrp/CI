@@ -169,7 +169,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   generarYMostrarDocumentos(): void {
     if (
       this.url === 'pexim' || ACUSE_PROCEDURE.includes(this.procedure)
-   ) {
+    ) {
       this.documentosService130118
         .guardarAcuse(this.idSolicitud.toString(), this.procedure)
         .pipe(
