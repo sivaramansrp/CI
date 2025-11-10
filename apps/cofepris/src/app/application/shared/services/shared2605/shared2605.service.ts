@@ -4,6 +4,9 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { Injectable } from '@angular/core';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
+import { HttpClient } from '@angular/common/http';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
+import { FRACCION_DESCRIPCION, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 
 /**
  * @description
@@ -28,7 +31,8 @@ export class Shared2605Service {
     private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private tercerosFabricanteQuery: TercerosFabricanteQuery,
     private solicitudPagoBancoQuery: TramitePagoBancoQuery,
-    private avisocalidadQuery: AvisocalidadQuery
+    private avisocalidadQuery: AvisocalidadQuery,
+    private _http: HttpClient
   ) {
     // Initialization logic
   }
@@ -405,5 +409,35 @@ export class Shared2605Service {
         "fecPago": data['fechaPago'] || "",
         "impPago": data['importePago'] || ""
     }
+  }
+
+  /**
+   * Realiza una solicitud HTTP POST para obtener información del representante legal
+   * basado en el cuerpo proporcionado y el identificador del procedimiento.
+   */
+  getRepresentanteLegala(body: Record<string, unknown>, idProcedimiento: string): Observable<JSONResponse> {
+    return this._http.post<JSONResponse>(RFC_BUSCAR_REPRESENTANTE_LEGAL(idProcedimiento), body).pipe(
+      map((response) => response)
+    );
+  }
+
+  /**
+   * Realiza una solicitud HTTP GET para obtener la descripción de una fracción arancelaria
+   * basada en la clave y el identificador del tipo de trámite.
+   */
+  getFraccionDescripcion(clave: string, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.get<JSONResponse>(FRACCION_DESCRIPCION(clave, idTipoTramite)).pipe(
+      map((response) => response)
+    );
+  }
+
+  /**
+   * Realiza una solicitud HTTP GET para obtener la unidad de medida
+   * basada en la clave de fracción y el identificador del tipo de trámite.
+   */
+  getUnidad(cveFraccion: string, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.get<JSONResponse>(UNIDAD_MEDIDA(cveFraccion, idTipoTramite)).pipe(
+      map((response) => response)
+    );
   }
 }

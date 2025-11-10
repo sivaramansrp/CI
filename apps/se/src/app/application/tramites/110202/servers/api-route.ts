@@ -23,14 +23,12 @@ const CATALOGO = ENVIRONMENT.CATALOGO_URL;
  */
 const SOLICITUD = ENVIRONMENT.SOLICITUD_URL;
 /**
- * Trámite de la API
- */
-const TRAMITE = ENVIRONMENT.TRAMITE_URL;
-/**
  * Procedimiento de la API
  */
 const PROCEDURE = '/sat-t110202';
 
+/** Número de procedimiento
+ */
 const PROCEDURE_NO = '110202';
 
 /**

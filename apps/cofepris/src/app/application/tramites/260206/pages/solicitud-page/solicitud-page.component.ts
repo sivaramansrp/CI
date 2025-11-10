@@ -1,6 +1,6 @@
-import {AlertComponent, DatosPasos, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { AVISO, AlertComponent, DatosPasos, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import {MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION, PASOS, TITULO_MENSAJE } from '../../constantes/maquila-materias-primas.enum';
+import {MENSAJE_DE_VALIDACION, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS, TITULO_MENSAJE } from '../../constantes/maquila-materias-primas.enum';
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -83,6 +83,38 @@ export class SolicitudPageComponent implements OnInit {
    * @default false - Deshabilitado por defecto
    */
     activarBotonCargaArchivos: boolean = false;
+
+    
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+    /**
+   * @property {string} TEXTOS
+   * @description
+   * Texto de aviso utilizado en el componente.
+   */
+  TEXTOS: string = AVISO.Aviso;
+    /**
+   * @property {string} infoAlert
+   * @description
+   * Clase CSS para aplicar estilos a los mensajes de información.
+   */
+  public infoAlert = 'alert-info  text-center';
+
+  /**
+   * @property {boolean} requiresPaymentData
+   * @description
+   * Indica si se requieren datos de pago para continuar con el trámite.
+   */
+  public requiresPaymentData: boolean = false;
+
+    /**
+   * @property {number} confirmarSinPagoDeDerechos
+   * @description
+   * Indica si se ha confirmado la continuación sin pago de derechos.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
 
     /**
    * @property {boolean} seccionCargarDocumentos
@@ -171,6 +203,12 @@ public mostrarAlerta: boolean = false;
   public solicitudState!: Tramite260206State;
   
   /**
+     * Identificador numérico de la solicitud actual.
+     * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+     */
+    idSolicitudState: number | null = 0;
+
+  /**
    * @property {WizardComponent} wizardComponent
    * Referencia al componente Wizard para controlar navegación entre pasos.
    */
@@ -240,10 +278,18 @@ public mostrarAlerta: boolean = false;
  getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont') {
               let isValid = true;
-        
-                if (this.indice === 1 && this.pasoUnoComponent) {
-                isValid = this.pasoUnoComponent.validarPasoUno();
+    
+              if (this.indice === 1 && this.pasoUnoComponent) {
+              isValid = this.pasoUnoComponent.validarPasoUno();
+            }
+    
+            if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+                this.confirmarSinPagoDeDerechos = 2;
+              }else {
+                this.confirmarSinPagoDeDerechos = 3;
               }
+    
+            if(!this.requiresPaymentData) {
               if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
                 this.mostrarAlerta=true;
                 this.seleccionarFilaNotificacion = {
@@ -251,65 +297,87 @@ public mostrarAlerta: boolean = false;
                   categoria: 'danger',
                   modo: 'action',
                   titulo: '',
-                  mensaje: MENSAJE_DE_PAGE,
+                  mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
                   cerrar: true,
                   tiempoDeEspera: 2000,
                   txtBtnAceptar: 'SI',
                   txtBtnCancelar: 'NO',
+                  alineacionBtonoCerrar:'flex-row-reverse'
                 }
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-              }
-              if (!isValid) {
-                this.esFormaValido = true;
-                this.datosPasos.indice = this.indice;
-                return;
-              }
-        
-              const PAYLOAD = GuardarAdapter_260206.toFormPayload(this.solicitudState);
-                   let shouldNavigate = false;
-                   this.registroSolicitudService.postGuardarDatos('260206', PAYLOAD).subscribe(response => {
-                     shouldNavigate = response.codigo === '00';
-                     if (!shouldNavigate) {
-                       const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-                       this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
-                       this.esFormaValido = false;
-                       this.indice = 1;
-                       this.datosPasos.indice = 1;
-                       this.wizardComponent.indiceActual = 1;
+             } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+                         this.confirmarSinPagoDeDerechos = 2;
+                       } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+                         this.confirmarSinPagoDeDerechos = 3;
+                       }
+                   }
+             
+                     if (!isValid) {
+                       this.formErrorAlert = this.MENSAJE_DE_ERROR;
+                       this.esFormaValido = true;
+                       this.datosPasos.indice = this.indice;
                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
                        return;
                      }
-                     if(shouldNavigate) {
-                       if(esValidObject(response) && esValidObject(response.datos)) {
-                         const DATOS = response.datos as { id_solicitud?: number };
-                         if(getValidDatos(DATOS.id_solicitud)) {                          
-                           this.tramiteStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
-                         } else {
-                           this.tramiteStore.setIdSolicitud(0);
-                         }
+             
+                     const PAYLOAD = GuardarAdapter_260206.toFormPayload(this.solicitudState);
+                     let shouldNavigate = false;
+                     this.registroSolicitudService.postGuardarDatos('260206', PAYLOAD).subscribe(response => {
+                       shouldNavigate = response.codigo === '00';
+                       if (!shouldNavigate) {
+                         const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+                         this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+                         this.esFormaValido = true;
+                         this.indice = 1;
+                         this.datosPasos.indice = 1;
+                         this.wizardComponent.indiceActual = 1;
+                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                         return;
                        }
-                       
-                      const INDICE_ACTUALIZADO = this.indice + 1;
-                       this.toastrService.success(response.mensaje);
-                       if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
-                         this.indice = INDICE_ACTUALIZADO;
-                         this.datosPasos.indice = INDICE_ACTUALIZADO;
+                       if(shouldNavigate) {
+                         if(esValidObject(response) && esValidObject(response.datos)) {
+                           this.esFormaValido = false;
+                           const DATOS = response.datos as { id_solicitud?: number };
+                           const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+                           this.idSolicitudState = ID_SOLICITUD;
+                           this.tramiteStore.setIdSolicitud(ID_SOLICITUD);
+                         }
+                         // Calcular el nuevo índice basado en la acción
+                         let indiceActualizado = e.valor;
                          if (e.accion === 'cont') {
-                           this.wizardComponent.siguiente();
-                         } else {
-                           this.wizardComponent.atras();
+                           indiceActualizado = e.valor;
                          }
+                         this.toastrService.success(response.mensaje);
+                         if (indiceActualizado > 0 && indiceActualizado < 5) {
+                           this.indice = indiceActualizado;
+                           this.datosPasos.indice = indiceActualizado;
+                           if (e.accion === 'cont') {
+                             this.wizardComponent.siguiente();
+                           } else {
+                             this.wizardComponent.atras();
+                           }
+                         }
+                       } else {
+                         this.toastrService.error(response.mensaje);
                        }
-                     } else {
-                       this.toastrService.error(response.mensaje);
-                     }
-                   });
-                 }else{
-                   this.indice = e.valor;
-                   this.datosPasos.indice = this.indice;
-                   this.wizardComponent.atras();
-                 }
+                     });
+                   }else{
+                     this.indice = e.valor;
+                     this.datosPasos.indice = this.indice;
+                     this.wizardComponent.atras();
+                   }
+             
+             
                }
+                  cerrarModal(value:boolean): void {
+                   if(value){
+                   this.mostrarAlerta = false;
+                   this.requiresPaymentData = true;
+                   } else {
+                     this.mostrarAlerta = false;
+                     this.confirmarSinPagoDeDerechos = 4;
+                   }
+                }
 
   public static generarAlertaDeError(mensajes:string): string {
     const ALERTA = `

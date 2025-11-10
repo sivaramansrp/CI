@@ -143,11 +143,6 @@ export const ADMINISTRAR_RESIDUOS = [
     orden: 15,
   },
   {
-    encabezado: 'No. de manifiesto',
-    clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
-    orden: 16,
-  },
-  {
     encabezado: 'Tipo de contenedor',
     clave: (item: ResiduoPeligroso): string => item.tipoContenedorDesc,
     orden: 17,

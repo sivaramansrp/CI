@@ -9,4 +9,11 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   templateUrl: './terceros-relacionados-fabricante.component.html',
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
-export class TercerosRelacionadosFabricanteComponent {}
+export class TercerosRelacionadosFabricanteComponent {
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260503;
+}
