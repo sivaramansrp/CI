@@ -123,7 +123,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
   validOnButtonClick():boolean{
     let isValid = false;
-    if(this.datosSolicitudRef?.validOnButtonClick() && this.pagoDerechosRef?.validOnButtonClick()){
+    if(this.datosSolicitudRef?.validOnButtonClick()){
           isValid = true;
         }
         else {
