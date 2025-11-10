@@ -1,13 +1,11 @@
 import {
-  AccionBoton,
   AVISO,
+  AccionBoton,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-
 import { PASOS, TITULOMENSAJE } from '../../constants/importacion-retorno-sanitario.enum';
-
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component
