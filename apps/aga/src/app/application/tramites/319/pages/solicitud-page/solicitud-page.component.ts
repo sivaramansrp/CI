@@ -8,27 +8,30 @@ import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 
 import {
   AccionBoton,
+  AlertComponent,
   BtnContinuarComponent,
   CategoriaMensaje,
   DatosPasos,
   ErrorModelo,
   ListaPasosWizard,
   Notificacion,
+  NotificacionesComponent,
+  PAGO_DE_DERECHOS,
   SeccionLibQuery,
   SeccionLibState,
-  SeccionLibStore
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
+import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
+import { CommonModule } from '@angular/common';
 import { FinalDataToSend } from '../../models/tramite319-state.model';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { ResultadoSolicitud } from './../../../../../../../../semarnat/src/app/application/tramites/231003/models/ResultadoSolicitud';
-import { ModificarCaatTerrestreModule } from '../../../40103/modificarCaatTerrestre.module';
+import { GuardarSolicitudT319 } from '../../models/guardar-solicitud.model';
+import { OperacionService } from '../../services/operacion.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ResultadoSolicitud } from '../../models/ResultadoSolicitud';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
-import { OperacionService } from '../../services/operacion.service';
-import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
-import { GuardarSolicitudT319 } from '../../models/guardar-solicitud.model';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /** Representa la forma cruda que puede venir desde el backend */
 interface ErrorModeloRaw {
@@ -42,11 +45,13 @@ interface ErrorModeloRaw {
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
   imports: [
+    CommonModule,
     WizardComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    ModificarCaatTerrestreModule,
     BtnContinuarComponent,
+    NotificacionesComponent,
+    AlertComponent,
   ],
 })
 /**
@@ -93,6 +98,17 @@ interface ErrorModeloRaw {
  * @param {SeccionLibStore} seccionStore - Almacenamiento de la sección.
  */
 export class SolicitudPageComponent implements OnInit, OnDestroy {
+  /**
+   * Textos estáticos relacionados con el pago de derechos.
+   * @type {typeof PAGO_DE_DERECHOS}
+   */
+  TEXTOS = PAGO_DE_DERECHOS;
+
+  /**
+   * Clase CSS para estilizar alertas informativas.
+   * @type {string}
+   */
+  public infoAlert = 'alert-info';
   /**
    * Notificación tipo banner que se muestra tras operaciones exitosas.
    */

@@ -39,13 +39,13 @@ export const PASOS = [
  * @const TRAMITE_ID
  * @description Identificador único del trámite utilizado en las operaciones de comercio exterior.
  */
-export const TRAMITE_ID = '319';
+export const TRAMITE_ID = 319;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
   `<p>La solicitud ha quedado registrada con el número temporal ${
     numeroSolicitud ?? ''
-  }. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+  }. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que esta sea firmada.</p>`;
 
 /**
  *  Ruta relativa a los archivos JSON utilizados para las operaciones de comercio exterior.

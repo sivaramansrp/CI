@@ -19,7 +19,7 @@ export class Firma319Service {
 
   /**
    * Envía una solicitud de firma electrónica.
-   * @param idSolicitud - ID de la solicitud a firmar.
+   * @param idSolicitud - ID de la solicitud a firmar. {type string}
    * @param body - Cuerpo de la solicitud de firma.
    * @returns Observable con la respuesta del servidor.
    */
@@ -28,8 +28,8 @@ export class Firma319Service {
     body: FirmarRequest
   ): Observable<BaseResponse<T>> {
     const ENDPOINT = `${this.urlServer}${API_POST_FIRMA(
-      TRAMITE_ID,
-      idSolicitud
+      idSolicitud.toString(),
+      TRAMITE_ID
     )}`;
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
       map((response) => response),

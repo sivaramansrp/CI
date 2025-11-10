@@ -30,8 +30,8 @@ export class CadenaOriginal319Service {
     body: CadenaOriginalRequest
   ): Observable<BaseResponse<T>> {
     const ENDPOINT = `${this.urlServer}${API_POST_CADENA_ORIGINAL(
-      TRAMITE_ID,
-      Number(idSolicitud)
+      idSolicitud,
+      TRAMITE_ID
     )}`;
 
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(

@@ -43,7 +43,7 @@ export interface Tramite319State {
  */
 export interface FinalDataToSend {
   /**
-   * @property {string | null} idSolicitud
+   * @property {number | null} idSolicitud
    * @description
    * Identificador único de la solicitud.
    */
