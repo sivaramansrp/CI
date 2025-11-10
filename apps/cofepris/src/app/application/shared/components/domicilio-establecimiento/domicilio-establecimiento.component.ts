@@ -110,7 +110,11 @@ public mostrarErrores = {
   telefono: false,
   deOrigen: false,
   deProcedencia: false,
-  aduanas:false 
+  aduanas:false ,
+  avisoCheckbox: false,
+  licenciaSanitaria: false,
+
+
 };
 nombresCampos:boolean = false;
   @Input() identificacion: boolean = false;
@@ -837,6 +841,8 @@ nombresCampos:boolean = false;
     this.mostrarErrores.muncipio = false;
     this.mostrarErrores.calle = false;
     this.mostrarErrores.telefono = false;
+    this.mostrarErrores.avisoCheckbox = false;
+    this.mostrarErrores.licenciaSanitaria = false;
       })
     this.obtenerEstadoList();
     this.obtenerClaveSvian();
@@ -1926,6 +1932,8 @@ onConfirmacionModal(accion: boolean): void {
     this.mostrarErrores.muncipio = true;
     this.mostrarErrores.calle = true;
     this.mostrarErrores.telefono = true;
+    this.mostrarErrores.avisoCheckbox = true;
+    this.mostrarErrores.licenciaSanitaria = true;
     ISVALID = false;
    }
    if(this.domicilio.invalid){
