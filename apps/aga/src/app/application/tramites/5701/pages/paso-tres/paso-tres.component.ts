@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   base64ToHex,
   encodeToISO88591Hex,
@@ -40,6 +40,8 @@ import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.
   styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent implements OnInit, OnDestroy {
+  @Input() procedureUrl: string = '';
+  @Input() procedure: number = 0;
   /**
    * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
    * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
@@ -156,7 +158,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
+   
       return;
     }
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
@@ -198,11 +200,12 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             firma,
             ID_SOLICITUD ?? 0
           );
-          this.router.navigate([`${this.url}/acuse`]);
+
+          this.router.navigate([this.router.url.replace('/autorizar-dictamen', '/acuse')]);
           this.tramite5701Store.limpiarSolicitud();
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
+   
           return throwError(() => error);
         })
       )

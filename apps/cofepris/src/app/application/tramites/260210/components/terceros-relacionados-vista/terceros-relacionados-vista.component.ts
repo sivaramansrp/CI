@@ -144,6 +144,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
        */
    public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR; 
 
+
+     /**
+   * @property {boolean} estaOculto
+   * @description
+   * Variable booleana que controla si el componente debe estar oculto o no.
+   */
+  estaOculto: boolean = true;
+  
   /**
    * @constructor
    * @description Constructor del componente que inicializa las dependencias necesarias

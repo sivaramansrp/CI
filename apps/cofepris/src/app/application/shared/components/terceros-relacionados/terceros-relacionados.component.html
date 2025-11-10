@@ -277,7 +277,7 @@
         <h5 class="modal-title" id="fabricanteModalLabel">
           {{ fabricanteSeleccionadoParaModificar.length > 0 ? 'Modificar Fabricante' : 'Agregar Fabricante' }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarFabricanteModal()"></button>
       </div>
       <div class="modal-body">
         <app-agregar-fabricante
@@ -304,7 +304,7 @@
         <h5 class="modal-title" id="destinatarioModalLabel">
           {{ destinatarioSeleccionadoParaModificar.length > 0 ? 'Modificar Destinatario' : 'Agregar Destinatario' }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarDestinatarioModal()"></button>
       </div>
       <div class="modal-body">
         <app-agregar-destinatario-final
@@ -332,7 +332,7 @@
         <h5 class="modal-title" id="proveedorModalLabel">
           {{ proveedorSeleccionadoParaModificar.length > 0 ? 'Modificar Proveedor' : 'Agregar Proveedor' }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarProveedorModal()"></button>
       </div>
       <div class="modal-body">
         <app-agregar-proveedor
@@ -359,7 +359,7 @@
         <h5 class="modal-title" id="facturadorModalLabel">
           {{ facturadorSeleccionadoParaModificar.length > 0 ? 'Modificar facturador' : 'Agregar facturador' }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarFacturadorModal()"></button>
       </div>
       <div class="modal-body">
         <app-agregar-facturador

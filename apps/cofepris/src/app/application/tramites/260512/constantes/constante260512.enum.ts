@@ -1,3 +1,5 @@
+import { ConfiguracionVisibilidad } from "../../../shared/models/datos-domicilio-legal.model";
+
 /**
   * @constant ERROR_FORMA_ALERT
   * @type {string}
@@ -18,3 +20,11 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `;
+ 
+export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
+  paisOrigen: true, // Indica si el país de origen es visible. Por defecto es `false`.
+  paisFabrica: false, // Indica si el país de fabricación es visible. Por defecto es `true`.
+  paisElaboracion: false, // Indica si el país de elaboración es visible. Por defecto es `true`.
+  paisProveedor: false, // Indica si el país del proveedor es visible. Por defecto es `true`.
+  paisProcedencia: true, // Indica si el país de procedencia es visible. Por defecto es `true`.
+};

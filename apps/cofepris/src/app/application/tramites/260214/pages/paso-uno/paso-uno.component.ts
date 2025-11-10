@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
@@ -27,7 +27,7 @@ import { Tramite260214Query } from '../../estados/tramite260214Query.query';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit, OnChanges {
   /**
    * @property {number | undefined} indice
    * @description Índice de la pestaña seleccionada actualmente.
@@ -68,6 +68,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   @ViewChild(ContenedorDeDatosSolicitudComponent)
   contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild(TercerosRelacionadosVistaComponent)
+  tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+  @ViewChild(PagoDeDerechosContenedoraComponent)
+  pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+  @Input() confirmarSinPagoDeDerechos: number = 0;
   /**
    * Initializes the PasoUnoComponent.
    *
@@ -91,6 +99,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         this.consultaState = seccionState;
         this.formularioDeshabilitado = seccionState.readonly;
       })).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
   }
 
   /**
@@ -176,8 +193,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
   validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
     return (
-      this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
+
     );
   }
 

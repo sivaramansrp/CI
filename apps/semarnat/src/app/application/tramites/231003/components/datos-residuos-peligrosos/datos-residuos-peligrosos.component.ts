@@ -247,6 +247,9 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   /** Control para mostrar el combo de "Otro" en tipo de contenedor */
   mostrarOtroTipoContenedor: boolean = false;
 
+  /** Determina si el campo cantidad esta fijado */
+  esCantidadFijada: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -512,7 +515,11 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
         .obtenerDescNico(NICO_SELECCIONADO, FRACCION_SELECCIONADA)
         .pipe(takeUntil(this.destroyed$))
         .subscribe((nicosData) => {
-          this.formularioResiduo.get('acotacion')?.setValue(nicosData.datos);
+          if (!nicosData.datos) {
+            this.mostrarNotificacionFraccionInvalida();
+          } else {
+            this.formularioResiduo.get('acotacion')?.setValue(nicosData.datos);
+          }
         });
     }
   }
@@ -538,8 +545,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * Maneja el cambio en el campo cantidad para auto-llenar cantidad en letra
    */
   onCantidadChange(): void {
+    this.esCantidadFijada = false;
     const CANTIDAD_VALUE = this.formularioResiduo.get('cantidad')?.value;
-
     if (CANTIDAD_VALUE && !isNaN(parseFloat(CANTIDAD_VALUE))) {
       const NUMERO = parseFloat(CANTIDAD_VALUE);
       const CANTIDAD_LETRA =
@@ -728,7 +735,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     if (!FORMS_DATOS_VALID) {
       this.esFormaValido = false;
       this.formularioDatos.get('origenResiduo')?.markAsTouched();
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
     }
     const FORMULARIO_RESIDUO_VALID = this.formularioResiduo.valid;
     if (!FORMULARIO_RESIDUO_VALID) {
@@ -738,7 +744,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
           CONTROL.markAsTouched();
         }
       });
-      this.alertaErrorFormulario = this.FALTAN_DATOS;
     }
     DatosResiduosPeligrososComponent.scrollModalToTop();
     return (FORMS_DATOS_VALID && FORMULARIO_RESIDUO_VALID) ?? false;
@@ -953,7 +958,7 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       this.alertaErrorFormulario = '';
     } else {
       this.esFormaValido = false;
-      this.alertaErrorFormulario = 'El número de bitácora no existe';
+      this.alertaErrorFormulario = `<p class="text-danger fw-bold fst-italic">El número de bitácora no existe</p>`;
       // También limpiar los campos deshabilitados
       this.formularioDatos.get('cantidad')?.setValue('');
       this.formularioDatos.get('cantidadLetra')?.setValue('');
@@ -1259,6 +1264,22 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
       tipoContenedorDesc: this.getTipoContenedor() || '',
       tipoContenedorOtro:
         this.formularioResiduo.get('otroContenedor')?.value || '',
+    };
+  }
+
+  /**
+   * Muestra una notificación de fracción arancelaria inválida.
+   */
+  mostrarNotificacionFraccionInvalida(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'el número no es valido',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     };
   }
   /**

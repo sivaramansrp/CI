@@ -1,7 +1,23 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import {
+  AccionBoton,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  WizardComponent,
+  esValidObject,
+  getValidDatos,
+} from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS, TITULOMENSAJE } from '../../constants/medicamentos-destinados-uso.enum';
-import { Tramite260208State, Tramite260208Store } from '../../estados/tramite260208Store.store';
+import {
+  ERROR_FORMA_ALERT,
+  MENSAJE_DE_PAGE,
+  PASOS,
+  TITULOMENSAJE,
+} from '../../constants/medicamentos-destinados-uso.enum';
+import {
+  Tramite260208State,
+  Tramite260208Store,
+} from '../../estados/tramite260208Store.store';
 import { GuardarAdapter_260208 } from '../../adapters/guardar-payload.adapter';
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -74,6 +90,11 @@ export class ContenedorDePasosComponent implements OnInit {
 
   public formErrorAlert = ERROR_FORMA_ALERT;
 
+  mostrarAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
     /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -81,7 +102,7 @@ export class ContenedorDePasosComponent implements OnInit {
   cargarArchivosEvento = new EventEmitter<void>();
     constructor(
     public tramiteQuery: Tramite260208Query,
-    private store : Tramite260208Store,
+    private store: Tramite260208Store,
     private toastrService: ToastrService,
     private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService
     ) {
@@ -101,7 +122,6 @@ ngOnInit(): void {
     this.indice = i;
   }
 
-
    /**
      * @method getValorIndice
      * @description Actualiza el índice y el título del mensaje según la acción del botón.
@@ -109,11 +129,25 @@ ngOnInit(): void {
      * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
      */
     getValorIndice(e: AccionBoton): void {
-  
       if (e.accion === 'cont') {
         const IS_VALID = true;
         if (this.indice === 1) {
           const ISVALID = this.validarTodosFormulariosPasoUno();
+        if (!this.pasoUnoComponent.tercerosRelacionados.validarFormulario()) {
+          this.mostrarAlerta = true;
+          this.seleccionarFilaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE_DE_PAGE,
+            cerrar: true,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'SI',
+            txtBtnCancelar: 'NO',
+          };
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        }
           if (!ISVALID) {
             this.esFormaValido = true;
           }
@@ -130,22 +164,29 @@ ngOnInit(): void {
   
         const PAYLOAD = GuardarAdapter_260208.toFormPayload(this.storeData);
         let shouldNavigate = false;
-        this.importacionDestinadosDonacioService.postGuardarDatos('260208', PAYLOAD).subscribe(response => {
+      this.importacionDestinadosDonacioService
+        .postGuardarDatos('260208', PAYLOAD)
+        .subscribe((response) => {
           shouldNavigate = response.codigo === '00';
           if (!shouldNavigate) {
-            const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-            this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+            const ERROR_MESSAGE =
+              response.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert =
+              ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
             this.esFormaValido = false;
             this.indice = 1;
             this.datosPasos.indice = 1;
             this.wizardComponent.indiceActual = 1;
-            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            setTimeout(
+              () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+              0
+            );
             return;
           }
-          if(shouldNavigate) {
-            if(esValidObject(response) && esValidObject(response.datos)) {
+          if (shouldNavigate) {
+            if (esValidObject(response) && esValidObject(response.datos)) {
               const DATOS = response.datos as { id_solicitud?: number };
-              if(getValidDatos(DATOS.id_solicitud)) {
+              if (getValidDatos(DATOS.id_solicitud)) {
                 this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
               } else {
                 this.store.setIdSolicitud(0);

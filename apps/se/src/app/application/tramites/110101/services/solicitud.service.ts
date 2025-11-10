@@ -7,11 +7,13 @@ import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shar
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { FirmarRequest } from "@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model";
 
-import { API_POST_FIRMA, API_POST_GENERAR_CADENA_ORIGINAL, API_POST_GUARDAR_SOLICITUD } from "../server/api-router";
+import { API_POST_FIRMA, API_POST_GENERAR_CADENA_ORIGINAL, API_POST_GUARDAR_SOLICITUD, API_POST_VALIDAR_SOLICITUD_COMPLETA } from "../server/api-router";
 import { GenerarCadenaOrigRequest } from "../models/request/generar-cadena-original-request.model";
 import { SolicitudCompletaRequest } from "../models/request/guardado-solicitud-request.model";
 
 import { FirmaResponse } from "../models/response/firma-response.model";
+import { RegistroCuestionarioRequest } from "../models/request/validar-solicitud-request.model";
+import { ValidarSolicitudResponse } from "../models/response/validar-solicitud-response.model";
 
 @Injectable({
     providedIn: 'root'
@@ -67,5 +69,14 @@ export class SolicitudService {
                 return throwError(() => ERROR);
             })
         );
+    }
+
+    /**
+     * Valida la solicitud completa previo al guardado.
+     * @returns Observable con la respuesta del servidor.
+     */
+    postValidarSolicitudCompleta(PAYLOAD: RegistroCuestionarioRequest): Observable<BaseResponse<ValidarSolicitudResponse>> {
+        const ENDPOINT = `${this.host}${API_POST_VALIDAR_SOLICITUD_COMPLETA}`;
+        return this.http.post<BaseResponse<ValidarSolicitudResponse>>(ENDPOINT, PAYLOAD);
     }
 }

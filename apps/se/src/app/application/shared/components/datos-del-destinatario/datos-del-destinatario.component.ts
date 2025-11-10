@@ -52,7 +52,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211,110201,110202];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -120,13 +120,21 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
-      if (this.idProcedimiento === 110212) {
+      if (this.idProcedimiento === 110212 || this.idProcedimiento === 110201 || this.idProcedimiento === 110202) {
       const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formDatosDelDestinatario.get(key)?.clearValidators();
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
       });
-    }else{
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else{
       this.applyNumeroRegistroFiscalValidation();
     }
     this.inicializarEstadoFormulario();
@@ -174,6 +182,13 @@ export class DatosDelDestinatarioComponent
         this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
       });
     }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
     else {
       this.updateRequiredValidators();
     }
@@ -210,7 +225,7 @@ export class DatosDelDestinatarioComponent
   applyNumeroRegistroFiscalValidation(): void {
     const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
-    const NOMBRES = this.formDatosDelDestinatario.get('nombres'); // Add validation for nombres
+    const NOMBRES = this.formDatosDelDestinatario.get('nombres');
 
     if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
       return;
@@ -223,7 +238,7 @@ export class DatosDelDestinatarioComponent
       ]);
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
       NOMBRES.setValidators([
-        Validators.required, // Add required validation for nombres
+        Validators.required,
         Validators.maxLength(20),
       ]);
     } else {
@@ -232,12 +247,12 @@ export class DatosDelDestinatarioComponent
         Validators.required,
         Validators.maxLength(20),
       ]);
-      NOMBRES.setValidators([Validators.maxLength(20)]); // Optional for other cases
+      NOMBRES.setValidators([Validators.maxLength(20)]);
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
-    NOMBRES.updateValueAndValidity(); // Update validity for nombres
+    NOMBRES.updateValueAndValidity();
   }
 
   /**
@@ -266,7 +281,7 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
-    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+    if (changes?.['idProcedimiento']?.currentValue && changes?.['idProcedimiento']) {
       this.updateRequiredValidators();
     }
   }

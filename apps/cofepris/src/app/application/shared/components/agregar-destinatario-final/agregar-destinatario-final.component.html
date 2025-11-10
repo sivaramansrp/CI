@@ -7,7 +7,12 @@
   <ng-template #agregarDestinatario>
     <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
   </ng-template>
-
+   @if(mensajeDeError){
+    <ng-alert
+      [CONTENIDO]="mensajeDeError"
+      [CUSTOMECLASS]="'alert-danger text-center'"
+    ></ng-alert>
+  }
   <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -29,19 +34,19 @@
           <span tooltip="Una persona moral es entendida como una empresa con una actividad específica"><i
               class="bi bi-question-circle-fill"></i></span>
         </div>
-          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
-          <small>Este campo es obligatorio</small>
-        </div>
-        @if(mostrarCamposNoContribuyente || idProcedimiento === 260911){
+        @if(mostrarCamposNoContribuyente){
         <div class="form-check">
           <input type="radio" class="form-check-input" formControlName="tipoPersona" value="NoContribyunte"
           (change)="changeNacionalidad()" />
-          No Contribyunte
+          No contribuyente
         </div>
         }
+         <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
       </div>
     </div>
- @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911){
+ @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte'){
     <div class="row mt-5 justify-content-center">
   <div class="col-md-4">
     <label class="form-label">
@@ -104,33 +109,9 @@
     </div>
   }
 
-    @if(agregarDestinatarioFinal?.get('tipoPersona')?.value ===
-    tipoPersona.MORAL) {
-    <div class="row">
-      <div class="col-md-8">
-        <div class="form-group">
-          <label class="form-label mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social@if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
-            <span *ngIf="esInvalido('denominacionRazon')" class="text-danger">*</span>
-          <span *ngIf="!esInvalido('denominacionRazon')">*</span>
-            }:</label>
-          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
-            [maxlength]="254" [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''" />
-          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
-            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']">
-              Este campo es obligatorio
-            </small>
-            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['pattern']">
-              Existen datos incorrectos que no cumplen con el formato esperado.
-            </small>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
-
     <!-- Datos Personales -->
     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA || agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911 ) {
+    tipoPersona.FISICA || agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' || agregarDestinatarioFinal.get('tipoPersona')?.value === undefined) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
@@ -169,7 +150,32 @@
         </div>
       </div>
     </div>
-    } @if (idProcedimiento === 260102) {
+    }
+     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
+    tipoPersona.MORAL || agregarDestinatarioFinal.get('tipoPersona')?.value === undefined) {
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social@if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
+            <span *ngIf="esInvalido('denominacionRazon')" class="text-danger">*</span>
+          <span *ngIf="!esInvalido('denominacionRazon')">*</span>
+            }:</label>
+          <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
+            [maxlength]="254" [ngClass]="esInvalido('denominacionRazon') ? 'required' : ''" />
+          <div *ngIf="esInvalido('denominacionRazon')" class="text-danger">
+            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']">
+              Este campo es obligatorio
+            </small>
+            <small *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['pattern']">
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    
+    @if (idProcedimiento === 260102) {
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4 px-5">
@@ -223,7 +229,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'"
-          [required]="!requiedField" [placeholder]="'Seleccione una opción'"
+          [required]="!requiedField" [placeholder]="'Seleccione una opción'" (selectionChange)="cargarLocalidades($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
           [markTouched]="agregarDestinatarioFinal.get('localidad')?.touched ?? false"
           [disabledPrimerOption]="false"
@@ -243,7 +249,7 @@
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
           [placeholder]="'Seleccione una opción'" [isDisabled]="estaDeshabilitadoDesplegable"
           [required]="idProcedimiento === 260911 || !elementosNoRequeridos.includes('colonia')"
-          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false"
+          [markTouched]="agregarDestinatarioFinal.get('colonia')?.touched ?? false"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false">
         </app-catalogo-select>

@@ -5,18 +5,18 @@
         <h1>Registro de solicitud de Reporte Anual</h1>
       </div>
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
-    </div>
+    </div>    
     <div class="row">
       @switch (indice) {
       @case (1) {
       <app-paso-uno></app-paso-uno>
       }
       @case (2) {
-        <app-paso-tres></app-paso-tres>
+        <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="150103" [procedureUrl]="'informe-anual-programa/solicitud-de-reporte'"></paso-firma>
       }
       }
     
-        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
       
     </div>
   </div>

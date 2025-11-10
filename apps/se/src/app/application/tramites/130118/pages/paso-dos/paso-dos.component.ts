@@ -83,6 +83,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   @Input() datosUsuario!: Usuario;
 
   /**
+   * ID de la solicitud actual.
+   */
+  @Input() idSolicitud!: string;
+
+  /** Carga del progreso del archivo */
+  cargaEnProgreso: boolean = true;
+
+  /** Emite un boleano sobre la carga del archivo */
+  @Output() cargaEnProgresoChange = new EventEmitter<boolean>();
+
+  /**
    * Constructor del componente.
    * 
    * @param catalogosServices Servicio para gestionar los catálogos.
@@ -139,6 +150,16 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
     this.reenviarCargaRealizada.emit(this.cargaRealizada);
+  }
+
+  /**
+ * Maneja el evento de carga en progreso emitido por un componente hijo.
+ * Actualiza el estado de cargaEnProgreso según el valor recibido.
+ * @param carga Valor booleano que indica si la carga está en progreso.
+ */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+    this.cargaEnProgresoChange.emit(this.cargaEnProgreso);
   }
 
   /**

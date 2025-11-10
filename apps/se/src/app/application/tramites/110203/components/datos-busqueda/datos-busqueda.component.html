@@ -8,7 +8,7 @@
                     [layout]="'horizontal'" (valueChange)="enCambioValorRadio($event)"></app-input-radio>
             </div>
         </div>
-        <div class="row mb-3" *ngIf="valorSeleccionado === 'Por número de certificado'">
+        <div class="row mb-3" *ngIf="busquedaDeCertificado()">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="númeroDeCertificado">Número de certificado*:</label>
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-3" *ngIf="valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque'">
+        <div class="row mb-3" *ngIf="busquedaDeTratadoPais()">
             <div class="col-md-8">
                 <app-catalogo-select [catalogo]="tratadoAcuerdo" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="Tratado / Acuerdo" formControlName="tratadoAcuerdo"></app-catalogo-select>

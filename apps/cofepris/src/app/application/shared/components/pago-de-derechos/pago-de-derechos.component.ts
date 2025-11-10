@@ -264,6 +264,10 @@ verificarAlerta:number[]=[];
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    if(this.idProcedimiento === 260513){
+      this.fechaInicioInput.labelNombre='Fecha de pago'
+      this.fechaInicioInput.required = true;
+    }
     this.getBancoDatos();
     this.pagoDerechosQuery.selectSolicitud$
       .pipe(

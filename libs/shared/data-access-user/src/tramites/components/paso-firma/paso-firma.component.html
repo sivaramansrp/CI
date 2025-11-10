@@ -4,7 +4,9 @@
       <firma-electronica 
         [tipo]="''" 
         [cadenaOriginal]="cadenaOriginal"
+        [cadenasOriginalesDocumentos]="cadenasOriginalesDocumentos"
         (datosFirma)="datosFirma($event)"
+        (documentosFirmados)="onDocumentosFirmados($event)"
       ></firma-electronica>
     </div>
   </div>

@@ -50,7 +50,7 @@ export class AvisoTrasladoService {
    * @returns {Observable<CatalogoLista>} Un observable con la lista de colonias.
    */
   obtenerColonias(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+    return this.http.get<CatalogoLista>(`assets/json/32503/colonia.json`);
   }
   /**
    * Obtiene la lista de municipios.
@@ -58,7 +58,7 @@ export class AvisoTrasladoService {
    * @returns {Observable<CatalogoLista>} Un observable con la lista de municipios.
    */
   obtenerMunicipio(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+    return this.http.get<CatalogoLista>(`assets/json/32503/alcaldia-municipio.json`);
   }
   /**
    * Obtiene la lista de entidades federativas.
@@ -74,7 +74,7 @@ export class AvisoTrasladoService {
    * @returns {Observable<CatalogoLista>} Un observable con la lista de unidades de medida.
    */
   obtenerUnidadMedida(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+    return this.http.get<CatalogoLista>(`assets/json/32503/unidad-de-medida.json`);
   }
   /**
    * Obtiene la lista de fracciones arancelarias.
@@ -82,7 +82,7 @@ export class AvisoTrasladoService {
    * @returns {Observable<CatalogoLista>} Un observable con la lista de fracciones arancelarias.
    */
   obtenerFraccionArancelaria(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+    return this.http.get<CatalogoLista>(`assets/json/32503/fraccion-arancelaria.json`);
   }
   /**
    * @method getDatosConsulta
