@@ -9,7 +9,7 @@
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         </div>
         }
-    <app-wizard [listaPasos]="pasos"></app-wizard>
+    <app-wizard #wizzard [listaPasos]="pasos"></app-wizard>
   </div>
 
   <div class="row">
@@ -63,3 +63,10 @@
             <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
         }
 </div>
+
+@if(mostrarAlerta){
+  <section>
+    <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
+    </lib-notificaciones>
+  </section>
+}

@@ -292,6 +292,8 @@ export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
   'correoElectronico',
+  'licenciaSanitaria',
+  'aviso'
 ];
 
 

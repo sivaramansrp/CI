@@ -97,8 +97,7 @@ consultaDatos!: ConsultaioState;
           disabled: true,
         },
       ],
-    });
-
+    });    
     this.solicitud150103Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -112,6 +111,11 @@ consultaDatos!: ConsultaioState;
             porcentajeExportacion:
               this.solicitud150103State.porcentajeExportacion,
           });
+          
+          // Habilitar campos específicos cuando se selecciona un programa
+          if (this.solicitud150103State.folioPrograma) {
+            this.habilitarCamposEspecificos();
+          }
         })
       )
       .subscribe();
@@ -169,7 +173,6 @@ consultaDatos!: ConsultaioState;
     this.solicitud150103Store.actualizarVentasTotales(VALOR);
     this.calcularReporteAnnual();
   }
-
   /**
    * Actualiza el valor de las importaciones totales y recalcula el reporte anual.
    * @param evento - Evento del input que contiene el valor de importaciones.
@@ -180,6 +183,15 @@ consultaDatos!: ConsultaioState;
     this.calcularReporteAnnual();
   }
 
+  /**
+   * Habilita los campos específicos de ventas totales y total exportaciones.
+   * Este método se llama cuando se selecciona un programa de la tabla.
+   */
+  habilitarCamposEspecificos(): void {
+    this.formReporteAnnual.get('ventasTotales')?.enable();
+    this.formReporteAnnual.get('totalExportaciones')?.enable();
+  }
+
 
   /**
  * @method inicializarEstadoFormulario
@@ -187,10 +199,18 @@ consultaDatos!: ConsultaioState;
  */
 inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.formReporteAnnual?.enable();
-    }
-    else {
       this.formReporteAnnual?.disable();
+    } else {
+      this.formReporteAnnual.get('totalImportaciones')?.disable();
+      this.formReporteAnnual.get('saldo')?.disable();
+      this.formReporteAnnual.get('porcentajeExportacion')?.disable();
+      
+      if (this.solicitud150103State.folioPrograma) {
+        this.habilitarCamposEspecificos();
+      } else {
+        this.formReporteAnnual.get('ventasTotales')?.disable();
+        this.formReporteAnnual.get('totalExportaciones')?.disable();
+      }
     }
 }
   /**

@@ -275,3 +275,21 @@ export interface PermisoModel {
     descripcion: string;
     umt: string;
   }
+
+  /**
+   * Array of numeric identifiers corresponding to the "nombres" fields used by the
+   * datos-domicilio-legal model.
+   *
+   * This constant provides a canonical, immutable list of field IDs that are consumed
+   * across the application for form generation, mapping backend responses, and validation
+   * related to the legal domicile "nombres" section.
+   *
+   * @remarks
+   * - Treat this constant as read-only at runtime.
+   * - Use it wherever a definitive set of "nombres" field identifiers is required.
+   *
+   * @public
+   * @module app/application/shared/models/datos-domicilio-legal.model
+   * @compodoc
+   */
+  export const NOMBRES_CAMPOS = [260512,260513,260516];
