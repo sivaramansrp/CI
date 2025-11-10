@@ -230,17 +230,18 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   */
   public validarFormulario(): { valido: boolean; mensaje?: string } {
 
+    console.log('fitosanitarioStoreTerceros', JSON.stringify(this.fitosanitarioStore.getValue()))
     // Verificar si hay datos en la tabla
-    const TABLE_DATA = this.fitosanitarioStore.getValue().personas;
+    const TABLE_DESTINATARIO = this.fitosanitarioStore.getValue().tercerosRelacionados;
     const TABLE_EXPORTADOR = this.fitosanitarioStore.getValue().datosForma;
 
     if (!TABLE_EXPORTADOR || TABLE_EXPORTADOR.length === 0) {
 
       return { valido: false, mensaje: 'Debe agregar al menos un Exportador.' };
     }
-    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+    if (!TABLE_DESTINATARIO || TABLE_DESTINATARIO.length === 0) {
 
-      return { valido: false, mensaje: 'Debe agregar al menos un Exportador.' };
+      return { valido: false, mensaje: 'Debe agregar al menos un Destinatario.' };
     }
 
     return { valido: true };

@@ -22,7 +22,7 @@ export interface DatosSolicitud {
 export interface Mercancia {
   tipo_requisito: number;
   requisito: string;
-  numero_certificado: number;
+  numero_certificado: string;
   cve_fraccion: string;
   id_fraccion_gubernamental: number;
   clave_nico: string;
@@ -41,7 +41,7 @@ export interface Mercancia {
 }
 
 export interface DetalleMercancia {
-  id_vida_silvestre: number;
+  id_vida_silvestre: string;
 }
 
 // ================= TRANSPORTE ===================

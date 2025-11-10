@@ -170,7 +170,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
     this.update(state => ({
       ...state,
-      pagoDeDerechos: pagoDeDerechos,
+      pago: pagoDeDerechos,
     }));
   }
 

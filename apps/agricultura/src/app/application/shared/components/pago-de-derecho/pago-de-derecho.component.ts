@@ -331,8 +331,24 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   actualizarPago(): void {
-    this.pagoChanged.emit(this.pagoForm?.value);
+    // this.pagoChanged.emit(this.pagoForm?.value);
+    this.actualizarTodoelForm();
   }
+
+  actualizarTodoelForm() {
+    const DATOS_PAGOS = {
+      exentoPago: this.pagoForm.value.exentoPago,
+      justificacion: this.pagoForm.get('justificacion')?.value,
+      claveReferencia: this.pagoForm.get('claveReferencia')?.value,
+      cadenaDependencia: this.pagoForm.get('cadenaDependencia')?.value,
+      banco: this.pagoForm.get('banco')?.value,
+      llavePago: this.pagoForm.get('llavePago')?.value,
+      importePago: this.pagoForm.get('importePago')?.value,
+      fechaPago: this.pagoForm.get('fechaPago')?.value
+    }
+    this.pagoChanged.emit(DATOS_PAGOS);
+  }
+
 
   /**
    * @description Método que se ejecuta al hacer clic en el botón "Borrar".

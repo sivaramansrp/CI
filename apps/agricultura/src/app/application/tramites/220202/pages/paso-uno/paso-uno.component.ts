@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
 import { map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { FilaSolicitud, ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
+import { FilaSolicitud, ListaDeDatosFinal, TercerosrelacionadosdestinoTable, TercerosrelacionadosExportadorTable } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -69,6 +69,14 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
 * @viewChild PagoDeDerechosComponent
 */
   @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponentRef!: PagoDeDerechosComponent;
+
+  /**
+   * Referencia al componente hijo SolicitanteComponent para manejar los datos del solicitante.
+   * @public
+   * @type {SolicitanteComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild(SolicitanteComponent) solicitanteComponentRef!: SolicitanteComponent;
 
 
   /**
@@ -206,7 +214,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   public validarFormularios(): { valido: boolean; mensaje?: string } {
     console.log('entra a alida formulario de los datos de la solicitud');
-    this.guardarSolicitud();
 
     const tabsValidadas = [
       { index: 2, ref: this.datosSolicitudRef },
@@ -226,6 +233,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         return { valido: esValido, mensaje: validaPestañas.mensaje! };
       }
     }
+    if (esValido) {
+      this.guardarSolicitud();
+
+    }
     return { valido: esValido };
   }
 
@@ -235,7 +246,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @method guardarSolicitud
    */
   guardarSolicitud(): void {
-    console.log('guardarSolicitud: inicio');
+    // console.log('guardarSolicitud: inicio');
 
     this.agriculturaApiService.getAllDatosForma()
       .pipe(
@@ -257,7 +268,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   }
 
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
-    console.log('datosFormulario', JSON.stringify(datos));
+    // console.log('Con deshabilitados:', JSON.stringify(this.solicitanteComponentRef.datosGenerales));
+    // console.log('datosFormulario', JSON.stringify(datos));
     return {
       id_solicitud: null,
       datos_solicitud: {
@@ -270,7 +282,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         mercancia: (datos.tablaDatos ?? []).map((t: FilaSolicitud) => ({
           tipo_requisito: Number(t.tipoRequisito) ?? 0,
           requisito: t.requisito ?? '',
-          numero_certificado: Number(t.numeroCertificadoInternacional) ?? 0,
+          numero_certificado: t.numeroCertificadoInternacional ?? '',
           cve_fraccion: t.fraccionArancelaria ?? '',
           id_fraccion_gubernamental: 0,
           clave_nico: t.nico ?? '',
@@ -286,7 +298,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
           clave_paises_procedencia: t.paisDeProcedencia ?? '',
           idNombreCientifico: '',
           lista_detalle_mercancia: (t.detalleVidaSilvestre ?? []).map(x => ({
-            id_vida_silvestre: x.idVidaSilvestre
+            id_vida_silvestre: String(x.idVidaSilvestre)
           }))
         }))
       },
@@ -299,70 +311,86 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       },
 
       terceros: {
-        terceros_exportador: [
-          {
-            tipo_persona_sol: "TIPERS.EXP",
-            persona_moral: datos.datosForma[0].tipoMercancia?.toLowerCase() === 'no',
-            nombre: datos.datosForma[0].nombre,
-            apellido_paterno: datos.datosForma[0].primerApellido,
-            apellido_materno: datos.datosForma[0].segundoApellido ?? '',
-            razon_social: datos.datosForma[0].razonSocial,
-            pais: datos.datosForma[0].pais,
-            descripcion_ubicacion: datos.datosForma[0].domicilio ?? '',
-            lada: datos.datosForma[0].lada ?? '',
-            telefonos: datos.datosForma[0].telefono ?? '',
-            correo: datos.datosForma[0].correo ?? ''
-          }
-        ],
-        terceros_destinatario: [
-          {
+        terceros_exportador: (datos.datosForma ?? []).map((t: TercerosrelacionadosExportadorTable) => ({
+          tipo_persona_sol: "TIPERS.EXP",
+          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+          nombre: t.nombre,
+          apellido_paterno: t.primerApellido,
+          apellido_materno: t.segundoApellido ?? '',
+          razon_social: t.razonSocial,
+          pais: t.pais,
+          descripcion_ubicacion: t.domicilio ?? '',
+          lada: t.lada ?? '',
+          telefonos: t.telefono ?? '',
+          correo: t.correo ?? ''
+
+        })),
+
+        terceros_destinatario: (datos.tercerosRelacionados ?? []).map((t: TercerosrelacionadosdestinoTable) => ({
             tipo_persona_sol: "TIPERS.DES",
-            persona_moral: datos.tercerosRelacionados[0].tipoMercancia?.toLowerCase() === 'no',
-            num_establ_tif: null,
-            nom_establ_tif: null,
-            nombre: datos.tercerosRelacionados[0].nombre,
-            apellido_paterno: datos.tercerosRelacionados[0].primerApellido,
-            apellido_materno: datos.tercerosRelacionados[0].segundoApellido ?? '',
-            razon_social: datos.tercerosRelacionados[0].razonSocial,
-            pais: datos.tercerosRelacionados[0].pais,
-            codigo_postal: datos.tercerosRelacionados[0].codigoPostal,
-            cve_entidad: datos.tercerosRelacionados[0].estado,
-            cve_deleg_mun: datos.tercerosRelacionados[0].municipio ?? '',
-            cve_colonia: datos.tercerosRelacionados[0].colonia ?? '',
-            calle: datos.tercerosRelacionados[0].calle,
-            num_exterior: datos.tercerosRelacionados[0].numeroExterior,
-            num_interior: datos.tercerosRelacionados[0].numeroInterior ?? '',
-            lada: datos.tercerosRelacionados[0].lada ?? '',
-            telefonos: datos.tercerosRelacionados[0].telefono ?? '',
-            correo: datos.tercerosRelacionados[0].correo ?? ''
-          }
-        ]
+          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+          num_establ_tif: "",
+          nom_establ_tif: "",
+          nombre: t.nombre,
+          apellido_paterno: t.primerApellido,
+          apellido_materno: t.segundoApellido ?? '',
+          razon_social: t.razonSocial,
+          pais: t.pais,
+          codigo_postal: t.codigoPostal,
+          cve_entidad: t.estado,
+          cve_deleg_mun: t.municipio ?? '',
+          cve_colonia: t.colonia ?? '',
+          calle: t.calle,
+          num_exterior: t.numeroExterior,
+          num_interior: t.numeroInterior ?? '',
+          lada: t.lada ?? '',
+          telefonos: t.telefono ?? '',
+          correo: t.correo ?? ''
+        })),
       },
 
       pago: {
-        exento_pago: false,
-        ide_motivo_exento_pago: null,
-        cve_referencia_bancaria: "454000554",
-        cadena_pago_dependencia: "0003007060CEFI",
-        cve_banco: "9",
-        llave_pago: "9998853",
-        fec_pago: "2024-08-19 00:00:00",
-        imp_pago: 2562
+        exento_pago: datos.pago.exentoPago?.toLowerCase() === 'si',
+        ide_motivo_exento_pago: datos.pago.justificacion,
+        cve_referencia_bancaria: datos.pago.claveReferencia,
+        cadena_pago_dependencia: datos.pago.cadenaDependencia,
+        cve_banco: datos.pago.banco,
+        llave_pago: datos.pago.llavePago,
+        fec_pago: this.convertirFechaFormato(datos.pago.fechaPago) ?? '',
+        imp_pago: Number(datos.pago.importePago)
       },
-
+      // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
-        rfc: "AAL0409235E6",
-        rol_capturista: "Solicitante",
-        nombre: "Juan Pérez",
-        es_persona_moral: true,
-        certificado_serial_number: 20001000000100001815
+        rfc: this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
+        rol_capturista: "Solicitante", // se saca de la sesion y aun no funciona login 
+        nombre: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''),
+        es_persona_moral: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
+        certificado_serial_number: 0 // no sabemos de donde se obtiene 
       },
 
       representacion_federal: {
-        cve_entidad_federativa: "DGO",
-        cve_unidad_administrativa: "1016"
+        cve_entidad_federativa: "DGO", // aun no estan los datos login
+        cve_unidad_administrativa: "1016" // aun no hay datos login
       }
     };
+  }
+
+  /**
+ * Convierte una fecha en formato dd/MM/yyyy o dd-MM-yyyy
+ * a una cadena ISO válida (UTC).
+ * 
+ * @param fechaStr - Ejemplo: "07/11/2025" o "07-11-2025"
+ * @returns string - Ejemplo: "2025-11-07 00:00:00"
+ */
+  convertirFechaFormato(fecha: string | Date): string {
+    if (!fecha) return '';
+
+    const d = new Date(fecha);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day} 00:00:00`;
   }
 
 
