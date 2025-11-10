@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, REGEX_RFC, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, Notificacion, NotificacionesComponent, REGEX_RFC, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -15,7 +15,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-representante-legal-rfc',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule,NotificacionesComponent],
   templateUrl: './representante-legal-rfc.component.html',
   styleUrl: './representante-legal-rfc.component.css',
 })
@@ -48,6 +48,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Grupo de formularios para el representante legal.
    */
   updateDatos: boolean = false;
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -155,7 +156,7 @@ const STATE = this.solicitudState ?? {};
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
   obtenerValor(): void {
- 
+ if(this.representante.get('rfc')?.valid){
     const PROCEDIMIENTO = String(this.idProcedimiento);
     const PAYLOAD = {
       "rfcRepresentanteLegal": this.representante.get('rfc')?.value
@@ -182,6 +183,22 @@ const STATE = this.solicitudState ?? {};
       }, (error) => {
         console.error('Error al obtener los representantes legala:', error);
       });
+    }
+    else{
+       this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe ingresar el RFC.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    }
   }
 
   /**
@@ -241,5 +258,10 @@ validarClickDeBoton(): boolean {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+  eliminarPedimento(event: boolean): void {
+    if (event) {
+    
+    }
   }
 }
