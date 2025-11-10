@@ -10,10 +10,12 @@ import {
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -97,6 +99,7 @@ export interface MercanciasTabla {
 export class DomicilioComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
+@Output() formValidityChange = new EventEmitter<boolean>();
 public mostrarErrores = {
   codigoPostal: false,
   estado: false,
@@ -411,18 +414,30 @@ public mostrarErrores = {
           Validators.pattern(/^-?(0|[1-9]\d*)?$/),
         ],
       ],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
-        [Validators.required, Validators.maxLength(50)],
-      ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
    
     });
+
+    if (this.isGarantiasOfrecidasVisible) {
+      this.domicilio.addControl(
+        "garantiasOfrecidas",
+        this.fb.control(this.solicitudState?.garantiasOfrecidas, [Validators.required]),
+      );
+    }
+
+    if (this.isAvisoLicenciaVisible) {
+      this.domicilio.addControl(
+        "avisoCheckbox",
+        this.fb.control(this.solicitudState?.avisoCheckbox),
+      );
+      this.domicilio.addControl(
+        "licenciaSanitaria",
+        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+      );
+    }
 
     /**
      * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
@@ -1507,6 +1522,7 @@ public mostrarErrores = {
     this.servicioDeFormularioService.setFormValue("domicilioForm", {
       [campo]: VALOR,
     });
+    this.formValidityChange.emit(this.domicilio.valid);
   }
 
   agregarMercanciaModal(): void {

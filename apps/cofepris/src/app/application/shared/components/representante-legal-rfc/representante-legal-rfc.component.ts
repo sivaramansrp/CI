@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
@@ -19,6 +19,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  @Output() formValidityChange = new EventEmitter<boolean>();
   public mostrarErroresRepresentante = {
   nombre: false,
   apellidoPaterno: false,
@@ -174,6 +175,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('representanteForm', {
         [campo]: VALOR,
       });
+    this.formValidityChange.emit(this.representante.valid);
   }
 
   /**

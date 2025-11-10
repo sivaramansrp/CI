@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
+import { Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
 
 /**
  * Componente que muestra la sección de Datos de la Solicitud.
@@ -27,11 +28,33 @@ export class DatosSolicitudComponent {
   /**
    * Indica si se debe mostrar la sección de Garantías Ofrecidas
    */
-  isGarantiasOfrecidasVisible: boolean = false;
+  isGarantiasOfrecidasVisible: boolean = true;
 
   /**
    * Indica si el campo de domicilio debe estar habilitado en el formulario.
    * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
    */
   tieneDomicilioHabilitar: boolean = true;
+
+  constructor(
+    public store: Tramite260509Store,
+  ) {
+    //
+  }
+
+  datosEstabelicimientoFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('datosEstablecimiento', event);
+  }
+
+  domicilioFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('domicilioEstablecimiento', event);
+  }
+
+  manifiestosFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('manifiestos', event);
+  }
+
+  representanteLegalFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('representanteLegal', event);
+  }
 }

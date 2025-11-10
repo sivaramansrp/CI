@@ -3,4 +3,8 @@
   [isAduanasEntradaVisible]="isAduanasEntradaVisible"
   [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible"
   [tieneDomicilioHabilitar]="tieneDomicilioHabilitar"
+  (establecimientoFormValidity)="datosEstabelicimientoFormValidityChange($event)"
+  (domicilioFormValidity)="domicilioFormValidityChange($event)"
+  (manifiestosFormValidity)="manifiestosFormValidityChange($event)"
+  (representanteLegalFormValidity)="representanteLegalFormValidityChange($event)"
 ></app-datos-de-la>

@@ -15,7 +15,10 @@ export interface Solicitud260509State {
     [key: string]: any;
     idSolicitud: number;
     formValidity?: {
-    datosDeLaSolicitud?: boolean;
+    datosEstablecimiento?: boolean;
+    domicilioEstablecimiento?: boolean;
+    manifiestos?: boolean;
+    representanteLegal?: boolean;
     terceros?: boolean;
     pagoDeDerechos?: boolean;
   };

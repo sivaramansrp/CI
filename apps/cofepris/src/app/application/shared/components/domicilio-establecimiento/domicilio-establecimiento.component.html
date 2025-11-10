@@ -241,12 +241,15 @@
          <textarea id="garantiasOfrecidas" class="form-control text-area-garantias" formControlName="garantiasOfrecidas"
             (change)="
             setValoresStore(
-            formMercancias,
+            domicilio,
             'garantiasOfrecidas',
             'setGarantiasOfrecidas'
             )
             "></textarea>
       </div>
+      <p class="mensaje-error" *ngIf="domicilio.get('garantiasOfrecidas')?.errors?.['required']">
+         Este campo es obligatorio
+      </p>
    </div>
 </form>
 <div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">

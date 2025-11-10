@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
@@ -54,7 +54,10 @@ import { ViewChild } from '@angular/core';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
-  
+  @Output() establecimientoFormValidity = new EventEmitter<boolean>();
+  @Output() domicilioFormValidity = new EventEmitter<boolean>();
+  @Output() manifiestosFormValidity = new EventEmitter<boolean>();
+  @Output() representanteLegalFormValidity = new EventEmitter<boolean>();
 
   @ViewChild(DatosDelEstablecimientoRFCComponent) datosDelEstablecimientoRfcComp!: DatosDelEstablecimientoRFCComponent;
   @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
@@ -340,6 +343,22 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   }
   onRfcValidoChange(valor: boolean):void {
     this.rfcValido = valor;
+  }
+
+  establecimientoFormValidityChange(event: boolean):void {
+    this.establecimientoFormValidity.emit(event);
+  }
+
+  domicilioFormValidityChange(event: boolean):void {
+    this.domicilioFormValidity.emit(event);
+  }
+
+  manifiestosFormValidityChange(event: boolean):void {
+    this.manifiestosFormValidity.emit(event);
+  }
+
+  representanteLegalFormValidityChange(event: boolean):void {
+    this.representanteLegalFormValidity.emit(event);
   }
 
   validarClickDeBoton(): boolean {

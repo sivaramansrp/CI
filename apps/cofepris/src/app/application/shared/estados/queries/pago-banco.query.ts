@@ -12,11 +12,7 @@ export class TramitePagoBancoQuery extends Query<SolicitudPagoBancoState> {
    * Observable selector for retrieving the entire state.
    */
   allStoreData$ = this.select((state) => state);
-  
-  /**
-   * Observable selector for retrieving the entire state.
-   */
-  allStoreData$ = this.select((state) => state);
+
   /**
    * Selecciona el estado completo de la solicitud
    */
