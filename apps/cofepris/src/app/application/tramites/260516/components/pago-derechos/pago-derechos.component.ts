@@ -22,6 +22,24 @@ export class PagoDerechosComponent {
     
         formularioDeshabilitado: boolean = true;
   
+          /**
+           * Validates the "pago de derechos" form when a button is clicked.
+           *
+           * Calls the pagoDeDerechosComponent.formularioSolicitudValidacion() helper
+           * and returns true when that helper indicates the form is valid.
+           *
+           * @returns {boolean} True if the form is valid; otherwise false.
+           *
+           * @public
+           * @compodoc
+           *
+           * @example
+           * if (this.validOnButtonClick()) {
+           *   // proceed with submission
+           * } else {
+           *   // handle validation errors
+           * }
+           */
           validOnButtonClick(): boolean {
             let isValid: boolean = false;
             if(this.pagoDeDerechosComponent.formularioSolicitudValidacion()){

@@ -48,6 +48,32 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Grupo de formularios para el representante legal.
    */
   updateDatos: boolean = false;
+
+  /**
+   * Nueva notificación asociada al formulario/flujo actual del componente.
+   *
+   * Representa el objeto de tipo `Notificacion` que se usa para crear, editar o enviar
+   * una notificación desde el componente de representante legal. Se marca con el operador
+   * de aserción no nulo (`!`) porque se inicializa de forma diferida (por ejemplo, en
+   * ngOnInit, al abrir un formulario o al recibir datos del servicio) antes de su uso.
+   *
+   * @remarks
+   * - Tipo esperado: Notificacion
+   * - Uso típico: almacenar los valores del formulario y pasarlos al servicio de persistencia
+   *   o a la capa de presentación (modal, vista previa, etc.).
+   *
+   * @example
+   * // Inicialización y uso
+   * this.nuevaNotificacion = {
+   *   titulo: 'Notificación importante',
+   *   mensaje: 'Contenido de la notificación',
+   *   destinatario: 'usuario@ejemplo.com'
+   * };
+   * this.enviarNotificacion(this.nuevaNotificacion);
+   *
+   * @public
+   * @compodoc Descripción: Instancia de Notificacion usada por el componente para crear/editar/enviar notificaciones.
+   */
   public nuevaNotificacion!: Notificacion;
 
   /**

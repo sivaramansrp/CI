@@ -116,7 +116,23 @@ public mostrarErrores = {
 
 
 };
+/**
+ * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
+ *
+ * @description
+ * Valor booleano que controla la visibilidad de las etiquetas/nombres de los campos
+ * dentro del componente DomicilioEstablecimiento. Usar `true` para mostrar las etiquetas
+ * y `false` para ocultarlas.
+ *
+ * @type {boolean}
+ * @default false
+ * @public
+ *
+ * @compodoc
+ * @input nombresCampos
+ */
 nombresCampos:boolean = false;
+
   @Input() identificacion: boolean = false;
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
