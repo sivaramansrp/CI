@@ -8,7 +8,8 @@ import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
@@ -88,6 +89,14 @@ export class SolicitudDeReporteComponent {
   public solicitudState!: Solicitud150103State;
 
   /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   *
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
    */
@@ -96,11 +105,25 @@ export class SolicitudDeReporteComponent {
     private store: Solicitud150103Store,
     private query: Solicitud150103Query
   ) {
+    
+  }
+
+  /**
+   * @description Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y sincroniza los datos iniciales con el estado.
+   */
+  ngOnInit(): void {
     this.query.seleccionarSolicitud$
-      .pipe(take(1))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
       });
+
+      //  this.tramiteQuery.selectSolicitud$
+      // .pipe(takeUntil(this.destroyNotifier$))
+      // .subscribe((solicitud) => {
+      //   this.solicitudState = solicitud;
+      // });
   }
   
   /**
@@ -179,8 +202,8 @@ export class SolicitudDeReporteComponent {
       this.informeAnualService.guardarDatosPost(PAYLOAD).subscribe(response => {
         const API_RESPONSE = doDeepCopy(response);
         if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
-          if(getValidDatos(API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud)) {
-            this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud));
+          if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+            this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud));
             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
           } else {
             this.store.setIdSolicitud(0);
@@ -214,4 +237,16 @@ export class SolicitudDeReporteComponent {
       }
     }
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
