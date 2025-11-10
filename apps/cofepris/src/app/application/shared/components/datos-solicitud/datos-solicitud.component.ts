@@ -366,4 +366,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  
 }

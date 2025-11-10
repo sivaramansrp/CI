@@ -374,14 +374,15 @@ nombresCampos:boolean = false;
     this.configurarFormularioDomicillio();
   }
   /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
-  static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
-    const VALOR = control.value;
-    if (!VALOR){ return null}    
-    if (/^\d+$/.test(VALOR) && VALOR.length !== 5) {
-      return { invalidCodigoPostal: true };
-    }
-    return null; 
+static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
+  const VALOR = control.value;
+  if (!VALOR){ return null}    
+  if (/^\d+$/.test(VALOR) && VALOR.length < 5) {
+    return { invalidCodigoPostal: true };
   }
+  return null; 
+}
+
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
@@ -1961,6 +1962,7 @@ onConfirmacionModal(accion: boolean): void {
    }
    return ISVALID;
   }
+  
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
