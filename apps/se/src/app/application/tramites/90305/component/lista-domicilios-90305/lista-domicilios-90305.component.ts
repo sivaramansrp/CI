@@ -14,7 +14,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -42,7 +42,7 @@ import { Tramite90305Store } from '../../estados/tramite90305.store';
   templateUrl: './lista-domicilios-90305.component.html',
   styleUrl: './lista-domicilios-90305.component.scss',
 })
-export class ListaDomicilios90305Component implements OnInit, OnDestroy {
+export class ListaDomicilios90305Component implements OnDestroy {
   /** Subject para destruir la consulta */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -139,9 +139,14 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
       orden: 9,
     },
     {
-      encabezado: 'Teléfono',
-      clave: (item: ProsecModificacionModel) => item.telefono,
+      encabezado: 'RFC',
+      clave: (item: ProsecModificacionModel) => item.rfc,
       orden: 10,
+    },
+    {
+      encabezado: 'Razón social',
+      clave: (item: ProsecModificacionModel) => item.razonSocial,
+      orden: 11,
     },
   ];
 
@@ -151,10 +156,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   /** Datos de domicilios obtenidos del servicio */
  @Input() personaparas: ProsecModificacionModel[] = [];
 
-  /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios y consulta */
-  ngOnInit(): void {
-    this.loadDomicilios();
-  }
+
 
   /**
    * Obtiene la lista de domicilios desde el servicio y la almacena en `personaparas`

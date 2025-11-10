@@ -28,6 +28,8 @@ describe('ListaDomicilios90305Component', () => {
           entidadFederativa: 'Illinois',
           pais: 'USA',
           telefono: '1234567890',
+          razonSocial: 'Test Company',
+          rfc: 'RFC123456789',
         },
       ]),
     };
@@ -46,12 +48,6 @@ describe('ListaDomicilios90305Component', () => {
     expect(component).toBeTruthy();
   });
 
-it('should initialize and call loadDomicilios on ngOnInit', () => {
-  const spy = jest.spyOn(component as any, 'loadDomicilios');
-  component.ngOnInit();
-  expect(spy).toHaveBeenCalled();
-});
-
   it('should load domicilios and update personaparas', () => {
     const spy = jest.spyOn(mockService, 'getListaDomicilios').mockReturnValue(of([
       {
@@ -65,6 +61,8 @@ it('should initialize and call loadDomicilios on ngOnInit', () => {
         entidadFederativa: 'Illinois',
         pais: 'USA',
         telefono: '1234567890',
+        razonSocial: 'Test Company',
+        rfc: 'RFC123456789',
       },
     ]));
     component.loadDomicilios();
@@ -82,8 +80,8 @@ it('should initialize and call loadDomicilios on ngOnInit', () => {
   });
 
   it('should have correct table configuration', () => {
-    expect(component.configuracionTabla.length).toBe(10);
+    expect(component.configuracionTabla.length).toBe(11);
     expect(component.configuracionTabla[0].encabezado).toBe('Calle');
-    expect(component.configuracionTabla[9].encabezado).toBe('Teléfono');
+    expect(component.configuracionTabla[10].encabezado).toBe('Razón social');
   });
 });

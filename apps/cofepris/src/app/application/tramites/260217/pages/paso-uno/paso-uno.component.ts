@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Tramite260217State, Tramite260217Store } from '../../estados/tramite260217Store.store';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
 
@@ -14,7 +14,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit, OnChanges {
   
   /**
    * Índice de la pestaña/tab actualmente seleccionada.
@@ -49,6 +49,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   @ViewChild(TercerosRelacionadosVistaComponent)
   tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
    * @constructor
@@ -67,6 +69,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       map((seccionState) => {
         this.consultaState = seccionState;
       })).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
   }
 
   /**
@@ -139,9 +150,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   validarPasoUno(): boolean {
     const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
 
     );
   }

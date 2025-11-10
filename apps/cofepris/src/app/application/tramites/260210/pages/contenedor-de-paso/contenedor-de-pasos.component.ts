@@ -1,5 +1,5 @@
 import { AVISO, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
-import { MENSAJE_DE_VALIDACION,TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import { MENSAJE_DE_VALIDACION,MENSAJE_DE_VALIDACION_PAGO_DERECHOS,TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
@@ -81,6 +81,20 @@ export class ContenedorDePasosComponent implements OnInit {
    * @property {boolean} mostrarAlerta
    */
   public mostrarAlerta: boolean = false;
+
+  /**
+   * @property {boolean} requiresPaymentData
+   * @description
+   * Indica si se requieren datos de pago para continuar con el trámite.
+   */
+  public requiresPaymentData: boolean = false;
+
+    /**
+   * @property {number} confirmarSinPagoDeDerechos
+   * @description
+   * Indica si se ha confirmado la continuación sin pago de derechos.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
 
   
     /**
@@ -172,6 +186,15 @@ esMostrarAlerta: boolean = false;
      * @default true - Inicia con carga activa
      */
   cargaEnProgreso: boolean = true;
+
+  /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
 
   /**
    * @property {boolean} seccionCargarDocumentos
@@ -309,23 +332,36 @@ ngOnInit(): void {
       if (e.accion === 'cont') {
         let isValid = true;
 
-        if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarPasoUno();
+      if (this.indice === 1 && this.pasoUnoComponent) {
+      isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-        this.mostrarAlerta=true;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
+        if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 2;
+        }else {
+          this.confirmarSinPagoDeDerechos = 3;
         }
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+
+        if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+            this.mostrarAlerta=true; 
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
       }
       if (!isValid) {
         this.formErrorAlert = this.MENSAJE_DE_ERROR;
@@ -536,6 +572,19 @@ anterior(): void {
 }
 
 /**
+ * @method saltar
+ * @description
+ * Método para saltar directamente al paso de firma en el wizard.
+ * Actualiza los índices correspondientes y ejecuta la transición
+ * forward en el componente wizard.
+ */
+saltar(): void {
+  this.indice = 3;
+  this.datosPasos.indice = 3;
+  this.wizardComponent.siguiente();
+}
+
+/**
  * @method onClickCargaArchivos
  * @description
  * Método de manejo de eventos para el click en botón de carga de archivos.
@@ -613,6 +662,17 @@ onClickCargaArchivos(): void {
 }
 
   /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  /**
    * @method obtenerNombreDelTítulo
    * @description Método auxiliar estático que devuelve el título correspondiente a cada paso.
    * @param {number} valor - Índice del paso.
@@ -632,7 +692,22 @@ onClickCargaArchivos(): void {
   }
 
 
-        /**
+ /**   * @method cerrarModal
+   * @description
+   * Maneja el cierre del modal de alerta y actualiza el estado según la respuesta del usuario.
+   * @param {boolean} value - Indica si se confirmó la acción (true) o se canceló (false).
+   */
+  cerrarModal(value:boolean): void {
+    if(value){
+    this.mostrarAlerta = false;
+    this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
+  } 
+
+  /**
    * Genera una alerta de error con los mensajes proporcionados.
    * @param mensajes Mensajes de error a mostrar en la alerta.
    * @returns HTML de la alerta de error.

@@ -18,6 +18,13 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260511;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
