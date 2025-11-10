@@ -1,5 +1,6 @@
 import {
   AccionBoton,
+  AVISO,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
@@ -32,6 +33,13 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+  
+  /**
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
   /**
    * @property {string | null} tituloMensaje
    * @description Título del mensaje que se muestra en el wizard.
@@ -46,6 +54,9 @@ export class ContenedorDePasosComponent {
    * Inicializado con el valor de `PASOS`.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  
+    TEXTOS: string = AVISO.Aviso;
 
   /**
    * @property {number} indice
