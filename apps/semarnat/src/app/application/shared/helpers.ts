@@ -65,7 +65,7 @@ export const MAX_DIGIT_VALIDATOR = (
   control: AbstractControl
 ): ValidationErrors | null => {
   const VALUE = control.value;
-  if (VALUE) {
+  if ( VALUE && VALUE > 0) {
     const REGEX = MAX_DIGITS_VALIDATOR;
     if (!REGEX.test(VALUE)) {
       return { maxDigits: true };
