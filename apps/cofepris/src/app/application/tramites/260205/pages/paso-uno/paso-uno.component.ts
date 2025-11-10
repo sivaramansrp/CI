@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,6 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
-import { ViewChild } from '@angular/core';
 
 /**
  * Decorador que define un componente Angular llamado `PasoUnoComponent`.
@@ -42,7 +41,10 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy {
+export class PasoUnoComponent implements OnDestroy, OnChanges {
+
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+
   /**
    * Índice numérico utilizado como referencia o posición actual.
    * Comienza en 1 por defecto.
@@ -124,7 +126,14 @@ export class PasoUnoComponent implements OnDestroy {
       });  
   }
 
-
+ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
+  }
   /**
    * Guarda los datos del formulario y actualiza el estado del formulario en el servicio correspondiente.
    * 
@@ -196,9 +205,8 @@ export class PasoUnoComponent implements OnDestroy {
     validarPasoUno(): boolean {
      const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
   const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-  const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
       return (
-        (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO)? true : false
+        (ESTABVALIDO && ESTERCEROSVALIDO)? true : false
       );
     }
 }
