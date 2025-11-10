@@ -1,14 +1,13 @@
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component';
 import { ListaPasosWizard, Notificacion, PASOS } from '@libs/shared/data-access-user/src';
 import { MENSAJE_DE_VALIDACION, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { Observable, catchError, map, switchMap, take, throwError } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-// import removed: PagoDeDerechosContenedoraComponent
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RegistroSolicitudService } from '@libs/shared/data-access-user/src/core/services/shared/registro-solicitud.service';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -28,12 +27,6 @@ interface AccionBoton {
 @Component({
   selector: 'app-sanitario',
   templateUrl: './sanitario.component.html',
-  standalone: true,
-  imports: [
-    NotificacionesComponent,
-    WizardComponent,
-    // Add other required components here
-  ],
 })
 export class SanitarioComponent implements OnInit {
   /**
@@ -107,6 +100,12 @@ export class SanitarioComponent implements OnInit {
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
 
+  /**
+   * Clase CSS para mostrar una alerta de error en caso de validación fallida.
+   * Matches 260218 behavior so the template can render a global error alert.
+   */
+  public infoError: string = 'alert-danger text-center';
+
 
   /**
  * @property {boolean} isSaltar
@@ -131,6 +130,13 @@ export class SanitarioComponent implements OnInit {
        */
   @ViewChild(PasoUnoComponent)
   pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Referencia al componente de notificaciones para depuración.
+   * Nos permite inspeccionar si el modal fue abierto por el componente hijo.
+   */
+  @ViewChild(NotificacionesComponent)
+  notificacionesChild?: NotificacionesComponent;
 
   // Removed direct ViewChild for PagoDeDerechosContenedoraComponent
 
@@ -173,48 +179,70 @@ export class SanitarioComponent implements OnInit {
 
   getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont') {
-      let IS_VALID = true;
+      let isValid = true;
+
       if (this.indice === 1 && this.pasoUnoComponent) {
-        IS_VALID = this.pasoUnoComponent.validarPasoUno();
-      }
-  if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent?.validarContenedor() && !this.requiresPaymentData) {
-        this.mostrarAlerta = true;
-        this.confirmarSinPagoDeDerechos = 2;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
-          alineacionBtonoCerrar: 'flex-row-reverse'
-        };
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        isValid = this.pasoUnoComponent.validarPasoUno();
       }
 
-      if (!IS_VALID) {
+      // Determinar el estado de confirmación/cobro según los contenedores del paso uno.
+      if (!this.pasoUnoComponent?.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      } else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+
+      const PAGO_VALID = Boolean(this.pasoUnoComponent?.pagoDeDerechosContenedoraComponent?.validarContenedor && this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor());
+
+      if (!this.requiresPaymentData) {
+        if (!PAGO_VALID) {
+          this.mostrarAlerta = true;
+          this.seleccionarFilaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE_DE_VALIDACION,
+            cerrar: true,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'SI',
+            txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar: 'flex-row-reverse',
+          };
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        } else if (this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+          this.confirmarSinPagoDeDerechos = 2;
+        } else if (
+          this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() &&
+          this.pasoUnoComponent?.contenedorDeDatosSolicitudComponent?.validarContenedor() &&
+          !this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.validarContenedor()
+        ) {
+          this.confirmarSinPagoDeDerechos = 3;
+        }
+      }
+
+      if (!isValid) {
+        this.formErrorAlert = MENSAJE_DE_VALIDACION;
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-        // return;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
       }
 
       const PAYLOAD = AmpliacionServiciosAdapter.toFormPayload(this.storeData);
       let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260207', PAYLOAD).subscribe(response => {
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe((response) => {
         shouldNavigate = response.codigo === '00';
         if (!shouldNavigate) {
-          const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+          const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
           this.formErrorAlert = SanitarioComponent.generarAlertaDeError(ERROR_MESSAGE);
-          this.esFormaValido = false;
+          this.esFormaValido = true;
           this.indice = 1;
           this.datosPasos.indice = 1;
-          this.wizardComponent.indiceActual = 1;
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
+
         if (shouldNavigate) {
           if (response && response.datos) {
             const DATOS = response.datos as { id_solicitud?: number };
@@ -224,22 +252,24 @@ export class SanitarioComponent implements OnInit {
               this.idSolicitudState = 0;
             }
           }
+
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = 2;
+            indiceActualizado = e.valor;
           }
           this.toastrService.success(response.mensaje);
-          // Ajusta el rango según el número de pasos reales (ejemplo: 1 < indiceActualizado < 4)
-          if (indiceActualizado > 0 && indiceActualizado < 4) {
+          if (indiceActualizado > 0 && indiceActualizado < 5) {
             this.indice = indiceActualizado;
             this.datosPasos.indice = indiceActualizado;
-            // Show document upload section and button like 260215
+            // Mostrar la sección de carga de documentos y ajustar controles
             this.seccionCargarDocumentos = true;
             this.activarBotonCargaArchivos = false;
             this.cargaEnProgreso = false;
             if (e.accion === 'cont') {
               this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
             }
           }
         } else {
@@ -267,12 +297,55 @@ export class SanitarioComponent implements OnInit {
    * @param value - Indica si se debe proceder con el pago de derechos. Si es `true`, se oculta la alerta y se requiere información de pago. Si es `false`, se oculta la alerta y se establece la confirmación sin pago de derechos.
    */
   cerrarModal(value: boolean): void {
+    /* eslint-disable no-console */
+    console.log('[Sanitario] cerrarModal called with value=', value, 'before:', {
+      mostrarAlerta: this.mostrarAlerta,
+      requiresPaymentData: this.requiresPaymentData,
+      confirmarSinPagoDeDerechos: this.confirmarSinPagoDeDerechos,
+    });
+    /* eslint-enable no-console */
     if (value) {
       this.mostrarAlerta = false;
       this.requiresPaymentData = true;
     } else {
       this.mostrarAlerta = false;
       this.confirmarSinPagoDeDerechos = 4;
+    }
+    // Re-run validation on the paso-uno container to ensure fields are marked
+    // and validation messages are displayed (matches behavior observed in 260218)
+    try {
+      this.pasoUnoComponent?.validarPasoUno();
+    } catch (err) {
+      // swallow errors in case child isn't initialized yet
+      /* eslint-disable no-console */
+      console.debug('[Sanitario] validarPasoUno revalidation skipped:', err);
+      /* eslint-enable no-console */
+    }
+    /* eslint-disable no-console */
+    console.log('[Sanitario] cerrarModal completed - after:', {
+      mostrarAlerta: this.mostrarAlerta,
+      requiresPaymentData: this.requiresPaymentData,
+      confirmarSinPagoDeDerechos: this.confirmarSinPagoDeDerechos,
+    });
+    /* eslint-enable no-console */
+    // Strong re-validation: ensure child form controls are marked as touched so
+    // per-field "Este campo es obligatorio" messages appear (matches 260218).
+    try {
+      // If the contenedor indicates the form is invalid, mark all fields touched
+      if (this.pasoUnoComponent?.contenedorDeDatosSolicitudComponent?.validarContenedor() === false) {
+        this.pasoUnoComponent?.contenedorDeDatosSolicitudComponent?.datosDeLaSolicitudComponent?.marcarTodosLosCamposComoTocados();
+        this.formErrorAlert = MENSAJE_DE_VALIDACION;
+        this.esFormaValido = true;
+        // scroll to top so user sees the global alert
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        /* eslint-disable no-console */
+        console.debug('[Sanitario] cerrarModal -> marcarTodosLosCamposComoTocados called and global alert set');
+        /* eslint-enable no-console */
+      }
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.debug('[Sanitario] cerrarModal revalidation failed:', err);
+      /* eslint-enable no-console */
     }
   }
 

@@ -1,3 +1,79 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { of } from 'rxjs';
+import { SanitarioComponent } from './sanitario.component';
+import { RegistroSolicitudService } from '@libs/shared/data-access-user/src/core/services/shared/registro-solicitud.service';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+import { ToastrService } from 'ngx-toastr';
+
+// Minimal stubs for child components and services used by SanitarioComponent
+class MockPasoUnoComponent {
+  pagoDeDerechosContenedoraComponent = { validarContenedor: () => false };
+  contenedorDeDatosSolicitudComponent = { validarContenedor: () => true };
+  tercerosRelacionadosVistaComponent = { validarContenedor: () => true };
+  validarPasoUno(): boolean {
+    return true;
+  }
+}
+
+const mockRegistroService = {
+  postGuardarDatos: (_id: string, _payload: unknown) => of({ codigo: '00', mensaje: 'OK', datos: { id_solicitud: 123 } }),
+};
+
+const mockQuery = {
+  selectTramiteState$: of({}),
+};
+
+const mockStore = {
+  setIdSolicitud: (_: number) => {},
+};
+
+describe('SanitarioComponent (behavior test)', () => {
+  let component: SanitarioComponent;
+  let fixture: ComponentFixture<SanitarioComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SanitarioComponent, MockPasoUnoComponent as any],
+      providers: [
+        { provide: Tramite260215Query, useValue: mockQuery },
+        { provide: Tramite260215Store, useValue: mockStore },
+        { provide: RegistroSolicitudService, useValue: mockRegistroService },
+        { provide: ServiciosPermisoSanitarioService, useValue: {} },
+        { provide: ToastrService, useValue: { success: () => {}, error: () => {} } },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SanitarioComponent);
+    component = fixture.componentInstance;
+
+    // attach a mock child instance for pasoUnoComponent
+    component.pasoUnoComponent = new MockPasoUnoComponent() as any;
+  });
+
+  it('should set mostrarAlerta true when pagoDeDerechos validation fails and requiresPaymentData is false', (done) => {
+    component.requiresPaymentData = false;
+
+    // call the method with continue action
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+
+    // postGuardarDatos is async (observable), wait a tick
+    setTimeout(() => {
+      try {
+        expect(component.mostrarAlerta).toBe(true);
+        expect(component.seleccionarFilaNotificacion).toBeDefined();
+        expect(component.seleccionarFilaNotificacion.txtBtnAceptar).toBe('SI');
+        expect(component.seleccionarFilaNotificacion.txtBtnCancelar).toBe('NO');
+        done();
+      } catch (err) {
+        done(err as any);
+      }
+    }, 10);
+  });
+});
 import { SanitarioComponent } from './sanitario.component';
 
 describe('SanitarioComponent', () => {

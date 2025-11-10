@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnDestroy, Input, SimpleChanges, ViewChild, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
@@ -17,7 +17,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
@@ -66,6 +66,13 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+  /**
+   * Indicador que recibe la confirmación de continuar sin pago de derechos.
+   * Cuando este valor cambia (no es la primera asignación) el componente
+   * seleccionará la pestaña indicada (comportamiento coherente con 260218).
+   */
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -83,7 +90,10 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
     })).subscribe();
-    if (this.consultaState.update) {
+  }
+
+  ngOnInit(): void {
+    if (this.consultaState && this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -95,12 +105,15 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * @returns {boolean} True si la validación es exitosa, false en caso contrario.
    */
   validarPasoUno(): boolean {
+    /* eslint-disable no-console */
+    console.debug('[PasoUno] validarPasoUno called');
     const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent?.validarContenedor() ?? false;
     const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent?.validarContenedor() ?? false;
-    return (
-      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
-    );
+  const RESULTADO = (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false;
+  console.debug('[PasoUno] validarPasoUno result=', { ES_TAB_VALIDO, ES_TERCEROS_VALIDO, ES_PAGO_VALIDO, RESULTADO });
+  /* eslint-enable no-console */
+  return RESULTADO;
   }
 
   /**
@@ -154,5 +167,19 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Se ejecuta cuando cambian los inputs del componente.
+   * Si el valor de `confirmarSinPagoDeDerechos` cambia y no es la primera vez,
+   * delega en `seleccionaTab` para moverse a la pestaña indicada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const NUEVO = changes['confirmarSinPagoDeDerechos'].currentValue as number;
+      if (NUEVO) {
+        this.seleccionaTab(NUEVO);
+      }
+    }
   }
 }
