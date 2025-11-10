@@ -12,6 +12,8 @@
  */
 import {
   AGREGAR_PRODUCTOR,
+  API_FRACCIONES_ARANCELARIAS,
+  API_UMT,
   CATALOGO_ACUERDOS,
   CATALOGO_ACUERDOS_PAIS,
   CATALOGO_ADUANAS,
@@ -50,9 +52,11 @@ import {
   CATALOGO_TRATADO_ACUERDO_PAIS,
   CATALOGO_UNIDAD_DE_MASA_BRUTA,
   CATALOGO_UNIDAD_MASA_BRUTA,
+  CLASIFICACION,
   CLASIFICACION_REGIMEN,
   COMUN_URL,
   FRACCION_HTS,
+  PAISES_POR_BLOQUE,
   PAIS_DESTINO,
   UNIDADES_MEDIDA_COMERCIAL
 } from '../../servers/api-router';
@@ -919,4 +923,22 @@ usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observa
   const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+getFraccionesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+getUMTCatalogo(tramite: string, cveRegimen: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_UMT(tramite).replace(CLASIFICACION, cveRegimen)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+getpaisesBloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${PAISES_POR_BLOQUE(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+
+
 }
