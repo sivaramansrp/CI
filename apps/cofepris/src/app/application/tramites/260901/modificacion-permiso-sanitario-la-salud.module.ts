@@ -15,7 +15,7 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
 import { PasoDosComponent } from '../../shared/components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../../shared/components/paso-tres/paso-tres.component';
 import { PasoUnoPagesComponent } from './pages/paso-uno-pages/paso-uno-pages.component';
-import { TercerosRelacionadosComponent } from '../260212/components/terceros-relacionados/terceros-relacionados.component';
+
 import { TercerosRelacionadosFebService } from '../../shared/services/tereceros-relacionados-feb.service';
 
 import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
@@ -34,7 +34,6 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
       TramitesAsociadosSeccionComponent,
       PagoDeDerechosEntradaComponent,
       AlertComponent,
-      TercerosRelacionadosComponent,
       TercerosRelacionadosFabSeccionComponent,
       PasoDosComponent,
       PasoTresComponent,

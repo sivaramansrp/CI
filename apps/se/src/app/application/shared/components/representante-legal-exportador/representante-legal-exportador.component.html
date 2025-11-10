@@ -4,14 +4,18 @@
   @for(campo of campos; track $index) {
   <div [ngClass]="campo.columna" class="form-group">
 
-    <label [for]="campo.nombre"> {{ campo.label }}
-      @if (campo.required) { <span for="asterisk">*: </span>}
+    <label [for]="campo.nombre">{{ campo.label }}
+      @if (campo.required) {<span for="asterisk" [ngClass]="{'text-danger': form.get(campo.nombre)?.invalid && form.get(campo.nombre)?.touched}">*:</span>}
       @if (campo.tooltip) { <span [tooltip]="campo.tooltip" placement="top">
         <i class="bi bi-question-circle-fill mx-2"></i>
       </span> } 
     
     
-    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo" class="form-control"
+    </label> @if (campo.tipo === 'text') { <input [type]="campo.tipo"  [ngClass]="
+                isValid(form, campo.nombre)
+                  ? (campo.required ? 'required' : null)
+                  : null
+              " class="form-control"
       [formControlName]="campo.nombre" [id]="campo.nombre"
       (change)=" setValoresStore('form', campo.nombre, campo.storeStateName ?? '') "
       [maxlength]="campo.maxlength ?? ''" /> } 

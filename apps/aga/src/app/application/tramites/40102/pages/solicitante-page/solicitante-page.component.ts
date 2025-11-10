@@ -20,15 +20,23 @@ import {
 } from '../../estados/chofer40102.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Chofer40102Query } from '../../estados/chofer40102.query';
-import { DatosPasos } from '@ng-mf/data-access-user';
+
+import { ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
+
 import { takeUntil } from 'rxjs/operators';
 
+import { DocumentoDetalle, IniciarResponse } from '../../../40101/pages/solicitante-page/solicitante-page.component';
+
+import { modificarTerrestreService } from '../../components/services/modificacar-terrestre.service';
+
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+
+import { NotificacionesService } from '@libs/shared/data-access-user/src/core/services/shared/notificaciones.service';
 /**
  * Interfaz que define la estructura de un objeto de acción de botón para la navegación del wizard.
  *
@@ -135,6 +143,35 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
+  isExtrajero: boolean = false
+  isBtnShow: string = "yes"
+  catErrorMessage: string = ""
+  isCaat: boolean = false
+  documentDetails: DocumentoDetalle = {};
+  acuseDocumentos: BodyTablaResolucion[] = [];
+
+  guardarDatos: ConsultaioState = {
+    folioTramite: '',
+    procedureId: '',
+    parameter: '',
+    department: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
+    idSolicitudSeleccionada: ''
+  };
+
+  /**
+  * Clase CSS para mostrar una alerta de información.
+  */
+  public info = 'alert-info';
   /**
    * Índice actual del paso en el wizard.
    *
@@ -180,6 +217,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * ```
    */
   public seccion!: Choferesnacionales40102State;
+  isLoading: boolean = false;
 
   /**
    * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
@@ -294,8 +332,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   constructor(
     private chofer40102Query: Chofer40102Query,
-    private chofer40102Store: Chofer40102Store
-  ) {}
+    private chofer40102Store: Chofer40102Store,
+    private modificarTerrestreService: modificarTerrestreService,
+    private NOTIF: NotificacionesService
+  ) { }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -331,16 +371,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    this.chofer40102Query.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
+    
+
+    this.chofer40102Query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data: Choferesnacionales40102State) => {
+      this.isCaat = data.codigo !== '00' ? true : false;
+      this.catErrorMessage = data.catErrorMessage;
+    });
 
     this.asignarSecciones();
+
   }
 
   /**
@@ -438,12 +477,82 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @since 1.0.0
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont' && e.valor === 2) {
+      this.isLoading = true
+      const IDPERSONASOLICITUD = this.chofer40102Store?.getValue().IdPersonaSolicitud
+      const SOLICITUDEID = 123
+      const PAYLOAD = {
+        id_solicitud: SOLICITUDEID,
+        representacion_federa: {
+          cve_entidad_federativa: "DGO",
+          cve_unidad_administrativa: "1016"
+        },
+        representante_legal: {
+          id_persona_solicitud: IDPERSONASOLICITUD,
+          nombre: this.chofer40102Query?.getValue().nombre ? this.chofer40102Query?.getValue().nombre : '',
+          ap_paterno: this.chofer40102Query?.getValue().primerApellido ? this.chofer40102Query?.getValue().primerApellido : '',
+          ap_materno: this.chofer40102Query?.getValue().segundoApellido ? this.chofer40102Query?.getValue().segundoApellido : '',
+        }
+      }
+      this.modificarTerrestreService.guardarDatosTramite(PAYLOAD).subscribe((res: IniciarResponse) => {
+        this.isLoading = false
+
+        if (res.codigo !== '00') {
+          this.NOTIF.showNotification({
+            tipoNotificacion: 'toastr',
+            categoria: 'danger',
+            mensaje: res.mensaje ? res.mensaje : '',
+            titulo: 'Error',
+            modo: '',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: 'Cancelar',
+          });
+        }
+    
+        (this.chofer40102Store['setCadenaOriginal'] as (valor: unknown) => void)(res?.datos?.cadena_original ?? '');
+        (this.chofer40102Store['setSolicitudeId'] as (valor: unknown) => void)(res?.datos?.id_solicitud);
+        this.isExtrajero = res?.datos?.is_extranjero ?? false
+        this.documentDetails = res?.datos?.documento_detalle ?? {}
+        this.acuseDocumentos = [
+          {
+            id: 1,
+            idDocumento: res?.datos?.cve_folio_caat ?? '',
+            documento: res?.datos?.documento_detalle?.nombre_archivo ?? '',
+            urlPdf: res?.datos?.documento_detalle?.nombre_archivo ?? '', // para mostrar o descargar nombre
+            fullBase64: res?.datos?.documento_detalle?.contenido ?? '' // <--- Base64 del backend aquí
+          }
+        ];
+
+        this.guardarDatos = {
+          ...this.guardarDatos,
+          folioTramite: res?.datos?.mensaje ?? '',
+          procedureId: (res?.datos?.id_solicitud ?? 0).toString()
+        };
+
+        if (this.isExtrajero) {
+          this.isBtnShow = 'no'
+          this.pasos = PASOS.slice(0, 1)
+        }
+        if (!this.isExtrajero) {
+          if (res.codigo === '00') {
+            if (e.valor > 0 && e.valor < 6) {
+              this.indice = e.valor;
+              this.wizardComponent.siguiente();
+            }
+          }
+        }
+
+      });
+
+    } else {
+      if (e.valor > 0 && e.valor < 6) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }

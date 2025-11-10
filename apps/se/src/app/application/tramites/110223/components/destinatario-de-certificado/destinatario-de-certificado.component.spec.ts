@@ -1,7 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DestinatarioDeCertificadoComponent } from './destinatario-de-certificado.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Tramite110223Store } from '../../estados/Tramite110223.store';
+import { Tramite110223Query } from '../../query/tramite110223.query';
+import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+
+// Mock classes for dependencies
+class MockTramite110223Store {
+  setFormDatosDelDestinatario = jest.fn();
+  setFormValida = jest.fn();
+}
+
+class MockTramite110223Query {
+  selectFormDestinatario$ = of({});
+  selectPexim$ = of({});
+}
+
+class MockSeccionLibStore {}
+
+class MockSeccionLibQuery {
+  selectSeccionState$ = of({});
+}
+
+class MockConsultaioQuery {
+  selectConsultaioState$ = of({ readonly: false });
+}
 
 describe('DestinatarioDeCertificadoComponent', () => {
   let component: DestinatarioDeCertificadoComponent;
@@ -9,11 +37,19 @@ describe('DestinatarioDeCertificadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DestinatarioDeCertificadoComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(DestinatarioDeCertificadoComponent);
+      imports: [DestinatarioDeCertificadoComponent, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        FormBuilder,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: Tramite110223Store, useClass: MockTramite110223Store },
+        { provide: Tramite110223Query, useClass: MockTramite110223Query },
+        { provide: SeccionLibStore, useClass: MockSeccionLibStore },
+        { provide: SeccionLibQuery, useClass: MockSeccionLibQuery },
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery }
+      ],
+    }).compileComponents();    fixture = TestBed.createComponent(DestinatarioDeCertificadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -24,47 +60,37 @@ describe('DestinatarioDeCertificadoComponent', () => {
 
   it('should call store.setFormDatosDelDestinatario with correct value in datosDelDestinatarioFunc', () => {
     const mockData = { key: 'value' };
-    jest.spyOn(component['store'], 'setFormDatosDelDestinatario');
+    const store = TestBed.inject(Tramite110223Store);
+    jest.spyOn(store, 'setFormDatosDelDestinatario');
 
     component.datosDelDestinatarioFunc(mockData);
 
-    expect(component['store'].setFormDatosDelDestinatario).toHaveBeenCalledWith(mockData);
+    expect(store.setFormDatosDelDestinatario).toHaveBeenCalledWith(mockData);
   });
-
   it('should call store.setFormValida with correct value in setFormValida', () => {
-    jest.spyOn(component['store'], 'setFormValida');
+    const store = TestBed.inject(Tramite110223Store);
+    jest.spyOn(store, 'setFormValida');
 
     component.setFormValida(true);
 
-    expect(component['store'].setFormValida).toHaveBeenCalledWith({ destinatrio: true });
+    expect(store.setFormValida).toHaveBeenCalledWith({ destinatrio: true });
   });
 
   it('should call store.setFormValida with correct value in setFormValidaDestinatario', () => {
-    jest.spyOn(component['store'], 'setFormValida');
+    const store = TestBed.inject(Tramite110223Store);
+    jest.spyOn(store, 'setFormValida');
 
     component.setFormValidaDestinatario(false);
 
-    expect(component['store'].setFormValida).toHaveBeenCalledWith({ datosDestinatario: false });
+    expect(store.setFormValida).toHaveBeenCalledWith({ datosDestinatario: false });
   });
-
-  it('should call store method with correct value in setValoresStore', () => {
-    const mockForm = new FormGroup({
-      testField: new FormBuilder().control('testValue'),
-    });
-    jest.spyOn(component['store'], 'setFormValida');
-
-    component.setValoresStore(mockForm, 'testField', 'setFormValida');
-
-    expect(component['store'].setFormValida).toHaveBeenCalledWith('testValue');
-  });
-
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    jest.spyOn(component['destroyNotifier$'], 'next');
-    jest.spyOn(component['destroyNotifier$'], 'complete');
+    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

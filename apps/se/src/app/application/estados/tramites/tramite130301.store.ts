@@ -13,7 +13,7 @@ export interface Solicitud130301State {
     /**
      * El valor de mixed.
      */
-    mixed: string;
+    mixed: boolean;
     /**
      * El valor de paisDeOrigen.
      */
@@ -41,7 +41,7 @@ export function createInitialState(): Solicitud130301State {
         /**
          * El valor de mixed.
          */
-        mixed: '',
+        mixed: true,
         /**
          * El valor de paisDeOrigen.
          */
@@ -91,36 +91,39 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
             paisEmisorCertificado,
         }));
     }
-    /**
-     * Establece el estado de mixed.
-     * @param mixed - El valor de mixed.
-     */
-    public setMixed(mixed: string):void {
-        this.update((state) => ({
-            ...state,
-            mixed,
-        }));
-    }
-    /**
-     * Establece el estado de paisDeOrigen.
-     * @param paisDeOrigen - El valor de paisDeOrigen.
-     */
-    public setPaisDeOrigen(paisDeOrigen: string):void {
-        this.update((state) => ({
-            ...state,
-            paisDeOrigen,
-        }));
-    }
-    /**
-     * Establece el estado de motivoJustificacion.
-     * @param motivoJustificacion - El valor de motivoJustificacion.
-     */
-    public setMotivoJustificacion(motivoJustificacion: string):void {
-        this.update((state) => ({
-            ...state,
-            motivoJustificacion,
-        }));
-    }
+        /**
+         * Establece el estado de mixed.
+         * @param mixed - El valor de mixed.
+         */
+        public setMixed(mixed: boolean): void {
+            this.update((state) => ({
+                mixed,
+                paisEmisorCertificado: state.paisEmisorCertificado,
+                paisDeOrigen: state.paisDeOrigen,
+                motivoJustificacion: state.motivoJustificacion,
+                otrasDeclaraciones: state.otrasDeclaraciones,
+            }));
+        }
+        /**
+         * Establece el estado de paisDeOrigen.
+         * @param paisDeOrigen - El valor de paisDeOrigen.
+         */
+        public setPaisDeOrigen(paisDeOrigen: string):void {
+            this.update((state) => ({
+                ...state,
+                paisDeOrigen,
+            }));
+        }
+        /**
+         * Establece el estado de motivoJustificacion.
+         * @param motivoJustificacion - El valor de motivoJustificacion.
+         */
+        public setMotivoJustificacion(motivoJustificacion: string):void {
+            this.update((state) => ({
+                ...state,
+                motivoJustificacion,
+            }));
+        }
     /**
      * Establece el estado de otrasDeclaraciones.
      * @param otrasDeclaraciones - El valor de otrasDeclaraciones.
@@ -132,5 +135,4 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
         }));
     }
 
-} 
-  
+}

@@ -5,7 +5,6 @@ import { Fabricante } from '../../../../shared/models/terceros-relacionados.mode
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -130,7 +129,7 @@ export function createInitialState(): Tramite260203State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -159,7 +158,7 @@ export function createInitialState(): Tramite260203State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -220,7 +219,7 @@ export class Tramite260203Store extends Store<Tramite260203State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [...newFabricantes],
     }));
   }
 
@@ -234,7 +233,6 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -247,7 +245,7 @@ export class Tramite260203Store extends Store<Tramite260203State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -258,7 +256,7 @@ export class Tramite260203Store extends Store<Tramite260203State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 

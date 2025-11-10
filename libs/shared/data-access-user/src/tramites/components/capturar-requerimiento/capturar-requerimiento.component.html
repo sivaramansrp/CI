@@ -11,9 +11,9 @@
         <div class="col-md-12" *ngIf="isTipoRequerimiento">
           <div class="col-md-4">
             <div class="row">
-              <app-catalogo-select [catalogo]="catTipoRequerimiento" formControlName="tipoRequerimiento"
+              <app-catalogo-select-clave [catalogo]="catTipoRequerimiento" formControlName="tipoRequerimiento"
                 [label]="'Tipo requerimiento'" [required]="true" name="tipoRequerimiento"
-                (change)="tipoRequerimientoSeleccionado(formRequerimiento,'tipoRequerimiento', 'settipoRequerimientoValue')"></app-catalogo-select>
+                (change)="tipoRequerimientoSeleccionado(formRequerimiento,'tipoRequerimiento', 'settipoRequerimientoValue')"></app-catalogo-select-clave>
             </div>
           </div>
         </div>

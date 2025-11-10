@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
   AbstractControl,
   FormBuilder,
@@ -7,6 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import {
+  AlertComponent,
   Catalogo,
   CatalogoServices,
   Notificacion,
@@ -57,6 +59,7 @@ import { takeUntil } from 'rxjs/operators';
     TituloComponent,
     TooltipModule,
     NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -251,6 +254,12 @@ export class AgregarDestinatarioFinalComponent
      * Suscripción para manejar observables.
      */
     private subscription: Subscription = new Subscription();
+
+  /**
+   * Mensaje de error para mostrar en el formulario.
+   * @property {string} mensajeDeError
+   */
+  mensajeDeError: string = '';
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -546,27 +555,71 @@ private setupNonModalMode(): void {
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
-    if (this.chequeoValidacionAlGuardar) {
-      return this.guardarDestinatarioModal();
-    }
+    // if (this.chequeoValidacionAlGuardar) {
+    //   return this.guardarDestinatarioModal();
+    // }
     return this.guardarDestinatarioNormal();
   }
 
-  /**
-   * Handles modal form save logic for chequeoValidacionAlGuardar === true
-   */
-  private guardarDestinatarioModal(): void {
+/**
+ * Handles modal form save logic for chequeoValidacionAlGuardar === true
+ */
+private guardarDestinatarioModal(): void {
     const VALIDATION_ERRORS = this.validateModalForm();
     if (VALIDATION_ERRORS.length > 0) {
       Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
+        this.mensajeDeError = 'Faltan campos por capturar.';
       });
       return;
     }
-    
+    this.mensajeDeError = '';
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-    const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
+    
+    const NUEVO_DESTINATARIO: Destinatario = VALOR_FORMULARIO as Destinatario;
+    
+    const PAIS_ID = this.agregarDestinatarioFinal.get('pais')?.value;
+    const PAIS_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
+    NUEVO_DESTINATARIO.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+    
+    const COLONIA_ID = this.agregarDestinatarioFinal.get('colonia')?.value;
+    const COLONIA_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.coloniasDatos, COLONIA_ID);
+    NUEVO_DESTINATARIO.colonia = COLONIA_OBJ?.[0]?.descripcion ?? '';
+    
+    const MUNICIPIO_ID = this.agregarDestinatarioFinal.get('municipio')?.value;
+    const MUNICIPIO_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.municipiosDatos, MUNICIPIO_ID);
+    NUEVO_DESTINATARIO.municipioAlcaldia = MUNICIPIO_OBJ?.[0]?.descripcion ?? '';
+    
+    const LOCALIDAD_ID = this.agregarDestinatarioFinal.get('localidad')?.value;
+    const LOCALIDAD_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.localidadesDatos, LOCALIDAD_ID);
+    NUEVO_DESTINATARIO.localidad = LOCALIDAD_OBJ?.[0]?.descripcion ?? '';
+    
+    const ESTADO_ID = this.agregarDestinatarioFinal.get('estado')?.value;
+    const ESTADO_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.estadosDatos, ESTADO_ID);
+    NUEVO_DESTINATARIO.estadoLocalidad = ESTADO_OBJ?.[0]?.descripcion ?? '';
+    
+    const CODIGO_POSTAL_ID = this.agregarDestinatarioFinal.get('codigoPostal')?.value;
+    const CODIGO_POSTAL_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.codigosPostalesDatos, CODIGO_POSTAL_ID);
+    NUEVO_DESTINATARIO.codigoPostal = CODIGO_POSTAL_OBJ?.[0]?.descripcion ?? '';
+    
+    let nombreRazonSocial: string;
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+        nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+        nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+        nombreRazonSocial = '';
+    }
+    NUEVO_DESTINATARIO.nombreRazonSocial = nombreRazonSocial;
+    
+    NUEVO_DESTINATARIO.telefono = `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim();
+    
+    NUEVO_DESTINATARIO.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
+    NUEVO_DESTINATARIO.entidadFederativa = '';
+    NUEVO_DESTINATARIO.coloniaEquivalente = VALOR_FORMULARIO.coloniaEquivalente || '';
+    NUEVO_DESTINATARIO.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
+    
     let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
       ? [...this.destinatarioFinalTablaDatos] 
       : [];
@@ -595,108 +648,127 @@ private setupNonModalMode(): void {
     this.setupAddMode();
     
     this.guardarYSalir.emit();
-  }
-
-  /**
-   * Handles normal form save logic for chequeoValidacionAlGuardar === false
-   * This preserves the exact original behavior from the old code
-   */
-  private guardarDestinatarioNormal(): void {
-     const VALIDATION_ERRORS = this.validateModalForm();
-  if (VALIDATION_ERRORS.length > 0) {
-    Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
-      control.markAsTouched();
-      control.updateValueAndValidity();
-    });
-    return;
-  }
-  
-  const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-  const NUEVO_DESTINATARIO = this.construirObjetoDestinatario(VALOR_FORMULARIO);
-  let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
-    ? [...this.destinatarioFinalTablaDatos] 
-    : [];
-  
-  if (this.isEditMode) {
-    const CURRENT_ID = this.datoSeleccionado && this.datoSeleccionado[0] ? this.datoSeleccionado[0].id : undefined;
-    NUEVO_DESTINATARIO.id = CURRENT_ID;
-    UPDATED_DESTINATARIOS = UPDATED_DESTINATARIOS.map(d => 
-      d.id === NUEVO_DESTINATARIO.id ? NUEVO_DESTINATARIO : d
-    );
-  } else {
-    const IS_DUPLICATE = UPDATED_DESTINATARIOS.some(d => d.rfc === NUEVO_DESTINATARIO.rfc);
-    
-    if (IS_DUPLICATE) {
-      this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
-      return;
-    }
-    const NEXT_ID = UPDATED_DESTINATARIOS.length > 0 ? Math.max(...UPDATED_DESTINATARIOS.map(d => d.id || 0)) + 1 : 1;
-    NUEVO_DESTINATARIO.id = NEXT_ID;
-    UPDATED_DESTINATARIOS.push(NUEVO_DESTINATARIO);
-  }
-  this.updateDestinatarioFinalTablaDatos.emit(UPDATED_DESTINATARIOS);
-  this.agregarDestinatarioFinal.reset();
-  this.datoSeleccionado = [];
-  this.isEditMode = false;
-  this.guardarYSalir.emit();
-  }
-
-/**
- * Builds destinatario object from form values
- */
-private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): Destinatario {
-  let nombreRazonSocial: string;
-  if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.MORAL) {
-    nombreRazonSocial = VALOR_FORMULARIO['denominacionRazon'] as string;
-  } else if (VALOR_FORMULARIO['tipoPersona'] === this.tipoPersona.FISICA) {
-    nombreRazonSocial = `${VALOR_FORMULARIO['nombres']} ${VALOR_FORMULARIO['primerApellido']} ${VALOR_FORMULARIO['segundoApellido'] || ''}`.trim();
-  } else {
-    nombreRazonSocial = '';
-  }
-
-  const OBTENER_DESCRIPCION_DEL_CATALOGO = (catalogArray: Catalogo[], clave: string | number): string => {
-    if (!catalogArray || catalogArray.length === 0 || !clave) {
-      return clave?.toString() || '';
-    }
-    
-    const ITEM_BY_CLAVE = catalogArray.find(cat => 
-      cat?.clave && cat.clave.toString() === clave.toString()
-    );
-    
-    if (ITEM_BY_CLAVE) {
-      return ITEM_BY_CLAVE.descripcion;
-    }
-    
-    return clave.toString();
-  };
-  
-  return {
-    nacionalidad: VALOR_FORMULARIO['nacionalidad'] as string || '',
-    tipoPersona: VALOR_FORMULARIO['tipoPersona'] as string,
-    nombreRazonSocial: nombreRazonSocial,
-    rfc: VALOR_FORMULARIO['rfc'] as string,
-    curp: VALOR_FORMULARIO['curp'] as string || '',
-    telefono: `${VALOR_FORMULARIO['lada'] || ''} ${VALOR_FORMULARIO['telefono'] || ''}`.trim(),
-    correoElectronico: VALOR_FORMULARIO['correoElectronico'] as string || '',
-    calle: VALOR_FORMULARIO['calle'] as string || '',
-    numeroExterior: VALOR_FORMULARIO['numeroExterior'] as string || '',
-    numeroInterior: (VALOR_FORMULARIO['numeroInterior'] as string) || '',
-    pais: OBTENER_DESCRIPCION_DEL_CATALOGO(this.paisesDatos, VALOR_FORMULARIO['pais'] as string),
-    colonia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.coloniasDatos, VALOR_FORMULARIO['colonia'] as string),
-    municipioAlcaldia: OBTENER_DESCRIPCION_DEL_CATALOGO(this.municipiosDatos, VALOR_FORMULARIO['municipio'] as string),
-    localidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.localidadesDatos, VALOR_FORMULARIO['localidad'] as string),
-    entidadFederativa: '',
-    estadoLocalidad: OBTENER_DESCRIPCION_DEL_CATALOGO(this.estadosDatos, VALOR_FORMULARIO['estado'] as string),
-    codigoPostal: OBTENER_DESCRIPCION_DEL_CATALOGO(this.codigosPostalesDatos, VALOR_FORMULARIO['codigoPostal'] as string),
-    coloniaEquivalente: VALOR_FORMULARIO['coloniaEquivalente'] as string || '',
-    nombres: VALOR_FORMULARIO['nombres'] as string || '',
-    primerApellido: VALOR_FORMULARIO['primerApellido'] as string || '',
-    segundoApellido: VALOR_FORMULARIO['segundoApellido'] as string || '',
-    razonSocial: VALOR_FORMULARIO['denominacionRazon'] as string || '',
-    lada: VALOR_FORMULARIO['lada'] as string || '',
-  };
 }
 
+/**
+ * Handles normal form save logic for chequeoValidacionAlGuardar === false
+ */
+private guardarDestinatarioNormal(): void {
+    const VALIDATION_ERRORS = this.validateModalForm();
+    if (VALIDATION_ERRORS.length > 0) {
+      Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      return;
+    }
+    
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+    
+    const NUEVO_DESTINATARIO: Destinatario = VALOR_FORMULARIO as Destinatario;
+    
+    const PAIS_ID = this.agregarDestinatarioFinal.get('pais')?.value;
+    const PAIS_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
+    
+    const ESTADO_ID = this.agregarDestinatarioFinal.get('estado')?.value;
+    const ESTADO_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.estadosDatos, ESTADO_ID);
+    
+    const MUNICIPIO_ID = this.agregarDestinatarioFinal.get('municipio')?.value;
+    const MUNICIPIO_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.municipiosDatos, MUNICIPIO_ID);
+    
+    const LOCALIDAD_ID = this.agregarDestinatarioFinal.get('localidad')?.value;
+    const LOCALIDAD_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.localidadesDatos, LOCALIDAD_ID);
+    
+    const CODIGO_POSTAL_ID = this.agregarDestinatarioFinal.get('codigoPostal')?.value;
+    const CODIGO_POSTAL_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.codigosPostalesDatos, CODIGO_POSTAL_ID);
+    
+    const COLONIA_ID = this.agregarDestinatarioFinal.get('colonia')?.value;
+    const COLONIA_OBJ = AgregarDestinatarioFinalComponent.generarCatalogoObjeto(this.coloniasDatos, COLONIA_ID);
+    
+    NUEVO_DESTINATARIO.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.paisObj = PAIS_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.estadoLocalidad = ESTADO_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.estadoObj = ESTADO_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.municipioAlcaldia = MUNICIPIO_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.municipioObj = MUNICIPIO_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.localidad = LOCALIDAD_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.localidadObj = LOCALIDAD_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.codigoPostal = CODIGO_POSTAL_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.codigoPostalObj = CODIGO_POSTAL_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.colonia = COLONIA_OBJ?.[0]?.descripcion ?? '';
+    NUEVO_DESTINATARIO.coloniaObj = COLONIA_OBJ?.[0] ?? undefined;
+    
+    NUEVO_DESTINATARIO.entidadFederativa = '';
+    NUEVO_DESTINATARIO.coloniaEquivalente = VALOR_FORMULARIO.coloniaEquivalente || '';
+
+    let nombreRazonSocial: string;
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+        nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+        nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+        nombreRazonSocial = '';
+    }
+    NUEVO_DESTINATARIO.nombreRazonSocial = nombreRazonSocial;
+    
+    NUEVO_DESTINATARIO.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
+    NUEVO_DESTINATARIO.tipoPersona = VALOR_FORMULARIO.tipoPersona;
+    NUEVO_DESTINATARIO.rfc = VALOR_FORMULARIO.rfc || '';
+    NUEVO_DESTINATARIO.curp = VALOR_FORMULARIO.curp || '';
+    NUEVO_DESTINATARIO.telefono = `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim();
+    NUEVO_DESTINATARIO.correoElectronico = VALOR_FORMULARIO.correoElectronico || '';
+    NUEVO_DESTINATARIO.calle = VALOR_FORMULARIO.calle || '';
+    NUEVO_DESTINATARIO.numeroExterior = VALOR_FORMULARIO.numeroExterior || '';
+    NUEVO_DESTINATARIO.numeroInterior = VALOR_FORMULARIO.numeroInterior || '';
+    NUEVO_DESTINATARIO.nombres = VALOR_FORMULARIO.nombres;
+    NUEVO_DESTINATARIO.primerApellido = VALOR_FORMULARIO.primerApellido;
+    NUEVO_DESTINATARIO.segundoApellido = VALOR_FORMULARIO.segundoApellido;
+    NUEVO_DESTINATARIO.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
+    NUEVO_DESTINATARIO.lada = VALOR_FORMULARIO.lada;
+    
+    let UPDATED_DESTINATARIOS: Destinatario[] = Array.isArray(this.destinatarioFinalTablaDatos) 
+      ? [...this.destinatarioFinalTablaDatos] 
+      : [];
+    
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
+      UPDATED_DESTINATARIOS = UPDATED_DESTINATARIOS.map(d => 
+        d.id === NUEVO_DESTINATARIO.id ? NUEVO_DESTINATARIO : d
+      );
+    } else {
+      const IS_DUPLICATE = UPDATED_DESTINATARIOS.some(d => d.rfc === NUEVO_DESTINATARIO.rfc);
+      
+      if (IS_DUPLICATE) {
+        this.abrirModal('La información proporcionada de la persona ya existe, favor de verificar.');
+        return;
+      }
+      const NEXT_ID = UPDATED_DESTINATARIOS.length > 0 ? Math.max(...UPDATED_DESTINATARIOS.map(d => d.id || 0)) + 1 : 1;
+      NUEVO_DESTINATARIO.id = NEXT_ID;
+      UPDATED_DESTINATARIOS.push(NUEVO_DESTINATARIO);
+    }
+    
+    this.updateDestinatarioFinalTablaDatos.emit(UPDATED_DESTINATARIOS);
+    this.agregarDestinatarioFinal.reset();
+    this.datoSeleccionado = [];
+    this.isEditMode = false;
+    this.guardarYSalir.emit();
+}
+
+/**
+ * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+ *
+ * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+ * @param {string} id - Identificador para filtrar los objetos del catálogo.
+ * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+ */
+static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+  return catalogo.filter(item => item.clave === id);
+}
   /**
    * Custom validation for modal form scenario
    * Only validates business rules for chequeoValidacionAlGuardar === true
@@ -784,13 +856,6 @@ private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): 
    * destrucción usando `takeUntil(this.unsubscribe$)`.
    */
   cargarDatos(tramite: string): void {
-    this.datosSolicitudService
-      .obtenerListaCodigosPostales()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.codigosPostalesDatos = data;
-      });
-
     this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
         takeUntil(this.unsubscribe$)
       ).subscribe((data) => {
@@ -983,7 +1048,7 @@ private construirObjetoDestinatario(VALOR_FORMULARIO: Record<string, unknown>): 
    * @param {keyof Destinatario } field - Nombre del campo a obtener.
    * @returns {string | number | undefined | string[]} - Valor del campo especificado.
    */
-  public obtenerValor(field: keyof Destinatario): string | number | undefined {
+  public obtenerValor(field: keyof Destinatario): string | number | undefined | Catalogo {
     return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
   }
 
@@ -1196,7 +1261,7 @@ changeNacionalidad(): void {
 
       if (!this.isEditMode) {
         this.agregarDestinatarioFinal.patchValue({
-          pais: 2
+          pais: 'MEX'
         });
       }
         if(this.idProcedimiento === 260201){
@@ -1233,7 +1298,6 @@ changeNacionalidad(): void {
     this.municipiosDatos = [];
   }
   }
-
   /**
    * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
    *
@@ -1252,17 +1316,42 @@ changeNacionalidad(): void {
       const DATOS = data.datos as Catalogo[];
       this.localidadesDatos = DATOS;
     }));
-
     this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, evento.clave).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe((data) => {
       const DATOS = data.datos as Catalogo[];
       this.coloniasDatos = DATOS;
     }));
-  } else {
-    this.localidadesDatos = [];
-    this.coloniasDatos = [];
+    } else {
+      this.localidadesDatos = [];
+      this.coloniasDatos = [];
+    }
+
   }
+
+  /**
+   * Carga la lista de códigos postales cuando se selecciona una localidad.
+   *
+   * @param _evento Objeto de tipo `Catalogo` que contiene la información seleccionada de la localidad.
+   *
+   * ### Descripción:
+   * - Obtiene el municipio seleccionado del formulario.
+   * - Si el formulario contiene el campo 'municipio', solicita los códigos postales asociados al municipio seleccionado.
+   * - Asigna la lista recibida a la propiedad `codigosPostalesDatos`.
+   * - Si no existe el campo 'municipio', limpia la lista de códigos postales.
+   */
+  cargarLocalidades(_evento: Catalogo): void {
+    const MUNICIPIO_SELECCIONADO = this.agregarDestinatarioFinal.get('municipio')?.value;
+    if (this.agregarDestinatarioFinal.contains('municipio')) {
+      this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, MUNICIPIO_SELECCIONADO).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.codigosPostalesDatos = DATOS;
+      }));
+    } else {
+      this.codigosPostalesDatos = [];
+    }
   }
 
   /**

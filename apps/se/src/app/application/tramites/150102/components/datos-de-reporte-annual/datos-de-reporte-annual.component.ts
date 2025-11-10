@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionAporteColumna, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, REG_X, TablaCampoSeleccion, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConfiguracionAporteColumna, ConfiguracionColumna, esValidArray, esValidObject, getValidDatos, Notificacion, NotificacionesComponent, Pedimento, REG_X, TablaCampoSeleccion, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENSAJES_EXPORTACIONES_TOTALS, MENSAJES_VENTAS_TOTALES, TOTAL_EXPORTACIONES_MENSAJES, VALIDATORS_MENSAJES, VENTAS_TOTALES_MENSAJES } from '../../constantes/solicitud150102.enum';
 import { Solicitud150102State, Solicitud150102Store } from '../../estados/solicitud150102.store';
@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
 /**
@@ -186,7 +187,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * Objeto que representa una nueva notificación a mostrar al usuario.
    * Puede incluir información como el tipo, mensaje, duración, etc.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    *  Índice del pedimento marcado para eliminación.
@@ -209,7 +210,12 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  bienesTablaProducidos: boolean = false;
+  bienesTablaProducidos: boolean = true;
+  /** Mensaje de alerta cuando las ventas totales son menores que las exportaciones totales.
+   *
+   * @type {string}
+   */
+  public mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.
@@ -225,7 +231,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService,
     public consultaioQuery: ConsultaioQuery,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -313,7 +320,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
           value: this.solicitud150102State.totalImportaciones,
           disabled: true,          
         },
-        [Validators.maxLength(16),Validators.required],
+        [Validators.maxLength(16)],
       ],
       saldo: [{ value: this.solicitud150102State.saldo, disabled: true }],
       porcentajeExportacion: [
@@ -470,33 +477,50 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    *
    * @param evento - Lista de bienes producidos seleccionados desde la tabla de entrada.
    */
-seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
-    if (evento.length > 0) {
-   this.bienesProducidosSelection = -1;
-} 
+seleccionarBienesFilaDeEntrada(evento: BienesProducidos): void {
+  const OBJETO_JSON:BienesProducidos[] = [evento];
+    if (OBJETO_JSON.length > 0) {
+      this.bienesProducidosSelection = -1;
+    } 
 }
 
   /**
    * @description Método para agregar nuevos bienes producidos si no existen en la lista.
    */
   agregarBienesProducidos(): void {
+    if(!esValidObject(this.bienesProducidos)) {
+      this.abrirModal('Se debe seleccionar un sector.');
+      return;
+    }
+
+  if(!getValidDatos(this.bienesProducidos.bienProducido) && 
+    !getValidDatos(this.bienesProducidos.fraccion) &&
+    !getValidDatos(this.bienesProducidos.totalBienesProducidos) &&
+    !getValidDatos(this.bienesProducidos.mercadoNacional) &&
+    !getValidDatos(this.bienesProducidos.exportaciones)) {
+      this.abrirModal('Debe de ingresar una fracción que corresponda al sector selecciondado.');
+      return;
+    }
     if (
       this.bienesProducidos &&
       Object.keys(this.bienesProducidos)?.length > 0
     ) {
       const EXISTE = this.bienesProducidosDatos.some(
         (item) => item.claveSector === this.bienesProducidos.claveSector
-      );
+      );  
+         
       if (!EXISTE) {
         this.bienesProducidosDatos = [
           ...this.bienesProducidosDatos,
           this.bienesProducidos,
         ];
+        this.producidosSelection = -1;
+        
+        this.solicitud150102Store.actualizarBienesProducidosDatos(
+          this.bienesProducidosDatos
+        );
+        
       }
-      this.producidosSelection = -1;
-      this.solicitud150102Store.actualizarBienesProducidosDatos(
-        this.bienesProducidosDatos
-      );
     }
   }
 
@@ -558,8 +582,53 @@ seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
    * Reinicia la selección de bienes producidos.
    */
 eliminarBienesProducidos(): void {
+    if(this.bienesProducidosSelection !== -1) {
+      this.abrirModal('Selecciona un registro.');
+      return;
+    }
+    this.bienesProducidosDatos = [];
     this.bienesProducidosSelection = -1;
   } 
+
+    /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  public diferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    } else {
+      this.nuevaNotificacion = null;
+    }
+  }
+
+    /**
+   * @method mostrarNotificacion
+   * @description Muestra una notificación y la limpia después del tiempo especificado
+   * @param notificacion - Objeto de notificación a mostrar
+   */
+  private mostrarNotificacion(notificacion: Notificacion): void {
+    this.nuevaNotificacion = notificacion;
+
+ if (notificacion.tiempoDeEspera) {
+      setTimeout(() => {
+        this.nuevaNotificacion = null;
+      }, notificacion.tiempoDeEspera);
+    }
+  }
 
   /**
    * @description Método que se ejecuta cuando el componente se destruye.

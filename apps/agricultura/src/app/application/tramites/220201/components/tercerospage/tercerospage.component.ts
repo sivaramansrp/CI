@@ -6,7 +6,6 @@
  * Cobertura compodoc 100%: cada clase, método, propiedad y evento está documentada.
  * @module TercerospageComponent
  */
-
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,10 +17,10 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { SharedFormService } from '../../services/220201/SharedForm.service';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
@@ -66,14 +65,14 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   @ViewChild('modalRef') modalRef!: ModalComponent;
 
-    /**
-   * Referencia al componente de terceros relacionados.
-   * Permite acceder a los métodos y propiedades del componente TercerosrelacionadosComponent.
-   * 
-   * @public
-   * @type {TercerosrelacionadosComponent}
-   * @memberof TercerospageComponent
-   */
+  /**
+ * Referencia al componente de terceros relacionados.
+ * Permite acceder a los métodos y propiedades del componente TercerosrelacionadosComponent.
+ * 
+ * @public
+ * @type {TercerosrelacionadosComponent}
+ * @memberof TercerospageComponent
+ */
   @ViewChild('tercerosRelacionadosRef') tercerosRelacionados!: TercerosrelacionadosComponent;
 
   /**
@@ -97,6 +96,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   datosForma: DestinatarioForm[] = [];
 
+  destinatario: DestinatarioForm[] = [];
+
   /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
@@ -109,7 +110,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     public tercerosrelacionadosService: TercerosrelacionadosService,
     public certificadoZoosanitarioStore: ZoosanitarioStore,
-    private catalogoService: CatalogosService
+    private catalogoService: CatalogosService,
+    private sharedService: SharedFormService
 
   ) { }
 

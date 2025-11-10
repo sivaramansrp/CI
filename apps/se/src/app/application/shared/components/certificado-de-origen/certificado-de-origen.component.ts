@@ -4,7 +4,6 @@ import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONA
 import { Catalogo, EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
-import { Subject, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
@@ -13,6 +12,7 @@ import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
+import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 /**
@@ -669,22 +669,32 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('fax1', new FormControl(''));
     }
 
+    if (this.idProcedimiento === 110205) {
+      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('pais', new FormControl(''));
+      this.formCertificado.addControl('correoElectronico', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('telefono', new FormControl(''));
+      this.formCertificado.addControl('fax', new FormControl(''));
+    }
+
     if (this.domicilio) {
       this.formCertificado.addControl('numeroLetras', new FormControl('', [Validators.required, Validators.maxLength(30)]));
     }
 
     if (this.domicilioTercer) {
       this.formCertificado.addControl('pais', new FormControl(''));
-      this.formCertificado.addControl('ciudad', new FormControl('', [Validators.required]));
-      this.formCertificado.addControl('calle', new FormControl('', [Validators.required]));
-      this.formCertificado.addControl('numeroLetra', new FormControl('', [Validators.required]));
-      this.formCertificado.addControl('lada', new FormControl('', [Validators.required]));
-      this.formCertificado.addControl('telefono', new FormControl('', [Validators.required]));
+      this.formCertificado.addControl('ciudad', new FormControl(''));
+      this.formCertificado.addControl('calle', new FormControl(''));
+      this.formCertificado.addControl('numeroLetra', new FormControl(''));
+      this.formCertificado.addControl('lada', new FormControl(''));
+      this.formCertificado.addControl('telefono', new FormControl(''));
       this.formCertificado.addControl('fax', new FormControl(''));
-      this.formCertificado.addControl('correo', new FormControl('', [Validators.required])); 
+      this.formCertificado.addControl('correo', new FormControl('')); 
     }
 
-    if (this.idProcedimiento === 110204) {
+    if (this.idProcedimiento === 110204 || this.idProcedimiento === 110212 || this.idProcedimiento === 110216) {
       const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
@@ -820,6 +830,12 @@ export class CertificadoDeOrigenComponent
     if (changes['datosForm']?.currentValue) {
       if (!this.formCertificado) {
         this.createForm();
+      }
+      if (changes['datosForm']?.currentValue.entidadFederativa) {
+        this.getPaisBloque(changes['datosForm']?.currentValue.entidadFederativa);
+      }
+      if (changes['datosForm']?.currentValue.nombres) {
+        this.formCertificado.get('razonSocial')?.disable({ emitEvent: false });
       }
       this.formCertificado.patchValue(this.datosForm);
     }

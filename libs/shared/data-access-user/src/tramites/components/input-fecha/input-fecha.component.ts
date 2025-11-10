@@ -60,6 +60,11 @@ export class InputFechaComponent implements OnInit, OnChanges {
    */
   @Input() tooltipQuestionCircleText!: string;
 
+/**
+ * Indica si se deben deshabilitar las fechas futuras en el calendario.
+ * Si es `true`, el usuario no podrá seleccionar fechas posteriores a la fecha actual.
+ * Valor por defecto: `false`.
+ */
   @Input() deshabilitarFuturas: boolean = false;
 
 /**
@@ -68,6 +73,13 @@ export class InputFechaComponent implements OnInit, OnChanges {
  * Valor por defecto: `false`.
  */
   @Input() deshabilitarPasadas: boolean = false;
+
+  /**
+   * Clase CSS personalizada para el asterisco de campo requerido.
+   * Permite aplicar estilos específicos al asterisco que indica que el campo es obligatorio.
+   * Valor por defecto: cadena vacía.
+   */
+  @Input() asteriskClass: string = '';
 
   /**
    * Arreglo con los nombres de los meses.

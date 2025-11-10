@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, JSONResponse, ListaPasosWizard, doDeepCopy, esValidObject,getValidDatos } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT,PASOS,TEXTOS } from '../../constants/validacion-posteriori.enum';
+import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO, PASOS, TEXTOS } from '../../constants/validacion-posteriori.enum';
 import { Subject, map, take, takeUntil } from 'rxjs';
-import { Tramite110212State,Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212State, Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { AccionBoton } from '../../models/validacion-posteriori.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
@@ -102,7 +102,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   idSolicitud: number = 0;
-
+  /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public alertaNotificacion!: Notificacion;
+  /**
+* Estado del tramite Folio
+*/
+  public folioTemporal: number = 0;
   /**
    * Estado actual del trámite 110212.
    *
@@ -186,7 +194,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
       });
   }
-  
+
   /**
 * Guarda los datos proporcionados en el parámetro `item` construyendo un objeto payload y enviándolo al servicio backend.
 * El payload incluye información del solicitante, certificado, destinatario y detalles del certificado.
@@ -197,11 +205,11 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
 * La llamada al servicio actualmente está comentada.
 */
- guardar(data: Tramite110212State): Promise<JSONResponse> {
- const CERTIFICADO = this.validacionPosterioriService.buildCertificado(data);
-  const DATOS_CERTIFICADO = this.validacionPosterioriService.buildDatosCertificado(data);   
-  const DESTINATARIO = this.validacionPosterioriService.buildDestinatario(data);
-   const PAYLOAD = {
+  guardar(data: Tramite110212State): Promise<JSONResponse> {
+    const CERTIFICADO = this.validacionPosterioriService.buildCertificado(data);
+    const DATOS_CERTIFICADO = this.validacionPosterioriService.buildDatosCertificado(data);
+    const DESTINATARIO = this.validacionPosterioriService.buildDestinatario(data);
+    const PAYLOAD = {
       rfc_solicitante: 'AAL0409235E6',
       idSolicitud: this.solicitudState.idSolicitud || 0,
       solicitante: {
@@ -228,22 +236,23 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       datos_del_certificado: DATOS_CERTIFICADO
     };
 
-     return new Promise((resolve, reject) => {
-           this.validacionPosterioriService.guardarDatosPost(PAYLOAD).subscribe(response => {
-             const API_RESPONSE = doDeepCopy(response);
-             if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
-               if(getValidDatos(API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud )) {
-                 this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud ||API_RESPONSE.datos.idSolicitud));
-                 this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-               } else {
-                 this.store.setIdSolicitud(0);
-               }
-             }
-             resolve(response);
-           }, error => {
-             reject(error);
-           });
-           });
+    return new Promise((resolve, reject) => {
+      this.validacionPosterioriService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        const API_RESPONSE = doDeepCopy(response);
+        if (esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if (getValidDatos(API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud)) {
+            this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+            this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud || API_RESPONSE.datos.idSolicitud));
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+          } else {
+            this.store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
+    });
   }
   /**
    * Navega a través de los pasos del asistente según la acción del botón.
@@ -255,22 +264,35 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+        if (e.valor > 0 && e.valor < 5) {
+          this.alertaNotificacion = {
+            tipoNotificacion: 'banner',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+            cerrar: true,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+
+        }
       } else {
         this.wizardComponent.atras();
       }
     }
   }
 
- /**
-   * @method validarTodosFormulariosPasoUno
-   * @description
-   * Valida todos los formularios del componente `PasoUnoComponent`.
-   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
-   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
-   * Retorna `true` si todos los formularios son válidos.
-   *
-   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
-   */
+  /**
+    * @method validarTodosFormulariosPasoUno
+    * @description
+    * Valida todos los formularios del componente `PasoUnoComponent`.
+    * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+    * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+    * Retorna `true` si todos los formularios son válidos.
+    *
+    * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+    */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;

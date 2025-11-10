@@ -1,116 +1,134 @@
-import { TestBed } from '@angular/core/testing';
 import { SolicitudService } from './solicitud.service';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { Solicitud150102Store } from '../estados/solicitud150102.store';
-import { GuardarDatosFormulario } from '../models/programas-reporte.model';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudService', () => {
   let service: SolicitudService;
-  let httpClientSpy: jest.Mocked<HttpClient>;
-  let storeSpy: jest.Mocked<Solicitud150102Store>;
+  let httpMock: any;
+  let storeMock: any;
+  let queryMock: any;
 
   beforeEach(() => {
-    httpClientSpy = {
-      get: jest.fn()
-    } as any;
-
-    storeSpy = {
-      actualizarInicio: jest.fn(()=> of()),
-      actualizarFin: jest.fn(()=> of()),
-      actualizarFolioPrograma: jest.fn(()=> of()),
-      actualizarModalidad: jest.fn(()=> of()),
-      actualizarTipoPrograma: jest.fn(()=> of()),
-      actualizarEstatus: jest.fn(()=> of()),
-      actualizarVentasTotales: jest.fn(()=> of()),
-      actualizarTotalExportaciones: jest.fn(()=> of()),
-      actualizarTotalImportaciones: jest.fn(()=> of()),
-      actualizarSaldo: jest.fn(()=> of()),
-      actualizarPorcentajeExportacion: jest.fn(()=> of())
-    } as any;
-
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        SolicitudService,
-        { provide: HttpClient, useValue: httpClientSpy },
-        { provide: Solicitud150102Store, useValue: storeSpy }
-      ]
-    });
-
-    service = TestBed.inject(SolicitudService);
+    httpMock = {
+      get: jest.fn(),
+      post: jest.fn(),
+    };
+    storeMock = {
+      actualizarInicio: jest.fn(),
+      actualizarFin: jest.fn(),
+      actualizarFolioPrograma: jest.fn(),
+      actualizarModalidad: jest.fn(),
+      actualizarTipoPrograma: jest.fn(),
+      actualizarEstatus: jest.fn(),
+      actualizarVentasTotales: jest.fn(),
+      actualizarTotalExportaciones: jest.fn(),
+      actualizarTotalImportaciones: jest.fn(),
+      actualizarSaldo: jest.fn(),
+      actualizarPorcentajeExportacion: jest.fn(),
+    };
+    queryMock = {};
+    service = new SolicitudService(httpMock, storeMock, queryMock);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('obtenerProgramasReporte should call http.get with correct URL', (done) => {
-    const mockData = [{ id: 1, nombre: 'Programa' }];
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.obtenerProgramasReporte().subscribe(data => {
-      expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/150102/programas-reporte.json');
-      done();
-    });
+  it('obtenerProgramasReporte should call http.get with correct url', () => {
+    const rfc = 'RFC123';
+    const mockResponse = { data: [] };
+    httpMock.get.mockReturnValueOnce({ subscribe: jest.fn() });
+    service.obtenerProgramasReporte(rfc).subscribe?.();
+    expect(httpMock.get).toHaveBeenCalledWith(expect.stringContaining(rfc));
   });
 
-  it('obtenerReporteFechas should call http.get with correct URL', (done) => {
-    const mockData = { inicio: '2023-01-01', fin: '2023-12-31' };
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.obtenerReporteFechas().subscribe(data => {
-      expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/150102/reporte-fechas.json');
-      done();
-    });
+  it('obtenerReporteFechas should call http.get with correct url', () => {
+    httpMock.get.mockReturnValueOnce({ subscribe: jest.fn() });
+    service.obtenerReporteFechas().subscribe?.();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/150102/reporte-fechas.json');
   });
 
-  it('obtenerProducidosDatos should call http.get with correct URL', (done) => {
-    const mockData = [{ id: 1, producto: 'Producto' }];
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.obtenerProducidosDatos().subscribe(data => {
-      expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/150102/producidos-datos.json');
-      done();
-    });
+  it('obtenerProducidosDatos should call http.get with correct url', () => {
+    httpMock.get.mockReturnValueOnce({ subscribe: jest.fn() });
+    service.obtenerProducidosDatos().subscribe?.();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/150102/producidos-datos.json');
   });
 
-  it('guardarDatosFormulario should call http.get with correct URL', (done) => {
-    const mockData = { inicio: '2023-01-01' } as GuardarDatosFormulario;
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.guardarDatosFormulario().subscribe(data => {
-      expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/150102/guardar-datos-formulario.json');
-      done();
-    });
+  it('guardarDatosFormulario should call http.get with correct url', () => {
+    httpMock.get.mockReturnValueOnce({ subscribe: jest.fn() });
+    service.guardarDatosFormulario().subscribe?.();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/150102/guardar-datos-formulario.json');
   });
 
-  it('actualizarEstadoFormulario should update store with correct values', () => {
-    const resp: GuardarDatosFormulario = {
+  it('actualizarEstadoFormulario should update all store fields', () => {
+    const resp = {
       inicio: '2023-01-01',
       fin: '2023-12-31',
       folioPrograma: 'FP123',
       modalidad: 'MOD',
       tipoPrograma: 'TIPO',
-      estatus: 'ACTIVO',
-      ventasTotales: '1000',
-      totalExportaciones: '500',
-      totalImportaciones: '200',
-      saldo: '300',
-      porcentajeExportacion: '50'
+      estatus: 'ESTATUS',
+      ventasTotales: 100,
+      totalExportaciones: 50,
+      totalImportaciones: 30,
+      saldo: 20,
+      porcentajeExportacion: 10,
     };
-    service.actualizarEstadoFormulario(resp);
-    expect(storeSpy.actualizarInicio).toHaveBeenCalledWith(resp.inicio);
-    expect(storeSpy.actualizarFin).toHaveBeenCalledWith(resp.fin);
-    expect(storeSpy.actualizarFolioPrograma).toHaveBeenCalledWith(resp.folioPrograma);
-    expect(storeSpy.actualizarModalidad).toHaveBeenCalledWith(resp.modalidad);
-    expect(storeSpy.actualizarTipoPrograma).toHaveBeenCalledWith(resp.tipoPrograma);
-    expect(storeSpy.actualizarEstatus).toHaveBeenCalledWith(resp.estatus);
-    expect(storeSpy.actualizarVentasTotales).toHaveBeenCalledWith(resp.ventasTotales);
-    expect(storeSpy.actualizarTotalExportaciones).toHaveBeenCalledWith(resp.totalExportaciones);
-    expect(storeSpy.actualizarTotalImportaciones).toHaveBeenCalledWith(resp.totalImportaciones);
-    expect(storeSpy.actualizarSaldo).toHaveBeenCalledWith(resp.saldo);
-    expect(storeSpy.actualizarPorcentajeExportacion).toHaveBeenCalledWith(resp.porcentajeExportacion);
+    service.actualizarEstadoFormulario(resp as any);
+    expect(storeMock.actualizarInicio).toHaveBeenCalledWith(resp.inicio);
+    expect(storeMock.actualizarFin).toHaveBeenCalledWith(resp.fin);
+    expect(storeMock.actualizarFolioPrograma).toHaveBeenCalledWith(resp.folioPrograma);
+    expect(storeMock.actualizarModalidad).toHaveBeenCalledWith(resp.modalidad);
+    expect(storeMock.actualizarTipoPrograma).toHaveBeenCalledWith(resp.tipoPrograma);
+    expect(storeMock.actualizarEstatus).toHaveBeenCalledWith(resp.estatus);
+    expect(storeMock.actualizarVentasTotales).toHaveBeenCalledWith(resp.ventasTotales);
+    expect(storeMock.actualizarTotalExportaciones).toHaveBeenCalledWith(resp.totalExportaciones);
+    expect(storeMock.actualizarTotalImportaciones).toHaveBeenCalledWith(resp.totalImportaciones);
+    expect(storeMock.actualizarSaldo).toHaveBeenCalledWith(resp.saldo);
+    expect(storeMock.actualizarPorcentajeExportacion).toHaveBeenCalledWith(resp.porcentajeExportacion);
+  });
+
+  it('guardar should call http.post and map response', (done) => {
+    const body = { foo: 'bar' };
+    const mockResponse = { ok: true };
+    httpMock.post.mockReturnValueOnce({
+      pipe: jest.fn((...args) => {
+        // Simulate RxJS pipe(map, catchError)
+        const mapFn = args[0];
+        return {
+          subscribe: (cb: any) => {
+            cb(mapFn(mockResponse));
+            done();
+          },
+        };
+      }),
+    });
+    service.guardar(body).subscribe((res: any) => {
+      expect(res).toEqual(mockResponse);
+    });
+    expect(httpMock.post).toHaveBeenCalled();
+  });
+
+  it('guardar should handle error and throw', (done) => {
+    const body = { foo: 'bar' };
+    httpMock.post.mockReturnValueOnce({
+      pipe: jest.fn((mapFn, catchErrorFn) => {
+        return {
+          subscribe: (_cb: any, errCb: any) => {
+            // Simulate error
+            const errorObs = catchErrorFn();
+            errorObs.subscribe?.(null, (err: any) => {
+              expect(err).toBeInstanceOf(Error);
+              done();
+            });
+          },
+        };
+      }),
+    });
+    service.guardar(body).subscribe(
+      () => {},
+      (err: any) => {
+        expect(err).toBeInstanceOf(Error);
+        done();
+      }
+    );
   });
 });

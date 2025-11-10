@@ -7,7 +7,7 @@ export interface ColumnasTabla {
 }
 
 export interface CertificadoApiData {
-  [key: string]: any;
+  [key: string]: unknown;
   numeroCertificado?: string;
   paisAsociado?: {
     nombre?: string;
@@ -24,6 +24,7 @@ export interface CertificadoApiData {
   nombre: string;
   observaciones?: string;
   nombreEmbarcacion?: string;
+  mercancias?: MercanciaCertificado[];
 }
 
 export interface MercanciaCertificado {

@@ -33,6 +33,17 @@ import { Tramite260215Store } from "../../estados/tramites/tramite260215.store";
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = [
+    'calle',
+    'correoElectronico',
+    'denominacionRazon',
+    'scian',
+    'numeroExterior'
+  ];
+  /**
    * @input formularioDeshabilitado
    * @description Indica si el formulario se encuentra en modo deshabilitado (solo lectura).
    */

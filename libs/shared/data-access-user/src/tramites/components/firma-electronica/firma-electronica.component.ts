@@ -98,6 +98,16 @@ export class FirmaElectronicaComponent implements OnDestroy {
   keyInputElement?: HTMLInputElement;
 
   /**
+   * Array de cadenas originales de documentos que requieren firma.
+   */
+  @Input() cadenasOriginalesDocumentos?: string[];
+
+  /**
+   * Evento que emite un array de firmas generadas para los documentos proporcionados.
+   */
+  @Output() documentosFirmados = new EventEmitter<string[]>();
+
+  /**
    * Referencia al elemento del DOM del input para la contraseña de la llave privada.
    * La contraseña es requerida para desbloquear la llave y poder firmar.
    */
@@ -199,31 +209,52 @@ export class FirmaElectronicaComponent implements OnDestroy {
       return;
     }
 
+    const PASSWORD_VALUE = this.passwordInputElement.value;
+
     this.isLoading = true;
 
     try {
       const ESLOGIN = this.tipo === OperationType.LOGIN;
-
-      // Verifica si se está en un escenario de prueba (dummy) o si es un login
       const ESCENARIO_DUMMY = !ESLOGIN && !this.cadenaOriginal;
 
-      // Si es un escenario de prueba (dummy), emite una firma ficticia
       if (ESCENARIO_DUMMY) {
         this.firma.emit('firma-dummy-30901');
         this.isLoading = false;
         return;
       }
 
+      if (this.cadenasOriginalesDocumentos && this.cadenasOriginalesDocumentos.length > 0) {
+        const SELLOS: string[] = [];
+
+        for (const CADENA of this.cadenasOriginalesDocumentos) {
+          const RESULTADO_DOC = await this.firmaService.firmarCadena(
+            this.cerInputElement,
+            this.keyInputElement,
+            PASSWORD_VALUE,
+            CADENA,
+            false
+          );
+
+          if (RESULTADO_DOC.firma) {
+            SELLOS.push(RESULTADO_DOC.firma);
+          } else {
+            this.toastrService.error('No se generó firma para una cadena de documento.');
+          }
+        }
+        this.documentosFirmados.emit(SELLOS);
+      }
+
+      // Luego procesar la firma principal
       const RESULTADO = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,
-        this.passwordInputElement,
+        PASSWORD_VALUE, // Pasar el string directamente
         ESLOGIN ? undefined : this.cadenaOriginal,
         ESLOGIN
       );
 
       if (ESLOGIN) {
-      // Crear el payload para la autenticación
+        // Crear el payload para la autenticación
         const PAYLOAD = {
           "rfc": RESULTADO.rfc,
           "certificate": RESULTADO.certificado,
@@ -235,9 +266,8 @@ export class FirmaElectronicaComponent implements OnDestroy {
         this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
         this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
           next: (response) => {
-            if(esValidObject(response)){
+            if (esValidObject(response)) {
               this.toastrService.success('Autenticación exitosa');
-
             }
           },
           error: (error) => {
@@ -257,7 +287,6 @@ export class FirmaElectronicaComponent implements OnDestroy {
           rfc: RESULTADO.rfc,
           fechaFin: RESULTADO.fechaFin,
         });
-        this.toastrService.success('Firma electrónica generada correctamente');
       }
 
     } catch (error) {
@@ -265,7 +294,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
       this.valido.emit({ rfc: '', tieneLogin: false });
 
       let mensaje = 'Error al validar la firma';
-
+      
       if (error instanceof Error) {
         if (error.message.includes('La contrasena no es valida')) {
           mensaje = 'Se produjo un error al firmar la cadena: La contraseña no es válida';
@@ -273,7 +302,6 @@ export class FirmaElectronicaComponent implements OnDestroy {
           mensaje = `Se produjo un error al firmar la cadena: ${error.message}`;
         }
       }
-
       this.toastrService.error(mensaje);
     }
     finally {

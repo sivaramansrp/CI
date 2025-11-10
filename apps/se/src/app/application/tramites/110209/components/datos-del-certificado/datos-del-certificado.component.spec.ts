@@ -7,7 +7,9 @@ import { TituloComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosDelCertificadoComponent', () => {
   let component: DatosDelCertificadoComponent;
@@ -15,6 +17,7 @@ describe('DatosDelCertificadoComponent', () => {
   let service: MercanciasService;
   let store: Tramite110209Store;
   let query: Tramite110209Query;
+  let consultaQuery: ConsultaioQuery;
   let router: Router;
 
   beforeEach(async () => {
@@ -33,7 +36,22 @@ describe('DatosDelCertificadoComponent', () => {
 
     const QUERY_MOCK = {
       selectTramite110209$: of({
-        observaciones: 'Observación inicial'
+        observaciones: 'Observación inicial',
+        mercanciasSeleccionadas: {
+          numeroDeOrden: '001',
+          fraccionArancelaria: '1234.56.78',
+          nombreTecnico: 'Técnico test',
+          nombreComercial: 'Comercial test',
+          nombreIngles: 'English test',
+          numeroDeRegistro: 'REG001'
+        }
+      })
+    };
+
+    const CONSULTA_QUERY_MOCK = {
+      selectConsultaioState$: of({
+        readonly: false,
+        update: false
       })
     };
 
@@ -45,13 +63,15 @@ describe('DatosDelCertificadoComponent', () => {
         DatosDelCertificadoComponent,
         ReactiveFormsModule,
         TituloComponent,
-        TablaDinamicaComponent
+        TablaDinamicaComponent,
+        HttpClientTestingModule
       ],
       providers: [
         FormBuilder,
         { provide: MercanciasService, useValue: SERVICE_MOCK },
         { provide: Tramite110209Store, useValue: STORE_MOCK },
         { provide: Tramite110209Query, useValue: QUERY_MOCK },
+        { provide: ConsultaioQuery, useValue: CONSULTA_QUERY_MOCK },
         { provide: Router, useValue: ROUTER_MOCK }
       ]
     }).compileComponents();
@@ -59,6 +79,7 @@ describe('DatosDelCertificadoComponent', () => {
     service = TestBed.inject(MercanciasService);
     store = TestBed.inject(Tramite110209Store);
     query = TestBed.inject(Tramite110209Query);
+    consultaQuery = TestBed.inject(ConsultaioQuery);
     router = TestBed.inject(Router);
   });
 
@@ -77,12 +98,11 @@ describe('DatosDelCertificadoComponent', () => {
     expect(component.datosDelCertificadoForm.get('observaciones')?.value).toBe('Observación inicial');
   });
 
-  it('debe obtener y asignar mercancías al inicializar', () => {
+  it('debe obtener mercancías del store al inicializar', () => {
     component.ngOnInit();
-    expect(service.getMercancias).toHaveBeenCalled();
-    expect(component.datosTabla.length).toBe(2);
-    expect(component.datosTabla[0].fraccionArancelaria).toBe('Mercancia 1');
-    expect(component.datosTabla[1].nombreComercial).toBe('Comercial 2');
+    expect(component.datosTabla.length).toBe(1);
+    expect(component.datosTabla[0].fraccionArancelaria).toBe('1234.56.78');
+    expect(component.datosTabla[0].nombreComercial).toBe('Comercial test');
   });
 
   it('debe obtener y asignar valores del store al formulario al inicializar', () => {
@@ -96,8 +116,12 @@ describe('DatosDelCertificadoComponent', () => {
     expect(store.setTramite110209).toHaveBeenCalledWith({ observaciones: 'Nueva observación' });
   });
 
+  it('debe establecer esFormularioSoloLectura según el estado de consulta', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
+  });
+
   it('debe completar el subject destroyed$ al destruir el componente', () => {
-    const NEXT_SPY= jest.spyOn(component['destroyed$'], 'next');
+    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
     const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
     expect(NEXT_SPY).toHaveBeenCalled();
@@ -119,6 +143,14 @@ describe('DatosDelCertificadoComponent', () => {
     };
     component.getMercanciasSeleccionadas(MERCANCIA);
     expect(component.mercanciasSeleccionadas).toBe(MERCANCIA);
+  });
+
+  it('debe validar el formulario correctamente', () => {
+    component.datosDelCertificadoForm.get('observaciones')?.setValue('Observación válida');
+    expect(component.validarFormulario()).toBe(true);
+
+    component.datosDelCertificadoForm.get('observaciones')?.setValue('  '); 
+    expect(component.validarFormulario()).toBe(false);
   });
 
 });

@@ -1,4 +1,4 @@
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 /**
  * @const MENSAJE_TABLA_OBLIGATORIA
@@ -28,12 +28,18 @@ export interface Fabricante {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
+  coloniaObj?: Catalogo | undefined;
   municipioAlcaldia: string;
+  municipioAlcaldiaObj?: Catalogo | undefined;
   localidad: string;
+  localidadObj?: Catalogo | undefined; 
   entidadFederativa: string;
+  entidadFederativaObj?: Catalogo | undefined;
   estadoLocalidad: string;
   codigoPostal: string;
+  codigoPostalObj?: Catalogo | undefined;
   coloniaEquivalente: string;
   nombres?: string;
   primerApellido?: string;
@@ -114,12 +120,18 @@ export interface Destinatario {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
+  coloniaObj?: Catalogo | undefined;
   municipioAlcaldia: string;
+  municipioObj?: Catalogo | undefined;
   localidad: string;
+  localidadObj?: Catalogo | undefined;
   entidadFederativa: string;
   estadoLocalidad: string;
+  estadoObj?: Catalogo | undefined;
   codigoPostal: string;
+  codigoPostalObj?: Catalogo | undefined;
   coloniaEquivalente: string;
   nombres?: string;
   primerApellido?: string;
@@ -205,6 +217,7 @@ export interface Proveedor {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
   municipioAlcaldia: string;
   localidad: string;
@@ -291,6 +304,7 @@ export interface Facturador {
   numeroExterior: string;
   numeroInterior: string;
   pais: string;
+  paisObj?: Catalogo | undefined;
   colonia: string;
   municipioAlcaldia: string;
   localidad: string;
@@ -377,6 +391,8 @@ export interface PagoDerechosFormState {
   fechaPago: string;
   importePago: string;
   banco?: string;
+  bancoObject?: Catalogo;
+  estadoObject?: Catalogo;
 }
 
 /**
@@ -384,7 +400,7 @@ export interface PagoDerechosFormState {
  * @description Configuración del campo “Fecha de pago” en el formulario.
  */
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de pago:',
   required: false,
   habilitado: true,
 };
@@ -398,6 +414,8 @@ export const FECHA_DE_FABRICACIO_PAGO = {
   required: true,
   habilitado: true,
 };
+
+export const FECHA_DE_IMPORTACION_PAGO = [260512]
 
 
 /**

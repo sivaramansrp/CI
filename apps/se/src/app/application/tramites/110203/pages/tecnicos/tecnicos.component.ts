@@ -1,5 +1,6 @@
 import { Component, ViewChild, inject } from '@angular/core';
 import { DatosPasos, JSONResponse, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import {ERROR_FORMA_ALERT, ERROR_PRECISA_REQUIRED} from '../../constant/destinatario.enum';
 import {
   Solicitud110203State,
   Tramite110203Store,
@@ -7,7 +8,6 @@ import {
 import { Subject, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosComponent } from '../datos/datos.component';
-import {ERROR_FORMA_ALERT} from '../../constant/destinatario.enum';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { Solocitud110203Service } from '../../service/service110203.service';
@@ -165,7 +165,11 @@ export class TecnicosComponent {
       return true;
     }
     const ISFORM_VALID_TOUCHED = this.datosComponent.validarFormularios();
+
     if (!ISFORM_VALID_TOUCHED) {
+      if(this.datosComponent.datosCertificadoComponent?.isPrecisaEmpty()){
+        this.formErrorAlert = ERROR_PRECISA_REQUIRED;
+      }
       return false;
     }
     return true;
