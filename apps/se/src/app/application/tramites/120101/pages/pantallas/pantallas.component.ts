@@ -166,11 +166,11 @@ export class PantallasComponent implements OnInit, OnDestroy {
   */
   public consultaState!: ConsultaioState;
 
- /**
-   * Estado de la solicitud de la sección 120101.
-   * @type {SolicitudDeRegistroTpl120101State}
-   * @memberof BienFinalComponent
-   */
+  /**
+    * Estado de la solicitud de la sección 120101.
+    * @type {SolicitudDeRegistroTpl120101State}
+    * @memberof BienFinalComponent
+    */
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
   /**
@@ -180,23 +180,30 @@ export class PantallasComponent implements OnInit, OnDestroy {
    */
   padreBtn: boolean = true;
 
-/**
- * Identificador numérico de la solicitud actual.
- * 
- * Este valor se utiliza para referenciar de manera única una solicitud dentro del sistema.
- * Por defecto, se inicializa en 0 hasta que se asigne un identificador válido.
- */
-idSolicitud:number=0;
+  /**
+   * Identificador numérico de la solicitud actual.
+   * 
+   * Este valor se utiliza para referenciar de manera única una solicitud dentro del sistema.
+   * Por defecto, se inicializa en 0 hasta que se asigne un identificador válido.
+   */
+  idSolicitud: number = 0;
 
-/**
- * Identificador numérico del mecanismo seleccionado.
- * 
- * @remarks
- * Este valor se utiliza para determinar el mecanismo actual en uso dentro del componente.
- * 
- * @defaultValue 0
- */
-idMecanismo:number=0;
+  /**
+   * Identificador numérico del mecanismo seleccionado.
+   * 
+   * @remarks
+   * Este valor se utiliza para determinar el mecanismo actual en uso dentro del componente.
+   * 
+   * @defaultValue 0
+   */
+  idMecanismo: number = 0;
+
+  /**
+   * Indica si el elemento "obtenor" es visible en la interfaz de usuario.
+   * 
+   * @default false El elemento no es visible por defecto.
+   */
+  obtenorVisibile: boolean = false;
 
   /**
  * @constructor
@@ -210,10 +217,10 @@ idMecanismo:number=0;
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
     private ampliacionServiciosAdapter: AmpliacionServiciosAdapter,
     private toastrService: ToastrService,
-    private tramite120101Store:Tramite120101Store,
+    private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query
-    
-    
+
+
   ) {
     //
   }
@@ -245,23 +252,23 @@ idMecanismo:number=0;
         })
       ).subscribe();
 
-       this.tramite120101Query.selectSolicitudDeRegistroTpl$
-            .pipe(
-              takeUntil(this.destroyNotifier$),
-              map((seccionState) => {
-                this.solicitudDeRegistroState = seccionState;
-      
-                if (
-                  this.solicitudDeRegistroState &&
-                  typeof this.solicitudDeRegistroState === 'object' 
-                ) {
-                  this.idSolicitud = this.solicitudDeRegistroState['idSolicitud'] as number;
-                  this.idMecanismo = this.solicitudDeRegistroState['idMecanismo'] as number;
-                }
-              })
-            )
-            .subscribe();
-      
+    this.tramite120101Query.selectSolicitudDeRegistroTpl$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudDeRegistroState = seccionState;
+
+          if (
+            this.solicitudDeRegistroState &&
+            typeof this.solicitudDeRegistroState === 'object'
+          ) {
+            this.idSolicitud = this.solicitudDeRegistroState['idSolicitud'] as number;
+            this.idMecanismo = this.solicitudDeRegistroState['idMecanismo'] as number;
+          }
+        })
+      )
+      .subscribe();
+
 
   }
 
@@ -272,15 +279,15 @@ idMecanismo:number=0;
  * @returns {boolean} - Indica si todos los formularios son válidos.
  */
   verificarLaValidezDelFormulario(): boolean {
-     return (
+    return (
       (this.servicioDeFormularioService.isFormValid('bienFinalForm') ??
         false) &&
       (this.servicioDeFormularioService.isFormValid('representacionFederalForm') ??
         false) &&
       (this.servicioDeFormularioService.isFormValid('insumosForm') ??
-      false) &&
+        false) &&
       (this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ??
-      false)
+        false)
     );
   }
 
@@ -334,6 +341,22 @@ idMecanismo:number=0;
     return this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ?? false;
   }
 
+
+
+  /**
+   * Mensaje de error asociado a la fracción uno.
+   * Puede ser indefinido si no existe un error actual para esta fracción.
+   */
+  fraccionErrorUno?: string;
+
+  /**
+   * Indica si ha ocurrido un error relacionado con la fracción.
+   * 
+   * Cuando es `true`, significa que se ha detectado un error en la fracción.
+   * Cuando es `false` o `undefined`, no hay error presente.
+   */
+  fraccionError?: boolean;
+
   /**
    * @method pestanaCambiado
    * @description
@@ -361,11 +384,11 @@ idMecanismo:number=0;
    */
   public getValorIndice(e: AccionBoton): void {
     if (!this.consultaState.readonly) {
-      
+
       if (this.esBienFinalFormValid && this.esRepresentacionFederalFormValid) {
         this.mostrarAplicacionRegistradaAlerta = true;
         this.pestanaDosFormularioValido = true;
-      } 
+      }
 
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (!this.esFormaValido) {
@@ -377,13 +400,13 @@ idMecanismo:number=0;
         if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
           const NEXT_INDEX =
             e.accion === 'cont' ? e.valor + 1 :
-            e.accion === 'ant' ? e.valor - 1 :
-            e.valor;
+              e.accion === 'ant' ? e.valor - 1 :
+                e.valor;
           if (e.accion === 'cont') {
             this.shouldNavigate$()
               .subscribe((shouldNavigate) => {
                 if (shouldNavigate) {
-                
+
                   this.indice = NEXT_INDEX;
                   this.datosPasos.indice = NEXT_INDEX;
                   this.wizardService.cambio_indice(NEXT_INDEX);
@@ -414,23 +437,23 @@ idMecanismo:number=0;
    *
    * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
    */
-    private shouldNavigate$(): Observable<boolean> {
-      return this.solicitudDeRegistroTplService.getAllState().pipe(
-        take(1),
-        switchMap(data => this.guardar(data)),
-        map(response => {
-          const DATOS = doDeepCopy(response);
-          const OK = response.codigo === '00';
-          if (OK) {
-            this.toastrService.success(DATOS.mensaje);
-          } else {
-            this.padreBtn = true;
-            this.toastrService.error(DATOS.mensaje);
-          }
-          return OK;
-        })
-      );
-    }
+  private shouldNavigate$(): Observable<boolean> {
+    return this.solicitudDeRegistroTplService.getAllState().pipe(
+      take(1),
+      switchMap(data => this.guardar(data)),
+      map(response => {
+        const DATOS = doDeepCopy(response);
+        const OK = response.codigo === '00';
+        if (OK) {
+          this.toastrService.success(DATOS.mensaje);
+        } else {
+          this.padreBtn = true;
+          this.toastrService.error(DATOS.mensaje);
+        }
+        return OK;
+      })
+    );
+  }
 
   /**
    * Guarda los datos de la solicitud de registro utilizando el adaptador y servicio correspondiente.
@@ -482,10 +505,10 @@ idMecanismo:number=0;
  * this.continuar({ valor: 2, accion: 'cont' });
  */
   public continuar(e: AccionBoton): void {
-    if(this.esBienFinalFormValid === false){
+    if (this.esBienFinalFormValid === false) {
       this.servicioDeFormularioService.markFormAsTouched('consultarCupoForm');
     }
-     if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid ) {
+    if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;
     } else if (this.esFormaValido) {
@@ -497,6 +520,29 @@ idMecanismo:number=0;
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
     }
+  }
+
+
+
+  /**
+   * Maneja el evento de error relacionado con la fracción.
+   * 
+   * @param event Objeto que contiene información sobre el error de fracción.
+   *  - `fraccionErrorUno` (opcional): Mensaje de error específico.
+   *  - `fraccionError` (opcional): Indica si existe un error en la fracción.
+   */
+  fraccionErrorEvent(event: { fraccionErrorUno?: string; fraccionError?: boolean }): void {
+    this.fraccionErrorUno = event.fraccionErrorUno;
+    this.fraccionError = event.fraccionError;
+  }
+
+  /**
+   * Cambia el estado de visibilidad basado en el evento recibido.
+   * 
+   * @param event - Valor booleano que indica el estado actual de visibilidad.
+   */
+  obtenerVisible(event: boolean): void {
+    this.obtenorVisibile = !event as boolean;
   }
 
   /**

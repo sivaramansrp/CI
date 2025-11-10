@@ -35,6 +35,8 @@ export { TramiteDetails } from './core/models/tramiteDetails';
 export { MenuItemComponent } from './tramites/components/menu-item/menu-item.component';
 export * from './core/queries/tramiteFolio.query';
 export * from './core/estados/tramiteFolio.store';
+export * from './core/queries/documentos-firma.query';
+export * from './core/estados/documentos-firma.store';
 export * from './core/queries/solicitante.query';
 export * from './core/estados/solicitante.store';
 export { TramiteStore } from './core/estados/tramite.store';

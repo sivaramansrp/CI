@@ -7,8 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  AlertComponent,
   Catalogo,
-  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -33,13 +33,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { DEFAULT_TABLA_ORDENS, PROCEDIMIENTOS_MUESTRAN_RFC } from '../../constantes/terceros-relacionados-fabricante.enum';
 import {
   PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
   PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-relacionados-fabricante.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -66,7 +66,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TituloComponent,
     TooltipModule,
     NotificacionesComponent,
-    InputRadioComponent
+    AlertComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -74,6 +74,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 export class AgregarFabricanteComponent
   implements OnDestroy, OnInit, OnChanges
 {
+  mensajeDeError: string = '';
   /**
    * Función de callback (Input) para propagar la lista de fabricantes.
    * @property {(value: Fabricante[]) => void} guardarFabricanteForm
@@ -473,17 +474,14 @@ private async cargarCatalogosParaModificacion(): Promise<void> {
     return;
   }
   try {
-    // Load estados if needed
     if (SELECTEDDATA.entidadFederativa || SELECTEDDATA.entidadFederativaObj) {
       const ESTADOSRESPONSE = await this.catalogoService.estadosCatalogo(this.tramiteID).toPromise();
       this.estadosDatos = ESTADOSRESPONSE?.datos as Catalogo[] || [];
       
-      // Find the estado by descripcion or use the stored object
       const ESTADOCLAVE = SELECTEDDATA.entidadFederativaObj?.clave ||
         this.estadosDatos.find(estado => estado.descripcion === SELECTEDDATA.entidadFederativa)?.clave;
 
       if (ESTADOCLAVE) {
-        // Load municipios for the selected estado
         const MUNICIPIOSRESPONSE = await this.catalogoService.municipiosDelegacionesCatalogo(this.tramiteID, String(ESTADOCLAVE)).toPromise();
         this.municipiosDatos = MUNICIPIOSRESPONSE?.datos as Catalogo[] || [];
         this.municipiosTempDatos = [...this.municipiosDatos];
@@ -505,13 +503,11 @@ private async cargarCatalogosParaModificacion(): Promise<void> {
       }
     }
 
-    // Load paises catalog if not already loaded
     if (!this.paisesDatos.length) {
       const PAIS_RESPONSE = await this.catalogoService.paisesCatalogo(this.tramiteID).toPromise();
       this.paisesDatos = PAIS_RESPONSE?.datos as Catalogo[] || [];
     }
 
-    // Load codigo postal catalog if not already loaded
     if (!this.codigosPostalesDatos.length) {
       this.datosSolicitudService
         .obtenerListaCodigosPostales()
@@ -535,7 +531,6 @@ private patchFormWithCatalogObjects(): void {
     return;
   }
 
-  // Use catalog objects if available, otherwise try to find by descripcion
   const PAISCLAVE = SELECTEDDATA.paisObj?.clave || this.paisesDatos.find(pais => 
     pais.descripcion === SELECTEDDATA.pais
   )?.clave || SELECTEDDATA.pais;
@@ -585,7 +580,6 @@ private patchFormWithCatalogObjects(): void {
   });
 }
 
-// ...existing code...
 
 
   /**
@@ -614,25 +608,22 @@ private patchFormWithCatalogObjects(): void {
       tipoPersona: [
         {
           value: this.obtenerValor('tipoPersona'),
-          disabled: this.chequeoValidacionAlGuardar,
+          disabled: true,
         },
         Validators.required
       ],
       rfc: [
-        this.obtenerValor('rfc'),
-        [Validators.required]
+        this.obtenerValor('rfc')
       ],
       curp: [
         this.obtenerValor('curp'),
         this.idProcedimiento === 260912 ? [] : (this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)])
       ],
       nombres: [
-        this.obtenerValor('nombres'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.obtenerValor('nombres')
       ],
       primerApellido: [
-        this.obtenerValor('primerApellido'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.obtenerValor('primerApellido')
       ],
       segundoApellido: [
         this.obtenerValor('segundoApellido'),
@@ -648,8 +639,7 @@ private patchFormWithCatalogObjects(): void {
             ? ''
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais') || this.chequeoValidacionAlGuardar,
-        },
-        [Validators.required],
+        }
       ],
       estado: [
         {
@@ -657,8 +647,7 @@ private patchFormWithCatalogObjects(): void {
             ? '1'
             : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
-        },
-        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+        }
       ],
       municipio: [
         {
@@ -666,14 +655,11 @@ private patchFormWithCatalogObjects(): void {
             ? '1'
             : this.obtenerValor('municipioAlcaldia'),
           disabled: this.elementosDeshabilitados.includes('municipio'),
-        },
-        [Validators.required],
+        }
       ],
       localidad: [
         this.obtenerValor('localidad'),
-        !this.elementosNoRequeridos.includes('localidad')
-          ? [Validators.required]
-          : [],
+        
       ],
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
@@ -689,10 +675,9 @@ private patchFormWithCatalogObjects(): void {
           ? [Validators.required]
           : [],
       ],
-      calle: [this.obtenerValor('calle'), Validators.required],
+      calle: [this.obtenerValor('calle')],
       numeroExterior: [
-        this.obtenerValor('numeroExterior'),
-        [Validators.required],
+        this.obtenerValor('numeroExterior')
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
@@ -781,9 +766,18 @@ private forzarDeshabilitarPais(): void {
    */
   validarElementos(): void {
     switch (this.idProcedimiento) {
+      case 260203:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
+      case 260204:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
       case 260207:
       case 260209:
       case 260208:
+      case 260218:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
       case 260219:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
@@ -802,26 +796,96 @@ private forzarDeshabilitarPais(): void {
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['localidad', 'colonia', 'codigoPostal'];
         break;
+        case 260213:
+       this.elementosNoRequeridos = ['codigoPostal','colonia'];
+       break;
         default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
     }
   }
 
+  private updateExtranjeroFisicaValidators(): void {
+  const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+  const TIPOPERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+
+  const NOMBRES_CONTROL = this.agregarFabricanteForm?.get('nombres');
+  const PRIMER_APELLIDO_CONTROL = this.agregarFabricanteForm?.get('primerApellido');
+  const PAIS_CONTROL = this.agregarFabricanteForm?.get('pais');
+  const ESTADO_CONTROL = this.agregarFabricanteForm?.get('estado');
+  const CALLE_CONTROL = this.agregarFabricanteForm?.get('calle');
+  const NUMERO_EXTERIOR_CONTROL = this.agregarFabricanteForm?.get('numeroExterior');
+  const LOCALIDAD = this.agregarFabricanteForm?.get('localidad');
+  const MUNICIPIO = this.agregarFabricanteForm?.get('municipio');
+  const RFC = this.agregarFabricanteForm?.get('rfc');
+
+  if(!NOMBRES_CONTROL || !PRIMER_APELLIDO_CONTROL || !PAIS_CONTROL || !ESTADO_CONTROL || !CALLE_CONTROL || !NUMERO_EXTERIOR_CONTROL || !LOCALIDAD || !MUNICIPIO || !RFC){
+    return;
+  }
+
+  if (NACIONALIDAD === 'Extranjero' && TIPOPERSONA === this.tipoPersona.FISICA) {
+    NOMBRES_CONTROL.setValidators([Validators.required,Validators.pattern(REGEX_NOMBRE)]);
+    PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+    PAIS_CONTROL.setValidators([Validators.required]);
+    ESTADO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]);
+    CALLE_CONTROL.setValidators([Validators.required]);
+    NUMERO_EXTERIOR_CONTROL.setValidators([Validators.required]);
+  } else if (NACIONALIDAD === 'Extranjero' && TIPOPERSONA === this.tipoPersona.MORAL) {
+    ESTADO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]);
+    CALLE_CONTROL.setValidators([Validators.required]);
+    NUMERO_EXTERIOR_CONTROL.setValidators([Validators.required]);
+
+  }else if(NACIONALIDAD === 'Nacional' && TIPOPERSONA === this.tipoPersona.FISICA){
+    LOCALIDAD.setValidators(!this.elementosNoRequeridos.includes('localidad')
+          ? [Validators.required]
+          : [],)
+    MUNICIPIO.setValidators([Validators.required]);
+    RFC.setValidators([Validators.required]);
+    CALLE_CONTROL.setValidators([Validators.required]);
+    NUMERO_EXTERIOR_CONTROL.setValidators([Validators.required]);
+  } else if(NACIONALIDAD === 'Nacional' && TIPOPERSONA === this.tipoPersona.MORAL){
+      LOCALIDAD.setValidators(!this.elementosNoRequeridos.includes('localidad')
+          ? [Validators.required]
+          : [],)
+
+      MUNICIPIO.setValidators([Validators.required]);
+      RFC.setValidators([Validators.required]);
+      CALLE_CONTROL.setValidators([Validators.required]);
+      NUMERO_EXTERIOR_CONTROL.setValidators([Validators.required]);
+  }
+  else {
+    NOMBRES_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMER_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PAIS_CONTROL.clearValidators();
+    ESTADO_CONTROL.setValidators([Validators.pattern(REGEX_IMPORTE_PAGO)]);
+    CALLE_CONTROL.clearValidators();
+    NUMERO_EXTERIOR_CONTROL.clearValidators();
+  }
+
+  NOMBRES_CONTROL.updateValueAndValidity();
+  PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
+  PAIS_CONTROL.updateValueAndValidity();
+  ESTADO_CONTROL.updateValueAndValidity();
+  CALLE_CONTROL.updateValueAndValidity();
+  NUMERO_EXTERIOR_CONTROL.updateValueAndValidity();
+  LOCALIDAD.updateValueAndValidity();
+  MUNICIPIO.updateValueAndValidity();
+  RFC.updateValueAndValidity();
+}
   /**
    * Guarda un fabricante nuevo en el arreglo `fabricantes`, lo actualiza en el store y
    * regresa a la página anterior en el historial del navegador.
    */
 guardarFabricante(): void {
-  
   if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
     Object.values(this.agregarFabricanteForm.controls).forEach(control => {
       control.markAsTouched();
       control.updateValueAndValidity();
     });
+    this.mensajeDeError = 'Faltan campos por capturar.';
     return;
   }
-
+   this.mensajeDeError = '';  
   const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
   let nombreRazonSocial: string;
@@ -925,12 +989,6 @@ guardarFabricante(): void {
    * Se desuscribe automáticamente al destruir el componente.
    */
   cargarDatos(tramite: string): void {
-    this.datosSolicitudService
-      .obtenerListaCodigosPostales()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.codigosPostalesDatos = data;
-      });
 
        this.subscription.add(
             this.catalogoService
@@ -944,21 +1002,7 @@ guardarFabricante(): void {
               }
             })
           );  
-        
-
-    // this.datosSolicitudService
-    //   .obtenerListaPaises()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.paisesDatos = data;
-    //   });
-
-    // this.datosSolicitudService
-    //   .obtenerListaEstados()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.estadosDatos = data;
-    //   });
+       
 
        this.subscription.add(
             this.catalogoService
@@ -972,31 +1016,6 @@ guardarFabricante(): void {
               }
             })
           );  
-
-
-    // this.datosSolicitudService
-    //   .obtenerListaMunicipios()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.municipiosTempDatos = data;
-    //   });
-
-      
-
-    // this.datosSolicitudService
-    //   .obtenerListaLocalidades()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.localidadesTempDatos = data;
-    //   });
-
-
-    // this.datosSolicitudService
-    //   .obtenerListaColonias()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((data) => {
-    //     this.coloniasTempDatos = data;
-    //   });
 
   }
 
@@ -1052,7 +1071,26 @@ guardarFabricante(): void {
     this.municipiosDatos = [];
   }
   }
-  
+  /**
+   * Carga la lista de localidades cuando se selecciona un catálogo válido.
+   *
+   * Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   */
+  cargarLocalidades(_evento: Catalogo): void {
+    const MUNICIIO_CLAVE = this.agregarFabricanteForm.get('municipio')?.value;
+
+  if (MUNICIIO_CLAVE) {
+    this.subscription.add(
+      this.catalogoService.codigoCatalogo(this.tramiteID, MUNICIIO_CLAVE)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.codigosPostalesDatos = data.datos as Catalogo[];
+        })
+    );
+  } else {
+    this.codigosPostalesDatos = [];
+  }
+}
   /**
    * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
    *
@@ -1078,6 +1116,7 @@ guardarFabricante(): void {
       const DATOS = data.datos as Catalogo[];
       this.coloniasDatos = DATOS;
     }));
+
   } else {
     this.localidadesDatos = [];
     this.coloniasDatos = [];
@@ -1206,67 +1245,93 @@ guardarFabricante(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   changeNacionalidad(): void {
-    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
-    const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
-    this.disableLabel=[];
-     if(VALOR_FORMULARIO.nacionalidad === 'Extranjero'){
-    this.elementosDeshabilitados=[];
+  const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+  const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+  this.disableLabel = [];
+
+  this.agregarFabricanteForm.get('tipoPersona')?.reset();
+
+  if (this.agregarFabricanteForm.get('nacionalidad')?.value) {
+    this.agregarFabricanteForm.get('tipoPersona')?.enable();
+  } else {
+    this.agregarFabricanteForm.get('tipoPersona')?.disable();
+   
   }
-  else{
-    if(this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' && this.agregarFabricanteForm.get('tipoPersona')?.value ){
- this.agregarFabricanteForm.patchValue({pais: 'MEX'});
+
+  if (VALOR_FORMULARIO.nacionalidad === 'Extranjero') {
+    this.elementosDeshabilitados = [];
+  } else {
+    if (
+      this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' &&
+      this.agregarFabricanteForm.get('tipoPersona')?.value
+    ) {
+      this.agregarFabricanteForm.patchValue({ pais: 'MEX' });
     }
-     this.elementosDeshabilitados = ['pais'];
+    this.elementosDeshabilitados = ['pais'];
   }
-if((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')){
- 
-  this.agregarFabricanteForm.patchValue({pais: 'MEX'});
-}
-    if (RFC_CONTROL) {
+
+  if ((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO.nacionalidad === 'Extranjero')) {
+    this.agregarFabricanteForm.patchValue({ pais: 'MEX' });
+  }
+
+  const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
+  const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+  if (RFC_CONTROL) {
+    if (
+      NACIONALIDAD === 'Extranjero' &&
+      (TIPO_PERSONA === this.tipoPersona.FISICA || TIPO_PERSONA === this.tipoPersona.MORAL)
+    ) {
+      RFC_CONTROL.clearValidators();
+    } else {
       RFC_CONTROL.setValidators([
         Validators.required,
-        AgregarFabricanteComponent.rfcFisicaValidator(
-          VALOR_FORMULARIO.tipoPersona
-        ),
+        AgregarFabricanteComponent.rfcFisicaValidator(TIPO_PERSONA)
       ]);
-      RFC_CONTROL.markAsTouched();
-      RFC_CONTROL.updateValueAndValidity();
     }
-    const NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
-    const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
-    if (!NACIONALIDAD || NACIONALIDAD === '') {
-      this.estaDeshabilitadoDesplegable = true;
+    RFC_CONTROL.updateValueAndValidity();
+  }
+
+  if (!NACIONALIDAD || NACIONALIDAD === '') {
+    this.estaDeshabilitadoDesplegable = true;
+    Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+      this.agregarFabricanteForm.get(controlName)?.disable();
+      if (controlName === 'nacionalidad') {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+      }
+      if (controlName === 'tipoPersona' && NACIONALIDAD) {
+        this.agregarFabricanteForm.get(controlName)?.enable();
+      }
+    });
+    if (this.chequeoValidacionAlGuardar) {
+      this.agregarFabricanteForm.get('tipoPersona')?.disable();
+    }
+  } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
+    if (NACIONALIDAD && TIPO_PERSONA) {
+      this.estaDeshabilitadoDesplegable = false;
       Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-        this.agregarFabricanteForm.get(controlName)?.disable();
-        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+        if (!this.elementosDeshabilitados.includes(controlName)) {
           this.agregarFabricanteForm.get(controlName)?.enable();
         }
       });
-      if (this.chequeoValidacionAlGuardar) {
-        this.agregarFabricanteForm.get('tipoPersona')?.disable();
-      }
-    } else if (NACIONALIDAD === this.nacionalStr || NACIONALIDAD === 'Extranjero') {
-      if (NACIONALIDAD && TIPO_PERSONA) {
-        this.estaDeshabilitadoDesplegable = false;
-        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-          if (!this.elementosDeshabilitados.includes(controlName)) {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        });
-      } else {
-        this.estaDeshabilitadoDesplegable = true;
-        Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
-          this.agregarFabricanteForm.get(controlName)?.disable();
-          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-            this.agregarFabricanteForm.get(controlName)?.enable();
-          }
-        });
-      }
+    } else {
+      this.estaDeshabilitadoDesplegable = true;
+      Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+        if (controlName === 'tipoPersona' && NACIONALIDAD) {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
     }
-    this.agregarFabricanteForm.get('pais')?.patchValue('');
-    this.agregarFabricanteForm.markAsUntouched();
-    this.forzarDeshabilitarPais();
   }
+  this.agregarFabricanteForm.get('pais')?.patchValue('');
+  this.agregarFabricanteForm.markAsUntouched();
+  this.forzarDeshabilitarPais();
+  this.updateExtranjeroFisicaValidators();
+  
+}
 
   /**
    * @method changeTipoPersona
@@ -1276,15 +1341,23 @@ if((VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA && VALOR_FORMULARIO
    * @returns {void} Este método no retorna ningún valor.
    */
 changeTipoPersona(): void {
-  const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 
   const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+
+  const NACIONALIDAD = this.agregarFabricanteForm.get('nacionalidad')?.value;
+  const TIPOPERSONA = this.agregarFabricanteForm.get('tipoPersona')?.value;
   if (RFC_CONTROL) {
-    RFC_CONTROL.setValidators([
-      Validators.required,
-      AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
-    ]);
-    RFC_CONTROL.markAsTouched();
+    if (
+      NACIONALIDAD === 'Extranjero' &&
+      (TIPOPERSONA === this.tipoPersona.FISICA || TIPOPERSONA === this.tipoPersona.MORAL)
+    ) {
+      RFC_CONTROL.clearValidators();
+    } else {
+      RFC_CONTROL.setValidators([
+        Validators.required,
+        AgregarFabricanteComponent.rfcFisicaValidator(TIPOPERSONA)
+      ]);
+    }
     RFC_CONTROL.updateValueAndValidity();
   }
   const HAS_NACIONALIDAD = this.agregarFabricanteForm?.get('nacionalidad')?.value;
@@ -1322,9 +1395,13 @@ changeTipoPersona(): void {
    this.agregarFabricanteForm.get('pais')?.patchValue('');
       this.agregarFabricanteForm.markAsUntouched();
   this.forzarDeshabilitarPais();
+  this.updateExtranjeroFisicaValidators();
 }
 
 private isTipoPersonaEmpty(): boolean {
+  if (!this.agregarFabricanteForm) {
+    return true;
+  }
   const TIPO_PERSONA_VALUE = this.agregarFabricanteForm?.get('tipoPersona')?.value;
   return TIPO_PERSONA_VALUE === '' || TIPO_PERSONA_VALUE === undefined;
 }
@@ -1361,6 +1438,7 @@ private resetExcept(excludedControls: string[]): void {
       this.agregarFabricanteForm.get(controlName)?.reset();
     }
   });
+  this.updateExtranjeroFisicaValidators();
 }
 
 
@@ -1403,7 +1481,16 @@ private resetExcept(excludedControls: string[]): void {
       }
     }
   }
-
+  /**
+   * Getter que determina si se debe mostrar el campo RFC en el formulario.
+   * @returns {boolean} True si la nacionalidad no es 'Extranjero' y el procedimiento actual está en la lista de procedimientos que muestran RFC; de lo contrario, false.
+   */
+  get mostrarRFC(): boolean {
+    return (
+      this.agregarFabricanteForm?.get('nacionalidad')?.value !== 'Extranjero' &&
+      PROCEDIMIENTOS_MUESTRAN_RFC.includes(this.idProcedimiento)
+    );
+  }
   /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.

@@ -7,13 +7,14 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { PeruDatosCertificadoComponent } from '../../components/peru-datos-certificado/peru-datos-certificado.component';
 import { PeruDestinatarioComponent } from '../../components/peru-destinatario/peru-destinatario.component';
 import { PeruHistoricoProductoresComponent } from '../../components/peru-historico-productores/peru-historico-productores.component';
+import {SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-paso-uno',

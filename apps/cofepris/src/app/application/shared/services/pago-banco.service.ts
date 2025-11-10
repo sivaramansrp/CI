@@ -1,5 +1,6 @@
+import { CATALOGO_BANCOS, COMUN_URL, Catalogo } from '@libs/shared/data-access-user/src';
 import { SolicitudPagoBancoState, TramitePagoBancoStore } from '../estados/stores/pago-banco.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -10,12 +11,24 @@ import { TramitePagoBancoQuery } from '../estados/queries/pago-banco.query';
 })
 export class PagoBancoService {
   /**
+     * URL base del host para todas las consultas de catálogos.
+     *
+     * Esta propiedad almacena la URL base configurada desde las variables de entorno
+     * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+     *
+     * @type {string}
+     * @readonly
+     * @since 1.0.0
+     */
+    host!: string;
+
+  /**
    * Constructor de la clase PagoBancoService.
    *
    * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
    */
   constructor(public http: HttpClient,private query: TramitePagoBancoQuery, private tramitePagoBancoStore: TramitePagoBancoStore) {
-    // Constructor de la clase PagoBancoService
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
@@ -25,6 +38,15 @@ export class PagoBancoService {
    */
   consultarDatosBanco(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260501/banco-options.json');
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getBancoList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_BANCOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
   
 /**

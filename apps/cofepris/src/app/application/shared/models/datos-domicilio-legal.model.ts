@@ -39,6 +39,8 @@ export interface MercanciasInfo {
   estadoFisico: string;
   usoEspecifico: string;
   umc: string;
+  estadoFisicoOtro?: string;
+  objetoImportacionOtro?: string;
 }
 
 export interface PermisoModel {

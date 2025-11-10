@@ -42,6 +42,11 @@ import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DocumentoRequeridoFirmar } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
+import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
+import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.store';
+import { hexToISO88591 } from '../../../core/utils/utilerias';
+
 @Component({
   selector: 'carga-documento',
   standalone: true,
@@ -91,6 +96,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
   @Output() cargaEnProgreso = new EventEmitter<boolean>();
+
+  /**
+   * @description Evento que se emite cuando el catálogo de documentos obligatorios está en blanco.
+   */
+  @Output() enBlancoObligatoria = new EventEmitter<boolean>();
 
   /**
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
@@ -164,6 +174,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   listDocOpcionalesAgregar: number[] = [];
 
+  /** Documentos adicionales que pueden ser cargados */
+  @Input() documentosAdicionales: DocumentoRequerimiento[] = [];
+
   /**
    * @description Estado de los documentos.
    * @type {DocumentosState}
@@ -188,7 +201,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     private cdr: ChangeDetectorRef,
     private catalogoDocumentosService: CatalogoDocumentosService,
     private cargarDocumentoService: CargarDocumentoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private documentosFirmaStore: DocumentosFirmaStore,
   ) { 
     
   }
@@ -217,14 +231,16 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-      if (this.idTipoTRamite === '130118') {
-        this.getDocumentosDesdeSolicitud130118();
-        this.getDocumentosDesdeSolicitud130118Opcionales();
-      } else {
-        this.getListaDocumentoObligatorios();
-        this.getListaDocumentoOpcionales();
-      }
+    if (changes['idTipoTRamite'] && this.idTipoTRamite && this.idTipoTRamite !== 'requerimiento') {
+      this.getDocumentosDesdeSolicitud();
+      this.getDocumentosDesdeSolicitudOpcionales();
+    } else if (!this.idTipoTRamite) {
+      this.getListaDocumentoObligatorios();
+      this.getListaDocumentoOpcionales();
+    }
+
+    if (changes['documentosAdicionales'] && this.documentosAdicionales?.length > 0) {
+      this.setDocumentosAdicionales();
     }
   }
 
@@ -239,6 +255,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
+          if (response.datos.documento_tramite.length === 0) {
+            this.enBlancoObligatoria.emit(true);
+          }else{
+            this.enBlancoObligatoria.emit(false);
+          }
           response.datos.documento_tramite.forEach((documento: Documento) => {
             if (documento.tipo_documento) {
               this.catalogoDocumentosObligatorios.push({
@@ -286,10 +307,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud 130118.
    * @returns {void} No retorna nada.
    */
-  getDocumentosDesdeSolicitud130118(): void {
+  getDocumentosDesdeSolicitud(): void {
     const ESPECIFICO = true;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud130118(ESPECIFICO)
+      .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -313,10 +334,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 130118.
    * @returns {void} No retorna nada.
    */
-  getDocumentosDesdeSolicitud130118Opcionales(): void {
+  getDocumentosDesdeSolicitudOpcionales(): void {
     const ESPECIFICO = false;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud130118(ESPECIFICO)
+      .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -331,6 +352,28 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
   }
+
+  /**
+   * Agrega documentos adicionales al catálogo de documentos obligatorios.
+   * @description Esta función agrega documentos adicionales al catálogo de documentos obligatorios si existen.
+   */
+  setDocumentosAdicionales(): void {
+  if (this.documentosAdicionales && this.documentosAdicionales.length > 0) {
+    this.documentosAdicionales.forEach((documento) => {
+      this.catalogoDocumentosObligatorios.push({
+        id_tipo_documento: documento.id_tipo_documento ?? 0,
+        tipo_documento: documento.tipo_documento,
+        tamanio_maximo: 10,
+        ide_rango_resolucion_imagen: '150',
+        adicionales: [],
+        cargado: false,
+        error: [],
+      });
+    });
+    this.actualizarEstadoBotonCargarArchivos();
+  }
+}
+
 
   /**
    * Maneja la carga de un documento.
@@ -596,7 +639,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
  */
 private validarCompletitudDocumentosObligatorios(): boolean {
   // Si no hay documentos configurados, no podemos continuar
-  if (!this.catalogoDocumentosObligatorios?.length) {
+  if (!this.catalogoDocumentosObligatorios?.length && this.listadoArchivos.length === 0) {
     return false;
   }
 
@@ -872,7 +915,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
   // }
 
 cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario): void {
-  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario).pipe(
+  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario, this.idSolicitud).pipe(
     switchMap((res: UploadDocumentResponse) => {
       if (res.error && res.codigo === 'UPSER001') {
         this.PDF_ERRORS = res.errores_modelo ?? [];
@@ -892,7 +935,7 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
       const REFERENCIA = res?.datos?.referenciaSolicitud;
       return interval(3000).pipe(
         switchMap(() => this.cargarDocumentoService.documentosreferenciaSolicitud(REFERENCIA)),
-        takeWhile((statusResponse) => !(statusResponse.datos.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")), true),
+        takeWhile((statusResponse) => !(statusResponse.datos.every((doc) => doc.carga_estado_kafka === "ARCHIVO_SUBIDO_MINIO")), true),
         catchError((err) => {
           console.error('Polling error', err);
           return of(null);
@@ -902,13 +945,18 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
     takeUntil(this.destroy$)
   ).subscribe({
     next: (res) => {
-      const FILESTATUS = res?.datos?.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")
+      const FILESTATUS = res?.datos?.every((doc) => doc.carga_estado_kafka === "ARCHIVO_SUBIDO_MINIO")
       if (res?.codigo === '00' && FILESTATUS) {
           this.listadoArchivos.forEach((archivo) => {
             archivo.cargado = true;
             archivo.estatus = 'cargado';
           });
-
+          const DOCUMENTOS: DocumentoRequeridoFirmar[] = res.datos.map(doc => ({
+          id_documento_seleccionado: doc.id_documento,
+          hash_documento: hexToISO88591(doc.cadena_original),
+          sello_documento: ''
+          }));
+          this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
           this.cargaEnProgreso.emit(false);
       }
     },

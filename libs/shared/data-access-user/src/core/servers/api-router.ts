@@ -458,8 +458,8 @@ export const API_POST_VISTA_PREVIA = (idSolicitud: string, tramite: number): str
  * API para obtener los documentos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consu…
  */
-export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
- 
+export const API_GET_DOCUMENTOS_SOLICITUD = (tramite: string): string => `sat-t${tramite}/solicitud/documentos`;
+
 /**
  *API para obtener los documentos del tramite 231001
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/consu…
@@ -1100,6 +1100,11 @@ export const CATALOGO_LOCALIDADES = (TRAMITE: string, CVE_MUNICIPIO: string): st
  */
 export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: string): string => `sat-t${TRAMITE}/catalogo/municipio-delegacion/${CVE_MUNICIPIO_DELEGACION}/colonias`;
 
+/**
+ *  * API para obtener el catálogo de codigo
+ *  https://api-v30.cloud-ultrasist.net/api/sat-t260203/catalogo/codigo-postal/03005/colonias
+ */
+export const CATALOGO_CODIGO = (TRAMITE: string, CVE_MUNICIPIO: string): string => `sat-t${TRAMITE}/catalogo/codigo-postal/${CVE_MUNICIPIO}/colonias`;
 /*
  * API para obtener el catálogo de bancos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
