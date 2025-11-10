@@ -5,7 +5,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
-
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -29,6 +29,14 @@ export class PagoDeDerechosContenedoraComponent {
    * @type {PagoDerechosFormState}
    */
   public pagoDerechos: PagoDerechosFormState;
+
+  idProcedimiento: number = 260206;
+
+
+   @ViewChild(PagoDeDerechosComponent)
+      pagoDeDerechosComponent!: PagoDeDerechosComponent;
+    
+  
 
   /**
    * que indica si el formulario está en modo solo lectura.
@@ -69,6 +77,12 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void{
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
 }

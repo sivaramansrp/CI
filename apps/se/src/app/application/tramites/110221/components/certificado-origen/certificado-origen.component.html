@@ -10,8 +10,8 @@
   (filaClicsMercanciaDisponibles)="abrirModificarModal($event, true)"
   (filaClicsMercanciaSelecction)="abrirModificarModal($event, false)"
   [tablaSeleccionEvent]="tablaSeleccionEvent"
-  [guardarClicado]="(datosTabla$ | async) || []"
-  (guardarClicadoEvent)="guardarClicado($event)"
+   [guardarClicado]="datosTabla$"
+    (guardarClicadoEvent)="guardarClicado($event)"
   (formaValida)="setFormValida($event)"
   [datosForm]="formCertificado"
   [cargoDeMercancias]="cargoDeMercancias"
@@ -22,8 +22,8 @@
   [idProcedimiento]="idProcedimiento"
   (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
   [domicilioTercer]="true"
+  [domicilio]="domicilio"
       [cargaMercanciaConfiguracionTabla]="cargaMercanciaConfiguracionTabla"
-
   [domTercerOperadorRadio]="true"
   [domTercerOperador]="false"
 >

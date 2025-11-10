@@ -5,10 +5,14 @@
         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
           (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Solicitante</a>
       </li>
+
+      @if(isShowDirector){
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
           (keydown.space)="seleccionaTab(2)" role="button" tabindex="3">Director general</a>
       </li>
+      }
+
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
           (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Choferes</a>

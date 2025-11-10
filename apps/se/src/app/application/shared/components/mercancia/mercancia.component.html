@@ -1,3 +1,4 @@
+
 <div class="modal-dialog modal-xl">
   <div class="modal-content">
     <div class="modal-header d-flex justify-content-between">
@@ -304,6 +305,48 @@
             </div>
             }
           </div>
+
+          @if(MARCA_BRUTA.includes(idProcedimiento)) {
+          <div class="col-md-4 col-sm-12">
+            <label for="marcaBruta">Marca Bruta<span
+                [ngClass]="{
+                  'text-danger':
+                    mercanciaForm.controls['marcaBruta'].invalid &&
+                    mercanciaForm.controls['marcaBruta'].touched
+                }"
+                >*</span
+              >:</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="marcaBruta"
+              maxlength="36"
+            />
+            @if(mercanciaForm.controls['marcaBruta'].invalid &&
+            mercanciaForm.controls['marcaBruta'].touched) {
+            <div class="d-grid">
+              @if(mercanciaForm.controls['marcaBruta'].errors?.['required'])
+              {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
+          </div>
+          }
+
+                @if(UMC_MARCA_BRUTA.includes(idProcedimiento)) {
+          <div class="col-md-8 col-sm-12">
+        
+            <app-catalogo-select
+              [catalogo]="umcMarcaBrutaCatalogo || []"
+              [label]="'Unidad de medida de la masa bruta'"
+              [required]="true"
+              name="umcMarcaBruta"
+              (selectionChange)="selectionUmcMarcaBruta($event)"
+              [markTouched]="mercanciaForm.get('umcMarcaBruta')?.touched ?? false"
+            ></app-catalogo-select>
+          </div>
+          }
 
           @if(FECHA_FACTURA.includes(idProcedimiento)) {
           <div class="col-md-4 col-sm-12">

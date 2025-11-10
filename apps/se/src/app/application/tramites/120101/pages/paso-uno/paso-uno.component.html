@@ -29,22 +29,22 @@
                 }
                 @case (2) {
                      @if (esDatosRespuesta) {
-                        <consultar-cupo [consultaState]="consultaState" (emitirFilaClicControlador)="archivoHagaClicControlador($event)"></consultar-cupo>
+                        <consultar-cupo #consultarCupo [consultaState]="consultaState" (emitirFilaClicControlador)="archivoHagaClicControlador($event)" (fraccionErrorEvent)="fraccionErrorEvent($event)" (obtenerVisible)="obtenerVisible($event)"></consultar-cupo>
                         @if (elementoDeTablaSeleccionado) {
-                            <descripcion-del-cupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
-                            <representacion-federal [consultaState]="consultaState"></representacion-federal>
-                            <bien-final [consultaState]="consultaState"></bien-final>
+                            <descripcion-del-cupo #descripcionDelCupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
+                            <representacion-federal #representacionFederal [consultaState]="consultaState"></representacion-federal>
+                            <bien-final #bienFinal [consultaState]="consultaState"></bien-final>
                         }
                      }
                 }
                 @case (3) {
                     @if (esDatosRespuesta) {
-                        <app-insumos [consultaState]="consultaState"></app-insumos>
+                        <app-insumos #insumos [consultaState]="consultaState"></app-insumos>
                     }
                 }
                 @case (4) {
                     @if (esDatosRespuesta) {
-                        <app-proceso-productivo [consultaState]="consultaState"></app-proceso-productivo>
+                        <app-proceso-productivo #procesoProductivo [consultaState]="consultaState"></app-proceso-productivo>
                     }
                 }
             }

@@ -1,10 +1,8 @@
 import { Component,OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
  /**
@@ -30,8 +28,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   imports: [
     CommonModule,
     TituloComponent,
-    TablaDinamicaComponent,
-    CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule
   ],
@@ -153,8 +149,8 @@ export class DetalleComponent implements OnInit, OnDestroy{
     this.detalleForm.get('DetalleData.paises')?.setValue('ESTADOS UNIDOS DE AMERICA');
     this.detalleForm.get('DetalleData.observaciones')?.setValue('observaciones');
     this.detalleForm.get('DetalleData.fundamentos')?.setValue('Fundamento de la vigencia del UPO');
-    this.detalleForm.get('DetalleData.inicio')?.setValue('01/01/2024');
-    this.detalleForm.get('DetalleData.fecha')?.setValue('31/12/2024');
+    this.detalleForm.get('DetalleData.inicio')?.setValue('14/10/24');
+    this.detalleForm.get('DetalleData.fecha')?.setValue('14/10/25');
   }
 
    /**

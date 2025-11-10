@@ -1,6 +1,6 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EMAIL, NotificacionesComponent,Pedimento, REGEX_REEMPLAZAR, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { EMAIL, NotificacionesComponent,Pedimento, REGEX_RFC, REGEX_TEXTO_CON_SIMBOLOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
@@ -32,6 +32,14 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
  */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+  @Output() rfcValidoChange = new EventEmitter<boolean>(); 
+    @Input() public idProcedimiento!: number;
+
+  public mostrarErrores = {
+  denominacionRazonSocial: false,
+  correoElectronico: false
+};
+
   /**
    * @description
    * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
@@ -164,7 +172,12 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
 
     this.elementoParaEliminar = i;
     this.tieneElBotonSeleccionClicado = true;
+    this.rfcValidoChange.emit(true); 
     this.datosDomicilioSvc.emitEvent(this.tieneElBotonSeleccionClicado);
+    this.datosDelForm.valueChanges.subscribe(() => {
+        this.mostrarErrores.denominacionRazonSocial = false;
+      this.mostrarErrores.correoElectronico = false;
+    })
   }
 
   /**
@@ -213,7 +226,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
 
     this.datosDelForm = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13),Validators.pattern(REGEX_RFC)]],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100), Validators.pattern(REGEX_REEMPLAZAR)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100), Validators.pattern(REGEX_TEXTO_CON_SIMBOLOS)]],
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.pattern(EMAIL), Validators.maxLength(320)]]
     });
 
@@ -241,6 +254,20 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('datosDelEstablecimientoRFCForm', {
         [campo]: VALOR,
       });
+  }
+  validatorButtonClick(): boolean {
+    if(!this.tieneElBotonSeleccionClicado){
+      this.mostrarErrores.denominacionRazonSocial = true;
+      this.mostrarErrores.correoElectronico = true;
+    return false;
+    }
+    if(this.datosDelForm.invalid){
+      this.datosDelForm.markAllAsTouched();
+      return true;
+    }
+    this.mostrarErrores.denominacionRazonSocial = false;
+    this.mostrarErrores.correoElectronico = false;
+    return this.datosDelForm.invalid;
   }
 
   /**

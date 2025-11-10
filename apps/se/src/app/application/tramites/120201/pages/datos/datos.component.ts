@@ -99,7 +99,6 @@ export class DatosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -149,6 +148,7 @@ export class DatosComponent implements OnInit, OnDestroy {
   mostrarNumFolioAsignacionErrorEvent(event: {mostrarError: boolean, valor: string}): void {
     this.mostrarNumFolioAsignacionErrorDirecto.emit(event);
   }
+
 
   /**
    * Muestra un error al agregar datos.

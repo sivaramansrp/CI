@@ -9,14 +9,9 @@
             [required]="true"
             formControlName="entidad"
             [isDisabled]="esFormularioSoloLectura"
+            [markTouched]="frmRepresentacionForm.get('entidad')?.touched ?? false"
             (change)="setValoresStore(frmRepresentacionForm, 'entidad')"
           ></app-catalogo-select>
-          <div
-            *ngIf="frmRepresentacionForm.controls['entidad'].invalid && frmRepresentacionForm.controls['entidad'].touched"
-            class="text-danger"
-          >
-            <small *ngIf="frmRepresentacionForm.controls['entidad'].errors?.['required']">Debe seleccionar un valor.</small>
-          </div>
         </div>
         <div class="col-md-4 form-group">
           <app-catalogo-select
@@ -26,13 +21,8 @@
             formControlName="representacion"
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmRepresentacionForm, 'representacion')"
+            [markTouched]="frmRepresentacionForm.get('representacion')?.touched ?? false"
           ></app-catalogo-select>
-          <div
-            *ngIf="frmRepresentacionForm.controls['representacion'].invalid && frmRepresentacionForm.controls['representacion'].touched"
-            class="text-danger"
-          >
-            <small *ngIf="frmRepresentacionForm.controls['representacion'].errors?.['required']">Debe seleccionar un valor.</small>
-          </div>
         </div>
       </div>
     </form>

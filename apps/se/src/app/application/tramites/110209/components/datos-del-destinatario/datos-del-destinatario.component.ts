@@ -51,6 +51,12 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   private seccionState!: Tramite110209State;
 
+  /**  
+  * Indica si el formulario ha sido inicializado correctamente.  
+  * Se utiliza para controlar la ejecución de procesos dependientes de la carga inicial.  
+  */
+  private formularioInicializado = false;
+
   /**
    * Constructor del componente DetallesDelDestinatarioComponent.
    * 
@@ -129,14 +135,20 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Crea el formulario del componente.
    */
   crearFormulario(): void {
+  if(this.formularioInicializado){ 
+    return;
+  }
+
     this.obtenerEstadoSolicitud();
     this.datosDelDestinatarioForm = this.fb.group({
-      nombre: [this.seccionState?.nombre , [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(25)]],
-      primerApellido: [this.seccionState?.primerApellido , [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
-      segundoApellido: [this.seccionState?.segundoApellido , [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
-      numeroDeRegistroFiscal: [this.seccionState?.numeroDeRegistroFiscal , [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(30)]],
-      razonSocial: [this.seccionState?.razonSocial , [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(70)]],
+      nombre: [this.seccionState?.nombre ?? '', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(25)]],
+      primerApellido: [this.seccionState?.primerApellido ?? '', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
+      segundoApellido: [this.seccionState?.segundoApellido ?? '', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
+      numeroDeRegistroFiscal: [this.seccionState?.numeroDeRegistroFiscal ?? '', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(30)]],
+      razonSocial: [this.seccionState?.razonSocial ?? '', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(70)]],
     });
+
+    this.formularioInicializado = true;
   }
 
   /**
@@ -146,16 +158,8 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
    this.tramite110209Query.selectTramite110209$.pipe(
     takeUntil(this.destroyed$),
-  ).subscribe(storeState => {
-    const ESTA_VACIO = !storeState?.nombre && !storeState?.primerApellido && !storeState?.numeroDeRegistroFiscal;
-    if (ESTA_VACIO) {
-      this.service.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe(datos => {
-        this.tramite110209Store.setTramite110209(datos);
-        this.inicializarEstadoFormulario();
-      });
-    } else {
-      this.inicializarEstadoFormulario();
-    }
+  ).subscribe(() => {
+    this.inicializarEstadoFormulario();
     if (this.datosDelDestinatarioForm.get('nombre')?.value) {
     this.datosDelDestinatarioForm.get('razonSocial')?.disable();
   }

@@ -1,13 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
-
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { Solicitud150101State, Solicitud150101Store } from '../../estados/solicitud150101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import {DatosDeReporteAnnualComponent} from '../../components/datos-de-reporte-anual/datos-de-reporte-anual.component';
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
 import { ProgramasReporteAnnualComponent} from '../../components/programas-reporte-anual/programas-reporte-anual.component';
-import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 
 /**
@@ -71,6 +70,8 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
    @Output() cambioDePestana = new EventEmitter<void>();
 
+   @Input() solicitudState!: Solicitud150101State;
+
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -131,6 +132,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
               resp.totalExportaciones !== null
                 ? String(resp.totalExportaciones)
                 : '',
+            idSolicitud: 0
           };
           this.solicitud150101Store.setRegistroSolicitudAnualState(
             RESP_WITH_STRING_EXPORTACIONES
@@ -167,8 +169,6 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */
   public validarTodosLosFormularios(): number {
-   
-    
     if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
       this.datosDeComp.formReporteAnnual.markAllAsTouched();
       if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
@@ -191,11 +191,11 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
     else if(this.indice===2&& this.programasDeComp?.periodoReporteAnual.get('estatus')?.value!==''){
       this.programasDeComp?.showAlert();
       return 5;
+    } else if (this.indice===1 && this.solicitudState.folioPrograma ==='' && this.solicitudState.totalExportaciones === '') {
+      return 5;
     }
-    return 0;
+     return 0;
   }
-  
-  
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

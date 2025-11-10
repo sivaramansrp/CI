@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CAMPO_DE_DESTINATARIO, CAMPO_DE_DESTINATARIOS } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, TituloComponent, VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TituloComponent, VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinatarioService } from '../../services/destinatario.service';
@@ -155,7 +155,8 @@ export class DestinatarioComponent
    */
   constructor(
     private fb: FormBuilder,
-    public destinatarioService: DestinatarioService
+    public destinatarioService: DestinatarioService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // La función se ejecutará después de un segundo.
     setTimeout(() => {
@@ -191,6 +192,17 @@ export class DestinatarioComponent
       this.formDestinatario.markAllAsTouched();
     }
   }
+
+    /**
+     * Valida un campo del formulario.
+     *
+     * @param {FormGroup} form - El formulario reactivo.
+     * @param {string} field - El nombre del campo a validar.
+     * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+     */
+    isValid(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) || false;
+    }
 
   ngAfterViewInit(): void {
     if (this.paisDestino) {
@@ -289,6 +301,7 @@ export class DestinatarioComponent
     });
   }
 
+  /** Obtiene la lista de medios de transporte desde el servicio */
   get paisDestinDestinatario(): Catalogo[]{
     return this.circulacion?.length
       ? this.circulacion

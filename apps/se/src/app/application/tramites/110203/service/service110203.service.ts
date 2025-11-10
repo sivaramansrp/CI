@@ -145,7 +145,7 @@ buildDestinatario(data:Solicitud110203State):unknown {
  */
 buildTransporte(data:Solicitud110203State): unknown {
   return {
-    "medio_de_transporte": data.medio
+    "medido_de_transporte": data.medio
   };
 }
 

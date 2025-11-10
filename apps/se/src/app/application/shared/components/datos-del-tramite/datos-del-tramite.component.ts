@@ -58,7 +58,7 @@ export class DatosDelTramiteComponent implements OnChanges{
   /**
    * @description Indica si se debe mostrar el error de clasificación.
    */
-  @Input() mostrarErrorClasificacion: boolean = true;
+  @Input() mostrarErrorClasificacion: boolean = false;
 
   /**
    * @description Opciones de solicitud configuradas para el formulario.

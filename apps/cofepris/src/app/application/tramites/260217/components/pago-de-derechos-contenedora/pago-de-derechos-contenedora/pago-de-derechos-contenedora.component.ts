@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -99,6 +99,9 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
   /**
    * @constructor
    * @description Constructor del componente que inicializa las dependencias necesarias
@@ -171,6 +174,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

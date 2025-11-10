@@ -1,9 +1,10 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SolicitudPagoBancoState } from '../../../../shared/estados/stores/pago-banco.store';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
@@ -26,10 +27,10 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnDestroy {
-constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService) {
+    @ViewChild(PasoUnoComponent) solicitante!: PasoUnoComponent;
 
-}
-
+esFormaValido: boolean = false;
+public formErrorAlert = ERROR_FORMA_ALERT;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -61,6 +62,9 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
    * Notificador para destruir observables al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService) {
+
+}
 
   /**
    * Maneja la acción del botón en el asistente.
@@ -68,18 +72,41 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
    *
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
+
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.getDatosDomicilioLegalState();
-      this.getSolicitudPagoBancoState();
-      this.indice = e.valor;
+      this.esFormaValido = false;
+      // Validar formularios antes de continuar desde el paso uno
+      if (this.indice === 1 && e.accion === 'cont') {
+        const ISVALID = this.solicitante.validOnButtonClick();
+        if (!ISVALID) {
+          this.esFormaValido = true;
+          return; // Detener ejecución si los formularios son inválidos
+        }
+      }
+  
+      // Calcular el nuevo índice basado en la acción
+      let indiceActualizado = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+        indiceActualizado = e.valor + 1;
+      } else if (e.accion === 'ant') {
+        indiceActualizado = e.valor - 1;
+      }
+  
+      // Validar que el nuevo índice esté dentro de los límites permitidos
+      if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+  
+        // Actualizar el índice y datosPasos
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
+  
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant') {
+          this.wizardComponent.atras();
+        }
       }
     }
-  }
+  
 
   /**
    * Obtiene el estado de los datos del domicilio legal desde el servicio `datosDomicilioLegalService`.

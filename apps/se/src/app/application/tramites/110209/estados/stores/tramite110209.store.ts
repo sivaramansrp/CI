@@ -60,9 +60,9 @@ export interface Tramite110209State {
   /** Correo electrónico */
   correoElectronico: string;
   /** Fax */
-  fax: number;
+  fax: string;
   /** Teléfono */
-  telefono: number;
+  telefono: string;
   /** **Valor seleccionado dentro del proceso de solicitud** */
   valorSeleccionado: string | number;
   /** **Número de certificado asociado a la solicitud** */
@@ -71,6 +71,18 @@ export interface Tramite110209State {
   tratadoAcuerdo: string;
    /** **País o bloque económico relacionado con la solicitud** */
   paisBloque: string;
+  /** **País de origen de la mercancía o trámite** */
+  paisOrigen: string;
+  /** **País de destino de la mercancía o trámite** */ 
+  paisDestino: string;
+  /** **Fecha de expedición del documento o certificado asociado** */
+  fechaExpedicion: string;
+  /** **Fecha de vencimiento del documento o certificado asociado** */
+  fechaVencimiento: string;
+  /** **Cantidad o volumen de productos o unidades declaradas** */ 
+  cantidad: string;
+  /** **Fecha de emisión o registro de la factura correspondiente** */ 
+  fechaFactura: string;
 }
 
 /**
@@ -108,12 +120,18 @@ export function createInitialState(): Tramite110209State {
     numeroLetra: '',
     ciudad: '',
     correoElectronico: '',
-    fax: 0,
-    telefono: 0,
+    fax: '',
+    telefono: '',
     valorSeleccionado: radioOpciones?.radioOptions[0].label,
     numeroDeCertificado: '',
     tratadoAcuerdo: '',
     paisBloque: '',
+    paisOrigen: '',
+    paisDestino: '',
+    fechaExpedicion: '',
+    fechaVencimiento: '',
+    cantidad: '',
+    fechaFactura: '',
   };
 }
 

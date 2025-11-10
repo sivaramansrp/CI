@@ -688,7 +688,7 @@ export const OCULTAR_FACTURADOR = [260102, 260101];
  * // Ejemplo de uso:
  */
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
-  260216, 260208, 260209, 260213,
+  260216, 260208, 260209, 260213, 260911
 ];
 
 /**
@@ -795,8 +795,8 @@ export const REPRESENTANTE_LEGAL = [260208];
  * }
  */
 export const BANCO = [
-  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210
+  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260205, 260216,
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206,260514,260515
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -820,7 +820,7 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260217
 ];
 
 /**
@@ -834,7 +834,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202, 260217
 ];
 
 /**
@@ -849,7 +849,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
-  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214, 260202, 260217
 ];
 
 /**
@@ -1019,10 +1019,10 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  */
 export const MOSTRAR_NOTIFICACION = [
   260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301,
-  260209, 260205, 260204, 260202,
+  260209, 260205, 260204,260203, 260202,
 ];
 
-export const ENABLE_FIELDS = [ 260209, 260210];
+export const ENABLE_FIELDS = [ 260209, 260210, 260208, 260218 ];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
@@ -1085,7 +1085,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260201]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260203,260204, 260205, 260206,260213, 260216, 260208, 260210, 260218]
 
 /**
  * Constante que representa el código AIFA.
@@ -1131,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218];
 
 
 
@@ -1141,3 +1141,17 @@ export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202];
  * @type {number[]}
  */
 export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];
+
+/**
+ * @const CAMPOS_DESHABILITAR_EN_ELIMINAR_PEDIMENTO
+ * @description Mapeo de procedimientos a los campos que deben ser deshabilitados al eliminar un pedimento.
+ * Cada clave en el objeto representa un identificador de procedimiento, y su valor asociado es un arreglo
+ */
+export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205];
+
+/**
+ * @const ES_VALIDO_REGISTRO_O_VENCIMIENTO
+ * @description Lista de identificadores de procedimientos para los cuales es válido el registro o vencimiento.
+ * @type {number[]}
+ */
+export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [260208, 260218];
