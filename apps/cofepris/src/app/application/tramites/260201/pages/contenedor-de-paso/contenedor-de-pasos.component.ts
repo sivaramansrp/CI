@@ -205,24 +205,35 @@ export class ContenedorDePasosComponent implements OnInit {
         if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
-        this.mostrarAlerta=true;
+      if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
         this.confirmarSinPagoDeDerechos = 2;
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'SI',
-          txtBtnCancelar: 'NO',
-          alineacionBtonoCerrar:'flex-row-reverse'
-        }
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+      if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+            this.mostrarAlerta=true;
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
       }
       if (!isValid) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;

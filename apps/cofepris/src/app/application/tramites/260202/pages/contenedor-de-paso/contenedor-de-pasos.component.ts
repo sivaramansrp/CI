@@ -166,22 +166,33 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!ISVALID) {
         this.esFormaValido = true;
       }
-      if(!this.pasoUnoComponent.pagoDeDerechos.validarFormulario() && !this.requiresPaymentData){
-          this.mostrarAlerta=true;
-          this.confirmarSinPagoDeDerechos = 2;
-          this.seleccionarFilaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: '',
-            mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
-            cerrar: true,
-            tiempoDeEspera: 2000,
-            txtBtnAceptar: 'SI',
-            txtBtnCancelar: 'NO',
-            alineacionBtonoCerrar:'flex-row-reverse'
+      if(!this.pasoUnoComponent.datosSolicitud.validarFormularioDatos() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      }else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+      if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechos.validarFormulario()){
+            this.mostrarAlerta=true;
+            this.confirmarSinPagoDeDerechos = 2;
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          } else if(this.pasoUnoComponent.pagoDeDerechos.validarFormulario() && !this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechos.validarFormulario() && this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos() && !this.pasoUnoComponent.tercerosRelacionados.validarFormulario()) {
+            this.confirmarSinPagoDeDerechos = 3;
           }
-          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         }
       if (this.esFormaValido) {
         this.datosPasos.indice = 1;
@@ -358,7 +369,7 @@ export class ContenedorDePasosComponent implements OnInit {
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
-  cerrarModal(value:boolean): void {
+  cerrarModal(value: Event | boolean): void {
     if(value){
       this.mostrarAlerta = false;
       this.requiresPaymentData = true;
