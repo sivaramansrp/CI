@@ -16,6 +16,7 @@ import { Tramite130105Query } from '../../../../estados/queries/tramite130105.qu
 import fractionValues from '@libs/shared/theme/assets/json/130105/fraccion_arancelaria.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130105/unidad_da.json';
 import { idProcedimiento, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src/core/models/shared/mostrar-partidas';
 
 
 /**
@@ -171,6 +172,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   idProcedimiento: number = idProcedimiento;
 
+  mostrarPartidas: MostrarPartidas[] = [];
+
   /**
    * Constructor del componente.
    */
@@ -190,7 +193,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
   }
   /**
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
@@ -199,7 +202,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     // this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
+    // this.obtenerTablaDatos();
     // this.fetchEntidadFederativa();
     // this.fetchRepresentacionFederal();
     // this.listaDePaisesDisponibles();
@@ -292,6 +295,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       representacion: [this.seccionState?.representacion, Validators.required],
     });
   }
+
+  validarFormulario(): boolean {
+    if (this.formDelTramite.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      return false;
+    }
+    if (this.mercanciaForm.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      return false;
+    }
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      return false;
+    }
+    if (this.paisForm.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      return false;
+    }
+    if (this.frmRepresentacionForm.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
+
   /**
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
@@ -299,6 +327,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130105Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
+          this.seccionState = seccionState;
           this.partidasDelaMercanciaForm.patchValue({
             cantidadPartidasDeLaMercancia:
               seccionState.cantidadPartidasDeLaMercancia,
@@ -409,15 +438,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
    * 
    */
-  obtenerTablaDatos(): void {
-    this.importacionVehiculosUsadosDonacionService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.tableBodyData = data;
-      this.formForTotalCount.patchValue({
-        cantidadTotal: data[0].cantidad,
-        valorTotalUSD: data[0].totalUSD
-      });
-    });
-  }
+  // obtenerTablaDatos(): void {
+  //   this.importacionVehiculosUsadosDonacionService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+  //     this.tableBodyData = data;
+  //     this.formForTotalCount.patchValue({
+  //       cantidadTotal: data[0].cantidad,
+  //       valorTotalUSD: data[0].totalUSD
+  //     });
+  //   });
+  // }
 
   /**
    * validarYEnviarFormulario
@@ -429,6 +458,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.mostrarTabla = true;
       this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
+      const DATOS = [
+        {
+          "id": this.tableBodyData.length + 1 + "",
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": this.seccionState?.unidadMedida || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": ((Number(this.seccionState?.valorFacturaUSD) % Number(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia)).toFixed(4).toString()) || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+        }
+      ];
+      this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.formForTotalCount.patchValue({
+        cantidadTotal: DATOS[0].cantidad,
+        valorTotalUSD: this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0)
+      });
     }
   }
 
@@ -599,6 +644,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.paisesPorBloque = data as Catalogo[];
       });
     }
+  }
+
+  getMostrarPartidas(): void {
+    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
+        this.mostrarPartidas = data as MostrarPartidas[];  
+        this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      });
   }
 
   /**

@@ -1137,3 +1137,5 @@ export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): stri
 export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
 
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
+
+export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;

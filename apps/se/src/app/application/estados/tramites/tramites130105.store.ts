@@ -8,6 +8,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 
 /**
  * Tramite130105State
@@ -86,7 +87,7 @@ export interface Tramite130105State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -132,6 +133,11 @@ export interface Tramite130105State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+
+  /**
+   * Lista de partidas a mostrar.
+   */
+  mostrarPartidas: MostrarPartidas[];
 }
 
 /**
@@ -149,17 +155,17 @@ export function createInitialState(): Tramite130105State {
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
+    defaultSelect: 'TISOL.I',
     producto: '',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.N',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -168,6 +174,7 @@ export function createInitialState(): Tramite130105State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    mostrarPartidas: [],
   };
 }
 

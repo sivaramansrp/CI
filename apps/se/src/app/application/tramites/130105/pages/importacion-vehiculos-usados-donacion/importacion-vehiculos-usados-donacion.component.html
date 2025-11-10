@@ -1,23 +1,26 @@
 <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h2>Solicitud Importación vehículos usados para donación</h2>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Solicitud Importación vehículos usados para donación</h2>
       </div>
-      <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
-      <div class="row">
-        @switch(indice){
-          @case(1){
-            <app-paso-uno></app-paso-uno>
-            }@case(2){
-              <app-paso-dos></app-paso-dos>
-            }@case(3){
-              <app-paso-tres></app-paso-tres>
-            }
-        }
-        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    </div>
+    <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
+    <div class="row">
+      @switch(indice){
+      @case(1){
+      <app-paso-uno></app-paso-uno>
+      }@case(2){
+      <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'130105'"
+        [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+        (reenviarCargaRealizada)="cargaRealizada($event)"
+        (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
+      }@case(3){
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="130105"
+        [procedureUrl]="'importacion-vehiculos-usados-donacion/solicitud'"></paso-firma>
+      }
+      }
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
-  </div>
-  
+</div>

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 
@@ -6,6 +6,7 @@ import { AccionBoton } from '../../enums/accionbotton.enum';
 import { take } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
+import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
 
 /**
  * Componente para la importación de vehículos usados.
@@ -43,6 +44,11 @@ export class ImportacionVehiculosUsadosDonacionComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+* Indica si el botón para cargar archivos está habilitado.
+*/
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
    * Datos relacionados con los pasos del asistente.
    * Incluye el número total de pasos, el índice actual y los textos de los botones de navegación.
    */
@@ -61,8 +67,40 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    */
   esFormaValido: boolean = false;
 
-  constructor(private importacionVehiculosUsadosDonacionService: ImportacionVehiculosUsadosDonacionService, private tramite130105Store: Tramite130105Store) {
+  /**
+   * @property {Tramite130105State} solicitudState
+   * @description
+   * Estado actual de la solicitud del trámite 130105.
+   */
+  solicitudState!: Tramite130105State;
 
+  /**
+    * Evento que se emite para cargar archivos.
+    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+    */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+* Indica si la sección de carga de documentos está activa.
+* Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+*/
+  seccionCargarDocumentos: boolean = true;
+  /**
+   * Indica si la carga de documentos está en progreso.
+   * Se inicializa en true para indicar que la carga está en progreso al inicio.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+   * @description
+   * Constructor de la clase.
+   * @param importacionVehiculosUsadosDonacionService
+   * @param tramite130105Store
+   */
+  constructor(private importacionVehiculosUsadosDonacionService: ImportacionVehiculosUsadosDonacionService, private tramite130105Store: Tramite130105Store, private tramite130105Query: Tramite130105Query) {
+    this.tramite130105Query.selectSolicitud$.pipe(take(1)).subscribe((solicitudState) => {
+      this.solicitudState = solicitudState;
+    });
   }
 
   /**
@@ -123,10 +161,10 @@ export class ImportacionVehiculosUsadosDonacionComponent {
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "mercancia": {
-        "cantidadComercial": item.cantidadPartidasDeLaMercancia,
-        "cantidadTarifaria": item.cantidad,
-        "valorFacturaUSD": item.valorFacturaUSD,
-        "condicionMercancia": "CONDMER.U",
+        "cantidadComercial": Number(item.cantidadPartidasDeLaMercancia),
+        "cantidadTarifaria": Number(item.cantidad),
+        "valorFacturaUSD": Number(item.valorFacturaUSD),
+        "condicionMercancia": item.producto,
         "descripcion": item.descripcion,
         "usoEspecifico": item.usoEspecifico,
         "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
@@ -135,25 +173,25 @@ export class ImportacionVehiculosUsadosDonacionComponent {
           "clave": item.unidadMedida
         },
         "fraccionArancelaria": {
-          "cveFraccion": item.fraccion
+          "cveFraccion": 87012101
         },
         "partidasMercancia": [
           {
-            "unidadesSolicitadas": 12,
-            "unidadesAutorizadas": 12,
-            "descripcionSolicitada": "eswa",
-            "descripcionAutorizada": "eswa",
-            "importeUnitarioUSD": 1,
-            "importeTotalUSD": 12,
+            "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
+            "unidadesAutorizadas": Number(item.cantidad),
+            "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
+            "descripcionAutorizada": item.descripcion,
+            "importeUnitarioUSD": Number(item.filaSeleccionada[0].precioUnitarioUSD),
+            "importeTotalUSD": Number(item.filaSeleccionada[0].totalUSD),
             "autorizada": true,
-            "importeUnitarioUSDAutorizado": 1,
-            "importeTotalUSDAutorizado": 12,
-            "fraccionArancelariaClave": "87012101",
-            "unidadMedidaClave": item
+            "importeUnitarioUSDAutorizado": Number(item.valorPartidaUSD),
+            "importeTotalUSDAutorizado": Number(item.filaSeleccionada[0].totalUSD),
+            "fraccionArancelariaClave": item.filaSeleccionada[0].fraccionFrancelaria,
+            "unidadMedidaClave": item.filaSeleccionada[0].unidadDeMedida
           }
         ]
       },
-      "id_solcitud": item.defaultSelect,
+      "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": {
@@ -223,5 +261,37 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+  * Emite un evento para cargar archivos.
+  * {void} No retorna ningún valor.
+  */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado del botón de carga de archivos.
+ *  carga - Indica si la carga de documentos está activa o no.
+ * {void} No retorna ningún valor.
+ */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado de la sección de carga de documentos.
+  *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+  * {void} No retorna ningún valor.
+  */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

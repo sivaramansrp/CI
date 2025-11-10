@@ -57,7 +57,8 @@ import {
   API_PEXIM_FRACCION_ARANCELARIA,
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_PAISES_POR_BLOQUE,
-  API_CATALOGOS_PAISES_TODOS
+  API_CATALOGOS_PAISES_TODOS,
+  API_MOSTRAR_PARTIDAS_SOLICITUD
 } from '../../servers/api-router';
 
 // import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_TRATADOS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_MEXICO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
@@ -70,6 +71,7 @@ import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MostrarPartidas } from '../../models/shared/mostrar-partidas';
 
 /**
  * Servicio centralizado para la gestión de catálogos del sistema VUCEM.
@@ -441,7 +443,10 @@ paisesPorBloqueCatalogo(tramite: string, ID: string): Observable<BaseResponse<Ca
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
-
+mostrarPartidasSolicitud(tramite: string, solicitudId:number): Observable<BaseResponse<MostrarPartidas[]>> {
+  const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
+  return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+}
   /**
    * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
    *

@@ -12,6 +12,7 @@ import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130105Query } from '../../../estados/queries/tramite130105.query';
 import { PROC_130105 } from '../servers/api-route';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src/core/models/shared/mostrar-partidas';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -185,6 +186,13 @@ export class ImportacionVehiculosUsadosDonacionService {
 
   getBloqueService(ID: string): Observable<any[]> {
     return this.catalogoServices.bloqueCatalogo(ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  getMostrarPartidasService(tramite: string, ID: number): Observable<MostrarPartidas[]> {
+    return this.catalogoServices.mostrarPartidasSolicitud(tramite, ID)
       .pipe(
         map(res => res?.datos ?? [])
       );

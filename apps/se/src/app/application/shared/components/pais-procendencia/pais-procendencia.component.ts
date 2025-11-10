@@ -314,4 +314,8 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
   seleccionarTodosPaises(): void {
     this.todosPaisesSeleccionadosEvent.emit(true);
   }
+
+  fechasSeleccionadasChange(evento: string[]): void {
+    console.log(evento);
+  }
 }

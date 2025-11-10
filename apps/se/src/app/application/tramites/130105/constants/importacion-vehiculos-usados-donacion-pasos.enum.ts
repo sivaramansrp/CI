@@ -20,17 +20,17 @@ export const PASOS_EXPORTACION = [
 ];
 
 export const OPINIONES_SOLICITUD = [{
-    label: 'Inicial', value: 'Inicial'
+    label: 'Inicial', value: 'TISOL.I'
 }];
 
 export const PRODUCTO_OPCION = [
     {
         label: 'Nuevo',
-        value: 'nuevo'
+        value: 'CONDMER.N'
     },
     {
         label: 'Usado',
-        value: 'usado'
+        value: 'CONDMER.U'
     }
 ];
 
