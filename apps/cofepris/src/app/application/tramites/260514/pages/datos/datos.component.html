@@ -19,28 +19,24 @@
 
         </ul>
         <ng-container>
-            @switch (indice) {
-            @case(1) {
-            <solicitante [tabindex]="1"></solicitante>
-            }
-            @case (2) {
+            
+            <solicitante [hidden]="indice !== 1"></solicitante>
+            
             @if(esDatosRespuesta){
                 <app-datos-de-la [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
-                [isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad"  ></app-datos-de-la>
+                [isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad" 
+                [idProcedimiento]="idProcedimiento"[identificacion]="true"
+[estadoValidte]="true" [hidden]="indice !== 2" ></app-datos-de-la>
             }
-            }
-            @case(3) {
+            
             @if(esDatosRespuesta){
-            <app-aviso-terceros-relacionados></app-aviso-terceros-relacionados>
+            <app-aviso-terceros-relacionados [hidden]="indice !== 3"></app-aviso-terceros-relacionados>
             }
-            }
-
-            @case(4) {
+           
             @if(esDatosRespuesta){
-            <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+            <app-pago-de-derechos-contenedora [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
             }
-            }
-            }
+            
         </ng-container>
     </div>
 </div>

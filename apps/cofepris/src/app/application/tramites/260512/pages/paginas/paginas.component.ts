@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AccionBoton } from '@ng-mf/data-access-user';
+import { DatosComponent } from '../datos/datos.component';
 import { ERROR_FORMA_ALERT } from '../../constantes/constante260512.enum';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
@@ -19,6 +20,7 @@ import { ServicioDeFormularioService } from '../../../../shared/services/forma-s
   templateUrl: './paginas.component.html',
 })
 export class PaginasComponent implements OnInit, OnDestroy {
+   @ViewChild(DatosComponent) solicitante!: DatosComponent;
 
   /**
    * @property pantallasPasos
@@ -162,42 +164,75 @@ export class PaginasComponent implements OnInit, OnDestroy {
    * @param {AccionBoton} e - Objeto que contiene el valor del paso y la acción a realizar.
    * @returns {void}
    */
-  public getValorIndice(e: AccionBoton): void {
-    if (!this.consultaState.readonly) {
-      this.esFormaValido = this.verificarLaValidezDelFormulario();
-      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-        if (e.accion === 'cont' && this.esFormaValido) {
-          this.indice = e.valor + 1;
-          this.datosPasos.indice = e.valor + 1;
-          this.wizardService.cambio_indice(this.datosPasos.indice);
-          this.wizardComponent.siguiente();
-        } else if (e.accion === 'ant' && this.esFormaValido) {
-          this.indice = e.valor - 1;
-          this.datosPasos.indice = e.valor - 1;
-          this.wizardComponent.atras();
-        } else if (!this.esFormaValido) {
-          this.indice = e.valor;
-          this.datosPasos.indice = e.valor;
-          this.servicioDeFormularioService.markFormAsTouched('datosDelEstablecimientoRFCForm');
-          this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
-          this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
-          this.servicioDeFormularioService.markFormAsTouched('representanteForm');
-          this.servicioDeFormularioService.markFormAsTouched('representanteForm');
-          this.servicioDeFormularioService.markFormAsTouched('derechosForm');
+  // public getValorIndice(e: AccionBoton): void {
+  //   if (!this.consultaState.readonly) {
+  //     this.esFormaValido = this.verificarLaValidezDelFormulario();
+  //     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+  //       if (e.accion === 'cont' && this.esFormaValido) {
+  //         this.indice = e.valor + 1;
+  //         this.datosPasos.indice = e.valor + 1;
+  //         this.wizardService.cambio_indice(this.datosPasos.indice);
+  //         this.wizardComponent.siguiente();
+  //       } else if (e.accion === 'ant' && this.esFormaValido) {
+  //         this.indice = e.valor - 1;
+  //         this.datosPasos.indice = e.valor - 1;
+  //         this.wizardComponent.atras();
+  //       } else if (!this.esFormaValido) {
+  //         this.indice = e.valor;
+  //         this.datosPasos.indice = e.valor;
+  //         this.servicioDeFormularioService.markFormAsTouched('datosDelEstablecimientoRFCForm');
+  //         this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
+  //         this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
+  //         this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+  //         this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+  //         this.servicioDeFormularioService.markFormAsTouched('derechosForm');
+  //       }
+  //     }
+  //   } else {
+  //     if (e && e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+  //     this.indice = e.valor;
+  //     this.datosPasos.indice = e.valor;
+  //     if (e.accion === 'cont') {
+  //       this.wizardComponent.siguiente();
+  //     } else {
+  //       this.wizardComponent.atras();
+  //     }
+  //   }
+  //   }
+  // }
+   getValorIndice(e: AccionBoton): void {
+      this.esFormaValido = false;
+      // Validar formularios antes de continuar desde el paso uno
+      if (this.indice === 1 && e.accion === 'cont') {
+        const ISVALID = this.solicitante.validOnButtonClick();
+        if (!ISVALID) {
+          this.esFormaValido = true;
+          return; // Detener ejecución si los formularios son inválidos
         }
       }
-    } else {
-      if (e && e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      this.indice = e.valor;
-      this.datosPasos.indice = e.valor;
+  
+      // Calcular el nuevo índice basado en la acción
+      let indiceActualizado = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+        indiceActualizado = e.valor + 1;
+      } else if (e.accion === 'ant') {
+        indiceActualizado = e.valor - 1;
+      }
+  
+      // Validar que el nuevo índice esté dentro de los límites permitidos
+      if (indiceActualizado > 0 && indiceActualizado <= this.pantallasPasos.length) {
+  
+        // Actualizar el índice y datosPasos
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
+  
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant') {
+          this.wizardComponent.atras();
+        }
       }
     }
-    }
-  }
 
   /**
    * @method ngOnDestroy

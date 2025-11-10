@@ -34,6 +34,12 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   @Output() rfcValidoChange = new EventEmitter<boolean>(); 
     @Input() public idProcedimiento!: number;
+
+  public mostrarErrores = {
+  denominacionRazonSocial: false,
+  correoElectronico: false
+};
+
   /**
    * @description
    * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
@@ -168,6 +174,10 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     this.tieneElBotonSeleccionClicado = true;
     this.rfcValidoChange.emit(true); 
     this.datosDomicilioSvc.emitEvent(this.tieneElBotonSeleccionClicado);
+    this.datosDelForm.valueChanges.subscribe(() => {
+        this.mostrarErrores.denominacionRazonSocial = false;
+      this.mostrarErrores.correoElectronico = false;
+    })
   }
 
   /**
@@ -246,7 +256,18 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       });
   }
   validatorButtonClick(): boolean {
-    return this.datosDelForm.valid ?? false;
+    if(!this.tieneElBotonSeleccionClicado){
+      this.mostrarErrores.denominacionRazonSocial = true;
+      this.mostrarErrores.correoElectronico = true;
+    return false;
+    }
+    if(this.datosDelForm.invalid){
+      this.datosDelForm.markAllAsTouched();
+      return true;
+    }
+    this.mostrarErrores.denominacionRazonSocial = false;
+    this.mostrarErrores.correoElectronico = false;
+    return this.datosDelForm.invalid;
   }
 
   /**
