@@ -12,7 +12,7 @@
   
       <div class="row">
         @switch (indice) { @case (1) {
-        <app-paso-uno></app-paso-uno>
+        <app-paso-uno  (formValidityChange)="onFormValidityChange($event)"></app-paso-uno>
         } @case (2) {
         <app-paso-dos></app-paso-dos>
         } @case (3) {
@@ -26,6 +26,13 @@
         @if (indice === 1) {
           <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
           }
+          @if (notificacionContinuarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionContinuarServicios">
+  </lib-notificaciones>
+</section>
+}
       </div>
     </div>
   </div>
