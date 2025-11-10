@@ -42,8 +42,8 @@ export interface TabDocumentosDescarga{
      */
     content: string;
 
-    /**
-     * Nombre del archivo del documento.
+    /** 
+     * Indica si la descarga fue exitosa. 
      */
     success: boolean;
 
