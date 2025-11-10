@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente para gestionar el paso uno de un flujo.
@@ -30,6 +31,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Valor inicial: 1.
    */
   indice: number = 1;
+
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
 
    /**
    * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.

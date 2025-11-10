@@ -7,6 +7,7 @@ import { take } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Componente para la importación de vehículos usados.
@@ -43,6 +44,8 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  @ViewChild(PasoUnoComponent, { static: false}) pasoUnoComponent!: PasoUnoComponent;
+  
   /**
 * Indica si el botón para cargar archivos está habilitado.
 */
@@ -113,25 +116,17 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   this.datosPasos.indice = 1;
-    // const ISVALID = this.validarTodosFormulariosPasoUno();
-    // if (!ISVALID) {
-    //   this.esFormaValido = true;
-    //   return;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
+    const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
+    if (!ISVALID) {
+      this.esFormaValido = true;
+      return;
+    }
     this.obtenerDatosDelStore();
-    // } else if (e.valor > 0 && e.valor <= this.pasos.length) {
-    //   this.pasoNavegarPor(e);
-    // }
-    // if (e.valor > 0 && e.valor < 5) {
-    //   this.indice = e.valor; // Actualiza el índice del paso actual
-    //   if (e.accion === 'cont') {
-    //     this.wizardComponent.siguiente(); // Navega al siguiente paso
-    //   } else {
-    //     this.wizardComponent.atras(); // Navega al paso anterior
-    //   }
-    // }
+    } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
+      this.pasoNavegarPor(e);
+    }
   }
 
   /**
