@@ -495,7 +495,7 @@ export class ModificarMercanciasComponent implements OnChanges, OnInit, OnDestro
    * @param evento - Objeto del producto seleccionado.
    */
   seleccionaProductos(evento: Catalogo): void {
-    this.solicitud260910Store.setCadenaDeDependencia(evento.descripcion);
+    this.solicitud260910Store.setClasificacionProductos(evento.id);
   }
 
   /**

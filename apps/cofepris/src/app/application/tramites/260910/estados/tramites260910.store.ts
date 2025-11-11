@@ -98,7 +98,7 @@ export interface Solicitud260910State {
   manifesto: boolean;
 
   /** Clasificación del producto asociado con la solicitud. */
-  clasificaionProductos: string;
+  clasificaionProductos: number | string;
 
   /** Especificación del producto representada por un identificador numérico. */
   especificarProducto: number | string;
@@ -695,7 +695,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la clasificación de productos en el estado.
    * @param clasificaionProductos - Nuevo valor para la clasificación de productos.
    */
-  public setClasificacionProductos(clasificaionProductos: string): void {
+  public setClasificacionProductos(clasificaionProductos: number | string): void {
     this.update((state) => ({
       ...state,
       clasificaionProductos
