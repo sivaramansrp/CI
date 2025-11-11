@@ -151,15 +151,7 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-  /**
-   * @method updatePagoDerechos
-   * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
-   * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
-   * @returns {void} No retorna ningún valor.
-   */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
-    // this.tramiteStore.updatePagoDerechos(event);
-  }
+
    validOnButtonClick():boolean{
     let isValid = false;
     if(this.datosSolicitudRef?.validarClickDeBoton()){

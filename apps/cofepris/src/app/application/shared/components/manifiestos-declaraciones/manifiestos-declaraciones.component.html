@@ -1,6 +1,6 @@
 <div class="row mt-2">
    <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
-   <form [formGroup]="manifiestos">
+   <form [formGroup]="manifiestos" *ngIf="manifiestos">
       <div class="mt-5">
          <div class="alert alert-info">
             <div class="row align-items-center justify-content-start py-2">

@@ -1,8 +1,9 @@
-import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
+import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
 import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
   RegistroSolicitudService,
   WizardComponent,
   esValidObject,
@@ -74,7 +75,7 @@ export class ContenedorDePasosComponent implements OnInit {
    * @description Referencia al componente del wizard.
    * Utilizado para manejar la navegación entre pasos.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild("wizzard") wizardComponent!: WizardComponent;
 
   @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
 
@@ -121,6 +122,19 @@ export class ContenedorDePasosComponent implements OnInit {
  */
   seccionCargarDocumentos: boolean = true;
 
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+   public requiresPaymentData: boolean = false;
+
+   public confirmarSinPagoDeDerechos: number = 0;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
   constructor(private tramite260202Query: Tramite260202Query, private tramite260202Store: Tramite260202Store, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
@@ -152,6 +166,34 @@ export class ContenedorDePasosComponent implements OnInit {
       if (!ISVALID) {
         this.esFormaValido = true;
       }
+      if(!this.pasoUnoComponent.datosSolicitud.validarFormularioDatos() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      }else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+      if(!this.requiresPaymentData) {
+          if(!this.pasoUnoComponent.pagoDeDerechos.validarFormulario()){
+            this.mostrarAlerta=true;
+            this.confirmarSinPagoDeDerechos = 2;
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+              alineacionBtonoCerrar:'flex-row-reverse'
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          } else if(this.pasoUnoComponent.pagoDeDerechos.validarFormulario() && !this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechos.validarFormulario() && this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos() && !this.pasoUnoComponent.tercerosRelacionados.validarFormulario()) {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
+        }
       if (this.esFormaValido) {
         this.datosPasos.indice = 1;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
@@ -325,5 +367,15 @@ export class ContenedorDePasosComponent implements OnInit {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  cerrarModal(value: Event | boolean): void {
+    if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
   }
 }
