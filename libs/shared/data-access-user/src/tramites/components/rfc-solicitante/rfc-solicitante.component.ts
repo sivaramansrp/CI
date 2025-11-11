@@ -25,7 +25,6 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './rfc-solicitante.component.html',
-  styleUrl: './rfc-solicitante.component.scss'
 })
 export class RfcSolicitanteComponent implements OnInit, OnDestroy {
   /**
@@ -73,7 +72,7 @@ export class RfcSolicitanteComponent implements OnInit, OnDestroy {
    *
    * @returns void
    */
-  Ahorrar(): void {
+  ahorrar(): void {
     this._loginStore.establecerLogin(this.rfcSolicitante, true);
   }
 
