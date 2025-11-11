@@ -55,9 +55,15 @@ export interface TratadoAgregado {
 
 /** Modelo que representa tratatados archivo */
 export interface TratadoArchivo {
-  /** Codigo */
-  codigo: string | null;
-  
-  /** Cve criterio origen*/
-  cveCriterioOrigen: string | null;
+  /** ID del tratado o acuerdo */
+  id_tratado_acuerdo: number | null;
+
+  /** Clave del grupo de criterio */
+  cve_grupo_criterio: string | null;
+
+  /** Clave del país */
+  cve_pais: string | null;
+
+  /** Clave del tratado o acuerdo */
+  cve_tratado_acuerdo: string | null;
 }

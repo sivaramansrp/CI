@@ -102,9 +102,9 @@ export class DatosMercanciaService {
             ENDPOINT = `${this.host}${API_POST_EMPAQUES_ARCHIVOS}`;
         }
         const FORMDATA = new FormData();
-        FORMDATA.append('archivoCsv', archivo, archivo.name);
-        FORMDATA.append('tipoArchivo', tipoArchivo);
-        FORMDATA.append('tratadosSeleccionados', JSON.stringify(tratadosSeleccionados));
+        FORMDATA.append('archivo_csv', archivo, archivo.name);
+        FORMDATA.append('tipo_archivo', tipoArchivo);
+        FORMDATA.append('tratados_seleccionados', JSON.stringify(tratadosSeleccionados));
         return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA);
     }
 }

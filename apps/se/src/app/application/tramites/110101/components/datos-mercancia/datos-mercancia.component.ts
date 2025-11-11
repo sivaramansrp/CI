@@ -1558,8 +1558,10 @@ get ninoFormGroup(): FormGroup {
     const ARCHIVOCSV = INPUTARCHIVO.files[0];
    
     const TRATADOS_SELECCIONADOS = this.solicitudeState.respuestaServicioDatosTabla.map(item => ({
-      codigo: item.cve_tratado_acuerdo || item.cve_tratado_acuerdo_bloque,
-      cveCriterioOrigen: item.cve_grupo_criterio
+      id_tratado_acuerdo: item.id_tratado_acuerdo,
+      cve_grupo_criterio: item.cve_grupo_criterio,
+      cve_pais:item.cve_pais,
+      cve_tratado_acuerdo:item.cve_tratado_acuerdo
     }));
 
     const TIPOARCHIVO = this.tipoArchivoActual;
@@ -1568,23 +1570,42 @@ get ninoFormGroup(): FormGroup {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
-            
-             response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
-              this.insumosTablaDatos.push({
-                nombreTecnico: elemento.nombre_tecnico,
-                proveedor: elemento.proveedor,
-                fabricanteOProductor: elemento.fabricante,
-                rfc: elemento.rfc_fabricante,
-                fraccionArancelaria: elemento.fraccion_arancelaria,
-                valorEnDolares: elemento.valor,
-                paisDeOrigen: elemento.pais_origen,
-                peso: elemento.peso,
-                volumen: null, 
-                cvePais: elemento.pais_origen
+            if(response.datos.elementos_validos[0].tipo_elemento === "INSUMOS" ){
+                response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.insumosTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
               });
-            });
               this.tramite110101Store.clearInsumos();
               this.tramite110101Store.addInsumo(this.insumosTablaDatos);
+            }else{
+               response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.envasesTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
+              });
+              this.tramite110101Store.clearEmpaques();
+              this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
+            }
+             
             this.formularioArchivo.reset();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });

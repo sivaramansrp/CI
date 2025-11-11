@@ -70,5 +70,20 @@ export interface ElementoValido {
     es_originario: string;
     
     /** Tratados originarios (null si no aplica) */
-    tratados_originarios: string | null;
+    tratados_originarios: TratadosOriginarios[];
+}
+
+/** Modelo que representa tratatados archivo */
+export interface TratadosOriginarios {
+  /** ID del tratado o acuerdo */
+  id_tratado_acuerdo: number | null;
+
+  /** Clave del grupo de criterio */
+  cve_grupo_criterio: string | null;
+
+  /** Clave del país */
+  cve_pais: string | null;
+
+  /** Clave del tratado o acuerdo */
+  cve_tratado_acuerdo: string | null;
 }
