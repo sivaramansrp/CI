@@ -7,7 +7,7 @@ import { FraccionValidarResponse } from "../models/response/validar-fraccion-res
 
 import { ArchivoMercanciaResponse } from "../models/response/archivo-mercancia-response.model";
 
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { InsumoTratadosRequest } from "../models/request/validar-insumo-request.model";
 import { Observable } from "rxjs";
@@ -105,6 +105,7 @@ export class DatosMercanciaService {
         FORMDATA.append('archivo_csv', archivo, archivo.name);
         FORMDATA.append('tipo_archivo', tipoArchivo);
         FORMDATA.append('tratados_seleccionados', JSON.stringify(tratadosSeleccionados));
-        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA);
+        const HEADERS = new HttpHeaders();
+        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA, { headers: HEADERS });
     }
 }
