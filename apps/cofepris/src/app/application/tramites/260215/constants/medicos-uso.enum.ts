@@ -56,6 +56,7 @@ export const PASOS = [
   },
 ];
 
+
 /**
  * Título del mensaje relacionado con el trámite 260214.
  *
@@ -79,7 +80,7 @@ export const TEXTOS_REQUISITOS =
  *
  * @constant {number}
  */
-export const ID_PROCEDIMIENTO = 260214;
+export const ID_PROCEDIMIENTO = 260215;
 
 /**
  * Mensaje de validación que solicita confirmación al usuario

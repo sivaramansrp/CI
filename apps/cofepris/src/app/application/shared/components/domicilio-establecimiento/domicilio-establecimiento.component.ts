@@ -1,25 +1,4 @@
 import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from "@angular/forms";
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
-} from "@angular/core";
-import {
-  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
   INPUT_FECHA_CADUCIDAD_CONFIG,
@@ -39,19 +18,44 @@ import {
   TipoNotificacionEnum,
   TituloComponent,
   ValidacionesFormularioService,
+  doDeepCopy,
+  esValidObject,
 } from "@libs/shared/data-access-user/src";
+
+ import {AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
+} from "@angular/core";
+
 import {
   ConfiguracionVisibilidad,
   DATOS_MERCANCIAS,
   MercanciasInfo,
   NICO_TABLA,
+  NOMBRES_CAMPOS,
   NicoInfo,
 } from "../../models/datos-domicilio-legal.model";
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
 } from "../../estados/stores/datos-domicilio-legal.store";
-import { Subject, map, takeUntil } from "rxjs";
+
+import { Subject, map, switchMap, takeUntil } from "rxjs";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
 import { CommonModule } from "@angular/common";
 import { ConsultaioQuery } from "@ng-mf/data-access-user";
@@ -59,6 +63,7 @@ import { DatosDomicilioLegalQuery } from "../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from "../../services/datos-domicilio-legal.service";
 import Modal from "bootstrap/js/dist/modal";
 import { ServicioDeFormularioService } from "../../services/forma-servicio/servicio-de-formulario.service";
+import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
@@ -103,7 +108,31 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
+  deOrigen: false,
+  deProcedencia: false,
+  aduanas:false ,
+  avisoCheckbox: false,
+  licenciaSanitaria: false,
+
+
 };
+/**
+ * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
+ *
+ * @description
+ * Valor booleano que controla la visibilidad de las etiquetas/nombres de los campos
+ * dentro del componente DomicilioEstablecimiento. Usar `true` para mostrar las etiquetas
+ * y `false` para ocultarlas.
+ *
+ * @type {boolean}
+ * @default false
+ * @public
+ *
+ * @compodoc
+ * @input nombresCampos
+ */
+nombresCampos:boolean = false;
+
   @Input() identificacion: boolean = false;
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
@@ -281,6 +310,7 @@ public mostrarErrores = {
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
     private validacionesService: ValidacionesFormularioService,
+    private sharedSvc: Shared2605Service
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -360,14 +390,14 @@ public mostrarErrores = {
     this.configurarFormularioDomicillio();
   }
   /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
-  static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
-    const VALOR = control.value;
-  if (!VALOR) { return null; } 
-  if (/^\d+$/.test(VALOR) && VALOR.length > 12) {
-    return { invalidCodigoPostal: true };
-  }
+static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
+   const VALOR = control.value;
+  if (!VALOR) { return null; }
+  if (!/^\d{1,12}$/.test(VALOR)) {
+    return { invalidCodigoPostal: true }; }
   return null;
-  }
+}
+
 
   configurarFormularioDomicillio(): void {
     this.domicilio = this.fb.group({
@@ -517,6 +547,7 @@ public mostrarErrores = {
    * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
+    this.mostrarErrores.aduanas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
@@ -800,8 +831,6 @@ public mostrarErrores = {
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
- 
-  
     this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -828,6 +857,8 @@ public mostrarErrores = {
     this.mostrarErrores.muncipio = false;
     this.mostrarErrores.calle = false;
     this.mostrarErrores.telefono = false;
+    this.mostrarErrores.avisoCheckbox = false;
+    this.mostrarErrores.licenciaSanitaria = false;
       })
     this.obtenerEstadoList();
     this.obtenerClaveSvian();
@@ -838,7 +869,6 @@ public mostrarErrores = {
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
-
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
@@ -900,6 +930,7 @@ public mostrarErrores = {
       ],
       paisDeOriginDatos:[ this.seleccionadasPaisDeOriginDatos, Validators.required],
       paisDeProcedenciaDatos:[ this.seleccionadasPaisDeProcedenciaDatos, Validators.required],
+      numeroRegistroSanitario:[],
     });
 
     /**
@@ -1470,10 +1501,36 @@ public mostrarErrores = {
    * If the control does not exist, no action is taken.
    */
   setDescripcionFraccion(): void {
-    this.formMercancias
-      .get("descripcionFraccion")
-      ?.setValue("descripcionFraccion");
-    this.formMercancias.get("UMT")?.setValue("UMT32131");
+    if(this.formMercancias.get("fraccionArancelaria")?.invalid) {
+      return;
+    }
+    const CLAVE_OBJ = {
+      clave: this.formMercancias.get("fraccionArancelaria")?.value,
+      idProcedimiento: String(this.idProcedimiento)
+    }
+    this.sharedSvc.getFraccionDescripcion(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento)
+    .pipe(takeUntil(this.destroyNotifier$),
+      switchMap((fraccionResponse) => {
+        if (esValidObject(fraccionResponse)) {
+          const DATOS = doDeepCopy(fraccionResponse);
+          if(esValidObject(DATOS.datos)) {
+              this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
+          }
+        }
+        throw new Error('Fracción call failed');
+      })
+    ).subscribe({
+      next: (unidadResponse) => {
+        const UNIDAD_DATOS = doDeepCopy(unidadResponse);
+        if(esValidObject(UNIDAD_DATOS.datos)) {
+          this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -1540,7 +1597,8 @@ public mostrarErrores = {
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
-      numeroRegistroSanitario:RAW.numeroRegistro
+      numeroRegistroSanitario:RAW.numeroRegistroSanitario,
+      porcentajeConcentracion:RAW.porcentajeConcentracion
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1817,7 +1875,10 @@ onConfirmacionModal(accion: boolean): void {
         objetoImportacion: SELECTED.objetoImportacion,
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
-
+        estadoFisico: SELECTED.estadoFisico,
+         estadoFisicoOtro: SELECTED.estadoFisicoOtro,
+         numeroRegistroSanitario: SELECTED.numeroRegistroSanitario,
+         objetoImportacionOtro: SELECTED.objetoImportacionOtro,
         ...(this.formMercancias.contains("numeroRegistro") && {
           numeroRegistro: SELECTED.numeroRegistroSanitario,
         }),
@@ -1865,6 +1926,13 @@ onConfirmacionModal(accion: boolean): void {
       this.formMercancias.get("licenciaSanitaria")?.updateValueAndValidity();
       this.formMercancias.get("avisoCheckbox")?.updateValueAndValidity();
     }
+    this.nombresCampos = NOMBRES_CAMPOS.includes(this.idProcedimiento ?? 0) ? true : false;
+    if(this.nombresCampos){
+      this.formMercancias.get("numeroRegistroSanitario")?.setValidators([Validators.required]);
+      this.formMercancias.get("numeroRegistroSanitario")?.updateValueAndValidity();
+      this.formMercancias.get("numeroRegistro")?.setValidators([]);   
+      this.formMercancias.get("numeroRegistro")?.updateValueAndValidity();
+     }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.formMercancias) {
@@ -1886,8 +1954,10 @@ onConfirmacionModal(accion: boolean): void {
     this.mostrarErrores.muncipio = true;
     this.mostrarErrores.calle = true;
     this.mostrarErrores.telefono = true;
+    this.mostrarErrores.avisoCheckbox = true;
+    this.mostrarErrores.licenciaSanitaria = true;
     ISVALID = false;
-   }   
+   }
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
@@ -1907,8 +1977,13 @@ onConfirmacionModal(accion: boolean): void {
    else{
     this.mercanciasTablaCheck=false;
    }
+   if(this.seleccionadasAduanasEntradaDatos.length === 0){
+    this.mostrarErrores.aduanas =true;
+     ISVALID = false;
+   }
    return ISVALID;
   }
+  
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

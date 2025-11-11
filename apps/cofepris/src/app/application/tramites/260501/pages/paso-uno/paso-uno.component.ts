@@ -16,6 +16,13 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
+
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260501;
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}

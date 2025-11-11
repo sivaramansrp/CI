@@ -110,6 +110,7 @@ export interface DatosMercancia {
  * Interfaz que representa la información de una mercancía.
  */
 export interface Mercancia {
+  id?: string | number;
   /** Fracción arancelaria de la mercancía. */
   fraccionArancelaria: string;
 
@@ -130,9 +131,6 @@ export interface Mercancia {
 
   /** Norma de origen de la mercancía (opcional). */
   normaOrigen?: string;
-
-  /** Identificador único de la mercancía (opcional). */
-  id?: string;
 
   /** Cantidad de mercancía (opcional). */
   cantidad?: string;
@@ -172,11 +170,6 @@ export interface Mercancia {
 
   /** Complemento para la clasificación arancelaria (opcional). */
   complementoClasificacion?: string;
-
-  fraccionNaladi: string;
-  fraccionNaladiSa93: string;
-  fraccionNaladiSa96: string;
-  fraccionNaladiSa02: string;
 }
 /**
  * Modelo que representa los datos de una mercancía.

@@ -1,12 +1,12 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../../estados/Tramite110223.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ERROR_FORMA_ALERT } from '../../../110204/constantes/modificacion.enum';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { HttpClient } from '@angular/common/http';
 import { PASOS } from '../../enums/constantes-alertas.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/';
@@ -54,7 +54,7 @@ interface AccionBoton {
     PasoFirmaComponent
   ]
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
       /**
    * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
    * const isValid = this.pasoUnoComponent.validateForms();
@@ -119,18 +119,18 @@ export class SolicitudPageComponent {
    * Constructor del componente.
    * @param store - El store del trámite.
    * @param query - La consulta del trámite.
-   */
+   */    
   constructor( private store: Tramite110223Store,
         private query: Tramite110223Query,
-        public certificadoService: CertificadosOrigenService,
         private certificadoDeService: CertificadosOrigenService,
-        private toastr: ToastrService){
+        private toastr: ToastrService,
+        private http: HttpClient){
     this.query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
       });
-
+    
   }
 
   /**
@@ -138,18 +138,21 @@ export class SolicitudPageComponent {
    * @param arr Arreglo de objetos con los datos de las mercancías seleccionadas.
    * @returns Arreglo de objetos con la estructura requerida para las mercancías seleccionadas.
    * */
-  buildMercanciaSeleccionadas(arr: any[]): any[] {
-    return arr.map((item: any) => ({
-      id: item.id,
-      fraccion_arancelaria: item.fraccionArancelaria,
-      tipo_factura: item.tipoFactura,
-      num_factura: item.numeroFactura,
-      complemento_descripcion: item.complementoDescripcion,
-      fecha_factura: item.fechaFactura,
-      cantidad: item.cantidad,
-      umc: item.umc,
-      valor_mercancia: item.valorMercancia,
-    }));
+  buildMercanciaSeleccionadas(arr: unknown[]): Record<string, unknown>[] {
+    return arr.map((item: unknown) => {
+      const MERCANCIA_ITEM = item as Record<string, unknown>;
+      return {
+      id: MERCANCIA_ITEM['id'],
+      fraccion_arancelaria: MERCANCIA_ITEM['fraccionArancelaria'],
+      tipo_factura: MERCANCIA_ITEM['tipoFactura'],
+      num_factura: MERCANCIA_ITEM['numeroFactura'],
+      complemento_descripcion: MERCANCIA_ITEM['complementoDescripcion'],
+      fecha_factura: MERCANCIA_ITEM['fechaFactura'],
+      cantidad: MERCANCIA_ITEM['cantidad'],
+      umc: MERCANCIA_ITEM['umc'],
+      valor_mercancia: MERCANCIA_ITEM['valorMercancia'],
+    };
+    });
   }
 
   /**
@@ -161,11 +164,17 @@ export class SolicitudPageComponent {
    * @remarks
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `registroService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
-   */
-  guardar(item: TramiteState): Promise<JSONResponse> {
+   */    
+  guardar(item: TramiteState): Promise<JSONResponse> {    
+    const PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS = this.certificadoDeService.buildProductoresPorExportador(item.agregarProductoresExportador);
+    const PRODUCTORES_POR_EXPORTADOR = this.certificadoDeService.buildProductoresPorExportador(item.productoresExportador);
+    const MERCANCIAS_PRODUCDOR = this.certificadoDeService.buildMercanciasProductor(item.mercanciaProductores);
+    const CERTIFICADO = this.certificadoDeService.buildCertificado(item);
+    const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
+    const DATOS_DEL_CERTIFICADO = this.certificadoDeService.buildDatosDelCertificado(item);
     const PAYLOAD = {
+      idSolicitud: this.solicitudState.idSolicitud || 0,
       rfc_solicitante: 'AAL0409235E6',
-      idSolicitud: this.solicitudState.idSolicitud,
       solicitante: {
         rfc: 'AAL0409235E6',
         nombre: 'ACEROS ALVARADO S.A. DE C.V.',
@@ -185,145 +194,44 @@ export class SolicitudPageComponent {
           telefono: '123456',
         },
       },
-      certificado: {
-        tratado_acuerdo: item.formCertificado['entidadFederativa'],
-        pais_bloque: item.formCertificado['bloque'],
-        fraccion_arancelaria: item.formCertificado['fraccionArancelariaForm'],
-        nombre_comercial: item.formCertificado['nombreComercialForm'],
-        registro_producto: item.formCertificado['numeroDeRegistroProductoForm'],
-        fecha_inicio: item.formCertificado['fechaInicioInput'],
-        fecha_fin: item.formCertificado['fechaFinalInput'],
-        realizo_tercer_operador: {
-          tercer_operador: item.formCertificado['si'],
-          nombre: item.formCertificado['nombres'],
-          primer_apellido: item.formCertificado['primerApellido'],
-          segundo_apellido: item.formCertificado['segundoApellido'],
-          numero_registro_fiscal:
-            item.formCertificado['numeroDeRegistroFiscal'],
-          razon_social: item.formCertificado['razonSocial'],
+      certificado: CERTIFICADO,
+      destinatario: DESTINATARIO,      
+      solicitud: {
+          datosConfidencialesProductor: item.formulario['datosConfidencialesProductor'],
+          productorMismoExportador: item.formulario['productorMismoExportador'],
+          productoresPorExportador: [...PRODUCTORES_POR_EXPORTADOR],
+          mercanciasProductor: [...MERCANCIAS_PRODUCDOR],
+          ProductoresPorExportadorSeleccionados: [...PRODUCTORES_POR_EXPORTADOR_SELECCIONADAS],
         },
-        domicilio_tercer_operador: {
-          pais: item.formCertificado['pais'],
-          ciudad: item.formCertificado['ciudad'],
-          calle: item.formCertificado['calle'],
-          numero_letra: item.formCertificado['numeroLetra'],
-          telefono: item.formCertificado['telefono'],
-          correo_electronico: item.formCertificado['correo'],
-        },
-        mercancias_seleccionadas: item.mercanciaTabla.map((m: Mercancia) => ({
-          id: m.id,
-          fraccion_arancelaria: m.fraccionArancelaria,
-          tipo_factura: m.tipoFactura,
-          num_factura: m.numeroFactura,
-          complemento_descripcion: m.complementoDescripcion,
-          fecha_factura: m.fechaFactura,
-          cantidad: m.cantidad,
-          umc: m.umc,
-          valor_mercancia: m.valorMercancia,
-        })),
-      },
-      destinatario: {
-        nombre: item.formDatosDelDestinatario['nombres'],
-        primer_apellido: item.formDatosDelDestinatario['primerApellido'],
-        segundo_apellido: item.formDatosDelDestinatario['segundoApellido'],
-        numero_registro_fiscal:
-          item.formDatosDelDestinatario['numeroDeRegistroFiscal'],
-        razon_social: item.formDatosDelDestinatario['razonSocial'],
-        domicilio: {
-          ciudad_poblacion_estado_provincia: item.formDestinatario['ciudad'],
-          calle: item.formDestinatario['calle'],
-          numero_letra: item.formDestinatario['numeroLetra'],
-          lada: item.formDestinatario['lada'],
-          telefono: item.formDestinatario['telefono'],
-          fax: item.formDestinatario['fax'],
-          correo_electronico: item.formDestinatario['correoElectronico'],
-          pais_destino: item.formDestinatario['paisDestino'],
-        },
-        generalesRepresentanteLegal: {
-          lugarRegistro: item.formExportor['lugar'],
-          nombre: item.formExportor['exportador'],
-          razonSocial: item.formExportor['nombres'],
-          puesto: item.formExportor['puesto'],
-          telefono: item.formExportor['telefono'],
-          correoElectronico: item.formExportor['correoElectronico'],
-        },
-        medio_transporte: item.formDatosDelDestinatario['medioTransporte'],
-      },
-      datos_del_certificado: {
-        observaciones: item.formDatosCertificado['observacionesDates'],
-        idioma: item.formDatosCertificado['idiomaDates'],
-        representacion_federal: {
-          entidad_federativa:
-            item.formDatosCertificado['EntidadFederativaDates'],
-          representacion_federal:
-            item.formDatosCertificado['representacionFederalDates'],
-        },
-      },
-      historico: {
-        datosConfidencialesProductor: true,
-        productorMismoExportador: true,
-        productoresPorExportador: [
-          {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
-        ],
-        ProductoresPorExportadorSeleccionados: [
-          {
-            nombreCompleto: '',
-            rfc: '',
-            direccionCompleta: '',
-            correoElectronico: '',
-            telefono: '',
-            fax: '',
-          },
-        ],
-        mercanciasProductor: [
-          {
-            fraccionArancelaria: '',
-            cantidadComercial: '',
-            descUnidadMedidaComercial: '',
-            valorTransaccional: '',
-            descFactura: '',
-            numeroFactura: '',
-            complementoDescripcion: '',
-            fechaFactura: '',
-            rfcProductor: '',
-          },
-        ],
-      },
-    };
-
-    return new Promise((resolve, reject) => {
-      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe(
-        (response) => {
-          if (esValidObject(response) && esValidObject(response['datos'])) {
-            const DATOS = response['datos'] as { idSolicitud?: number };
-            if (getValidDatos(DATOS.idSolicitud)) {
-              this.store.setIdSolicitud(DATOS.idSolicitud ?? 0);
-              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-            } else {
-              this.store.setIdSolicitud(0);
+      datos_del_certificado: DATOS_DEL_CERTIFICADO
+    };    
+      return new Promise((resolve, reject) => {
+      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
+          next: (response) => {
+            if (esValidObject(response) && esValidObject(response['datos'])) {
+              const DATOS = response['datos'] as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
             }
-          }
-          resolve({
-            id: response['id'] ?? 0,
-            descripcion: response['descripcion'] ?? '',
-            codigo: response['codigo'] ?? '',
-            data: response['data'] ?? response['datos'] ?? null,
-            ...response,
-          } as JSONResponse);
-        },
-        (error) => {
-          reject(error);
-          this.toastr.error('Error al buscar Mercancia');
-        }
-      );
-    });
+            
+            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
+            resolve({
+              id: response['id'] ?? 0,
+              descripcion: response['descripcion'] ?? '',
+              codigo: response['codigo'] ?? '',
+              data: response['data'] ?? response['datos'] ?? null,
+              ...response
+            } as JSONResponse);
+          },
+          error: (error) => {
+            reject(error);
+          }    
+        });
+      });
+
   }
 
   /**
@@ -331,8 +239,10 @@ export class SolicitudPageComponent {
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
   pasoNavegarPor(e: AccionBoton): void {
+    
     this.indice = e.valor;
     this.datosPasos.indice = e.valor;
+    
     if (e.valor > 0 && e.valor < 5) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -355,38 +265,21 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
 getValorIndice(e: AccionBoton): void {
-  this.esFormaValido = false;
+    this.esFormaValido = false;
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
 
-  // Validar formularios antes de continuar desde el paso uno
-  if (this.indice === 1 && e.accion === 'cont') {
-    const IS_VALID = this.validarTodosFormulariosPasoUno();
-    if (!IS_VALID) {
-      this.esFormaValido = true;
-      return; // Si no es válido, no avanza de página
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+      this.obtenerDatosDelStore();
+    }
+    else if (e.valor > 0 && e.valor <= this.pasos.length) {
+      this.pasoNavegarPor(e);
     }
   }
-
-  // Calcular el nuevo índice basado en la acción
-  let indiceActualizado = e.valor;
-  if (e.accion === 'cont') {
-    indiceActualizado = e.valor + 1;
-  } else if (e.accion === 'ant') {
-    indiceActualizado = e.valor - 1;
-  }
-
-  // Validar que el nuevo índice esté dentro de los límites permitidos
-  if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-    // Actualizar el índice y datosPasos
-    this.indice = indiceActualizado;
-    this.datosPasos.indice = indiceActualizado;
-
-    if (e.accion === 'cont') {
-      this.wizardComponent.siguiente();
-    } else if (e.accion === 'ant') {
-      this.wizardComponent.atras();
-    }
-  }
-}
 
 /**
  * @descripcion
@@ -397,26 +290,45 @@ getValorIndice(e: AccionBoton): void {
  * - Si existe, ejecuta la función `validarFormularios()` del componente 
  *   y retorna `false` en caso de que alguno no sea válido.
  *
- * @returns {boolean}  
- * Retorna `true` si todos los formularios son válidos o si el componente no existe,  
- * de lo contrario retorna `false`.
- *
- * @ejemplo
- * ```ts
- * const esValido = this.validarTodosFormulariosPasoUno();
- * if (!esValido) {
- *   console.warn('El paso uno tiene formularios inválidos');
- * }
- * ```
- */
-   private validarTodosFormulariosPasoUno(): boolean {
+ */   
+public validarTodosFormulariosPasoUno(): boolean {
+     
     if (!this.pasoUnoComponent) {
       return true;
     }
+    
     const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
     if (!ISFORM_VALID_TOUCHED) {
       return false;
     }
-    return true;
+      return true;
+  }  
+  
+  /**
+   * Obtiene los datos actuales del store del trámite y los guarda.
+   */
+  obtenerDatosDelStore(): void {
+    this.certificadoDeService.getAllState()
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
+  }  
+
+  /**
+   * @metodo ngOnDestroy
+   * @descripcion
+   * Se ejecuta cuando el componente va a ser destruido.
+   * 
+   * @tareas
+   * - Cancela todas las suscripciones activas
+   * - Libera recursos para evitar fugas de memoria
+   * 
+   * @implementa OnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
+  
 }
