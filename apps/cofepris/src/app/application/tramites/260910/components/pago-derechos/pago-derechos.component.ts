@@ -177,7 +177,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   actualizarEstadoFormulario(): void {
     if (this.solicitud260910State.tipoOperacion === 'PRO') {
       this.pagoDeDerechosForm.enable();
-      this.disableFechaDePago = true;
+      this.disableFechaDePago = false;
     } else if (
       this.solicitud260910State.tipoOperacion === 'MYP' ||
       this.solicitud260910State.tipoOperacion === 'MOD'

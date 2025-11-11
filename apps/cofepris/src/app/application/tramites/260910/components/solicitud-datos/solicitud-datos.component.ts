@@ -991,6 +991,15 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método para validar si la prórroga está seleccionada.
+   * @returns {boolean} Regresa un booleano si el campo es inválido o no.
+   */
+  public isProrrogaSelected(): boolean {
+    const TIPO_OPERACION_VALUE = this.solicitudForm.get('tipoOperacion')?.value;
+    return TIPO_OPERACION_VALUE === 'PRO' || TIPO_OPERACION_VALUE === 'Prórroga';
+  }
+
+  /**
    * Destrucción del componente.
    */
   ngOnDestroy(): void {
