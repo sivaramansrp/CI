@@ -173,11 +173,10 @@ export class PasoUnoComponent implements OnDestroy, OnChanges {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
    validarPasoUno(): boolean {
-    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
     return (
-      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO) ? true : false
 
     );
   }
