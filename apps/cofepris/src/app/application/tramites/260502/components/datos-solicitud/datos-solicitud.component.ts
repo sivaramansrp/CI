@@ -12,5 +12,11 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
 export class DatosSolicitudComponent {
   isAvisoLicenciaVisible: boolean = false;
   isAduanasEntradaVisible: boolean = true;
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260502;
 
 }

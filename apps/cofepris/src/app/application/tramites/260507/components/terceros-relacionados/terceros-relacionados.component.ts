@@ -21,4 +21,10 @@ export class TercerosRelacionados260507Component {
    * Propiedad que almacena la constante TABLA_ORDEN para definir el orden de la tabla.
    */
   tablaOrden = TABLA_ORDEN;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260507;
 }
