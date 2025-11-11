@@ -1,132 +1,145 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { Solicitud120602Service } from '../../services/solicitud120602/solicitud120602.service';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT } from '../../constantes/definiciones.enum';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { RepresentacionFederalComponent } from '../../component/representacion-federal/representacion-federal.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * @Component
- * @selector app-datos
- * @description
- * Componente `DatosComponent` que gestiona la selección de pestañas y la carga de datos para el trámite 120602.
- * 
- * Detalles:
- * - Utiliza el decorador `@Component` para definir las propiedades del componente.
- * - Renderiza la plantilla HTML asociada para mostrar y gestionar los datos del trámite.
- * - Controla la selección de pestañas mediante el índice y la carga de datos desde el store y servicios.
- * 
- * Propiedades:
- * - `selector`: Define el nombre del selector del componente como `app-datos`.
- * - `templateUrl`: Ruta al archivo de plantilla HTML del componente.
- * 
- * @example
- * <app-datos></app-datos>
+ * Interfaz que representa la acción de un botón.
+ */
+interface AccionBoton {
+  /**
+   * La acción que se va a realizar.
+   */
+  accion: string;
+  /**
+   * El valor asociado a la acción.
+   */
+  valor: number;
+}
+
+/**
+ * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent implements OnInit, OnDestroy {
-
+export class DatosComponent {
   /**
-  * Esta variable se utiliza para almacenar el índice del subtítulo.
-  * @type {number}
-  */
-  public indice: number = 1;
-
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
-
-  /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
-  
-  /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
-  public consultaState!: ConsultaioState;
-
-  /**
-  * @constructor
-  * @description Inicializa una instancia del `DatosComponent`.
-  */
-  constructor(
-    private solicitus120602Service: Solicitud120602Service,
-    private consultaQuery: ConsultaioQuery
-  ) {
-    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
-  }
-
-  /**
-   * @method ngOnInit
-   * @description
-   * Método de inicialización del componente `DatosComponent`.
-   * 
-   * Detalles:
-   * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
-   * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
-   * - Actualiza la propiedad `consultaState` con el estado recibido.
-   * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
-   * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
-   * 
-   * @example
-   * this.ngOnInit();
-   * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
+   * Lista de pasos en el asistente.
    */
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
+  pasos: ListaPasosWizard[] = PASOS_REGISTRO;
+
+  /**
+   * Referencia al componente WizardComponent.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente PasoUno.
+   * 
+   * @viewChild pasoUnoRef
+   * @description Permite acceder a las propiedades y métodos públicos del componente PasoUnoComponent desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUno!: PasoUnoComponent;
+
+  /**
+   * @description Referencia al componente `RepresentacionFederalComponent` dentro de la vista actual.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo para interactuar desde el componente padre.
+   * 
+   * @type {RepresentacionFederalComponent}
+   * @memberof DatosComponent
+   */
+  @ViewChild(RepresentacionFederalComponent) representacionFederal!: RepresentacionFederalComponent;
+
+   /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * Variable utilizada para almacenar la lista de pasos.
+   */
+  pantallasPasos: ListaPasosWizard[] = PASOS_REGISTRO;
+
+  /**
+   * Variable utilizada para almacenar el índice del paso actual.
+   */
+  indice: number = 1;
+
+  /**
+   * Datos para los pasos en el asistente.
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   * }
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    // Validar formulario de solicitante (pestaña 1) a través del componente paso-uno
+    if (this.pasoUno) {
+      isValid = this.pasoUno.validarFormularios();
     } else {
-      this.esDatosRespuesta = true;
+      isValid = false;
     }
+
+    return isValid;
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Actualiza el valor del índice según el evento del botón de acción.
+   * @param e El evento del botón de acción que contiene la acción y el valor.
    */
-  guardarDatosFormulario(): void {
-    this.solicitus120602Service
-      .getEmpresaSolicitudData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.solicitus120602Service.actualizarEstadoFormulario(resp);
-        }
-      });
-  }
-  
- /**
-   * @method seleccionaTab
-   * @description Este método se utiliza para establecer el índice del subtítulo.
-   * @param {number} i - El nuevo índice del subtítulo.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
+  public getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarFormularios();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        // Scroll to top to show error message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
 
-  /**
- * @method ngOnDestroy
- * @description
- * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
- * 
- * Detalles:
- * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
- * - Completa el observable para liberar recursos y evitar fugas de memoria.
- * 
- * @returns {void} No retorna ningún valor.
- */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    // Calcular el nuevo índice basado en la acción
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else if (e.accion === 'ant') {
+        this.wizardComponent.atras();
+      }
+    }
   }
 }

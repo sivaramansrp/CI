@@ -54,6 +54,7 @@ import {
   COMUN_URL,
   FRACCION_HTS,
   PAIS_DESTINO,
+  TIPO_EMPRESA,
   UNIDADES_MEDIDA_COMERCIAL
 } from '../../servers/api-router';
 
@@ -919,4 +920,17 @@ usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observa
   const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+/**
+ * Obtiene el catálogo tipo de empresa.
+ * 
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de empresa
+ * @see CATALOGO_TIPO_EMPRESA
+ */
+  obtenerTipoEmpresaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${TIPO_EMPRESA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
 }
