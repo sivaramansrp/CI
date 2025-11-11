@@ -627,7 +627,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   */
   fetchRepresentacionFederal(): void {
     this.solocitud130106Service
-      .getRepresentacionFederal('130106',"SIN")
+      .getRepresentacionFederal('130106', "SIN")
       .subscribe((data) => {
         this.representacionFederal = data;
       });
@@ -874,9 +874,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.unidadCatalogo = data || [];
     });
   }
-   /**
-   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
-   */
+  /**
+  * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+  */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

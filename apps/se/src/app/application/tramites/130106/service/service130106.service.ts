@@ -20,7 +20,7 @@ export class Solocitud130106Service {
   urlServer = ENVIRONMENT.URL_SERVER;
   // URL base para consumir los catálogos auxiliares desde el servidor.
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
-
+  // Identificador del trámite 130106.
   tramiteId: string = '130106';
 
   /** Constructor que inyecta servicios HTTP y el store del trámite 130106.  
