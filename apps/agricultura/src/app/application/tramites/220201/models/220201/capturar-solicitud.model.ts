@@ -327,6 +327,10 @@ export interface FilaSolicitud {
    * Descripción de la fracción arancelaria del producto.
    */
   descripcionFraccion: string;
+    /**
+   * Descripción de la fracción arancelaria del producto.
+   */
+  idDescripcionFraccion: number;
   /**
    * Código NICO.
    */

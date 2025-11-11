@@ -213,7 +213,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
    */
   public validarFormularios(): { valido: boolean; mensaje?: string } {
-    console.log('entra a alida formulario de los datos de la solicitud');
+    console.log('entra a salida formulario de los datos de la solicitud');
 
     const tabsValidadas = [
       { index: 2, ref: this.datosSolicitudRef },
@@ -268,8 +268,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   }
 
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
-    // console.log('Con deshabilitados:', JSON.stringify(this.solicitanteComponentRef.datosGenerales));
-    // console.log('datosFormulario', JSON.stringify(datos));
+
     return {
       id_solicitud: null,
       datos_solicitud: {
@@ -284,7 +283,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
           requisito: t.requisito ?? '',
           numero_certificado: t.numeroCertificadoInternacional ?? '',
           cve_fraccion: t.fraccionArancelaria ?? '',
-          id_fraccion_gubernamental: 0,
+          id_fraccion_gubernamental: t.idDescripcionFraccion,
           clave_nico: t.nico ?? '',
           descripcion_mercancia: t.descripcion ?? '',
           cantidad_umt: Number(t.cantidadUMT) ?? 0,
@@ -362,7 +361,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
         rfc: this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
-        rol_capturista: "Solicitante", // se saca de la sesion y aun no funciona login 
+        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login 
         nombre: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''),
         es_persona_moral: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
         certificado_serial_number: 0 // no sabemos de donde se obtiene 

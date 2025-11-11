@@ -63,7 +63,22 @@ export class RegistroSolicitudService {
     */
   obtieneUnidadMedida(tramite: number, cveFraccion: string): Observable<BaseResponse<Catalogo>> {
     const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_UNIDAD_MEDIDA(tramite.toString(), cveFraccion)}`;
-    return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
+    return this.http.get<BaseResponse<any>>(ENDPOINT).pipe(
+      map(response => {
+        // Transformar el dato para que cumpla con la interfaz Catalogo
+        const nuevoCatalogo: Catalogo = {
+          clave: response.datos?.cve_unidad_medida ?? '',
+          descripcion: response.datos?.descripcion ?? '',
+          id: 0
+        };
+
+        // Retornar la misma estructura de BaseResponse pero con Catalogo mapeado
+        return {
+          ...response,
+          datos: nuevoCatalogo
+        } as BaseResponse<Catalogo>;
+      })
+    );
   }
 
   /**
