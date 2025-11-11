@@ -6,6 +6,7 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { DatosAdicionalesComponent } from '../../components/datos-adicionales/datos-adicionales.component';
 import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
+import { ExportadorAutorizadoService } from '../../services/exportador-autorizado.service';
 
 import { EmpaqueMercancia, InsumoMercancia, SolicitudCompletaRequest } from '../../models/request/guardado-solicitud-request.model';
 
@@ -150,6 +151,25 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public bandejaSolicitud = false;
 
+  /** 
+   * @property mostrarExportadorUE
+   * @description Indica si debe mostrarse la sección del exportador autorizado para la Unión Europea.
+   * 
+  */
+  mostrarExportadorUE: boolean = false;
+
+  /**
+   * @property mostrarExportadorJPN
+   * @description Indica si debe mostrarse la sección del exportador autorizado para Japón.
+   */
+  mostrarExportadorJPN: boolean = false;
+
+  /**
+   * @property tituloExportador
+   * @description Almacena el título dinámico que se muestra en la interfaz según el tipo de exportador autorizado.
+   */
+  tituloExportador: string = '';
+
   /**
    * @property controlPeticiones
    * @type {boolean}
@@ -170,6 +190,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     private evaluacionTratadosService: EvaluacionTratadosService,
     private solicitudService: SolicitudService,
     private tramite110101Store: Tramite110101Store,
+    private exportadorAutorizadoService: ExportadorAutorizadoService
   ) {
 
   }
@@ -194,6 +215,7 @@ export class DatosComponent implements OnInit, OnDestroy {
         }
 
         this.checkParameterAndEnableTabs();
+
       })
     )
     .subscribe();
@@ -209,7 +231,71 @@ export class DatosComponent implements OnInit, OnDestroy {
     if(this.consultaState.parameter === "EvaluarSolicitud"){
       this.evaluacionTablaTratados();
     }
+
+    if(this.consultaState.create === false){
+      this.consultarExportadorAutorizado();
+    }
   }
+
+  /**
+   * @method consultarExportadorAutorizado
+   * @description Realiza la consulta de información del exportador autorizado para 
+   * la Unión Europea o Japón según el folio del trámite.
+   * Actualiza las banderas que controlan la visualización de las secciones correspondientes 
+   * y el título del componente.
+   */
+  consultarExportadorAutorizado(): void {
+    this.exportadorAutorizadoService.getExportadoAutorizadoUEoJPN(this.consultaState.folioTramite)
+      .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (response.codigo === CodigoRespuesta.EXITO) {
+              this.mostrarExportadorUE = Boolean(response.datos?.mostrar_exportador_ue);
+              this.mostrarExportadorJPN = Boolean(response.datos?.mostrar_exportador_jpn);
+              
+              this.actualizarTituloExportador();
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: response.error || 'Error obtener tratados.',
+                mensaje: response.causa || response.mensaje || 'Error obtener tratados.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          },
+          error: (err) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const MENSAJE = err?.error?.error || 'Error obtener tratados.';
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+        });
+  }
+  /**
+   * @method actualizarTituloExportador
+   * @description Actualizar el título dinámicamente según la respuesta del endpoit
+   */
+  actualizarTituloExportador(): void{
+    if (this.mostrarExportadorUE) {
+      this.tituloExportador = 'Exportador Autorizado UE';
+    } else if (this.mostrarExportadorJPN) {
+      this.tituloExportador = 'Exportador Autorizado JPN';
+    } 
+  }
+
   /**
      * Obtiene la evaluación de tratados para la solicitud actual y actualiza la tabla de evaluación.
      *

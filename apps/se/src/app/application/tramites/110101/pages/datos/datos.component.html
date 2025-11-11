@@ -41,10 +41,11 @@
                     <a data-toggle="tab" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Tratados</a>
                 </li>
                 
+                @if (mostrarExportadorUE || mostrarExportadorJPN) {
                 <li [ngClass]="indice === 7 ? 'active' : ''">
-                    <a data-toggle="tab" (keyup)="seleccionaTab(7)" (click)="seleccionaTab(7)">Exportador Autorizado</a>
+                    <a data-toggle="tab" (keyup)="seleccionaTab(7)" (click)="seleccionaTab(7)">{{tituloExportador}}</a>
                 </li>
-
+                }
                 <li [ngClass]="indice === 6? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
                     (keydown.space)="seleccionaTab(6)" role="button" tabindex="3">Protesto de Decir Verdad</a>

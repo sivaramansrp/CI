@@ -32,3 +32,20 @@ export interface ExportadorAutorizadoResponse {
   /** Indica si el dictaminador puede calificar el exportador autorizado para Japón */
   dictaminador_puede_calificar_jpn: boolean;
 }
+
+export interface DatosExportadorAutorizadoResponse {
+  /** Indica si se debe mostrar la sección de exportador UE */
+  mostrar_exportador_ue: boolean;
+
+  /** Indica si se debe mostrar la sección de exportador JPN */
+  mostrar_exportador_jpn: boolean;
+
+  /** Indica si el solicitante aplica */
+  solicitante: boolean;
+
+  /** Indica si la mercancía aplica */
+  mercancia: boolean;
+
+  /** Indica si los tratados aplican */
+  tratados: boolean;
+}

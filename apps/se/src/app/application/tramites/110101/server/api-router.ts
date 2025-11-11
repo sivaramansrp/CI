@@ -24,10 +24,16 @@ export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
 export const CVEFRACCION = '{cveFraccion}';
 
 /**
- * cveFraccion de la solicitud que se utilizará en las consultas.
- * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ * idSolicitud de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el idSolicitud real de la solicitud.
  */
 export const IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * numFolioTramite de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el numFolioTramite real de la solicitud.
+ */
+export const NUMFOLIOTRAMITE = '{numFolioTramite}'
 
 /**
  *  URLs de catalogos
@@ -211,3 +217,8 @@ export const API_GET_PROTESTO_EVALUAR = (IDSOLICITUD: string): string => `sat-t1
  */
 export const API_GET_EXPORTADOR_AUTORIZADO = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/exportador`;
 
+/**
+ * API para consultar el exportador autorizado si es de UE o JPN
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitud/get-solicitud-seccion
+ */
+export const API_GET_EXPORTADOR_AUTORIZADO_UE_O_JPN = (NUMFOLIOTRAMITE: string): string => `sat-t110101/tramite/${NUMFOLIOTRAMITE}/solicitud/seccion`;

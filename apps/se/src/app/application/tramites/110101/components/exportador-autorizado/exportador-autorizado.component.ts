@@ -8,7 +8,8 @@ import { ExportadorAutorizadoService } from '../../services/exportador-autorizad
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RADIO_OPCIONS_EXP_AUT } from '../constante110101.enum';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
@@ -90,6 +91,8 @@ export class ExportadorAutorizadoComponent implements OnInit {
         })
       )
       .subscribe();
+    this.inicializarFormulario();
+    this.getExportadorAutorizado();
   }
 
   /**
@@ -97,10 +100,17 @@ export class ExportadorAutorizadoComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void { 
-    this.inicializarFormulario();
-    this.getExportadorAutorizado(this.consultaState.id_solicitud);
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => { 
+          this.consultaState= seccionState;
+        })
+      )
+      .subscribe();
+      this.inicializarFormulario();
+      this.getExportadorAutorizado();
   }
-
   /**
    * Método que inicializa el formulario
    * @returns {void}
@@ -119,8 +129,8 @@ export class ExportadorAutorizadoComponent implements OnInit {
    * y muestra una notificación en caso de error.
    * @param id_solicitud 
    */
-  getExportadorAutorizado(id_solicitud: string): void {
-    this.exportadorAutorizadoService.getExportadorAutorizado(id_solicitud)
+  getExportadorAutorizado(): void {
+    this.exportadorAutorizadoService.getExportadorAutorizado(this.consultaState.id_solicitud)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
