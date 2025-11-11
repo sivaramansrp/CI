@@ -149,7 +149,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal SCIAN.
    */
-  @ViewChild('modal-agregar-scian') modalElementSCIAN!: ElementRef;
+  @ViewChild('modalAgregarScian') modalElementSCIAN!: ElementRef;
 
   /**
    * Tipo seleccionado para acciones.
