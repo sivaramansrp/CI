@@ -249,7 +249,7 @@
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
           [placeholder]="'Seleccione una opción'" [isDisabled]="estaDeshabilitadoDesplegable"
           [required]="idProcedimiento === 260911 || !elementosNoRequeridos.includes('colonia')"
-          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false"
+          [markTouched]="agregarDestinatarioFinal.get('colonia')?.touched ?? false"
           [disabledPrimerOption]="false"
           [hiddenPrimerOption]="false">
         </app-catalogo-select>

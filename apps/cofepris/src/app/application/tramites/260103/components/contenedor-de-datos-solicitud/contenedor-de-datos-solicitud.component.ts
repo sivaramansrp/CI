@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -49,6 +49,20 @@ import { Tramite260103Query } from '../../estados/tramite260103Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+    /**
+     * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+     * @description
+     * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     *
+     * Esta propiedad permite acceder a los métodos públicos y propiedades
+     * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+     *
+     * > Nota: Angular inicializa esta referencia después de que la vista
+     * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+     */
+    @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+  
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description
@@ -269,6 +283,25 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasImportacion: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

@@ -5,6 +5,14 @@
     </div>
     <ng-container *ngIf="indice === 2"> </ng-container>
     <app-wizard [listaPasos]="pasos"></app-wizard>
+      @if(esFormaValido){
+      <div class="col-12">
+        <ng-alert
+          [CONTENIDO]="MENSAJE_DE_ERROR"
+          [CUSTOMECLASS]="infoError"
+        ></ng-alert>
+      </div>
+    }
   </div>
 
   <div class="row">
@@ -22,4 +30,11 @@
       (continuarEvento)="getValorIndice($event)"
     ></btn-continuar>
   </div>
+  @if(indice === 1) {
+    <div class="mt-5">
+      <div class="mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
+    </div>
+    }
 </div>
