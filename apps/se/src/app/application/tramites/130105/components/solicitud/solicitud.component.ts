@@ -599,7 +599,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   fechasSeleccionadas(evento: string[]): void {
-    console.log(evento);
     this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 

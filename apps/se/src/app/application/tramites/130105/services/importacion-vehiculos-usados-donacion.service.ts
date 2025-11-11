@@ -1,18 +1,12 @@
 
-/**
- * Importación de vehículos usados por donación.
- * Este servicio proporciona métodos para obtener datos relacionados con la importación de vehículos usados por donación.
- */
 import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
 import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130105Query } from '../../../estados/queries/tramite130105.query';
 import { PROC_130105 } from '../servers/api-route';
-import { MostrarPartidas } from '@libs/shared/data-access-user/src/core/models/shared/mostrar-partidas';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -39,72 +33,6 @@ export class ImportacionVehiculosUsadosDonacionService {
     return this.tramite130105Query.selectSolicitud$;
   }
 
-  /**
-   * Obtiene la lista de países disponibles desde un archivo JSON.
-   * Un observable que emite una lista de países.
-   */
-  getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130105/pais-procenia.json');
-  }
-
-  /**
-   * Obtiene la lista de países por bloque desde un archivo JSON.
-   * El ID del bloque.
-   * Un observable que emite una lista de países agrupados por bloque.
-   */
-  // getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130105/paises-por-bloque.json'
-  //   );
-  // }
-
-  /**
-   * Obtiene la lista de entidades federativas desde un archivo JSON.
-   * Un observable que emite una lista de entidades federativas.
-   */
-  // getEntidadFederativa(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130105/entidad-federativa.json'
-  //   );
-  // }
-
-  /**
-   * Obtiene la lista de representaciones federales desde un archivo JSON.
-   * Un observable que emite una lista de representaciones federales.
-   */
-  // getRepresentacionFederal(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130105/representacion-federal.json'
-  //   );
-  // }
-
-  /**
-   * Obtiene las opciones de solicitud desde un archivo JSON.
-   * Un observable que emite las opciones de solicitud.
-   */
-  // getSolicitudeOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130105/solicitude-options.json'
-  //   );
-  // }
-
-  /**
-   * Obtiene las opciones de producto desde un archivo JSON.
-   * Un observable que emite las opciones de producto.
-   */
-  // getProductoOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130105/producto-otions.json'
-  //   );
-  // }
-  /**
-   * Obtiene la lista de clasificaciones desde un archivo JSON.
-   */
-  // getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-  //   return this.http.get<PartidasDeLaMercanciaModelo[]>(
-  //     'assets/json/130105/partidas-de-la.json'
-  //   );
-  // }
 
   /**
   * Actualiza el estado del formulario en el store.
@@ -137,42 +65,42 @@ export class ImportacionVehiculosUsadosDonacionService {
     * @param tratadoAsociado - Clave del tratado asociado
     * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
     */
-  getRegimenCatalogo(tramitesID: string): Observable<any[]> {
+  getRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
     return this.catalogoServices.regimenesCatalogo(tramitesID)
       .pipe(
         map(res => res?.datos ?? [])
       );
   }
 
-  getClasificacionRegimenCatalogo(tramitesID: string): Observable<any[]> {
-    const payloadDatos = { tramite: 'TITPEX.130108', id: tramitesID };
-    return this.catalogoServices.clasificacionRegimenCatalogo('130105', payloadDatos)
+  getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+    const PAYLOAD_DATOS = { tramite: 'TITPEX.130108', id: tramitesID };
+    return this.catalogoServices.clasificacionRegimenCatalogo('130105', PAYLOAD_DATOS)
       .pipe(
         map(res => res?.datos ?? [])
       );
   }
 
-  getFraccionCatalogoService(ID: string): Observable<any[]> {
+  getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
     return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130116')
       .pipe(
         map(res => res?.datos ?? [])
       );
   }
 
-  getUMTService(ID: string, FRACCION_ID: string): Observable<any[]> {
+  getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
     return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
       .pipe(
         map(res => res?.datos ?? [])
       );
   }
 
-  getEntidadesFederativasCatalogo(ID: string): Observable<any[]> {
+  getEntidadesFederativasCatalogo(ID: string): Observable<Catalogo[]> {
     return this.catalogoServices.entidadesFederativasCatalogo(ID).pipe(
       map(res => res?.datos ?? [])
     );
   }
 
-  getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<any[]> {
+  getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<Catalogo[]> {
     return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
       map(res => res?.datos ?? [])
     );
@@ -184,7 +112,7 @@ export class ImportacionVehiculosUsadosDonacionService {
     );
   }
 
-  getBloqueService(tramite: string): Observable<any[]> {
+  getBloqueService(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.tratadosAcuerdoCatalogo(tramite,'TITRAC.TA')
       .pipe(
         map(res => res?.datos ?? [])
@@ -198,7 +126,7 @@ export class ImportacionVehiculosUsadosDonacionService {
       );
   }
 
-  getPaisesPorBloqueService(tramite: string, ID: string): Observable<any[]> {
+  getPaisesPorBloqueService(tramite: string, ID: string): Observable<Catalogo[]> {
     return this.catalogoServices.getpaisesBloqueCatalogo(tramite, ID)
       .pipe(
         map(res => res?.datos ?? [])
