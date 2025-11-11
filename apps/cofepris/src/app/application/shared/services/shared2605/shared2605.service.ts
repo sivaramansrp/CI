@@ -1,12 +1,12 @@
+import { FRACCION_DESCRIPCION, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 import { Observable, combineLatest, map } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
-import { HttpClient } from '@angular/common/http';
-import { JSONResponse } from '@libs/shared/data-access-user/src';
-import { FRACCION_DESCRIPCION, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 
 /**
  * @description

@@ -149,18 +149,21 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Retorna true si todos los formularios son válidos, false en caso contrario.
    */
   public validarFormularios(): boolean {
-    this.isDatosDeLaSolicitudComponentValid = (this.query.getValue().formValidity?.datosEstablecimiento && this.query.getValue().formValidity?.domicilioEstablecimiento &&
-  this.query.getValue().formValidity?.manifiestos && this.query.getValue().formValidity?.representanteLegal) ?? false;
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.query.getValue().formValidity?.datosEstablecimiento && 
+      this.query.getValue().formValidity?.domicilioEstablecimiento &&
+      this.query.getValue().formValidity?.manifiestos &&
+      this.query.getValue().formValidity?.representanteLegal ) ?? false;
     this.isTercerosComponentValid = this.query.getValue().formValidity?.terceros ?? false;
     this.isPagoDeDerechosComponentValid = this.query.getValue().formValidity?.pagoDeDerechos ?? false;
 
-    // if (!this.isCertificadoOrigenComponentValid) {
-    //   this.certificadoOrigenComponent?.validarFormulario(); 
-    // }
+    if (!this.isDatosDeLaSolicitudComponentValid) {
+      this.datosSolicitudComponent?.validarFormulario(); 
+    }
 
-    // if (!this.isDatosCertificadoComponentValid) {
-    //   this.datosCertificadoComponent?.validarFormulario();
-    // }
+    if (!this.isTercerosComponentValid) {
+      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
+    }
 
     // if (!this.isDestinarioComponentValid) {
     //   this.destinatarioComponent?.validarFormulario();

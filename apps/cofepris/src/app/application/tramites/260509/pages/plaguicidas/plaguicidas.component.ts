@@ -127,14 +127,14 @@ export class PlaguicidasComponent implements OnInit {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
 
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ES_VALIDO = this.validarFormulariosPasoActual();
-      if (!ES_VALIDO) {
-        this.isPeligro = true;
-        return;
-      }
-      this.isPeligro = false;
-    }
+    // if (this.indice === 1 && e.accion === 'cont') {
+    //   const ES_VALIDO = this.validarFormulariosPasoActual();
+    //   if (!ES_VALIDO) {
+    //     this.isPeligro = true;
+    //     return;
+    //   }
+    //   this.isPeligro = false;
+    // }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
         this.shouldNavigate$()

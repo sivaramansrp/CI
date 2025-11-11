@@ -282,6 +282,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public tercerosForm: FormGroup = new FormGroup({});
 
+    public isfabricanteInvalida: boolean = false;
+
+    public isProveedorInvalida: boolean = false;
+
+    public isFormuladorInvalida: boolean = false;
+
+
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -1564,6 +1572,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         extranjeroEstado: 'Estado del Extranjero Ejemplo',
         extranjeroColonia: 'Colonia del Extranjero Ejemplo',
       })
+    }
+  }
+
+  markTouched(): void {
+    if (this.fabricanteRowData.length===0) {
+      this.isfabricanteInvalida=true;
+    }
+    if (this.formuladorRowData.length===0) {
+      this.isFormuladorInvalida=true;
+    }
+    if (this.proveedorRowData.length===0) {
+      this.isProveedorInvalida=true;
     }
   }
 

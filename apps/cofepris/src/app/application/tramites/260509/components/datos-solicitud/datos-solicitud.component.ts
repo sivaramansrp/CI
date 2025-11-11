@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { Tramite260509Store } from '../../../../estados/tramites/260509/tramite260509.store';
 
@@ -15,6 +15,12 @@ import { Tramite260509Store } from '../../../../estados/tramites/260509/tramite2
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosDeLaComponent', { static: false }) datosDeLaComponent!: DatosDeLaComponent;
+
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
@@ -63,5 +69,9 @@ export class DatosSolicitudComponent {
 
   representanteLegalFormValidityChange(event: boolean): void {
     this.store.setFormValidity('representanteLegal', event);
+  }
+
+  validarFormulario(): void {
+    this.datosDeLaComponent?.validarClickDeBoton();
   }
 }

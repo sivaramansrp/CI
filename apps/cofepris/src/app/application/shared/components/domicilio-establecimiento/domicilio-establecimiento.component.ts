@@ -33,10 +33,12 @@ import {
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -146,6 +148,12 @@ public mostrarErrores = {
    * Lista de países seleccionados como origen.
    */
    public seleccionadasPaisDeOriginDatos: string[] = [];
+
+   public seleccionadasPaisfabrica: string[]= [];
+
+   public seleccionadasPaisElaboracion: string[] = [];
+
+   public seleccionadasPaisProveedor: string[] = [];
 
    seleccionadasPaisDeProcedenciaDatos: string[] = [];
   /**
@@ -418,7 +426,7 @@ public mostrarErrores = {
         ],
       ],
       regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
    
@@ -921,8 +929,6 @@ public mostrarErrores = {
        "",
         [Validators.maxLength(100)],
       ],
-      paisDeOriginDatos:[ this.seleccionadasPaisDeOriginDatos, Validators.required],
-      paisDeProcedenciaDatos:[ this.seleccionadasPaisDeProcedenciaDatos, Validators.required],
     });
 
     /**
@@ -939,6 +945,43 @@ public mostrarErrores = {
         this.fb.control("", [Validators.required, Validators.maxLength(50)]),
       );
     }
+
+    if (this.configuracionVisibilidad.paisOrigen) {
+      this.formMercancias.addControl(
+        "paisDeOriginDatos",
+        this.fb.control(this.seleccionadasPaisDeOriginDatos, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisFabrica) {
+      this.formMercancias.addControl(
+        "paisFabrica",
+        this.fb.control(this.seleccionadasPaisfabrica, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisElaboracion) {
+      this.formMercancias.addControl(
+        "paisElaboracion",
+        this.fb.control(this.seleccionadasPaisElaboracion, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProveedor) {
+      this.formMercancias.addControl(
+        "paisProveedor",
+        this.fb.control(this.seleccionadasPaisProveedor, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProcedencia) {
+      this.formMercancias.addControl(
+        "paisDeProcedenciaDatos",
+        this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+
 
     this.seleccionadasAduanasEntradaDatos =
       this.solicitudState?.aduanasDeEntrada;
@@ -1563,6 +1606,9 @@ public mostrarErrores = {
     this.formMercancias.reset();
     this.seleccionadasPaisDeOriginDatos=[];
     this.seleccionadasPaisDeProcedenciaDatos=[];
+    this.seleccionadasPaisfabrica=[];
+    this.seleccionadasPaisElaboracion=[];
+    this.seleccionadasPaisProveedor=[];
     this.modalInstance.hide();
 
   }
@@ -1608,6 +1654,9 @@ public mostrarErrores = {
       this.datosDomicilioLegalStore.setMercanciasTabla(this.mercanciasTablaDatos);
       this.formMercancias.reset();
       this.seleccionadasPaisDeOriginDatos=[];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       this.seleccionadasPaisDeProcedenciaDatos=[];
       
     
@@ -1706,6 +1755,9 @@ openModal():void {
     if (forma) {
       this.seleccionadasPaisDeOriginDatos = [];
       this.seleccionadasPaisDeProcedenciaDatos = [];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       forma.reset();
     }
   }
@@ -1722,6 +1774,51 @@ openModal():void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
     this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
+    });
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisProveedorSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisProveedor = events;
+    this.formMercancias.patchValue({
+      paisProveedor: events,
+    });
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisElaboracionSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisElaboracion = events;
+    this.formMercancias.patchValue({
+      paisElaboracion: events,
+    });
+  }
+
+   /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisfabricaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisfabrica = events;
+    this.formMercancias.patchValue({
+      paisFabrica: events,
     });
   }
 
