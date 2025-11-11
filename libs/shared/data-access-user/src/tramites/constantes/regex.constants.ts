@@ -405,6 +405,8 @@ export const REGEX_TEXTO_CON_SIMBOLOS = /^[a-zA-Z0-9\s\-.,()&]*$/;
 
 export const REGEX_TEXTO_ALFANUMERICO_EXTENDIDO = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.,()\-]+$/;
 
+export const REGEX_TEXTO_CON_SYMBOLOS = /^[a-zA-Z0-9\s&()\-\/.,]*$/;
+
 
 
 
