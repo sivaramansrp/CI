@@ -1304,7 +1304,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   guardarTotal(): void {
     // Lógica para guardar la solicitud de forma completa
     const FORMULARIO = this.datosDelaSolicitud.value;
-
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
       tipo_mercancia: 'TICERM.AN',
@@ -1318,7 +1317,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
       cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.clave_umt || '',
+      clave_unidad_comercial: fila.umc || '',
       id_especie: Number(fila.especie) || 0,
       id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',
