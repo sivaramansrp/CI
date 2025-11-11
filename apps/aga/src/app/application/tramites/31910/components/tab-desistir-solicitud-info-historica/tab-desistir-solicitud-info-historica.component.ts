@@ -1,6 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud31910State, Tramite31910Store } from '../../estados/stores/tramite31910.store';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud31910State,
+  Tramite31910Store,
+} from '../../estados/stores/tramite31910.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -18,7 +26,9 @@ import { Tramite31910Query } from '../../estados/queries/tramite31910.query';
   templateUrl: './tab-desistir-solicitud-info-historica.component.html',
   styleUrl: './tab-desistir-solicitud-info-historica.component.scss',
 })
-export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDestroy {
+export class TabDesistirSolicitudInfoHistoricaComponent
+  implements OnInit, OnDestroy
+{
   /**
    * solicitud reactivo para capturar las observaciones del usuario.
    */
@@ -48,23 +58,23 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
   /**
    * Constructor que inicializa los servicios necesarios para el componente.
    */
-  
+
   constructor(
     private fb: FormBuilder,
     private tramite31910Store: Tramite31910Store,
     private tramite31910Query: Tramite31910Query,
-    private desistirSolicitudInformacionHistoricaService : DesistirSolicitudInformacionHistoricaService,
+    private desistirSolicitudInformacionHistoricaService: DesistirSolicitudInformacionHistoricaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-  this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-       this.crearFormulario();
-      })
-    )
-    .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -72,11 +82,12 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
    * Configura las suscripciones y crea el formulario.
    */
   ngOnInit(): void {
-    this.tramite31910Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+    this.tramite31910Query.selectSolicitud$
+      ?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Solicitud31910State) => {
         this.seccionState = data;
       });
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -91,7 +102,7 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
     }
   }
 
-   /**
+  /**
    * @method
    * @name guardarDatosFormulario
    * @description
@@ -117,7 +128,10 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
    */
   crearFormulario(): void {
     this.solicitud = this.fb.group({
-      justificacion: [this.seccionState?.justificacion, [Validators.required, Validators.maxLength(4000)]],
+      justificacion: [
+        this.seccionState?.justificacion,
+        [Validators.required, Validators.maxLength(4000)],
+      ],
     });
   }
 
@@ -127,6 +141,26 @@ export class TabDesistirSolicitudInfoHistoricaComponent implements OnInit, OnDes
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite31910Store.actualizarEstado({ [campo]: VALOR });
+  }
+
+  /**
+   * * Verifica si el formulario es válido.
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  esFormValido(): boolean {
+    return this.solicitud.valid;
+  }
+
+  /**
+   * Marca todos los campos del formulario como tocados para activar las validaciones.
+   * Esto es útil para mostrar mensajes de error cuando el usuario intenta enviar un formulario incompleto o inválido.
+   */
+  marcarCamposComoTocados(): void {
+    this.solicitud.markAllAsTouched();
+  }
+
+  validarFormulario(): boolean {
+    return this.solicitud.valid;
   }
 
   /**

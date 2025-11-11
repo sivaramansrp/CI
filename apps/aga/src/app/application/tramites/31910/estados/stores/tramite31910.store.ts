@@ -7,6 +7,12 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud31910State {
   /**
+   * ID de la solicitud.
+   * Puede ser nulo si la solicitud no ha sido creada aún.
+   */
+  idSolicitud: number | null;
+
+  /**
    * justificacion relacionadas con la solicitud.
    */
   justificacion: string;
@@ -18,6 +24,7 @@ export interface Solicitud31910State {
  */
 export function createInitialState(): Solicitud31910State {
   return {
+    idSolicitud: null,
     justificacion: '',
   };
 }
@@ -34,7 +41,6 @@ export class Tramite31910Store extends Store<Solicitud31910State> {
   constructor() {
     super(createInitialState());
   }
-
 
   /**
    * Actualiza el estado de la solicitud con los valores proporcionados.

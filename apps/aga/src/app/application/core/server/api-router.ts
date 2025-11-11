@@ -51,3 +51,11 @@ export const API_POST_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/reque
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Atender-Requerimiento/guardar-acuse-promocion
  */
 export const API_POST_ACUSE_REQUERIMIENTO= `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/requerimiento/atender/acuse/guardar`;
+
+/**
+ * Api para guardar la solicitud del tramite
+ * @param tramite id del tramite
+ * @returns endpoint para guardar la solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Guardar-Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = (tramite: number | string): string =>`sat-t${tramite}/solicitud/guardar`;
