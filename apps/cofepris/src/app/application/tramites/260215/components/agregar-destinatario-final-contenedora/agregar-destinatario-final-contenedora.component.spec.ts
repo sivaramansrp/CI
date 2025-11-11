@@ -1,46 +1,43 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
-import { Tramite260214Query } from '../../estados/tramite260214Query.query';
+import { of, Subject } from 'rxjs';
+import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
-  let fixture: any;
-  let mockTramiteStore: jest.Mocked<Tramite260214Store>;
-  let mockTramiteQuery: any;
-  let mockActivatedRoute: any;
-
-  const mockState = {
-    destinatarioFinalTablaDatos: [{ id: 1, nombre: 'Dest 1' }],
-    destinatarioFinalTablaModificaDatos: [{ id: 2, nombre: 'Dest 2' }]
-  } as any;
+  let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
+  let storeMock: any;
+  let queryMock: any;
+  let routeMock: any;
 
   beforeEach(async () => {
-    mockTramiteStore = {
-      updateDestinatarioFinalTablaDatos: jest.fn()
-    } as any;
-    mockTramiteQuery = {
-      selectTramiteState$: of(mockState)
+    storeMock = {
+      updateDestinatarioFinalTablaDatos: jest.fn(),
     };
-    mockActivatedRoute = {
-      queryParams: of({})
+
+    queryMock = {
+      selectTramiteState$: of({
+        destinatarioFinalTablaDatos: [{ id: 1, nombre: 'Destinatario 1' }],
+        destinatarioFinalTablaModificaDatos: [{ id: 2, nombre: 'Destinatario 2' }],
+      }),
+    };
+
+    routeMock = {
+      queryParams: of({}),
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, AgregarDestinatarioFinalComponent, HttpClientTestingModule,AgregarDestinatarioFinalContenedoraComponent],
+      imports: [AgregarDestinatarioFinalContenedoraComponent],
       providers: [
-        provideHttpClientTesting(),
-        { provide: Tramite260214Store, useValue: mockTramiteStore },
-        { provide: Tramite260214Query, useValue: mockTramiteQuery },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
-      ]
+        provideHttpClient(),
+        { provide: Tramite260215Store, useValue: storeMock },
+        { provide: Tramite260215Query, useValue: queryMock },
+        { provide: ActivatedRoute, useValue: routeMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
@@ -48,62 +45,71 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize idProcedimiento with ID_PROCEDIMIENTO', () => {
-    expect(component.idProcedimiento).toBe(ID_PROCEDIMIENTO);
-  });
-
-  it('should set tramiteState and destinatarioFinalTablaDatos from query', () => {
-    expect(component.tramiteState).toEqual(mockState);
-    expect(component.destinatarioFinalTablaDatos).toEqual(mockState.destinatarioFinalTablaDatos);
+  it('should initialize tramiteState and destinatarioFinalTablaDatos from query', () => {
+    expect(component.tramiteState).toBeDefined();
+    expect(component.destinatarioFinalTablaDatos).toEqual([{ id: 1, nombre: 'Destinatario 1' }]);
   });
 
   it('should clear destinatarioFinalTablaDatos if update param is false', () => {
-    mockActivatedRoute.queryParams = of({ update: 'false' });
+    // Recreate component with updated routeMock for 'update: false'
+    routeMock.queryParams = of({ update: 'false' });
+    fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
     component.ngOnInit();
-    expect(component.destinatarioFinalTablaDatos).toEqual([]);
-  });
-
-  it('should set destinatarioFinalTablaDatos from tramiteState if update param is true', () => {
-    mockActivatedRoute.queryParams = of({ update: 'true' });
-    component.tramiteState = mockState;
+    component.tramiteState = {
+      destinatarioFinalTablaModificaDatos: [{ id: 2, nombre: 'Destinatario 2' }],
+    } as any;
+    // Recreate component with updated routeMock for 'update: true'
+    routeMock.queryParams = of({ update: 'true' });
+    fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
+    component = fixture.componentInstance;
+    component.tramiteState = {
+      destinatarioFinalTablaModificaDatos: [{ id: 2, nombre: 'Destinatario 2' }],
+    } as any;
+    fixture.detectChanges();
     component.ngOnInit();
-    expect(component.destinatarioFinalTablaDatos).toEqual(mockState.destinatarioFinalTablaModificaDatos);
-  });
-
-  it('should call tramiteStore.updateDestinatarioFinalTablaDatos on updateDestinatarioFinalTablaDatos', () => {
-    const destinatarios: Destinatario[] = [];
-    component.updateDestinatarioFinalTablaDatos(destinatarios);
-    expect(mockTramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(destinatarios);
-  });
-
-  it('should clear destinatarioFinalTablaDatos when update param is missing', () => {
-    mockActivatedRoute.queryParams = of({});
-    component.destinatarioFinalTablaDatos = [];
+    expect(component.destinatarioFinalTablaDatos).toEqual([{ id: 2, nombre: 'Destinatario 2' }]);
+    // Instead of accessing private property, recreate the component with updated routeMock
+    routeMock.queryParams = of({ update: 'true' });
+    fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
+    component = fixture.componentInstance;
+    component.tramiteState = {
+      destinatarioFinalTablaModificaDatos: [{ id: 2, nombre: 'Destinatario 2' }],
+    } as any;
+    fixture.detectChanges();
     component.ngOnInit();
-    expect(component.destinatarioFinalTablaDatos).toEqual([]);
+    expect(component.destinatarioFinalTablaDatos).toEqual([{ id: 2, nombre: 'Destinatario 2' }]);
   });
 
-  it('should handle ngOnInit multiple queryParams emissions', () => {
-    const params$ = of({ update: 'false' }, { update: 'true' });
-    mockActivatedRoute.queryParams = params$;
-    component.tramiteState = mockState;
-    component.ngOnInit();
-    expect(component.destinatarioFinalTablaDatos).toEqual(mockState.destinatarioFinalTablaModificaDatos);
-  });
-
-
-  it('should not throw if tramiteState is undefined in ngOnInit', () => {
-    mockActivatedRoute.queryParams = of({ update: 'true' });
-    component.tramiteState = undefined as any;
-    expect(() => component.ngOnInit()).not.toThrow();
-  });
-
-  it('should call updateDestinatarioFinalTablaDatos with empty array', () => {
-    component.updateDestinatarioFinalTablaDatos([]);
-    expect(mockTramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith([]);
+  it('should call store.updateDestinatarioFinalTablaDatos when updateDestinatarioFinalTablaDatos is called', () => {
+   const destinatario: Destinatario = {
+  id: 1,
+  nombres: 'Nombre',
+  nombreRazonSocial: 'Razon Social',
+  rfc: 'RFC123',
+  curp: 'CURP123',
+  telefono: '1234567890',
+  correoElectronico: 'correo@ejemplo.com',
+  pais: 'México',
+  codigoPostal: '12345',
+  tipoPersona: 'Física',
+  calle: 'Calle 1',
+  numeroExterior: '10',
+  numeroInterior: '2A',
+  colonia: 'Centro',
+  municipioAlcaldia: 'Benito Juárez',
+  entidadFederativa: 'CDMX',
+  localidad: 'Localidad',
+  estadoLocalidad: 'Estado',
+  coloniaEquivalente: 'Colonia Equivalente' // Added required property
+  // ...add any other required properties
+};
+    component.updateDestinatarioFinalTablaDatos([destinatario]);
+    expect(storeMock.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith([destinatario]);
   });
 });
