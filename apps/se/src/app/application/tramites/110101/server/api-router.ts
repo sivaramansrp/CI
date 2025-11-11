@@ -168,6 +168,19 @@ export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string =>
 export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t110101/solicitud/${IDSOLICITUD}/firmar`;
 
 /**
+ * API para agregar insumos mediante archivo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-insumos-por-archivo
+ */
+export const API_POST_INSUMO_ARCHIVOS = `sat-t110101/solicitud/insumo/archivo`; 
+
+/**
+ * API para agregar insumos mediante archivo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-empaques-por-archivo
+ */
+export const API_POST_EMPAQUES_ARCHIVOS = `/api/sat-t110101/solicitud/empaque/archivo`; 
+
+
+/**
  *  URLs de evaluacion tratados
  */
 

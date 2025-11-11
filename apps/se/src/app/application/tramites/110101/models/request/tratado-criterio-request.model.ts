@@ -52,3 +52,12 @@ export interface TratadoAgregado {
     /** Mensaje agregado */
     mensaje_agregado?: string | null;
 }
+
+/** Modelo que representa tratatados archivo */
+export interface TratadoArchivo {
+  /** Codigo */
+  codigo: string | null;
+  
+  /** Cve criterio origen*/
+  cveCriterioOrigen: string | null;
+}

@@ -1296,10 +1296,12 @@ eliminarTratado(): void {
     const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
     const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
     if (
-      CRITERIO_ORIGEN === 'OTROS' ||
-      CRITERIO_ORIGEN === 'B' ||
-      CRITERIO_ORIGEN === 'OTRASINST' ||
-      (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+       !(
+    CRITERIO_ORIGEN === 'OTROS' ||
+    CRITERIO_ORIGEN === 'B' ||
+    CRITERIO_ORIGEN === 'OTRASINST' ||
+    (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+  )
     ) {
       this.abrirModalGlobalAccion();
       return;
@@ -1408,7 +1410,12 @@ eliminarTratado(): void {
     if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
       this.abrirModalTratadosEvaluacion();
       return;
-    }          
+    }
+
+    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].criterio_origen
+    if (CRITERIO_ORIGEN === 'OTROS' || CRITERIO_ORIGEN === 'OTRASINST') {
+     
+    
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1446,6 +1453,9 @@ eliminarTratado(): void {
         }
       }
     });
+    }else{
+      this.abrirModalGlobalAccion();
+    }
   }
 
   /**
