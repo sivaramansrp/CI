@@ -66,7 +66,7 @@ describe('DatosComponent', () => {
 
   it('debe renderizar el título', () => {
     const h1 = fixture.nativeElement.querySelector('h1');
-    expect(h1.textContent).toContain('Solicitud empresa de la frontera persona física.');
+    expect(h1.textContent).toContain('Solicitud empresa de la frontera persona moral.');
   });
 
   it('debe renderizar el wizard con los pasos correctos', () => {
