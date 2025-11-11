@@ -9,9 +9,7 @@ import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.se
 import { ExportadorAutorizadoService } from '../../services/exportador-autorizado.service';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
-import { SolicitudService } from '../../services/solicitud.service';
-
-import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { Solicitante110101State } from '../../estados/tramites/solicitante110101.store';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { TratadosComponent } from '../../components/tratados/tratados.component';
 
@@ -184,8 +182,6 @@ export class DatosComponent implements OnInit, OnDestroy {
     private consultaQuery: ConsultaioQuery,
     private solicitanteQuery: Solicitante110101Query,
     private evaluacionTratadosService: EvaluacionTratadosService,
-    private solicitudService: SolicitudService,
-    private tramite110101Store: Tramite110101Store,
     private exportadorAutorizadoService: ExportadorAutorizadoService
   ) {
 

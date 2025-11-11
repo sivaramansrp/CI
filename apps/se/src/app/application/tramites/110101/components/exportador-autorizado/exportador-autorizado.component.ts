@@ -1,15 +1,14 @@
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion } from '@ng-mf/data-access-user';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
-import { Component, type OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { ExportadorAutorizadoService } from '../../services/exportador-autorizado.service';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RADIO_OPCIONS_EXP_AUT } from '../constante110101.enum';
 
-import { map, takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
@@ -80,8 +79,8 @@ export class ExportadorAutorizadoComponent implements OnInit {
    * @param fb Constructor del componente exportador-autorizado
    */
   constructor(private fb: FormBuilder,
-    private exportadorAutorizadoService: ExportadorAutorizadoService,
     private consultaioQuery: ConsultaioQuery,
+    private exportadorAutorizadoService: ExportadorAutorizadoService
   ){
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -91,8 +90,6 @@ export class ExportadorAutorizadoComponent implements OnInit {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
-    this.getExportadorAutorizado();
   }
 
   /**
@@ -100,14 +97,6 @@ export class ExportadorAutorizadoComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void { 
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => { 
-          this.consultaState= seccionState;
-        })
-      )
-      .subscribe();
       this.inicializarFormulario();
       this.getExportadorAutorizado();
   }
