@@ -6,6 +6,8 @@ import {
   CatalogosService,
   FirmaElectronicaComponent,
   InicioSesionService,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   SolicitanteComponent,
   SubirDocumentoService,
   TituloComponent,
@@ -25,10 +27,12 @@ import { TercerosRelacionadosFabricanteComponent } from './components/terceros-r
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 @NgModule({
-  declarations: [PasoUnoComponent,
+  declarations: [
+    PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    PlaguicidasComponent],
+    PlaguicidasComponent
+  ], 
   imports: [
     PermitDeSubstancesRoutingModule,
     CommonModule,
@@ -42,7 +46,8 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent,
     DatosSolicitudComponent,
     TercerosRelacionadosFabricanteComponent,
-
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
     AvisoDePrivacidadComponent,
     PagoDeDerechosContenedoraComponent
   ],
