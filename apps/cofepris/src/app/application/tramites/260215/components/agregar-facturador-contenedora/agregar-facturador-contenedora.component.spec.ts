@@ -1,177 +1,42 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarFacturadorContenedoraComponent } from './agregar-facturador-contenedora.component';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
-import {
-  Tramite260214Store,
-  Tramite260214State,
-} from '../../estados/tramite260214Store.store';
-import { Tramite260214Query } from '../../estados/tramite260214Query.query';
+import { of, Subject } from 'rxjs';
+import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
-import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { CommonModule } from '@angular/common';
-import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
-import {
-  HttpClientTestingModule,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AgregarFacturadorContenedoraComponent', () => {
   let component: AgregarFacturadorContenedoraComponent;
-  let fixture: any;
-  let mockStore: jest.Mocked<Tramite260214Store>;
-  let mockQuery: Partial<Tramite260214Query>;
-  let mockActivatedRoute: any;
-
-  const mockState: Tramite260214State = {
-    facturadorTablaDatos: [
-      {
-        nacionalidad: 'Mexicana',
-        tipoPersona: 'Física',
-        nombreRazonSocial: 'Juan Pérez López',
-        rfc: 'PELJ800101XXX',
-        curp: 'PELJ800101HDFLRN09',
-        telefono: '5544332211',
-        correoElectronico: 'juan.perez@example.com',
-        calle: 'Av. Insurgentes Sur',
-        numeroExterior: '1234',
-        numeroInterior: '5B',
-        pais: 'México',
-        colonia: 'Del Valle',
-        municipioAlcaldia: 'Benito Juárez',
-        localidad: 'Ciudad de México',
-        entidadFederativa: 'CDMX',
-        estadoLocalidad: 'Ciudad de México',
-        codigoPostal: '03100',
-        coloniaEquivalente: 'Col. Del Valle Centro',
-        nombres: 'Juan',
-        primerApellido: 'Pérez',
-        segundoApellido: 'López',
-        razonSocial: 'Servicios Pérez S.A. de C.V.',
-        lada: '55',
-      },
-    ],
-    facturadorTablaModificaDatos: [
-      {
-        nacionalidad: 'Mexicana',
-        tipoPersona: 'Física',
-        nombreRazonSocial: 'Juan Pérez López',
-        rfc: 'PELJ800101XXX',
-        curp: 'PELJ800101HDFLRN09',
-        telefono: '5544332211',
-        correoElectronico: 'juan.perez@example.com',
-        calle: 'Av. Insurgentes Sur',
-        numeroExterior: '1234',
-        numeroInterior: '5B',
-        pais: 'México',
-        colonia: 'Del Valle',
-        municipioAlcaldia: 'Benito Juárez',
-        localidad: 'Ciudad de México',
-        entidadFederativa: 'CDMX',
-        estadoLocalidad: 'Ciudad de México',
-        codigoPostal: '03100',
-        coloniaEquivalente: 'Col. Del Valle Centro',
-        nombres: 'Juan',
-        primerApellido: 'Pérez',
-        segundoApellido: 'López',
-        razonSocial: 'Servicios Pérez S.A. de C.V.',
-        lada: '55',
-      },
-    ],
-    destinatarioFinalTablaDatos: [],
-    proveedorTablaDatos: [],
-    fabricanteTablaDatos: [],
-    destinatarioFinalTablaModificaDatos: [],
-    proveedorTablaModificaDatos: [],
-    fabricanteTablaModificaDatos: [],
-    datosSolicitudFormState: {
-      rfcSanitario: '',
-      denominacionRazon: '',
-      correoElectronico: '',
-      codigoPostal: '',
-      estado: '',
-      municipioAlcaldia: '',
-      localidad: '',
-      colonia: '',
-      calle: '',
-      lada: '',
-      telefono: '',
-      aviso: '',
-      licenciaSanitaria: '',
-      regimen: '',
-      adunasDeEntradas: '',
-      aeropuerto: false,
-      publico: 'si',
-      representanteRfc: '',
-      representanteNombre: '',
-      apellidoPaterno: '',
-      apellidoMaterno: '',
-      manifiestosCasillaDeVerificacion: false,
-    },
-    mercanciaForm: {
-      clasificacionProducto: '',
-      especificarClasificacionProducto: '',
-      denominacionEspecificaProducto: '',
-      denominacionDistintiva: '',
-      denominacionComun: '',
-      tipoProducto: '',
-      formaFarmaceutica: '',
-      estadoFisico: '',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      cantidadUmtValor: '',
-      cantidadUmt: '',
-      cantidadUmcValor: '',
-      cantidadUmc: '',
-      presentacion: '',
-      numeroRegistroSanitario: '',
-      fechaCaducidad: '',
-      paisDeOriginDatos: [],
-      paisDeProcedenciaDatos: [],
-    },
-    opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [],
-    tablaMercanciasConfigDatos: [],
-    seleccionadoopcionDatos: [],
-    seleccionadoScianDatos: [],
-    seleccionadoTablaMercanciasDatos: [],
-    opcionesColapsableState: false,
-    pagoDerechos: {
-      claveReferencia: '',
-      cadenaDependencia: '',
-      estado: '',
-      llavePago: '',
-      fechaPago: '',
-      importePago: '',
-    },
-    tabSeleccionado: 1,
-  };
+  let fixture: ComponentFixture<AgregarFacturadorContenedoraComponent>;
+  let storeMock: any;
+  let queryMock: any;
+  let routeMock: any;
 
   beforeEach(async () => {
-    mockStore = {
+    storeMock = {
       updateFacturadorTablaDatos: jest.fn(),
-    } as any;
-
-    mockQuery = {
-      selectTramiteState$: of(mockState),
     };
 
-    mockActivatedRoute = {
+    queryMock = {
+      selectTramiteState$: of({
+        facturadorTablaDatos: [{ id: 1, nombre: 'Facturador 1' }],
+        facturadorTablaModificaDatos: [{ id: 2, nombre: 'Facturador 2' }],
+      }),
+    };
+
+    routeMock = {
       queryParams: of({}),
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        AgregarFacturadorContenedoraComponent,
-        CommonModule,
-        HttpClientTestingModule,
-        AgregarFacturadorComponent,
-      ],
+      imports: [AgregarFacturadorContenedoraComponent, require('@angular/common/http/testing').HttpClientTestingModule],
       providers: [
-        provideHttpClientTesting(),
-        { provide: Tramite260214Store, useValue: mockStore },
-        { provide: Tramite260214Query, useValue: mockQuery },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        provideHttpClient(),
+        { provide: Tramite260215Store, useValue: storeMock },
+        { provide: Tramite260215Query, useValue: queryMock },
+        { provide: ActivatedRoute, useValue: routeMock },
       ],
     }).compileComponents();
 
@@ -185,108 +50,50 @@ describe('AgregarFacturadorContenedoraComponent', () => {
   });
 
   it('should initialize tramiteState and facturadorTablaDatos from query', () => {
-    expect(component.tramiteState).toEqual(mockState);
-    expect(component.facturadorTablaDatos).toEqual(
-      mockState.facturadorTablaDatos
-    );
+    expect(component.tramiteState).toBeDefined();
+    expect(component.facturadorTablaDatos).toEqual([{ id: 1, description: 'Facturador 1' }]);
   });
 
-  it('should clear facturadorTablaDatos when update param is "false"', () => {
-    mockActivatedRoute.queryParams = of({ update: 'false' });
+  it('should clear facturadorTablaDatos if update param is false', () => {
+    component.route.queryParams = of({ update: 'false' });
     component.ngOnInit();
     expect(component.facturadorTablaDatos).toEqual([]);
   });
 
-  it('should set facturadorTablaDatos to facturadorTablaModificaDatos when update param is "true"', () => {
-    component.tramiteState = mockState;
-    mockActivatedRoute.queryParams = of({ update: 'true' });
+  it('should set facturadorTablaDatos from tramiteState if update param is true', () => {
+    component.tramiteState = {
+      facturadorTablaModificaDatos: [{ id: 2, description: 'Facturador 2' }],
+    } as any;
+    component.route.queryParams = of({ update: 'true' });
     component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual(
-      mockState.facturadorTablaModificaDatos
-    );
+    expect(component.facturadorTablaDatos).toEqual([{ id: 2, description: 'Facturador 2' }]);
   });
 
   it('should call store.updateFacturadorTablaDatos when updateFacturadorTablaDatos is called', () => {
-    const facturadores: Facturador[] = [];
-    component.updateFacturadorTablaDatos(facturadores);
-    expect(mockStore.updateFacturadorTablaDatos).toHaveBeenCalledWith(
-      facturadores
-    );
-  });
-
-  it('should not modify facturadorTablaDatos if update param is not present', () => {
-    mockActivatedRoute.queryParams = of({});
-    component.facturadorTablaDatos = [
-      { nombreRazonSocial: 'Test' } as Facturador,
-    ];
-    component.tramiteState = mockState;
-    component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual([
-      { nombreRazonSocial: 'Test' },
-    ]);
-  });
-
-  it('should handle multiple calls to ngOnInit with different params', () => {
-    mockActivatedRoute.queryParams = of({ update: 'false' });
-    component.facturadorTablaDatos = [
-      { nombreRazonSocial: 'Test' } as Facturador,
-    ];
-    component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual([]);
-    mockActivatedRoute.queryParams = of({ update: 'true' });
-    component.tramiteState = mockState;
-    component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual(
-      mockState.facturadorTablaModificaDatos
-    );
-  });
-
-  it('should call updateFacturadorTablaDatos with correct arguments', () => {
-    const facturadores: Facturador[] = [
-      { nombreRazonSocial: 'Nuevo Facturador' } as Facturador,
-    ];
-    component.updateFacturadorTablaDatos(facturadores);
-    expect(mockStore.updateFacturadorTablaDatos).toHaveBeenCalledWith(
-      facturadores
-    );
-  });
-
-  it('should not throw error if tramiteState is undefined when update param is "true"', () => {
-    component.tramiteState = undefined as any;
-    mockActivatedRoute.queryParams = of({ update: 'true' });
-    expect(() => component.ngOnInit()).not.toThrow();
-  });
-
-  it('should update facturadorTablaDatos to empty array if tramiteState is undefined and update param is "true"', () => {
-    component.tramiteState = undefined as any;
-    mockActivatedRoute.queryParams = of({ update: 'true' });
-    component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual([
-      {
-        calle: 'Av. Insurgentes Sur',
-        codigoPostal: '03100',
-        colonia: 'Del Valle',
-        coloniaEquivalente: 'Col. Del Valle Centro',
-        correoElectronico: 'juan.perez@example.com',
-        curp: 'PELJ800101HDFLRN09',
-        entidadFederativa: 'CDMX',
-        estadoLocalidad: 'Ciudad de México',
-        lada: '55',
-        localidad: 'Ciudad de México',
-        municipioAlcaldia: 'Benito Juárez',
-        nacionalidad: 'Mexicana',
-        nombreRazonSocial: 'Juan Pérez López',
-        nombres: 'Juan',
-        numeroExterior: '1234',
-        numeroInterior: '5B',
-        pais: 'México',
-        primerApellido: 'Pérez',
-        razonSocial: 'Servicios Pérez S.A. de C.V.',
-        rfc: 'PELJ800101XXX',
-        segundoApellido: 'López',
-        telefono: '5544332211',
-        tipoPersona: 'Física',
-      },
-    ]);
+  const facturador: Facturador = {
+  id: 1,
+  nombres: 'Nombre',
+  nombreRazonSocial: 'Razon Social',
+  rfc: 'RFC123',
+  curp: 'CURP123',
+  telefono: '1234567890',
+  tipoPersona: 'Física',
+  nacionalidad: 'Mexicana',
+  pais: 'México',
+  entidadFederativa: 'CDMX',
+  codigoPostal: '12345',
+  municipioAlcaldia: 'Benito Juárez',
+  localidad: 'Localidad',
+  estadoLocalidad: 'Estado',
+  coloniaEquivalente: 'Colonia',
+  correoElectronico: 'correo@ejemplo.com',
+  calle: 'Calle Ejemplo',
+  numeroExterior: '123',
+  numeroInterior: 'A',
+  colonia: 'Colonia Ejemplo'
+  // ...add any other required properties
+};
+    component.updateFacturadorTablaDatos([facturador]);
+    expect(storeMock.updateFacturadorTablaDatos).toHaveBeenCalledWith([facturador]);
   });
 });

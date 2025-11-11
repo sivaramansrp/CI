@@ -1918,15 +1918,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
    */
   postDocumentosEspecificos(): void {
-    const PAYLOAD: DocumentosEspecificosRequest = {
-      id_pexim: 0,
-      list_fraccion_arancelarias: [],
-      list_mecanismo_asignaciones: [],
-      list_tratamientos: [],
-      clave_tipo_accion_mecanismo: '',
-      descripcion_tipo_accion_mecanismo: '',
-      esquema_regla_octava: 0
-    };
+    const PAYLOAD = this.requerimientoConfig.isBodyNullDocumentos === true
+    ? null
+    : {
+        id_pexim: 0,
+        list_fraccion_arancelarias: [],
+        list_mecanismo_asignaciones: [],
+        list_tratamientos: [],
+        clave_tipo_accion_mecanismo: '',
+        descripcion_tipo_accion_mecanismo: '',
+        esquema_regla_octava: 0
+      } as DocumentosEspecificosRequest;
     const IDREQUERMIENTO = this.dataIniciarRequerimiento?.id_requerimiento;
     const IDSOLICITUD = this.guardarDatos.id_solicitud;
 
@@ -1983,7 +1985,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @param idSolicitud - Identificador de la solicitud.
    * @param payload - Objeto con los parámetros necesarios para la petición.
    */
-  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest): void {
+  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest | null): void {
     this.guardarRequerimientoService
       .postDocumentosEspecificos(this.tramite, idSolicitud, true, idRequerimiento, payload)
       .subscribe({

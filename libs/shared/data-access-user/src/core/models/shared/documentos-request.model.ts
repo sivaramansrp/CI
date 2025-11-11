@@ -32,3 +32,23 @@ export interface DocumentoResponse {
     nombre_archivo: string;
     contenido: string;
 }
+
+/**
+ * Representa la respuesta al solicitar la descarga de documentos en las pestañas.
+ */
+export interface TabDocumentosDescarga{
+    /**
+     * Contenido del documento en formato string.
+     */
+    content: string;
+
+    /** 
+     * Indica si la descarga fue exitosa. 
+     */
+    success: boolean;
+
+    /**
+     * Mensaje de error en caso de que la descarga falle.
+     */
+    errorMessage: string;
+}

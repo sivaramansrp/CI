@@ -5,6 +5,7 @@ import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
@@ -23,6 +24,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
     @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
+    @ViewChild(PagoDerechosComponent) pagoDerechosRef!:PagoDerechosComponent;
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -124,9 +126,10 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     if(this.datosSolicitudRef?.validOnButtonClick()){
           isValid = true;
         }
-        else{
+        else {
           isValid = false;
         }
+  
         return isValid;
       }
   
