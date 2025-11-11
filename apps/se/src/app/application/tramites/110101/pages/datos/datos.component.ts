@@ -7,10 +7,6 @@ import { DatosAdicionalesComponent } from '../../components/datos-adicionales/da
 import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { ExportadorAutorizadoService } from '../../services/exportador-autorizado.service';
-
-import { EmpaqueMercancia, InsumoMercancia, SolicitudCompletaRequest } from '../../models/request/guardado-solicitud-request.model';
-
-import { Empaque, Insumo, RegistroCuestionarioRequest } from '../../models/request/validar-solicitud-request.model';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { SolicitudService } from '../../services/solicitud.service';
