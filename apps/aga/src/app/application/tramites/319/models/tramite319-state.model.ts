@@ -1,4 +1,3 @@
-import { Solicitante } from '@libs/shared/data-access-user/src/core/models/shared/cadena-original-request.model';
 import { Solicitar } from './personas';
 
 /**

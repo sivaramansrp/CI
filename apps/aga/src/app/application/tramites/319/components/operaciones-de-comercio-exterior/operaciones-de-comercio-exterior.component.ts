@@ -276,6 +276,7 @@ export class OperacionesDeComercioExterioComponent
 
   /**
    * Obtiene la lista de países desde el servicio.
+   * use usa RFC estatico para pruebas.
    * @method getOperacionList
    */
   public getOperacionList(): void {
@@ -302,11 +303,12 @@ export class OperacionesDeComercioExterioComponent
 
   /**
    * Obtiene los datos de la tabla de personas desde el servicio.
+   * use usa RFC estatico para pruebas.
    * @method getPersonasTablaData
    */
   public getPersonasTablaData(): void {
     this.operacionService
-      .obtenerPersonas<Personas[]>('AAL0409235E6')
+      .obtenerPersonas<Personas[]>('AAL981209G67')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.cuerpoPersonasTablaFila = data.datos || [];
