@@ -2,6 +2,7 @@ import { DatosModificacion, DatosSolicitante } from '../../tramites/80302/estado
 import { Injectable } from '@angular/core';
 import { Store, } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { AnexoImportacion, BitacoraModificacion, DatosSocioAccionista, Notario, OperacionsImmex, Planta, ProductoExportacion } from '../../tramites/80302/estados/models/plantas-consulta.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 80302
@@ -12,6 +13,8 @@ import { StoreConfig } from '@datorama/akita';
  * Representa el estado de la solicitud 80302.
  */
 export interface Solicitud80302State {
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Menú desplegable seleccionado.
    */
@@ -26,6 +29,46 @@ export interface Solicitud80302State {
    * Información relacionada con la modificación.
    */
   datosModificacion: DatosModificacion;
+
+  /**
+   * Datos de modificación relacionados con plantas.
+   */
+  modificacionDatos:Planta[];
+
+  /** 
+   * Lista de datos de complimentaria.
+   */
+  datosComplimentaria: DatosSocioAccionista[];
+
+  /** 
+   * Lista de datos de federetarios.
+   */
+  datosFederetarios: Notario[];
+
+  /** 
+   * Lista de datos de operaciones.
+   */
+  datosOperacions: OperacionsImmex[];
+
+  /** 
+   * Lista de datos de anexos.
+   */
+  datosAnexo: ProductoExportacion[];
+
+  /** 
+   * Lista de datos de anexos de importación.
+   */
+  datosImportacion: AnexoImportacion[];
+
+  /** 
+   * Lista de datos de la bitácora de modificaciones.
+   */
+  datosBitacora: BitacoraModificacion[];
+
+  /** 
+   * Valor de la certificación SAT.
+   */
+  certificacionSAT: string;
 
   /**
    * Lista de datos del contenedor.
@@ -109,6 +152,7 @@ export interface Solicitud80302State {
 
 export function createInitialState(): Solicitud80302State {
   return {
+    idSolicitud: 0,
     menuDesplegable: '',
     datosSolicitante: {
       rfc: "",
@@ -122,7 +166,15 @@ export function createInitialState(): Solicitud80302State {
       tipo: "",
       programa: ""
     },   
+    modificacionDatos: [],
+    datosComplimentaria: [],
+    datosFederetarios: [],
+    datosOperacions: [],
+    datosAnexo: [],
+    datosImportacion: [],
+    datosBitacora: [],
     datosDelContenedor: [],
+    certificacionSAT: '',
     tipoBusqueda: '',
     aduana: '',
     inicialesContenedor: '',
@@ -149,6 +201,17 @@ export function createInitialState(): Solicitud80302State {
 export class Tramite80302Store extends Store<Solicitud80302State> {
   constructor() {
     super(createInitialState());
+  }
+   /**
+   * Guarda el tipo de solicitud en el estado.
+   *
+   * @param idSolicitud - El identificador de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number | null): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 
   /**
@@ -237,7 +300,103 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
       datosModificacion
     }));
   }
-  
+
+  /**
+   * Establece los datos de modificación en el estado de la tienda.
+   *
+   * @param modificacionDatos - Un arreglo que contiene los datos de modificación a establecer.
+   */
+  public setModificacionDatos(modificacionDatos: Planta[]): void {
+    this.update((state) => ({
+      ...state,
+      modificacionDatos
+    }));
+  }
+
+  /**
+   * Establece los datos de complimentaria en el estado de la tienda.
+   *
+   * @param datosComplimentaria - Un arreglo que contiene los datos de complimentaria a establecer.
+   */
+  public setDatosComplimentaria(datosComplimentaria: DatosSocioAccionista[]): void {
+    this.update((state) => ({
+      ...state,
+      datosComplimentaria
+    }));
+  }
+
+  /**
+   * Establece los datos de federatarios en el estado de la tienda.
+   *
+   * @param datosFederetarios - Un arreglo que contiene los datos de federatarios a establecer.
+   */
+  public setDatosFederatarios(datosFederetarios: Notario[]): void {
+    this.update((state) => ({
+      ...state,
+      datosFederetarios
+    }));
+  }
+
+  /**
+   * Establece los datos de operaciones en el estado de la tienda.
+   *
+   * @param datosOperacions - Un arreglo que contiene los datos de operaciones a establecer.
+   */
+  public setDatosOperacions(datosOperacions: OperacionsImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      datosOperacions
+    }));
+  }
+
+  /**
+   * Establece los datos de anexos en el estado de la tienda.
+   *
+   * @param datosAnexo - Un arreglo que contiene los datos de anexos a establecer.
+   */
+  public setDatosAnexo(datosAnexo: ProductoExportacion[]): void {
+    this.update((state) => ({
+      ...state,
+      datosAnexo
+    }));
+  }
+
+  /**
+   * Establece los datos de importación en el estado de la tienda.
+   *
+   * @param datosImportacion - Un arreglo que contiene los datos de importación a establecer.
+   */
+  public setDatosImportacion(datosImportacion: AnexoImportacion[]): void {
+    this.update((state) => ({
+      ...state,
+      datosImportacion
+    }));
+  }
+
+  /**
+   * Establece los datos de la bitácora en el estado de la tienda.
+   *
+   * @param datosBitacora - Un arreglo que contiene los datos de la bitácora a establecer.
+   */
+  public setDatosBitacora(datosBitacora: BitacoraModificacion[]): void {
+    this.update((state) => ({
+      ...state,
+      datosBitacora
+    }));
+  }
+
+  /**
+   * Establece el valor de la certificación SAT en el estado de la tienda.
+   *
+   * @param certificacionSAT - El nuevo valor para la certificación SAT.
+   */
+  public setCertificacionSAT(certificacionSAT: string): void {
+    this.update((state) => ({
+      ...state,
+      certificacionSAT
+    }));
+  }
+
   /**
    * Establece los datos del contenedor en el estado de la tienda.
    *

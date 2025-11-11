@@ -1,13 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Bitacora } from '../../../80308/models/plantas-consulta.model';
-import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
+import { TablaDinamicaComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
+import { BitacoraModificacion } from '../../estados/models/plantas-consulta.model';
+import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { SolicitudService } from '../../service/solicitud.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 
 @Component({
   selector: 'app-bitacora',
@@ -34,27 +36,51 @@ export class BitacoraComponent implements OnDestroy {
    * Configuración de las columnas de la tabla que muestra la bitácora.
    * @type {ConfiguracionColumna<Bitacora>[]}
    */
-  configuracionTabla: ConfiguracionColumna<Bitacora>[] =
-    CONFIGURACION_BITACORA_TABLA;
+  configuracionTabla: ConfiguracionColumna<BitacoraModificacion>[] =
+    CONFIGURACION_BITACORA_TABLA as ConfiguracionColumna<BitacoraModificacion>[];
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Bitacora[]}
    */
-  datos: Bitacora[] = [];
-
-  constructor( public modificionService: ModificacionSolicitudeService, public toastr: ToastrService ) {
-    this.modificionService
-      .obtenerBitacora()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
-      .subscribe(
-        (data: Bitacora[]) => {
-          this.datos = [...data]; // Almacena los datos de la bitácora en la variable `datos`.
-        },
-        () => {
-          this.toastr.error('Error al cargar los estados'); // Manejo de errores.
-        }
-      );
+  datos: BitacoraModificacion[] = [];
+  /**
+   * Constructor del componente BitacoraComponent.
+   * @param modificionService Servicio para manejar las modificaciones de la solicitud.
+   * @param toastr Servicio para mostrar notificaciones al usuario.
+   * @param solicitudService Servicio para manejar las solicitudes relacionadas con el trámite.
+   */
+  constructor( public modificionService: ModificacionSolicitudeService, public toastr: ToastrService,
+    public solicitudService: SolicitudService,
+    public tramite80302Store: Tramite80302Store,
+   ) {
+    this.obtenerDatosBitacora();
+  }
+  /**
+   * Método para obtener los datos de la bitácora desde el servicio.
+   * Realiza una llamada al servicio `solicitudService` para obtener los datos y los almacena en la propiedad `datos`.
+   * Maneja errores mostrando una notificación al usuario en caso de fallo.
+   */
+  obtenerDatosBitacora() {
+    const PARAMS = { idPrograma: `120662` };
+        this.solicitudService.obtenerBitacora(PARAMS)
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(
+            (data) => {
+              if(esValidObject(data)) {
+                const RESPONSE = doDeepCopy(data);
+                if(esValidArray(RESPONSE.datos)) {
+                  this.datos = RESPONSE.datos.filter(
+                    (obj: BitacoraModificacion) => Object.values(obj).some(value => value !== null)
+                  ); // Almacena los datos de operaciones.
+                  this.tramite80302Store.setDatosBitacora(this.datos);
+                }
+              }
+            },
+            () => {
+              this.toastr.error('Error al cargar los anexos de exportación');
+            }
+          );
   }
 
   /**

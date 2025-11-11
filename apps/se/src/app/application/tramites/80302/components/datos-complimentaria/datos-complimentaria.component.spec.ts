@@ -13,9 +13,12 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 class MockSolicitudService {
-  obtenerComplimentaria = jest.fn().mockReturnValue(observableOf([]));
-  obtenerFederetarios = jest.fn().mockReturnValue(observableOf([]));
-  obtenerOperacion = jest.fn().mockReturnValue(observableOf([]));
+  obtenerBuscarSocioAccionista = jest.fn().mockReturnValue(observableOf({}));
+  obtenerBuscarNotarios = jest.fn().mockReturnValue(observableOf({}));
+  obtenerOperacionImmex = jest.fn().mockReturnValue(observableOf({}));
+  obtenerPlanta = jest.fn().mockReturnValue(observableOf([]));
+  obtenerServicios = jest.fn().mockReturnValue(observableOf([]));
+  obtenerDatosCertificacionSat = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Directive({ selector: '[myCustom]' })
@@ -85,35 +88,97 @@ describe('DatosComplimentariaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #obtenerComplimentaria()', async () => {
-    component.solicitudService.obtenerComplimentaria = jest.fn().mockReturnValue(observableOf([]));
+  it('should run #obtenerComplimentaria() and set datos + store', async () => {
+    const mockResponse = { datos: [{ nombre: 'juan' }] };
+    component.solicitudService.obtenerBuscarSocioAccionista = jest.fn().mockReturnValue(observableOf(mockResponse));
+    const storeSpy = jest.spyOn(component.tramite80302Store, 'setDatosComplimentaria');
+
     component.obtenerComplimentaria();
-    expect(component.solicitudService.obtenerComplimentaria).toHaveBeenCalled();
-    // REMOVE this:
-    // expect(component.toastr.error).toHaveBeenCalled();
+
+    expect(component.solicitudService.obtenerBuscarSocioAccionista).toHaveBeenCalled();
+    expect(component.datosComplimentaria.length).toBeGreaterThan(0);
+    expect(storeSpy).toHaveBeenCalledWith(component.datosComplimentaria);
   });
 
 
-  it('should run #obtenerFederetarios() successfully', async () => {
-  component.solicitudService.obtenerFederetarios = jest.fn().mockReturnValue(observableOf([]));
+  it('should run #obtenerFederetarios() and set datos + store', async () => {
+    const mockResponse = { datos: [{ nombre: 'notario' }] };
+  component.solicitudService.obtenerBuscarNotarios = jest.fn().mockReturnValue(observableOf(mockResponse));
+    const storeSpy = jest.spyOn(component.tramite80302Store, 'setDatosFederatarios');
+
+    component.obtenerFederetarios();
+
+    expect(component.solicitudService.obtenerBuscarNotarios).toHaveBeenCalled();
+    expect(component.datosFederetarios.length).toBeGreaterThan(0);
+    expect(storeSpy).toHaveBeenCalledWith(component.datosFederetarios);
+  });
+
+it('should run #obtenerOperacions() and set datos + store', async () => {
+  const mockResponse = { datos: [{ operacion: 'op' }] };
+  component.solicitudService.obtenerOperacionImmex = jest.fn().mockReturnValue(observableOf(mockResponse));
+  const storeSpy = jest.spyOn(component.tramite80302Store, 'setDatosOperacions');
+
+  component.obtenerOperacions();
+
+  expect(component.solicitudService.obtenerOperacionImmex).toHaveBeenCalled();
+  expect(component.datosOperacions.length).toBeGreaterThan(0);
+  expect(storeSpy).toHaveBeenCalledWith(component.datosOperacions);
+});
+
+it('should set datosPlanta on obtenerPlanta() success', async () => {
+  const plantas = [{ id: 1 }];
+  component.solicitudService.obtenerPlanta = jest.fn().mockReturnValue(observableOf(plantas));
+
+  component.obtenerPlanta();
+
+  expect(component.solicitudService.obtenerPlanta).toHaveBeenCalled();
+  expect(component.datosPlanta).toEqual(plantas);
+});
+
+it('should set datosServicios on obtenerServicios() success', async () => {
+  const servicios = [{ id: 2 }];
+  component.solicitudService.obtenerServicios = jest.fn().mockReturnValue(observableOf(servicios));
+
+  component.obtenerServicios();
+
+  expect(component.solicitudService.obtenerServicios).toHaveBeenCalled();
+  expect(component.datosServicios).toEqual(servicios);
+});
+
+it('should show toastr error on obtenerComplimentaria() failure', async () => {
+  const errorResponse = throwError(() => new Error('Error en obtenerComplimentaria'));
+
+  component.solicitudService.obtenerBuscarSocioAccionista = jest.fn().mockReturnValue(errorResponse);
+  component.toastr.error = jest.fn();
+
+  component.obtenerComplimentaria();
+
+  expect(component.solicitudService.obtenerBuscarSocioAccionista).toHaveBeenCalled();
+  expect(component.toastr.error).toHaveBeenCalled();
+});
+
+it('should show toastr error on obtenerFederetarios() failure', async () => {
+  const errorResponse = throwError(() => new Error('Error en obtenerFederetarios'));
+
+  component.solicitudService.obtenerBuscarNotarios = jest.fn().mockReturnValue(errorResponse);
   component.toastr.error = jest.fn();
 
   component.obtenerFederetarios();
 
-  expect(component.solicitudService.obtenerFederetarios).toHaveBeenCalled();
-  // REMOVE this line:
-  // expect(component.toastr.error).toHaveBeenCalled();
+  expect(component.solicitudService.obtenerBuscarNotarios).toHaveBeenCalled();
+  expect(component.toastr.error).toHaveBeenCalled();
 });
 
-it('should run #obtenerOperacions() successfully', async () => {
-  component.solicitudService.obtenerOperacion = jest.fn().mockReturnValue(observableOf([]));
+it('should show toastr error on obtenerOperacions() failure', async () => {
+  const errorResponse = throwError(() => new Error('Error en obtenerOperacions'));
+
+  component.solicitudService.obtenerOperacionImmex = jest.fn().mockReturnValue(errorResponse);
   component.toastr.error = jest.fn();
 
   component.obtenerOperacions();
 
-  expect(component.solicitudService.obtenerOperacion).toHaveBeenCalled();
-  // REMOVE this line:
-  // expect(component.toastr.error).toHaveBeenCalled();
+  expect(component.solicitudService.obtenerOperacionImmex).toHaveBeenCalled();
+  expect(component.toastr.error).toHaveBeenCalled();
 });
 
 });

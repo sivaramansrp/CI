@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
-import { Observable, map } from 'rxjs';
+import { Anexo, Complimentaria, Federetarios, GuardarSolicitudPayload, Operacions, PlantasResponse } from '../estados/models/plantas-consulta.model';
+import { HttpCoreService,JSONResponse } from '@ng-mf/data-access-user';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { Params, Programa, SocioAccionistaPayload } from '../estados/models/payload.model';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PROC_80302 } from '../servers/api-route';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Solicitud80302State } from '../../../estados/tramites/tramite80302.store';
+import { Tramite80302Query } from '../../../estados/queries/tramite80302.query';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolicitudService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, 
+    public httpService: HttpCoreService,
+    private Tramite80302Query: Tramite80302Query
+  ) {}
 
   /**
    * Obtener datos del solicitante
@@ -122,4 +129,171 @@ export class SolicitudService {
       return this.http
         .get<{data: Operacions[]}>('assets/json/80302/servicios.json').pipe(map((res: {data: Operacions[]}) => res.data));
     }
+
+  /**
+   * Obtiene la lista de socios o accionistas desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de objetos de tipo `SocioAccionista`.
+   */
+  obtenerBuscarSocioAccionista(body:SocioAccionistaPayload): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.BUSCAR_SOCIO_ACCIONISTA, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.BUSCAR_SOCIO_ACCIONISTA}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la lista de notarios desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de objetos de tipo `Notario`.
+   */
+  obtenerBuscarNotarios(body:SocioAccionistaPayload): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.BUSCAR_NOTARIOS, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.BUSCAR_NOTARIOS}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la información de la operación IMMEX desde el servidor.
+   * @param body Cuerpo de la solicitud con los parámetros necesarios.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerOperacionImmex(body:SocioAccionistaPayload): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.OPERACION_IMMEX, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.OPERACION_IMMEX}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la lista de productos de exportación desde el servidor.
+   * @param queryParams Parámetros de consulta para la solicitud.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerAnexoExportacion(queryParams: Params): Observable<JSONResponse> {
+    const PARAMS_OBJ: { [param: string]: string | number | boolean } = { ...queryParams };
+    return this.http.get<JSONResponse>(PROC_80302.ANEXO_EXPORTACION, { params: PARAMS_OBJ }).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.ANEXO_EXPORTACION}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la lista de productos de importación desde el servidor.
+   * @param queryParams Parámetros de consulta para la solicitud.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerAnexoImportacion(queryParams: Params): Observable<JSONResponse> {
+    const PARAMS_OBJ: { [param: string]: string | number | boolean } = { ...queryParams };
+    return this.http.get<JSONResponse>(PROC_80302.ANEXO_IMPORTACION, { params: PARAMS_OBJ }).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.ANEXO_IMPORTACION}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la bitácora IMMEX desde el servidor.
+   * @param queryParams Parámetros de consulta para la solicitud.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerBitacora(queryParams: Params): Observable<JSONResponse> {
+    const PARAMS_OBJ: { [param: string]: string | number | boolean } = { ...queryParams };
+    return this.http.get<JSONResponse>(PROC_80302.BITACORA, { params: PARAMS_OBJ }).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.BITACORA}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos de certificación SAT desde el servidor.
+   * @param queryParams Parámetros de consulta para la solicitud.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerDatosCertificacionSat(queryParams: Params): Observable<JSONResponse> {
+    const PARAMS_OBJ: { [param: string]: string | number | boolean } = { ...queryParams };
+    return this.http.get<JSONResponse>(PROC_80302.CERTIFICACION_SAT, { params: PARAMS_OBJ }).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.CERTIFICACION_SAT}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la lista de domicilios (plantas) desde el servidor.
+   * @param body Cuerpo de la solicitud con los parámetros necesarios.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerListaDomicilios(body: Programa): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.BUSCAR_PLANTAS, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la lista de plantas en ${PROC_80302.BUSCAR_PLANTAS}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Actualiza la lista de domicilios (plantas) en el servidor.
+   * @param body Cuerpo de la solicitud con los datos de las plantas a actualizar.
+   * @returns Observable con la respuesta JSON.
+   */
+  actualizarDomicilios(body: PlantasResponse): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.UPDATE_PLANTAS, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al actualizar la lista de plantas en ${PROC_80302.UPDATE_PLANTAS}`);
+        return throwError(() => ERROR);
+      })
+    );
+
+  }
+
+  /**
+   * Guarda la solicitud en el servidor.
+   * @param body Cuerpo de la solicitud con los datos a guardar.
+   * @returns Observable con la respuesta JSON.
+   */
+  guardar(body: GuardarSolicitudPayload): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.GUARDAR, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al guardar la solicitud en ${PROC_80302.GUARDAR}`);
+        return throwError(() => ERROR);
+      })
+    );
+
+  }
+
+  /**
+   * Obtiene todo el estado de la solicitud 80302 desde el store.
+   * @returns Observable con el estado completo de la solicitud 80302.
+   */
+  getAllState(): Observable<Solicitud80302State> {
+    return this.Tramite80302Query.selectSolicitud$;
+  }
+
 }
+
+  

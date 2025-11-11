@@ -4,7 +4,6 @@ import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
 
 /**

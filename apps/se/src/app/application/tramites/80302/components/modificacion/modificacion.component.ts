@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
-import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
+import { Planta } from '../../estados/models/plantas-consulta.model';
 import { SolicitudService } from '../../service/solicitud.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
 
 @Component({
@@ -29,6 +30,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private tramite80302Store: Tramite80302Store,
     private tramite80302Query: Tramite80302Query,
     private consultaioQuery: ConsultaioQuery,
+    private toastr: ToastrService 
   ) {}
 
   /**
@@ -60,12 +62,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla dinámica.
    * Define las propiedades de cada columna, como encabezado, clave y orden.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] = CONFIGURACION_MODIFICACION;
+  public encabezadoDeTabla: ConfiguracionColumna<Planta>[] = CONFIGURACION_MODIFICACION as ConfiguracionColumna<Planta>[];
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: DatosDelModificacion[] = [];
+  datosTabla: Planta[] = [];
 
   /**
    * @property {ConsultaioState} consultaDatos
@@ -149,10 +151,32 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * this.loadDatosTablaData();
    */
   loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) =>
-    {
-      this.datosTabla = data;
-    });
+    const PAYLOAD ={
+      "rfc": "AAL970927390",
+      "idPrograma": "121119",
+      "tipoPrograma": "TICPSE.PROSEC",
+      "folioPrograma": "9415",
+      "discriminator": "80302"
+    }
+    this.solicitudService
+      .obtenerListaDomicilios(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos?.plantas)) {
+              this.datosTabla = RESPONSE.datos?.plantas.filter(
+                (obj: Planta) => Object.values(obj).some(value => value !== null)
+              ); // Almacena los datos de operaciones.
+              this.tramite80302Store.setModificacionDatos(this.datosTabla);
+            }
+          }
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+        }
+      );
   }
 
   /**
@@ -194,10 +218,44 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * // Ahora, registro.desEstatus será 'Activada'.
    * ```
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  valorDeAlternancia(event: any):void { 
-    const ROW = event.row;
-    const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id);
-    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
+  
+  valorDeAlternancia(event: unknown): void {
+    if (event && typeof event === 'object' && 'row' in event) {
+      const ROW = (event as { row: Planta }).row;
+      const INDEX = this.datosTabla.findIndex((x) => x.idPlanta === ROW.idPlanta);
+      this.updateTablaData(this.datosTabla[INDEX]);
+    }
+  }
+
+  /**
+   * Actualiza los datos de la tabla enviando la información modificada al servicio.
+   * @param datos - Los datos de la planta que se van a actualizar.
+   */
+  updateTablaData(datos: Planta): void {
+    const PAYLOAD ={
+      plantas: [datos],
+      idFraccion: "1",
+      status: datos.estatus ? "true" : "false",
+      tipoFraccion: "Plantas",
+      idSolicitud: "202744086"
+    }
+    this.solicitudService
+      .actualizarDomicilios(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos?.plantas)) {
+              this.datosTabla = RESPONSE.datos?.plantas.filter(
+                (obj: Planta) => Object.values(obj).some(value => value !== null)
+              ); // Almacena los datos de operaciones.
+            }
+          }
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+        }
+      );
   }
 }

@@ -1,13 +1,14 @@
 import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_EMPRESAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES, CONFIGURACION_PLANTA, CONFIGURACION_SERVICIOS } from '../../constantes/modificacion.enum';
-import { Complimentaria, Federetarios, Operacions } from '../../estados/models/plantas-consulta.model';
+import { Complimentaria, DatosSocioAccionista, Notario, Operacions, OperacionsImmex } from '../../estados/models/plantas-consulta.model';
 import { Component, OnDestroy } from '@angular/core';
 import { DatosDelModificacion, DatosDelModificaciondos } from '../../estados/models/datos-tramite.model';
 import { Subject, takeUntil } from 'rxjs';
-import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent, TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '../../estados/models/cambio-de-modalidad.model';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
 import { SolicitudService } from '../../service/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 
 @Component({
   selector: 'app-datos-complimentaria',
@@ -39,15 +40,15 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Configuración de las columnas de la tabla para los federetarios.
    * @type {ConfiguracionColumna<Federetarios>[]}
    */
-  configuracionFederetios: ConfiguracionColumna<Federetarios>[] =
-    CONFIGURACION_FEDERETARIOS;
+  configuracionFederetios: ConfiguracionColumna<Notario>[] =
+    CONFIGURACION_FEDERETARIOS as ConfiguracionColumna<Notario>[];
 
   /**
    * Configuración de las columnas de la tabla para las operaciones.
    * @type {ConfiguracionColumna<Operacions>[]}
    */
-  configuracionOperacion: ConfiguracionColumna<Operacions>[] =
-    CONFIGURACION_OPERACIONES;
+  configuracionOperacion: ConfiguracionColumna<OperacionsImmex>[] =
+    CONFIGURACION_OPERACIONES as ConfiguracionColumna<OperacionsImmex>[];
 
   /**
    * Configuración de la planta que define las columnas para las operaciones.
@@ -83,13 +84,13 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Datos de los federetarios obtenidos desde el servicio.
    * @type {Federetarios[]}
    */
-  datosFederetarios: Federetarios[] = [];
+  datosFederetarios: Notario[] = [];
 
   /**
    * Datos de las operaciones obtenidos desde el servicio.
    * @type {Operacions[]}
    */
-  datosOperacions: Operacions[] = [];
+  datosOperacions: OperacionsImmex[] = [];
 
     /**
    * Datos de las operaciones obtenidos desde el servicio.
@@ -109,7 +110,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Datos de la complimentaria obtenidos desde el servicio.
    * @type {Complimentaria[]}
    */
-  datosComplimentaria: Complimentaria[] = [];
+  datosComplimentaria: DatosSocioAccionista[] = [];
 
   /**
    * Constructor de la clase DatosComplimentariaComponent.
@@ -126,7 +127,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   constructor(
     public solicitudService: SolicitudService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private tramite80302Store: Tramite80302Store,
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.
     this.obtenerOperacions(); // Carga las operaciones.
@@ -141,12 +143,24 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosComplimentaria`.
    */
   obtenerComplimentaria(): void {
+    const PAYLOAD ={
+      idSolicitud: [202767359,202767710]
+    }
     this.solicitudService
-      .obtenerComplimentaria() // Llama al servicio para obtener los datos de complimentaria.
+      .obtenerBuscarSocioAccionista(PAYLOAD) // Llama al servicio para obtener los datos de complimentaria.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
-        (data: Complimentaria[]) => {
-          this.datosComplimentaria = [...data]; // Almacena los datos de complimentaria.
+        (response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            if(esValidArray(RESPONSE.datos)) {
+              this.datosComplimentaria = RESPONSE.datos.filter(
+                (obj: DatosSocioAccionista) => Object.values(obj).some(value => value !== null)
+              );
+              this.tramite80302Store.setDatosComplimentaria(this.datosComplimentaria);
+            }
+          }
+          
         },
         () => {
           this.toastr.error('Error al cargar los datos de complimentaria'); // Manejo de errores.
@@ -159,12 +173,23 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosFederetarios`.
    */
   obtenerFederetarios(): void {
+    const PAYLOAD ={
+      idSolicitud: [202767359,202767710]
+    }
     this.solicitudService
-      .obtenerFederetarios() // Llama al servicio para obtener los datos de federetarios.
+      .obtenerBuscarNotarios(PAYLOAD) // Llama al servicio para obtener los datos de federetarios.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
-        (data: Federetarios[]) => {
-          this.datosFederetarios = [...data]; // Almacena los datos de federetarios.
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos)) {
+              this.datosFederetarios = RESPONSE.datos.filter(
+                (obj: Notario) => Object.values(obj).some(value => value !== null)
+              ); // Almacena los datos de federetarios.
+              this.tramite80302Store.setDatosFederatarios(this.datosFederetarios);
+            }
+          }
         },
         () => {
           this.toastr.error('Error al cargar los federetarios'); // Manejo de errores.
@@ -177,12 +202,23 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosOperacions`.
    */
   obtenerOperacions(): void {
+    const PAYLOAD ={
+      idSolicitud: [202767359,202767710]
+    }
     this.solicitudService
-      .obtenerOperacion() // Llama al servicio para obtener los datos de operaciones.
+      .obtenerOperacionImmex(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
-        (data: Operacions[]) => {
-          this.datosOperacions = [...data]; // Almacena los datos de operaciones.
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos)) {
+              this.datosOperacions = RESPONSE.datos.filter(
+                (obj: OperacionsImmex) => Object.values(obj).some(value => value !== null)
+              ); // Almacena los datos de operaciones.
+              this.tramite80302Store.setDatosOperacions(this.datosOperacions);
+            }
+          }
         },
         () => {
           this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
