@@ -18,7 +18,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
-import { Documentos319HandlerService } from '../../../core/services/shared/Documentos319Handler.service';
 
 import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.service';
 import { DocumentoService } from '../../..';
@@ -28,7 +27,6 @@ import { DocumentosT2310Service } from '../../../core/services/shared/documentos
 import { Router } from '@angular/router';
 
 import { ACUSE_PROCEDURE } from '../../constantes/acuse.enums';
-import { DocumentHandler } from '../../../core/handlers/Document.handler';
 import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
 import { DocumentosTramiteResolucionService } from '../../../core/services/shared/detalleTramite.service';
 
@@ -127,11 +125,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
-  /**
-   * Handlers registrados para manejar diferentes procedimientos.
-   * @type {DocumentHandler[]}
-   */
-  private handlers: DocumentHandler[];
+  
   constructor(
     private router: Router,
     private documentosService: DocumentoService,
@@ -142,9 +136,9 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private acuseDetalleService: AcuseDetalleService,
     private aviso230301: DocumentosT230301Service,
     private documentosResolucinService: DocumentosTramiteResolucionService,
-    private handlerT319: Documentos319HandlerService
+    
   ) {
-    this.handlers = [this.handlerT319];
+    
   }
 
   /**
@@ -175,7 +169,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    this.revisaHandler();
     if (this.url === 'pexim' || ACUSE_PROCEDURE.includes(this.procedure)) {
       this.documentosService130118
         .guardarAcuse(this.idSolicitud.toString(), this.procedure)
@@ -509,24 +502,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
         },
         error: (err) => console.error('Error inesperado (230301):', err),
       });
-  }
-
-  /**
-   * Revisa y utiliza el handler adecuado para el procedimiento actual.
-   * Pensado para los documentos que requieren un manejo especial.
-   * Busca entre los handlers registrados aquel que soporte el procedimiento
-   * actual y utiliza su método `handle` para obtener las filas de la tabla de acuse.
-   */
-  private revisaHandler(): void {
-    const HANDLER = this.handlers.find((h) => h.supports(this.procedure));
-    if (HANDLER) {
-      HANDLER.handle(this.procedure, this.idSolicitud)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: (filas) => (this.datosTablaAcuse = filas),
-          error: (err) => console.error('Error handler:', err),
-        });
-    }
   }
 
   /**

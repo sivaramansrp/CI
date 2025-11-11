@@ -163,7 +163,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -221,7 +220,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
             typeof resp.datos === 'string' ? resp.datos : 'cadenajemeplo';
         },
         error: (error) => {
-          console.error('Error al iniciar trámite:', error);
           const MENSAJE =
             error?.error?.error || 'Error inesperado al iniciar trámite.';
           this.nuevaNotificacion = {

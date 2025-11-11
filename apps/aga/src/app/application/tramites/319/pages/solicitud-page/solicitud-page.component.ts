@@ -14,6 +14,7 @@ import {
   DatosPasos,
   ErrorModelo,
   ListaPasosWizard,
+  LoginQuery,
   Notificacion,
   NotificacionesComponent,
   PAGO_DE_DERECHOS,
@@ -151,6 +152,10 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Estado de la solicitud.
+   * @type {FinalDataToSend}
+   */
   estadoSolicitud!: FinalDataToSend;
 
   /**
@@ -164,6 +169,12 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * RFC del usuario logueado.
+   * @type {string}
+   */
+  rfcLogueado: string = '';
+
+  /**
    * Constructor del componente.
    * @param seccionQuery Consulta de la sección.
    * @param seccionStore Almacenamiento de la sección.
@@ -173,7 +184,8 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite319Query: Tramite319Query,
-    private guardarService: OperacionService
+    private guardarService: OperacionService,
+    private loginQuery: LoginQuery
   ) {
     this.seccionStore.establecerFormaValida([false]);
     this.seccionStore.establecerSeccion([true]);
@@ -192,6 +204,18 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoSolicitud();
+  }
+
+  /**
+   * Obtiene el RFC del usuario logueado.
+   * @return void
+   */
+  obtenerRfcLogueado(): void {
+    this.loginQuery.selectLoginState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((loginState) => {
+        this.rfcLogueado = loginState.rfc;
+      });
   }
 
   /**

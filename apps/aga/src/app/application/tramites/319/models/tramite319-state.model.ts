@@ -1,4 +1,5 @@
 import { Solicitar } from './personas';
+import { formatMonthYear } from '@libs/shared/data-access-user/src';
 
 /**
  * @fileoverview
@@ -109,11 +110,7 @@ export function createDatosState(
     numero_registro: params.numero_registro ?? '',
     clave_operacion_historica: params.clave_operacion_historica ?? '',
     mes_anio_actual_periodo:
-      params.mes_anio_actual_periodo ??
-      `${String(new Date().getMonth() + 1).padStart(
-        2,
-        '0'
-      )}/${new Date().getFullYear()}`,
+      params.mes_anio_actual_periodo ?? formatMonthYear(new Date()),
     clave_per_historico_actual: params.clave_per_historico_actual ?? '',
     puede_capturar_representante_legal_cg:
       params.puede_capturar_representante_legal_cg ?? false,

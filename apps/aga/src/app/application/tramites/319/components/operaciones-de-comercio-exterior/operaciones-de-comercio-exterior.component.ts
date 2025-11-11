@@ -12,6 +12,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  LoginQuery,
   Notificacion,
   NotificacionesComponent,
   REGEX_FECHA_MES_ANO,
@@ -219,6 +220,12 @@ export class OperacionesDeComercioExterioComponent
   mostrarInfo: boolean = false;
 
   /**
+   * RFC del usuario logueado.
+   * @property {string} RFCLogueado
+   */
+  RFCLogueado: string = '';
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
@@ -234,8 +241,10 @@ export class OperacionesDeComercioExterioComponent
     public readonly tramite319Query: Tramite319Query,
     public tramite319Store: Tramite319Store,
     public seccionStore: SeccionLibStore,
-    public readonly consultaioQuery: ConsultaioQuery
+    public readonly consultaioQuery: ConsultaioQuery,
+    private loginQuery: LoginQuery
   ) {
+    this.obtenerRfcLogueado();
     this.getOperacionList();
     this.getPersonasTablaData();
     this.getperiodoList();
@@ -263,6 +272,18 @@ export class OperacionesDeComercioExterioComponent
   }
 
   /**
+   * Obtiene el RFC del usuario logueado.
+   * @return void
+   */
+  obtenerRfcLogueado(): void {
+    this.loginQuery.selectLoginState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((loginState) => {
+        this.RFCLogueado = loginState.rfc;
+      });
+  }
+
+  /**
    * Habilita o deshabilita el formulario según el estado de solo lectura.
    * @method ngAfterViewInit
    */
@@ -281,7 +302,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getOperacionList(): void {
     this.operacionService
-      .obtenerTipoOperacion<Catalogo[]>('AAL981209G67')
+      .obtenerTipoOperacion<Catalogo[]>(this.RFCLogueado)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.optionsPaisList = data.datos || [];
@@ -308,7 +329,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getPersonasTablaData(): void {
     this.operacionService
-      .obtenerPersonas<Personas[]>('AAL981209G67')
+      .obtenerPersonas<Personas[]>(this.RFCLogueado)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.cuerpoPersonasTablaFila = data.datos || [];
@@ -627,10 +648,18 @@ export class OperacionesDeComercioExterioComponent
     }
   }
 
+  /**
+   * Cierra la alerta modal.
+   * @method aceptar
+   */
   aceptar(): void {
     this.mostrarAlerta = false;
   }
 
+  /**
+   * Maneja la acción de aceptar en la información mostrada.
+   * @param event Evento que indica si se aceptó la acción.
+   */
   aceptarInfo(event: boolean): void {
     if (event) {
       this.mostrarInfo = false;
