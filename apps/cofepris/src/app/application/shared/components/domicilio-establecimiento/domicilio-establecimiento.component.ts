@@ -391,12 +391,11 @@ nombresCampos:boolean = false;
   }
   /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
 static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
-  const VALOR = control.value;
-  if (!VALOR){ return null}    
-  if (/^\d+$/.test(VALOR) && VALOR.length < 5) {
-    return { invalidCodigoPostal: true };
-  }
-  return null; 
+   const VALOR = control.value;
+  if (!VALOR) { return null; }
+  if (!/^\d{1,12}$/.test(VALOR)) {
+    return { invalidCodigoPostal: true }; }
+  return null;
 }
 
 
@@ -1711,10 +1710,16 @@ openModal():void {
    * @param {forma}
    */
   // eslint-disable-next-line class-methods-use-this
-  public limpiar(forma: FormGroup): void {
+  public limpiar(forma: FormGroup, tipo?: string): void {
     if (forma) {
+        if (tipo === 'mercancias') {   
+    this.seleccionarOrigenDelPaisDuos = [];
+    this.seleccionarOrigenDelPaisTres = [];
+    this.seleccionarOrigenDelPaisCuatro = [];
+    this.seleccionarOrigenDelPaisCinco = [];
+  }
       this.seleccionadasPaisDeOriginDatos = [];
-      this.seleccionadasPaisDeProcedenciaDatos = [];
+      this.seleccionadasPaisDeProcedenciaDatos = [];    
       forma.reset();
     }
   }
