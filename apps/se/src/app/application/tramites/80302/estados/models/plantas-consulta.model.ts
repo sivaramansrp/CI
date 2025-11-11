@@ -606,3 +606,8 @@ export interface PlantaGuardar{
       idProducto?: string | null;
     };
   }
+
+  export interface SolicitudPayload{
+    idPrograma?: string;
+    tipoPrograma?: string;
+  }

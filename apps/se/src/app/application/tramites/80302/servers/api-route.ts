@@ -38,4 +38,5 @@ export const PROC_80302 = {
     UPDATE_PLANTAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/plantas-actualizar-grid`,
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/guardar`,
     CERTIFICACION_SAT: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-datos-certificacion-sat`,
+    OBTENER_SOLICITUD: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/consultas-busca-id-solicitud`,
 };

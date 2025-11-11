@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, SolicitanteQuery, SolicitanteState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -30,7 +30,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private tramite80302Store: Tramite80302Store,
     private tramite80302Query: Tramite80302Query,
     private consultaioQuery: ConsultaioQuery,
-    private toastr: ToastrService 
+    private toastr: ToastrService,
+    private solicitanteQuery: SolicitanteQuery
   ) {}
 
   /**
@@ -76,6 +77,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   consultaDatos!: ConsultaioState;
 
   /**
+   * @property {SolicitanteState} solicitanteState
+   * @description Estado actual del solicitante, que contiene información relacionada con el solicitante.
+   */
+  solicitanteState!: SolicitanteState;
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -93,7 +100,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
             ...seccionState,
           };
         })).subscribe();
-        this.consultaioQuery.selectConsultaioState$
+
+    this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -102,6 +110,16 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    this.solicitanteQuery.selectSeccionState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitanteState = seccionState;
+      })
+    )
+    .subscribe();
+    
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
@@ -121,10 +139,10 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.modificacionForm = this.fb.group({
-      rfc: [this.derechoState?.datosModificacion?.rfc, []],
-      federal: [this.derechoState?.datosModificacion?.federal, []],
-      tipo: [this.derechoState?.datosModificacion?.tipo, []],
-      programa: [this.derechoState?.datosModificacion?.programa, []],
+      rfc: [this.solicitanteState?.rfc_original ?? '', []],
+      federal: ['', []],
+      tipo: [this.solicitanteState?.tipo_sociedad ?? '', []],
+      programa: [this.solicitanteState?.email ?? '', []],
     });
   }
 
@@ -183,10 +201,10 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Establece los valores del formulario utilizando los datos de modificación.
    */
   setFormValues(): void {
-    this.modificacionForm.get('rfc')?.setValue(this.derechoState?.datosModificacion?.rfc);
-    this.modificacionForm.get('federal')?.setValue(this.derechoState?.datosModificacion?.federal);
-    this.modificacionForm.get('tipo')?.setValue(this.derechoState?.datosModificacion?.tipo);
-    this.modificacionForm.get('programa')?.setValue(this.derechoState?.datosModificacion?.programa);
+    this.modificacionForm.get('rfc')?.setValue(this.solicitanteState?.rfc_original ?? '');
+    this.modificacionForm.get('federal')?.setValue('');
+    this.modificacionForm.get('tipo')?.setValue(this.solicitanteState?.tipo_sociedad ?? '');
+    this.modificacionForm.get('programa')?.setValue(this.solicitanteState?.email ?? '');
   }
 
   /**

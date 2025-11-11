@@ -61,7 +61,7 @@ export class BitacoraComponent implements OnDestroy {
    * Realiza una llamada al servicio `solicitudService` para obtener los datos y los almacena en la propiedad `datos`.
    * Maneja errores mostrando una notificación al usuario en caso de fallo.
    */
-  obtenerDatosBitacora() {
+  obtenerDatosBitacora():void {
     const PARAMS = { idPrograma: `120662` };
         this.solicitudService.obtenerBitacora(PARAMS)
           .pipe(takeUntil(this.destroyNotifier$))

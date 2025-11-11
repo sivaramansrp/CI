@@ -24,6 +24,11 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /** Identificador de la solicitud.
+   * Se utiliza para almacenar el ID de la solicitud como un objeto.
+   */
+  buscarIdSolicitud!: string;
+
   /**
    * Configuración de las columnas de la tabla para los anexos.
    * @type {ConfiguracionColumna<Anexo>[]}
@@ -87,8 +92,7 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * Llama a `obteneComplimentaria()` para cargar los anexos complementarios al iniciar el componente.
    */
   ngOnInit(): void {
-     this.obteneComplimentaria(); // Carga los anexos complementarios.
-     this.obtenerAnexoImportacion(); // Carga los anexos de importación.
+     this.obtenerSolicitudId();
   }
 
   /**
@@ -96,7 +100,7 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
    */
   obteneComplimentaria(): void {
-    const PARAMS = { idSolicitud: `202767359,202767710` };
+    const PARAMS = { idSolicitud: this.buscarIdSolicitud };
     this.solicitudService.obtenerAnexoExportacion(PARAMS)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -122,7 +126,7 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * Asigna los datos a la variable `datosImportacion`.
    */
   obtenerAnexoImportacion(): void {
-    const PARAMS = { idSolicitud: `202767359,202767710` };
+    const PARAMS = { idSolicitud: this.buscarIdSolicitud };
     this.solicitudService.obtenerAnexoImportacion(PARAMS)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -142,6 +146,37 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+  /**
+     * Obtiene el ID de la solicitud desde el servicio.
+     * Almacena el ID en la propiedad `buscarIdSolicitud` y llama a los métodos
+     * para obtener los datos relacionados.
+     */
+    obtenerSolicitudId(): void {
+      const PAYLOAD = {
+        "idPrograma": "105639",
+        "tipoPrograma": "TICPSE.IMMEX"
+      };
+      this.solicitudService
+        .obtenerSolicitudId(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
+        .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+        .subscribe(
+          (data) => {
+            if(esValidObject(data)) {
+              const RESPONSE = doDeepCopy(data);
+              this.buscarIdSolicitud = RESPONSE.datos?.buscaIdSolicitud.split(',')
+              .map((id:string) => id.trim())
+              .filter((id:string) => id !== '' && id !== '0') // remove empty and zero
+              .join(',');
+              this.obteneComplimentaria(); // Carga los anexos complementarios.
+              this.obtenerAnexoImportacion(); // Carga los anexos de importación.
+            }
+          },
+          () => {
+            this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+          }
+        );
+    }
 
   /**
    * Método que se ejecuta cuando el componente es destruido.

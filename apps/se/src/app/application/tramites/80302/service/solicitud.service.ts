@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Anexo, Complimentaria, Federetarios, GuardarSolicitudPayload, Operacions, PlantasResponse } from '../estados/models/plantas-consulta.model';
+import { Anexo, Complimentaria, Federetarios, GuardarSolicitudPayload, Operacions, PlantasResponse, SolicitudPayload } from '../estados/models/plantas-consulta.model';
 import { HttpCoreService,JSONResponse } from '@ng-mf/data-access-user';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Params, Programa, SocioAccionistaPayload } from '../estados/models/payload.model';
@@ -283,7 +283,21 @@ export class SolicitudService {
         return throwError(() => ERROR);
       })
     );
+  }
 
+  /**
+   * Obtiene la solicitud por ID desde el servidor.
+   * @param body Cuerpo de la solicitud con el ID de la solicitud a obtener.
+   * @returns Observable con la respuesta JSON.
+   */
+  obtenerSolicitudId(body: SolicitudPayload): Observable<JSONResponse> {
+    return this.http.post(PROC_80302.OBTENER_SOLICITUD, body).pipe(
+      map((response) => response as JSONResponse),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la solicitud en ${PROC_80302.OBTENER_SOLICITUD}`);
+        return throwError(() => ERROR);
+      })
+    );
   }
 
   /**

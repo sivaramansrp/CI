@@ -98,6 +98,11 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   datosPlanta: Operacions[] = [];
 
+  /** Identificador de la solicitud en formato cadena.
+   * Se utiliza para almacenar el ID de la solicitud como una cadena de texto.
+   */
+  buscarIdSolicitud!: number[];
+
   /**
    * Arreglo que contiene los datos de modificación relacionados con los servicios.
    * 
@@ -130,10 +135,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
     private toastr: ToastrService,
     private tramite80302Store: Tramite80302Store,
   ) {
-    this.obtenerFederetarios(); // Carga los federetarios.
-    this.obtenerOperacions(); // Carga las operaciones.
+    this.obtenerSolicitudId()
     this.obtenerPlanta(); // Carga las plata.
-    this.obtenerComplimentaria(); // Carga los datos de complimentaria.
     this.obtenerServicios(); // Carga los servicios.
   }
 
@@ -144,7 +147,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   obtenerComplimentaria(): void {
     const PAYLOAD ={
-      idSolicitud: [202767359,202767710]
+      idSolicitud: this.buscarIdSolicitud
     }
     this.solicitudService
       .obtenerBuscarSocioAccionista(PAYLOAD) // Llama al servicio para obtener los datos de complimentaria.
@@ -174,7 +177,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   obtenerFederetarios(): void {
     const PAYLOAD ={
-      idSolicitud: [202767359,202767710]
+      idSolicitud: this.buscarIdSolicitud
     }
     this.solicitudService
       .obtenerBuscarNotarios(PAYLOAD) // Llama al servicio para obtener los datos de federetarios.
@@ -203,7 +206,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   obtenerOperacions(): void {
     const PAYLOAD ={
-      idSolicitud: [202767359,202767710]
+      idSolicitud: this.buscarIdSolicitud
     }
     this.solicitudService
       .obtenerOperacionImmex(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
@@ -218,6 +221,35 @@ export class DatosComplimentariaComponent implements OnDestroy {
               ); // Almacena los datos de operaciones.
               this.tramite80302Store.setDatosOperacions(this.datosOperacions);
             }
+          }
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+        }
+      );
+  }
+
+  /**
+   * Obtiene el ID de la solicitud desde el servicio.
+   * Almacena el ID en la propiedad `buscarIdSolicitud` y llama a los métodos
+   * para obtener los datos relacionados.
+   */
+  obtenerSolicitudId(): void {
+    const PAYLOAD = {
+      "idPrograma": "105639",
+      "tipoPrograma": "TICPSE.IMMEX"
+    };
+    this.solicitudService
+      .obtenerSolicitudId(PAYLOAD) // Llama al servicio para obtener los datos de operaciones.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            this.buscarIdSolicitud = RESPONSE.datos.buscaIdSolicitud ? RESPONSE.datos.buscaIdSolicitud.split(',').map((id: string) => Number(id.trim())).filter((id:number) => id !== 0) : [];
+            this.obtenerComplimentaria();
+            this.obtenerFederetarios();
+            this.obtenerOperacions();
           }
         },
         () => {
