@@ -874,13 +874,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.unidadCatalogo = data || [];
     });
   }
-
-  // getBloque(): void {
-  //   this.solocitud130106Service.getBloque().subscribe((data) => {
-  //     this.elementosDeBloque = data;
-  //   });
-  // }
- 
    /**
    * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */

@@ -73,22 +73,6 @@ export class DesmantelarComponent {
       }
     }
   }
-
-  // getValorIndice(e: AccionBoton): void {
-  //     this.esFormaValido = false;
-  //     if (this.indice === 1 && e.accion === 'cont') {
-  //       this.datosPasos.indice = 1;
-  //       const ISVALID = this.validarTodosFormulariosPasoUno();
-  //       if (!ISVALID) {
-  //         this.esFormaValido = true;
-  //         return;
-  //       }
-  //       this.obtenerDatosDelStore()
-  //     }
-  //     else if (e.valor > 0 && e.valor <= this.pasos.length) {
-  //       this.pasoNavegarPor(e);
-  //     }
-  //   }
   /**
      * Navega a través de los pasos del asistente según la acción del botón.
      * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
