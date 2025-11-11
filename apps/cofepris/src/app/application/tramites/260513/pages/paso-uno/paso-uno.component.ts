@@ -125,17 +125,29 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       });
   }
   validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
-          isValid = true;
-        }
-        else{
-          isValid = false;
-        }
-        return isValid;
+
+      const ES_TAB_VALIDO = this.datosSolicitudRef?.validarClickDeBoton() ?? false;
+      const ES_PAGO_VALIDO = this.pagoDerechosRef.validarContenedor() ?? false;
+      return (
+        (ES_TAB_VALIDO && ES_PAGO_VALIDO)? true : false
+  
+      );
+    // let isValid = false;
+    // if(this.datosSolicitudRef?.validarClickDeBoton()){
+    //       isValid = true;
+    //     }
+    //     else{
+    //       isValid = false;
+    //     }
+    //     return isValid;
       }
   
 
+        ValidarPagoDerechos(): boolean {
+      return (
+        this.pagoDerechosRef.validarContenedor() ?? false 
+    );
+    }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.
