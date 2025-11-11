@@ -1,13 +1,13 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
-import { AVISO, DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-
+import { AVISO, DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src';
+import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 import { AccionBoton } from '../../enums/accionbotton.enum';
 import { Subject, take, takeUntil } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Componente para la importación de vehículos usados.
@@ -90,6 +90,12 @@ export class ImportacionVehiculosUsadosDonacionComponent {
 `
 
   /**
+     * Folio temporal de la solicitud.
+     * Se utiliza para mostrar el folio en la notificación de éxito.
+     */
+  public alertaNotificacion!: Notificacion;
+
+  /**
       * Constante que almacena el valor de la nota de privacidad.
       * 
       * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
@@ -116,17 +122,61 @@ export class ImportacionVehiculosUsadosDonacionComponent {
 
   private destroyed$ = new Subject<void>();
 
+  public folioTemporal: number = 0;
+
   /**
    * @description
    * Constructor de la clase.
    * @param importacionVehiculosUsadosDonacionService
    * @param tramite130105Store
    */
-  constructor(private importacionVehiculosUsadosDonacionService: ImportacionVehiculosUsadosDonacionService, private tramite130105Store: Tramite130105Store, private tramite130105Query: Tramite130105Query) {
+  constructor(private importacionVehiculosUsadosDonacionService: ImportacionVehiculosUsadosDonacionService, private tramite130105Store: Tramite130105Store, private tramite130105Query: Tramite130105Query, private toastrService: ToastrService) {
     this.tramite130105Query.selectSolicitud$.pipe(takeUntil(this.destroyed$)).subscribe((solicitudState) => {
       this.solicitudState = solicitudState;
     });
   }
+
+  /**
+ * @method anterior
+ * @description
+ * Método para navegar programáticamente al paso anterior del wizard.
+ * Ejecuta la transición backward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_backward
+ * Realiza navegación que:
+ * - Retrocede al paso anterior usando `wizardComponent.atras()`
+ * - Actualiza índice local basado en nueva posición del wizard
+ * - Sincroniza datos de pasos con posición actualizada
+ * - Mantiene consistencia de estado durante retroceso
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component  
+ * - Datos de configuración de pasos
+ * - Estado visual de navegación
+ * 
+ * @state_preservation
+ * Durante retroceso:
+ * - Preserva datos capturados en pasos anteriores
+ * - Mantiene validaciones ya realizadas
+ * - Conserva estado de formularios
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Nueva posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @backward_navigation
+ */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
 
   /**
    * Método para actualizar el índice del paso actual en el asistente.
@@ -145,7 +195,7 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         this.esFormaValido = true;
         return;
       }
-      this.obtenerDatosDelStore();
+      this.obtenerDatosDelStore(e);
     } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
       this.pasoNavegarPor(e);
     }
@@ -154,11 +204,11 @@ export class ImportacionVehiculosUsadosDonacionComponent {
   /**
     * Obtiene los datos del store y los guarda utilizando el servicio.
     */
-  obtenerDatosDelStore(): void {
+  obtenerDatosDelStore(e: AccionBoton): void {
     this.importacionVehiculosUsadosDonacionService.getAllState()
       .pipe(take(1))
       .subscribe((data) => {
-        this.guardar(data);
+        this.guardar(data, e);
       });
   }
 
@@ -173,13 +223,12 @@ export class ImportacionVehiculosUsadosDonacionComponent {
    * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `certificadoService.guardarDatosPost`.
    * La llamada al servicio actualmente está comentada.
    */
-  guardar(item: Tramite130105State): Promise<JSONResponse> {
-    console.log('Payload a enviar al backend:', item);
+  guardar(item: Tramite130105State, e: AccionBoton): Promise<JSONResponse> {
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "mercancia": {
-        "cantidadComercial": Number(item.cantidadPartidasDeLaMercancia),
-        "cantidadTarifaria": Number(item.cantidad),
+        "cantidadComercial": Number(item.cantidad),
+        "cantidadTarifaria": Number(item.cantidadPartidasDeLaMercancia),
         "valorFacturaUSD": Number(item.valorFacturaUSD),
         "condicionMercancia": item.defaultProducto,
         "descripcion": item.descripcion,
@@ -194,15 +243,15 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         },
         "partidasMercancia": [
           {
-            "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
-            "unidadesAutorizadas": Number(item.cantidad),
-            "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
+            "autorizada": true,
+            "unidadesAutorizadas": Number(item.cantidadPartidasDeLaMercancia),
             "descripcionAutorizada": item.descripcionPartidasDeLaMercancia,
+            "importeTotalUSDAutorizado": Number(item.filaSeleccionada[0].totalUSD),
+            "importeUnitarioUSDAutorizado": Number(item.valorPartidaUSD),
+            "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
+            "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
             "importeUnitarioUSD": Number(item.filaSeleccionada[0].precioUnitarioUSD),
             "importeTotalUSD": Number(item.filaSeleccionada[0].totalUSD),
-            "autorizada": true,
-            "importeUnitarioUSDAutorizado": Number(item.valorPartidaUSD),
-            "importeTotalUSDAutorizado": Number(item.filaSeleccionada[0].totalUSD),
             "fraccionArancelariaClave": item.filaSeleccionada[0].fraccionFrancelaria,
             "unidadMedidaClave": item.filaSeleccionada[0].unidadDeMedida
           }
@@ -236,85 +285,54 @@ export class ImportacionVehiculosUsadosDonacionComponent {
       },
       "lista_paises": item.fechasSeleccionadas
     };
-    // const PAYLOAD = {
-    //   "tipoDeSolicitud": "guardar",
-    //   "mercancia": {
-    //     "cantidadComercial": 0,
-    //     "cantidadTarifaria": 12,
-    //     "valorFacturaUSD": Number(item.valorFacturaUSD),
-    //     "condicionMercancia": item.producto,
-    //     "descripcion": item.descripcion,
-    //     "usoEspecifico": item.usoEspecifico,
-    //     "justificacionImportacionExportacion":item.justificacionImportacionExportacion,
-    //     "observaciones": item.observaciones,
-    //     "unidadMedidaTarifaria": {
-    //       "clave": item.unidadMedida
-    //     },
-    //     "fraccionArancelaria": {
-    //       "cveFraccion": item.fraccion
-    //     },
-    //     "partidasMercancia": [
-    //       {
-    //         "unidadesSolicitadas": 12,
-    //         "unidadesAutorizadas": 12,
-    //         "descripcionSolicitada": "eswa",
-    //         "descripcionAutorizada": "eswa",
-    //         "importeUnitarioUSD": 1,
-    //         "importeTotalUSD": 12,
-    //         "autorizada": true,
-    //         "importeUnitarioUSDAutorizado": 1,
-    //         "importeTotalUSDAutorizado": 12,
-    //         "fraccionArancelariaClave": "87012101",
-    //         "unidadMedidaClave": "6"
-    //       }
-    //     ]
-    //   },
-    //   "id_solcitud": 202859165,
-    //   "cve_regimen": item.regimen,
-    //   "cve_clasificacion_regimen": item.clasificacion,
-    //   "productor": {
-    //     "tipo_persona": true,
-    //     "nombre": "Juan",
-    //     "apellido_materno": "López",
-    //     "apellido_paterno": "Norte",
-    //     "razon_social": "Aceros Norte",
-    //     "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
-    //     "rfc": "AAL0409235E6",
-    //     "pais": "SIN"
-    //   },
-    //   "solicitante": {
-    //     "rfc": "AAL0409235E6",
-    //     "nombre": "Juan Pérez",
-    //     "es_persona_moral": true,
-    //     "certificado_serial_number": "string"
-    //   },
-    //   "representacion_federal": {
-    //     "cve_entidad_federativa": item.entidad,
-    //     "cve_unidad_administrativa": item.representacion
-    //   },
-    //   "entidades_federativas": {
-    //     "cveEntidad": "SIN"
-    //   },
-    //   "lista_paises": item.fechasSeleccionadas
-    // };
     return new Promise((resolve, reject) => {
+      let shouldNavigate = false;
       this.importacionVehiculosUsadosDonacionService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
-          const API_RESPONSE = doDeepCopy(response);
-          if (
-            esValidObject(API_RESPONSE) &&
-            esValidObject(API_RESPONSE.datos)
-          ) {
-            if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-              this.tramite130105Store.setIdSolicitud(
-                API_RESPONSE.datos.id_solicitud
-              );
-              this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-            } else {
-              this.tramite130105Store.setIdSolicitud(0);
+          shouldNavigate = response.codigo === '00';
+          if (shouldNavigate) {
+            const API_RESPONSE = doDeepCopy(response);
+            if (
+              esValidObject(API_RESPONSE) &&
+              esValidObject(API_RESPONSE.datos)
+            ) {
+              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+                this.tramite130105Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+              } else {
+                this.tramite130105Store.setIdSolicitud(0);
+              }
+              if (e.valor > 0 && e.valor < 5) {
+                this.indice = e.valor;
+
+                if (e.valor > 0 && e.valor < 5) {
+                  this.indice = e.valor;
+                  if (e.accion === 'cont') {
+                    this.wizardComponent.siguiente();
+                    if (e.valor > 0 && e.valor < 5) {
+                      this.alertaNotificacion = {
+                        tipoNotificacion: 'banner',
+                        categoria: 'success',
+                        modo: 'action',
+                        titulo: '',
+                        mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                        cerrar: true,
+                        txtBtnAceptar: '',
+                        txtBtnCancelar: '',
+                      };
+
+                    }
+                  } else {
+                    this.wizardComponent.atras();
+                  }
+                }
+              }
             }
+            this.toastrService.success(response.mensaje);
+            resolve(response);
+          } else {
+            this.toastrService.error(response.mensaje);
           }
-          resolve(response);
         },
         (error) => {
           reject(error);
@@ -336,6 +354,48 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+ * @method siguiente
+ * @description
+ * Método para navegar programáticamente al siguiente paso del wizard.
+ * Ejecuta la transición forward en el componente wizard y actualiza los
+ * índices correspondientes para mantener sincronización de estado.
+ * 
+ * @navigation_forward
+ * Realiza navegación que:
+ * - Ejecuta validación de documentos cargados (comentario indica validación futura)
+ * - Avanza al siguiente paso usando `wizardComponent.siguiente()`
+ * - Actualiza índice local basado en posición del wizard
+ * - Sincroniza datos de pasos con nueva posición
+ * 
+ * @wizard_synchronization
+ * Mantiene sincronización entre:
+ * - Índice local del componente
+ * - Índice actual del wizard component
+ * - Datos de configuración de pasos
+ * - Estado visual de la UI
+ * 
+ * @future_validation
+ * Comentario indica que se implementará:
+ * - Validación de documentos cargados
+ * - Verificación de completitud de adjuntos
+ * - Control de calidad de archivos
+ * 
+ * @state_update
+ * Actualiza:
+ * - `indice`: Posición actual + 1
+ * - `datosPasos.indice`: Sincronización con datos de pasos
+ * 
+ * @void
+ * @programmatic_navigation
+ */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
   /**

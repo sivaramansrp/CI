@@ -199,7 +199,7 @@ export class ImportacionVehiculosUsadosDonacionService {
   }
 
   getPaisesPorBloqueService(tramite: string, ID: string): Observable<any[]> {
-    return this.catalogoServices.paisesPorBloqueCatalogo(tramite, ID)
+    return this.catalogoServices.getpaisesBloqueCatalogo(tramite, ID)
       .pipe(
         map(res => res?.datos ?? [])
       );

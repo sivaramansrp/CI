@@ -2,6 +2,7 @@ import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Decimal } from 'decimal.js';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
@@ -419,6 +420,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.mostrarTabla = true;
       this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
+      const precioUnitarioUSD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
       const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
@@ -427,7 +429,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           "unidadDeMedida": UMT || "",
           "fraccionFrancelaria": this.seccionState?.fraccion || "",
           "descripcion": this.seccionState?.descripcion || "",
-          "precioUnitarioUSD": ((Number(this.seccionState?.valorFacturaUSD) % Number(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia)).toFixed(3).toString()) || "",
+          "precioUnitarioUSD": precioUnitarioUSD || "",
           "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
@@ -599,6 +601,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fechasSeleccionadas(evento: string[]): void {
     console.log(evento);
     this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
+  }
+
+  
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const totalPartidas = Number(cantidadPartidas);
+    const totalUSD = Number(cantidadUSD);
+
+    if (totalPartidas === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 4;
+    const importeUnitarioUSD = new Decimal(totalUSD).dividedBy(totalPartidas).toDecimalPlaces(MAXIMO_DECIMALES, Decimal.ROUND_HALF_DOWN);
+
+    return importeUnitarioUSD.toString();
   }
 
   /**
