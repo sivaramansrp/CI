@@ -509,15 +509,15 @@ export function formatFechaCreacion(fecha_creacion: string): string {
 }
 
 /**
- 
-Convierte una fecha de formato "dd/MM/yyyy" a "yyyy-MM-dd HH:mm:ss"
-@param fechaStr Fecha en formato "dd/MM/yyyy"
-@returns Fecha formateada en "yyyy-MM-dd HH:mm:ss"*/
+ * Formatea una fecha en formato 'DD/MM/YYYY' a 'YYYY-MM-DD HH:mm:ss' con hora fija.
+ * @param fechaStr Fecha en formato 'DD/MM/YYYY' como string.
+ * @returns Fecha formateada como string 'YYYY-MM-DD HH:mm:ss'.
+ */
 export function formatearFechaSolicitud(fechaStr: string): string {
-  if (!fechaStr) {return ''}
+  if (!fechaStr) { return '' }
 
   const PARTES = fechaStr.split('/');
-  if (PARTES.length !== 3) {return ''}
+  if (PARTES.length !== 3) { return '' }
 
   const [DIA, MES, ANIO] = PARTES;
   const FECHA = new Date(Number(ANIO), Number(MES) - 1, Number(DIA));
@@ -537,3 +537,15 @@ export function formatearFechaSolicitud(fechaStr: string): string {
 
   return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}`;
 }
+
+/**
+ * Formatea la fecha en formato 'MM/YYYY'.
+ * @param date Objeto Date a formatear.
+ * @returns Fecha formateada como string 'MM/YYYY'.
+ */
+export function formatMonthYear(date: Date): string {
+  const MONTH = String(date.getMonth() + 1).padStart(2, '0');
+  const YEAR = date.getFullYear();
+  return `${MONTH}/${YEAR}`;
+}
+
