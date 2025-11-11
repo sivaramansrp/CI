@@ -252,6 +252,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setClaveDeReferencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('claveDeReferencia');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setClaveDeReferencia(VALOR);
   }
 
@@ -261,6 +267,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setCadenaDeDependencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('cadenaDeDependencia');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setCadenaDeDependencia(VALOR);
   }
 
@@ -279,6 +291,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setLiaveDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('liaveDePago');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+
     this.solicitud260910Store.setLiaveDePago(VALOR);
   }
 
@@ -328,6 +346,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setImporteDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('importeDePago');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setImporteDePago(VALOR);
   }
 

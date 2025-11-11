@@ -17,7 +17,7 @@
         maxlength="9"
         (change)="setClaveDeReferencia($event)"
       />
-      @if (esContinuarClicked && !pagoDeDerechosForm.get('claveDeReferencia')?.value) {
+      @if (pagoDeDerechosForm.get('claveDeReferencia')?.touched && !pagoDeDerechosForm.get('claveDeReferencia')?.value) {
         <span class="mensaje-error"
           >Todos los campos de pago son requeridos</span
         >
@@ -37,7 +37,7 @@
         maxlength="14"
         (change)="setCadenaDeDependencia($event)"
       />
-      @if (esContinuarClicked && !pagoDeDerechosForm.get('cadenaDeDependencia')?.value) {
+      @if (pagoDeDerechosForm.get('cadenaDeDependencia')?.touched && !pagoDeDerechosForm.get('cadenaDeDependencia')?.value) {
         <span class="mensaje-error"
           >Todos los campos de pago son requeridos</span
         >
@@ -80,7 +80,7 @@
       pagoDeDerechosForm.get('liaveDePago')?.dirty)) {
         <span class="mensaje-error">Solo se permiten 10 caracteres en mayúsculas y números.</span>
       }
-      @if (esContinuarClicked && !pagoDeDerechosForm.get('liaveDePago')?.value) {
+      @if (pagoDeDerechosForm.get('liaveDePago')?.touched && !pagoDeDerechosForm.get('liaveDePago')?.value) {
         <span class="mensaje-error"
           >Todos los campos de pago son requeridos</span
         >
@@ -122,7 +122,7 @@
       pagoDeDerechosForm.get('importeDePago')?.dirty)) {
         <span class="mensaje-error">Por favor, escribe un número entero válido</span>
       }
-      @if (esContinuarClicked && !pagoDeDerechosForm.get('importeDePago')?.value) {
+      @if (pagoDeDerechosForm.get('importeDePago')?.touched && !pagoDeDerechosForm.get('importeDePago')?.value) {
         <span class="mensaje-error"
           >Todos los campos de pago son requeridos</span
         >
