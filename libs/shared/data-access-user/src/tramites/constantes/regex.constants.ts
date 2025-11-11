@@ -381,6 +381,10 @@ export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
  * Expresión regular para validar números enteros y decimales.
  */
 export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
+/**
+ * Expresión regular para validar números con hasta 14 dígitos enteros y 3 decimales.
+ */
+export const REGEX_NUMERO_ENTERO_14_3 = /^\d{1,14}(\.\d{1,3})?$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -615,6 +619,15 @@ export const REGEX_VALID_UMC = /^\d{1,12}(\.\d{1,10})?$/
  * - "abc" (contiene caracteres no numéricos)
  */
 export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
+
+/**
+ * Expresión regular para validar números enteros positivos con al menos 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123.4567"
+ * - "0.1234"
+ */
+export const REGEX_NUMERO_ENTERO_POSITIVO = /^\d+\.\d{4,}$/;
 
 /* Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales.
  * 
