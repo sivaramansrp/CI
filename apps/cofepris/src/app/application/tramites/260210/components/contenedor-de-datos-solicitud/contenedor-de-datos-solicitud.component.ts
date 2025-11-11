@@ -21,6 +21,7 @@ import { map, takeUntil } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
@@ -183,10 +184,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * “Tramite 260214” state with the selected data from the component.
    */
   constructor(
-    private Tramite260210Query: Tramite260210Query,
-    private Tramite260210Store: Tramite260210Store,
+    private tramite260210Query: Tramite260210Query,
+    private tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
-    private RegistroSolicitudService: RegistroSolicitudService,
+    private registroSolicitudService: RegistroSolicitudService,
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -208,7 +209,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.cargarTablaOpcionConfigSolicitud();
-    this.Tramite260210Query.selectTramiteState$
+    this.tramite260210Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -221,6 +222,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+enIdSolicitudPrellenado($event:number): void {
+    const SOLICITUDE_ID = $event;
+    this.registroSolicitudService.parcheOpcionesPrellenadas(SOLICITUDE_ID).subscribe((res:any) => {
+      if(res && res.datos){
+        GuardarMappingAdapter.patchToStore(res.datos, this.tramite260210Store);
+      }
+    });
+  }
+  
   /**
    * Maneja el evento cuando se selecciona una opción en la tabla.
    *
@@ -231,7 +242,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.Tramite260210Store.updateOpcionConfigDatos(event);
+    this.tramite260210Store.updateOpcionConfigDatos(event);
   }
 
   /**
@@ -243,7 +254,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.Tramite260210Store.updateScianConfigDatos(event);
+    this.tramite260210Store.updateScianConfigDatos(event);
   }
   /**
    * Maneja el evento de selección de mercancías en la tabla.
@@ -252,7 +263,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.Tramite260210Store.updateTablaMercanciasConfigDatos(event);
+    this.tramite260210Store.updateTablaMercanciasConfigDatos(event);
   }
 
   /**
@@ -261,7 +272,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.Tramite260210Store.updateDatosSolicitudFormState(event);
+    this.tramite260210Store.updateDatosSolicitudFormState(event);
   }
 
   /**
@@ -272,7 +283,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * y las mercancías seleccionadas de la tabla.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.Tramite260210Store.update((state) => ({
+    this.tramite260210Store.update((state) => ({
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,
@@ -303,7 +314,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
 
   cargarTablaOpcionConfigSolicitud(): void {    
-    this.RegistroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
     const DATOS = res.datos as TablaOpcionConfig[];
     this.opcionConfig.datos = DATOS;
     this.opcionSeleccionado(DATOS);

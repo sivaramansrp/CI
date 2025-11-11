@@ -62,6 +62,7 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  RegistroSolicitudService,
   TablaAcciones,
   TablaDinamicaComponent,
   TablePaginationComponent,
@@ -108,6 +109,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     ScianTablaComponent,
     DatosMercanciaComponent
   ],
+  providers: [RegistroSolicitudService],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
@@ -590,6 +592,7 @@ export class DatosDeLaSolicitudComponent
 
 public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
+ @Output() idSolicitudPrellenado: EventEmitter<number> = new EventEmitter<number>();
   /**
    * Constructor del componente.
    *
@@ -614,7 +617,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     private scianDataService: ScianDataService,
     private cdr: ChangeDetectorRef,
     private catalogoService: CatalogoServices,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService
 
 
   ) {
@@ -808,6 +812,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param datos1 Los datos de la mercancia seleccionada.
    */
   patchOpcionesValue(datos1: TablaOpcionConfig): void {
+    this.idSolicitudPrellenado.emit(datos1.id_solicitud);
     this.patchDatosPrincipales(datos1);
     this.patchDatosRepresentante(datos1);
     this.patchDatosMercancia(datos1);

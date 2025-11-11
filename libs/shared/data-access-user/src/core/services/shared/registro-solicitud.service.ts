@@ -1,5 +1,5 @@
 
-import { API_POST_SOLICITUD_GUARDAR, COMUN_URL, OPCIONES_PRELLENADO_SOLICITUD } from '../../servers/api-router';
+import { API_POST_PARCHE_PRELLENADAS, API_POST_SOLICITUD_GUARDAR, COMUN_URL, OPCIONES_PRELLENADO_SOLICITUD } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -34,9 +34,10 @@ export class RegistroSolicitudService {
     return this.http.get<BaseResponse<T>>(ENDPOINT)
   }
 
-  parcheOpcionesPrellenadas<T>(tramite: string, payload: T): Observable<BaseResponse<T>> {
-    const ENDPOINT = `${this.host}${API_POST_SOLICITUD_GUARDAR(tramite)}`;
-    return this.http.post<BaseResponse<T>>(ENDPOINT, payload);
+  parcheOpcionesPrellenadas<T>(tramite: number): Observable<BaseResponse<T>> {
+    // const ENDPOINT = `${this.host}${API_POST_PARCHE_PRELLENADAS(tramite)}`;
+    const ENDPOINT = '/assets/json/260210/prellenadasDatos.json';
+    return this.http.get<BaseResponse<T>>(ENDPOINT);
   }
   
 }
