@@ -227,10 +227,10 @@ export class ImportacionVehiculosUsadosDonacionComponent {
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "mercancia": {
-        "cantidadComercial": Number(item.cantidad),
-        "cantidadTarifaria": Number(item.cantidadPartidasDeLaMercancia),
+        "cantidadComercial": 0,
+        "cantidadTarifaria": Number(item.cantidad),
         "valorFacturaUSD": Number(item.valorFacturaUSD),
-        "condicionMercancia": item.defaultProducto,
+        "condicionMercancia": item.producto,
         "descripcion": item.descripcion,
         "usoEspecifico": item.usoEspecifico,
         "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
@@ -243,17 +243,17 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         },
         "partidasMercancia": [
           {
-            "autorizada": true,
-            "unidadesAutorizadas": Number(item.cantidadPartidasDeLaMercancia),
-            "descripcionAutorizada": item.descripcionPartidasDeLaMercancia,
-            "importeTotalUSDAutorizado": Number(item.filaSeleccionada[0].totalUSD),
-            "importeUnitarioUSDAutorizado": Number(item.valorPartidaUSD),
             "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
+            "unidadesAutorizadas": Number(item.cantidadPartidasDeLaMercancia),
             "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
+            "descripcionAutorizada": item.descripcionPartidasDeLaMercancia,
             "importeUnitarioUSD": Number(item.filaSeleccionada[0].precioUnitarioUSD),
             "importeTotalUSD": Number(item.filaSeleccionada[0].totalUSD),
-            "fraccionArancelariaClave": item.filaSeleccionada[0].fraccionFrancelaria,
-            "unidadMedidaClave": item.filaSeleccionada[0].unidadDeMedida
+            "autorizada": true,
+            "importeUnitarioUSDAutorizado": Number(item.filaSeleccionada[0].precioUnitarioUSD),
+            "importeTotalUSDAutorizado": Number(item.valorPartidaUSDPartidasDeLaMercancia),
+            "fraccionArancelariaClave": item.fraccion,
+            "unidadMedidaClave": item.unidadMedida
           }
         ]
       },
@@ -281,10 +281,11 @@ export class ImportacionVehiculosUsadosDonacionComponent {
         "cve_unidad_administrativa": item.representacion
       },
       "entidades_federativas": {
-        "cveEntidad": "SIN"
+        "cveEntidad": item.entidad
       },
       "lista_paises": item.fechasSeleccionadas
     };
+
     return new Promise((resolve, reject) => {
       let shouldNavigate = false;
       this.importacionVehiculosUsadosDonacionService.guardarDatosPost(PAYLOAD).subscribe(

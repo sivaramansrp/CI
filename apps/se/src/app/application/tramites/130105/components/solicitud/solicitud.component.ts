@@ -14,7 +14,7 @@ import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enu
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
 import { idProcedimiento, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-import { MostrarPartidas } from '@libs/shared/data-access-user/src/core/models/shared/mostrar-partidas';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src/';
 
 
 /**
@@ -612,10 +612,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return '0';
     }
 
-    const MAXIMO_DECIMALES = 4;
-    const importeUnitarioUSD = new Decimal(totalUSD).dividedBy(totalPartidas).toDecimalPlaces(MAXIMO_DECIMALES, Decimal.ROUND_HALF_DOWN);
+    const MAXIMO_DECIMALES = 3;
+    const importeUnitarioUSD = new Decimal(totalUSD).dividedBy(totalPartidas);
 
-    return importeUnitarioUSD.toString();
+    return importeUnitarioUSD.toFixed(MAXIMO_DECIMALES).toString();
   }
 
   /**
