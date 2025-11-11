@@ -184,8 +184,8 @@ export class ImportacionVehiculosUsadosDonacionService {
     );
   }
 
-  getBloqueService(ID: string): Observable<any[]> {
-    return this.catalogoServices.bloqueCatalogo(ID)
+  getBloqueService(tramite: string): Observable<any[]> {
+    return this.catalogoServices.paisesPorBloqueCatalogo(tramite, 'TITRAC.TA')
       .pipe(
         map(res => res?.datos ?? [])
       );

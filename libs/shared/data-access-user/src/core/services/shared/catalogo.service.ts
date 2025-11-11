@@ -445,10 +445,10 @@ bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
 
-// paisesPorBloqueCatalogo(tramite: string, ID: string): Observable<BaseResponse<Catalogo[]>> {
-//   const ENDPOINT = `${this.host}${API_PAISES_POR_BLOQUE(tramite, ID)}`;
-//   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-// }
+paisesPorBloqueCatalogo(tramite: string, ID: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_PAISES_POR_BLOQUE(tramite, ID)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 
 mostrarPartidasSolicitud(tramite: string, solicitudId:number): Observable<BaseResponse<MostrarPartidas[]>> {
   const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
