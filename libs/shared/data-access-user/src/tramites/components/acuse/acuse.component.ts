@@ -137,9 +137,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private aviso230301: DocumentosT230301Service,
     private documentosResolucinService: DocumentosTramiteResolucionService,
     
-  ) {
-    
-  }
+  ) {}
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
