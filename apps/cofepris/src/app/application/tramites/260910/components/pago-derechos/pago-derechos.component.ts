@@ -11,12 +11,7 @@ import {
   REGEX_LLAVE_PAGO,
   REGEX_SOLO_NUMEROS,
 } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import {
   Solicitud260910State,
   Solicitud260910Store,
@@ -293,7 +288,37 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * @param evento Cadena con la fecha seleccionada
    */
   seleccionarFechaInicio(evento: string): void {
+    const CONTROL = this.pagoDeDerechosForm.get('fechaDePago');
+    if (!CONTROL) { return; }
+
     this.solicitud260910Store.setFechaDePago(evento);
+    CONTROL.enable();
+
+    const PARTES = evento.split('/');
+    if (PARTES.length === 3) {
+      const DIA = parseInt(PARTES[0], 10);
+      const MES = parseInt(PARTES[1], 10) - 1;
+      const ANIO = parseInt(PARTES[2], 10);
+      
+      const FECHA = new Date(ANIO, MES, DIA);
+      const HOY = new Date();
+      
+      FECHA.setHours(0, 0, 0, 0);
+      HOY.setHours(0, 0, 0, 0);
+      
+      if (FECHA > HOY) {
+        // No emitimos eventos para evitar ciclos de validación
+        CONTROL.setValue(evento, { emitEvent: false });
+        CONTROL.markAsTouched();
+        CONTROL.markAsDirty();
+        CONTROL.setErrors({ futureDateNotAllowed: true });
+      } else {
+        // La fecha es válida
+        CONTROL.setValue(evento, { emitEvent: false });
+        CONTROL.markAsTouched();
+        CONTROL.setErrors(null);
+      }
+    }
   }
 
   /**

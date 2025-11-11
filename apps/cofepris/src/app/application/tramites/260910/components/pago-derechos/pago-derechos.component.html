@@ -91,8 +91,14 @@
       <input-fecha
         [datos]="fechaPago"
         [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
-        (valorCambiado)="seleccionarFechaInicio($event)" [isDisabled]="disableFechaDePago"
+        (valorCambiado)="seleccionarFechaInicio($event)" 
+        [isDisabled]="disableFechaDePago"
       ></input-fecha>
+       @if (pagoDeDerechosForm.get('fechaDePago')?.errors?.['futureDateNotAllowed'] ) {
+        <div class="mensaje-error">
+          La fecha de pago debe ser menor o igual a la fecha actual.
+        </div>
+       }
     </div>
 
     <div class="col-md-4 mt-3">
