@@ -12,14 +12,46 @@
           <paso-uno (continuarEvento)="continuar()"></paso-uno>
         } 
         @case (2) {
-          <paso-dos></paso-dos>
-          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+          <paso-dos
+           [idTipoTRamite]="'11204'"
+          [datosUsuario]="datosUsuario"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          ></paso-dos>
+
         }
         @case (3) {
           <paso-tres></paso-tres>
           <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
         } 
       }
+    </div>
+      <div class="row">
+      <div class="col-md-12">
+        @if (indice == 2) {
+        <div class="mt-5 mb-3 d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-default"
+            (click)="anterior()"
+            *ngIf="seccionCargarDocumentos"
+          >
+            Anterior
+          </button>
+
+          <button
+            class="btn btn-primary ms-3"
+            (click)="
+              seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+            "
+            [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+          >
+            {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+          </button>
+        </div>
+        }
+      </div>
     </div>
   </div>
 </div>

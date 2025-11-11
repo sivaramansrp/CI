@@ -1,7 +1,7 @@
 import { ANEXAR, CARGAR } from '../../enums/datos-tramite.enum';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild ,EventEmitter } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { ListaPasosWizard,Usuario } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -29,6 +29,32 @@ export class SolicitantePageComponent implements OnInit {
    * Índice de la pestaña actual.
    */
   indice: number = 1;
+
+
+    /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+   /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+
+    /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   */
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
 
   /**
    * Referencia al componente Wizard.
@@ -89,4 +115,55 @@ export class SolicitantePageComponent implements OnInit {
   continuar(): void {
     this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
+
+  /**
+    * Método para manejar el evento de carga de documentos.
+    * Actualiza el estado del botón de carga de archivos.
+    *  carga - Indica si la carga de documentos está activa o no.
+    * {void} No retorna ningún valor.
+    */
+    manejaEventoCargaDocumentos(carga: boolean): void {
+      this.activarBotonCargaArchivos = carga;
+    }
+
+  /**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado de la sección de carga de documentos.
+ *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+ * {void} No retorna ningún valor.
+ */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }  
+
+  /**
+ * Método para navegar a la sección anterior del wizard.
+ * Actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+  */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+  /**
+ * Método para navegar a la siguiente sección del wizard.
+ * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+siguiente(): void {
+  // Aqui se hara la validacion de los documentos cargdados
+  this.wizardComponent.siguiente();
+  this.indice = this.wizardComponent.indiceActual + 1;
+  this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+}
+
 }
