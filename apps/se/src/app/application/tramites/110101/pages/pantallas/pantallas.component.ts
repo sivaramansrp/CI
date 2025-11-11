@@ -171,10 +171,6 @@ export class PantallasComponent implements OnInit {
    * @property esFormaValido
    * @type {boolean}
    * @default false
-   * @example
-   * if (this.esFormaValido) {
-   *   // Continuar con el envío
-   * }
    */
   esFormaValido: boolean = false;
 
