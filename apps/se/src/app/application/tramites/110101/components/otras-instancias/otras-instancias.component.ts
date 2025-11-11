@@ -131,18 +131,10 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
-    if (this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false) {
-      this.formularioInstancias.markAllAsTouched();
-      this.mensajeService.mostrarMensaje(true); 
-    }
-    // Inicializa la validación si aún no existe
-    if (this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === null) {
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario);
-    }
+ 
     if(this.catalogo){
       this.suscribirCambiosFormulario();
     }else{
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.formularioInstancias.valid);
       this.actualizarValidadoresCatalogo();
     }
    
@@ -154,7 +146,6 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         tap((_value) => {
           this.validarFormulario = this.formularioInstancias.valid;
-          this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias',this.validarFormulario );
         })
       )
       .subscribe();

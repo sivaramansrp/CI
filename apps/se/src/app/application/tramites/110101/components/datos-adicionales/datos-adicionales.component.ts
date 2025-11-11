@@ -213,30 +213,22 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     this.getEntidadFederativa();
     this.getDeclaracionDatos();
-    //validacion para cuando de tab sin el boton de continuar
-    if (this.solicitudeState?.validacion_formularios?.validacion_tab_datos_adicionales === false) {
-      this.formulario.markAllAsTouched();
-      this.mensajeService.mostrarMensaje(true);
-    }
-
-    // Inicializa la validación si aún no existe
-    if (this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === null) {
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.validarFormulario);
-    }
+    
     this.formulario.statusChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((_value) => {
           this.validarFormulario = this.formulario.valid;
-          this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.validarFormulario);
+          this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.formulario.valid);
         })
       )
       .subscribe(); 
-    this.mensajeService.tocarFormulario$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
+
+     if(this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false){
       this.formulario.markAllAsTouched();
-    });
+      this.validarFormularioAdicionales();
+    }
+  
   }
 
   /**
@@ -464,6 +456,19 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   return Array.isArray(DATA) ? DATA.some(item => item?.cve_pais === country) : false;
 }
 
+/**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * @method validarFormularioAdicionales
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+ validarFormularioAdicionales(): boolean {
+    if (this.formulario.valid === false) {
+     this.formulario.markAllAsTouched();
+      return false;
+    }
+    return true
+  }
+
   /**
    * **Ciclo de vida: Destruye las suscripciones y limpia recursos**
    * 
@@ -472,6 +477,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * - Esto previene fugas de memoria al garantizar que las suscripciones dependientes de `takeUntil(this.destroy$)` se cancelen correctamente.
    */
   ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.validarFormularioAdicionales() ?? null);
     this.destroy$.next(); // Notifica a las suscripciones activas que deben finalizar
     this.destroy$.complete(); // Completa el Subject para evitar futuras emisiones
   }
