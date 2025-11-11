@@ -22,6 +22,10 @@ describe('ContenedorDePasosComponent', () => {
 
     fixture = TestBed.createComponent(ContenedorDePasosComponent);
     component = fixture.componentInstance;
+  });
+
+  beforeEach(() => {
+    // Always set wizardComponent mock before each test and before detectChanges
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -55,13 +59,7 @@ describe('ContenedorDePasosComponent', () => {
   });
 
   describe('getValorIndice', () => {
-    beforeEach(() => {
-      component.wizardComponent = {
-        siguiente: jest.fn(),
-        atras: jest.fn(),
-        iconClasses: []
-      } as any;
-    });
+    // wizardComponent mock is already set in the top-level beforeEach
 
     it('should update indice and call siguiente when accion is "cont" and valor is valid', () => {
       const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };

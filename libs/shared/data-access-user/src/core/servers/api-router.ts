@@ -1147,4 +1147,7 @@ export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${
 export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
 
 /*API para obtener el catálogo de países por bloque*/
-export const PAISES_POR_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/105`;
+export const PAISES_POR_BLOQUE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${CLAVEBLOQUE}`;
+
+/*API para obtener el catálogo de clasificaciones de régimen*/
+export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/clasificaciones-regimen/${CLASIFICACION}`;
