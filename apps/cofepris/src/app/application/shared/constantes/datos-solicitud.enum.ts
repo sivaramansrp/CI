@@ -23,7 +23,7 @@ import {
 export const OPCION_TABLA = [
   {
     encabezado: 'Fecha creación',
-    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion,
+    clave: (ele: TablaOpcionConfig): string | number | undefined => ele.fecha_creacion,
     orden: 1,
   },
   {
@@ -33,7 +33,7 @@ export const OPCION_TABLA = [
   },
   {
     encabezado: 'Cantidad',
-    clave: (ele: TablaOpcionConfig): string => ele.cantidad,
+    clave: (ele: TablaOpcionConfig): number | string => ele.cantidad,
     orden: 3,
   },
   {

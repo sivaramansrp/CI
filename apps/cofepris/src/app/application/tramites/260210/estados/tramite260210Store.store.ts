@@ -119,7 +119,7 @@ export function createInitialState(): Tramite260210State {
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
     },
-    opcionConfigDatos: TABLA_OPCION_DATA,
+    opcionConfigDatos: [],
     scianConfigDatos: [],
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],

@@ -1133,3 +1133,11 @@ export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: stri
   * API para obtener la unidad de medida por fracción arancelaria
  */
 export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;
+
+/**
+ * 
+ * @param TRAMITE 
+ * @param rfc 
+ * @returns 
+ */
+export const OPCIONES_PRELLENADO_SOLICITUD = (TRAMITE: number, rfc: string): string => `sat-t${TRAMITE}/solicitud/recientes/${rfc}`

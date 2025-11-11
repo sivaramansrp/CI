@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, RegistroSolicitudService } from '@ng-mf/data-access-user';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -17,9 +18,9 @@ import {
   Tramite260210Store,
 } from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
@@ -39,6 +40,7 @@ import { ViewChild } from '@angular/core';
   imports: [CommonModule, DatosDeLaSolicitudComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
+   providers: [RegistroSolicitudService],
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -185,6 +187,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     private Tramite260210Query: Tramite260210Query,
     private Tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
+    private RegistroSolicitudService: RegistroSolicitudService,
     private cdr: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$
@@ -207,15 +210,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.cargarTablaOpcionConfigSolicitud();
     this.Tramite260210Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
-          this.scianConfig.datos = this.tramiteState.scianConfigDatos;
+          this.opcionConfig.datos = this.tramiteState?.opcionConfigDatos ?? [];
+          this.scianConfig.datos = this.tramiteState?.scianConfigDatos ?? [];
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            this.tramiteState?.tablaMercanciasConfigDatos ?? [];
         })
       )
       .subscribe();
@@ -300,6 +304,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  cargarTablaOpcionConfigSolicitud(): void {    
+    this.RegistroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+    const DATOS = res.datos as TablaOpcionConfig[];
+    this.opcionConfig.datos = DATOS;
+    this.opcionSeleccionado(DATOS);
+    });
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
