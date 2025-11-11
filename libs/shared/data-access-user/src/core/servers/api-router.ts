@@ -609,6 +609,12 @@ export const DOCUMENTOMINIO= '{documentoMinio}';
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * API para Consultar url de descarga de documentos.
+ * @see  https://api-v30.cloud-ultrasist.net/api/digitalizacion/swagger-ui/index.html#/Carga-Documento/DownloadDocument
+ */
+export const API_GET_DESCARGAR_DOCUMENTOS= `digitalizacion/descargar/${DOCUMENTOMINIO}`
  
 /**
  * IDREQUERIMIENTO para detalle de requerimiento.
@@ -1141,3 +1147,11 @@ export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string =>
  * @returns 
  */
 export const OPCIONES_PRELLENADO_SOLICITUD = (TRAMITE: number, rfc: string): string => `sat-t${TRAMITE}/solicitud/recientes/${rfc}`
+/*API para obtener el catálogo de fracciones arancelarias*/
+export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
+
+/*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
+export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
+
+/*API para obtener el catálogo de países por bloque*/
+export const PAISES_POR_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/105`;

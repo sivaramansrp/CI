@@ -19,7 +19,6 @@ import {
 } from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
@@ -188,14 +187,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     private Tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
     private RegistroSolicitudService: RegistroSolicitudService,
-    private cdr: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.cdr.detectChanges();
         })
       )
       .subscribe();
@@ -216,10 +213,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          this.opcionConfig.datos = this.tramiteState?.opcionConfigDatos ?? [];
-          this.scianConfig.datos = this.tramiteState?.scianConfigDatos ?? [];
+          this.opcionConfig.datos = this.tramiteState.opcionConfigDatos ?? [];
+          this.scianConfig.datos = this.tramiteState.scianConfigDatos ?? [];
           this.tablaMercanciasConfig.datos =
-            this.tramiteState?.tablaMercanciasConfigDatos ?? [];
+            JSON.parse(JSON.stringify(this.tramiteState.tablaMercanciasConfigDatos)) ?? [];
         })
       )
       .subscribe();
