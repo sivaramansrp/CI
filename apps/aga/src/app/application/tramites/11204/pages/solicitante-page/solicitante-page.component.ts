@@ -1,7 +1,7 @@
 import { ANEXAR, CARGAR } from '../../enums/datos-tramite.enum';
-import { Component, OnInit, ViewChild ,EventEmitter } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { ListaPasosWizard,Usuario } from '@ng-mf/data-access-user';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -60,6 +60,14 @@ export class SolicitantePageComponent implements OnInit {
    * Referencia al componente Wizard.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Representa los datos del usuario para el componente.
+   * Esta propiedad se inicializa como un arreglo vacío convertido al tipo `Usuario`.
+   * Asegúrate de que el tipo `Usuario` esté correctamente definido y que esta propiedad
+   * reciba los datos de usuario adecuados durante el ciclo de vida del componente.
+   */
+  datosUsuario: Usuario = [] as unknown as Usuario;
 
   /**
    * Datos de los pasos del wizard.
