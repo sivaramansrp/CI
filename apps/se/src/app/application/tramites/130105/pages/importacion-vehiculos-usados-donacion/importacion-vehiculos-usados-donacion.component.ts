@@ -1,13 +1,13 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
-import { AVISO, DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO,DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
 import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-import { AccionBoton } from '../../enums/accionbotton.enum';
 import { Subject, take, takeUntil } from 'rxjs';
-import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
-import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
+import { AccionBoton } from '../../enums/accionbotton.enum';
+import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
 
 /**
  * Componente para la importación de vehículos usados.
@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-importacion-vehiculos-usados-donacion',
   templateUrl: './importacion-vehiculos-usados-donacion.component.html'
 })
-export class ImportacionVehiculosUsadosDonacionComponent {
+export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
   /**
    * Lista de pasos del asistente (wizard) para solicitar la importación.
    * Los pasos se obtienen de la constante `PASOS_EXPORTACION`.

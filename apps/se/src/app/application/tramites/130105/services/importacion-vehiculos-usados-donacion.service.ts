@@ -1,12 +1,12 @@
 
-import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
 import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
+import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Tramite130105Query } from '../../../estados/queries/tramite130105.query';
-import { PROC_130105 } from '../servers/api-route';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
+import { PROC_130105 } from '../servers/api-route';
+import { Tramite130105Query } from '../../../estados/queries/tramite130105.query';
 
 /**
  * Servicio para gestionar la importación de vehículos.

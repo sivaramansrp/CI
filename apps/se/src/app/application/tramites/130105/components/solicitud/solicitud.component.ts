@@ -1,20 +1,18 @@
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
+import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Decimal } from 'decimal.js';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Decimal } from 'decimal.js';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130105Query } from '../../../../estados/queries/tramite130105.query';
-import { idProcedimiento, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-import { MostrarPartidas } from '@libs/shared/data-access-user/src/';
 
 
 /**
@@ -173,7 +171,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   private seccionState!: Tramite130105State;
 
-  idProcedimiento: number = idProcedimiento;
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   mostrarPartidas: MostrarPartidas[] = [];
 
@@ -420,26 +418,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.mostrarTabla = true;
       this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
-      const precioUnitarioUSD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+      const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
       const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
-          "id": this.tableBodyData.length + 1 + "",
+          "id": String(this.tableBodyData.length + 1),
           "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
           "unidadDeMedida": UMT || "",
           "fraccionFrancelaria": this.seccionState?.fraccion || "",
           "descripcion": this.seccionState?.descripcion || "",
-          "precioUnitarioUSD": precioUnitarioUSD || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
           "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
       this.partidasDelaMercanciaForm.reset();
-      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad), 0);
-      const TOTAL_lUSD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+      const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
       this.formForTotalCount.patchValue({
         cantidadTotal: CANTIDAD_TOTAL,
-        valorTotalUSD: TOTAL_lUSD,
+        valorTotalUSD: TOTAL_USD,
       });
     }
   }
@@ -602,19 +600,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 
-  
-  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
-    const totalPartidas = Number(cantidadPartidas);
-    const totalUSD = Number(cantidadUSD);
 
-    if (totalPartidas === 0) {
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas);
+    const TOTAL_USD = Number(cantidadUSD);
+
+    if (TOTAL_PARTIDAS === 0) {
       return '0';
     }
 
     const MAXIMO_DECIMALES = 3;
-    const importeUnitarioUSD = new Decimal(totalUSD).dividedBy(totalPartidas);
+    const IMPORTE_UNITARIO_USD = new Decimal(TOTAL_USD).dividedBy(TOTAL_PARTIDAS);
 
-    return importeUnitarioUSD.toFixed(MAXIMO_DECIMALES).toString();
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
   }
 
   /**

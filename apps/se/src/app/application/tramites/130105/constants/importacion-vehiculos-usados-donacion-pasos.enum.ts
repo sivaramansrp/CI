@@ -35,7 +35,7 @@ export const PRODUCTO_OPCION = [
 ];
 
 
-export const idProcedimiento = 130105; 
+export const ID_PROCEDIMIENTO : number = 130105; 
 
 
 /** Genera el mensaje HTML para registro exitoso
