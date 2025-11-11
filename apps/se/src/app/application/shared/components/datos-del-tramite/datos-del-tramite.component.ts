@@ -31,6 +31,9 @@ export class DatosDelTramiteComponent implements OnChanges{
   */
   @Input() esFormularioSoloLectura!: boolean;
 
+  /**
+   * @description Identificador del procedimiento asociado al trámite.
+   */
   @Input() idProcedimiento!: number;
   
   /**

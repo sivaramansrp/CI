@@ -1,6 +1,6 @@
 /* Importación de componentes, servicios, formularios y datos necesarios para el manejo del trámite 130106 */
 /* Incluye componentes UI, validaciones, operadores RxJS, estados y datos JSON relacionados */
-import { Catalogo, NotificacionesComponent, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Catalogo, NotificacionesComponent, ConfiguracionColumna, REGEX_DECIMAL, REGEX_NUMERO_ENTERO_POSITIVO, REGEX_NUMERO_ENTERO, REGEX_NUMERO_ENTERO_14_3 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Subject, forkJoin, map, takeUntil } from 'rxjs';
@@ -709,11 +709,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = control.value;
     if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
 
-    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+    if (!REGEX_DECIMAL.test(VALOR)) {
       return { noEsNumero: true };
     }
 
-    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+    if (REGEX_NUMERO_ENTERO_POSITIVO.test(VALOR)) {
       return { maximoTresDecimales: true };
     }
 
@@ -737,11 +737,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = control.value;
     if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
 
-    if (!/^\d*\.?\d*$/.test(VALOR)) {
+    if (!REGEX_NUMERO_ENTERO.test(VALOR)) {
       return { noEsNumero: true };
     }
 
-    if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+    if (!REGEX_NUMERO_ENTERO_14_3.test(VALOR)) {
       return { validarCatorceEnterosTresDecimales: true };
     }
 

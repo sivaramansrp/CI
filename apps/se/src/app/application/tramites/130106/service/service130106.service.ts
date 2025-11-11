@@ -60,51 +60,56 @@ export class Solocitud130106Service {
     return this.http.get<Solicitud130106State>('assets/json/130106/serviciosExtraordinarios.json');
   }
 
+  /** Obtiene el catálogo de regímenes para el trámite especificado.  
+   *  @param {string} tramite - El identificador del trámite.
+   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de regímenes.
+   */
   getRegimenes(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.regimenesCatalogo(tramite).pipe(
       map(res => res?.datos ?? [])
     );
   }
+  /** Obtiene el catálogo de clasificaciones de régimen para el trámite especificado.  
+   *  @param {string} tramite - El identificador del trámite.
+   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de clasificaciones de régimen.
+   */
   getClasificacionRegimen(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.getClasificacionRegimen(this.tramiteId, "01").pipe(
       map(res => res?.datos ?? [])
     );
   }
-
+  /** Obtiene el catálogo de fracciones arancelarias para el trámite especificado.  
+   *  @param {string} tramite - El identificador del trámite.
+   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de fracciones arancelarias.
+   */
   getFraccionesArancelarias(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.getFraccionesCatalogo(tramite).pipe(
       map(res => res?.datos ?? [])
     );
   }
-
+  /** Obtiene el catálogo de unidades de medida para el trámite especificado.  
+   *  @param {string} tramite - El identificador del trámite.
+   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de unidades de medida.
+   */
   getUMTCatalogo(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.getUMTCatalogo(tramite, "87012301").pipe(
       map(res => res?.datos ?? [])
     );
   }
-
+  /** Obtiene el catálogo de bloques para el trámite especificado.  
+   *  @param {string} tramite - El identificador del trámite.
+   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de bloques.
+   */
   getBloque(tramite: string): Observable<Catalogo[]> {
     return this.catalogoServices.tratadosAcuerdoCatalogo(tramite, "TITRAC.TA").pipe(
       map(res => res?.datos ?? [])
     );
   }
-  // obtenerTratadoData(): void {
-  //     this.catalogoServices
-  //       .tratadosAcuerdoCatalogo(this.tramiteId, "TITRAC.TA")
-  //       .pipe(takeUntil(this.destroy$))
-  //       .subscribe((resp): void => {
-  //         const TRATADO_FIELD = this.consultarCupoFormData.find(
-  //           (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
-  //         ) as ModeloDeFormaDinamica;
-  //         if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
-  //           TRATADO_FIELD.opciones = resp.datos as Catalogo[];
-  //         }
-  //       });
-  //   }
+
   /**
-  //   * Obtiene las opciones de solicitud desde un archivo JSON.
-  //   * @returns {Observable<ProductoResponse>}
-  //   */
+    * Obtiene las opciones de solicitud desde un archivo JSON.
+    * @returns {Observable<ProductoResponse>}
+   */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
       'assets/json/130202/solicitude-options.json'
@@ -112,10 +117,10 @@ export class Solocitud130106Service {
   }
 
 
-  // /**
-  //  * Obtiene las opciones de producto desde un archivo JSON.
-  //  * @returns {Observable<ProductoResponse>}
-  //  */
+  /**
+   * Obtiene las opciones de producto desde un archivo JSON.
+   * @returns {Observable<ProductoResponse>}
+   */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
       'assets/json/130202/producto-options.json'
@@ -135,19 +140,11 @@ export class Solocitud130106Service {
    * Obtiene la lista de representaciones federales desde un archivo JSON.
    * @returns {Observable<Catalogo[]>}
    */
-  getRepresentacionFederal(tramite: string,cveEntidad: string): Observable<Catalogo[]> {
+  getRepresentacionFederal(tramite: string, cveEntidad: string): Observable<Catalogo[]> {
     return this.catalogoServices.representacionFederalCatalogo(tramite, "SIN").pipe(
       map(res => res?.datos ?? [])
     );
   }
-
-  /**
-  * Obtiene la lista de países disponibles desde un archivo JSON.
-  * @returns {Observable<Catalogo[]>}
-  */
-  // getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
-  // }
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
    * @param {number} _bloqueId - El ID del bloque.
@@ -159,11 +156,4 @@ export class Solocitud130106Service {
     );
   }
 
-  
-
-  //   getUMTCatalogo(tramite: string): Observable<Catalogo[]> {
-  //   return this.catalogoServices.getUMTCatalogo(this.tramiteId, "87012301").pipe(
-  //     map(res => res?.datos ?? [])
-  //   );
-  // }
 }
