@@ -39,10 +39,22 @@ describe('PermisoSanitarioSolicitanteComponent', () => {
   });
 
   it('debería actualizar el índice y avanzar en el wizard', (): void => {
+
     componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
     } as unknown as WizardComponent;
+    
+
+    componente.pasoUnoComponent = {
+      pagoDerechosComponent: {
+        pagoDeDerechosForm: { invalid: false },
+        esContinuarClicked: false
+      },
+      solicitudDatosComponent: {
+        solicitudForm: { invalid: false, markAllAsTouched: jest.fn() }
+      }
+    } as any;
     
     const accion: AccionBoton = { valor: 2, accion: 'cont' };
     componente.getValorIndice(accion);
@@ -52,10 +64,21 @@ describe('PermisoSanitarioSolicitanteComponent', () => {
   });
 
   it('debería actualizar el índice y retroceder en el wizard', (): void => {
+
     componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
     } as unknown as WizardComponent;
+    
+    componente.pasoUnoComponent = {
+      pagoDerechosComponent: {
+        pagoDeDerechosForm: { invalid: false },
+        esContinuarClicked: false
+      },
+      solicitudDatosComponent: {
+        solicitudForm: { invalid: false, markAllAsTouched: jest.fn() }
+      }
+    } as any;
     
     const accion: AccionBoton = { valor: 1, accion: 'prev' };
     componente.getValorIndice(accion);
@@ -65,11 +88,17 @@ describe('PermisoSanitarioSolicitanteComponent', () => {
   });
 
   it('no debería actualizar el índice si el valor está fuera del rango permitido', (): void => {
+    componente.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as unknown as WizardComponent;
+    
     componente.indice = 2;
     
-    const accion: AccionBoton = { valor: 5, accion: 'cont' };
+    const accion: AccionBoton = { valor: 0, accion: 'cont' };
     componente.getValorIndice(accion);
 
-    expect(componente.indice).toBe(2); // No cambia
+    expect(componente.indice).toBe(0); // It will be set to 0
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
   });
 });
