@@ -7,6 +7,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnI
 import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA } from '../constante110101.enum';
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { DatosMercanciaService } from '../../services/datos-mercancia.service';
+import { ElementoValido } from '../../models/response/archivo-mercancia-response.model';
 
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InsumoTratadosRequest } from '../../models/request/validar-insumo-request.model';
@@ -28,7 +29,6 @@ import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
 
 import { CampoEvaluar, EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
 import { MensajePantallaService } from '../../services/validaciones-tabs.service';
-
 
 
 /**
@@ -257,6 +257,9 @@ get ninoFormGroup(): FormGroup {
    */
   public NUMERO_REQUERIDO = INTRODUZCA_NUMERO;
 
+  /** Tipo de archivo actual a cargar archivos (`INSUMOS` o `EMPAQUES`). */
+  public tipoArchivoActual!: string;
+
   /**
    * Mensaje juegos y surtidos alianza.
    * Este mensaje se utiliza para indicar que un campo debe ser un número.
@@ -418,52 +421,21 @@ get ninoFormGroup(): FormGroup {
     if(this.esFormularioSoloLectura === true){
       this.mercanciaEvaluar();
     }
-    //Validar tabla aun que este valido formulario
-    if(this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === true){
-       if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-    }
-    //validacion para cuando de tab sin el boton de continuar
-    if (this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === false) {
-      this.formMercancia.markAllAsTouched();
-      this.mensajeService.mostrarMensaje(true);
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-      
-    }
 
-    // Inicializa la validación si aún no existe
-    if (this.solicitudeState.validacion_formularios.validacion_tab_mercancia === null) {
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
+     if(this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false){
+      this.formMercancia.markAllAsTouched();
+      this.validarFormularioMercancia();
     }
+  
     this.formMercancia.statusChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((_value) => {
           this.validarFormulario = this.formMercancia.valid;
-          this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
         })
       )
       .subscribe();
 
-    this.mensajeService.tocarFormulario$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-      this.formMercancia.markAllAsTouched();
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-        if(this.solicitudeState.insumosTablaDatos.length === 0){
-        this.validacionInsumo = true;
-       }
-      }
-    });
   }
 
   /**
@@ -1079,20 +1051,20 @@ get ninoFormGroup(): FormGroup {
         fraccion_naladisa96: this.formMercancia.get('clasificacionNaladi1996')?.value,
         fraccion_naladisa02: this.formMercancia.get('clasificacionNaladi2002')?.value,
         //ultimo tab
-        tipo_proceso_mercancia: '',
+        tipo_proceso_mercancia:this.solicitudeState.transformacion53,
         //Mismo campo difenre nombre dependiendo del caso
         valo_transaccional_fob: this.ninoFormGroup.get('fraccionArancelariaModal')?.value,
-        costo_neto_ap: null
+        costo_neto_ap: this.solicitudeState.costoNetoDolares,
       },
       tratados_seleccionados: this.solicitudeState?.respuestaServicioDatosTabla.map(item => ({
         cve_grupo_criterio: item.cve_grupo_criterio,
-        id_bloque: item.id_bloque ?? 0,
-        cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
+        id_bloque: item.id_bloque,
+        cve_tratado_acuerdo: item.cve_tratado_acuerdo,
         id_tratado_acuerdo: item.id_tratado_acuerdo,
-        cve_pais: item.cve_pais ?? '',
-        id_desc_alterna_fraccion: 0,
+        cve_pais: item.cve_pais ,
+        id_desc_alterna_fraccion:null,
         // es lo mismo a tipo_proceso_mercancia
-        ide_tipo_proceso_mercancia: ''
+        ide_tipo_proceso_mercancia:null
       }))
     };
     this.datosMercanciaService.postFracccionArancelariaValidar(PAYLOAD)
@@ -1217,7 +1189,8 @@ get ninoFormGroup(): FormGroup {
    *
    * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
    */
-  cargaArchivo(): void {
+  cargaArchivo(tipo: 'INSUMOS' | 'EMPAQUES'): void {
+     this.tipoArchivoActual = tipo;
     if (this.modalArchivo) {
       const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
       MODAL_INSTANCE.show();
@@ -1544,6 +1517,128 @@ get ninoFormGroup(): FormGroup {
   }
 }
 
+ /**
+ * @description Valida el formulario de mercancía antes de continuar con el proceso.
+ * Si la configuración requiere mostrar insumos, verifica que existan registros en la tabla.
+ * En caso contrario, marca los campos del formulario y detiene el avance.
+ * @method validarFormularioMercancia
+ * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
+ */
+  validarFormularioMercancia(): boolean {
+    if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true) {
+      if (this.solicitudeState.insumosTablaDatos.length === 0) {
+         if (this.formMercancia.valid === false) {
+            this.formMercancia.markAllAsTouched();
+         }
+        this.validacionInsumo = true;
+        this.cd.detectChanges();
+         return false;
+      }
+    }
+    if (this.formMercancia.valid === false) {
+     this.formMercancia.markAllAsTouched();
+      this.cd.detectChanges();
+      return false;
+    }
+    return true
+  }
+
+  /**
+    * Carga y envía el archivo CSV según el tipo seleccionado (`INSUMOS` o `EMPAQUES`).
+    * 
+    * - Obtiene el archivo desde el input `#archivoAdjuntar`.
+    * - Envía el archivo al servicio `postArchivoMercancia`.
+    * - Limpia el formulario si la respuesta es exitosa, o muestra un mensaje de error en caso contrario.
+    */
+  agregarCsv(): void {
+    const INPUTARCHIVO = document.getElementById('archivoAdjuntar') as HTMLInputElement;
+    if (!INPUTARCHIVO.files || INPUTARCHIVO.files.length === 0) {
+      return;
+    }
+    const ARCHIVOCSV = INPUTARCHIVO.files[0];
+   
+    const TRATADOS_SELECCIONADOS = this.solicitudeState.respuestaServicioDatosTabla.map(item => ({
+      id_tratado_acuerdo: item.id_tratado_acuerdo,
+      cve_grupo_criterio: item.cve_grupo_criterio,
+      cve_pais:item.cve_pais,
+      cve_tratado_acuerdo:item.cve_tratado_acuerdo
+    }));
+
+    const TIPOARCHIVO = this.tipoArchivoActual;
+    this.datosMercanciaService.postArchivoMercancia(TRATADOS_SELECCIONADOS, TIPOARCHIVO, ARCHIVOCSV)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
+            if(response.datos.elementos_validos[0].tipo_elemento === "INSUMOS" ){
+                response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.insumosTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
+              });
+              this.tramite110101Store.clearInsumos();
+              this.tramite110101Store.addInsumo(this.insumosTablaDatos);
+            }else{
+               response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.envasesTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
+              });
+              this.tramite110101Store.clearEmpaques();
+              this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
+            }
+             
+            this.formularioArchivo.reset();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response?.error || 'Error en archivo',
+              mensaje: response?.causa || response?.mensaje || 'Error en archivo',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error en archivo';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
    * 
@@ -1552,6 +1647,7 @@ get ninoFormGroup(): FormGroup {
    * - Este método se ejecuta automáticamente cuando el componente se destruye, asegurando una gestión eficiente de las suscripciones.
    */
   ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormularioMercancia() ?? null);
     this.destroy$.next();
     this.destroy$.complete();
   }
