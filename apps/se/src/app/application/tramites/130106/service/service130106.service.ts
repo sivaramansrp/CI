@@ -25,7 +25,7 @@ export class Solocitud130106Service {
 
   /** Constructor que inyecta servicios HTTP y el store del trámite 130106.  
    *  Utilizado para inicializar dependencias necesarias en el componente. */
-  constructor(private http: HttpClient, private tramite130106Store: Tramite130106Store,private catalogoServices: CatalogoServices) {
+  constructor(private http: HttpClient, private tramite130106Store: Tramite130106Store, private catalogoServices: CatalogoServices) {
     // Lógica de inicialización si es necesario
   }
   /** Actualiza el estado del formulario en el store con los datos proporcionados.  
@@ -66,81 +66,104 @@ export class Solocitud130106Service {
     );
   }
   getClasificacionRegimen(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.clasificacionRegimenCatalogo(this.tramiteId, { tramite: 'TITPEX.130106', id: "01" }).pipe(
+    return this.catalogoServices.getClasificacionRegimen(this.tramiteId, "01").pipe(
       map(res => res?.datos ?? [])
     );
   }
 
-  // obtenerRegimenDatos(): void {
+  getFraccionesArancelarias(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.getFraccionesCatalogo(tramite).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  getUMTCatalogo(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.getUMTCatalogo(tramite, "87012301").pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  getBloque(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.tratadosAcuerdoCatalogo(tramite, "TITRAC.TA").pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+  // obtenerTratadoData(): void {
   //     this.catalogoServices
-  //       .clasificacionRegimenCatalogo(this.tramiteId, { tramite: 'TITPEX.130110', id: "01" })
+  //       .tratadosAcuerdoCatalogo(this.tramiteId, "TITRAC.TA")
   //       .pipe(takeUntil(this.destroy$))
   //       .subscribe((resp): void => {
-  //         const REGIMEN_FIELD = this.consultarCupoFormData.find(
-  //           (datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion'
+  //         const TRATADO_FIELD = this.consultarCupoFormData.find(
+  //           (datos: ModeloDeFormaDinamica) => datos.campo === 'tratado'
   //         ) as ModeloDeFormaDinamica;
-  //         if (REGIMEN_FIELD && !REGIMEN_FIELD.opciones) {
-  //           REGIMEN_FIELD.opciones = resp.datos as Catalogo[];
+  //         if (TRATADO_FIELD && !TRATADO_FIELD.opciones) {
+  //           TRATADO_FIELD.opciones = resp.datos as Catalogo[];
   //         }
   //       });
   //   }
-
-   /**
-     * Obtiene las opciones de solicitud desde un archivo JSON.
-     * @returns {Observable<ProductoResponse>}
-     */
-    getSolicitudeOptions(): Observable<ProductoResponse> {
-      return this.http.get<ProductoResponse>(
-        'assets/json/130202/solicitude-options.json'
-      );
-    }
-
-    
   /**
-   * Obtiene las opciones de producto desde un archivo JSON.
-   * @returns {Observable<ProductoResponse>}
-   */
+  //   * Obtiene las opciones de solicitud desde un archivo JSON.
+  //   * @returns {Observable<ProductoResponse>}
+  //   */
+  getSolicitudeOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(
+      'assets/json/130202/solicitude-options.json'
+    );
+  }
+
+
+  // /**
+  //  * Obtiene las opciones de producto desde un archivo JSON.
+  //  * @returns {Observable<ProductoResponse>}
+  //  */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
       'assets/json/130202/producto-options.json'
     );
   }
 
-   /**
-   * Obtiene la lista de entidades federativas desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>}
-   */
-  getEntidadFederativa(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130202/entidad-federativa.json'
+  /**
+  * Obtiene la lista de entidades federativas desde un archivo JSON.
+  * @returns {Observable<Catalogo[]>}
+  */
+  getEntidadFederativa(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.entidadesFederativasCatalogo(tramite).pipe(
+      map(res => res?.datos ?? [])
     );
   }
   /**
    * Obtiene la lista de representaciones federales desde un archivo JSON.
    * @returns {Observable<Catalogo[]>}
    */
-  getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130202/representacion-federal.json'
+  getRepresentacionFederal(tramite: string,cveEntidad: string): Observable<Catalogo[]> {
+    return this.catalogoServices.representacionFederalCatalogo(tramite, "SIN").pipe(
+      map(res => res?.datos ?? [])
     );
   }
 
-   /**
-   * Obtiene la lista de países disponibles desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>}
-   */
-  getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
-  }
+  /**
+  * Obtiene la lista de países disponibles desde un archivo JSON.
+  * @returns {Observable<Catalogo[]>}
+  */
+  // getListaDePaisesDisponibles(): Observable<Catalogo[]> {
+  //   return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+  // }
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
    * @param {number} _bloqueId - El ID del bloque.
    * @returns {Observable<Catalogo[]>}
    */
-  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130202/paises-por-bloque.json'
+  getPaisesPorBloque(tramite: string, _bloqueId: number): Observable<Catalogo[]> {
+    return this.catalogoServices.getpaisesBloqueCatalogo(tramite, _bloqueId.toString()).pipe(
+      map(res => res?.datos ?? [])
     );
   }
+
   
+
+  //   getUMTCatalogo(tramite: string): Observable<Catalogo[]> {
+  //   return this.catalogoServices.getUMTCatalogo(this.tramiteId, "87012301").pipe(
+  //     map(res => res?.datos ?? [])
+  //   );
+  // }
 }

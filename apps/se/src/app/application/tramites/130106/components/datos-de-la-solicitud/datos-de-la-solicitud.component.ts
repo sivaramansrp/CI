@@ -17,9 +17,6 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
 import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
-
-import fractionValues from '@libs/shared/theme/assets/json/130202/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
@@ -118,21 +115,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   productoOpciones: ProductoOpción[] = [];
   /**
    * @description Catálogo con valores de fracción arancelaria.
+   * Será cargado desde la API mediante `getFraccionArancelaria()`.
    */
-
-  fraccionCatalogo: Catalogo[] = fractionValues;
+  fraccionCatalogo: Catalogo[] = [];
 
   /**
    * @description Catálogo con opciones de unidad de medida.
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
   /**
    * @description Campos de entrada configurables para detalles adicionales.
    */
 
   datosInputFields = DATOS_INPUT_FIELDS;
-  
+
   catalogoRegimenes: Catalogo[] = [];
+
   catalogoClasificacionRegimen: Catalogo[] = [];
   /**
    * @description Matriz de catálogos adicionales para el formulario.
@@ -267,8 +265,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.tableBodyData = data || [];
       });
-      this.getRegimenes();
-    this.getClasificacionRegimen();
+    this.getRegimenes();
+    this.getFraccionArancelaria();
+    this.getUMTCatalogo();
+    this.enCambioDeBloque(105);
   }
 
   /**
@@ -617,7 +617,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   fetchEntidadFederativa(): void {
     this.solocitud130106Service
-      .getEntidadFederativa()
+      .getEntidadFederativa('130106')
       .subscribe((data) => {
         this.entidadFederativa = data;
       });
@@ -627,7 +627,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   */
   fetchRepresentacionFederal(): void {
     this.solocitud130106Service
-      .getRepresentacionFederal()
+      .getRepresentacionFederal('130106',"SIN")
       .subscribe((data) => {
         this.representacionFederal = data;
       });
@@ -637,7 +637,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   */
   listaDePaisesDisponibles(): void {
     this.solocitud130106Service
-      .getListaDePaisesDisponibles()
+      .getBloque('130106')
       .subscribe((data) => {
         this.elementosDeBloque = data;
       });
@@ -648,7 +648,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.solocitud130106Service
-      .getPaisesPorBloque(_bloqueId)
+      .getPaisesPorBloque('130106', _bloqueId)
       .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(
@@ -701,13 +701,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
     return disabled;
   }
-  /**
-   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+ 
   /**
    * Valida que un número tenga como máximo tres decimales.
    */
@@ -837,14 +831,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  /**
+   * Obtiene los catálogos de regímenes y clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
   getRegimenes(): void {
     this.solocitud130106Service.getRegimenes('130106').subscribe((data) => {
       this.catalogoRegimenes = data;
-       this.getClasificacionRegimen();
+      this.getClasificacionRegimen();
     });
   }
 
+  /**
+   * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
   getClasificacionRegimen(): void {
     this.solocitud130106Service.getClasificacionRegimen('130106').subscribe((data) => {
       this.catalogoClasificacionRegimen = data;
@@ -854,4 +855,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**  
+    * Obtiene el catálogo de fracciones arancelarias desde el servicio.
+     * Actualiza la propiedad del componente con los datos obtenidos.
+     */
+  getFraccionArancelaria(): void {
+    this.solocitud130106Service.getFraccionesArancelarias('130106').subscribe((data) => {
+      this.fraccionCatalogo = data || [];
+    });
+  }
+
+  /**  
+   * Obtiene el catálogo de unidades de medida desde el servicio.
+   * Actualiza la propiedad del componente con los datos obtenidos.
+   */
+  getUMTCatalogo(): void {
+    this.solocitud130106Service.getUMTCatalogo('130106').subscribe((data) => {
+      this.unidadCatalogo = data || [];
+    });
+  }
+
+  // getBloque(): void {
+  //   this.solocitud130106Service.getBloque().subscribe((data) => {
+  //     this.elementosDeBloque = data;
+  //   });
+  // }
+ 
+   /**
+   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }
