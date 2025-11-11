@@ -1,4 +1,4 @@
-import { Solicitud31910State, Tramite31910Store } from '../../../estados/tramites/tramite31910.store';
+import { Solicitud31910State, Tramite31910Store } from '../estados/stores/tramite31910.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

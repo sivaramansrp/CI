@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud31910State, Tramite31910Store } from '../../../../estados/tramites/tramite31910.store';
+import { Solicitud31910State, Tramite31910Store } from '../../estados/stores/tramite31910.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistirSolicitudInformacionHistoricaService } from '../../services/desistir-solicitud-informacion-historica.service';
-import { Tramite31910Query } from '../../../../estados/queries/tramite31910.query';
+import { Tramite31910Query } from '../../estados/queries/tramite31910.query';
 
 /**
  * Componente que gestiona la información histórica de la solicitud de desistimiento.
