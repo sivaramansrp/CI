@@ -92,8 +92,8 @@ export class TramiteConfigService {
    * La clave corresponde al `tramiteId`.
    */
   private requerimientoConfig: Record<number, RequerimientoConfig> = {
-    130118: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: false },
     130120: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: false },
+    130118: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: true, isBodyNullDocumentos: true },
     110101: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: true },
   };
 

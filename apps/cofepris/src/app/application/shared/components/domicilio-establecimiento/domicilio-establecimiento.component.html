@@ -733,7 +733,7 @@
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                            <p class="panel-title fw-bold">
-                              País donde se produce o fabrica el ingrediente activo
+                              País donde se fabrica el ingrediente activo (TÉCNICO)
                            </p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
@@ -753,7 +753,7 @@
                   <div class="panel-group ficha-collapse" id="accordion">
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
-                           <p class="panel-title fw-bold">País donde se elabora el producto</p>
+                           <p class="panel-title fw-bold">País donde se elabora el producto (FORMULADO)</p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
                         @if (colapsableDuos) {
@@ -877,7 +877,7 @@
             </form>
          </div>
          <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias)"
+            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias, 'mercancias')"
             [disabled]="esFormularioSoloLectura">
             Limpiar
             </button>

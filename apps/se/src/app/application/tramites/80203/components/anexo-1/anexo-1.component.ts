@@ -1235,15 +1235,15 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   validarFormulario(): boolean {
       let VALID = true;
       if (this.immexTableDatos.length > 0 && this.fraccionTablaDatos.length > 0) {
-        if(this.mercanciaImportacionForm.valid){
+        // if(this.mercanciaImportacionForm.valid){
           VALID = true;
-        }
-        else{  
-          VALID = false;
-          this.immexRegistroStore.establecerDatos({
-            mercanciaImportacionFormError: true
-          })
-        }
+        // }
+        // else{  
+        //   VALID = false;
+        //   this.immexRegistroStore.establecerDatos({
+        //     mercanciaImportacionFormError: true
+        //   })
+        // }
       } else {
         this.immexRegistroform.markAllAsTouched();
         VALID = false;

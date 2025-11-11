@@ -17,6 +17,7 @@ import {
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TruncateText } from '../../pipes/truncate-text/truncate-text.pipe';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
@@ -24,7 +25,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   standalone: true,
   templateUrl: './catalogo-select.component.html',
   styleUrl: './catalogo-select.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TooltipModule],
+  imports: [CommonModule, ReactiveFormsModule, TooltipModule, TruncateText],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -64,6 +65,13 @@ export class CatalogoSelectComponent
    * Este texto se muestra cuando no hay ninguna opción seleccionada.
    */
   @Input() placeholder!: string;
+
+
+  /**
+   * @description Número máximo de caracteres que se mostrarán en las opciones del select.
+   * Si el texto de una opción excede este límite, se truncará y se añadirá una elipsis al final.
+   */
+  @Input() maxCharacters: number = 80;
 
   /**
    * @description Indica si el select está deshabilitado.

@@ -24,10 +24,16 @@ export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
 export const CVEFRACCION = '{cveFraccion}';
 
 /**
- * cveFraccion de la solicitud que se utilizará en las consultas.
- * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ * idSolicitud de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el idSolicitud real de la solicitud.
  */
 export const IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * numFolioTramite de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el numFolioTramite real de la solicitud.
+ */
+export const NUMFOLIOTRAMITE = '{numFolioTramite}'
 
 /**
  *  URLs de catalogos
@@ -162,6 +168,19 @@ export const API_POST_GENERAR_CADENA_ORIGINAL = (IDSOLICITUD: string): string =>
 export const API_POST_FIRMA = (IDSOLICITUD: string) : string => `sat-t110101/solicitud/${IDSOLICITUD}/firmar`;
 
 /**
+ * API para agregar insumos mediante archivo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-insumos-por-archivo
+ */
+export const API_POST_INSUMO_ARCHIVOS = `sat-t110101/solicitud/insumo/archivo`; 
+
+/**
+ * API para agregar insumos mediante archivo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-empaques-por-archivo
+ */
+export const API_POST_EMPAQUES_ARCHIVOS = `/api/sat-t110101/solicitud/empaque/archivo`; 
+
+
+/**
  *  URLs de evaluacion tratados
  */
 
@@ -201,3 +220,18 @@ export const API_GET_MERCANCIA_EVALUAR = (IDSOLICITUD: string): string => `sat-t
  */
 export const API_GET_PROTESTO_EVALUAR = (IDSOLICITUD: string): string => `sat-t110101/tramite/solicitud/${IDSOLICITUD}/declaraciones`;
 
+/**
+ * URLs de Tab Exportador autorizado
+ */
+
+/**
+ * API para consultar el exportador autorizado de UE y JPN
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitudes/get-exportador-by-id-solicitud
+ */
+export const API_GET_EXPORTADOR_AUTORIZADO = (IDSOLICITUD: string): string => `sat-t110101/solicitud/${IDSOLICITUD}/exportador`;
+
+/**
+ * API para consultar el exportador autorizado si es de UE o JPN
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Consulta-Solicitud/get-solicitud-seccion
+ */
+export const API_GET_EXPORTADOR_AUTORIZADO_UE_O_JPN = (NUMFOLIOTRAMITE: string): string => `sat-t110101/tramite/${NUMFOLIOTRAMITE}/solicitud/seccion`;

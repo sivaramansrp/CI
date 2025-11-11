@@ -54,6 +54,19 @@ export interface IniciarDictamenResponse {
     aplica_ley_aduanera_144a: boolean;
     /** Historial de observaciones del dictamen */
     historial_observaciones: HistorialObservacione[];
+    /** Indica si el dictaminador califica como exportador */
+    calificacion_dictaminador_exportador?: boolean;
+    /** Indica si el dictaminador califica como exportador JPN */
+    calificacion_dictaminador_exportador_jpn?:boolean;
+    /** Indica si la descripción ALADI es correcta */
+    calificacion_descripcion_aladi?: boolean;
+    /** Indica si tiene fracción ALADI */
+    tiene_fraccion_aladi?:boolean;
+    /** Indica si el dictaminador califica al exportador */
+    dictaminador_califica_exportador?:boolean;
+    /** Indica si el dictaminador califica al exportador JPN */
+    dictaminador_califica_exportador_jpn?:boolean;
+
 }
 
 /** HistorialObservacione */
