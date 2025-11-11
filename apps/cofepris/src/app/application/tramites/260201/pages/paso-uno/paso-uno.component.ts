@@ -156,9 +156,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    validarPasoUno(): boolean {
     const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ES_TERCEROS_VALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ES_PAGO_VALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
 
     );
   }

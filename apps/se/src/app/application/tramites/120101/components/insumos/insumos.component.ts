@@ -234,6 +234,17 @@ export class InsumosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Restablece los formularios `ninoFormGroup` y `forma` a sus valores iniciales.
+   * 
+   * Este método se utiliza para limpiar los datos ingresados en ambos formularios,
+   * permitiendo que el usuario comience una nueva entrada sin información previa.
+   */
+  agregar():void{
+  this.ninoFormGroup.reset();
+  this.forma.reset();
+  }
+
 
   agregarInsumo(): void {
     if (this.forma.invalid) {

@@ -6,7 +6,7 @@ export interface CriterioConfiguracionRequest {
     cve_grupo_criterio: string;
     
     /** Clave del tratado o acuerdo */
-    cve_tratado_acuerdo: string;
+    cve_tratado_acuerdo: string | null;
     
     /** Clave del país */
     cve_pais: string | null;

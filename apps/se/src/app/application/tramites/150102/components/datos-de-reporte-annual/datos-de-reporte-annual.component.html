@@ -117,13 +117,13 @@
           [datos]="bienesProducidosDatos"
           [inputSelection]="bienesProducidosSelection"
           [configuracionTabla]="bienesProducidosConfiguracionTabla"
-          (listaDeFilaSeleccionada)="seleccionarBienesFilaDeEntrada($event)"
+          (filaSeleccionada)="seleccionarBienesFilaDeEntrada($event)"
         >
         </app-tabla-dinamica>
         <div class="row justify-content-end">
           <button
             type="button"
-            class="btn eliminar-btn col-auto pull-right float-end mt-3"
+            class="btn btn-danger col-auto pull-right float-end mt-3"
             (click)="eliminarBienesProducidos()"
           >
             Eliminar

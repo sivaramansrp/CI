@@ -80,13 +80,14 @@ describe('CertificadosOrigenService', () => {
                     fax: '0987654321',
                 },
             ],
-        };
-
-        service.obtenerProductorPorExportador().subscribe((response) => {
+        };        service.obtenerProductorPorExportador('AAL0409235E6').subscribe((response) => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110223/productor-exportador.json');
+        const req = httpMock.expectOne((request) => 
+            request.url.includes('/solicitud/buscar-productor') && 
+            request.url.includes('rfcSolicitante=AAL0409235E6')
+        );
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });

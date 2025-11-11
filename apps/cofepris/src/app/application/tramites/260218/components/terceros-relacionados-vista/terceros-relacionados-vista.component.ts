@@ -9,7 +9,7 @@
  * Este componente actúa como una vista de solo lectura para mostrar los datos de terceros relacionados en el trámite 260218.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -124,6 +124,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  
+  @ViewChild(TercerosRelacionadosComponent)
+  TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * @constructor
    * @description
@@ -212,6 +216,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
+  }
+
+    validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

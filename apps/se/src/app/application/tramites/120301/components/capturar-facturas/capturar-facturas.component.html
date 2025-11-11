@@ -107,7 +107,8 @@
                     <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
                       [datos]="fechaInicioInputs"
                       (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)"
-                      [deshabilitarFuturas]="true">
+                      [deshabilitarFuturas]="true"
+                      [asteriskClass]="facturaForm.get('fechaExpedicionFactura')?.invalid && (facturaForm.get('fechaExpedicionFactura')?.touched || facturaForm.get('fechaExpedicionFactura')?.dirty) ? 'mensaje-error' : ''">
                     </input-fecha>
                   </div>
                   <div
@@ -176,7 +177,8 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" id="razonSocial" placeholder="" type="text" libUppercase
-                          name="razonSocial" formControlName="razonSocial"  (input)="onInputUppercase('razonSocial', $event)"
+                          name="razonSocial" formControlName="razonSocial"
+                          (input)="onInputUppercase('razonSocial', $event)"
                           (change)="setValoresStore(facturaForm,'razonSocial','setRazonSocial')" />
                         @if (facturaForm.get('razonSocial')?.hasError('required') &&
                         (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
@@ -255,7 +257,8 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" class="form-control" id="ciudad" placeholder="" type="text"
-                          libUppercase name="ciudad" formControlName="ciudad" (input)="onInputUppercase('ciudad', $event)" (change)="
+                          libUppercase name="ciudad" formControlName="ciudad"
+                          (input)="onInputUppercase('ciudad', $event)" (change)="
                             setValoresStore(facturaForm, 'ciudad', 'setCiudad')
                           " />
                         @if (facturaForm.get('ciudad')?.hasError('required') && (facturaForm.get('ciudad')?.touched ||

@@ -23,10 +23,10 @@ export interface InsumoResponse {
   proveedor?: string;
 
   /** Fabricante o productor del insumo. */
-  fabricanteProductor?: string;
+  fabricante_productor?: string;
 
   /** RFC del fabricante o productor del insumo. */
-  rfcFabricanteProductor?: string;
+  rfc_fabricante_productor?: string;
 
   /** Clave de la fracción arancelaria correspondiente al insumo. */
   clave_fraccion_arancelaria?: string;

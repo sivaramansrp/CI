@@ -1,13 +1,18 @@
 import { AlertComponent, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, ConsultaioState, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
+import { CommonModule } from '@angular/common';
+
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CriteriosOtrasInstanciasRequest } from '../../models/request/criterios-otras-instancias-request.model';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, map, takeUntil, tap } from 'rxjs';
+
+import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { MensajePantallaService } from '../../services/validaciones-tabs.service';
+import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 
 @Component({
   selector: 'app-otras-instancias',
@@ -19,6 +24,7 @@ import { Tramite110101Store } from '../../estados/tramites/solicitante110101.sto
     CatalogoSelectComponent,
     NotificacionesComponent,
     ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './otras-instancias.component.html',
   styleUrl: './otras-instancias.component.scss',
@@ -68,8 +74,25 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
   */
   public criteriosInstanciasCatalogo: Catalogo[] = [];
 
+  /**
+   * **Estado actual de la consulta de store**  
+   */
   public consultaState!: ConsultaioState;
 
+   /**
+   * **Indica si se ha seleccionado un criterio de instancias**  
+   */
+  public criterioInstanciasSeleccionado: boolean = false;
+
+  /**
+   * Representa el estado actual del solicitante (Solicitante) para el trámite 110101.
+   * Esta propiedad contiene toda la información relevante sobre los datos y el estado
+   * del solicitante dentro del contexto del trámite.
+ */
+  public solicitudeState!: Solicitante110101State;
+
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
 
   /**
     * Inicializa el TratadosComponent.
@@ -85,36 +108,167 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private consultaioQuery: ConsultaioQuery,
     private catalogosTramiteService: CatalogosTramiteService,
+    private solicitanteQuery: Solicitante110101Query,
+    private mensajeService: MensajePantallaService
   ) {
     this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.consultaState = seccionState;
-        })
-      )
-      .subscribe();
+    .pipe(
+      takeUntil(this.destroy$),
+      tap(seccionState => {
+        this.consultaState = seccionState;
+      })
+    )
+    .subscribe();
     this.formularioInstancias = this.fb.group({
-      criterioInstancias:[null]
+      criterioInstancias:[null],
+      acumulacion: [false],
+      bienes: [false],
+      intermedio: [false],
     });
   }
 
   ngOnInit(): void {
-    if(this.catalogo){
-      this.criteriosOtrasInstancias();
+    this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+        this.solicitudeState = seccionState;
+    })).subscribe();
+    if (this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false) {
+      this.formularioInstancias.markAllAsTouched();
+      this.mensajeService.mostrarMensaje(true); 
     }
-    
+    // Inicializa la validación si aún no existe
+    if (this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === null) {
+      this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario);
+    }
+    if(this.catalogo){
+      this.suscribirCambiosFormulario();
+    }else{
+      this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.formularioInstancias.valid);
+      this.actualizarValidadoresCatalogo();
+    }
+   
+    this.restaurarValoresFormulario();
+   
+
+    this.formularioInstancias.statusChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_value) => {
+          this.validarFormulario = this.formularioInstancias.valid;
+          this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias',this.validarFormulario );
+        })
+      )
+      .subscribe();
   }
 
+/**
+ * Restaura los valores guardados del store al formulario reactivo.
+ */
+private restaurarValoresFormulario(): void {
+  if (this.solicitudeState.respuestaServicioDatosTabla.length === 0){
+     return;
+  }
+  // Mapeo según país, igual que en setValoresStore
+  const MAPA_PAISES: Record<string, string> = {
+    'INSTANCIASURUGUAY': 'uruguay',
+    'INSTANCIASPERU': 'peru',
+    'INSTANCIASPACIFICO': 'ap',
+    'OTRASINSTANCIAS': 'instancias',
+  };
+
+  const PAIS_NORMALIZADO =
+    MAPA_PAISES[this.pais?.toUpperCase() ?? ''] ?? this.pais?.toLowerCase();
+
+  // Intentar leer los valores según país
+  const ACUMULACION =this.solicitudeState[`acumulacion_${PAIS_NORMALIZADO}` as keyof Solicitante110101State];
+
+  const BIENES =this.solicitudeState[`materiales_fungibles_${PAIS_NORMALIZADO}` as keyof Solicitante110101State];
+
+  const INTERMEDIO = this.solicitudeState[`materiales_intermedios_${PAIS_NORMALIZADO}` as keyof Solicitante110101State];
+
+  const CRITERIO = this.solicitudeState[`criterio_origen_${PAIS_NORMALIZADO}` as keyof Solicitante110101State];
+
+  // Asignar al formulario (sin emitir valueChanges)
+  this.formularioInstancias.patchValue(
+    {
+      acumulacion: ACUMULACION ?? false,
+      bienes: BIENES ?? false,
+      intermedio: INTERMEDIO ?? false,
+      criterioInstancias: CRITERIO ?? null,
+    },
+    { emitEvent: false }
+  );
+  // Si hay valores, actualizar el catálogo
+  if (ACUMULACION || BIENES || INTERMEDIO) {
+    const INSTANCIAS: string[] = [];
+    if (ACUMULACION){
+      INSTANCIAS.push('ACU');
+    } 
+    if (BIENES){
+      INSTANCIAS.push('BMF');
+    } 
+    if (INTERMEDIO){
+      INSTANCIAS.push('MAI');
+    } 
+    this.criteriosOtrasInstancias(INSTANCIAS);
+  }
+}
+
+
+  /**
+ * @method suscribirCambiosFormulario
+ * @description Observa los cambios en los checkboxes y ejecuta la petición dinámica.
+ */
+private suscribirCambiosFormulario(): void {
+  this.formularioInstancias.valueChanges
+    .pipe(
+      debounceTime(100),
+      map(value => ({
+        acumulacion: value.acumulacion,
+        bienes: value.bienes,
+        intermedio: value.intermedio
+      })),
+      distinctUntilChanged((a, b) => 
+        a.acumulacion === b.acumulacion && 
+        a.bienes === b.bienes && 
+        a.intermedio === b.intermedio
+      ),
+      takeUntil(this.destroy$)
+    )
+    .subscribe(({acumulacion, bienes, intermedio}) => {
+      const INSTANCIAS: string[] = [];
+
+      if (acumulacion){
+        INSTANCIAS.push('ACU');
+      } 
+      if (bienes){
+        INSTANCIAS.push('BMF');
+      } 
+      if (intermedio){
+        INSTANCIAS.push('MAI');
+      }
+      
+      if (INSTANCIAS.length > 0) {
+        this.criteriosOtrasInstancias(INSTANCIAS);
+      } else {
+        this.criteriosInstanciasCatalogo = []; 
+      }
+    });
+}
+
   /** 
-   * @method criteriosOtrasInstancias
-   * @description Realiza una petición para obtener criterios de otras instancias.
-   * @return {void}
-  */
-  public criteriosOtrasInstancias(): void {
+ * @method criteriosOtrasInstancias
+ * @description Realiza una petición para obtener criterios de otras instancias.
+ * @param otrasInstancias - lista de instancias seleccionadas (e.g., ['ACU', 'BMF'])
+ */
+  public criteriosOtrasInstancias(otrasInstancias: string[]): void {
+    const MAPA_PAISES: Record<string, string> = {
+      'INSTANCIASURUGUAY': 'URY',
+      'INSTANCIASPERU': 'PER',
+    };
+    const PAIS_FINAL = MAPA_PAISES[this.pais] || this.pais; 
     const PAYLOAD: CriteriosOtrasInstanciasRequest = {
-      paises: [this.pais],
-      otras_instancias: ['ACU', 'BMF']
+      paises: [PAIS_FINAL],
+      otras_instancias: otrasInstancias
     };
     this.catalogosTramiteService.postCatCriteriosOtrasInstancias(PAYLOAD)
       .subscribe({
@@ -135,6 +289,20 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
             id: index + 1,
             descripcion: item,
           }));
+          
+          const VALOR_GUARDADO = this.formularioInstancias.get('criterioInstancias')?.value;
+          if (VALOR_GUARDADO) {
+          
+            const OPCION = this.criteriosInstanciasCatalogo.find(
+              (c) => c.descripcion === VALOR_GUARDADO || c.id === VALOR_GUARDADO
+            );
+            if (OPCION) {
+              // Reasignar el valor sin disparar valueChanges
+              this.formularioInstancias
+                .get('criterioInstancias')
+                ?.patchValue(OPCION.id, { emitEvent: false });
+            }
+          }
         },
         error: (error) => {
           const MENSAJE = error?.error?.error || 'Error de criterio instancias';
@@ -158,11 +326,72 @@ export class OtrasInstanciasComponent implements OnInit, OnDestroy {
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * @param valorExterno - Valor externo opcional, usualmente un catálogo.
   */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  public setValoresStore(form: FormGroup, campo: string, valorExterno?:Catalogo): void {
+    const VALOR = valorExterno?.descripcion ?? form.get(campo)?.value;
+  if (VALOR === undefined || VALOR === null){
+    return;
+  } 
+
+  // Mapear el campo base con su equivalente en el store
+  const MAPEO_CAMPOS: Record<string, string> = {
+    acumulacion: 'acumulacion',
+    bienes: 'materiales_fungibles',
+    intermedio: 'materiales_intermedios',
+    criterioInstancias: 'criterio_origen'
+  };
+
+  const BASE = MAPEO_CAMPOS[campo];
+  if (!BASE){
+    return;
+  } 
+
+   // Normalizar el país
+  const MAPA_PAISES: Record<string, string> = {
+    'INSTANCIASURUGUAY': 'uruguay',
+    'INSTANCIASPERU': 'peru',
+    'INSTANCIASPACIFICO': 'ap',
+    'OTRASINSTANCIAS': 'instancias',
+  };
+
+  // Tomar el país normalizado si existe en el mapa
+  const PAIS_NORMALIZADO = MAPA_PAISES[this.pais?.toUpperCase() ?? ''] ?? this.pais?.toLowerCase();
+  
+ // Construir el campo final del store
+  const CAMPO_FINAL =
+    PAIS_NORMALIZADO === 'peru' || PAIS_NORMALIZADO === 'uruguay' || PAIS_NORMALIZADO === 'ap' || PAIS_NORMALIZADO === 'instancias'
+      ? `${BASE}_${PAIS_NORMALIZADO}`
+      : BASE;
+
+  // Guardar en el store de forma genérica
+  this.tramite110101Store.setValor(
+    CAMPO_FINAL as keyof Solicitante110101State,
+    VALOR
+  );
   }
+
+  /** 
+ * Agrega o quita el validador "required" de criterioInstancias 
+ * dependiendo del valor del input `catalogo`.
+ */
+private actualizarValidadoresCatalogo(): void {
+  const CTRL = this.formularioInstancias.get('criterioInstancias');
+  if (!CTRL){
+   return;
+  } 
+
+  if (this.catalogo) {
+    CTRL.setValidators([Validators.required]);
+  } else {
+    CTRL.clearValidators();
+    CTRL.setValue(null, { emitEvent: false });
+  }
+
+  // 🔹 Importante: actualizar el estado del control
+  CTRL.updateValueAndValidity({ emitEvent: false });
+}
+
 
   /**
    * **Ciclo de vida: OnDestroy**

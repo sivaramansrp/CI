@@ -1,5 +1,5 @@
+import { AlertComponent, CargaDocumentoComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CapturarFacturasComponent } from './components/capturar-facturas/capturar-facturas.component';
@@ -55,7 +55,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     HistoricoFabricantesComponent,
     TableComponent,
     CatalogoSelectComponent,
-  ],
+    CargaDocumentoComponent
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ElegibilidadDeTextilesModule { }

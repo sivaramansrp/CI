@@ -18,35 +18,25 @@
             </li>
         </ul>
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-            <solicitante #Solicitante></solicitante>
-            }
-            @case (2) {
-            @if(esDatosRespuesta){
-            <app-datos-del-establecimiento-rfc    [idProcedimiento]="idProcedimiento"></app-datos-del-establecimiento-rfc>
-            <app-domicillo-establecimiento-aduanas    [idProcedimiento]="idProcedimiento"></app-domicillo-establecimiento-aduanas>
-            <app-manifiestos    [idProcedimiento]="idProcedimiento"></app-manifiestos>
-            <app-representante-legal-rfc    [idProcedimiento]="idProcedimiento"></app-representante-legal-rfc>
-            }
-            }
-            @case (3) {
-            @if(esDatosRespuesta){
-            <app-aviso-terceros-relacionados></app-aviso-terceros-relacionados>
-            }
-            }
-            @case (4) {
-            @if(esDatosRespuesta){
-          <app-pago-de-derechos 
-    #pagoDeDerechosComponent
-    [idProcedimiento]="idProcedimiento"
-    [pagoDerechoFormState]="pagoDerechos"
-    (updatePagoDerechos)="updatePagoDerechos($event)"
-    [formularioDeshabilitado]="formularioDeshabilitado" 
-></app-pago-de-derechos>
-            }
-            }
-            }
+            <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
+            <app-datos-de-la
+            [hidden]="indice !== 2 || !esDatosRespuesta"
+            [isAvisoLicenciaVisible]="isAvisoLicenciaVisible"
+            [isAduanasEntradaVisible]="isAduanasEntradaVisible"
+            [configuracionVisibilidad]="configuracionVisibilidad"
+            [identificacion]="true"
+            [estadoValidte]="true"
+            ></app-datos-de-la>
+            <app-aviso-terceros-relacionados
+            [hidden]="indice !== 3 || !esDatosRespuesta"
+            ></app-aviso-terceros-relacionados>
+            <app-pago-de-derechos
+            [hidden]="indice !== 4 || !esDatosRespuesta"
+            #pagoDeDerechosComponent
+            [idProcedimiento]="idProcedimiento"
+            [pagoDerechoFormState]="pagoDerechos"
+            [formularioDeshabilitado]="formularioDeshabilitado"
+            ></app-pago-de-derechos>
         </ng-container>
     </div>
 </div>

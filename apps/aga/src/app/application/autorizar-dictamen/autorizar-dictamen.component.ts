@@ -170,6 +170,14 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   isObservacion: boolean = false;
 
 
+  /**
+   * @property {string} sentidoDictamenSeleccionado
+   * @description Sentido del dictamen seleccionado por el usuario.
+   *  
+   */
+  sentidoDictamenSeleccionado: string = '';
+
+
 
   /**
    * @property {boolean} isFirma
@@ -500,6 +508,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.iniciarDictamenAutorizar();
     this.getSentidosDisponibles();
     this.getTabs();
+
   }
 
     /**
@@ -519,8 +528,11 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
 
     this.autorizarDictamenService.getIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
       next: (resp) => {
+       
+        this.sentidoDictamenSeleccionado = resp.datos?.sentido_dictamen || '';
         if (resp.codigo === CodigoRespuesta.EXITO) {
-          this.dataAutorizarDictamen = resp.datos ?? {} as IniciarAutorizacionResponse;
+          this.dataAutorizarDictamen = resp.datos as IniciarAutorizacionResponse;
+ 
         }
 
       },
@@ -1526,6 +1538,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
+  
           if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -1551,8 +1564,11 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
             }
             this.isDictamen = false;
             this.isFirma = false;
-            this.isDocumento = false;
-            if (this.dataAutorizarDictamen.sentido_dictamen === "Aceptado") {
+            this.isDocumento = true;
+      
+      
+    
+            if (this.sentidoDictamenSeleccionado == "Aceptado") {
               this.postOficioAutorizacion();
             } else {
               this.postOficioRechazado();
@@ -1592,6 +1608,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   postOficioAutorizacion(): void {
+
     const PAYLOAD: Firma = {
       cadena_original: encodeToISO88591Hex(this.cadenaOriginal || ''),
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
@@ -1600,7 +1617,8 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       clave_rol: 'Autorizador',
       sello: this.sello
     }
-    const PAYLOADSEND = this.serviceConfigModelo.actualizarModelo ? PAYLOAD : null;
+
+    const PAYLOADSEND =  PAYLOAD;
     this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud), PAYLOADSEND)
       .subscribe({
         next: (resp) => {

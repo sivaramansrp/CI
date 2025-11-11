@@ -8,7 +8,7 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos del formulario de pago de derechos en el flujo del trámite 260218.
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -90,6 +90,10 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @param {Tramite260218Store} tramiteStore - Store que administra el estado del trámite 260218.
    * @param {ConsultaioQuery} consultaQuery - Query para acceder al estado de la consulta.
    */
+
+    @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  
   constructor(
     public tramiteStore: Tramite260218Store,
     private consultaQuery: ConsultaioQuery,
@@ -130,6 +134,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
     this.tramiteStore.updatePagoDerechos(event);
   }
 
+   validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
+  
   /**
    * @method ngOnDestroy
    * @description

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260210State, Tramite260210Store } from '../../estados/tramite260210Store.store';
@@ -27,7 +27,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @property indice
    * @description Indicates the index of the selected tab within the form step.
@@ -51,11 +51,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     @ViewChild(ContenedorDeDatosSolicitudComponent)
     contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
 
+    /**
+     * @ViewChild(PagoDeDerechosContenedoraComponent)
+     * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(PagoDeDerechosContenedoraComponent)
     pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
 
+    /**
+     * @ViewChild(TercerosRelacionadosVistaComponent)
+     * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(TercerosRelacionadosVistaComponent)
     tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+    /**
+     * @property {number} confirmarSinPagoDeDerechos
+     * @description
+     * Indica si se ha confirmado la continuación sin pago de derechos.
+     */
+    @Input() confirmarSinPagoDeDerechos: number = 0;
    
   /**
    * @property destroyNotifier$
@@ -89,6 +106,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.consultaState = seccionState;
       })).subscribe();
   }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+        const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+        if (CONFIRMAR_VALOR) {
+          this.seleccionaTab(CONFIRMAR_VALOR);
+        }
+      }
+    }
 
   /**
    * Angular lifecycle method that runs on component initialization.
@@ -157,9 +184,8 @@ actualizarEstadoFormulario(DATOS: Tramite260210State): void {
    validarPasoUno(): boolean {
     const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
     return (
-      (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO) ? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO) ? true : false
 
     );
   }
