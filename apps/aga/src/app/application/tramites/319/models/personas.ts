@@ -1,12 +1,4 @@
 /**
- * @fileoverview
- * Modelos de datos para el trámite 319 de operaciones de comercio exterior.
- * Incluye la definición de las interfaces para personas y solicitudes.
- * Cobertura compodoc 100%: cada interfaz y propiedad está documentada.
- * @module PersonasModule
- */
-
-/**
  * @interface Personas
  * @description
  * Representa el modelo de datos para una persona en el trámite 319.
@@ -14,8 +6,8 @@
  * @property {string} rfc - Registro Federal de Contribuyentes de la persona.
  * @property {string} curp - Clave Única de Registro de Población de la persona.
  * @property {string} nombre - Nombre de la persona.
- * @property {string} primer_apellido - Primer apellido de la persona.
- * @property {string} segundo_apellido - Segundo apellido de la persona.
+ * @property {string} apellido_paterno - Primer apellido de la persona.
+ * @property {string} apellido_materno - Segundo apellido de la persona.
  * @property {string} correo_electronico - Dirección de correo electrónico de la persona.
  */
 export interface Personas {
@@ -39,16 +31,16 @@ export interface Personas {
   nombre: string;
   /**
    *  Primer apellido de la persona.
-   * @property {string} primer_apellido
+   * @property {string} apellido_paterno
    * @description Primer apellido de la persona.
    */
-  primer_apellido: string;
+  apellido_paterno: string;
   /**
    * Segundo apellido de la persona.
-   * @property {string} segundo_apellido
+   * @property {string} apellido_materno
    * @description Segundo apellido de la persona.
    */
-  segundo_apellido: string;
+  apellido_materno: string;
   /**
    * Dirección de correo electrónico de la persona.
    * @property {string} correo_electronico
@@ -64,7 +56,7 @@ export interface Personas {
  * Cada objeto de esta interfaz define la información de una solicitud.
  * @property {number} [id] - Identificador único opcional de la solicitud.
  * @property {string} periodo - Periodo de tiempo asociado a la solicitud.
- * @property {string} fechas_sobre_el_periodo - Fechas relacionadas con el periodo de la solicitud.
+ * @property {string} fechas_periodo - Fechas relacionadas con el periodo de la solicitud.
  */
 export interface Solicitar {
   /**
@@ -72,7 +64,14 @@ export interface Solicitar {
    * @property {number} [id]
    * @description Identificador único de la solicitud.
    */
-  id?: number;
+  id_solicitud: number | null;
+
+  /**
+   * Identificador del periodo.
+   * @property {number} id_periodo
+   * @description Identificador del periodo.
+   */
+  id_periodo_solicitud: number | null;
   /**
    * Periodo de tiempo para la solicitud.
    * @property {string} periodo
@@ -81,8 +80,28 @@ export interface Solicitar {
   periodo: string;
   /**
    *  Fechas relacionadas con el periodo de la solicitud.
-   * @property {string} fechas_sobre_el_periodo
+   * @property {string} fechas_periodo
    * @description Fechas relacionadas con el periodo de la solicitud.
    */
-  fechas_sobre_el_periodo: string;
+  fechas_periodo: string;
+
+  /**
+   * Fecha de inicio del periodo.
+   * @property {string} periodo_inicio
+   * @description Fecha de inicio del periodo.
+   */
+  periodo_inicio: string;
+  /**
+   * Fecha de fin del periodo.
+   * @property {string} periodo_fin
+   * @description Fecha de fin del periodo.
+   */
+  periodo_fin: string;
+
+  /**
+   * Descripción del periodo.
+   * @property {string} periodo_desc
+   * @description Descripción del periodo.
+   */
+  periodo_desc: string;
 }
