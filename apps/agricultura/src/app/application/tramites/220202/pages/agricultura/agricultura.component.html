@@ -7,6 +7,9 @@
         @if (esFormaInValido) {
         <div class="alert alert-info alert-danger text-center" [innerHTML]="formErrorAlert"></div>
         }
+        @if (esPasoUnoCompleto) {
+        <div class="alert alert-info" [innerHTML]="mensajePasos"></div>
+        }
         <app-wizard [listaPasos]="pasos"></app-wizard>
       </div>
   

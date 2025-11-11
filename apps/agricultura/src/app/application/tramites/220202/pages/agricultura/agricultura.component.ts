@@ -1,8 +1,9 @@
-import { ALERT_TEXTO, PASOS } from '../../constantes/220202/fitosanitario.enums';
+import { ALERT_TEXTO, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/220202/fitosanitario.enums';
 import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -40,6 +41,11 @@ export class AgriculturaComponent {
    * @type {ListaPasosWizard[]}
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
+   */
+  mensajePasos: string = "";
 
   /**
    * @description Referencia al componente Wizard.
@@ -91,6 +97,13 @@ export class AgriculturaComponent {
   esFormaInValido: boolean = false;
 
   /**
+* Indica si ya se llenaron todos los formularios del paso 1.
+*
+* Se utiliza para mostrar/ocultar el alert azul.
+*/
+  esPasoUnoCompleto: boolean = false;
+
+  /**
    * @description Objeto que contiene los datos de los pasos del formulario.
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número total de pasos, el índice del paso actual
@@ -107,6 +120,34 @@ export class AgriculturaComponent {
   };
 
   /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Constructor del componente.
+   * Este constructor inicializa el componente y establece el estado inicial de la validación
+   * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
+   * @constructor
+   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+  ) {
+  }
+  ngOnInit(): void {
+    console.log('ngOnInit agricuktura');
+
+    this.obtenerDatosDelStore()
+  }
+
+  /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
    * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
    * del formulario.
@@ -121,14 +162,14 @@ export class AgriculturaComponent {
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
+
+    console.log('getValorIndice Agricultura', this.indice);
     // Si estamos en el paso 1, validar antes de continuar
-    console.log('indicePasos', this.indice);
+
     if (this.indice === 1) {
       var validaPestañas = this.pasoUnoRef?.validarFormularios();
-      console.log('validaPestañas', validaPestañas);
       if (!validaPestañas.valido) {
         // Detener la navegación si no es válido
-        console.log('no es valido', this.indice);
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
 
@@ -140,13 +181,15 @@ export class AgriculturaComponent {
         }
         return;
       }
+
+
     }
+
     this.esFormaInValido = false;
+    this.esPasoUnoCompleto = true;
     if (e.valor > 0 && e.valor < 5) {
-      console.log('e.valor', e.valor);
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        console.log('continuarCod', this.indice);
         this.componenteWizard.siguiente();
       } else {
         this.componenteWizard.atras();
@@ -160,6 +203,16 @@ export class AgriculturaComponent {
 */
   // eslint-disable-next-line class-methods-use-this
   obtenerDatosDelStore(): void {
-    // Lógica para obtener datos del store y guardarlos
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          var nuevo = MENSAJE_DE_EXITO_ETAPA_UNO.replace("_folio_", this.consultaState.id_solicitud ?? "0");
+          this.mensajePasos = nuevo;
+        })
+      )
+      .subscribe();
+
   }
 }
