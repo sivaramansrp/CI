@@ -52,59 +52,59 @@ export class ImportacionVehiculosUsadosDonacionService {
    * El ID del bloque.
    * Un observable que emite una lista de países agrupados por bloque.
    */
-  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130105/paises-por-bloque.json'
-    );
-  }
+  // getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
+  //   return this.http.get<Catalogo[]>(
+  //     '/assets/json/130105/paises-por-bloque.json'
+  //   );
+  // }
 
   /**
    * Obtiene la lista de entidades federativas desde un archivo JSON.
    * Un observable que emite una lista de entidades federativas.
    */
-  getEntidadFederativa(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130105/entidad-federativa.json'
-    );
-  }
+  // getEntidadFederativa(): Observable<Catalogo[]> {
+  //   return this.http.get<Catalogo[]>(
+  //     '/assets/json/130105/entidad-federativa.json'
+  //   );
+  // }
 
   /**
    * Obtiene la lista de representaciones federales desde un archivo JSON.
    * Un observable que emite una lista de representaciones federales.
    */
-  getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130105/representacion-federal.json'
-    );
-  }
+  // getRepresentacionFederal(): Observable<Catalogo[]> {
+  //   return this.http.get<Catalogo[]>(
+  //     '/assets/json/130105/representacion-federal.json'
+  //   );
+  // }
 
   /**
    * Obtiene las opciones de solicitud desde un archivo JSON.
    * Un observable que emite las opciones de solicitud.
    */
-  getSolicitudeOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>(
-      'assets/json/130105/solicitude-options.json'
-    );
-  }
+  // getSolicitudeOptions(): Observable<ProductoResponse> {
+  //   return this.http.get<ProductoResponse>(
+  //     'assets/json/130105/solicitude-options.json'
+  //   );
+  // }
 
   /**
    * Obtiene las opciones de producto desde un archivo JSON.
    * Un observable que emite las opciones de producto.
    */
-  getProductoOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>(
-      'assets/json/130105/producto-otions.json'
-    );
-  }
+  // getProductoOptions(): Observable<ProductoResponse> {
+  //   return this.http.get<ProductoResponse>(
+  //     'assets/json/130105/producto-otions.json'
+  //   );
+  // }
   /**
    * Obtiene la lista de clasificaciones desde un archivo JSON.
    */
-  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-    return this.http.get<PartidasDeLaMercanciaModelo[]>(
-      'assets/json/130105/partidas-de-la.json'
-    );
-  }
+  // getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+  //   return this.http.get<PartidasDeLaMercanciaModelo[]>(
+  //     'assets/json/130105/partidas-de-la.json'
+  //   );
+  // }
 
   /**
   * Actualiza el estado del formulario en el store.
@@ -185,7 +185,7 @@ export class ImportacionVehiculosUsadosDonacionService {
   }
 
   getBloqueService(tramite: string): Observable<any[]> {
-    return this.catalogoServices.paisesPorBloqueCatalogo(tramite, 'TITRAC.TA')
+    return this.catalogoServices.tratadosAcuerdoCatalogo(tramite,'TITRAC.TA')
       .pipe(
         map(res => res?.datos ?? [])
       );
