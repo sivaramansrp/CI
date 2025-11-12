@@ -1,9 +1,16 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src/core/resolvers/iniciar-tramite.resolver';
 
 const ROUTES: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '260508'
+      }
+    },
     path: 'plaguicidas',
     component: PlaguicidasComponent,
   },
