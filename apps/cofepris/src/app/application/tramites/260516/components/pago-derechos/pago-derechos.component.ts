@@ -21,13 +21,30 @@ export class PagoDerechosComponent {
         public pagoDerechos!: PagoDerechosFormState;
     
         formularioDeshabilitado: boolean = true;
-         /**
-           * @method updatePagoDerechos
-           * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
-           * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
-           * @returns {void} No retorna ningún valor.
+  
+          /**
+           * Validates the "pago de derechos" form when a button is clicked.
+           *
+           * Calls the pagoDeDerechosComponent.formularioSolicitudValidacion() helper
+           * and returns true when that helper indicates the form is valid.
+           *
+           * @returns {boolean} True if the form is valid; otherwise false.
+           *
+           * @public
+           * @compodoc
+           *
+           * @example
+           * if (this.validOnButtonClick()) {
+           *   // proceed with submission
+           * } else {
+           *   // handle validation errors
+           * }
            */
-          updatePagoDerechos(event: PagoDerechosFormState): void {
-            // this.tramiteStore.updatePagoDerechos(event);
+          validOnButtonClick(): boolean {
+            let isValid: boolean = false;
+            if(this.pagoDeDerechosComponent.formularioSolicitudValidacion()){
+                  isValid = true;
+            }
+            return isValid;
           }
 }

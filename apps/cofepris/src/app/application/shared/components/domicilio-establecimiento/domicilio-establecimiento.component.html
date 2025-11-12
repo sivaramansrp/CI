@@ -1,5 +1,5 @@
 <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
-<form [formGroup]="domicilio">
+<form *ngIf="domicilio"[formGroup]="domicilio">
    <div class="row">
       <div class="col-md-4">
          <div class="form-group">
@@ -118,7 +118,7 @@
       <div class="col-md-3">
          <div class="form-group">
             <label class="form-label" for="telefono">Teléfono<span [ngClass]="{'tiene-error': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched || mostrarErrores.telefono}">*</span>:</label>
-            <input class="form-control" id="telefono" placeholder="" type="text" [maxlength]="24" size="29"
+            <input class="form-control" id="telefono" placeholder="" type="text" [maxlength]="idProcedimiento === 260516 ? 30 : 24" size="29"
             [ngClass]="{'tiene-invalido': domicilio.get('telefono')?.invalid && domicilio.get('telefono')?.touched}"
             formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
             <div class="d-grid">
@@ -165,10 +165,10 @@
                setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
                " />
             <label class="form-check-label" for="avisoCheckbox">
-            <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched}">*</span></span>
+            <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched || mostrarErrores.avisoCheckbox}">*</span></span>
             </label>
          </div>
-         @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required']) {
+         @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox) {
          <div class="mensaje-error mt-2">
             Este campo es obligatorio.
          </div>
@@ -176,7 +176,7 @@
       </div>
       <div class="col-md-4">
          <div class="form-group">
-            <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
+            <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria<span [ngClass]="{'tiene-error': domicilio.get('licenciaSanitaria')?.invalid && domicilio.get('licenciaSanitaria')?.touched || mostrarErrores.licenciaSanitaria}">*</span></label>
             <span class="bi bi-question-circle-fill mx-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
             <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
             formControlName="licenciaSanitaria" (change)="
@@ -185,9 +185,10 @@
             'licenciaSanitaria',
             'setLicenciaSanitaria'
             )
-            " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"/>
+            " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"
+            [maxlength]="50"/>
             <div
-               *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required']"
+               *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required'] || mostrarErrores.licenciaSanitaria"
                class="mensaje-error">
                Este campo es obligatorio.
             </div>
@@ -202,6 +203,11 @@
          [markTouched]="domicilio.get('aduanasEntradas')?.errors?.['required'] && domicilio.get('aduanasEntradas')?.touched ">
          </crosslist>
       </div>
+        <div
+               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanas"
+               class="mensaje-error">
+               Este campo es obligatorio.
+            </div>
    </div>
    <div class="row">
       <div class="col-md-12 mt-5">
@@ -261,7 +267,7 @@
             <h4 class="modal-title">Clave S.C.I.A.N.</h4>
          </div>
          <div class="modal-body">
-            <form [formGroup]="formAgente">
+            <form [formGroup]="formAgente" *ngIf="formAgente">
                <div class="form-group">
                   <app-catalogo-select [showClave]="idProcedimiento ? true : false" [catalogo]="idProcedimiento ? claveScianLista : estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
                   [required]="true" name="claveScianModal" (change)="
@@ -284,19 +290,24 @@
                </div>
             </form>
          </div>
-         <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" (click)="limpiarScianForm()"
-            [disabled]="esFormularioSoloLectura">
-            Limpiar
-            </button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-            Cancelar
-            </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="guardarScian()"
-            [disabled]="esFormularioSoloLectura">
-            Agregar
-            </button>
-         </div>
+          <div class="modal-footer custom-footer" style="justify-content: space-between;display: flex;">
+            <div>
+               * Campos obligatorios
+            </div>
+            <div class="d-flex gap-2">
+               <button type="button" class="btn btn-default" (click)="limpiarScianForm()"
+               [disabled]="esFormularioSoloLectura">
+               Limpiar
+               </button>
+               <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
+               Cancelar
+               </button>
+               <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="guardarScian()"
+               [disabled]="esFormularioSoloLectura">
+               Agregar
+               </button>
+            </div>
+          </div>
       </div>
    </div>
 </div>
@@ -305,12 +316,12 @@
    <div class="modal-dialog modal-dialog-centered modal-datos-generales">
       <div class="modal-content">
          <div class="modal-body modal-height">
-            <form [formGroup]="formMercancias">
+            <form [formGroup]="formMercancias" *ngIf="formMercancias">
                <ng-titulo titulo="Datos mercancía"></ng-titulo>
                <ng-titulo titulo="Identificación del producto"></ng-titulo>
                <div class="form-group">
                   <label for="nombreCientifico">
-                  Nombre científico<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
+                  Nombre comercial<span *ngIf="identificacion" [ngClass]="{'tiene-error':formMercancias.get('nombreCientifico')?.invalid && formMercancias.get('nombreCientifico')?.touched}">*</span>:
                   </label>
                   <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
                      setValoresStore(
@@ -319,7 +330,9 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreComercial')?.markAsTouched();
-                     " />
+                     " 
+                     [maxlength]="1000"
+                     />
                   <div *ngIf="
                      formMercancias.get('nombreComercial')?.invalid &&
                      formMercancias.get('nombreComercial')?.touched
@@ -343,7 +356,8 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreComun')?.markAsTouched();
-                     " />
+                     "
+                      [maxlength]="256" />
                   <div *ngIf="
                      formMercancias.get('nombreComun')?.invalid &&
                      formMercancias.get('nombreComun')?.touched
@@ -367,7 +381,8 @@
                      'setDenominacionEspecifica'
                      );
                      formMercancias.get('nombreCientifico')?.markAsTouched();
-                     " />
+                     " 
+                      [maxlength]="256"/>
                   <div *ngIf="
                      formMercancias.get('nombreCientifico')?.invalid &&
                      formMercancias.get('nombreCientifico')?.touched
@@ -394,8 +409,8 @@
                      formMercancias.get('usoEspecifico')?.markAsTouched();
                      "
                        [ngClass]="
-              isValid(formMercancias, 'usoEspecifico') ? 'required' : ''
-            "></textarea>
+              isValid(formMercancias, 'usoEspecifico') ? 'required' : ''"
+              [maxlength]="5000"></textarea>
                   <div *ngIf="
                      formMercancias.get('usoEspecifico')?.invalid &&
                      formMercancias.get('usoEspecifico')?.touched
@@ -443,7 +458,7 @@
                   <label for="fraccionArancelaria">
                   Fracción arancelaria<span  [ngClass]="{'tiene-error':formMercancias.get('fraccionArancelaria')?.invalid && formMercancias.get('fraccionArancelaria')?.touched}">*</span>:
                   </label>
-                  <span class="bi bi-question-circle-fill" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado" placement="top"></span>
+                   <span class="bi bi-question-circle-fill mx-2" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado" placement="top"></span>
                   <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
                   (change)="
                   setValoresStore(
@@ -455,7 +470,9 @@
                   " 
                   [ngClass]="
               isValid(formMercancias, 'fraccionArancelaria') ? 'required' : ''
-            "/>
+            "
+            [maxlength]="8"
+            />
                   <div *ngIf="
                      formMercancias.get('fraccionArancelaria')?.invalid &&
                      formMercancias.get('fraccionArancelaria')?.touched
@@ -501,7 +518,8 @@
                            "
                            [ngClass]="
               isValid(formMercancias, 'cantidadUMT') ? 'required' : ''
-            " />
+            "
+            [maxlength]="20" />
                         <div *ngIf="
                            formMercancias.get('cantidadUMT')?.invalid &&
                            formMercancias.get('cantidadUMT')?.touched
@@ -546,7 +564,8 @@
                            "
                            [ngClass]="
               isValid(formMercancias, 'cantidadUMC') ? 'required' : ''
-            " />
+            " 
+                [maxlength]="20"/>
                         <div *ngIf="
                            formMercancias.get('cantidadUMC')?.invalid &&
                            formMercancias.get('cantidadUMC')?.touched
@@ -573,6 +592,61 @@
                      </div>
                   </div>
                </div>
+               @if(nombresCampos){
+              <div class="form-group">
+                  <label for="numeroRegistroSanitario">
+                 Número CAS<span [ngClass]="{'tiene-error':formMercancias.get('numeroRegistroSanitario')?.invalid && formMercancias.get('numeroRegistroSanitario')?.touched}">*</span>:
+                  </label>
+                  <input type="text" id="numeroRegistroSanitario" formControlName="numeroRegistroSanitario"
+                     class="form-control" (change)="
+                     setValoresStore(
+                     formMercancias,
+                     'numeroRegistroSanitario',
+                     'setDenominacionEspecifica'
+                     );
+                     formMercancias.get('numeroRegistroSanitario')?.markAsTouched();
+                     " 
+                     [maxlength]="20"
+                     />
+                  <div *ngIf="
+                     formMercancias.get('numeroRegistroSanitario')?.invalid &&
+                     formMercancias.get('numeroRegistroSanitario')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('numeroRegistroSanitario')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     <small *ngIf="formMercancias.get('numeroRegistroSanitario')?.errors?.['maxlength']">
+                     Máximo 100 caracteres permitidos
+                     </small>
+                  </div>
+               </div>
+               <div class="form-group" *ngIf="mostrarNumeroRegistro">
+                  <label for="numeroRegistro">
+                   Porcentaje de concentración<span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
+                  </label>
+                  <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion" class="form-control" (change)="
+                     setValoresStore(
+                     formMercancias,
+                     'numeroRegistro',
+                     'setNumeroRegistro'
+                     );
+                     formMercancias.get('porcentajeConcentracion')?.markAsTouched();
+                     " 
+                      [maxlength]="100"/>
+                  <div *ngIf="
+                     formMercancias.get('porcentajeConcentracion')?.invalid &&
+                     formMercancias.get('porcentajeConcentracion')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     <small *ngIf="formMercancias.get('porcentajeConcentracion')?.errors?.['maxlength']">
+                     Máximo 50 caracteres permitidos
+                     </small>
+                  </div>
+               </div>
+               }
+               @else{
                <div class="form-group">
                   <label for="porcentajeConcentracion">
                   Porcentaje de concentración<span [ngClass]="{'tiene-error':formMercancias.get('porcentajeConcentracion')?.invalid && formMercancias.get('porcentajeConcentracion')?.touched}">*</span>:
@@ -611,7 +685,8 @@
                      'setNumeroRegistro'
                      );
                      formMercancias.get('numeroRegistro')?.markAsTouched();
-                     " />
+                     "
+                      [maxlength]="100" />
                   <div *ngIf="
                      formMercancias.get('numeroRegistro')?.invalid &&
                      formMercancias.get('numeroRegistro')?.touched
@@ -624,6 +699,7 @@
                      </small>
                   </div>
                </div>
+            }
                @if (configuracionVisibilidad.paisOrigen) {
                <div class="form-group mt-5">
                   <div class="panel-group ficha-collapse" id="accordion">
@@ -645,6 +721,15 @@
                            </div>
                         </div>
                         }
+                    
+                     </div>
+                          <div *ngIf="
+                     formMercancias.get('paisDeOriginDatos')?.invalid &&
+                     formMercancias.get('paisDeOriginDatos')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('paisDeOriginDatos')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
                      </div>
                   </div>
                </div>
@@ -654,7 +739,7 @@
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                            <p class="panel-title fw-bold">
-                              País donde se produce o fabrica el ingrediente activo
+                              País donde se fabrica el ingrediente activo (TÉCNICO)
                            </p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
@@ -677,7 +762,7 @@
                   <div class="panel-group ficha-collapse" id="accordion">
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
-                           <p class="panel-title fw-bold">País donde se elabora el producto</p>
+                           <p class="panel-title fw-bold">País donde se elabora el producto (FORMULADO)</p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
                         @if (colapsableDuos) {
@@ -738,7 +823,16 @@
                         </div>
                         }
                      </div>
+                       <div *ngIf="
+                     formMercancias.get('paisDeProcedenciaDatos')?.invalid &&
+                     formMercancias.get('paisDeProcedenciaDatos')?.touched
+                     " class="mensaje-error">
+                     <small *ngIf="formMercancias.get('paisDeProcedenciaDatos')?.errors?.['required']">
+                     Este campo es obligatorio
+                     </small>
+                     </div>
                   </div>
+                 
                </div>
                }
                <div class="row">
@@ -795,7 +889,7 @@
             </form>
          </div>
          <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias)"
+            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias, 'mercancias')"
             [disabled]="esFormularioSoloLectura">
             Limpiar
             </button>

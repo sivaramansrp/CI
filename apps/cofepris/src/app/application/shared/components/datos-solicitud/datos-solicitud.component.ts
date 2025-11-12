@@ -363,7 +363,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
 
   validarClickDeBoton(): boolean {
     let ISVALID = true;
-    console.log(this.datosDelEstablecimientoRfcComp.validatorButtonClick(),this.domicilioComp.validatorButtonClick(),this.manifiestosComp.validarClickDeBoton(),this.representanteLegalRfcComp.validarClickDeBoton());
     if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === true){
       ISVALID = false;
     }
@@ -386,4 +385,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  
 }
