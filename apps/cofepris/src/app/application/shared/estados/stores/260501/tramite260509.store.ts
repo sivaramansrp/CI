@@ -55,6 +55,10 @@ export function createInitialState(): Solicitud260501State {
  */
 @StoreConfig({ name: 'tramite260501', resettable: true })
 
+/**
+ * Clase que representa el store para Tramite260501.
+ * Extiende la clase Store de Akita para gestionar el estado de Solicitud260501State.
+ */
 export class Tramite260501Store extends Store<Solicitud260501State> {
 
     /**
@@ -94,6 +98,10 @@ export class Tramite260501Store extends Store<Solicitud260501State> {
     }));
   }
 
+  /**
+   * Establece el ID de la solicitud en el estado del store.
+   * @param idSolicitud El ID de la solicitud a establecer.
+   */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
