@@ -1,5 +1,5 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TABLA_ORDEN } from '../../constantes/permiso-sujetos.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 
@@ -20,6 +20,13 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+
+  /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosComponent', { static: false }) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+
   // Propiedad que almacena la constante TABLA_ORDEN para definir el orden de la tabla.
   tablaOrden = TABLA_ORDEN;
   
@@ -29,4 +36,9 @@ export class TercerosRelacionadosFabricanteComponent {
    * como catálogos o listas asociadas.
    */
   public idProcedimiento: number = 260504;
+
+  /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
+  validarFormulario(): void {
+    this.tercerosRelacionadosComponent.markTouched(); 
+  }
 }

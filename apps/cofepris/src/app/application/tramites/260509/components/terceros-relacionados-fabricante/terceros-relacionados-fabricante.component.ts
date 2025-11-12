@@ -33,9 +33,6 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public idProcedimiento: number = 260509;
 
-  /** Indica si los campos de terceros relacionados han sido marcados como tocados. */
-  public markTouched: boolean = false;
-
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
   validarFormulario(): void {
     this.tercerosRelacionadosComponent.markTouched();
