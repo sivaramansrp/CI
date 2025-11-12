@@ -1,4 +1,4 @@
-import { FRACCION_DESCRIPCION, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
+import { FRACCION_DESCRIPCION, GUARDAR_SOLICITUD, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 import { Observable, combineLatest, map } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -441,7 +441,7 @@ export class Shared2605Service {
     );
   }
 
-  submitGuarderDatos(payload: Record<string, unknown>, idTipoTramite: string): Observable<JSONResponse> {
+  guardarDatosPost(payload: Record<string, unknown>, idTipoTramite: string): Observable<JSONResponse> {
     return this._http.post<JSONResponse>(GUARDAR_SOLICITUD(idTipoTramite), payload).pipe(
       map((response) => response)
     );

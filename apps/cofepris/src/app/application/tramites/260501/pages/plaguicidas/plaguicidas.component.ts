@@ -247,7 +247,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
       const PAYLOAD = this.sharedSvc.buildPayload(datos,this.idProcedimiento);
 
       return new Promise((resolve, reject) => {
-        this.sharedSvc.submitGuarderDatos(PAYLOAD, this.idProcedimiento.toString()).pipe(
+        this.sharedSvc.guardarDatosPost(PAYLOAD, this.idProcedimiento.toString()).pipe(
           takeUntil(this.destroyNotifier$)
         ).subscribe((response) => {
           if(esValidObject(response)) {
