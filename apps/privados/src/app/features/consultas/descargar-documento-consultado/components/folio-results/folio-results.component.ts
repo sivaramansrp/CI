@@ -65,7 +65,6 @@ export class FolioResultsComponent implements OnInit, OnDestroy {
 
   onRowClicked(event: TableBodyData) {
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       DESCARGAR_DOCUMENTO_CONSULTADO_ROUTES.DOCUMENTO,
       event.hiddenData.idFolio,
