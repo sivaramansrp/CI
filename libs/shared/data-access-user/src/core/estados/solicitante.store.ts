@@ -11,6 +11,8 @@ export interface SolicitanteState {
     ap_materno: string | null;
     razon_social: string | null;
     tipo_persona: string;
+    tipo_sociedad?: string;
+    email?: string;
 }
 
 /** * Función que crea el estado inicial del solicitante.
@@ -24,6 +26,8 @@ export function createInitialStatee(): SolicitanteState {
         ap_materno: null,
         razon_social: null,
         tipo_persona: '',
+        tipo_sociedad: '',
+        email: '',
     };
 }
 
@@ -118,6 +122,27 @@ export class SolicitanteStore extends Store<SolicitanteState> {
         this.update((state) => ({
             ...state,
             tipo_persona,
+        }));
+    }
+    /** 
+     * Actualiza el tipo de sociedad
+     * @param tipo_sociedad - Nuevo tipo de sociedad
+     */
+    public setTipoSociedad(tipo_sociedad: string): void {
+        this.update((state) => ({
+            ...state,
+            tipo_sociedad,
+        }));
+    }
+
+    /** 
+     * Actualiza el email
+     * @param email - Nuevo email
+     */
+    public setEmail(email: string): void {
+        this.update((state) => ({
+            ...state,
+            email,
         }));
     }
 }
