@@ -168,7 +168,7 @@ export class DatosEmpresaService {
             "colonia": data.domicilioFiscal.colonia,
             "calle": data.domicilioFiscal.calle,
             "numeroExterior": data.domicilioFiscal.nExt,
-            "numeroInterior": data.domicilioFiscal.nInt,
+            "numeroInterior": data.domicilioFiscal.nInt ?? '111',
             "telefono": data.domicilioFiscal.telefono ?? '1234567890'
           },
           "sociosAccionistas": {

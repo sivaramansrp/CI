@@ -65,14 +65,6 @@ export class DomicilioComponent implements OnDestroy {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
-  /**
-   * Método del ciclo de vida de Angular.
-   * Se ejecuta al inicializar el componente y obtiene los datos generales del solicitante.
-   */
-  // ngOnInit(): void {
-  //   // this.getDatosGenerales();
-  // }
-
    /**
    * Se ejecuta al destruir el componente y se cancelan suscripciones activas.
    */
@@ -149,34 +141,18 @@ export class DomicilioComponent implements OnDestroy {
   }
 
   /**
-   * Obtiene los datos generales del solicitante y los asigna al formulario.
-   */
-  // getDatosGenerales(): void {
-  //   this.subscription.add(
-  //     this.solicitanteServicio.getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
-  //       .pipe(
-  //         tap((response) => {
-  //           if (response) {
-  //             const DATOS = JSON.parse(response.data);
-  //             const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
-  //             const CAMPOS_DATOS_DOMICILIO_FISCAL = FormulariosService.obtenerNombresCamposForm(this.domicilioFiscalForm);
-
-  //             CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
-  //               FormulariosService.agregarValorCampoDesactivado(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
-  //             });
-  //           }
-  //         })
-  //       )
-  //       .subscribe()
-  //   );
-  // }
-
-  saveDomicilioFiscalToStore(): void {
+ * Guarda los datos del domicilio fiscal en el store.
+ */
+  guardarDomicilioFiscal(): void {
     const DOMICILIO_DATOS = this.domicilioFiscalForm.value;
     this.tramite120601Store.setDomicilioFiscal(DOMICILIO_DATOS);
   }
 
-  prefillDomicilioForm(plantasData: RepresentacionFederal[]): void {
+  /**
+ * Prellena el formulario de domicilio fiscal con los datos de la primera planta
+ * y guarda automáticamente la información en el store.
+ */
+  prellenarDomicilioForm(plantasData: RepresentacionFederal[]): void {
     if (plantasData.length > 0) {
       const PLANTA = plantasData[0]; 
       this.domicilioFiscalForm.patchValue({
@@ -193,7 +169,7 @@ export class DomicilioComponent implements OnDestroy {
         telefono: PLANTA.telefono,
       });
 
-      this.saveDomicilioFiscalToStore();
+      this.guardarDomicilioFiscal();
     }
   }
 }

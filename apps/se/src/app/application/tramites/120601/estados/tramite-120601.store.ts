@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
  * Interfaz que define la estructura del estado para el trámite 120601.
  */
 export interface Tramites120601State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud?: number | null;
   /** Datos generales de los socios */
   datosGeneralesSocios: {
     pais?: string;
@@ -66,6 +68,7 @@ export interface Tramites120601State {
  */
 export function createInitialState(): Tramites120601State {
   return {
+    idSolicitud: 0,
     datosGeneralesSocios: {
       nacionalidad: 'Si',
       persona: 'Si',

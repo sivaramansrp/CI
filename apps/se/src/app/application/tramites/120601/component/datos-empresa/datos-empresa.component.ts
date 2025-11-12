@@ -104,7 +104,7 @@ export class DatosEmpresaComponent {
  * Llama al método prefillDomicilioForm para rellenar el formulario de domicilio con la información obtenida.
  */
   onPlantasDataReceived(plantasData: RepresentacionFederal[]): void {
-    this.domicilio.prefillDomicilioForm(plantasData);
+    this.domicilio.prellenarDomicilioForm(plantasData);
   }
   
 }
