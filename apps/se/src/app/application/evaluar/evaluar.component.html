@@ -44,6 +44,7 @@
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
+                    @if (!vistasModificacion110101.actualizarVista) {
                     <app-generar-dictamen [isAntecedentes]="config.isAntecedentes" 
                     [conformidad]="conformidadDictamen"
                     [dataIniciarDictamen]="dataIniciarDictamen"
@@ -55,6 +56,20 @@
                     [sentidoInput]="sentidoInputTramite110101"
                     (controlDictaminador)="onDictaminador($event)">
                     </app-generar-dictamen>
+                    }@else{
+                        <app-generar-dictamen-clasificacion
+                        [isAntecedentes]="config.isAntecedentes" 
+                        [conformidad]="conformidadDictamen"
+                        [dataIniciarDictamen]="dataIniciarDictamen"
+                        [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
+                        (enviarEvento)="enviarEvento($event)"
+                        [habilitarFechasPorAceptacion]="config.habilitarFechas"
+                        [anexo222se]="config.anexo222se"
+                        [inputSentidos]="vistasModificacion110101.actualizarVista"
+                        [sentidoInput]="sentidoInputTramite110101"
+                        (controlDictaminador)="onDictaminador($event)">
+                        </app-generar-dictamen-clasificacion>
+                    }
                     }
                     @case (2) {
                     <br>

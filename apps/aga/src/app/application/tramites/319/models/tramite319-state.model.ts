@@ -1,4 +1,5 @@
-import { Solicitar } from "./personas.module";
+import { Solicitar } from './personas';
+import { formatMonthYear } from '@libs/shared/data-access-user/src';
 
 /**
  * @fileoverview
@@ -23,13 +24,13 @@ export interface Tramite319State {
    * @description
    * Lista de solicitudes asociadas al trámite.
    */
-  datos: Solicitar[];
+  lista_periodos_solicitud: Solicitar[];
   /**
    * @property {string} operacion
    * @description
    * Operación actual relacionada con el trámite.
    */
-  operacion: string;
+  numero_registro: string;
 }
 
 /**
@@ -42,17 +43,49 @@ export interface Tramite319State {
  */
 export interface FinalDataToSend {
   /**
+   * @property {number | null} idSolicitud
+   * @description
+   * Identificador único de la solicitud.
+   */
+  idSolicitud: number | null;
+
+  /**
    * @property {Solicitar[]} datos
    * @description
    * Lista de solicitudes que contienen la información a enviar.
    */
-  datos: Solicitar[];
+  lista_periodos_solicitud: Solicitar[];
   /**
-   * @property {string} operacion
+   * @property {string} numero_registro
    * @description
    * Tipo de operación que se realizará con los datos.
    */
-  operacion: string;
+  numero_registro: string;
+
+  /**
+   * @property {string} clave_operacion_historica
+   * @description
+   * Clave de la operación histórica.
+   */
+  clave_operacion_historica: string;
+  /**
+   * @property {string} mes_anio_actual_periodo
+   * @description
+   * Mes y año actual del periodo.
+   */
+  mes_anio_actual_periodo: string;
+  /**
+   * @property {string} clave_per_historico_actual
+   * @description
+   * Clave del periodo histórico actual.
+   */
+  clave_per_historico_actual: string;
+  /**
+   * @property {boolean} puede_capturar_representante_legal_cg
+   * @description
+   * Indica si se puede capturar el representante legal de la compañía general.
+   */
+  puede_capturar_representante_legal_cg: boolean;
 }
 
 /**
@@ -68,10 +101,19 @@ export interface FinalDataToSend {
  * console.log(estadoInicial);
  * // { datos: [], operacion: 'crear' }
  */
-export function createDatosState(params: Partial<FinalDataToSend> = {}): FinalDataToSend {
+export function createDatosState(
+  params: Partial<FinalDataToSend> = {}
+): FinalDataToSend {
   return {
-    datos: params.datos ?? [],
-    operacion: params.operacion ?? ''
+    idSolicitud: params.idSolicitud ?? null,
+    lista_periodos_solicitud: params.lista_periodos_solicitud ?? [],
+    numero_registro: params.numero_registro ?? '',
+    clave_operacion_historica: params.clave_operacion_historica ?? '',
+    mes_anio_actual_periodo:
+      params.mes_anio_actual_periodo ?? formatMonthYear(new Date()),
+    clave_per_historico_actual: params.clave_per_historico_actual ?? '',
+    puede_capturar_representante_legal_cg:
+      params.puede_capturar_representante_legal_cg ?? false,
   };
 }
 

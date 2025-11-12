@@ -43,22 +43,22 @@ export interface DatosDelContenedor {
   /**
    * Iniciales del equipo.
    */
-  inicialesEquipo: string;
+  iniciales_contenedor: string;
 
   /**
    * Número del equipo.
    */
-  numeroEquipo: number;
+  numero_contenedor: number;
 
   /**
    * Dígito verificador del equipo.
    */
-  digitoVerificador: number;
+  digito_verificador: number;
 
   /**
    * Tipo de equipo.
    */
-  tipoEquipo: string;
+  tipo_contenedor: string;
 
   /**
    * Identificador de la aduana.
@@ -68,7 +68,7 @@ export interface DatosDelContenedor {
   /**
    * Fecha de ingreso del equipo.
    */
-  fechaIngreso: string;
+  fecha_ingreso: string;
 
   /**
    * Vigencia del equipo.
@@ -84,6 +84,16 @@ export interface DatosDelContenedor {
    * Indica si el equipo o contenedor existe en el sistema.
    */
   existe: string;
+
+  /**
+   * Indica si se puede registrar el contenedor.
+   */
+  puede_registrar: string;
+  /**
+   * Indica si existe en VUCEM.
+   */
+  existe_en_vucem: string;
+  
 }
 
 /**
@@ -99,22 +109,22 @@ export interface DatosDelCsvArchivo {
   /**
    * Iniciales del equipo.
    */
-  inicialesEquipo: string;
+  iniciales_contenedor: string;
 
   /**
    * Número del equipo.
    */
-  numeroEquipo: number;
+  numero_contenedor: number;
 
   /**
    * Dígito verificador del equipo.
    */
-  digitoVerificador: number;
+  digito_verificador: number;
 
   /**
    * Tipo de equipo.
    */
-  tipoEquipo: string;
+  tipo_contenedor: string;
 
   /**
    * Identificador de la aduana.
@@ -124,7 +134,7 @@ export interface DatosDelCsvArchivo {
   /**
    * Fecha de ingreso del equipo.
    */
-  fechaIngreso: string;
+  fecha_ingreso: string;
 
   /**
    * Vigencia del equipo.
@@ -141,6 +151,16 @@ export interface DatosDelCsvArchivo {
    * Indica si el equipo o contenedor existe en el sistema.
    */
   existe: string;
+
+    /**
+   * Indica si se puede registrar el contenedor.
+   */
+  puede_registrar: string;
+  /**
+   * Indica si existe en VUCEM.
+   */
+  existe_en_vucem: string;
+
 }
 
 /**

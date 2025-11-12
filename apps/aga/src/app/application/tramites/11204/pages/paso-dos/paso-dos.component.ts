@@ -1,78 +1,151 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 
+/**
+ * Este componente se muestra en PasaDos
+ */
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss'],
+  styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
+
+  @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
+
   /**
-   * Constante que contiene los textos utilizados en el componente.
+ * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
+ * @type {EventEmitter<void>}
+ */
+  @Input() cargaArchivosEvento!: EventEmitter<void>;
+
+  @Input() idTipoTRamite!: string;
+  /**
+   * Textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Arreglo que contiene los tipos de documentos disponibles.
+   * Evento que se emite para reenviar la solicitud de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de carga de documentos.
    */
-  tiposDocumentos: Catalogo[] = [];
+  reenviarEvento = new EventEmitter<void>();
 
   /**
-   * Clase CSS para mostrar una alerta informativa.
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   */
+  reenviarRegresarSeccion = new EventEmitter<void>();
+
+  /**
+   * Clase CSS para la alerta de información.
    */
   infoAlert = 'alert-info';
 
   /**
-   * Arreglo que contiene el catálogo de documentos disponibles.
+   * Catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * Arreglo que contiene los documentos seleccionados.
+   * Documentos seleccionados por el usuario.
    */
   documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * Sujeto para notificar la destrucción del componente.
+   * Subject para destruir notificador.
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  public destroyed$: Subject<void> = new Subject();
 
-  @Output() reenviarEvento = new EventEmitter<void>();
-  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+  /**
+  * Indica si la carga de documentos se realizó correctamente.
+  * @type {boolean}
+  */
+  cargaRealizada = false;
+
+  /**
+   * Evento que se emite para indicar si la carga de documentos se ha realizado.
+   * Este evento se utiliza para notificar a otros componentes que la carga de documentos ha finalizado.
+   */
+  @Output() reenviarCargaRealizada = new EventEmitter<boolean>();
+
+  /**
+ * Evento que se emite para indicar si existen documentos para cargar, y así activar el botón de "Cargar Archivos en <solicitud-page>".
+ * Este evento se utiliza para habilitar o deshabilitar el botón de carga de archivos en <solicitud-page>.
+ */
+  @Output() reenviarEventoCarga = new EventEmitter<boolean>();
+
+  /**
+   * Servicio para gestionar los catálogos.
+   */
+  @Input() datosUsuario!: Usuario;
 
   /**
    * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos.
+   * 
+   * @param catalogosServices Servicio para gestionar los catálogos.
    */
   constructor(
-    private catalogosServices: CatalogosService
+    private catalogosServices: CatalogosService,
   ) { }
 
   /**
-   * Método de inicialización del componente.
-   * Se ejecuta al inicializar el componente y obtiene los tipos de documentos.
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    */
   ngOnInit(): void {
-    this.getTiposDocumentos();
+    this.cargaArchivosEvento
+      .pipe(
+        takeUntil(this.destroyed$),
+        map(() => {
+          this.reenviarEvento.emit();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
         next: (resp): void => {
-          if (Array.isArray(resp) && resp.length > 0) {
+          if (resp.length > 0) {
             this.catalogoDocumentos = resp;
-          } else {
-            console.error('Unexpected response format for tipos de documentos', resp);
           }
-        },
-        error: (_error): void => {
-          console.error('Error al obtener el catálogo de tipos de documentos', _error);
-        },
+        }
       });
+  }
+
+
+  /**
+  * Actualiza el estado de carga de documentos y emite un evento con el nuevo valor.
+  * @param cargaRealizada Indica si la carga de documentos se realizó correctamente.
+  * @returns void
+  */
+  documentosCargados(cargaRealizada: boolean): void {
+    this.cargaRealizada = cargaRealizada;
+    this.reenviarCargaRealizada.emit(this.cargaRealizada);
+  }
+
+  /**
+   * Maneja el evento de carga de documentos y emite un evento con el estado.
+   * @param existenDocumentosParaCargar - Indica si hay documentos para cargar.
+   * @returns void
+   */
+  manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {
+    this.reenviarEventoCarga.emit(existenDocumentosParaCargar);
+  }
+
+  /**
+    * Se ejecuta al destruir el componente.
+    * Emite un valor y completa el subject `destroyed$` para cancelar las suscripciones.
+    */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

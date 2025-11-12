@@ -7,6 +7,9 @@ import { DescargarDocumentoConsultadoPage } from './descargar-documento-consulta
 import { descargarDocumentoConsultaRoutes } from './descargar-documento-consultado/descargar-documento-consultado.routes';
 import { guiasAereasRoutes } from './guias-aereas/guias-aereas.routes';
 import { ConsultaGuiasAereasPage } from './guias-aereas/pages/consulta-guias-aereas/consulta-guias-aereas.page';
+import { ConsultaGuiasAereasEstadosPage } from './guias-aereas-estados/pages/consulta-guias-aereas-estados/consulta-guias-aereas-estados.page';
+import { ConsultaTransbordoPage } from './transbordo/pages/consulta-transbordo/consulta-transbordo.page';
+import { transbordoRoutes } from './transbordo/transbordo.routes';
 
 export const consultasRoutes: Routes = [
   {
@@ -31,6 +34,17 @@ export const consultasRoutes: Routes = [
     component: ConsultaGuiasAereasPage,
   },
   ...guiasAereasRoutes,
+  // Guías Aereas Estados Routes
+  {
+    path: CONSULTAS_ROUTES.CONSULTA_GUIAS_AEREAS_ESTADOS,
+    component: ConsultaGuiasAereasEstadosPage,
+  },
+  // Transbordo Routes
+  {
+    path: CONSULTAS_ROUTES.CONSULTA_TRANSBORDO,
+    component: ConsultaTransbordoPage,
+  },
+  ...transbordoRoutes,
   {
     path: '**',
     redirectTo: '',
