@@ -431,6 +431,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         this.adquiriente.patchValue({
           rfc: LICITACION.participante.rfc,
           adquirienteMontoDisponible: LICITACION.participante.montoDisponible,
+          montoRecibir: LICITACION.montoTransferir
         });
       });
   }
