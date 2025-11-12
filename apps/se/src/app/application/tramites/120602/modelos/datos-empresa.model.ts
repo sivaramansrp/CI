@@ -1,4 +1,23 @@
 /**
+ * Modelos de datos para el trámite 120602
+ * ---------------------------------------
+ * Este archivo contiene las interfaces TypeScript que representan la estructura de los datos
+ * utilizados en los formularios, tablas y entidades relacionadas con la empresa, socios,
+ * domicilio fiscal y representación federal para el trámite 120602.
+ *
+ * Uso:
+ * Importar las interfaces necesarias en los componentes, servicios o stores que requieran
+ * manipular o validar la información estructurada de la empresa y sus entidades asociadas.
+ *
+ * Funcionalidad:
+ * - Define la estructura de los datos de socios, domicilio, solicitud y representación federal.
+ * - Facilita la validación y el tipado estricto en formularios y servicios.
+ * - Centraliza los modelos para mantener la coherencia en toda la aplicación.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 
+ */
+/**
  * Representa una fila de la tabla de socios.
  */
 export interface DatosSociosTable {
@@ -72,6 +91,8 @@ export interface RepresentacionFederal {
     localidad: string;
     /** Teléfono */
     telefono: string;
+    /** lada */
+    lada?: string;
 }
 
 /**

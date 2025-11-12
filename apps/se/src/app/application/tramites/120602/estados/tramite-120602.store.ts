@@ -1,3 +1,21 @@
+/**
+ * Clase: Tramite120602Store
+ * -------------------------
+ * Esta clase gestiona el estado global del trámite 120602 utilizando Akita Store.
+ * Permite almacenar, actualizar y consultar los datos generales de socios, solicitud,
+ * representación federal y domicilio fiscal, centralizando la información relevante del proceso.
+ *
+ * Uso:
+ * Inyectar Tramite120602Store en componentes o servicios para manipular el estado del trámite.
+ *
+ * Funcionalidad:
+ * - Permite actualizar campos individuales o secciones completas del estado.
+ * - Provee métodos para modificar datos de socios, solicitud, representación federal y domicilio fiscal.
+ * - Facilita la gestión reactiva y centralizada del estado en la aplicación.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 12/11/2025
+ */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -7,6 +25,7 @@ import { Injectable } from '@angular/core';
 export interface Tramites120602State {
   /** Datos generales de los socios */
   datosGeneralesSocios: {
+    pais?: string;
     /** Nacionalidad del socio */
     nacionalidad: string;
     /** Tipo de persona del socio */
@@ -41,7 +60,20 @@ export interface Tramites120602State {
     estado: string;
     /** Representación seleccionada */
     representacion: string;
-  }
+  },
+  domicilioFiscal: {
+    calle?: string;
+    nInt?: string;
+    nExt?: string;
+    codigoPostal?: string;
+    colonia?: string;
+    localidad?: string;
+    municipio?: string;
+    entidadFederativa?: string;
+    pais?: string;
+    lada?: string;
+    telefono?: string;
+  };
 }
 
 /**
@@ -53,8 +85,8 @@ export interface Tramites120602State {
 export function createInitialState(): Tramites120602State {
   return {
     datosGeneralesSocios: {
-      nacionalidad: 'Yes',
-      persona: 'Yes',
+      nacionalidad: 'Si',
+      persona: 'Si',
       cadenaDependencia: '',
       nombre: '',
       apellidoPaterno: '',
@@ -62,7 +94,8 @@ export function createInitialState(): Tramites120602State {
       estado: '',
       correoElectronico: '',
       taxId: '',
-      denominacion: ''
+      denominacion: '',
+      pais: '',
     },
     datosDeLaSolicitud: {
       tipoDeEmpresa: '',           
@@ -71,6 +104,19 @@ export function createInitialState(): Tramites120602State {
     representacionFederal: {
       estado: '',
       representacion: '',
+    },
+    domicilioFiscal: {
+      calle: '',
+      nInt: '',
+      nExt: '',
+      codigoPostal: '',
+      colonia: '',
+      localidad: '',
+      municipio: '',
+      entidadFederativa: '',
+      pais: '',
+      lada: '',
+      telefono: ''
     }
   };  
 }
@@ -196,9 +242,31 @@ export class Tramite120602Store extends Store<Tramites120602State> {
   public establecerDatos(datos: Partial<Tramites120602State>): void {
     this.update((state) => ({
       ...state,
-      datosGeneralesSocios:{
+      datosGeneralesSocios: {
         ...state.datosGeneralesSocios,
         ...datos,
+      },
+    }));
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  public setDomicilioFiscal(domicilioFiscal: Partial<Tramites120602State['domicilioFiscal']>): void {
+    this.update((state) => ({
+      ...state,
+      domicilioFiscal: {
+        ...state.domicilioFiscal,
+        ...domicilioFiscal,
       },
     }));
   }

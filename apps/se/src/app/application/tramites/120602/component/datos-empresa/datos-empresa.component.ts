@@ -1,10 +1,13 @@
+
 import { Component, ViewChild } from '@angular/core';
 import { CargarArchivosComponent } from '../cargar-archivos/cargar-archivos.component';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosGeneralesSociosComponent } from '../datos-generales-socios/datos-generales-socios.component';
 import { DomicilioComponent } from '../domicilio/domicilio.component';
+import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
 import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
+
 /**
  * Componente que representa los datos de la empresa en un proceso de múltiples pasos.
  */
@@ -23,22 +26,17 @@ import { RepresentacionFederalComponent } from '../representacion-federal/repres
   styleUrls: ['./datos-empresa.component.scss'],
 })
 export class DatosEmpresaComponent {
-  
   /**
    * Referencias ViewChild a los componentes hijos con formularios
    */
   /** Referencia al componente de representación federal */
   @ViewChild('representacionFederalRef') representacionFederal!: RepresentacionFederalComponent;
-  
   /** Referencia al componente de datos de la solicitud */
   @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
-  
   /** Referencia al componente de domicilio */
   @ViewChild('domicilioRef') domicilio!: DomicilioComponent;
-  
   /** Referencia al componente de datos generales de socios */
   @ViewChild('datosGeneralesRef') datosGenerales!: DatosGeneralesSociosComponent;
-  
   /** Referencia al componente de carga de archivos */
   @ViewChild('cargarArchivosRef') cargarArchivos!: CargarArchivosComponent;
 
@@ -97,5 +95,12 @@ export class DatosEmpresaComponent {
 
     return isValid;
   }
-  
+
+  /**
+   * Maneja los datos recibidos de las plantas.
+   * Llama al método prefillDomicilioForm para rellenar el formulario de domicilio con la información obtenida.
+   */
+  onPlantasDataReceived(plantasData: RepresentacionFederal[]): void {
+    this.domicilio.prefillDomicilioForm(plantasData);
+  }
 }

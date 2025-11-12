@@ -1,10 +1,30 @@
+/**
+ * Servicio: DatosEmpresaService
+ * -----------------------------
+ * Este servicio centraliza la lógica de acceso, consulta y manipulación de los datos de la empresa
+ * y sus entidades asociadas para el trámite 120602. Permite obtener, guardar y actualizar información
+ * relevante de socios, domicilio, solicitud y representación federal, integrando la comunicación con la API y el store.
+ *
+ * Uso:
+ * Inyectar DatosEmpresaService en componentes o servicios que requieran interactuar con los datos de la empresa.
+ *
+ * Funcionalidad:
+ * - Provee métodos para obtener y guardar datos de socios, domicilio, solicitud y representación federal.
+ * - Facilita la integración con la API y el store de estado global.
+ * - Permite la simulación de datos mediante archivos JSON locales para pruebas y desarrollo.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 12/11/2025
+ */
 import { DatosEmpresa, DatosSociosTable, DatosSociosTableExtranjeros, RepresentacionFederal } from '../modelos/datos-empresa.model';
+import { Tramite120602Store, Tramites120602State } from '../estados/tramite-120602.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PROC_120602 } from '../servers/api.route';
 import { Tramite120602Query } from '../estados/tramite-120602.query';
-import { Tramite120602Store } from '../estados/tramite-120602.store';
 
 /**
  * Servicio para manejar los datos de la empresa en el trámite 120602.
@@ -28,7 +48,7 @@ export class DatosEmpresaService {
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient ,private tramite120602Store: Tramite120602Store,
-    private tramite120602Query: Tramite120602Query) {
+    private tramite120602Query: Tramite120602Query,public httpService: HttpCoreService,) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -112,4 +132,87 @@ export class DatosEmpresaService {
     return this.http.get<DatosEmpresa>(`${this.assetsJsonUrl}datosEmpresa.json`);
   }
 
-}
+    /**
+   * Envía una petición HTTP POST al endpoint definido para guardar los datos del trámite 110203.
+   * Recibe un objeto genérico como cuerpo de la solicitud.
+   * Devuelve un observable con la respuesta del servidor en formato de objeto.
+   */
+    guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+      return this.httpService.post<Record<string, unknown>>(PROC_120602.GUARDAR, { body: body });
+    }
+
+    /**
+     * Obtiene el estado completo de la solicitud 120602 desde el store.
+     * Retorna un observable que emite los cambios en el estado de la solicitud.
+     * Permite suscribirse para reaccionar ante actualizaciones del estado.
+     */
+      getAllState(): Observable<Tramites120602State> {
+        return this.tramite120602Query.selectSolicitud$;
+      }
+
+      getAccionistasByRFC(rfc: string): Observable<DatosSociosTable[]> {
+        return this.httpService.get<DatosSociosTable[]>(PROC_120602.ACCIONISTAS, { params: { rfc } });
+      }
+
+      obtenerPlantas(estadoId: string): Observable<{ datos: RepresentacionFederal[] }> {
+        const URL = `${PROC_120602.PLANTAS}?rfcSolicitante=AAL0409235E6&entidadFederativa=${estadoId}`;
+        return this.http.get<{ datos: RepresentacionFederal[] }>(URL);
+      }
+
+      obtenerRepresentacionFederalPorEstado(estadoId: string): Observable<Catalogo[]> {
+        const URL = `${PROC_120602.PLANTAS}?entidadFederativa=${estadoId}`;
+        return this.httpService.get<Catalogo[]>(URL);
+      }
+
+      buildDatosEmpresa(data:Tramites120602State): unknown {
+        return{
+          "representacionFederal" : {
+            "estado": data.representacionFederal.estado,
+            "representacionFederal": data.representacionFederal.representacion,
+          },
+          "datosSolicitud": {
+            "tipoEmpresa": data.datosDeLaSolicitud.tipoDeEmpresa,
+            "especifique": "Expo Internacional de Tecnología 2025",
+            "actividadEconomicaClave": data.datosDeLaSolicitud.actividadEconomicaClave,
+            "actividadEconomicaDescripcion": "Desarrollo de software y servicios de TI"
+          },
+          "ubicacionMercancia": {
+            "paisNombre": data.domicilioFiscal.pais,
+            "codigoPostal": data.domicilioFiscal.codigoPostal,
+            "entidadFederativa": data.domicilioFiscal.entidadFederativa,
+            "delegacionMunicipio": data.domicilioFiscal.municipio,
+            "lada": data.domicilioFiscal.lada ?? '123',
+            "localidad": data.domicilioFiscal.localidad,
+            "colonia": data.domicilioFiscal.colonia,
+            "calle": data.domicilioFiscal.calle,
+            "numeroExterior": data.domicilioFiscal.nExt,
+            "numeroInterior": data.domicilioFiscal.nInt,
+            "telefono": data.domicilioFiscal.telefono ?? '1234567890'
+          },
+          "sociosAccionistas": {
+            "tipoNacionalidad": data.datosGeneralesSocios.nacionalidad,
+            "tipoExtranjero": data.datosGeneralesSocios.persona,
+            "mexicano": {
+                "rfc": data.datosGeneralesSocios.cadenaDependencia
+            },
+            "extranjeroFisico": {
+                "nombre": data.datosGeneralesSocios.nombre,
+                "apellidoPaterno": data.datosGeneralesSocios.apellidoPaterno,
+                "pais": data.datosGeneralesSocios.pais,
+                "codigoPostal": data.datosGeneralesSocios.codigoPostal,
+                "estado": data.datosGeneralesSocios.estado,
+                "correoElectronico": data.datosGeneralesSocios.correoElectronico,
+                "taxId": data.datosGeneralesSocios.taxId
+            },
+            "extranjeroMoral": {
+                "taxId": data.datosGeneralesSocios.taxId,
+                "razonSocial": data.datosGeneralesSocios.denominacion,
+                "pais": data.datosGeneralesSocios.pais,
+                "codigoPostal": data.datosGeneralesSocios.codigoPostal,
+                "estado": data.datosGeneralesSocios.estado,
+                "correoElectronico": data.datosGeneralesSocios.correoElectronico
+            }
+        }
+      }
+    }
+  }

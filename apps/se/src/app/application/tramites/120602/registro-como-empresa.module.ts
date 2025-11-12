@@ -1,3 +1,18 @@
+/**
+ * Módulo: RegistroComoEmpresaModule
+ * ----------------------------------
+ * Este módulo agrupa los componentes, servicios y rutas necesarios para el flujo de registro
+ * como empresa en el trámite 120602.
+ *
+ * Uso:
+ * Importar este módulo en el módulo principal de la aplicación para habilitar el proceso de registro de empresa.
+ *
+ * Funcionalidad:
+ * - Declara y agrupa los componentes principales del flujo de registro.
+ * - Importa los módulos y componentes compartidos requeridos para la funcionalidad.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';

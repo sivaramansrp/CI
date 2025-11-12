@@ -12,6 +12,28 @@ import { TituloComponent } from '@ng-mf/data-access-user';
  * y gestiona la entrada del usuario para diferentes tipos de personas 
  * (Física Nacional, Moral Nacional, etc.).
  */
+import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
+import { Tramite120602Store } from '../../estados/tramite-120602.store';
+
+/**
+ * Componente: DomicilioComponent
+ * --------------------------------
+ * Este componente gestiona los datos del domicilio fiscal en el proceso de captura de la empresa.
+ * Permite la entrada, validación y prellenado de información de domicilio para diferentes tipos de personas (física/moral, nacional/extranjera).
+ *
+ * Uso:
+ * <app-domicilio></app-domicilio>
+ *
+ * Funcionalidad:
+ * - Permite capturar y validar los datos del domicilio fiscal mediante formularios reactivos.
+ * - Soporta la carga dinámica de campos según el tipo de persona seleccionada.
+ * - Permite prellenar el formulario con datos provenientes de otras fuentes (por ejemplo, plantas).
+ * - Sincroniza los datos con el store global del trámite.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 12/11/2025
+ */
+
 @Component({
   selector: 'app-domicilio',
   standalone: true,
@@ -56,10 +78,35 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
+    private tramite120602Store: Tramite120602Store
   ) {
     this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
+  }
+  saveDomicilioFiscalToStore(): void {
+    const DOMICILIO_DATOS = this.domicilioFiscalForm.value;
+    this.tramite120602Store.setDomicilioFiscal(DOMICILIO_DATOS);
+  }
+
+  prefillDomicilioForm(plantasData: RepresentacionFederal[]): void {
+    if (plantasData.length > 0) {
+      const PLANTA = plantasData[0];
+      this.domicilioFiscalForm.patchValue({
+        calle: PLANTA.calle,
+        nInt: PLANTA.numeroInterior,
+        nExt: PLANTA.numeroExterior,
+        codigoPostal: PLANTA.codigoPostal,
+        colonia: PLANTA.colonia,
+        localidad: PLANTA.localidad,
+        municipio: PLANTA.municipio,
+        entidadFederativa: PLANTA.estado,
+        pais: PLANTA.pais,
+        lada: PLANTA.lada,
+        telefono: PLANTA.telefono,
+      });
+      this.saveDomicilioFiscalToStore();
+    }
   }
 
   /**

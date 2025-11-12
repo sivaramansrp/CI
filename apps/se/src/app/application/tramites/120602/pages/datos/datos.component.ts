@@ -1,4 +1,26 @@
+/**
+ * Componente: DatosComponent
+ * --------------------------
+ * Este componente gestiona el flujo de pasos y la validación de formularios para la captura de datos
+ * de la empresa y sus representantes en el trámite 120602. Coordina la navegación entre pasos,
+ * la validación de formularios y la integración con el store y servicios relacionados.
+ *
+ * Uso:
+ * <app-datos></app-datos>
+ *
+ * Funcionalidad:
+ * - Controla la navegación y validación de los pasos del asistente.
+ * - Interactúa con componentes hijos y el store para guardar y recuperar datos.
+ * - Gestiona la visualización de mensajes de error y confirmación.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * 
+ */
 import { Component, ViewChild } from '@angular/core';
+import { Subject, firstValueFrom, take, takeUntil } from 'rxjs';
+import { Tramite120602Store, Tramites120602State } from '../../estados/tramite-120602.store';
+import { doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../constantes/definiciones.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -87,27 +109,52 @@ export class DatosComponent {
    */
   esFormaValido: boolean = false;
 
+
+
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  guardarIdSolicitud: number = 0;
+
+  /** Mensaje de confirmación al guardar la solicitud.
+   * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
+   */
+  guardarMensaje: string = '';
+
+  constructor(
+    private servicio120602: DatosEmpresaService,
+    private tramite120602Store: Tramite120602Store
+  ) {}
+
+  /**
+   * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
+   */
   /**
    * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
    */
   public validarFormularios(): boolean {
     let isValid = true;
-
     // Validar formulario de solicitante (pestaña 1) a través del componente paso-uno
     if (this.pasoUno) {
       isValid = this.pasoUno.validarFormularios();
     } else {
       isValid = false;
     }
-
     return isValid;
   }
+
 
   /**
    * Actualiza el valor del índice según el evento del botón de acción.
    * @param e El evento del botón de acción que contiene la acción y el valor.
    */
-  public getValorIndice(e: AccionBoton): void {
+  /**
+   * Actualiza el valor del índice según el evento del botón de acción.
+   * @param e El evento del botón de acción que contiene la acción y el valor.
+   */
+  public async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -117,6 +164,12 @@ export class DatosComponent {
         // Scroll to top to show error message
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return; // Detener ejecución si los formularios son inválidos
+      }
+      try {
+        await this.obtenerDatosDelStore();
+      } catch (err) {
+        console.error('Error saving data before continuing', err);
+        return;
       }
     }
 
@@ -130,7 +183,6 @@ export class DatosComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -141,5 +193,65 @@ export class DatosComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Obtiene los datos almacenados en el estado (store) mediante el servicio correspondiente.
+   * Realiza una única suscripción al observable usando 'take(1)'.
+   * Al recibir los datos, los guarda mediante el método 'guardar'.
+   */
+  /**
+   * Obtiene los datos almacenados en el estado (store) mediante el servicio correspondiente.
+   * Realiza una única suscripción al observable usando 'take(1)'.
+   * Al recibir los datos, los guarda mediante el método 'guardar'.
+   */
+  obtenerDatosDelStore(): Promise<void> {
+    return firstValueFrom(this.servicio120602.getAllState().pipe(take(1)))
+      .then(data => {
+        return this.guardar(data);
+      });
+  }
+
+  guardar(data: Tramites120602State): Promise<void> {
+    const DATOS_EMPRESA = this.servicio120602.buildDatosEmpresa(data);
+    const PAYLOAD = {
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividad_economica": "Fabricación de productos de hierro y acero",
+        "correo_electronico": "contacto@acerosalvarado.com",
+        "razonSocial": "INTEGRADORA",
+        "domicilio": {
+            "pais": "México",
+            "codigoPostal": "03100",
+            "estado": "26",
+            "delegacionMunicipio": "Benito Juárez",
+            "localidad": "REGION ARROYO SECO",
+            "colonia": "Del Valle",
+            "calle": "Av. Insurgentes Sur",
+            "numeroExterior": "1234",
+            "numeroInterior": "A",
+            "lada": "1234",
+            "telefono": "12345678"
+        }
+      },
+      "datosEmpresa": DATOS_EMPRESA
+    }
+    return new Promise((resolve, reject) => {
+      this.servicio120602.guardarDatosPost(PAYLOAD).pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          this.tramite120602Store.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+          this.wizardComponent.siguiente();
+          resolve();
+        }
+      },error=>{
+        reject(error);
+      });
+    });
   }
 }

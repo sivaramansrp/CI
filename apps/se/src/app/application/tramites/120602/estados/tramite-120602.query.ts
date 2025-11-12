@@ -1,3 +1,21 @@
+/**
+ * Clase: Tramite120602Query
+ * -------------------------
+ * Esta clase proporciona selectores y observables para acceder y consultar el estado del trámite 120602.
+ * Permite obtener datos específicos y reactivos de la store, facilitando la gestión y visualización de la información
+ * en los componentes relacionados con el trámite.
+ *
+ * Uso:
+ * Inyectar Tramite120602Query en componentes o servicios para acceder a los selectores y observables del estado.
+ *
+ * Funcionalidad:
+ * - Provee selectores para datos generales de socios, solicitud y representación federal.
+ * - Permite la suscripción reactiva a cambios en el estado del trámite.
+ * - Facilita la separación de lógica de acceso a estado respecto a los componentes de UI.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 12/11/2025
+ */
 import { Tramite120602Store, Tramites120602State } from '../estados/tramite-120602.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
@@ -37,6 +55,13 @@ export class Tramite120602Query extends Query<Tramites120602State> {
   selectDatosGeneralesSocios$ = this.select((state) => {
     return state.datosGeneralesSocios;  
   })
+
+    /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
 
   /**
    * Observable que emite los datos generales del socio desde el estado.

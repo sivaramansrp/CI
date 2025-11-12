@@ -1,7 +1,24 @@
+/**
+ * Componente: RepresentacionFederalComponent
+ * -------------------------------------------
+ * Este componente gestiona la captura y visualización de la información relacionada con la representación federal de la empresa.
+ * Permite la entrada, edición y validación de datos de plantas o sucursales, así como la sincronización con el store global del trámite.
+ *
+ * Uso:
+ * <app-representacion-federal></app-representacion-federal>
+ *
+ * Funcionalidad:
+ * - Permite capturar y validar los datos de representación federal mediante formularios reactivos.
+ * - Gestiona la visualización y edición de una tabla dinámica de plantas o sucursales.
+ * - Sincroniza los datos con el store global del trámite y emite eventos para otros componentes.
+ *
+ * Autor: [Agregar nombre del autor si se desea]
+ * Fecha: 12/11/2025
+ */
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
@@ -96,6 +113,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   *  Ayuda a prevenir fugas de memoria en flujos observables. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+   @Output() plantasDataEmitted = new EventEmitter<RepresentacionFederal[]>();
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * @returns {void}
@@ -132,7 +151,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.crearFormulario();
     // this.getEntidadFederativa();
     // this.getRepresentacionFederal();
-    this.getDatosSocios();
+    // this.getDatosSocios();
 
     this.query.selectEstado$.pipe(
       takeUntil(this.destroyed$)
@@ -150,9 +169,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       })
     })
  
-
      this.obtenerEstado();
-     this.obtenerRepresentacionFederal()
+     this.suscribirCambioEstado();
+    //  this.obtenerRepresentacionFederal()
   }
 
   /**
@@ -248,15 +267,73 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  * @description Obtiene el representación federal desde el servicio y asigna los datos a la variable `representacion`.
  * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
  */
-  obtenerRepresentacionFederal(): void {
-    this.catalogoService.representacionFederalCatalogo(this.tramites, "MEX")
+  obtenerRepresentacionFederal(claveEstado: string): void {
+    this.catalogoService.representacionFederalCatalogo(this.tramites, claveEstado)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
           this.representacion = response?.datos ?? [];
+          if (this.representacion.length > 0) {
+          const OPCION_PRESELECCIONADA = this.representacion[0];
+          this.representacion = [OPCION_PRESELECCIONADA];
+        }
         }
       });
   }
+
+  /**
+ * Recupera y establece la información de las plantas según el estado seleccionado.
+ * @param estadoId El ID del estado seleccionado.
+ * @returns {void}
+ */
+obtenerPlantasPorEstado(estadoId: string): void {
+  this.datosEmpresaService.obtenerPlantas(estadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (response?.datos?.length > 0) {
+          this.datosSocios = response.datos.map((planta: RepresentacionFederal) => ({
+            calle: planta.calle,
+            numeroInterior: planta.numeroInterior,
+            numeroExterior: planta.numeroExterior,
+            codigoPostal: planta.codigoPostal,
+            colonia: planta.colonia,
+            localidad: planta.localidad,
+            municipio: planta.municipio,
+            estado: planta.estado,
+            pais: planta.pais,
+            telefono: planta.telefono, // Asegúrate de que 'telefono' exista en el objeto 'planta'
+          }));
+          this.plantasDataEmitted.emit(this.datosSocios);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener las plantas:', err);
+      }
+    });
+}
+
+/**
+ * Suscribe al cambio de valor del dropdown de estado.
+ * Llama a la API de plantas cuando se selecciona un estado.
+ */
+suscribirCambioEstado(): void {
+  this.formulario.get('estado')?.valueChanges
+    .pipe(
+      debounceTime(300), 
+      distinctUntilChanged(),
+      takeUntil(this.destroyNotifier$))
+      .subscribe((cveEntidad) => {
+      if (cveEntidad) {
+        const ESTADO_SELECCIONADO = this.estado.find((item) => item.clave === cveEntidad);
+        const CLAVE_ESTADO = ESTADO_SELECCIONADO?.clave;
+        if (CLAVE_ESTADO) {
+          this.obtenerRepresentacionFederal(CLAVE_ESTADO);
+        }
+        this.obtenerPlantasPorEstado(cveEntidad);
+      }
+    });
+}
 
   /**
    * Método que se ejecuta cuando se destruye el componente.
