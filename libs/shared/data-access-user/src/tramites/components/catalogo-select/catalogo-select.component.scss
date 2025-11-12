@@ -27,4 +27,21 @@
 }
 
 
+/* Pantallas grandes */
+select.form-select {
+  max-width: 300px;
+}
 
+/* Tablets */
+@media (max-width: 768px) {
+  select.form-select {
+    max-width: 200px;
+  }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+  select.form-select {
+    max-width: 100%;
+  }
+}

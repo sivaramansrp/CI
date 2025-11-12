@@ -1,6 +1,6 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { EMAIL, NotificacionesComponent,Pedimento, REGEX_RFC, REGEX_TEXTO_CON_SIMBOLOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { EMAIL, NotificacionesComponent,Pedimento, REGEX_RFC, REGEX_TEXTO_CON_SYMBOLOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
@@ -32,6 +32,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
  */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+  /** Emite un evento cuando cambia la validez del formulario. */
+  @Output() formValidityChange = new EventEmitter<boolean>();
   @Output() rfcValidoChange = new EventEmitter<boolean>(); 
     @Input() public idProcedimiento!: number;
 
@@ -226,7 +228,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
 
     this.datosDelForm = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13),Validators.pattern(REGEX_RFC)]],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100), Validators.pattern(REGEX_TEXTO_CON_SIMBOLOS)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100), Validators.pattern(REGEX_TEXTO_CON_SYMBOLOS)]],
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.pattern(EMAIL), Validators.maxLength(320)]]
     });
 
@@ -254,7 +256,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('datosDelEstablecimientoRFCForm', {
         [campo]: VALOR,
       });
+    this.formValidityChange.emit(this.datosDelForm.valid);
   }
+
   validatorButtonClick(): boolean {
     if(!this.tieneElBotonSeleccionClicado){
       this.mostrarErrores.denominacionRazonSocial = true;

@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, JSONResponse, ListaPasosWizard, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -173,7 +173,7 @@ export class SolicitudPageComponent implements OnDestroy {
     const DESTINATARIO = this.certificadoDeService.buildDestinatario(item);
     const DATOS_DEL_CERTIFICADO = this.certificadoDeService.buildDatosDelCertificado(item);
     const PAYLOAD = {
-      idSolicitud: this.solicitudState.idSolicitud || 0,
+      idSolicitud: this.solicitudState.idSolicitud,
       rfc_solicitante: 'AAL0409235E6',
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -206,31 +206,27 @@ export class SolicitudPageComponent implements OnDestroy {
       datos_del_certificado: DATOS_DEL_CERTIFICADO
     };    
       return new Promise((resolve, reject) => {
-      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe({
-          next: (response) => {
-            if (esValidObject(response) && esValidObject(response['datos'])) {
-              const DATOS = response['datos'] as { id_solicitud?: number };
-              if (getValidDatos(DATOS.id_solicitud)) {
-                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-              } else {
-                this.store.setIdSolicitud(0);
-              }
-            }
-            
+      this.certificadoDeService.guardarDatosPost(PAYLOAD).subscribe(response => {
+          const API_RESPONSE = doDeepCopy(response);
+        if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
+          if(getValidDatos(API_RESPONSE.datos.idSolicitud)) {
+            this.store.setIdSolicitud((API_RESPONSE.datos.idSolicitud));
             this.pasoNavegarPor({ accion: 'cont', valor: 2 });
-            resolve({
-              id: response['id'] ?? 0,
-              descripcion: response['descripcion'] ?? '',
-              codigo: response['codigo'] ?? '',
-              data: response['data'] ?? response['datos'] ?? null,
-              ...response
-            } as JSONResponse);
-          },
-          error: (error) => {
-            reject(error);
-          }    
-        });
+          } else {
+            this.store.setIdSolicitud(0);
+          }
+        }
+        const JSON_RESPONSE: JSONResponse = {
+          id: API_RESPONSE.id ?? API_RESPONSE.datos?.id_solicitud ?? API_RESPONSE.datos?.idSolicitud ?? 0,
+          descripcion: API_RESPONSE.descripcion ?? '',
+          codigo: API_RESPONSE.codigo ?? '',
+          data: API_RESPONSE.datos ?? {}
+        };
+        resolve(JSON_RESPONSE);
+      }, error => {
+        reject(error);
       });
+    });
 
   }
 

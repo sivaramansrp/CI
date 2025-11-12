@@ -11,6 +11,7 @@
       </h6>
 
       <app-tabla-dinamica
+        [styleCenter]="true"
         [isInvalida]="!esFormValido && mercancias.length === 0"
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercancias"

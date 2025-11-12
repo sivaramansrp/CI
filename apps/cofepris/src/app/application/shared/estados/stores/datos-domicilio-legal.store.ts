@@ -1,3 +1,4 @@
+import { MercanciasInfo, NicoInfo } from '../../models/datos-domicilio-legal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -215,6 +216,28 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   mensaje: boolean;
+
+  /**
+   * El valor de nicoTabla.
+   */
+  nicoTabla: NicoInfo[],
+
+  /**
+   * El valor de mercanciaTabla.
+   */
+  mercanciaTabla: MercanciasInfo[],
+  /**
+   * El valor de nombreComercial.
+   */
+  nombreComercial: string,
+  /**
+   * El valor de nombreComun.
+   */
+  nombreComun: string,
+  /**
+   * El valor de nombreCientifico.
+   */
+  nombreCientifico: string,
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -426,7 +449,29 @@ export function createInitialState(): DatosDomicilioLegalState {
  /**
      * El valor de mensaje.
      */
-    mensaje: false
+    mensaje: false,
+
+    /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
+    /**
+     * El valor de nombreComercial.
+     */
+    nombreComercial: '',
+    /**
+     * El valor de nombreComun.
+     */
+    nombreComun: '',
+    /**
+     * El valor de nombreCientifico.
+     */
+    nombreCientifico: '',
   };
 }
 
@@ -990,6 +1035,42 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         this.update((state) => ({
             ...state,
             estadoFisicoOtro,
+        }));
+    }
+
+    /** Actualiza el estado con la nueva tabla de información Nico. */
+    setNicoTabla(nicoTabla: NicoInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            nicoTabla,
+        }));
+    }
+
+    setMercanciasTabla(mercanciaTabla: MercanciasInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            mercanciaTabla,
+        }));
+    }
+
+    setNombreComercial(nombreComercial: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComercial,
+        }));
+    }
+
+    setNombreComun(nombreComun: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComun,
+        }));
+    }
+
+    setNombreCientifico(nombreCientifico: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreCientifico,
         }));
     }
     

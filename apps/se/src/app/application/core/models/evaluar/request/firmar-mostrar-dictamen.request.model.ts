@@ -14,6 +14,14 @@ export interface MostrarFirmarRequest {
     fecha_fin_vigencia: string,
     /** Texto del dictamen */
     texto_dictamen: string,
+    /** Id solicitud en algunos tramites */
+    id_solicitud?: number;
+    /** Indica si el dictaminador califica como exportador */
+    calificacion_dictaminador_exportador?: boolean | null;
+    /** Indica si el dictaminador califica como exportador JPN */
+    calificacion_dictaminador_exportador_jpn?: boolean | null;
+    /** Indica si la descripción ALADI es correcta */
+    calificacion_descripcion_aladi?: boolean | null;
     /** Datos del solicitante */
     solicitante: Solicitante;
     /** Lista de criterios asociados a tratados */

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
@@ -30,9 +30,10 @@ import { Tramite260216Query } from '../../estados/tramite260216Query.query';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit, OnChanges {
 
-  
+    @Input() confirmarSinPagoDeDerechos: number = 0;
+
     /**
        * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
        * @description
@@ -140,6 +141,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+        const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+        if (CONFIRMAR_VALOR) {
+          this.seleccionaTab(CONFIRMAR_VALOR);
+        }
+      }
+    }
+
   /**
    * @inheritdoc
    *
@@ -189,10 +199,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   validarPasoUno(): boolean {
   const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
   const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-  const ESPAGOVALIDO = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
-
       return (
-        (ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO)? true : false
+        (ESTABVALIDO && ESTERCEROSVALIDO)? true : false
 
       );
   }
