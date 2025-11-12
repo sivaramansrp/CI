@@ -201,9 +201,9 @@ const STATE = this.solicitudState ?? {};
               apellidoPaterno: getValidDatos(DATOS.datos[0].apellidoPaterno) ? DATOS.datos[0].apellidoPaterno : '',
               apellidoMaterno: getValidDatos(DATOS.datos[0].apellidoMaterno) ? DATOS.datos[0].apellidoMaterno : '',
           });
-        this.DatosDomicilioLegalStore.setNombre(this.representante.get('nombre')?.getRawValue());
-        this.DatosDomicilioLegalStore.setApellidoPaterno(this.representante.get('apellidoPaterno')?.getRawValue());
-        this.DatosDomicilioLegalStore.setApellidoMaterno(this.representante.get('apellidoMaterno')?.getRawValue());
+          this.setValoresStore(this.representante, 'nombre', 'setNombre');
+          this.setValoresStore(this.representante, 'apellidoPaterno', 'setApellidoPaterno');
+          this.setValoresStore(this.representante, 'apellidoMaterno', 'setApellidoMaterno');
         }
         else{
              this.mostrarErroresRepresentante.nombre = true;

@@ -14,7 +14,7 @@ td {
 }
 
 #modal-agregar-mercancias .modal-dialog {
-  max-width: 1100px !important;
+  max-width: 1215px !important;
 }
 
 #modal-agregar-scian .modal-dialog {
@@ -82,4 +82,8 @@ textarea.form-control {
 
 .word-spacing-10 {
   word-spacing: 10px;
+}
+
+.custom-modal-bg {
+  background-color: #7f7f7f; 
 }

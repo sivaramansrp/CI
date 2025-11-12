@@ -11,12 +11,7 @@ import {
   REGEX_LLAVE_PAGO,
   REGEX_SOLO_NUMEROS,
 } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import {
   Solicitud260910State,
   Solicitud260910Store,
@@ -182,7 +177,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   actualizarEstadoFormulario(): void {
     if (this.solicitud260910State.tipoOperacion === 'PRO') {
       this.pagoDeDerechosForm.enable();
-      this.disableFechaDePago = true;
+      this.disableFechaDePago = false;
     } else if (
       this.solicitud260910State.tipoOperacion === 'MYP' ||
       this.solicitud260910State.tipoOperacion === 'MOD'
@@ -257,6 +252,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setClaveDeReferencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('claveDeReferencia');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setClaveDeReferencia(VALOR);
   }
 
@@ -266,6 +267,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setCadenaDeDependencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('cadenaDeDependencia');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setCadenaDeDependencia(VALOR);
   }
 
@@ -284,6 +291,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setLiaveDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('liaveDePago');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+
     this.solicitud260910Store.setLiaveDePago(VALOR);
   }
 
@@ -293,7 +306,37 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * @param evento Cadena con la fecha seleccionada
    */
   seleccionarFechaInicio(evento: string): void {
+    const CONTROL = this.pagoDeDerechosForm.get('fechaDePago');
+    if (!CONTROL) { return; }
+
     this.solicitud260910Store.setFechaDePago(evento);
+    CONTROL.enable();
+
+    const PARTES = evento.split('/');
+    if (PARTES.length === 3) {
+      const DIA = parseInt(PARTES[0], 10);
+      const MES = parseInt(PARTES[1], 10) - 1;
+      const ANIO = parseInt(PARTES[2], 10);
+      
+      const FECHA = new Date(ANIO, MES, DIA);
+      const HOY = new Date();
+      
+      FECHA.setHours(0, 0, 0, 0);
+      HOY.setHours(0, 0, 0, 0);
+      
+      if (FECHA > HOY) {
+        // No emitimos eventos para evitar ciclos de validación
+        CONTROL.setValue(evento, { emitEvent: false });
+        CONTROL.markAsTouched();
+        CONTROL.markAsDirty();
+        CONTROL.setErrors({ futureDateNotAllowed: true });
+      } else {
+        // La fecha es válida
+        CONTROL.setValue(evento, { emitEvent: false });
+        CONTROL.markAsTouched();
+        CONTROL.setErrors(null);
+      }
+    }
   }
 
   /**
@@ -303,6 +346,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   setImporteDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
+    const CONTROL = this.pagoDeDerechosForm.get('importeDePago');
+    
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+    }
+    
     this.solicitud260910Store.setImporteDePago(VALOR);
   }
 
