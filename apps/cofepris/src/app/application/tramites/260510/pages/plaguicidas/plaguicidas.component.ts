@@ -61,6 +61,9 @@ export class PlaguicidasComponent implements OnInit,OnDestroy{
    * Título del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * Estado de la solicitud.
+   */
   public solicitudState!: Solicitud260510State;
 
   /**
@@ -73,6 +76,14 @@ export class PlaguicidasComponent implements OnInit,OnDestroy{
     txtBtnSig: 'Continuar',
   };
 
+
+/**   * Crea una instancia del componente PlaguicidasComponent.
+   * @param datosDomicilioLegalService Servicio para gestionar los datos del domicilio legal.
+   * @param pagoBancoService Servicio para gestionar los datos de pago en banco.
+   * @param tercerosFabricanteService Servicio para gestionar los datos de terceros fabricantes.
+   * @param _store Almacén para gestionar el estado del trámite 260510.
+   * @param toastrService Servicio para mostrar notificaciones tipo toast.
+   */
 constructor(
   private datosDomicilioLegalService: DatosDomicilioLegalService,
   private pagoBancoService:PagoBancoService,
@@ -85,6 +96,9 @@ constructor(
   
 }
 
+
+/**   * Inicializa el componente y suscribirse a los cambios en el estado de la solicitud.
+   */
   ngOnInit(): void {
     this._query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
@@ -133,6 +147,11 @@ constructor(
     }
   }
 
+  /**
+   * Verifica si se debe navegar al siguiente paso del asistente.
+   * Guarda los datos actuales y muestra notificaciones según el resultado.
+   * @return {Observable<boolean>} Observable que emite true si se debe navegar, false en caso contrario.
+   */
   private shouldNavigate$(): Observable<boolean> {
       return this._sharedSvc.getAllState().pipe(
         take(1),
@@ -211,10 +230,15 @@ constructor(
         return PAYLOAD;
     }
 
+    /**
+     * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `shared2605Service`.
+     * @param data - Los datos que se desean guardar y enviar al servidor.
+     * @returns {Promise<unknown>} Promesa que se resuelve con la respuesta del servidor.
+     */
   public guardar(data: Record<string, unknown>): Promise<unknown> {
      const PAYLOAD = this._sharedSvc.buildPayload(data, this.idProcedimiento);
       return new Promise((resolve, reject) => {
-        this._sharedSvc.submitGuarderDatos(PAYLOAD,this.idProcedimiento.toString()).subscribe({
+        this._sharedSvc.guardarDatosPost(PAYLOAD,this.idProcedimiento.toString()).subscribe({
           next: (response) => {
             const RESPONSE = doDeepCopy(response);
             if (esValidObject(RESPONSE) && esValidObject(RESPONSE['datos'])) {

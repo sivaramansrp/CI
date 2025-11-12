@@ -441,6 +441,12 @@ export class Shared2605Service {
     );
   }
 
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * @param payload - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @param idTipoTramite - Identificador del tipo de trámite para construir la URL de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
   guardarDatosPost(payload: Record<string, unknown>, idTipoTramite: string): Observable<JSONResponse> {
     return this._http.post<JSONResponse>(GUARDAR_SOLICITUD(idTipoTramite), payload).pipe(
       map((response) => response)
