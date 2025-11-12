@@ -6,7 +6,7 @@ import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabrican
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 import { HttpClient } from '@angular/common/http';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-import { FRACCION_DESCRIPCION, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
+import { FRACCION_DESCRIPCION, GUARDAR_SOLICITUD, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 
 /**
  * @description
@@ -437,6 +437,12 @@ export class Shared2605Service {
    */
   getUnidad(cveFraccion: string, idTipoTramite: string): Observable<JSONResponse> {
     return this._http.get<JSONResponse>(UNIDAD_MEDIDA(cveFraccion, idTipoTramite)).pipe(
+      map((response) => response)
+    );
+  }
+
+  submitGuarderDatos(payload: Record<string, unknown>, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.post<JSONResponse>(GUARDAR_SOLICITUD(idTipoTramite), payload).pipe(
       map((response) => response)
     );
   }
