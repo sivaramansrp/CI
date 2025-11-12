@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
  * Utilizamos esta interfaz para definir la estructura del estado de la solicitud.
  */
 export interface Solicitud11204State {
+  idSolicitud: number | null;
 
   /**
    * Datos del contenedor.
@@ -87,7 +88,8 @@ export function createInitialState(): Solicitud11204State {
     fechaIngreso: '',
     vigencia: '',
     aduanaMenuDesplegable: '',
-    archivoSeleccionado: ''
+    archivoSeleccionado: '',
+    idSolicitud: null
   };
 }
 
@@ -232,6 +234,13 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
     this.update((state) => ({
       ...state,
       archivoSeleccionado,
+    }));
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 

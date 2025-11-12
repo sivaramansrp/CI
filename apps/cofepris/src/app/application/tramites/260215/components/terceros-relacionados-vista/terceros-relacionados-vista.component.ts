@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import {Destinatario, Fabricante, Facturador, Proveedor } from "../../../../shared/models/terceros-relacionados.model";
 import { Subject, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
@@ -68,6 +68,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Lista de facturadores mostrados en la tabla.
    */
   facturadorTablaDatos: Facturador[] = [];
+
+    
+     @ViewChild(TercerosRelacionadosComponent)
+          tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
   /**
    * Subject para gestionar la destrucción del componente y cancelar todas las suscripciones activas.
@@ -222,7 +226,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   facturadorEventoModificar(facturador: Facturador[]): void {
     this.tramiteStore.facturadorTablaModificaDatos(facturador);
   }
+/**
+   * @method validarContenedor
+   * @description
+   * Valida el contenedor delegando la validación al componente hijo.
+   * @returns {boolean} True si la validación es exitosa, false en caso contrario.
+   */
 
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * Hook de destrucción del componente.
    * Emite y completa el subject `destroy$` para cancelar todas las suscripciones activas.
