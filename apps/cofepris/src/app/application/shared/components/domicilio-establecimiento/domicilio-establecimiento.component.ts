@@ -116,8 +116,6 @@ public mostrarErrores = {
   aduanas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
-
-
 };
 /**
  * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
@@ -585,7 +583,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.setValoresStore(
       this.domicilio,
       "paisDeOriginDatos",
-      "setPaisDeOriginDatos",
+      "setAduanasDeEntrada",
     );
   }
 
@@ -1611,7 +1609,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
-      if(this.formMercancias.getRawValue()?.objetoImportacion === '5' && this.estadoValidte){
+      if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
@@ -1812,6 +1810,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisDeProcedenciaDatos",
+      "setPaisDeProcedenciaDatos",
+    );
   }
 
   /**
@@ -1827,6 +1830,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisProveedor: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisProveedor",
+      "setPaisProveedor",
+    );
   }
 
   /**
@@ -1842,6 +1850,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisElaboracion: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisElaboracion",
+      "setPaisElaboracion",
+    );
   }
 
    /**
@@ -1857,6 +1870,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisFabrica: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisFabrica",
+      "setPaisFabrica",
+    );
   }
 
 
@@ -1872,6 +1890,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisDeOriginDatos",
+      "setPaisDeOriginDatos",
+    );
   }
 
   /**
@@ -2068,16 +2091,26 @@ onConfirmacionModal(accion: boolean): void {
   }
   validatorButtonClick(): boolean {
    let ISVALID = true;
-   if(!this.rfcValido){
-    this.mostrarErrores.codigoPostal = true;
-    this.mostrarErrores.estado = true;
-    this.mostrarErrores.muncipio = true;
-    this.mostrarErrores.calle = true;
-    this.mostrarErrores.telefono = true;
-    this.mostrarErrores.avisoCheckbox = true;
-    this.mostrarErrores.licenciaSanitaria = true;
-    ISVALID = false;
-   }
+  // Check all required fields in 'domicilio' and set mostrarErrores accordingly
+  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  'codigoPostal',
+  'estado',
+  'muncipio',
+  'calle',
+  'telefono',
+  'deOrigen',
+  'deProcedencia',
+  'aduanas',
+  'avisoCheckbox',
+  'licenciaSanitaria',
+];
+REQUIREDFIELDS.forEach((field) => {
+    const VALUE = this.domicilio.get(field)?.value;
+    this.mostrarErrores[field] = !VALUE;
+    if (!VALUE) {
+      ISVALID = false;
+    }
+  });
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
