@@ -304,7 +304,7 @@ export class Shared2605Service {
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
       "nombreCortoPaisOrigen": item['paisOrigen'] as string || "",
-      "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] as string || "",
+      // "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] as string || "",
       "tipoProductoDescripcionOtros": "Analgésico",
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
