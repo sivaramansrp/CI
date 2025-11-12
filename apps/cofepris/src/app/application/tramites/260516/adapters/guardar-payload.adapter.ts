@@ -63,8 +63,8 @@ export class GuardarAdapter_260516 {
         },
       },
       "establecimiento": {
-          "rfcResponsableSanitario": null,
-          "razonSocial":null,
+          "rfcResponsableSanitario": this.establecimientDatos.rfcDel,
+          "razonSocial": this.establecimientDatos.denominacionRazonSocial,
           "correoElectronico": this.establecimientDatos?.correoElectronico ? this.establecimientDatos.correoElectronico : "",
           "domicilio": {
               "codigoPostal": this.solicitudDatos.codigoPostal,
@@ -79,7 +79,7 @@ export class GuardarAdapter_260516 {
               "telefono": this.solicitudDatos.telefono
           },
           "original": "",
-          "numeroLicencia": this.solicitudDatos.licenciaSanitaria,
+          "aduanas": this.solicitudDatos.aduanasDeEntrada?.toString()
       },
       "pagoDeDerechos": {
           "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
@@ -91,8 +91,65 @@ export class GuardarAdapter_260516 {
           "llaveDePago": this.pagoDerechosDatos.llavePago,
           "fecPago": this.pagoDerechosDatos.fechaPago,
           "impPago": this.pagoDerechosDatos.importePago
-      }
-      
+      },
+      "mercancias":  {
+          "objetoImportacionEnum": "CLAVE_DEL_CATALOGO",
+          "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
+          "descOtroObjetoImportacion": "Descripción cuando se selecciona 'Otro' (opcional)",
+          "clasificacionToxicologica": {
+            "idClasificacionToxicologicaTipoTramite": this.solicitudDatos.especificar,
+            "clasificacionToxicologica": "Descripción opcional (string)"
+          },
+          "numeroCAS": this.solicitudDatos.numeroRegistroSanitario,
+          "porcentajeConcentracion": this.solicitudDatos.denominacionEspecifica,
+          "nombreComercial": this.solicitudDatos.nombreComercial,
+          "nombreComun": this.solicitudDatos.nombreComun,
+          "nombreCientifico": this.solicitudDatos.nombreCientifico,
+          "idMercancia": "1",
+          "idClasificacionProducto": "",
+          "nombreClasificacionProducto": "",
+          "ideSubClasificacionProducto": "",
+          "nombreSubClasificacionProducto": "",
+          "descDenominacionEspecifica":"",
+          "descDenominacionDistintiva": "",
+          "descripcionMercancia": "",
+          "formaFarmaceuticaDescripcionOtros": "",
+          "estadoFisicoDescripcionOtros": this.solicitudDatos.estadoFisicoOtro,
+          "fraccionArancelaria": {
+              "clave": this.solicitudDatos.fraccionArancelaria,
+              "descripcion": this.solicitudDatos.descripcionFraccion
+          },
+          "unidadMedidaComercial": {
+              "descripcion": this.solicitudDatos.UMC
+          },
+          "cantidadUMCConComas": this.solicitudDatos.cantidadUMC,
+          "unidadMedidaTarifa": {
+              "descripcion": this.solicitudDatos.UMT
+          },
+          "cantidadUMTConComas": this.solicitudDatos.cantidadUMT,
+          "presentacion": "",
+          "registroSanitarioConComas": "",
+          "nombreCortoPaisOrigen": this.solicitudDatos.paisDeOriginDatos?.toString(),
+          "nombreCortoPaisProcedencia": this.solicitudDatos.paisDeProcedenciaDatos?.toString(),
+          "tipoProductoDescripcionOtros": "",
+          "nombreCortoUsoEspecifico": this.solicitudDatos.acondicionamiento,
+          "fechaCaducidadStr": "",
+          "idEstadoFisico": this.solicitudDatos.estadoFisico,
+      },
+      "representanteLegal": {
+          "rfc": this.solicitudDatos.rfc,
+          "resultadoIDC": "",
+          "nombre": this.solicitudDatos.nombre,
+          "apellidoPaterno": this.solicitudDatos.apellidoPaterno,
+          "apellidoMaterno": this.solicitudDatos.apellidoMaterno
+      },
+      "solicitud": {
+          "discriminatorValue": 260516,
+          "declaracionesSeleccionadas": this.solicitudDatos.mensaje,
+          "regimen": "",
+          "aduanaAIFA": "",
+          "informacionConfidencial": this.solicitudDatos.cumplimiento === 'Si' ? true : false
+      },
     }
   }
 }
