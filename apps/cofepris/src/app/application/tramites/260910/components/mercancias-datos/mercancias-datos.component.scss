@@ -5,3 +5,7 @@
 ::ng-deep .btn-group > .btn {
   white-space: nowrap !important;
 }
+
+::ng-deep app-catalogo-select select.form-select {
+  max-width: 100% !important;
+}
