@@ -1609,7 +1609,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
-      if(this.formMercancias.getRawValue()?.objetoImportacion === '5' && this.estadoValidte){
+      if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
