@@ -43,4 +43,8 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
  `
   }
 
+  /**
+   * Lista de IDs de trámites que requieren la selección de partidas.
+   * 
+   */
   export const PARTIDAS_SELECCIONADAS_REQUIRED = [130105];

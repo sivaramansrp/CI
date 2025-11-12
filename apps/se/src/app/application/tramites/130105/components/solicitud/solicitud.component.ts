@@ -45,6 +45,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   formForTotalCount!: FormGroup;
 
+  /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
   isInvalidaPartidas: boolean = false;
 
   /**
@@ -56,6 +59,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   frmRepresentacionForm!: FormGroup;
 
+  /**
+   * Formulario reactivo para modificar las partidas de la mercancía.
+   */
   modificarPartidasDelaMercanciaForm!: FormGroup;
   /**
    * tableHeaderData

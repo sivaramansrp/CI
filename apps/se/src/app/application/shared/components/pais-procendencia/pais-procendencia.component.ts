@@ -321,12 +321,16 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
     this.todosPaisesSeleccionadosEvent.emit(true);
   }
 
+  /**
+   *  Maneja el cambio en las fechas seleccionadas y emite un evento con las claves correspondientes.
+   * @param evento 
+   */
   fechasSeleccionadasChange(evento: string[]): void {
     const CLAVE_LIST: string[] = evento.map((paisSeleccionado: string) => {
-      const encontrado = this.paisesPorBloque.find(
+      const ENCONTRADO = this.paisesPorBloque.find(
         (pais: Catalogo) => pais.descripcion === paisSeleccionado
       );
-      return typeof encontrado?.clave === 'string' ? encontrado.clave : paisSeleccionado;
+      return typeof ENCONTRADO?.clave === 'string' ? ENCONTRADO.clave : paisSeleccionado;
     });
     this.fechasSeleccionadas.emit(CLAVE_LIST);
   }

@@ -1,8 +1,8 @@
 
-import { ALERTARCHIVOMSG, PARTIDAS_SELECCIONADAS_REQUIRED, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -231,14 +231,6 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
         this.partidasDelaMercanciaForm.enable();
       }
     }
-    // if (changes['modificarPartidasDelaMercanciaForm'] && changes['modificarPartidasDelaMercanciaForm']?.currentValue) {
-    //   const VALORES_ANTERIORES = changes['modificarPartidasDelaMercanciaForm'].currentValue;
-    //   this.modificarPartidasDelaMercanciaForm.patchValue({
-    //     cantidadPartidasDeLaMercancia: VALORES_ANTERIORES.cantidadPartidasDeLaMercancia,
-    //     descripcionPartidasDeLaMercancia: VALORES_ANTERIORES.descripcionPartidasDeLaMercancia,
-    //     valorPartidaUSDPartidasDeLaMercancia: VALORES_ANTERIORES.valorPartidaUSDPartidasDeLaMercancia
-    //   });
-    // }
   }
 
   /**

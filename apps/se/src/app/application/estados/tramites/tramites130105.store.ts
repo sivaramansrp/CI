@@ -7,8 +7,8 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
+import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * Tramite130105State
@@ -138,16 +138,28 @@ export interface Tramite130105State {
    * Lista de partidas a mostrar.
    */
   mostrarPartidas: MostrarPartidas[];
-
+  /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
   modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
     cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
     valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
     descripcionPartidasDeLaMercancia: string;
   };
-
+  /**   
+   * Cantidad total de las partidas de la mercancía.
+   */
   cantidadTotal: string;
+  /**   
+   * Valor total en USD de las partidas de la mercancía.
+   */
   valorTotalUSD: string;
-
+  /**   
+    * Fechas seleccionadas en el formulario.
+    */
   fechasSeleccionadas: string[];
 }
 
