@@ -8,6 +8,7 @@ import { HeaderComponent } from '@ng-mf/data-access-user';
 import { InformacionUsuarioComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
+import { RfcSolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
@@ -27,8 +28,9 @@ import { provideHttpClient } from '@angular/common/http';
     NavComponent,
     TituloComponent,
     ToastrModule.forRoot(),
+    RfcSolicitanteComponent
   ],
   providers: [ToastrService, provideHttpClient(), SolicitanteService],
   bootstrap: [AppComponent],
 })
-export class AppSEModule {}
+export class AppSEModule { }

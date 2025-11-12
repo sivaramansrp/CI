@@ -125,6 +125,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
+  
   constructor(
     private router: Router,
     private documentosService: DocumentoService,
@@ -134,7 +135,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
     private aviso230301: DocumentosT230301Service,
-    private documentosResolucinService: DocumentosTramiteResolucionService
+    private documentosResolucinService: DocumentosTramiteResolucionService,
+    
   ) {}
 
   /**
@@ -158,8 +160,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     }
   }
 
-
-
   /**
    * Método que genera y muestra los documentos necesarios para el acuse.
    *
@@ -167,9 +167,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (
-      this.url === 'pexim' || ACUSE_PROCEDURE.includes(this.procedure)
-    ) {
+    if (this.url === 'pexim' || ACUSE_PROCEDURE.includes(this.procedure)) {
       this.documentosService130118
         .guardarAcuse(this.idSolicitud.toString(), this.procedure)
         .pipe(

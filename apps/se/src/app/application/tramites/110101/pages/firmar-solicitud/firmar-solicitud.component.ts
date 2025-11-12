@@ -206,7 +206,7 @@ export class FirmarSolicitudComponent implements OnInit, OnDestroy {
       clave_pais: item.cve_pais,
 
       /** Nombre del bloque */
-      id_bloque: item.cve_bloque,
+      id_bloque: item.id_bloque?.toString() || null,
 
       /** Nombre del grupo de criterio */
       clave_grupo_criterio: item.cve_grupo_criterio,

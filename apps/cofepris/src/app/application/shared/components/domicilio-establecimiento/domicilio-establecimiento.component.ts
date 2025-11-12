@@ -33,10 +33,12 @@ import {
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -102,6 +104,7 @@ export interface MercanciasTabla {
 export class DomicilioComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
+@Output() formValidityChange = new EventEmitter<boolean>();
 public mostrarErrores = {
   codigoPostal: false,
   estado: false,
@@ -113,8 +116,6 @@ public mostrarErrores = {
   aduanas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
-
-
 };
 /**
  * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
@@ -171,6 +172,28 @@ nombresCampos:boolean = false;
    */
    public seleccionadasPaisDeOriginDatos: string[] = [];
 
+   /**
+   * @property {string[]} seleccionadasPaisfabrica
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisfabrica: string[]= [];
+
+   /**
+   * @property {string[]} seleccionadasPaisElaboracion
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisElaboracion: string[] = [];
+
+   /**
+   * @property {string[]} seleccionadasPaisProveedor
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisProveedor: string[] = [];
+
+   /**
+   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
+   * Lista de países seleccionados como origen.
+   */
    seleccionadasPaisDeProcedenciaDatos: string[] = [];
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -336,21 +359,8 @@ nombresCampos:boolean = false;
       this.inicializarFormulario();
     }
     if (this.esFormularioSoloLectura || this.esFormularioActualizacion) {
-      this.obtenerScianTablaDatos();
       this.obtenerDataMercanciasDatos();
     }
-  }
-
-  /**
-   * Método para obtener el valor de la fecha seleccionada.
-   */
-  obtenerScianTablaDatos(): void {
-    this.service
-      .getObtenerScianTablaDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
   }
 
   /**
@@ -384,6 +394,12 @@ nombresCampos:boolean = false;
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          if (seccionState.nicoTabla.length) {
+            this.nicoTablaDatos = seccionState.nicoTabla;
+          }
+          if (seccionState.mercanciaTabla.length) {
+            this.mercanciasTablaDatos = seccionState.mercanciaTabla;
+          }
         }),
       )
       .subscribe();
@@ -391,12 +407,11 @@ nombresCampos:boolean = false;
   }
   /** Valida Código Postal: permite cualquier valor, pero si es numérico debe tener 5 dígitos; retorna error si no cumple. */
 static codigoPostalValidator(control: AbstractControl): ValidationErrors | null {
-  const VALOR = control.value;
-  if (!VALOR){ return null}    
-  if (/^\d+$/.test(VALOR) && VALOR.length < 5) {
-    return { invalidCodigoPostal: true };
-  }
-  return null; 
+   const VALOR = control.value;
+  if (!VALOR) { return null; }
+  if (!/^\d{1,12}$/.test(VALOR)) {
+    return { invalidCodigoPostal: true }; }
+  return null;
 }
 
 
@@ -437,18 +452,30 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           Validators.pattern(/^-?(0|[1-9]\d*)?$/),
         ],
       ],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
-        [Validators.required, Validators.maxLength(50)],
-      ],
       regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
    
     });
+
+    if (this.isGarantiasOfrecidasVisible) {
+      this.domicilio.addControl(
+        "garantiasOfrecidas",
+        this.fb.control(this.solicitudState?.garantiasOfrecidas, [Validators.required]),
+      );
+    }
+
+    if (this.isAvisoLicenciaVisible) {
+      this.domicilio.addControl(
+        "avisoCheckbox",
+        this.fb.control(this.solicitudState?.avisoCheckbox),
+      );
+      this.domicilio.addControl(
+        "licenciaSanitaria",
+        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+      );
+    }
 
     /**
      * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
@@ -556,7 +583,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.setValoresStore(
       this.domicilio,
       "paisDeOriginDatos",
-      "setPaisDeOriginDatos",
+      "setAduanasDeEntrada",
     );
   }
 
@@ -929,8 +956,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
        "",
         [Validators.maxLength(100)],
       ],
-      paisDeOriginDatos:[ this.seleccionadasPaisDeOriginDatos, Validators.required],
-      paisDeProcedenciaDatos:[ this.seleccionadasPaisDeProcedenciaDatos, Validators.required],
       numeroRegistroSanitario:[],
     });
 
@@ -948,6 +973,43 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.fb.control("", [Validators.required, Validators.maxLength(50)]),
       );
     }
+
+    if (this.configuracionVisibilidad.paisOrigen) {
+      this.formMercancias.addControl(
+        "paisDeOriginDatos",
+        this.fb.control(this.seleccionadasPaisDeOriginDatos, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisFabrica) {
+      this.formMercancias.addControl(
+        "paisFabrica",
+        this.fb.control(this.seleccionadasPaisfabrica, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisElaboracion) {
+      this.formMercancias.addControl(
+        "paisElaboracion",
+        this.fb.control(this.seleccionadasPaisElaboracion, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProveedor) {
+      this.formMercancias.addControl(
+        "paisProveedor",
+        this.fb.control(this.seleccionadasPaisProveedor, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProcedencia) {
+      this.formMercancias.addControl(
+        "paisDeProcedenciaDatos",
+        this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+
 
     this.seleccionadasAduanasEntradaDatos =
       this.solicitudState?.aduanasDeEntrada;
@@ -1015,11 +1077,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       if (!EXISTS) {
         this.nicoTablaDatos.push(NUEVO_DATO);
         this.nicoTablaDatos = [...this.nicoTablaDatos];
+        this.datosDomicilioLegalStore.setNicoTabla(this.nicoTablaDatos);
         this.formAgente.reset();
         this.cerrarModalScian();
-        
-    }
-    else{
+    } else {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: 'info',
@@ -1548,7 +1609,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
-      if(this.formMercancias.getRawValue()?.objetoImportacion === '5' && this.estadoValidte){
+      if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
@@ -1561,6 +1622,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.servicioDeFormularioService.setFormValue("domicilioForm", {
       [campo]: VALOR,
     });
+    this.formValidityChange.emit(this.domicilio.valid);
   }
 
   agregarMercanciaModal(): void {
@@ -1572,6 +1634,9 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.formMercancias.reset();
     this.seleccionadasPaisDeOriginDatos=[];
     this.seleccionadasPaisDeProcedenciaDatos=[];
+    this.seleccionadasPaisfabrica=[];
+    this.seleccionadasPaisElaboracion=[];
+    this.seleccionadasPaisProveedor=[];
     this.modalInstance.hide();
 
   }
@@ -1615,8 +1680,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.listaMercancias.push(NUEVA_MERCANCIA);
       }
       this.mercanciasTablaDatos = [...this.listaMercancias];
+      this.datosDomicilioLegalStore.setMercanciasTabla(this.mercanciasTablaDatos);
       this.formMercancias.reset();
       this.seleccionadasPaisDeOriginDatos=[];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       this.seleccionadasPaisDeProcedenciaDatos=[];
       
     
@@ -1711,10 +1780,19 @@ openModal():void {
    * @param {forma}
    */
   // eslint-disable-next-line class-methods-use-this
-  public limpiar(forma: FormGroup): void {
+  public limpiar(forma: FormGroup, tipo?: string): void {
     if (forma) {
+        if (tipo === 'mercancias') {   
+    this.seleccionarOrigenDelPaisDuos = [];
+    this.seleccionarOrigenDelPaisTres = [];
+    this.seleccionarOrigenDelPaisCuatro = [];
+    this.seleccionarOrigenDelPaisCinco = [];
+  }
       this.seleccionadasPaisDeOriginDatos = [];
       this.seleccionadasPaisDeProcedenciaDatos = [];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       forma.reset();
     }
   }
@@ -1732,6 +1810,71 @@ openModal():void {
     this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisDeProcedenciaDatos",
+      "setPaisDeProcedenciaDatos",
+    );
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisProveedorSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisProveedor = events;
+    this.formMercancias.patchValue({
+      paisProveedor: events,
+    });
+    this.setValoresStore(
+      this.domicilio,
+      "paisProveedor",
+      "setPaisProveedor",
+    );
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisElaboracionSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisElaboracion = events;
+    this.formMercancias.patchValue({
+      paisElaboracion: events,
+    });
+    this.setValoresStore(
+      this.domicilio,
+      "paisElaboracion",
+      "setPaisElaboracion",
+    );
+  }
+
+   /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisfabricaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisfabrica = events;
+    this.formMercancias.patchValue({
+      paisFabrica: events,
+    });
+    this.setValoresStore(
+      this.domicilio,
+      "paisFabrica",
+      "setPaisFabrica",
+    );
   }
 
 
@@ -1747,6 +1890,11 @@ openModal():void {
     this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(
+      this.domicilio,
+      "paisDeOriginDatos",
+      "setPaisDeOriginDatos",
+    );
   }
 
   /**
@@ -1943,16 +2091,26 @@ onConfirmacionModal(accion: boolean): void {
   }
   validatorButtonClick(): boolean {
    let ISVALID = true;
-   if(!this.rfcValido){
-    this.mostrarErrores.codigoPostal = true;
-    this.mostrarErrores.estado = true;
-    this.mostrarErrores.muncipio = true;
-    this.mostrarErrores.calle = true;
-    this.mostrarErrores.telefono = true;
-    this.mostrarErrores.avisoCheckbox = true;
-    this.mostrarErrores.licenciaSanitaria = true;
-    ISVALID = false;
-   }
+  // Check all required fields in 'domicilio' and set mostrarErrores accordingly
+  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  'codigoPostal',
+  'estado',
+  'muncipio',
+  'calle',
+  'telefono',
+  'deOrigen',
+  'deProcedencia',
+  'aduanas',
+  'avisoCheckbox',
+  'licenciaSanitaria',
+];
+REQUIREDFIELDS.forEach((field) => {
+    const VALUE = this.domicilio.get(field)?.value;
+    this.mostrarErrores[field] = !VALUE;
+    if (!VALUE) {
+      ISVALID = false;
+    }
+  });
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
