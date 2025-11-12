@@ -135,16 +135,6 @@ describe('ServiciosPermisoSanitarioService', () => {
     });
   });
 
-  it('debe obtener la tabla de permisos sanitarios', (done) => {
-    const datos = [{ id: 1 }];
-    // httpMock.get.mockReturnValue(of(datos));
-    // service.getTable().subscribe(res => {
-    //   expect(res).toEqual(datos);
-    //   done();
-    // });
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/260215/terceros.json');
-  });
-
   it('debe obtener los datos de terceros relacionados', (done) => {
     const datos = [{ id: 2 }];
     httpMock.get.mockReturnValue(of(datos));

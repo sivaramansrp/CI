@@ -19,7 +19,7 @@
     </div>
     <ng-titulo titulo="Materias primas relacionadas" />
     <div class="col-12">
-      @if (!esFormaValido) {
+      @if (!esFormaValido && alertaErrorFormulario) {
       <div
         class="alert alert-info alert-danger text-center"
         [innerHTML]="alertaErrorFormulario"
@@ -74,7 +74,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="materiasPrimasCatalogo"
-          [label]="'Nombre de la materia prima'"
+          [label]="'Nombre de la materia prima*'"
           formControlName="nombreMateriaPrima"
           (change)="
             actualizarCampoFormularioDatos('nombreMateriaPrima');
@@ -171,6 +171,7 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <app-tabla-dinamica
+          [styleCenter]="true"
           [isInvalida]="submitted && materiasPrimasTabla.length === 0"
           [configuracionTabla]="configuracionTablaMaterias"
           [datos]="materiasPrimasTabla"
@@ -294,6 +295,7 @@
           (change)="
             actualizarCampoFormularioResiduo('cantidad'); onCantidadChange()
           "
+          (focus)="esCantidadFijada = true"
           (blur)="onCantidadChange()"
           [ngClass]="
             formularioResiduo.get('cantidad')?.invalid &&
@@ -307,24 +309,24 @@
         <div class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
-        } @if (formularioResiduo.get('cantidad')?.hasError('pattern') &&
-        formularioResiduo.get('cantidad')?.touched) {
+        } @if (formularioResiduo.get('cantidad')?.hasError('pattern') ) {
         <div class="text-danger">
           <small>Debe ingresar un número.</small>
         </div>
-        } @if (formularioResiduo.get('cantidad')?.hasError('noComma') &&
-        formularioResiduo.get('cantidad')?.touched) {
-        <div class="text-danger">
-          <small>No está permitido capturar "," (COMA)</small>
-        </div>
-        } @if (formularioResiduo.get('cantidad')?.hasError('maxDigits') &&
-        formularioResiduo.get('cantidad')?.touched) {
+        } @if (formularioResiduo.get('cantidad')?.hasError('maxDigits')) {
         <div class="text-danger">
           <small
             >No se pueden ingresar más de 6 cifras significativas a la izquierda
             o a la derecha después del punto decimal (999999.999999)</small
           >
         </div>
+        }
+      </div>
+      <div class="col-md-4">
+        @if (esCantidadFijada) {
+        <p style="margin-top: 40px" class="text-muted">
+          No está permitido capturar "," (COMA)
+        </p>
         }
       </div>
     </div>

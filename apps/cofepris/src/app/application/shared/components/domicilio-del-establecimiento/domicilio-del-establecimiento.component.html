@@ -98,7 +98,7 @@
                     @if(domicilioForm.get('lada')?.invalid && domicilioForm.get('lada')?.touched){
                      <div class="text-danger">
                        @if(domicilioForm.get('lada')?.errors?.['pattern']){
-                         <small>Este campo es obligatorio</small>
+                         <small>Por favor, escribe un número entero válido</small>
                        }
                      </div>
                     }
@@ -111,7 +111,7 @@
                     @if(domicilioForm.get('telefono')?.invalid && domicilioForm.get('telefono')?.touched){
                      <div class="text-danger">
                        @if(domicilioForm.get('telefono')?.errors?.['pattern']){
-                         <small>Este campo es obligatorio</small>
+                         <small>Por favor, escribe un número entero válido</small>
                        }
                      </div>
                     }
@@ -203,7 +203,6 @@
                 [isRequired]="true"
                 [layout]="'horizontal'"
                 [gap]="'493px'"
-                [isBold]="true"
                 [labelMargin]="'0px'"
                 formControlName="autorizacionIVAIEPS"
                 (change)="setValoresStore(domicilioForm,'autorizacionIVAIEPS', 'setAutorizacionIVAIEPS')"

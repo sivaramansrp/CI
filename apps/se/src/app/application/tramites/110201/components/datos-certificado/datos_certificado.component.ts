@@ -14,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { OPTIONS_ENTIDAD_FEDERATIVA, OPTIONS_IDIOMA, OPTIONS_REPRESENTACION_FEDERAL } from '../../models/registro.model';
-import { ReplaySubject, map, take, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,

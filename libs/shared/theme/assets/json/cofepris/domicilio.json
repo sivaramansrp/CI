@@ -92,27 +92,33 @@
   "codigo_postal": [
     {
       "id": 1,
-      "descripcion": "20800"
+      "descripcion": "20800",
+      "clave": "1"
     },
     {
       "id": 2,
-      "descripcion": "20801"
+      "descripcion": "20801",
+      "clave": "2"
     },
     {
       "id": 3,
-      "descripcion": "20802"
+      "descripcion": "20802",
+      "clave": "3"
     },
     {
       "id": 4,
-      "descripcion": "20803"
+      "descripcion": "20803",
+      "clave": "4"
     },
     {
       "id": 5,
-      "descripcion": "20804"
+      "descripcion": "20804",
+      "clave": "5"
     },
     {
       "id": 6,
-      "descripcion": "20805"
+      "descripcion": "20805",
+      "clave": "6"
     }
   ],
   "colonia": [

@@ -52,7 +52,7 @@ export class GuardarAdapter_260201 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -82,8 +82,10 @@ export class GuardarAdapter_260201 {
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
               "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
@@ -100,7 +102,8 @@ export class GuardarAdapter_260201 {
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }

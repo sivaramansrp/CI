@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
@@ -6,7 +6,6 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import {
@@ -33,6 +32,7 @@ import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-d
 import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ViewChild } from '@angular/core';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
  * incluyendo domicilio, manifiestos y representante legal.
@@ -42,7 +42,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
@@ -55,8 +54,29 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  @Output() establecimientoFormValidity = new EventEmitter<boolean>();
+  @Output() domicilioFormValidity = new EventEmitter<boolean>();
+  @Output() manifiestosFormValidity = new EventEmitter<boolean>();
+  @Output() representanteLegalFormValidity = new EventEmitter<boolean>();
+
+  @ViewChild(DatosDelEstablecimientoRFCComponent) datosDelEstablecimientoRfcComp!: DatosDelEstablecimientoRFCComponent;
+  @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
+  @ViewChild(ManifiestosComponent) manifiestosComp!: ManifiestosComponent;
+  @ViewChild(RepresentanteLegalRfcComponent) representanteLegalRfcComp!: RepresentanteLegalRfcComponent;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
   @Input() idProcedimiento!: number;
+
+  /** Bandera que indica si el RFC ingresado es válido. Se utiliza para controlar la validación del campo en el formulario. */
   rfcValido = false;
+
+  /**
+ * Bandera que indica si se debe mostrar u operar con datos de identificación en el formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
   @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -77,6 +97,12 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Este input controla el estado habilitado/deshabilitado de la sección de domicilio en el componente.
    */
   @Input() tieneDomicilioHabilitar: boolean = false;
+
+  /**
+ * Bandera que indica si se debe validar el estado dentro del formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
+  @Input() estadoValidte: boolean = false;
 
   /**
    * Estado de la solicitud.
@@ -319,6 +345,42 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.rfcValido = valor;
   }
 
+  /** Emite la validez del formulario de establecimiento al componente padre. */
+  establecimientoFormValidityChange(event: boolean):void {
+    this.establecimientoFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de domicilio al componente padre. */
+  domicilioFormValidityChange(event: boolean):void {
+    this.domicilioFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de manifiestos al componente padre. */
+  manifiestosFormValidityChange(event: boolean):void {
+    this.manifiestosFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de representanteLegal al componente padre. */
+  representanteLegalFormValidityChange(event: boolean):void {
+    this.representanteLegalFormValidity.emit(event);
+  }
+
+  validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === true){
+      ISVALID = false;
+    }
+    if(this.domicilioComp.validatorButtonClick() === false){
+      ISVALID = false;
+    }
+    if(this.manifiestosComp.validarClickDeBoton() === false){
+      ISVALID = false;
+    }
+    if(this.representanteLegalRfcComp.validarClickDeBoton() === false){
+      ISVALID = false;
+    }
+    return ISVALID;
+  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
@@ -327,4 +389,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  
 }

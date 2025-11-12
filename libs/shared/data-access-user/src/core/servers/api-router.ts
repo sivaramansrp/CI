@@ -458,8 +458,8 @@ export const API_POST_VISTA_PREVIA = (idSolicitud: string, tramite: number): str
  * API para obtener los documentos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consu…
  */
-export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
- 
+export const API_GET_DOCUMENTOS_SOLICITUD = (tramite: string): string => `sat-t${tramite}/solicitud/documentos`;
+
 /**
  *API para obtener los documentos del tramite 231001
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/consu…
@@ -609,6 +609,12 @@ export const DOCUMENTOMINIO= '{documentoMinio}';
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * API para Consultar url de descarga de documentos.
+ * @see  https://api-v30.cloud-ultrasist.net/api/digitalizacion/swagger-ui/index.html#/Carga-Documento/DownloadDocument
+ */
+export const API_GET_DESCARGAR_DOCUMENTOS= `digitalizacion/descargar/${DOCUMENTOMINIO}`
  
 /**
  * IDREQUERIMIENTO para detalle de requerimiento.
@@ -1100,6 +1106,11 @@ export const CATALOGO_LOCALIDADES = (TRAMITE: string, CVE_MUNICIPIO: string): st
  */
 export const CATALOGO_COLONIAS = (TRAMITE: string, CVE_MUNICIPIO_DELEGACION: string): string => `sat-t${TRAMITE}/catalogo/municipio-delegacion/${CVE_MUNICIPIO_DELEGACION}/colonias`;
 
+/**
+ *  * API para obtener el catálogo de codigo
+ *  https://api-v30.cloud-ultrasist.net/api/sat-t260203/catalogo/codigo-postal/03005/colonias
+ */
+export const CATALOGO_CODIGO = (TRAMITE: string, CVE_MUNICIPIO: string): string => `sat-t${TRAMITE}/catalogo/codigo-postal/${CVE_MUNICIPIO}/colonias`;
 /*
  * API para obtener el catálogo de bancos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260204/catalogo/bancos
@@ -1133,3 +1144,25 @@ export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string =>
   * API para obtener la tipo de empresa
  */
 export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
+
+/*API para obtener el catálogo de fracciones arancelarias*/
+export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
+
+/*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
+export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
+
+/*API para obtener el catálogo de países por bloque*/
+export const PAISES_POR_BLOQUE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${CLAVEBLOQUE}`;
+
+/*API para obtener el catálogo de clasificaciones de régimen*/
+export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/clasificaciones-regimen/${CLASIFICACION}`;
+
+export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
+
+export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medida-tarifaria`;
+
+// export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
+
+export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
+
+export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;

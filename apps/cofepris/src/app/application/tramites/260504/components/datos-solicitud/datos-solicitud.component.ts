@@ -31,4 +31,11 @@ export class DatosSolicitudComponent {
      * Indica si el campo esPaginacionVisible es visible.
      */
     esPaginacionVisible: boolean = true;
+
+    /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260504;
 }
