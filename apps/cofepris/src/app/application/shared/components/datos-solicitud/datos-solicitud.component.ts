@@ -345,18 +345,22 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.rfcValido = valor;
   }
 
+  /** Emite la validez del formulario de establecimiento al componente padre. */
   establecimientoFormValidityChange(event: boolean):void {
     this.establecimientoFormValidity.emit(event);
   }
 
+  /** Emite la validez del formulario de domicilio al componente padre. */
   domicilioFormValidityChange(event: boolean):void {
     this.domicilioFormValidity.emit(event);
   }
 
+  /** Emite la validez del formulario de manifiestos al componente padre. */
   manifiestosFormValidityChange(event: boolean):void {
     this.manifiestosFormValidity.emit(event);
   }
 
+  /** Emite la validez del formulario de representanteLegal al componente padre. */
   representanteLegalFormValidityChange(event: boolean):void {
     this.representanteLegalFormValidity.emit(event);
   }

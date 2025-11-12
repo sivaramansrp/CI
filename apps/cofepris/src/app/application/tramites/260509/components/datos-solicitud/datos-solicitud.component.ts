@@ -49,28 +49,34 @@ export class DatosSolicitudComponent {
    */
   public idProcedimiento: number = 260509;
 
+  /** Constructor que inicializa el store del trámite 260509. */
   constructor(
     public store: Tramite260509Store,
   ) {
     //
   }
 
+  /** Actualiza la validez del formulario de datos del establecimiento en el store. */
   datosEstabelicimientoFormValidityChange(event: boolean): void {
     this.store.setFormValidity('datosEstablecimiento', event);
   }
 
+  /** Actualiza la validez del formulario de domicilio del establecimiento en el store. */
   domicilioFormValidityChange(event: boolean): void {
     this.store.setFormValidity('domicilioEstablecimiento', event);
   }
 
+  /** Actualiza la validez del formulario de manifiestos en el store. */
   manifiestosFormValidityChange(event: boolean): void {
     this.store.setFormValidity('manifiestos', event);
   }
 
+  /** Actualiza la validez del formulario de representante legal en el store. */
   representanteLegalFormValidityChange(event: boolean): void {
     this.store.setFormValidity('representanteLegal', event);
   }
 
+  /** Ejecuta la validación del formulario desde el componente de datos. */
   validarFormulario(): void {
     this.datosDeLaComponent?.validarClickDeBoton();
   }

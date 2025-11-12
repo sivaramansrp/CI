@@ -155,7 +155,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       this.query.getValue().formValidity?.manifiestos &&
       this.query.getValue().formValidity?.representanteLegal ) ?? false;
     this.isTercerosComponentValid = this.query.getValue().formValidity?.terceros ?? false;
-    this.isPagoDeDerechosComponentValid = this.query.getValue().formValidity?.pagoDeDerechos ?? false;
 
     if (!this.isDatosDeLaSolicitudComponentValid) {
       this.datosSolicitudComponent?.validarFormulario(); 
@@ -165,16 +164,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
     }
 
-    // if (!this.isDestinarioComponentValid) {
-    //   this.destinatarioComponent?.validarFormulario();
-    // }
-
-    // if (!this.isHistProductoresComponentValid) {
-    //   this.histProductoresComponent?.validarFormulario();
-    // }
-
-    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid &&
-      this.isPagoDeDerechosComponentValid
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
 
   }
 

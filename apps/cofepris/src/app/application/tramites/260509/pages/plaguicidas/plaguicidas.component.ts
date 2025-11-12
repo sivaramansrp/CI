@@ -57,7 +57,9 @@ export class PlaguicidasComponent implements OnInit {
    */
   public isPeligro: boolean = false;
 
+  /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
   public textoPeligro: string = TEXTO_DE_PELIGRO;
+
 
   /**
    * @property wizardService
@@ -101,6 +103,14 @@ export class PlaguicidasComponent implements OnInit {
    */
   cargaEnProgreso: boolean = true;
 
+  /**
+   * Constructor que inyecta los servicios necesarios para el componente.
+   * - toastrService: Servicio para mostrar notificaciones al usuario.
+   * - service: Servicio específico para operaciones del permiso de vegetales y nutrientes.
+   * - store: Manejador del estado del trámite 260509.
+   * - shared2605Service: Servicio compartido para lógica común del trámite 2605.
+   * - query: Fuente de datos reactiva para observar el estado de la solicitud.
+   */
   constructor(
     private toastrService: ToastrService,
     private service: PermisoVegetalesNutrientesService,
@@ -109,6 +119,7 @@ export class PlaguicidasComponent implements OnInit {
     private query: Tramite260509Query
   ) {}
 
+  /** Se ejecuta al inicializar el componente y suscribe al estado de la solicitud. */
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
@@ -251,6 +262,7 @@ export class PlaguicidasComponent implements OnInit {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
+  /** Actualiza el estado de carga en progreso. */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }

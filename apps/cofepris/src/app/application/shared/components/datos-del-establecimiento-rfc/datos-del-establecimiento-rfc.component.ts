@@ -32,6 +32,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
  */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+  /** Emite un evento cuando cambia la validez del formulario. */
   @Output() formValidityChange = new EventEmitter<boolean>();
   @Output() rfcValidoChange = new EventEmitter<boolean>(); 
     @Input() public idProcedimiento!: number;

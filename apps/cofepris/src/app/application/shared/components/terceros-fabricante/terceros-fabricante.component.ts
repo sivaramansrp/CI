@@ -282,10 +282,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public tercerosForm: FormGroup = new FormGroup({});
 
+    /** Indica si el campo de fabricante es inválido. */
     public isfabricanteInvalida: boolean = false;
 
+    /** Indica si el campo de Proveedor es inválido. */
     public isProveedorInvalida: boolean = false;
 
+    /** Indica si el campo de Formulador es inválido. */
     public isFormuladorInvalida: boolean = false;
 
 
@@ -1575,6 +1578,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Marca como inválidos los campos si no contienen datos. */
   markTouched(): void {
     if (this.fabricanteRowData.length===0) {
       this.isfabricanteInvalida=true;

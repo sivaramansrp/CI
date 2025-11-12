@@ -1014,6 +1014,7 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         }));
     }
 
+    /** Actualiza el estado con la nueva tabla de información Nico. */
     setNicoTabla(nicoTabla: NicoInfo[]): void {
       this.update((state) => ({
             ...state,

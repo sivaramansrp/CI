@@ -174,12 +174,28 @@ nombresCampos:boolean = false;
    */
    public seleccionadasPaisDeOriginDatos: string[] = [];
 
+   /**
+   * @property {string[]} seleccionadasPaisfabrica
+   * Lista de países seleccionados como origen.
+   */
    public seleccionadasPaisfabrica: string[]= [];
 
+   /**
+   * @property {string[]} seleccionadasPaisElaboracion
+   * Lista de países seleccionados como origen.
+   */
    public seleccionadasPaisElaboracion: string[] = [];
 
+   /**
+   * @property {string[]} seleccionadasPaisProveedor
+   * Lista de países seleccionados como origen.
+   */
    public seleccionadasPaisProveedor: string[] = [];
 
+   /**
+   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
+   * Lista de países seleccionados como origen.
+   */
    seleccionadasPaisDeProcedenciaDatos: string[] = [];
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -348,18 +364,6 @@ nombresCampos:boolean = false;
       this.obtenerDataMercanciasDatos();
     }
   }
-
-  /**
-   * Método para obtener el valor de la fecha seleccionada.
-   */
-  // obtenerScianTablaDatos(): void {
-  //   this.service
-  //     .getObtenerScianTablaDatos()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe((data): void => {
-  //       this.nicoTablaDatos = data?.data;
-  //     });
-  // }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constantes/permiso-vegetales-nutrientes.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 
@@ -33,9 +33,12 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public idProcedimiento: number = 260509;
 
+  /** Indica si los campos de terceros relacionados han sido marcados como tocados. */
   public markTouched: boolean = false;
 
+  /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
   validarFormulario(): void {
     this.tercerosRelacionadosComponent.markTouched();
   }
+
 }
