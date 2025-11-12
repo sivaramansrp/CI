@@ -164,5 +164,54 @@ export class ImportacionOtrosVehiculosUsadosService {
       map(res => res?.datos ?? [])
     );
   }
+
+  /**
+   *  Obtiene el catálogo de entidades federativas asociado a un identificador.
+   * @param ID Identificador para obtener las entidades federativas
+   * @returns Observable con un arreglo de entidades federativas (o vacío si no hay datos)
+   */
+  getEntidadesFederativasCatalogo(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.entidadesFederativasCatalogo(ID).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   *  Obtiene el catálogo de representación federal asociado a un identificador y clave de entidad.
+   * @param ID Identificador para obtener la representación federal
+   * @param cveEntidad Clave de la entidad para filtrar la representación federal
+   * @returns Observable con un arreglo de representación federal (o vacío si no hay datos)
+   */
+  getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<Catalogo[]> {
+    return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   *  Obtiene el catálogo de unidades de medida tarifaria asociado a un identificador y fracción arancelaria.
+   * @param ID Identificador para obtener las unidades de medida tarifaria
+   * @param FRACCION_ID Identificador de la fracción arancelaria
+   * @returns Observable con un arreglo de unidades de medida tarifaria (o vacío si no hay datos)
+   */
+  getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
+   * @param tramitesID Identificador del trámite
+   * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
+   */
+  getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+    const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
+    return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
   
 }

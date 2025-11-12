@@ -594,6 +594,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene el catálogo de entidades federativas desde el servicio y lo asigna a la propiedad `entidadFederativa`.
+   *
+   * @returns {void}
+   */
+  getEntidadesFederativasCatalogo(): void {
+    this.importacionOtrosVehiculosUsadosService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+      this.entidadFederativa = data as Catalogo[];
+    })
+  }
+
+  /**
+   *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+   * @param cveEntidad 
+   */
+  getRepresentacionFederalCatalogo(cveEntidad: string): void {
+    this.importacionOtrosVehiculosUsadosService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
+      this.representacionFederal = data as Catalogo[];
+    });
+  }
+
 /**
 * Maneja el cambio de bloque seleccionado.
 * Identificador del bloque seleccionado.
@@ -601,6 +622,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 enCambioDeBloque(bloqueId: number): void {
   this.getPaisesPorBloque(bloqueId.toString());
 }
+  
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   *
+   * @returns {void}
+   */
+  getClasificacionRegimenCatalogo(VALOR: string): void {
+    this.importacionOtrosVehiculosUsadosService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+      this.catalogosArray[1] = data as Catalogo[];
+    });
+  }
+
+  /**
+   *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
+   * @param FRACCION_ID 
+   */
+  getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
+    this.importacionOtrosVehiculosUsadosService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
+      this.unidadCatalogo = data as Catalogo[];
+      if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130104Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
+    });
+  }
+
   /**
    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
@@ -608,10 +655,31 @@ enCambioDeBloque(bloqueId: number): void {
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
     this.tramite130104Store.actualizarEstado({ [$event.campo]: VALOR });
-    if($event.campo === 'fraccion'){
-      this.tramite130104Store.actualizarEstado({'unidadMedida': '1'});
+    if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimenCatalogo(VALOR);
+    }
+    if ($event.campo === 'fraccion') {
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUnidadesMedidaTarifaria(VALOR);
+    }
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.getRepresentacionFederalCatalogo(VALOR);
     }
   }
+
+// /**
+//    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
+//    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
+//    */
+//   setValoresStore($event: { form: FormGroup; campo: string }): void {
+//     const VALOR = $event.form.get($event.campo)?.value;
+//     this.tramite130104Store.actualizarEstado({ [$event.campo]: VALOR });
+//     if($event.campo === 'fraccion'){
+//       this.tramite130104Store.actualizarEstado({'unidadMedida': '1'});
+//     }
+//   }
  
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
