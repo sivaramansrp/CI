@@ -116,8 +116,6 @@ public mostrarErrores = {
   aduanas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
-
-
 };
 /**
  * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
@@ -2093,16 +2091,26 @@ onConfirmacionModal(accion: boolean): void {
   }
   validatorButtonClick(): boolean {
    let ISVALID = true;
-   if(!this.rfcValido){
-    this.mostrarErrores.codigoPostal = true;
-    this.mostrarErrores.estado = true;
-    this.mostrarErrores.muncipio = true;
-    this.mostrarErrores.calle = true;
-    this.mostrarErrores.telefono = true;
-    this.mostrarErrores.avisoCheckbox = true;
-    this.mostrarErrores.licenciaSanitaria = true;
-    ISVALID = false;
-   }
+  // Check all required fields in 'domicilio' and set mostrarErrores accordingly
+  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  'codigoPostal',
+  'estado',
+  'muncipio',
+  'calle',
+  'telefono',
+  'deOrigen',
+  'deProcedencia',
+  'aduanas',
+  'avisoCheckbox',
+  'licenciaSanitaria',
+];
+REQUIREDFIELDS.forEach((field) => {
+    const VALUE = this.domicilio.get(field)?.value;
+    this.mostrarErrores[field] = !VALUE;
+    if (!VALUE) {
+      ISVALID = false;
+    }
+  });
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
