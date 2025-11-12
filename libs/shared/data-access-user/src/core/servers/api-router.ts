@@ -1148,3 +1148,10 @@ export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fr
 
 /*API para obtener el catálogo de países por bloque*/
 export const PAISES_POR_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/105`;
+
+
+/**
+ * API para obtener la solicitud por ID
+ */
+export const API_GET_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud-servicio/${IDSOLICITUD}`;
+ 
