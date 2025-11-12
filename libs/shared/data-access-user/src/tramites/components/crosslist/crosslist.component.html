@@ -57,6 +57,9 @@
       <option value="{{ifs}}">{{f_sel}}</option>
       }
     </select>
+    <div *ngIf="fechaSeleccionada?.errors?.['required'] && fechaSeleccionada?.touched" class="mensaje-error">
+      Este campo es obligatorio
+    </div>
 
   </div>
 </div>
