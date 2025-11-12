@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
@@ -31,7 +31,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
-    PasoFirmaComponent,
     CertificadoOrigenComponent,
     PasoUnoComponent,
     SolicitudPageComponent

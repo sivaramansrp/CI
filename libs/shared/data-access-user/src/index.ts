@@ -229,3 +229,4 @@ export * from './tramites/components/paso-carga-documento/paso-carga-documento.c
 export * from './core/services/shared/registro-solicitud.service';
 export * from './core/models/110101/response/tab-tratados-response.model';
 export * from './tramites/components/rfc-solicitante/rfc-solicitante.component';
+export * from './core/models/shared/mostrar-partidas';

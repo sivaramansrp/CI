@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DestinatarioModel, FacricanteModel, FacturadorModel, ProveedorModel } from '../../models/terceros-fabricante-relocionados.model';
@@ -86,6 +86,10 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestro
    */
   configuracionTablaFacturador: ConfiguracionColumna<FacturadorModel>[] = FACTURADOR_TABLE_CONFIG;
 
+  /**
+    * Indica si se debe ocultar el botón "Agregar".
+   */
+  @Input() hideAgregarBtn: boolean = false;
 
    /**
      * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.

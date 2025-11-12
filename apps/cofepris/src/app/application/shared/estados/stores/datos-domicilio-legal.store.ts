@@ -225,7 +225,19 @@ export interface DatosDomicilioLegalState {
   /**
    * El valor de mercanciaTabla.
    */
-  mercanciaTabla: MercanciasInfo[]
+  mercanciaTabla: MercanciasInfo[],
+  /**
+   * El valor de nombreComercial.
+   */
+  nombreComercial: string,
+  /**
+   * El valor de nombreComun.
+   */
+  nombreComun: string,
+  /**
+   * El valor de nombreCientifico.
+   */
+  nombreCientifico: string,
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -448,6 +460,18 @@ export function createInitialState(): DatosDomicilioLegalState {
    * El valor de mercanciaTabla.
    */
     mercanciaTabla: [],
+    /**
+     * El valor de nombreComercial.
+     */
+    nombreComercial: '',
+    /**
+     * El valor de nombreComun.
+     */
+    nombreComun: '',
+    /**
+     * El valor de nombreCientifico.
+     */
+    nombreCientifico: '',
   };
 }
 
@@ -1026,6 +1050,27 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       this.update((state) => ({
             ...state,
             mercanciaTabla,
+        }));
+    }
+
+    setNombreComercial(nombreComercial: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComercial,
+        }));
+    }
+
+    setNombreComun(nombreComun: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComun,
+        }));
+    }
+
+    setNombreCientifico(nombreCientifico: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreCientifico,
         }));
     }
     
