@@ -128,7 +128,6 @@ describe('SolicitudComponent', () => {
         mockImportacionService = TestBed.inject(ImportacionVehiculosUsadosDonacionService) as jest.Mocked<ImportacionVehiculosUsadosDonacionService>;
         mockConsultaioQuery = TestBed.inject(ConsultaioQuery) as jest.Mocked<ConsultaioQuery>;
 
-        // Setup service mocks
         mockImportacionService.getRegimenCatalogo.mockReturnValue(of());
         mockImportacionService.getClasificacionRegimenCatalogo.mockReturnValue(of());
         mockImportacionService.getFraccionCatalogoService.mockReturnValue(of());
@@ -172,8 +171,6 @@ describe('SolicitudComponent', () => {
         expect(component.frmRepresentacionForm).toBeDefined();
         expect(component.modificarPartidasDelaMercanciaForm).toBeDefined();
         expect(component.formForTotalCount).toBeDefined();
-
-        // Check required validators
         expect(component.formDelTramite.get('solicitud')?.hasError('required')).toBeTruthy();
         expect(component.mercanciaForm.get('descripcion')?.hasError('required')).toBeTruthy();
     });
@@ -195,7 +192,6 @@ describe('SolicitudComponent', () => {
     });
 
     it('should return true when all forms are valid and rows selected', () => {
-        // Set valid values
         component.formDelTramite.patchValue({
             solicitud: 'test',
             regimen: 'test',

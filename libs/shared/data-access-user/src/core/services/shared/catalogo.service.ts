@@ -429,30 +429,64 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
-fraccionesArancelariasCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA(tramite, id)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+  * Obtiene el catálogo de fracciones arancelarias según el trámite e identificador proporcionado.
+  *
+  * Este método realiza una petición HTTP GET al servicio correspondiente para recuperar 
+  * la lista de fracciones arancelarias disponibles.
+  *
+  * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+  * @param {string} id - Identificador específico utilizado para filtrar las fracciones arancelarias.
+  * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de fracciones arancelarias.
+  */
+  fraccionesArancelariasCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-unidadesMedidaTarifariaCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+    * Obtiene el catálogo de unidades de medida tarifarias según el trámite e identificador proporcionado.
+    *
+    * Este método realiza una solicitud HTTP GET para recuperar las unidades de medida tarifarias 
+    * asociadas al trámite indicado.
+    *
+    * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+    * @param {string} id - Identificador específico utilizado para filtrar las unidades de medida tarifarias.
+    * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de unidades de medida tarifarias.
+    */
+  unidadesMedidaTarifariaCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, 'TITRAC.TA')}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+     * Obtiene el catálogo de bloques comerciales (tratados o acuerdos) relacionados con el trámite especificado.
+     *
+     * Este método realiza una solicitud HTTP GET para recuperar la lista de tratados o acuerdos 
+     * comerciales disponibles para el trámite.
+     *
+     * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+     * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de bloques comerciales.
+     */
+  bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, 'TITRAC.TA')}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-// paisesPorBloqueCatalogo(tramite: string, ID: string): Observable<BaseResponse<Catalogo[]>> {
-//   const ENDPOINT = `${this.host}${API_PAISES_POR_BLOQUE(tramite, ID)}`;
-//   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-// }
-
-mostrarPartidasSolicitud(tramite: string, solicitudId:number): Observable<BaseResponse<MostrarPartidas[]>> {
-  const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
-  return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene la información de las partidas asociadas a una solicitud específica.
+   *
+   * Este método realiza una petición HTTP GET al endpoint correspondiente para recuperar 
+   * la lista de partidas registradas en la solicitud del trámite indicado.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la solicitud.
+   * @param {number} solicitudId - Identificador único de la solicitud cuyas partidas se desean consultar.
+   * @returns {Observable<BaseResponse<MostrarPartidas[]>>} Un observable que emite la respuesta base con la lista de partidas de la solicitud.
+   */
+  mostrarPartidasSolicitud(tramite: string, solicitudId: number): Observable<BaseResponse<MostrarPartidas[]>> {
+    const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
+    return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+  }
   /**
    * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
    *
@@ -476,7 +510,7 @@ mostrarPartidasSolicitud(tramite: string, solicitudId:number): Observable<BaseRe
     const ENDPOINT = `${this.host}${CLASSIFICACIONES_REGIMEN(tramite).replace(CLASIFICACION, cveRegimen)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
- 
+
   /*
    * Obtiene el catálogo de países (bloques).
    * @param {string} tramite - El ID del trámite.
@@ -518,6 +552,15 @@ mostrarPartidasSolicitud(tramite: string, solicitudId:number): Observable<BaseRe
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene el catálogo completo de países disponibles para el trámite especificado.
+   *
+   * Este método realiza una solicitud HTTP GET al servicio correspondiente para recuperar 
+   * la lista completa de países asociados al trámite.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación para el cual se consultan los países.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo completo de países.
+   */
   todosPaisesSeleccionados(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_CATALOGOS_PAISES_TODOS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);

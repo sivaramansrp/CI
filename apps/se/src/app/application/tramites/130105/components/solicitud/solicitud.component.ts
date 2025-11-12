@@ -372,15 +372,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
           this.seccionState = seccionState;
-          // this.partidasDelaMercanciaForm.patchValue({
-          //   cantidadPartidasDeLaMercancia:
-          //     seccionState.cantidadPartidasDeLaMercancia,
-          //   valorPartidaUSDPartidasDeLaMercancia:
-          //     seccionState.valorPartidaUSDPartidasDeLaMercancia,
-          //   descripcionPartidasDeLaMercancia:
-          //     seccionState.descripcionPartidasDeLaMercancia,
-          // });
-
+          
           this.formDelTramite.patchValue({
             solicitud: seccionState.defaultSelect,
             regimen: seccionState.regimen,

@@ -205,6 +205,16 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   @Output() partidaModificada = new EventEmitter<PartidasDeLaMercanciaModelo>();
 
+  /**
+   * Indica si las partidas son inválidas.
+   * 
+   * Este valor se recibe como una propiedad de entrada desde el componente padre.
+   * Cuando es `true`, puede utilizarse para mostrar mensajes de error, deshabilitar acciones
+   * o aplicar estilos visuales de validación.
+   *
+   * @type {boolean}
+   * @Input()
+   */
   @Input() isInvalidaPartidas: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -263,7 +273,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
     this.selectedRows = event;
-    if(this.selectedRows.length > 0) {
+    if (this.selectedRows.length > 0) {
       this.isInvalidaPartidas = false;
     }
     this.filaSeleccionadaChange.emit(event);
