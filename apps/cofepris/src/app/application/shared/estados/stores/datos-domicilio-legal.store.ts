@@ -238,6 +238,14 @@ export interface DatosDomicilioLegalState {
    * El valor de nombreCientifico.
    */
   nombreCientifico: string,
+  /**
+   * El valor de acondicionamiento.
+   */
+  acondicionamiento: string,
+  /**
+   * El valor de numeroRegistroSanitario.
+   */
+  numeroRegistroSanitario: string,
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -472,6 +480,14 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de nombreCientifico.
      */
     nombreCientifico: '',
+    /**
+     * El valor de acondicionamiento.
+     */
+    acondicionamiento: '',
+    /**
+     * El valor de numeroRegistroSanitario.
+     */
+    numeroRegistroSanitario: '',
   };
 }
 
@@ -1071,6 +1087,20 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       this.update((state) => ({
             ...state,
             nombreCientifico,
+        }));
+    }
+
+    setAcondicionamiento(acondicionamiento: string): void {
+      this.update((state) => ({
+            ...state,
+            acondicionamiento,
+        }));
+    }
+
+    setNumeroRegistroSanitario(numeroRegistroSanitario: string): void {
+      this.update((state) => ({
+            ...state,
+            numeroRegistroSanitario,
         }));
     }
     
