@@ -1022,6 +1022,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                     mercancia.fraccion_arancelaria_corto || '',
                   descripcionFraccion:
                     mercancia.descripcion_fracción_arancelaria || '',
+                  idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0, 
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',

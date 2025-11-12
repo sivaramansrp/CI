@@ -296,3 +296,46 @@ export const CROSLISTA_DE_DATOS: string[] = [
   'ANDORRA (PRINCIPADO DE)',
   '8-2024-AUTORIZACIÓN PROGRAMA NUEVO',
 ];
+
+/**
+ * @constante MENSAJE_DE_EXITO_ETAPA_UNO
+ * @tipo {string}
+ * @exportado
+ * @descripcion
+ * Mensaje de confirmación mostrado al usuario cuando la primera etapa del trámite se completa exitosamente.
+ * 
+ * @contenido_del_mensaje
+ * - **Confirmación de registro**: Informa que la solicitud ha sido registrada exitosamente
+ * - **Número temporal**: Proporciona el número de identificación temporal (202758511)
+ * - **Aclaración legal**: Especifica que este número no tiene validez legal oficial
+ * - **Propósito del número**: Explica que sirve únicamente para identificación interna
+ * - **Proceso siguiente**: Indica que el folio oficial se asignará al firmar la solicitud
+ * 
+ * @importancia_comunicacion
+ * Este mensaje es crucial porque:
+ * - Tranquiliza al usuario confirmando que su acción fue exitosa
+ * - Establece expectativas claras sobre el número temporal
+ * - Evita confusiones sobre la validez legal del número mostrado
+ * - Orienta sobre los próximos pasos del proceso
+ * 
+ * @aspectos_legales
+ * - Aclara explícitamente que el número temporal NO tiene validez legal
+ * - Informa sobre cuándo se asigna el folio oficial (al firmar)
+ * - Protege tanto al usuario como a la institución de malentendidos
+ * 
+ * @contexto_uso
+ * - Mostrado en modales de confirmación
+ * - Presentado en páginas de resultado exitoso
+ * - Incluido en notificaciones de estado del sistema
+ * 
+ * @experiencia_usuario
+ * - Proporciona retroalimentación inmediata y clara
+ * - Reduce ansiedad del usuario con confirmación explícita
+ * - Educa sobre el proceso institucional
+ * 
+ * @numero_ejemplo
+ * El número 202758511 es un ejemplo representativo que sigue
+ * el patrón de numeración temporal del sistema.
+ */
+export const MENSAJE_DE_EXITO_ETAPA_UNO = `La solicitud ha quedado registrada con el número temporal _folio_. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`;
+

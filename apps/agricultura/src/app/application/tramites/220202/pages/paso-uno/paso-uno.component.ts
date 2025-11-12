@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
-import { map, switchMap, take, takeUntil, tap } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
+import { catchError, map, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FilaSolicitud, ListaDeDatosFinal, TercerosrelacionadosdestinoTable, TercerosrelacionadosExportadorTable } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
@@ -154,6 +154,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   constructor(private readonly seccionStore: SeccionLibStore, 
     private agriculturaApiService: AgriculturaApiService,
     private consultaQuery: ConsultaioQuery,
+    private consultaioStore: ConsultaioStore,
     private registroSolicitudService: RegistroSolicitudService) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
@@ -213,7 +214,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
    */
   public validarFormularios(): { valido: boolean; mensaje?: string } {
-    console.log('entra a alida formulario de los datos de la solicitud');
 
     const tabsValidadas = [
       { index: 2, ref: this.datosSolicitudRef },
@@ -234,8 +234,17 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       }
     }
     if (esValido) {
-      this.guardarSolicitud();
-
+      this.guardarSolicitud().subscribe({
+        next: codigo => {
+          if (codigo === "00") {
+            return { valido: esValido, mensaje: this.consultaState.id_solicitud };
+          }
+          else {
+            esValido = false;
+            return { valido: esValido };
+          }
+        }
+      })
     }
     return { valido: esValido };
   }
@@ -245,33 +254,39 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Guarda la solicitud.
    * @method guardarSolicitud
    */
-  guardarSolicitud(): void {
-    // console.log('guardarSolicitud: inicio');
+  guardarSolicitud(): Observable<string> {
 
-    this.agriculturaApiService.getAllDatosForma()
+    return this.agriculturaApiService.getAllDatosForma()
       .pipe(
         take(1), // solo la primera emisión
         map(datos => this.crearPayload(datos)), // crear payload
         tap(payload => console.log('payloadGuardar', JSON.stringify(payload))), // debug
         switchMap(payload =>
           this.registroSolicitudService.guardarSolicitud(220202, payload).pipe(take(1))
-        )
-      )
-      .subscribe({
-        next: (data) => {
+        ),
+        tap(data => {
           console.log("respuesta de guardar", data);
-        },
-        error: (err) => {
-          console.error("Error guardando solicitud:", err);
-        }
-      });
+          // id_solicitud: 202875826, fecha_actualización: '2025-11-10 19:02:00'
+          this.consultaioStore.update(state => ({
+            ...state,
+            id_solicitud: data.datos?.id_solicitud?.toString() ?? ''
+          }));
+        }),
+        map(data => data.codigo),
+        catchError(err => {
+          console.error('Error guardando solicitud:', err);
+          // return throwError(() => err);
+          return 'error';
+
+        })
+      );
   }
 
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
-    // console.log('Con deshabilitados:', JSON.stringify(this.solicitanteComponentRef.datosGenerales));
-    // console.log('datosFormulario', JSON.stringify(datos));
+
     return {
-      id_solicitud: null,
+      id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
+        && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
       datos_solicitud: {
         cve_aduana: datos.datos.aduanaDeIngreso!,
         oficina_inspeccion_sanidad_agropecuaria: datos.datos.oficinaDeInspeccion,
@@ -284,7 +299,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
           requisito: t.requisito ?? '',
           numero_certificado: t.numeroCertificadoInternacional ?? '',
           cve_fraccion: t.fraccionArancelaria ?? '',
-          id_fraccion_gubernamental: 0,
+          id_fraccion_gubernamental: t.idDescripcionFraccion,
           clave_nico: t.nico ?? '',
           descripcion_mercancia: t.descripcion ?? '',
           cantidad_umt: Number(t.cantidadUMT) ?? 0,
@@ -362,7 +377,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
         rfc: this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
-        rol_capturista: "Solicitante", // se saca de la sesion y aun no funciona login 
+        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login 
         nombre: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''),
         es_persona_moral: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
         certificado_serial_number: 0 // no sabemos de donde se obtiene 

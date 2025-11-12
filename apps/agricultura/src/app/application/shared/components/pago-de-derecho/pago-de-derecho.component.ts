@@ -359,9 +359,14 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
   onBorrar(): void {
     this.setFecha = false;
     const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
-    this.pagoForm.reset();
+    // this.pagoForm.reset();
     this.pagoForm.patchValue({
       exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
+      fechaPago: '',
+      llavePago: '',
+      banco: '',
+      justificacion: ''
+
     });
     setTimeout(() => {
       this.setFecha = true;

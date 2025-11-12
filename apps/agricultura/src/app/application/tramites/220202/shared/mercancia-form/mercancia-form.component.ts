@@ -213,7 +213,6 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   */
   catalogosDatosPaisDestinoList: Catalogo[] = [];
 
-
   /**
    * Constructor del componente.
    *
@@ -305,6 +304,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_DESCRIPCION)]],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
+      idDescripcionFraccion: [0],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
@@ -313,6 +313,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       ],
       cantidadUMT: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umt: [{ value: '', disabled: true }, Validators.required],
+      descripcionUMT: [{ value: '', disabled: true }, Validators.required],
       cantidadUMC: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
@@ -371,7 +372,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
           this.getNicoFraccionArancelariaLista(event);
           this.getUnidadMedida(event);
           this.mercanciaForm.patchValue({
-            descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
+            descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción',
+            idDescripcionFraccion: data.datos?.id_fraccion ?? 0
+
       });
         }
     );
@@ -422,9 +425,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       ).subscribe(
         (data): void => {
-
           this.mercanciaForm.patchValue({
-            umt: data.datos?.descripcion ?? 'Sin descripción'
+            umt: data.datos?.clave ?? 'sin clave',
+            descripcionUMT: data.datos?.descripcion ?? 'Sin descripción'
           });
         }
       );

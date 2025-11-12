@@ -220,7 +220,6 @@ export class BtnContinuarComponent implements OnInit {
     const PUEDE_CONTINUAR =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     let valor = this.datos.indice;
-    console.log('valor1', valor);
 
     if (!PUEDE_CONTINUAR) {
       return;
@@ -234,7 +233,6 @@ export class BtnContinuarComponent implements OnInit {
     if (!this.dePadre) {
       this.wizardService.cambio_indice(valor);
       valor += 1;
-      console.log('valor2', valor);
       this.datos.indice = valor;
     }
     const DATOS_CONTINUAR: AccionBoton = {
