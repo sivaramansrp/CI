@@ -383,10 +383,16 @@ export class PantallasComponent implements OnInit {
           } as Empaque)
           ),
           //Guardado de procesos
-          procesos_solicitados:this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados?.map(proceso => ({
+         procesos_solicitados: (
+          (this.solicitudeState.proceso_seleccionado?.length
+            ? this.solicitudeState.proceso_seleccionado
+            : this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados
+          )?.map(proceso => ({
             id_proceso_ceror: proceso.id_proceso_ceror,
             cumple_proceso: proceso.cumple_proceso
-          })) || [],
+          })) || []
+        ),
+
           //Tab mercancia el de fraccion arancelaria
           cve_fraccion: this.solicitudeState.fraccionArancelaria,
           //Al principio se manda en null
@@ -649,10 +655,15 @@ export class PantallasComponent implements OnInit {
         cve_declaracion: item.clave,
         aceptado: this.solicitudeState.protesto_verdad ? 1 : 0
       })),
-      procesos: this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados?.map(proceso => ({
+      procesos : (
+      (this.solicitudeState.proceso_seleccionado?.length
+        ? this.solicitudeState.proceso_seleccionado
+        : this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados
+      )?.map(proceso => ({
         id_proceso_ceror: proceso.id_proceso_ceror ? proceso.id_proceso_ceror.toString() : null,
         aprobado: proceso.cumple_proceso ?? null
       })) || []
+    ),
     };
 
     this.solicitudService.postSolicitudGuardar(PAYLOAD)

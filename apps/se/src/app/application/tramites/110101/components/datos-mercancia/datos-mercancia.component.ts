@@ -1430,6 +1430,7 @@ get ninoFormGroup(): FormGroup {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
             if(response.datos.elementos_validos[0].tipo_elemento === "INSUMOS" ){
+              this.mostrarTabla = false;
                 response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
                 this.insumosTablaDatos.push({
                   nombreTecnico: elemento.nombre_tecnico,
@@ -1446,7 +1447,10 @@ get ninoFormGroup(): FormGroup {
               });
               this.tramite110101Store.clearInsumos();
               this.tramite110101Store.addInsumo(this.insumosTablaDatos);
+              this.cd.detectChanges();
+              this.mostrarTabla = true;
             }else{
+               this.mostrarTabla = false;
                response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
                 this.envasesTablaDatos.push({
                   nombreTecnico: elemento.nombre_tecnico,
@@ -1463,6 +1467,8 @@ get ninoFormGroup(): FormGroup {
               });
               this.tramite110101Store.clearEmpaques();
               this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
+               this.cd.detectChanges();
+              this.mostrarTabla = true;
             }
              
             this.formularioArchivo.reset();
