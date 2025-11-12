@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TableComponent, TituloComponent} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosSociosTable, DatosSociosTableExtranjeros } from '../../modelos/datos-empresa.model';
@@ -261,23 +262,6 @@ actualizarEstadoFormulario(): void {
    this.actualizarBanderasCamposEntrada(NACIONALIDAD, TIPO_PERSONA);
   }
 
-  
-
-  /**
-   * Obtiene los datos de la tabla de socios desde el servicio.
-   * Suscribe a los datos y los asigna a la variable `datosSocios`.
-   */
-
-  // obtenerDatosTablaDeSocios(): void {
-  //   this.empresaService.obtenerDatosTablaDeSocios().subscribe((data)=>{
-  //     this.datosSocios = data;
-  //   })
-
-  //   this.empresaService.obtenerDatosTablaDeSociosExtranjeros().subscribe((data)=>{
-  //     this.datosExtranjeros = data;
-  //   })
-  // }
-
   /**
    * Agrega un nuevo socio a la lista de socios.
    * Dependiendo de los campos de entrada, agrega un socio regular o un socio extranjero.
@@ -329,6 +313,10 @@ agregarSocio(): void {
   }
 }
 
+/**
+ * Procesa la respuesta de la API de accionistas y actualiza 
+ * el arreglo `datosSocios` con la información de cada persona relacionada.
+ */
 private aplicarAccionistasRespuesta(apiResponse: any): void {
   const DATOS = apiResponse?.datos || [];
 

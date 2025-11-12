@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { CatalogoServices } from '@libs/shared/data-access-user/src';
@@ -132,9 +132,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    // this.getEntidadFederativa();
-    // this.getRepresentacionFederal();
-    // this.getDatosSocios();
 
     this.query.selectEstado$.pipe(
       takeUntil(this.destroyed$)

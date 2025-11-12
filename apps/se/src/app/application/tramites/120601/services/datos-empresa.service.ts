@@ -132,20 +132,37 @@ export class DatosEmpresaService {
         return this.tramite120601Query.selectSolicitud$;
       }
 
+      /**
+       * Obtiene la lista de accionistas de un contribuyente específico por RFC.
+       * Retorna un Observable con un arreglo de DatosSociosTable.
+       */
       getAccionistasByRFC(rfc: string): Observable<DatosSociosTable[]> {
         return this.httpService.get<DatosSociosTable[]>(PROC_120601.ACCIONISTAS, { params: { rfc } });
       }
-
+      
+    /**
+    * Obtiene la lista de plantas de un estado específico usando su ID.
+    * Retorna un Observable con los datos obtenidos del servicio HTTP.
+    */
       obtenerPlantas(estadoId: string): Observable<any> {
         const URL = `${PROC_120601.PLANTAS}?rfcSolicitante=AAL0409235E6&entidadFederativa=${estadoId}`;
         return this.http.get<any>(URL);
       }
 
+    /**
+     * Obtiene un catálogo de representaciones federales filtradas
+     * por el ID de la entidad federativa.
+     */
       obtenerRepresentacionFederalPorEstado(estadoId: string): Observable<Catalogo[]> {
         const URL = `${PROC_120601.PLANTAS}?entidadFederativa=${estadoId}`;
         return this.httpService.get<Catalogo[]>(URL);
       }
 
+    /**
+     * Construye un objeto con la información de la empresa, incluyendo
+     * representación federal, datos de la solicitud, ubicación de mercancía
+     * y socios/accionistas a partir del estado de `Tramites120601State`.
+     */
       buildDatosEmpresa(data:Tramites120601State): unknown {
         return{
           "representacionFederal" : {

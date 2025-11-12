@@ -136,15 +136,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la lista de tipos de empresa.
-   */
-  // public getTipoDeEmpresa(): void {
-  //   this.service.obtenerEstado().subscribe((data)=>{
-  //     this.tipoDeEmpresa = data;
-  //   })
-  // }
-
-  /**
    * Maneja la selección de un documento.
    * @param _e El objeto del evento.
    */

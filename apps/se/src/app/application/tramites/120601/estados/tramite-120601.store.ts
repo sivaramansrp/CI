@@ -45,19 +45,31 @@ export interface Tramites120601State {
     /** Representación seleccionada */
     representacion: string;
   },
-  domicilioFiscal: {
-    calle?: string;
-    nInt?: string;
-    nExt?: string;
-    codigoPostal?: string;
-    colonia?: string;
-    localidad?: string;
-    municipio?: string;
-    entidadFederativa?: string;
-    pais?: string;
-    lada?: string;
-    telefono?: string;
-  };
+domicilioFiscal: {
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Número interior del domicilio fiscal */
+  nInt?: string;
+  /** Número exterior del domicilio fiscal */
+  nExt?: string;
+  /** Código postal del domicilio fiscal */
+  codigoPostal?: string;
+  /** Colonia del domicilio fiscal */
+  colonia?: string;
+  /** Localidad del domicilio fiscal */
+  localidad?: string;
+  /** Municipio del domicilio fiscal */
+  municipio?: string;
+  /** Estado o entidad federativa del domicilio fiscal */
+  entidadFederativa?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
+  /** LADA o clave de la zona telefónica */
+  lada?: string;
+  /** Teléfono del domicilio fiscal */
+  telefono?: string;
+};
+
 }
 
 /**
@@ -246,6 +258,10 @@ export class Tramite120601Store extends Store<Tramites120601State> {
     }));
   }
 
+  /**
+ * Actualiza el estado del domicilio fiscal en el store
+ * combinando los valores existentes con los proporcionados.
+ */
   public setDomicilioFiscal(domicilioFiscal: Partial<Tramites120601State['domicilioFiscal']>): void {
     this.update((state) => ({
       ...state,
