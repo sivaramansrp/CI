@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente para gestionar el paso uno de un flujo.
@@ -31,6 +32,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
+
    /**
    * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
    * La lógica de inicialización se delega a métodos específicos.
@@ -50,7 +57,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.consultaState = seccionState;
     })).subscribe();
-    if(this.consultaState.update) {
+    if(this.consultaState?.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
