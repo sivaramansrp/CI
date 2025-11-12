@@ -1,10 +1,13 @@
-import { Adquiriente, Complementaria, DetallesLicitacion, LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
+import { Adquiriente, DetallesLicitacion, LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
+import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL, Catalogo } from '@libs/shared/data-access-user/src';
+import { LicitacionResponse,LicitacionesResponse } from '../models/solicitud.model';
 import { Solicitud120501State, Tramite120501Store } from '../estados/tramites/tramite120501.store';
-import { Catalogo, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL } from '@libs/shared/data-access-user/src';
+import { catchError, map, throwError } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { PROC_120501 } from '../servers/api-route';
 
 /**
  * Servicio encargado de gestionar las operaciones relacionadas con las licitaciones disponibles,
@@ -86,9 +89,9 @@ export class LicitacionesDisponiblesService {
   /**
    * Obtiene los detalles de una licitación específica.
    */
-  getDetallesDelalicitacion(): Observable<DetallesLicitacion> {
-    return this.http.get<DetallesLicitacion>('assets/json/120501/detalles-licitacion.json');
-  }
+  // getDetallesDelalicitacion(): Observable<DetallesLicitacion> {
+  //   return this.http.get<DetallesLicitacion>('assets/json/120501/detalles-licitacion.json');
+  // }
 
   /**
    * Obtiene los datos del adquiriente.
@@ -100,9 +103,40 @@ export class LicitacionesDisponiblesService {
   /**
    * Obtiene los datos para poblar la tabla dinámica.
    */
-  getTableData(): Observable<Complementaria[]> {
-    return this.http.get<Complementaria[]>('assets/json/120501/datos-de-la-tabla.json');
+  getLicitacionesDisponiblesData(RFC: string): Observable<LicitacionResponse[]> {
+    const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
+
+    return this.http.get<BaseResponse<LicitacionResponse[]>>(ENDPOINT).pipe(map((response) => {
+      if (!response.datos) {
+          throw new Error('No se encontraron datos en la respuesta');
+        }
+      return response.datos;
+    }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
   }
+
+  getLicitacionesFormData(REQUEST: { rfc: string; idAsignacion: number }): Observable<LicitacionesResponse> {
+    const ENDPOINT = `${PROC_120501.BUSCAR}`;
+    return this.http.post<BaseResponse<LicitacionesResponse>>(ENDPOINT, REQUEST).pipe(
+      map((response) => {
+        if (!response.datos) {
+          throw new Error('No se encontraron datos en la respuesta');
+        }
+        return response.datos;
+      }),
+      catchError(() => {
+        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT}`);
+        return throwError(() => ERROR);
+      })
+    );
+}
+
 
   /**
    * Obtiene los datos vigentes de licitaciones para el formulario principal.

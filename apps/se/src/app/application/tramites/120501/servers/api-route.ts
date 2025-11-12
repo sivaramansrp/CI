@@ -31,10 +31,13 @@ const PROCEDURE = '/sat-t120501';
 /**
  * Rutas de la API para el procedimiento 110207
  */
-export const PROC_110207 = {
+export const PROC_120501 = {
+    PREFILLED: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}`,
+    BUSCAR: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar`,
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };
+
+export const API_GET_MOLINOS_ACERO_HABILITAR = (CVEFRACCION: string): string => `sat-t80202/fraccion-arancelaria/${CVEFRACCION}/molinos-acero/habilitar`;

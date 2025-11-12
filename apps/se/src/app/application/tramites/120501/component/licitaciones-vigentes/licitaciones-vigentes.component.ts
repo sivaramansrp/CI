@@ -1,9 +1,9 @@
-import { AccionBoton, Adquiriente, AlertComponent, Complementaria, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AccionBoton, Adquiriente, AlertComponent, Complementaria, CONFIGURACION_ACCIONISTAS_TABLA1, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
-import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
-import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
+// import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
+// import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -24,7 +24,9 @@ import { Validators } from '@angular/forms';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { idProcedimiento } from '../../constantes/cupos-constantes.enum';
+import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_ACCIONISTAS_TABLA, ID_PROCEDIMIENTO } from '../../constantes/cupos-constantes.enum';
+import { LicitacionesResponse, LicitacionResponse, ParticipanteLicitacion } from '../../models/solicitud.model';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 /**
  * Componente para mostrar las licitaciones vigentes.
  *
@@ -34,7 +36,7 @@ import { idProcedimiento } from '../../constantes/cupos-constantes.enum';
 @Component({
   selector: 'app-licitaciones-vigentes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent,CatalogoSelectComponent,AlertComponent,TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, AlertComponent, TablaDinamicaComponent],
   templateUrl: './licitaciones-vigentes.component.html',
   styleUrls: ['./licitaciones-vigentes.component.scss'],
 })
@@ -63,7 +65,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Opciones para la tabla.
    */
   tableOptions = {
-    checkbox : false
+    checkbox: false
   };
   /**
    * Texto de mensaje.
@@ -85,17 +87,17 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Configuración para la tabla de accionistas.
    */
-  configTableArray1 = CONFIGURACION_ACCIONISTAS_TABLA1;
+  configParticipantesTable = CONFIGURACION_ACCIONISTAS;
 
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos:Complementaria[] = [];
-  
-   /**
-   * Datos de ejemplo para la tabla.
-   */
-  datos1:Complementaria1[] = []
+  licitacionTablaDatos: LicitacionResponse[] = [];
+
+  /**
+  * Datos de ejemplo para la tabla.
+  */
+  datosParticipantes: ParticipanteLicitacion[] = []
 
   /**
    * Datos de los pasos del asistente.
@@ -121,7 +123,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el adquiriente.
    */
-  adquiriente!:FormGroup;
+  adquiriente!: FormGroup;
   /**
    * Catálogo de entidades federativas.
    */
@@ -135,20 +137,20 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   public tableData!: TableData;
 
-    /**
-     * Lista de entidades federativas.
-     *  LicitacionesVigentesComponent
-     * 
-     */
-    entidadFederativa: Catalogo[] = [];
+  /**
+   * Lista de entidades federativas.
+   *  LicitacionesVigentesComponent
+   * 
+   */
+  entidadFederativa: Catalogo[] = [];
 
-    /**
-     * Lista de representaciones federales.
-     * LicitacionesVigentesComponent
-     * 
-     */
-    representacionFederal: Catalogo[] = [];
-  
+  /**
+   * Lista de representaciones federales.
+   * LicitacionesVigentesComponent
+   * 
+   */
+  representacionFederal: Catalogo[] = [];
+
   /**
    * Subject para la destrucción del componente.
    */
@@ -163,13 +165,13 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    */
   showRepresentacionFederal: boolean = false;
 
-   /**
-   * Indica si se muestra la selección de participante.
-   */
+  /**
+  * Indica si se muestra la selección de participante.
+  */
   showSeleccionarParticipante: boolean = false;
 
-  idProcedimiento: number = idProcedimiento;
-  
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+
   /**
  * Indica si el formulario está en modo solo lectura.
  * Cuando se establece en `true`, todos los controles del formulario y elementos interactivos
@@ -185,16 +187,16 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
  * desde el store o desde una consulta al backend. Se utiliza para inicializar y actualizar
  * los formularios del componente con los valores correspondientes a la solicitud en curso.
  */
-   private seccionState!: Solicitud120501State;
+  private seccionState!: Solicitud120501State;
   /**
    * Constructor del componente.
    * Servicio para obtener datos de licitaciones disponibles.
    */
-  constructor(private service:LicitacionesDisponiblesService,private fb: FormBuilder,
-    private tramite120501Store: Tramite120501Store, 
+  constructor(private service: LicitacionesDisponiblesService, private fb: FormBuilder,
+    private tramite120501Store: Tramite120501Store,
     private tramite120501Query: Tramite120501Query,
     private consultaioQuery: ConsultaioQuery,) {
-     
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -204,7 +206,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-       
+
   }
   /**
    * Método de inicialización del componente.
@@ -212,10 +214,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.getEntidadFederativa();
-    this.getDetallesDelalicitacion();
+    // this.getDetallesDelalicitacion();
     this.getAdquiriente();
     this.obtenerDatosDeTabla();
-
+    this.fillFormLicitacionesFormData();
   }
   /**
  * Inicializa los formularios principales del componente con los valores actuales del estado.
@@ -227,30 +229,30 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       representacionFederal: [this.seccionState?.representacionFederal, Validators.required],
     });
     this.detalledelaLicitacionForm = this.fb.group({
-      numeraDelicitacion: [{value:this.seccionState?.numeraDelicitacion,disabled: true}, Validators.required ],
-      fechaDelEventoDelicitacion: [{value:this.seccionState?.fechaDelEventoDelicitacion,disabled: true}, Validators.required],
-      descripcionDelProducto:[{value:this.seccionState?.descripcionDelProducto, disabled: true}, Validators.required],
-      unidadTarifaria:[{value:this.seccionState?.unidadTarifaria, disabled: true}, Validators.required],
-      regimenAduanero: [{value: this.seccionState?.regimenAduanero, disabled: true}, Validators.required],
-      fraccionArancelaria: [{value:this.seccionState?.fraccionArancelaria, disabled: true}, Validators.required],
-      fechaDeiniciodeVigenciadelCupo: [{value:this.seccionState?.fechaDeiniciodeVigenciadelCupo, disabled: true}, Validators.required],
-      fechaDefindeVigenciadelCupo:[{value:this.seccionState?.fechaDefindeVigenciadelCupo, disabled: true}, Validators.required],
-      obserVaciones: [{value:this.seccionState?.obserVaciones, disabled: true}, Validators.required],
-      bloqueComercial: [{value:this.seccionState?.bloqueComercial, disabled: true}, Validators.required],
-      paises: [{value:this.seccionState?.paises, disabled: true}, Validators.required],
-      montoadJudicado: [{value:this.seccionState?.montoadJudicado, disabled: true}, Validators.required],
-      montoDisponible: [{value:this.seccionState?.montoDisponible, disabled: true}, Validators.required],
-      montoMaximo: [{value:this.seccionState?.montoMaximo, disabled: true}, Validators.required],
+      numeraDelicitacion: [{ value: this.seccionState?.numeraDelicitacion, disabled: true }, Validators.required],
+      fechaDelEventoDelicitacion: [{ value: this.seccionState?.fechaDelEventoDelicitacion, disabled: true }, Validators.required],
+      descripcionDelProducto: [{ value: this.seccionState?.descripcionDelProducto, disabled: true }, Validators.required],
+      unidadTarifaria: [{ value: this.seccionState?.unidadTarifaria, disabled: true }, Validators.required],
+      regimenAduanero: [{ value: this.seccionState?.regimenAduanero, disabled: true }, Validators.required],
+      fraccionArancelaria: [{ value: this.seccionState?.fraccionArancelaria, disabled: true }, Validators.required],
+      fechaDeiniciodeVigenciadelCupo: [{ value: this.seccionState?.fechaDeiniciodeVigenciadelCupo, disabled: true }, Validators.required],
+      fechaDefindeVigenciadelCupo: [{ value: this.seccionState?.fechaDefindeVigenciadelCupo, disabled: true }, Validators.required],
+      obserVaciones: [{ value: this.seccionState?.obserVaciones, disabled: true }, Validators.required],
+      bloqueComercial: [{ value: this.seccionState?.bloqueComercial, disabled: true }, Validators.required],
+      paises: [{ value: this.seccionState?.paises, disabled: true }, Validators.required],
+      montoadJudicado: [{ value: this.seccionState?.montoadJudicado, disabled: true }, Validators.required],
+      montoDisponible: [{ value: this.seccionState?.montoDisponible, disabled: true }, Validators.required],
+      montoMaximo: [{ value: this.seccionState?.montoMaximo, disabled: true }, Validators.required],
     })
     this.adquiriente = this.fb.group({
-      rfc: [{value:this.seccionState?.rfc,disabled: true}, Validators.required],
-      adquirienteMontoDisponible: [{value:this.seccionState?.adquirienteMontoDisponible,disabled: true}],
+      rfc: [{ value: this.seccionState?.rfc, disabled: true }, Validators.required],
+      adquirienteMontoDisponible: [{ value: this.seccionState?.adquirienteMontoDisponible, disabled: true }],
       montoRecibir: [this.seccionState?.montoRecibir, Validators.required],
       rfc1: [this.seccionState?.rfc1],
     })
   }
 
-  
+
   /**
    * Suscribe al observable `selectSolicitud$` del query `tramite120501Query` para obtener el estado actual de la solicitud y actualizar la propiedad `seccionState` con los datos recibidos. La suscripción se mantiene activa hasta que se emite un valor en `destroyed$`, evitando fugas de memoria.
    */
@@ -266,9 +268,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
  * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
  * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
  */
-   inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); 
+      this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
     }
@@ -292,191 +294,222 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     } else {
       // No se requiere ninguna acción en el formulario
     }
-}
- 
+  }
+
   /**
    * Obtiene la lista de entidades federativas.
    */
   getEntidadFederativa(): void {
-      this.service.entidadesFederativasCatalogo(idProcedimiento.toString()).pipe(
-        takeUntil(this.destroyed$)
-      ).subscribe(
-        (data) => {
-          if(data.codigo === "00") {
-            this.entidadFederativaOptions = data.datos as Catalogo[];
-          }else{
-            
-          }
+    this.service.entidadesFederativasCatalogo(ID_PROCEDIMIENTO.toString()).pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        if (data.codigo === "00") {
+          this.entidadFederativaOptions = data.datos as Catalogo[];
         }
-      );
-     
-  }
-/**
-   * Obtiene la lista de representaciones federales.
-   */
-getRepresentacionFederal(cveEntidad: string): void {
-  this.service.representacionFederalCatalogo(idProcedimiento.toString(), cveEntidad).pipe(
-    takeUntil(this.destroyed$)
-  ).subscribe(
-    (data) => {
-      if(data.codigo === "00") {
-        this.representacionFederalOptions = data.datos as Catalogo[];
       }
-    }
-  );
-}
+    );
 
-/**
- * Verifica si un control del formulario 'adquiriente' es inválido.
- */
-isInvalid(id: string): boolean | null {
-  const CONTROL = this.adquiriente.get(id);
-  return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
-}
-
-/**
- * Método de destrucción del componente.
- *
- * Limpia las suscripciones al Subject `destroyed$`.
- */
-ngOnDestroy(): void {
-  this.destroyed$.next();
-  this.destroyed$.complete();
-}
-/**
- * Maneja el valor del índice del asistente (wizard) basado en la acción del botón.
- *
- * Objeto que contiene la acción y el valor del botón.
- */
-getValorIndice(e: AccionBoton):void{
-  if (e.valor > 0 && e.valor < 5) {
-    this.indice = e.valor;
-    if (this.wizardComponent) {
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    } 
   }
-
-}
-/**
- * Obtiene y establece los detalles de la licitación en el formulario 'detalledelalicitacionForm'.
- *
- * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
- */
-getDetallesDelalicitacion():void{
-  this.service.getDetallesDelalicitacion().pipe(takeUntil(this.destroyed$)).subscribe(
-    (data:DetallesLicitacion)=>{
-      this.detalledelaLicitacionForm.patchValue({
-        numeraDelicitacion:data.numeraDelicitacion,
-        fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
-        descripcionDelProducto:data.descripcionDelProducto,
-        unidadTarifaria:data.unidadTarifaria,
-        regimenAduanero:data.regimenAduanero,
-        fraccionArancelaria:data.fraccionArancelaria,
-        fechaDeiniciodeVigenciadelCupo:data.fechaDeiniciodeVigenciadelCupo,
-        fechaDefindeVigenciadelCupo:data.fechaDefindeVigenciadelCupo,
-        obserVaciones:data.obserVaciones,
-        bloqueComercial:data.bloqueComercial,
-        paises:data.paises,
-        montoadJudicado:data.montoadJudicado,
-        montoDisponible:data.montoDisponible,
-        montoMaximo:data.montoMaximo
-      })
-    })
-}
-   /**
-     * Obtiene los datos de la tabla desde el servicio.
-     *
-     * LicitacionesVigentesComponent
-     * 
-     */ 
-  obtenerDatosDeTabla(): void {
-    this.service.getTableData()
-    .pipe(takeUntil(this.destroyed$)).subscribe(
-        (data: Complementaria[]) => {
-            this.datos = data;
+  /**
+     * Obtiene la lista de representaciones federales.
+     */
+  getRepresentacionFederal(cveEntidad: string): void {
+    this.service.representacionFederalCatalogo(ID_PROCEDIMIENTO.toString(), cveEntidad).pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        if (data.codigo === "00") {
+          this.representacionFederalOptions = data.datos as Catalogo[];
         }
+      }
     );
   }
-/**
- * Obtiene y establece los datos del adquiriente en el formulario 'adquiriente'.
- *
- * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
- */
-getAdquiriente():void{
-  this.service.getAdquiriente()
-   .pipe(takeUntil(this.destroyed$)).subscribe(
-    (data:Adquiriente)=>{
-      this.adquiriente.patchValue({
-        rfc:data.rfc,
-        adquirienteMontoDisponible:data.adquirienteMontoDisponible,
-      })
-    })  
-}
-/**
-     * Establece los valores en el store del trámite 120501.
-     *
-     * LicitacionesVigentesComponent
-     * El formulario que contiene los valores.
-     * El nombre del campo en el formulario.
-     * El nombre del método en el store a invocar.
-     * 
-     */
-setValoresStore(form: FormGroup, campo: string): void {
-  const VALOR = form.get(campo)?.value;
-  this.tramite120501Store.actualizarEstado({ [campo]: VALOR });
-  if(campo === 'entidadFederativa' && this.formulario.get('entidadFederativa')?.value) {
-    const CVE_ENTIDAD = this.formulario.get('entidadFederativa')?.value;
-    this.getRepresentacionFederal(CVE_ENTIDAD);
-  }
-}
 
-/**
- * Abre el modal para modificar la información.
- *
- * LicitacionesVigentesComponent
- * 
- */
-abrirModificarModal(_event: Complementaria): void {
-  if(this.esFormularioSoloLectura){
-    return
+  /**
+   * Verifica si un control del formulario 'adquiriente' es inválido.
+   */
+  isInvalid(id: string): boolean | null {
+    const CONTROL = this.adquiriente.get(id);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
-  this.showRepresentacionFederal = true;
-  
-}
 
-/**
- * Muestra la sección para seleccionar un participante.
- * Cambia el valor de la propiedad `showSeleccionarParticipante` a `true`,
- * lo que habilita la visualización de la interfaz correspondiente.
- */
-seleccionarParticipante():void{
-  this.showSeleccionarParticipante = true;
-}
+  /**
+   * Método de destrucción del componente.
+   *
+   * Limpia las suscripciones al Subject `destroyed$`.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+  /**
+   * Maneja el valor del índice del asistente (wizard) basado en la acción del botón.
+   *
+   * Objeto que contiene la acción y el valor del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (this.wizardComponent) {
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
 
-/**
- * Agrega el valor del campo 'rfc1' al array 'datos1'.
- * Si el campo está vacío, no realiza ninguna acción.
- */
-agregarRFC1(): void {
-  const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
-  if (RFC1VALUE) {
-    this.datos1.push({ registrofederaldecontribuyentes: RFC1VALUE });
-    this.adquiriente.get('rfc1')?.reset();
   }
-}
-/**
- * Mueve el valor seleccionado de 'datos1' al campo 'rfc'.
- * Índice del elemento seleccionado en el array 'datos1'.
- */
-moverRFC1(selectedEntry: Complementaria1): void {
-  const INDEX = this.datos1.indexOf(selectedEntry); 
-  if (INDEX !== -1 && selectedEntry.registrofederaldecontribuyentes) {
-    this.adquiriente.get('rfc')?.setValue(selectedEntry.registrofederaldecontribuyentes);
-    this.datos1.splice(INDEX, 1);
+  /**
+   * Obtiene y establece los detalles de la licitación en el formulario 'detalledelalicitacionForm'.
+   *
+   * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
+   */
+  // getDetallesDelalicitacion(): void {
+  //   this.service.getDetallesDelalicitacion().pipe(takeUntil(this.destroyed$)).subscribe(
+  //     (data: DetallesLicitacion) => {
+  //       this.detalledelaLicitacionForm.patchValue({
+  //         numeraDelicitacion: data.numeraDelicitacion,
+  //         fechaDelEventoDelicitacion: data.fechaDelEventoDelicitacion,
+  //         descripcionDelProducto: data.descripcionDelProducto,
+  //         unidadTarifaria: data.unidadTarifaria,
+  //         regimenAduanero: data.regimenAduanero,
+  //         fraccionArancelaria: data.fraccionArancelaria,
+  //         fechaDeiniciodeVigenciadelCupo: data.fechaDeiniciodeVigenciadelCupo,
+  //         fechaDefindeVigenciadelCupo: data.fechaDefindeVigenciadelCupo,
+  //         obserVaciones: data.obserVaciones,
+  //         bloqueComercial: data.bloqueComercial,
+  //         paises: data.paises,
+  //         montoadJudicado: data.montoadJudicado,
+  //         montoDisponible: data.montoDisponible,
+  //         montoMaximo: data.montoMaximo
+  //       })
+  //     })
+  // }
+  /**
+    * Obtiene los datos de la tabla desde el servicio.
+    *
+    * LicitacionesVigentesComponent
+    * 
+    */
+  obtenerDatosDeTabla(): void {
+    this.service.getLicitacionesDisponiblesData('DSH120709TW1').pipe(takeUntil(this.destroyed$)).subscribe((data: LicitacionResponse[]) => {
+      this.licitacionTablaDatos = data || [];
+    }
+    );
   }
-}
+
+  fillFormLicitacionesFormData(): void {
+    const REQUEST_DATA = {
+      rfc: 'DSH120709TW1',
+      idAsignacion: 52777
+    }
+    this.service.getLicitacionesFormData(REQUEST_DATA)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: LicitacionesResponse) => {
+        this.showRepresentacionFederal = true;
+        const LICITACION = data;
+        this.datosParticipantes = LICITACION.participantesLicitacion;
+        this.detalledelaLicitacionForm.patchValue({
+          numeraDelicitacion: LICITACION.licitacionPublica.numeroLicitacion,
+          fechaDelEventoDelicitacion: LICITACION.licitacionPublica.fechaConcurso,
+          // descripcionDelProducto: LICITACION,
+          // unidadTarifaria: LICITACION.unidadTarifaria,
+          regimenAduanero: LICITACION.regimen,
+          fraccionArancelaria: LICITACION.fraccionArancelaria,
+          fechaDeiniciodeVigenciadelCupo: LICITACION.licitacionPublica.fechaInicioVigencia,
+          fechaDefindeVigenciadelCupo: LICITACION.licitacionPublica.fechaFinVigencia,
+          obserVaciones: LICITACION.observaciones,
+          // bloqueComercial: LICITACION.bloqueComercial,
+          // paises: LICITACION.paises,
+          montoadJudicado: LICITACION.participante.montoAdjudicado,
+          montoDisponible: LICITACION.participante.montoDisponible,
+          montoMaximo: LICITACION.licitacionPublica.cantidadMaxima
+        });
+
+        this.adquiriente.patchValue({
+          rfc: LICITACION.participante.rfc,
+          adquirienteMontoDisponible: LICITACION.participante.montoDisponible,
+        });
+      });
+  }
+  /**
+   * Obtiene y establece los datos del adquiriente en el formulario 'adquiriente'.
+   *
+   * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
+   */
+  getAdquiriente(): void {
+    this.service.getAdquiriente()
+      .pipe(takeUntil(this.destroyed$)).subscribe(
+        (data: Adquiriente) => {
+          this.adquiriente.patchValue({
+            rfc: data.rfc,
+            adquirienteMontoDisponible: data.adquirienteMontoDisponible,
+          })
+        })
+  }
+  /**
+       * Establece los valores en el store del trámite 120501.
+       *
+       * LicitacionesVigentesComponent
+       * El formulario que contiene los valores.
+       * El nombre del campo en el formulario.
+       * El nombre del método en el store a invocar.
+       * 
+       */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite120501Store.actualizarEstado({ [campo]: VALOR });
+    if (campo === 'entidadFederativa' && this.formulario.get('entidadFederativa')?.value) {
+      const CVE_ENTIDAD = this.formulario.get('entidadFederativa')?.value;
+      this.getRepresentacionFederal(CVE_ENTIDAD);
+    }
+  }
+
+  /**
+   * Abre el modal para modificar la información.
+   *
+   * LicitacionesVigentesComponent
+   * 
+   */
+  abrirModificarModal(_event: LicitacionResponse): void {
+    if (this.esFormularioSoloLectura) {
+      return
+    }
+    this.showRepresentacionFederal = true;
+
+  }
+
+  /**
+   * Muestra la sección para seleccionar un participante.
+   * Cambia el valor de la propiedad `showSeleccionarParticipante` a `true`,
+   * lo que habilita la visualización de la interfaz correspondiente.
+   */
+  seleccionarParticipante(): void {
+    this.showSeleccionarParticipante = true;
+  }
+
+  /**
+   * Agrega el valor del campo 'rfc1' al array 'datos1'.
+   * Si el campo está vacío, no realiza ninguna acción.
+   */
+  agregarRFC1(): void {
+    const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
+    if (RFC1VALUE) {
+      this.datosParticipantes.push({ rfc: RFC1VALUE, montoDisponible:0 });
+      this.adquiriente.get('rfc1')?.reset();
+    }
+  }
+  /**
+   * Mueve el valor seleccionado de 'datos1' al campo 'rfc'.
+   * Índice del elemento seleccionado en el array 'datos1'.
+   */
+  moverRFC1(selectedEntry: ParticipanteLicitacion): void {
+    const INDEX = this.datosParticipantes.indexOf(selectedEntry);
+    if (INDEX !== -1 && selectedEntry.rfc) {
+      this.adquiriente.get('rfc')?.setValue(selectedEntry.rfc);
+      this.datosParticipantes.splice(INDEX, 1);
+    }
+  }
 }
