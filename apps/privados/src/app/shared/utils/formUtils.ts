@@ -19,6 +19,7 @@ export class FormUtils {
         case 'customRequired':
         case 'broadcastDateRequired':
         case 'numFlightRequired':
+        case 'transferDateRequired':
           return 'Este campo es obligatorio';
         case 'missingStartDate':
           return 'Selecciona primero fecha de inicio';

@@ -26,7 +26,6 @@ export class DetalleTransbordoPage {
       'numGuideMaster',
     ]);
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       CONSULTAS_ROUTES.CONSULTA_TRANSBORDO,
     ]);
