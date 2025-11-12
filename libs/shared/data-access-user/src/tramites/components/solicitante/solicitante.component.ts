@@ -106,7 +106,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
      if (this.guardarDatos.id_solicitud && (this.guardarDatos.procedureId === '130118' || this.guardarDatos.procedureId === '5701' 
-      || this.guardarDatos.procedureId === '120301' || this.guardarDatos.procedureId === '110101')) {
+      || this.guardarDatos.procedureId === '120301' || this.guardarDatos.procedureId === '110101' || this.guardarDatos.procedureId === '130120')) {
       this.getDatosSolicitanteEvaluar(this.guardarDatos.id_solicitud);
     } else {
       this.getDatosGenerales(this.RFC);
