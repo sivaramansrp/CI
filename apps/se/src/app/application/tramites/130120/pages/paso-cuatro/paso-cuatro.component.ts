@@ -1,13 +1,13 @@
-import { CategoriaMensaje, DocumentoService, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TXT_ALERTA_ACUSE, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from "@ng-mf/data-access-user";
+import { CategoriaMensaje, DocumentoService, DocumentosFirmaQuery, DocumentosFirmaStore, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TXT_ALERTA_ACUSE, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from "@ng-mf/data-access-user";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { GenerarCadenaResponse } from '../../../120301/models/request/generar-cadena-request.model';
 import { Router } from '@angular/router';
 
+import { DocumentoRequeridoFirmar, FirmarRequest } from "@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model";
 import { FirmaService } from "../../services/firma.service";
 import { Firmar130120Request } from "../../models/request/firma-request.model";
-import { FirmarRequest } from "@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model";
 
 /**
  * Componente para el paso cuatro del trámite.
@@ -129,7 +129,16 @@ Mantener la coherencia en la navegación del proceso de trámite
     fechaFin: string;
   };
 
+  /**
+  * Array que almacena las cadenas originales de los documentos que requieren firma.
+  */
+  public cadenasOriginalesDocumentos: string[] = [];
 
+  /** Lista de documentos que requieren firma electrónica.
+   * Esta lista se obtiene del store `DocumentosFirmaStore` a través del query `DocumentosFirmaQuery`.
+   * Se utiliza para mostrar los documentos al usuario y procesar la firma de cada uno.
+   */
+  public documentosFirma: DocumentoRequeridoFirmar[] = [];
 
   /**
    * Constructor del componente.
@@ -139,9 +148,18 @@ Mantener la coherencia en la navegación del proceso de trámite
     private router: Router,
     private firmarService: FirmaService,
     private documentoService: DocumentoService,
-    private tramiteStore: TramiteFolioStore,) { }
+    private tramiteStore: TramiteFolioStore,
+    private documentosFirmaQuery: DocumentosFirmaQuery,
+    private documentosFirmaStore: DocumentosFirmaStore,) { }
 
   ngOnInit(): void {
+
+    this.documentosFirmaQuery.documentos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((docs) => {
+        this.documentosFirma = docs;
+        this.cadenasOriginalesDocumentos = docs.map(d => d.hash_documento);
+      });
 
     // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
@@ -218,6 +236,21 @@ Mantener la coherencia en la navegación del proceso de trámite
     this.obtieneFirma(datos.firma);
   }
 
+   /**
+   * Maneja los documentos firmados y actualiza el store con los sellos correspondientes.
+   * @param sellos - Array de cadenas que representan los sellos de los documentos firmados.
+   */
+  onDocumentosFirmados(sellos: string[]): void {
+    // Mezclas los sellos con los documentos de Akita
+    const DOCUMENTOS = this.documentosFirma.map((doc, i) => ({
+      ...doc,
+      hash_documento: encodeToISO88591Hex(doc.hash_documento),
+      sello_documento: base64ToHex(sellos[i] || '')
+    }));
+
+    this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
+  }
+
   /**
      * Método para obtener la firma del documento.
      * Este método se encarga de enviar la solicitud de firma al servicio correspondiente.
@@ -255,7 +288,7 @@ Mantener la coherencia en la navegación del proceso de trámite
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
+            documentos_requeridos:  this.documentosFirma || response.datos?.documentos_requeridos || [],
           };
 
           return this.firmarService.postFirma(this.idSolicitud, PAYLOAD);
