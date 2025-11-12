@@ -47,7 +47,6 @@ export class TransferComponent implements OnInit {
         tap((hasResult: boolean) => {
           if (hasResult) {
             this.routingService.navigate([
-              APP_ROUTES.VUCEM,
               STORE_FRONT_ROUTES.CONSULTAS,
               TRANSBORDO_ROUTES.TRANSBORDO_DETALLE,
             ]);

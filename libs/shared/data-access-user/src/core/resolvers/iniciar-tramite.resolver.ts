@@ -65,7 +65,8 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
           rol_actual: 'CapturistaGubernamental',
           folio_programa: "FOL123456",
           idTipoTramite:Number(INICIAR_CONFIG?.procedureId),
-          discriminador:INICIAR_CONFIG?.procedureId // Valor estándar
+          discriminador:INICIAR_CONFIG?.procedureId, // Valor estándar
+          ...(INICIAR_CONFIG?.procedureId === '80302' && { tipoPrograma: "TICPSE.IMMEX",idProgramaAutorizado:"121880" })
         };
 
         return this.iniciarTramiteService.postIniciar(PAYLOAD, INICIAR_CONFIG).pipe(

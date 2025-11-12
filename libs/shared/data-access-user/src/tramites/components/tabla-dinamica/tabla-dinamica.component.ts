@@ -482,6 +482,8 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   obtenerTextoBoton(fila: any): string {
     if (fila?.desEstatus && fila?.desEstatus === TEXTO_FILA_REGISTRO.BAJA) {
       this.batonValor = ESTADO_REGISTRO.ACTIVAR;
+    }else{
+      this.batonValor = ESTADO_REGISTRO.BAJA;
     }
     return this.batonValor;
   }
