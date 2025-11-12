@@ -1095,6 +1095,8 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
       case 260207:
       case 260209:
       case 260208:
+      case 260210:
+      case 260218:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['colonia'];
         break;

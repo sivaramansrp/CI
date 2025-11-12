@@ -1153,9 +1153,6 @@ export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${
 /*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
 export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
 
-/*API para obtener el catálogo de países por bloque*/
-export const PAISES_POR_BLOQUE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/105`;
-
 /** API para prellenadasDatos la solicitud del tramite generico.
  */
 export const API_POST_PARCHE_PRELLENADAS = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
