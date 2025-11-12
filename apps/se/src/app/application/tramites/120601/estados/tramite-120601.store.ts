@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 export interface Tramites120601State {
   /** Datos generales de los socios */
   datosGeneralesSocios: {
+    pais?: string;
     /** Nacionalidad del socio */
     nacionalidad: string;
     /** Tipo de persona del socio */
@@ -41,7 +42,20 @@ export interface Tramites120601State {
     estado: string;
     /** Representación seleccionada */
     representacion: string;
-  }
+  },
+  domicilioFiscal: {
+    calle?: string;
+    nInt?: string;
+    nExt?: string;
+    codigoPostal?: string;
+    colonia?: string;
+    localidad?: string;
+    municipio?: string;
+    entidadFederativa?: string;
+    pais?: string;
+    lada?: string;
+    telefono?: string;
+  };
 }
 
 /**
@@ -53,8 +67,8 @@ export interface Tramites120601State {
 export function createInitialState(): Tramites120601State {
   return {
     datosGeneralesSocios: {
-      nacionalidad: 'Yes',
-      persona: 'Yes',
+      nacionalidad: 'Si',
+      persona: 'Si',
       cadenaDependencia: '',
       nombre: '',
       apellidoPaterno: '',
@@ -62,7 +76,8 @@ export function createInitialState(): Tramites120601State {
       estado: '',
       correoElectronico: '',
       taxId: '',
-      denominacion: ''
+      denominacion: '',
+      pais: '',
     },
     datosDeLaSolicitud: {
       tipoDeEmpresa: '',           
@@ -71,7 +86,20 @@ export function createInitialState(): Tramites120601State {
     representacionFederal: {
       estado: '',
       representacion: '',
-    }
+    },
+    domicilioFiscal: {
+      calle: '',
+      nInt: '',
+      nExt: '',
+      codigoPostal: '',
+      colonia: '',
+      localidad: '',
+      municipio: '',
+      entidadFederativa: '',
+      pais: '',
+      lada: '',
+      telefono: ''
+  }
   };  
 }
 
@@ -199,6 +227,28 @@ export class Tramite120601Store extends Store<Tramites120601State> {
       datosGeneralesSocios:{
         ...state.datosGeneralesSocios,
         ...datos,
+      },
+    }));
+  }
+
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  public setDomicilioFiscal(domicilioFiscal: Partial<Tramites120601State['domicilioFiscal']>): void {
+    this.update((state) => ({
+      ...state,
+      domicilioFiscal: {
+        ...state.domicilioFiscal,
+        ...domicilioFiscal,
       },
     }));
   }

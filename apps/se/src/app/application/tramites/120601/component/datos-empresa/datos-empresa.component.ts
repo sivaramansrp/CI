@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosGeneralesSociosComponent } from '../datos-generales-socios/datos-generales-socios.component';
 import { DomicilioComponent } from '../domicilio/domicilio.component';
+import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
 import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
 /**
  * Componente que representa los datos de la empresa en un proceso de múltiples pasos.
@@ -96,6 +97,14 @@ export class DatosEmpresaComponent {
     }
 
     return isValid;
+  }
+
+/**
+ * Maneja los datos recibidos de las plantas.
+ * Llama al método prefillDomicilioForm para rellenar el formulario de domicilio con la información obtenida.
+ */
+  onPlantasDataReceived(plantasData: RepresentacionFederal[]): void {
+    this.domicilio.prefillDomicilioForm(plantasData);
   }
   
 }

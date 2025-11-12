@@ -1,4 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
+import { Subject, firstValueFrom, take, takeUntil } from 'rxjs';
+import { Tramite120601Store, Tramites120601State } from '../../estados/tramite-120601.store';
+import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../constantes/definiciones.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -87,6 +91,23 @@ export class DatosComponent {
    */
   esFormaValido: boolean = false;
 
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /** Identificador numérico para guardar la solicitud.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  guardarIdSolicitud: number = 0;
+
+  /** Mensaje de confirmación al guardar la solicitud.
+   * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
+   */
+  guardarMensaje: string = '';
+
+  constructor( private servicio120601: DatosEmpresaService,
+    private tramite120601Store: Tramite120601Store
+
+  ) {}
+
   /**
    * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
    */
@@ -107,7 +128,7 @@ export class DatosComponent {
    * Actualiza el valor del índice según el evento del botón de acción.
    * @param e El evento del botón de acción que contiene la acción y el valor.
    */
-  public getValorIndice(e: AccionBoton): void {
+  public async getValorIndice(e: AccionBoton): Promise<void> {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -118,6 +139,12 @@ export class DatosComponent {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return; // Detener ejecución si los formularios son inválidos
       }
+    try {
+      await this.obtenerDatosDelStore();
+    } catch (err) {
+      console.error('Error saving data before continuing', err);
+      return;
+    }
     }
 
     // Calcular el nuevo índice basado en la acción
@@ -141,5 +168,68 @@ export class DatosComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Obtiene los datos almacenados en el estado (store) mediante el servicio correspondiente.
+   * Realiza una única suscripción al observable usando 'take(1)'.
+   * Al recibir los datos, los guarda mediante el método 'guardar'.
+   */
+    // obtenerDatosDelStore(): void {
+    //   this.servicio120601.getAllState()
+    //     .pipe(take(1))
+    //     .subscribe(data => {
+    //       this.guardar(data);
+    //     });
+    // }
+
+    obtenerDatosDelStore(): Promise<void> {
+      return firstValueFrom(this.servicio120601.getAllState().pipe(take(1)))
+      .then(data => {
+      return this.guardar(data);
+      });
+    }
+
+  guardar(data: Tramites120601State):Promise<void>{
+    const DATOS_EMPRESA = this.servicio120601.buildDatosEmpresa(data);
+    const PAYLOAD = {
+     "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividad_economica": "Fabricación de productos de hierro y acero",
+        "correo_electronico": "contacto@acerosalvarado.com",
+        "razonSocial": "INTEGRADORA",
+        "domicilio": {
+            "pais": "México",
+            "codigoPostal": "03100",
+            "estado": "26",
+            "delegacionMunicipio": "Benito Juárez",
+            "localidad": "REGION ARROYO SECO",
+            "colonia": "Del Valle",
+            "calle": "Av. Insurgentes Sur",
+            "numeroExterior": "1234",
+            "numeroInterior": "A",
+            "lada": "1234",
+            "telefono": "12345678"
+        }
+    },
+    "datosEmpresa": DATOS_EMPRESA
+    }
+    return new Promise((resolve, reject) => {
+      this.servicio120601.guardarDatosPost(PAYLOAD).pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        if(esValidObject(response)) {
+          const RESPONSE = doDeepCopy(response);
+          this.tramite120601Store.setIdSolicitud(RESPONSE?.datos?.idSolicitud ?? 0);
+          this.guardarIdSolicitud = RESPONSE?.datos?.idSolicitud ?? 0;
+          this.guardarMensaje = RESPONSE?.datos?.mensaje ?? '';
+          this.wizardComponent.siguiente();
+          resolve();
+        }
+      },error=>{
+        reject(error);
+      });
+    });
   }
 }

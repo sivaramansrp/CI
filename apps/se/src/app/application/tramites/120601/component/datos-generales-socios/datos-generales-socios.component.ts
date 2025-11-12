@@ -118,6 +118,11 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
   *  Ayuda a prevenir fugas de memoria en flujos observables. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+/**
+ * Indica si la carga de los accionistas está en proceso.
+ * Se utiliza para mostrar o ocultar indicadores de carga en la interfaz.
+ */
+  private estaCargandoAccionistas = false; 
 
   /**
    * Constructor - inicializa el form builder.
@@ -195,18 +200,12 @@ actualizarEstadoFormulario(): void {
    * Hook del ciclo de vida - inicializa el componente y los formularios.
    */
   ngOnInit(): void {
-    this.obtenerDatosTablaDeSocios();
-  //   this.catalogoPaises = [
-  //   { id: 1, descripcion: 'México' },
-  //   { id: 2, descripcion: 'Estados Unidos' },
-  //   { id: 3, descripcion: 'Canadá' },
-  // ]
   this.obtenerCatalogoPaises();
 
     this.FormSolicitud = this.fb.group({
       datosGeneralesSocios: this.fb.group({
-        nacionalidad: ['No', Validators.required],
-        persona: ['No', Validators.required],
+        nacionalidad: ['', Validators.required],
+        persona: ['', Validators.required],
         cadenaDependencia: ['', Validators.required],
         // Campos para persona física extranjera
         nombre: [''],
@@ -269,60 +268,88 @@ actualizarEstadoFormulario(): void {
    * Suscribe a los datos y los asigna a la variable `datosSocios`.
    */
 
-  obtenerDatosTablaDeSocios(): void {
-    this.empresaService.obtenerDatosTablaDeSocios().subscribe((data)=>{
-      this.datosSocios = data;
-    })
+  // obtenerDatosTablaDeSocios(): void {
+  //   this.empresaService.obtenerDatosTablaDeSocios().subscribe((data)=>{
+  //     this.datosSocios = data;
+  //   })
 
-    this.empresaService.obtenerDatosTablaDeSociosExtranjeros().subscribe((data)=>{
-      this.datosExtranjeros = data;
-    })
-  }
+  //   this.empresaService.obtenerDatosTablaDeSociosExtranjeros().subscribe((data)=>{
+  //     this.datosExtranjeros = data;
+  //   })
+  // }
 
   /**
    * Agrega un nuevo socio a la lista de socios.
    * Dependiendo de los campos de entrada, agrega un socio regular o un socio extranjero.
    */
-  agregarSocio(): void {
-    if(this.camposEntradaRegulares){
-       const NUEVOSOCIO: DatosSociosTable = {
-      rfc: "DIP150930L62",
-      razonsocial: "",
-      nombre: "EUROFOODS",
-      apellidoPaterno: "HONALEZ",
-      apellidoM: "SINAL",
-      correo: "vucem3.5@hotmail.com"
-    }
-    this.datosSocios.push(NUEVOSOCIO);
-    }
-    if(this.camposPersonaMoralExtranjera){
-      const NUEVOSOCIOEXTRANJERO: DatosSociosTableExtranjeros= {
-        taxID: "123456789",
-        razonSocial: "DESARROLLOS INMOBILIARIOS",
-        nombre: "EUROFOODS EXTRANJERO",
-        apellidoPaterno: "HONALEZ",
-        pais: "Estados Unidos",
-        estado: "California",
-        correo: "abc@gmail.com",
-        codigoPostal: "12345"
-      }
-      this.datosExtranjeros.push(NUEVOSOCIOEXTRANJERO);
-    }
-     if(this.camposPersonaFisicaExtranjera){
-      const NUEVOSOCIOEXTRANJERO: DatosSociosTableExtranjeros= {
-        taxID: "123456789",
-        razonSocial: "",
-        nombre: "EUROFOODS EXTRANJERO",
-        apellidoPaterno: "HONALEZ",
-        pais: "Estados Unidos",
-        estado: "California",
-        correo: "abc@gmail.com",
-        codigoPostal: "12345"
-      }
-      this.datosExtranjeros.push(NUEVOSOCIOEXTRANJERO);
-    }
-   
+  // eslint-disable-next-line complexity
+agregarSocio(): void {
+  const VALOR_FORMULARIO = this.FormSolicitud.get('datosGeneralesSocios')?.value || {};
+  const RFC = VALOR_FORMULARIO.cadenaDependencia || '';
+  if (this.camposEntradaRegulares && RFC) {
+  this.estaCargandoAccionistas = true;
+    this.empresaService.getAccionistasByRFC(RFC)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => {
+          this.estaCargandoAccionistas = false;
+          if(response){
+            this.aplicarAccionistasRespuesta(response);
+          }
+        }
+      });
   }
+  if (this.camposPersonaMoralExtranjera) {
+    const NUEVO_SOCIO_EXTRANJERO: DatosSociosTableExtranjeros = {
+      taxID: VALOR_FORMULARIO.taxId || '',
+      razonSocial: VALOR_FORMULARIO.denominacion || '',
+      nombre: '',
+      apellidoPaterno: '',
+      pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
+      estado: VALOR_FORMULARIO.estado || '',
+      correo: VALOR_FORMULARIO.correoElectronico || '',
+      codigoPostal: VALOR_FORMULARIO.codigoPostal || ''
+    };
+    this.datosExtranjeros.push(NUEVO_SOCIO_EXTRANJERO);
+    this.datosExtranjeros = [...this.datosExtranjeros]; 
+  }
+  if (this.camposPersonaFisicaExtranjera) {
+    const NUEVO_SOCIO_EXTRANJERO: DatosSociosTableExtranjeros = {
+      taxID: VALOR_FORMULARIO.taxId || '',
+      razonSocial: '', 
+      nombre: VALOR_FORMULARIO.nombre || '',
+      apellidoPaterno: VALOR_FORMULARIO.apellidoPaterno || '',
+      pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
+      estado: VALOR_FORMULARIO.estado || '',
+      correo: VALOR_FORMULARIO.correoElectronico || '',
+      codigoPostal: VALOR_FORMULARIO.codigoPostal || ''
+    };
+    this.datosExtranjeros.push(NUEVO_SOCIO_EXTRANJERO);
+    this.datosExtranjeros = [...this.datosExtranjeros]; 
+  }
+}
+
+private aplicarAccionistasRespuesta(apiResponse: any): void {
+  const DATOS = apiResponse?.datos || [];
+
+  DATOS.forEach((item: any) => {
+    const ACCIONISTA = item.personaRelacionada;
+    if (!ACCIONISTA) {return;}
+
+    const PERSONA_VALOR = ACCIONISTA.ideTipoPersona === 'TIPER.FI';
+
+    const NUEVO_SOCIO: DatosSociosTable = {
+      rfc: ACCIONISTA.rfc || '',
+      razonsocial: PERSONA_VALOR ? (ACCIONISTA.razonSocial || '') : '',
+      nombre: PERSONA_VALOR ? (ACCIONISTA.nombre || '') : '',
+      apellidoPaterno: PERSONA_VALOR ? (ACCIONISTA.apellidoPaterno || '') : '',
+      apellidoM: PERSONA_VALOR ? (ACCIONISTA.apellidoMaterno || '') : '',
+      correo: ACCIONISTA.correoElectronico || ''
+    };
+    this.datosSocios.push(NUEVO_SOCIO);
+    this.datosSocios = [...this.datosSocios];
+  });
+}
 
   /**
    * Actualiza las banderas booleanas basadas en la combinación de nacionalidad y tipo de persona.
@@ -340,11 +367,11 @@ actualizarEstadoFormulario(): void {
     this.camposPersonaMoralExtranjera = false;
 
     // Determinar qué campos mostrar según la combinación
-    if (NACIONALIDAD === 'Yes') { 
+    if (NACIONALIDAD === 'Si') { 
       this.camposEntradaRegulares = true;
     } 
     else if (NACIONALIDAD === 'No') { 
-      if (TIPO_PERSONA === 'Yes') { 
+      if (TIPO_PERSONA === 'Si') { 
         this.camposPersonaFisicaExtranjera = true;
       } else if (TIPO_PERSONA === 'No') { 
         this.camposPersonaMoralExtranjera = true;
@@ -407,6 +434,16 @@ actualizarEstadoFormulario(): void {
         }
       });
 }
+
+  /**
+   * Devuelve la descripción del país dado su ID.
+   * @param paisId El ID del país.
+   * @returns La descripción del país o el ID si no se encuentra.
+   */
+  getPaisDescription(paisClave: string | number): string {
+    const PAIS = this.catalogoPaises.find(p => p.clave === paisClave);
+    return PAIS ? PAIS.descripcion : paisClave as string;
+  }
 
   /**
    * Hook del ciclo de vida - se ejecuta cuando el componente se destruye.
