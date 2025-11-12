@@ -79,15 +79,15 @@ export class GuardarAdapter_260513 {
         aduanas: this.solicitudDatos.aduanasDeEntrada?.toString() ?? ""
       },
       pagoDeDerechos: {
-        claveDeReferencia: this.solicitudDatos.claveDeReferencia ?? "",
-        cadenaPagoDependencia: this.solicitudDatos.cadenaDependencia ?? "",
+        claveDeReferencia: this.pagoDerechosDatos.claveReferencia ?? "",
+        cadenaPagoDependencia: this.pagoDerechosDatos.cadenaDependencia ?? "",
         banco: {
-          clave: this.solicitudDatos.banco ?? "",
+          clave: this.pagoDerechosDatos.banco ?? "",
           descripcion: this.pagoDerechosDatos.bancoObject?.descripcion ?? ""
         },
-        llaveDePago: this.solicitudDatos.llaveDePago ?? "",
-        fecPago: this.solicitudDatos.fechaPago ?? "",
-        impPago: this.solicitudDatos.importePago ?? ""
+        llaveDePago: this.pagoDerechosDatos.llavePago ?? "",
+        fecPago: this.pagoDerechosDatos.fechaPago ?? "",
+        impPago: this.pagoDerechosDatos.importePago ?? ""
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mercancias: (this.solicitudDatos.mercanciaTabla ?? []).map((m: any) => ({
