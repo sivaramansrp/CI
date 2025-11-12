@@ -17,13 +17,13 @@ export class GuardarAdapter_260513 {
   establecimientDatos: SolicitudState = {} as SolicitudState;
   solicitudDatos: DatosDomicilioLegalState = {} as DatosDomicilioLegalState;
 
-  pagoDerechosDatos: PagoDerechosState ={} as PagoDerechosState;
+  pagoDerechosDatos: PagoDerechosState = {} as PagoDerechosState;
 
   constructor(
-    private establecimientQuery:AvisocalidadQuery, 
+    private establecimientQuery: AvisocalidadQuery,
     private solicitudQuery: DatosDomicilioLegalQuery,
-     private pagoDrenchosQuery:PagoDerechosQuery
-   ) {
+    private pagoDrenchosQuery: PagoDerechosQuery
+  ) {
     this.establecimientQuery.allStoreData$.subscribe(data => {
       this.establecimientDatos = data;
     });
@@ -35,103 +35,105 @@ export class GuardarAdapter_260513 {
     });
   }
 
+  // eslint-disable-next-line complexity
   public toFormPayload(): unknown {
     return {
-      "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "María Fernanda Torres",
-        "actividadEconomica": "Comercio al por mayor de productos farmacéuticos",
-        "correoElectronico": "mfernanda.torres@example.com",
-        "domicilio": {
-            "pais": "México",
-            "codigoPostal": "03100",
-            "estado": "Ciudad de México",
-            "municipioAlcaldia": "Benito Juárez",
-            "localidad": "Narvarte",
-            "colonia": "Colonia Narvarte Poniente",
-            "calle": "Av. Universidad 300",
-            "numeroExterior": "300",
-            "numeroInterior": "12",
-            "lada": "55",
-            "telefono": "5556789012"
+      solicitante: {
+        rfc: this.solicitudDatos.rfc ?? "",
+        nombre: this.solicitudDatos.nombre ?? "",
+        actividadEconomica: "", 
+        correoElectronico: this.solicitudDatos.correo ?? "",
+        domicilio: {
+          pais: "México", 
+          codigoPostal: this.solicitudDatos.codigoPostal ?? "",
+          estado: this.solicitudDatos.estado ?? "",
+          municipioAlcaldia: this.solicitudDatos.muncipio ?? "",
+          localidad: this.solicitudDatos.localidad ?? "",
+          colonia: this.solicitudDatos.colonia ?? "",
+          calle: this.solicitudDatos.calle ?? "",
+          numeroExterior: "", 
+          numeroInterior: "", 
+          lada: this.solicitudDatos.lada ?? "",
+          telefono: this.solicitudDatos.telefono ?? ""
+        }
+      },
+      establecimiento: {
+        rfcResponsableSanitario: this.establecimientDatos.rfcDel ?? "",
+        razonSocial: this.establecimientDatos.denominacionRazonSocial ?? "",
+        correoElectronico: this.establecimientDatos.correoElectronico ?? "",
+        domicilio: {
+          codigoPostal: this.solicitudDatos.codigoPostal ?? "",
+          entidadFederativa: {
+            clave: "09" // Only hardcoded value available
+          },
+          descripcionMunicipio: this.solicitudDatos.muncipio ?? "",
+          informacionExtra: this.solicitudDatos.localidad ?? "",
+          descripcionColonia: this.solicitudDatos.colonia ?? "",
+          calle: this.solicitudDatos.calle ?? "",
+          lada: this.solicitudDatos.lada ?? "",
+          telefono: this.solicitudDatos.telefono ?? ""
         },
+        original: "", 
+        avisoFuncionamiento: this.solicitudDatos.avisoCheckbox ?? false,
+        numeroLicencia: this.solicitudDatos.licenciaSanitaria ?? "",
+        aduanas: this.solicitudDatos.aduanasDeEntrada?.toString() ?? ""
       },
-      "establecimiento": {
-          "rfcResponsableSanitario": this.establecimientDatos?.rfcDel ? this.establecimientDatos.rfcDel : "",
-          "razonSocial":this.establecimientDatos?.denominacionRazonSocial ? this.establecimientDatos.denominacionRazonSocial : "",
-          "correoElectronico": this.establecimientDatos?.correoElectronico ? this.establecimientDatos.correoElectronico : "",
-          "domicilio": {
-              "codigoPostal": this.solicitudDatos.codigoPostal,
-              "entidadFederativa": {
-                  "clave": "09"
-              },
-              "descripcionMunicipio": this.solicitudDatos.muncipio,
-              "informacionExtra": this.solicitudDatos.localidad,
-              "descripcionColonia": this.solicitudDatos.colonia,
-              "calle": this.solicitudDatos.calle,
-              "lada": this.solicitudDatos.lada,
-              "telefono": this.solicitudDatos.telefono
-          },
-          "original": "",
-          "numeroLicencia": this.solicitudDatos.licenciaSanitaria,
+      pagoDeDerechos: {
+        claveDeReferencia: this.solicitudDatos.claveDeReferencia ?? "",
+        cadenaPagoDependencia: this.solicitudDatos.cadenaDependencia ?? "",
+        banco: {
+          clave: this.solicitudDatos.banco ?? "",
+          descripcion: this.pagoDerechosDatos.bancoObject?.descripcion ?? ""
+        },
+        llaveDePago: this.solicitudDatos.llaveDePago ?? "",
+        fecPago: this.solicitudDatos.fechaPago ?? "",
+        impPago: this.solicitudDatos.importePago ?? ""
       },
-      "pagoDeDerechos": {
-          "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
-          "cadenaPagoDependencia": this.pagoDerechosDatos.cadenaDependencia,
-          "banco": {
-              "clave": this.pagoDerechosDatos.banco,
-              "descripcion": ""
-          },
-          "llaveDePago": this.pagoDerechosDatos.llavePago,
-          "fecPago": this.pagoDerechosDatos.fechaPago,
-          "impPago": this.pagoDerechosDatos.importePago
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mercancias: (this.solicitudDatos.mercanciaTabla ?? []).map((m: any) => ({
+        idMercancia: m.idMercancia ?? "",
+        nombreComercial: m.nombreComercial ?? "",
+        nombreComun: m.nombreComun ?? "",
+        nombreCientifico: m.nombreCientifico ?? "",
+        acondicionamiento: m.acondicionamiento ?? "",
+        estadoFisico: m.estadoFisico ?? "",
+        estadoFisicoDescripcionOtros: m.estadoFisicoOtro ?? "",
+        fraccionArancelaria: {
+          clave: m.fraccionArancelaria ?? "",
+          descripcion: m.descripcionFraccion ?? ""
+        },
+        unidadMedidaComercial: {
+          descripcion: m.UMC ?? ""
+        },
+        cantidadUMCConComas: m.cantidadUMC ?? "",
+        unidadMedidaTarifa: {
+          descripcion: m.UMT ?? ""
+        },
+        cantidadUMTConComas: m.cantidadUMT ?? "",
+        presentacion: m.presentacion ?? "",
+        registroSanitarioConComas: m.numeroRegistroSanitario ?? "",
+        nombreCortoPaisOrigen: m.paisDeOriginDatos?.toString() ?? "",
+        nombreCortoPaisProcedencia: m.paisDeProcedenciaDatos?.toString() ?? "",
+        porcentajeConcentracion: m.porcentajeConcentracion ?? "",
+        fechaCaducidadStr: m.fechaCaducidad ?? ""
+      })),
+      representanteLegal: {
+        rfc: this.solicitudDatos.rfc ?? "",
+        resultadoIDC: "", 
+        nombre: this.solicitudDatos.nombre ?? "",
+        apellidoPaterno: this.solicitudDatos.apellidoPaterno ?? "",
+        apellidoMaterno: this.solicitudDatos.apellidoMaterno ?? ""
       },
-      // "mercancias": (this.solicitudDatos?.mercanciaTabla ?? []).map((mercancia) => ({
-      //   "objetoImportacionEnum": mercancia.objetoImportacionEnum,
-      //   "objetoImportacionDesc": mercancia.objetoImportacionDesc,
-      //   "descOtroObjetoImportacion": mercancia.descOtroObjetoImportacion,
-      //   "clasificacionToxicologica": {
-      //     "idClasificacionToxicologicaTipoTramite": mercancia.clasificacionToxicologica?.idClasificacionToxicologicaTipoTramite,
-      //     "clasificacionToxicologica": mercancia.clasificacionToxicologica?.clasificacionToxicologica
-      //   },
-      //   "numeroCAS": mercancia.numeroCAS,
-      //   "porcentajeConcentracion": mercancia.porcentajeConcentracion,
-      //   "nombreComercial": mercancia.nombreComercial,
-      //   "nombreComun": mercancia.nombreComun,
-      //   "nombreCientifico": mercancia.nombreCientifico,
-      //   "idEstadoFisico": mercancia.idEstadoFisico,
-      //   "idMercancia": mercancia.idMercancia,
-      //   "idClasificacionProducto": mercancia.idClasificacionProducto,
-      //   "nombreClasificacionProducto": mercancia.nombreClasificacionProducto,
-      //   "ideSubClasificacionProducto": mercancia.ideSubClasificacionProducto,
-      //   "nombreSubClasificacionProducto": mercancia.nombreSubClasificacionProducto,
-      //   "descDenominacionEspecifica": mercancia.descDenominacionEspecifica,
-      //   "descDenominacionDistintiva": mercancia.descDenominacionDistintiva,
-      //   "descripcionMercancia": mercancia.descripcionMercancia,
-      //   "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceuticaDescripcionOtros,
-      //   "estadoFisicoDescripcionOtros": mercancia.estadoFisicoDescripcionOtros,
-      //   "fraccionArancelaria": {
-      //     "clave": mercancia.fraccionArancelaria?.clave,
-      //     "descripcion": mercancia.fraccionArancelaria?.descripcion
-      //   },
-      //   "unidadMedidaComercial": {
-      //     "descripcion": mercancia.unidadMedidaComercial?.descripcion
-      //   },
-      //   "cantidadUMCConComas": mercancia.cantidadUMCConComas,
-      //   "unidadMedidaTarifa": {
-      //     "descripcion": mercancia.unidadMedidaTarifa?.descripcion
-      //   },
-      //   "cantidadUMTConComas": mercancia.cantidadUMTConComas,
-      //   "presentacion": mercancia.presentacion,
-      //   "registroSanitarioConComas": mercancia.registroSanitarioConComas,
-      //   "nombreCortoPaisOrigen": mercancia.nombreCortoPaisOrigen,
-      //   "nombreCortoPaisProcedencia": mercancia.nombreCortoPaisProcedencia,
-      //   "tipoProductoDescripcionOtros": mercancia.tipoProductoDescripcionOtros,
-      //   "nombreCortoUsoEspecifico": mercancia.nombreCortoUsoEspecifico,
-      //   "fechaCaducidadStr": mercancia.fechaCaducidadStr
-      // })),
- 
-
+      solicitud: {
+        discriminatorValue: 260513,
+        declaracionesSeleccionadas: this.solicitudDatos.mensaje ?? false,
+        regimen: this.solicitudDatos.regimen ?? "",
+        aduanaAIFA: "", 
+        informacionConfidencial: this.solicitudDatos.cumplimiento === 'Si' ? true : false
+      },
+      datosSCIAN: this.solicitudDatos.nicoTabla ?? []
+      };
     }
+    
   }
-}
+  
