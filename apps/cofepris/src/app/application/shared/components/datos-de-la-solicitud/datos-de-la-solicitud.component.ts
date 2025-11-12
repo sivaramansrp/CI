@@ -1165,6 +1165,10 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       this.datosSolicitudForm.patchValue(
         changes['datosSolicitudFormState'].currentValue
       );
+      this.cambioAviso();
+      this.cambioLicenciaSanitaria();
+      this.updateMercanciaTable();
+      
     }
   }
 
@@ -1692,10 +1696,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param {Event} event - Evento que se dispara al cambiar el estado del checkbox.
    * @returns {void} Este método no retorna ningún valor.
    **/
-  cambioAviso(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
+  cambioAviso(): void {
+    const CHECKED = this.datosSolicitudForm.get('aviso')?.value;
     const LICENCIA_SANITARIA_CONTROL =
       this.datosSolicitudForm.get('licenciaSanitaria');
+    
     if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
       LICENCIA_SANITARIA_CONTROL?.clearValidators();
       LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
@@ -1712,8 +1717,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    *
    * @param {Event} event - Evento de entrada proveniente de un elemento HTML.
    */
-  cambioLicenciaSanitaria(event: Event): void {
-    const VAL = (event.target as HTMLInputElement).value;
+  cambioLicenciaSanitaria(): void {
+    const VAL = this.datosSolicitudForm.get('licenciaSanitaria')?.value;
     if (VAL) {
       this.datosSolicitudForm.get('aviso')?.disable();
     } else {
@@ -2159,13 +2164,6 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
  * Updates the table after merchandise changes
  */
 private updateMercanciaTable(): void {
-  // Force the table to refresh by reassigning the data
-  this.tablaMercanciasConfig = {
-    ...this.tablaMercanciasConfig,
-    datos: [...this.tablaMercanciasConfig.datos]
-  };
-  
-  // Update the form control
   this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
   this.datosSolicitudForm.get('mercancias')?.updateValueAndValidity();
 }

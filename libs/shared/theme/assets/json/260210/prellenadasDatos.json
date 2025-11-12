@@ -45,7 +45,7 @@
       },
       "original": "",
       "avisoFuncionamiento": true,
-      "numeroLicencia": "123456",
+      "numeroLicencia": "",
       "aduanas": "020"
     },
     "datosSCIAN": [
@@ -120,27 +120,27 @@
           "numeroExterior": "2000",
           "numeroInterior": "A",
           "pais": {
-            "clave": "MEX",
-            "nombre": "México"
+            "clave": "AFG",
+            "nombre": "AFGANISTAN (EMIRATO ISLAMICO DE)"
           },
           "colonia": {
-            "clave": "001",
-            "nombre": "Industrial"
+            "clave": "00220710009",
+            "nombre": "ASIENTOS CENTRO"
           },
           "delegacionMunicipio": {
-            "clave": "015",
-            "nombre": "Cuauhtémoc"
+            "clave": "01002",
+            "nombre": "ASIENTOS"
           },
           "localidad": {
-            "clave": "001",
-            "nombre": "Ciudad de México"
+            "clave": "00220768002",
+            "nombre": "3 VALLES - CP 20768"
           },
           "entidadFederativa": {
-            "clave": "DF",
-            "nombre": "Ciudad de México"
+            "clave": "AGS",
+            "nombre": "AGUASCALIENTES"
           },
           "informacionExtra": "Zona Industrial Norte",
-          "codigoPostal": "06400",
+          "codigoPostal": "20801",
           "descripcionColonia": "Industrial Norte"
         },
         "idSolicitud": "12345"
@@ -175,8 +175,8 @@
             "nombre": "ALBANIA (REPUBLICA DE)"
           },
           "colonia": {
-            "clave": "001",
-            "nombre": "Industrial"
+            "clave": "00122920011",
+            "nombre": "13 DEMAYO"
           },
           "delegacionMunicipio": {
             "clave": "02001",
@@ -191,8 +191,8 @@
             "nombre": "BAJA CALIFORNIA"
           },
           "informacionExtra": "Zona Industrial Norte",
-          "codigoPostal": "06400",
-          "descripcionColonia": "Industrial Norte"
+          "codigoPostal": "22767",
+          "descripcionColonia": "ASIENTOS CENTRO"
         },
         "idSolicitud": "12345"
       }
@@ -222,12 +222,12 @@
           "numeroExterior": "2000",
           "numeroInterior": "A",
           "pais": {
-            "clave": "MEX",
-            "nombre": "México"
+            "clave": "AFG",
+            "nombre": "AFGANISTAN (EMIRATO ISLAMICO DE)"
           },
           "colonia": {
-            "clave": "001",
-            "nombre": "Industrial"
+            "clave": "00220710009",
+            "nombre": "ASIENTOS CENTRO"
           },
           "delegacionMunicipio": {
             "clave": "015",
@@ -242,8 +242,8 @@
             "nombre": "Ciudad de México"
           },
           "informacionExtra": "Zona Industrial Norte",
-          "codigoPostal": "06400",
-          "descripcionColonia": "Industrial Norte"
+          "codigoPostal": "20801",
+          "descripcionColonia": "ASIENTOS CENTRO"
         },
         "idSolicitud": "12345"
       }
@@ -277,8 +277,8 @@
             "nombre": "ALBANIA (REPUBLICA DE)"
           },
           "colonia": {
-            "clave": "001",
-            "nombre": "Industrial"
+            "clave": "00220710009",
+            "nombre": "ASIENTOS CENTRO"
           },
           "delegacionMunicipio": {
             "clave": "015",
@@ -293,8 +293,8 @@
             "nombre": "Ciudad de México"
           },
           "informacionExtra": "Zona Industrial Norte",
-          "codigoPostal": "06400",
-          "descripcionColonia": "Industrial Norte"
+          "codigoPostal": "20801",
+          "descripcionColonia": "ASIENTOS CENTRO"
         },
         "idSolicitud": "12345"
       }

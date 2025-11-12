@@ -315,6 +315,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
  * Se recibe como propiedad de entrada desde el componente padre.
  */
 @Input() tramiteID: string = '';
+
+/**
+ * Referencia al componente modal de Fabricante.
+ * @viewChild('fabricanteModalComponent')
+ */
+@ViewChild('destinatarioModalComponent') public destinatarioModalComponent!: AgregarDestinatarioFinalComponent;
   /**
    * Constructor del componente.
    *
@@ -748,7 +754,7 @@ cerrarFacturadorModal(): void {
   this.fabricanteSeleccionadoParaModificar = this.fabricanteSeleccionadoDatos.map(f => ({ ...f }));
   
   this.fabricanteModalAbierto = true;
-  
+
   const MODALELEMENT = document.getElementById('fabricanteModal');
   if (MODALELEMENT) {
     const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
@@ -771,12 +777,15 @@ cerrarFacturadorModal(): void {
   
   this.destinatarioSeleccionadoParaModificar = this.destinatarioSeleccionadoDatos.map(d => ({ ...d }));
   this.destinatarioModalAbierto = true;
-  
+
+
   const MODALELEMENT = document.getElementById('destinatarioModal');
   if (MODALELEMENT) {
     const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
     MODAL.show();
   }
+
+  
 }
 
 

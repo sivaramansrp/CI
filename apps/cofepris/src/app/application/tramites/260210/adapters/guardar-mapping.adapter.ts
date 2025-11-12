@@ -19,8 +19,27 @@ export class GuardarMappingAdapter {
   
   static toFormPayload(state: Tramite260210State): unknown {
     return {
+            "solicitante": {
+            "rfc": "AAL0409235E6",
+            "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+            "actividadEconomica": "Fabricación de productos de hierro y acero",
+            "correoElectronico": "contacto@acerosalvarado.com",
+            "domicilio": {
+            "pais": "México",
+            "codigoPostal": "06700",
+            "estado": "Ciudad de México",
+            "municipioAlcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numeroExterior": "123",
+            "numeroInterior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+            }
+        },
       "solicitud": {
-          "discriminatorValue": 260201,
+          "discriminatorValue": 260210,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
@@ -372,7 +391,7 @@ export class GuardarMappingAdapter {
             numeroExterior: p.domicilio?.numeroExterior ?? '',
             numeroInterior: p.domicilio?.numeroInterior ?? '',
             pais: p.domicilio?.pais?.nombre ?? '',
-            colonia: p.domicilio?.descripcionColonia ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
             municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
             localidad: p.domicilio?.localidad?.nombre ?? '',
             entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
@@ -403,7 +422,7 @@ export class GuardarMappingAdapter {
             numeroExterior: p.domicilio?.numeroExterior ?? '',
             numeroInterior: p.domicilio?.numeroInterior ?? '',
             pais: p.domicilio?.pais?.nombre ?? '',
-            colonia: p.domicilio?.descripcionColonia ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
             municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
             localidad: p.domicilio?.localidad?.nombre ?? '',
             entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
