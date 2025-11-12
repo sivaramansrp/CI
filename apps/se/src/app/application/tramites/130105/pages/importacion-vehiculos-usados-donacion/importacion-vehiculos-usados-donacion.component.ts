@@ -44,6 +44,10 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   * Se utiliza para acceder a las funcionalidades del primer paso del asistente.
+   */
   @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -120,8 +124,16 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
    */
   cargaEnProgreso: boolean = true;
 
+  /**
+   * @description
+   * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Folio temporal de la solicitud.
+   * @description
+   */
   public folioTemporal: number = 0;
 
   /**
@@ -427,10 +439,18 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
+  /**
+   *  Método para manejar el evento de carga en progreso.
+   * @param carga Indica si la carga está en progreso.
+   */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia los recursos y restablece el estado del store asociado al trámite 130105.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

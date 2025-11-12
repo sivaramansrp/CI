@@ -32,9 +32,14 @@ const PROCEDURE = '/sat-t130105';
  * Rutas de la API para el procedimiento 130105
  */
 export const PROC_130105 = {
+    /** Ruta para obtener los datos del formulario */
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
+    /** Ruta para buscar mercancías */
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+    /** Ruta para guardar los datos del formulario */
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    /** Ruta para consultar una solicitud por ID */
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    /** Ruta para obtener opiniones de un trámite */
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };

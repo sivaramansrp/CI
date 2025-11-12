@@ -32,6 +32,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
   @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
 
    /**

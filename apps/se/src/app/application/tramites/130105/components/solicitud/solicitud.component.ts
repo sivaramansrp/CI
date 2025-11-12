@@ -171,8 +171,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   private seccionState!: Tramite130105State;
 
+  /**
+   * jest.spyOnIdentificador del procedimiento actual.
+   * @type {number}
+   */
   idProcedimiento: number = ID_PROCEDIMIENTO;
 
+  /**
+   * jest.spyOnArreglo que almacena las partidas a mostrar en la tabla.
+   * @type {MostrarPartidas[]}
+   */
   mostrarPartidas: MostrarPartidas[] = [];
 
   /**
@@ -319,6 +327,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
+   */
   validarFormulario(): boolean {
     let isValid = true;
     if (this.formDelTramite.invalid) {
@@ -493,7 +505,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return disabled;
   }
 
-
+/**
+ *  Modifica los valores del formulario de partidas de la mercancía según el evento recibido.
+ * @param evento 
+ */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
@@ -502,6 +517,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *  Actualiza la partida modificada en la tabla de datos.
+   * @param evento 
+   */
   partidaModificada(evento: PartidasDeLaMercanciaModelo): void {
     this.tableBodyData = this.tableBodyData.map(item => {
       if (item.id === evento.id) {
@@ -538,6 +557,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene el catálogo de fracciones arancelarias desde el servicio y lo asigna a la propiedad `fraccionCatalogo`.
+   *
+   * @returns {void}
+   */
   getFraccionCatalogo(): void {
     this.importacionVehiculosUsadosDonacionService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
       this.fraccionCatalogo = data?.map(item => ({
@@ -547,6 +571,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
+   * @param FRACCION_ID 
+   */
   getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
     this.importacionVehiculosUsadosDonacionService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data as Catalogo[];
@@ -557,30 +585,52 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los bloques desde el servicio y los asigna a la propiedad `elementosDeBloque`.
+   *
+   * @returns {void}
+   */
   getBloque(): void {
     this.importacionVehiculosUsadosDonacionService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
       this.elementosDeBloque = data as Catalogo[];
     });
   }
 
+  /**
+   *  Obtiene los países por bloque desde el servicio y los asigna a la propiedad `paisesPorBloque`.
+   * @param ID 
+   */
   getPaisesPorBloque(ID: string): void {
     this.importacionVehiculosUsadosDonacionService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
       this.paisesPorBloque = data as Catalogo[];
     });
   }
 
+  /**
+   * Obtiene el catálogo de entidades federativas desde el servicio y lo asigna a la propiedad `entidadFederativa`.
+   *
+   * @returns {void}
+   */
   getEntidadesFederativasCatalogo(): void {
     this.importacionVehiculosUsadosDonacionService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
       this.entidadFederativa = data as Catalogo[];
     })
   }
 
+  /**
+   *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+   * @param cveEntidad 
+   */
   getRepresentacionFederalCatalogo(cveEntidad: string): void {
     this.importacionVehiculosUsadosDonacionService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
     });
   }
 
+  /**
+   *  Maneja la selección de todos los países.
+   * @param evento 
+   */
   todosPaisesSeleccionados(evento: boolean): void {
     if (evento) {
       this.importacionVehiculosUsadosDonacionService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
@@ -589,6 +639,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
+   *
+   * @returns {void}
+   */
   getMostrarPartidas(): void {
     this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
       this.mostrarPartidas = data as MostrarPartidas[];
@@ -596,11 +651,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *  Maneja la selección de fechas y actualiza el estado global.
+   * @param evento 
+   */
   fechasSeleccionadas(evento: string[]): void {
     this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 
-
+/**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
   calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
     const TOTAL_PARTIDAS = Number(cantidadPartidas);
     const TOTAL_USD = Number(cantidadUSD);
