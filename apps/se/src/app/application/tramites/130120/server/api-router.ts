@@ -28,7 +28,7 @@ export const API_GET_CAT_TIPOS_ADUANAS = `sat-t130120/catalogo/tipos-aduanas`;
  * API para el catálogo de tipos de monedas.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-tipos-monedas
  */
-export const API_GET_CAT_TIPOS_MONEDAS = `sat-t130120/tipos-monedas`;
+export const API_GET_CAT_TIPOS_MONEDAS = `sat-t130120/catalogo/tipos-monedas`;
 
 /**
  * API para el catálogo de países.
@@ -47,7 +47,7 @@ export const API_GET_CAT_UNIDADES_ADMINISTRATIVAS = (CVEENTIDAD: string): string
  * @param CVEFRACCION - Clave de la fracción arancelaria para la cual se desean obtener las unidades de medidas tarifarias.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-unidades-medidas-tarifarias
  */
-export const API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS = (CVEFRACCION: string): string => `sat-t130120/fraccion-arrancelaria/${CVEFRACCION}/unidades-medidas-tarifarias`;
+export const API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS = (CVEFRACCION: string): string => `sat-t130120/catalogo/fraccion-arrancelaria/${CVEFRACCION}/unidades-medidas-tarifarias`;
 
 /**
  * API para el catálogo de unidades de medida.
