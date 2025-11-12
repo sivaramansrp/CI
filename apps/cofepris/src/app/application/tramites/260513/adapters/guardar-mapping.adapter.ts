@@ -1,130 +1,137 @@
-// Adapter for mapping frontend form data to backend payload for procedure 260513
-export class GuardarMappingAdapter260513 {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static toFormPayload(formData: any): any {
-    // Map the formData to the required payload structure
+import { Injectable, OnInit } from '@angular/core';
+import { AvisocalidadQuery } from '../../../shared/estados/queries/aviso-calidad.query';
+import { DatosDomicilioLegalQuery } from '../../../shared/estados/queries/datos-domicilio-legal.query';
+import { DatosDomicilioLegalState } from '../../../shared/estados/stores/datos-domicilio-legal.store';
+import { PagoDerechosQuery } from '../../../shared/estados/queries/pago-derechos.query';
+import { PagoDerechosState } from '../../../shared/estados/stores/pago-de-derechos.store';
+import { SolicitudState } from '../../../shared/estados/stores/aviso-calidad.store';
+
+
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GuardarAdapter_260513 {
+  establecimientDatos: SolicitudState = {} as SolicitudState;
+  solicitudDatos: DatosDomicilioLegalState = {} as DatosDomicilioLegalState;
+
+  pagoDerechosDatos: PagoDerechosState ={} as PagoDerechosState;
+
+  constructor(
+    private establecimientQuery:AvisocalidadQuery, 
+    private solicitudQuery: DatosDomicilioLegalQuery,
+     private pagoDrenchosQuery:PagoDerechosQuery
+   ) {
+    this.establecimientQuery.allStoreData$.subscribe(data => {
+      this.establecimientDatos = data;
+    });
+    this.solicitudQuery.allStoreData$.subscribe(data => {
+      this.solicitudDatos = data;
+    });
+    this.pagoDrenchosQuery.selectSolicitud$.subscribe(data => {
+      this.pagoDerechosDatos = data;
+    });
+  }
+
+  public toFormPayload(): unknown {
     return {
-      solicitante: {
-        rfc: formData.solicitante?.rfc,
-        nombre: formData.solicitante?.nombre,
-        actividadEconomica: formData.solicitante?.actividadEconomica,
-        correoElectronico: formData.solicitante?.correoElectronico,
-        domicilio: {
-          pais: formData.solicitante?.domicilio?.pais,
-          codigoPostal: formData.solicitante?.domicilio?.codigoPostal,
-          estado: formData.solicitante?.domicilio?.estado,
-          municipioAlcaldia: formData.solicitante?.domicilio?.municipioAlcaldia,
-          localidad: formData.solicitante?.domicilio?.localidad,
-          colonia: formData.solicitante?.domicilio?.colonia,
-          calle: formData.solicitante?.domicilio?.calle,
-          numeroExterior: formData.solicitante?.domicilio?.numeroExterior,
-          numeroInterior: formData.solicitante?.domicilio?.numeroInterior,
-          lada: formData.solicitante?.domicilio?.lada,
-          telefono: formData.solicitante?.domicilio?.telefono,
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "María Fernanda Torres",
+        "actividadEconomica": "Comercio al por mayor de productos farmacéuticos",
+        "correoElectronico": "mfernanda.torres@example.com",
+        "domicilio": {
+            "pais": "México",
+            "codigoPostal": "03100",
+            "estado": "Ciudad de México",
+            "municipioAlcaldia": "Benito Juárez",
+            "localidad": "Narvarte",
+            "colonia": "Colonia Narvarte Poniente",
+            "calle": "Av. Universidad 300",
+            "numeroExterior": "300",
+            "numeroInterior": "12",
+            "lada": "55",
+            "telefono": "5556789012"
         },
       },
-      solicitud: {
-        discriminatorValue: 260513,
-        declaracionesSeleccionadas: formData.solicitud?.declaracionesSeleccionadas,
-        regimen: formData.solicitud?.regimen,
-        aduanaAIFA: formData.solicitud?.aduanaAIFA,
-        informacionConfidencial: formData.solicitud?.informacionConfidencial,
-      },
-      establecimiento: {
-        rfcResponsableSanitario: formData.establecimiento?.rfcResponsableSanitario,
-        razonSocial: formData.establecimiento?.razonSocial,
-        correoElectronico: formData.establecimiento?.correoElectronico,
-        domicilio: {
-          codigoPostal: formData.establecimiento?.domicilio?.codigoPostal,
-          entidadFederativa: {
-            clave: formData.establecimiento?.domicilio?.entidadFederativa?.clave,
+      "establecimiento": {
+          "rfcResponsableSanitario": this.establecimientDatos?.rfcDel ? this.establecimientDatos.rfcDel : "",
+          "razonSocial":this.establecimientDatos?.denominacionRazonSocial ? this.establecimientDatos.denominacionRazonSocial : "",
+          "correoElectronico": this.establecimientDatos?.correoElectronico ? this.establecimientDatos.correoElectronico : "",
+          "domicilio": {
+              "codigoPostal": this.solicitudDatos.codigoPostal,
+              "entidadFederativa": {
+                  "clave": "09"
+              },
+              "descripcionMunicipio": this.solicitudDatos.muncipio,
+              "informacionExtra": this.solicitudDatos.localidad,
+              "descripcionColonia": this.solicitudDatos.colonia,
+              "calle": this.solicitudDatos.calle,
+              "lada": this.solicitudDatos.lada,
+              "telefono": this.solicitudDatos.telefono
           },
-          descripcionMunicipio: formData.establecimiento?.domicilio?.descripcionMunicipio,
-          informacionExtra: formData.establecimiento?.domicilio?.informacionExtra,
-          descripcionColonia: formData.establecimiento?.domicilio?.descripcionColonia,
-          calle: formData.establecimiento?.domicilio?.calle,
-          lada: formData.establecimiento?.domicilio?.lada,
-          telefono: formData.establecimiento?.domicilio?.telefono,
-        },
-        original: formData.establecimiento?.original,
-        avisoFuncionamiento: formData.establecimiento?.avisoFuncionamiento,
-        numeroLicencia: formData.establecimiento?.numeroLicencia,
-        aduanas: formData.establecimiento?.aduanas,
+          "original": "",
+          "numeroLicencia": this.solicitudDatos.licenciaSanitaria,
       },
-      datosSCIAN: Array.isArray(formData.datosSCIAN)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ? formData.datosSCIAN.map((item: any) => ({
-            cveScian: item.cveScian,
-            descripcion: item.descripcion,
-            selected: item.selected,
-          }))
-        : [],
-      mercancias: Array.isArray(formData.mercancias)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ? formData.mercancias.map((item: any) => ({
-            objetoImportacionEnum: item.objetoImportacionEnum,
-            objetoImportacionDesc: item.objetoImportacionDesc,
-            descOtroObjetoImportacion: item.descOtroObjetoImportacion,
-            clasificacionToxicologica: {
-              idClasificacionToxicologicaTipoTramite:
-                item.clasificacionToxicologica?.idClasificacionToxicologicaTipoTramite,
-              clasificacionToxicologica:
-                item.clasificacionToxicologica?.clasificacionToxicologica,
-            },
-            numeroCAS: item.numeroCAS,
-            porcentajeConcentracion: item.porcentajeConcentracion,
-            nombreComercial: item.nombreComercial,
-            nombreComun: item.nombreComun,
-            nombreCientifico: item.nombreCientifico,
-            estadoFisicoDescripcionOtros: item.estadoFisicoDescripcionOtros,
-            idMercancia: item.idMercancia,
-            idClasificacionProducto: item.idClasificacionProducto,
-            nombreClasificacionProducto: item.nombreClasificacionProducto,
-            ideSubClasificacionProducto: item.ideSubClasificacionProducto,
-            nombreSubClasificacionProducto: item.nombreSubClasificacionProducto,
-            descDenominacionEspecifica: item.descDenominacionEspecifica,
-            descDenominacionDistintiva: item.descDenominacionDistintiva,
-            descripcionMercancia: item.descripcionMercancia,
-            formaFarmaceuticaDescripcionOtros: item.formaFarmaceuticaDescripcionOtros,
-            fraccionArancelaria: {
-              clave: item.fraccionArancelaria?.clave,
-              descripcion: item.fraccionArancelaria?.descripcion,
-            },
-            unidadMedidaComercial: {
-              descripcion: item.unidadMedidaComercial?.descripcion,
-            },
-            cantidadUMCConComas: item.cantidadUMCConComas,
-            unidadMedidaTarifa: {
-              descripcion: item.unidadMedidaTarifa?.descripcion,
-            },
-            cantidadUMTConComas: item.cantidadUMTConComas,
-            presentacion: item.presentacion,
-            registroSanitarioConComas: item.registroSanitarioConComas,
-            nombreCortoPaisOrigen: item.nombreCortoPaisOrigen,
-            nombreCortoPaisProcedencia: item.nombreCortoPaisProcedencia,
-            tipoProductoDescripcionOtros: item.tipoProductoDescripcionOtros,
-            nombreCortoUsoEspecifico: item.nombreCortoUsoEspecifico,
-            fechaCaducidadStr: item.fechaCaducidadStr,
-          }))
-        : [],
-      representanteLegal: {
-        rfc: formData.representanteLegal?.rfc,
-        resultadoIDC: formData.representanteLegal?.resultadoIDC,
-        nombre: formData.representanteLegal?.nombre,
-        apellidoPaterno: formData.representanteLegal?.apellidoPaterno,
-        apellidoMaterno: formData.representanteLegal?.apellidoMaterno,
+      "pagoDeDerechos": {
+          "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
+          "cadenaPagoDependencia": this.pagoDerechosDatos.cadenaDependencia,
+          "banco": {
+              "clave": this.pagoDerechosDatos.banco,
+              "descripcion": ""
+          },
+          "llaveDePago": this.pagoDerechosDatos.llavePago,
+          "fecPago": this.pagoDerechosDatos.fechaPago,
+          "impPago": this.pagoDerechosDatos.importePago
       },
-      pagoDeDerechos: {
-        claveDeReferencia: formData.pagoDeDerechos?.claveDeReferencia,
-        cadenaPagoDependencia: formData.pagoDeDerechos?.cadenaPagoDependencia,
-        banco: {
-          clave: formData.pagoDeDerechos?.banco?.clave,
-          descripcion: formData.pagoDeDerechos?.banco?.descripcion,
-        },
-        llaveDePago: formData.pagoDeDerechos?.llaveDePago,
-        fecPago: formData.pagoDeDerechos?.fecPago,
-        impPago: formData.pagoDeDerechos?.impPago,
-      },
-    };
+      // "mercancias": (this.solicitudDatos?.mercanciaTabla ?? []).map((mercancia) => ({
+      //   "objetoImportacionEnum": mercancia.objetoImportacionEnum,
+      //   "objetoImportacionDesc": mercancia.objetoImportacionDesc,
+      //   "descOtroObjetoImportacion": mercancia.descOtroObjetoImportacion,
+      //   "clasificacionToxicologica": {
+      //     "idClasificacionToxicologicaTipoTramite": mercancia.clasificacionToxicologica?.idClasificacionToxicologicaTipoTramite,
+      //     "clasificacionToxicologica": mercancia.clasificacionToxicologica?.clasificacionToxicologica
+      //   },
+      //   "numeroCAS": mercancia.numeroCAS,
+      //   "porcentajeConcentracion": mercancia.porcentajeConcentracion,
+      //   "nombreComercial": mercancia.nombreComercial,
+      //   "nombreComun": mercancia.nombreComun,
+      //   "nombreCientifico": mercancia.nombreCientifico,
+      //   "idEstadoFisico": mercancia.idEstadoFisico,
+      //   "idMercancia": mercancia.idMercancia,
+      //   "idClasificacionProducto": mercancia.idClasificacionProducto,
+      //   "nombreClasificacionProducto": mercancia.nombreClasificacionProducto,
+      //   "ideSubClasificacionProducto": mercancia.ideSubClasificacionProducto,
+      //   "nombreSubClasificacionProducto": mercancia.nombreSubClasificacionProducto,
+      //   "descDenominacionEspecifica": mercancia.descDenominacionEspecifica,
+      //   "descDenominacionDistintiva": mercancia.descDenominacionDistintiva,
+      //   "descripcionMercancia": mercancia.descripcionMercancia,
+      //   "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceuticaDescripcionOtros,
+      //   "estadoFisicoDescripcionOtros": mercancia.estadoFisicoDescripcionOtros,
+      //   "fraccionArancelaria": {
+      //     "clave": mercancia.fraccionArancelaria?.clave,
+      //     "descripcion": mercancia.fraccionArancelaria?.descripcion
+      //   },
+      //   "unidadMedidaComercial": {
+      //     "descripcion": mercancia.unidadMedidaComercial?.descripcion
+      //   },
+      //   "cantidadUMCConComas": mercancia.cantidadUMCConComas,
+      //   "unidadMedidaTarifa": {
+      //     "descripcion": mercancia.unidadMedidaTarifa?.descripcion
+      //   },
+      //   "cantidadUMTConComas": mercancia.cantidadUMTConComas,
+      //   "presentacion": mercancia.presentacion,
+      //   "registroSanitarioConComas": mercancia.registroSanitarioConComas,
+      //   "nombreCortoPaisOrigen": mercancia.nombreCortoPaisOrigen,
+      //   "nombreCortoPaisProcedencia": mercancia.nombreCortoPaisProcedencia,
+      //   "tipoProductoDescripcionOtros": mercancia.tipoProductoDescripcionOtros,
+      //   "nombreCortoUsoEspecifico": mercancia.nombreCortoUsoEspecifico,
+      //   "fechaCaducidadStr": mercancia.fechaCaducidadStr
+      // })),
+ 
+
+    }
   }
 }

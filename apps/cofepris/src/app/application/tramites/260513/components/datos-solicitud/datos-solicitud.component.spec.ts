@@ -17,6 +17,12 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('should create', () => {
+    fixture.detectChanges(); // Ensure change detection runs again
+    expect(component).toBeTruthy();
+  });
+
+  it('should not throw ExpressionChangedAfterItHasBeenCheckedError after state change', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 });

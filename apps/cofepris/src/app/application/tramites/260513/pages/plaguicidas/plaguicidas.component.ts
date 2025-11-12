@@ -1,12 +1,20 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { AvisocalidadQuery } from '../../../../shared/estados/queries/aviso-calidad.query';
+import { GuardarAdapter_260513 } from '../../adapters/guardar-mapping.adapter';
+import { RegistroSolicitudService } from '@libs/shared/data-access-user/src/core/services/shared/registro-solicitud.service';
+
+import { DatosDomicilioLegalQuery } from '../../../../shared/estados/queries/datos-domicilio-legal.query';
+
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { MENSAJE_DE_VALIDACION } from '../../constantes/datos-solicitud.enum';
 import { Notificacion } from '@ng-mf/data-access-user';
+import { PagoDerechosQuery } from '../../../../shared/estados/queries/pago-derechos.query';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+
 
 
 /**
@@ -26,6 +34,15 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {
+  /**
+   * Controla si se puede saltar el paso de carga de documentos.
+   */
+  isSaltar: boolean = false;
+  MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+  public confirmarSinPagoDeDerechos: number = 0;
+  public requiresPaymentData: boolean = false;
+  private payloadAdapter: GuardarAdapter_260513;
+
 
    /**
      * Identificador del tipo de trámite.
@@ -94,8 +111,14 @@ export class PlaguicidasComponent {
   indice: number = 1;
 
    constructor(
-      private toastrService: ToastrService,
-      ) {}
+    private toastrService: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService,
+    private avisoCalidadQuery: AvisocalidadQuery,
+    private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private pagoDrenchosQuery:PagoDerechosQuery
+  ) {
+    this.payloadAdapter = new GuardarAdapter_260513(this.avisoCalidadQuery, this.datosDomicilioLegalQuery, this.pagoDrenchosQuery);
+  }
 
   /**
    * Título del asistente.
@@ -266,115 +289,145 @@ cargaRealizada(cargaRealizada: boolean): void {
   this.cargaEnProgreso = carga;
 }
   getValorIndice(e: AccionBoton): void {
-    // if(e.accion === 'cont') {
-    //   let ISVALID = true;
-
-    //   if(this.indice === 1 && this.pasoUnoComponent) {
-    //     ISVALID = this.pasoUnoComponent.validOnButtonClick();
-    //   }
-    //   if(!this.pasoUnoComponent.ValidarPagoDerechos()) {
-    //     this.mostrarAlerta = true;
-    //     this.seleccionarFilaNotificacion = {
-    //          tipoNotificacion: 'alert',
-    //                 categoria: 'danger',
-    //                 modo: 'action',
-    //                 titulo: '',
-    //                 mensaje: MENSAJE_DE_VALIDACION,
-    //                 cerrar: true,
-    //                 tiempoDeEspera: 2000,
-    //                 txtBtnAceptar: 'SI',
-    //                 txtBtnCancelar: 'NO',
-    //     };
-    //   }
-    //    if (!ISVALID) {
-    //     this.esFormaValido = true;
-    //     this.datosPasos.indice = this.indice;
-    //     //return;
-    //   }
-
-    //   const STATE = this.tramite260209Query.getValue();
-    //   this.importacionDestinadosDonacioService.guardarTramite(STATE).subscribe({
-    //     next: () => {
-    //       this.toastrService.success('Guardado exitosamente');
-    //       this.esFormaValido = false;
-    //       this.indice = e.valor;
-    //       this.datosPasos.indice = this.indice;
-    //       this.wizardComponent.siguiente();
-    //     },
-    //     error: () => {
-    //       this.toastrService.error('Error al guardar');
-    //     }
-    //   });
-    //   return;
-    // }
-    // this.indice = e.valor;
-    // this.datosPasos.indice = this.indice;
-    // this.wizardComponent.atras();
-
-     this.esFormaValido = false;
-      // Validar formularios antes de continuar desde el paso uno
-      if (this.indice === 1 && e.accion === 'cont') {
-        const ISVALID = this.pasoUnoComponent.validOnButtonClick();
-        if (!ISVALID) {
-          this.esFormaValido = true;
-          return; // Detener ejecución si los formularios son inválidos
+    this.esFormaValido = false;
+    if (e.accion === 'cont') {
+      let isValid = true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validOnButtonClick();
+      }
+      // Payment and data validation logic
+      if (!this.pasoUnoComponent?.datosSolicitudRef?.validarClickDeBoton() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      } else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+      if (!this.requiresPaymentData) {
+        if (!this.pasoUnoComponent?.pagoDerechosRef?.validarContenedor()) {
+          this.mostrarAlerta = true;
+          this.seleccionarFilaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'Debe capturar los datos de pago de derechos para continuar.',
+            cerrar: true,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'SI',
+            txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar: 'flex-row-reverse'
+          };
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        } else if (this.pasoUnoComponent?.pagoDerechosRef?.validarContenedor() && !this.pasoUnoComponent?.datosSolicitudRef?.validarClickDeBoton()) {
+          this.confirmarSinPagoDeDerechos = 2;
+        } else if (this.pasoUnoComponent?.pagoDerechosRef?.validarContenedor() && this.pasoUnoComponent?.datosSolicitudRef?.validarClickDeBoton()) {
+          // If you need to validate terceros, add a method to TercerosRelacionadosFabricanteComponent and call it here
+          this.confirmarSinPagoDeDerechos = 3;
         }
       }
-  
-      // Calcular el nuevo índice basado en la acción
-      let indiceActualizado = e.valor;
-      if (e.accion === 'cont') {
-        indiceActualizado = e.valor + 1;
-      } else if (e.accion === 'ant') {
-        indiceActualizado = e.valor - 1;
+      if (!isValid) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+       // return;
       }
-  
-      // Validar que el nuevo índice esté dentro de los límites permitidos
-      if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-  
-        // Actualizar el índice y datosPasos
-        this.indice = indiceActualizado;
-        this.datosPasos.indice = indiceActualizado;
-  
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else if (e.accion === 'ant') {
-          this.wizardComponent.atras();
+      const PAYLOAD = this.payloadAdapter.toFormPayload();
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        next: (response: any) => {
+          if (response.codigo !== '00') {
+            const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+            this.formErrorAlert = PlaguicidasComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          if (response.datos && response.datos.id_solicitud) {
+            this.idSolicitudState = response.datos.id_solicitud;
+            // If using Akita store, update here
+            // this.tramite260513Store.setIdSolicitud(response.datos.id_solicitud);
+          }
+          this.esFormaValido = false;
+          this.toastrService.success(response.mensaje);
+          let indiceActualizado = e.valor;
+          if (e.accion === 'cont') {
+            indiceActualizado = e.valor;
+          }
+          if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+            this.indice = indiceActualizado;
+            this.datosPasos.indice = indiceActualizado;
+            this.wizardComponent.siguiente();
+          }
+        },
+        error: () => {
+          this.toastrService.error('Error al guardar');
         }
-      }
+      });
+    } else {
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+    }
+  }
 
+  siguiente(): void {
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
+
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  cerrarModal(value: boolean): void {
+    if (value) {
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+      if (!this.pasoUnoComponent?.datosSolicitudRef?.validarClickDeBoton() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      } else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
     }
-    //   this.esFormaValido = false;
-    //   // Validar formularios antes de continuar desde el paso uno
-    //   if (this.indice === 1 && e.accion === 'cont') {
-    //     const ISVALID = this.pasoUnoComponent.validOnButtonClick();
-    //     if (!ISVALID) {
-    //       this.esFormaValido = true;
-    //       return; // Detener ejecución si los formularios son inválidos
-    //     }
-    //   }
-  
-    //   // Calcular el nuevo índice basado en la acción
-    //   let indiceActualizado = e.valor;
-    //   if (e.accion === 'cont') {
-    //     indiceActualizado = e.valor + 1;
-    //   } else if (e.accion === 'ant') {
-    //     indiceActualizado = e.valor - 1;
-    //   }
-  
-    //   // Validar que el nuevo índice esté dentro de los límites permitidos
-    //   if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-  
-    //     // Actualizar el índice y datosPasos
-    //     this.indice = indiceActualizado;
-    //     this.datosPasos.indice = indiceActualizado;
-  
-    //     if (e.accion === 'cont') {
-    //       this.wizardComponent.siguiente();
-    //     } else if (e.accion === 'ant') {
-    //       this.wizardComponent.atras();
-    //     }
-    //   }
-    }
+    // ...existing code...
+  }
+
+  static generarAlertaDeError(mensajes: string): string {
+    const ALERTA = `
+      <div class="row">
+        <div class="col-md-12 justify-content-center text-center">
+          <div class="row">
+            <div class="col-md-12">
+              <p>Corrija los siguientes errores:</p>
+              <ol>
+                <li>${mensajes}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    return ALERTA;
+  }
     
-
+}

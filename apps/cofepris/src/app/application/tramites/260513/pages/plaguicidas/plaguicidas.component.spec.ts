@@ -4,6 +4,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PlaguicidasComponent', () => {
   let component: PlaguicidasComponent;
@@ -14,6 +15,9 @@ describe('PlaguicidasComponent', () => {
       declarations: [PlaguicidasComponent],
       imports: [WizardComponent, HttpClientTestingModule], // Import the standalone component here
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this to suppress unknown element errors
+      providers: [
+        { provide: ToastrService, useValue: { success: jest.fn(), error: jest.fn() } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PlaguicidasComponent);
