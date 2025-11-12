@@ -197,7 +197,7 @@
    </div>
    <div *ngIf="isAduanasEntradaVisible" class="row">
       <div class="panel-body">
-         <crosslist formControlName="aduanasEntradas" [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
+         <crosslist [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
          [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos" [botones]="aduanasEntradaBotons"
          (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)" [isDisabled]="esFormularioSoloLectura"
          [markTouched]="domicilio.get('aduanasEntradas')?.errors?.['required'] && domicilio.get('aduanasEntradas')?.touched ">
