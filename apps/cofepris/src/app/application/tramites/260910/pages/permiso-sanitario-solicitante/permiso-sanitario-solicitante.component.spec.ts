@@ -98,7 +98,7 @@ describe('PermisoSanitarioSolicitanteComponent', () => {
     const accion: AccionBoton = { valor: 0, accion: 'cont' };
     componente.getValorIndice(accion);
 
-    expect(componente.indice).toBe(0); // It will be set to 0
+    expect(componente.indice).toBe(0);
     expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
   });
 });
