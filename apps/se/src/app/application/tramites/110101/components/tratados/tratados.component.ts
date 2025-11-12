@@ -1292,7 +1292,7 @@ eliminarTratado(): void {
       return;
     }
     const TRATADO = this.tratadoSeleccionado[0];
-    const CRITERIO_ORIGEN = TRATADO.criterio_origen?.trim() ?? '';
+    const CRITERIO_ORIGEN = TRATADO.cve_grupo_criterio?.trim() ?? '';
     const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
     const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
     if (
@@ -1412,7 +1412,7 @@ eliminarTratado(): void {
       return;
     }
 
-    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].criterio_origen
+    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].cve_grupo_criterio
     if (CRITERIO_ORIGEN === 'OTROS' || CRITERIO_ORIGEN === 'OTRASINST') {
      
     
