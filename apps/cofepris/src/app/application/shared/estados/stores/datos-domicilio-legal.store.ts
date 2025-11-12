@@ -207,6 +207,16 @@ export interface DatosDomicilioLegalState {
  */
   aduanasDeEntrada: string[]
 
+  paisDeOriginDatos: string[]
+
+  paisFabrica: string[]
+
+  paisElaboracion: string[]
+
+  paisProveedor: string[]
+
+  paisDeProcedenciaDatos: string[]
+
   /**
    * El valor de garantiasOfrecidas.
    */
@@ -449,6 +459,16 @@ export function createInitialState(): DatosDomicilioLegalState {
      * @type {string[]}
      */
     aduanasDeEntrada: [],
+
+    paisDeOriginDatos: [],
+
+    paisFabrica: [],
+
+    paisElaboracion: [],
+
+    paisProveedor: [],
+
+    paisDeProcedenciaDatos: [],
 
     /**
      * El valor de garantiasOfrecidas.
@@ -1009,12 +1029,48 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
    *
    * @param aduanasDeEntrada - Un arreglo de cadenas que representa los datos de país de origen.
    */
-  public setPaisDeOriginDatos(aduanasDeEntrada: string[]): void {
+  public setAduanasDeEntrada(aduanasDeEntrada: string[]): void {
     this.update((state) => ({
       ...state,
       aduanasDeEntrada,
     }));
   }
+
+  public setPaisDeOriginDatos(paisDeOriginDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDeOriginDatos,
+    }));
+  }
+
+  public setPaisFabrica(paisFabrica: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisFabrica,
+    }));
+  }
+
+  public setPaisElaboracion(paisElaboracion: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisElaboracion,
+    }));
+  }
+
+  public setPaisProveedor(paisProveedor: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisProveedor,
+    }));
+  }
+
+  public setPaisDeProcedenciaDatos(paisDeProcedenciaDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDeProcedenciaDatos,
+    }));
+  }
+
   /**
   * Establece el estado de garantiasOfrecidas.
   * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
