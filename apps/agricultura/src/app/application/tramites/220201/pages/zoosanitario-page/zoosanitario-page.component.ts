@@ -1,6 +1,6 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -12,6 +12,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 import { EventEmitter } from '@angular/core';
+import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -158,6 +159,7 @@ export class ZoosanitarioPageComponent implements OnInit {
    */
   constructor(
     private tramite220201Query: ZoosanitarioQuery,
+    private solicitudService: SolicitudService
 
   ) {
     this.pasos = PASOS;
@@ -279,25 +281,10 @@ export class ZoosanitarioPageComponent implements OnInit {
     this.guardadoTotal.guardadoTotal();
   }
 
-  recibirRespuesta(valor: boolean): void {
-    console.warn('El hijo envió:', valor);
-    this.isAcuseVisible = valor;
-  }
-
   ngOnInit(): void {
-    if (this.isAcuseVisible) {
-      this.tramite220201Query.seleccionarTodo$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            if (seccionState !== undefined) {
-              this.solicitudState = { ...(this.solicitudState || {}), ...seccionState } as unknown as ZoosanitarioStore;
-              const IDSOLICITUD = this.solicitudState.getValue() ? this.solicitudState.getValue() : 0;
-              this.numeroSolicitud = IDSOLICITUD.toString();
-
-            }
-          })
-        ).subscribe();
-    }
+    this.solicitudService.idSolicitud$.subscribe(idSolicitud => {
+      this.numeroSolicitud = idSolicitud;
+    });
   }
+
 }

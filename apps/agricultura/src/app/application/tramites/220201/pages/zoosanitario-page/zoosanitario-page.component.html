@@ -1,4 +1,4 @@
-@if (!isAcuseVisible) {
+
 <div class="page">
   <div class="container">
     <div class="row">
@@ -34,7 +34,7 @@
         </div>
       </div>
       } @case (3) {
-      <paso-firma [idSolicitud]="+this.numeroSolicitud" [procedure]="220201" [procedureUrl]="'solicitud'"></paso-firma>
+      <paso-firma [idSolicitud]="+this.numeroSolicitud" [procedure]="220201" [procedureUrl]="'registrozoosanitario'"></paso-firma>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
           <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"
@@ -61,13 +61,3 @@
     </div>
   </div>
 </div>
-}
-@if (isAcuseVisible) {
-  <lib-component-acuse
-    titulo="Acuse de recibo"
-    [txtAlerta]="txtAlerta"
-    [subtitulo]="subtitulo"
-    [idSolicitud]="+numeroSolicitud"
-    [procedure]="220201"
-  ></lib-component-acuse>
-}

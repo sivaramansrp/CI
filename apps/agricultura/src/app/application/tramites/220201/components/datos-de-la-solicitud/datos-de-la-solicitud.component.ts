@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { 
   AlertComponent, 
   Catalogo, 
@@ -46,6 +46,9 @@ import { GuardaSolicitud, Mercancia } from '../../models/220201/guardar-solicitu
 import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/fitosanitario.model';
 
 import { SharedFormService } from '../../services/220201/SharedForm.service';
+
+import { EventEmitter } from '@angular/core';
+import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
 
 
 /**
@@ -362,6 +365,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
   guardaSolicitud!: CapturarSolicitud;
 
+  idSolicitud: string | null = null;
+
+
+
   /**
    * Constructor del componente.
    * @constructor
@@ -383,6 +390,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     private catalogoService: CatalogosService,
     private registroSolicitudService: RegistroSolicitudService,
     private sharedService: SharedFormService,
+    private solicitudService: SolicitudService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -1438,17 +1446,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       {
         next: (response) => {
           if (response && response.datos?.id_solicitud) {
+            this.idSolicitud = response.datos.id_solicitud.toString();
             this.fitosanitarioStore.setIdSolicitud(response.datos?.id_solicitud);
+            this.solicitudService.emitirIdSolicitud(this.idSolicitud);
           }
-        },
-        error: (error) => {
-          console.error('Error al guardar la solicitud:', error);
         }
       }
-    );
-    
-    
+      
+    );   
   }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

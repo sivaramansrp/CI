@@ -8,13 +8,13 @@ import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 
 export const ROUTES_ZOOSANITARIO: Routes = [
   {
-    path: 'zoosanitario',
+    path: 'registrozoosanitario',
     component: ZoosanitarioPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'zoosanitario',
+    redirectTo: 'registrozoosanitario',
   },
   {
     path: 'acuse',
