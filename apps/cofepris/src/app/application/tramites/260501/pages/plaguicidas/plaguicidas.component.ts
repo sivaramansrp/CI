@@ -1,12 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, WizardService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject, JSONResponse, WizardService } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/260501constante.enum';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { TEXTOS } from '../../constantes/260501constante.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { ToastrService } from 'ngx-toastr';
+import { Solicitud260501State, Tramite260501Store } from '../../../../shared/estados/stores/260501/tramite260509.store';
+import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -21,6 +25,12 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit, OnDestroy {
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260501;
   /** Identificador numérico para guardar la solicitud.
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
@@ -54,6 +64,11 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**   
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud260501State;
 
   /**
   * @property consultaState
@@ -116,7 +131,11 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    */
   constructor(
     private servicioDeFormularioService: ServicioDeFormularioService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private sharedSvc: Shared2605Service,
+    private toastrService: ToastrService,
+    private store: Tramite260501Store,
+    private query: Tramite260501Query
   ) {}
 
 
@@ -126,6 +145,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
  * Método de inicialización del componente `PlaguicidasComponent`.
  */
   ngOnInit(): void {
+    this.query.selectSolicitud$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
     this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -142,9 +164,35 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
     if (!this.consultaState.readonly && !this.consultaState.update) {
       this.esFormaValido = this.verificarLaValidezDelFormulario();
+        // if (!this.esFormaValido) {
+        //   this.indice = e.valor;
+        //   this.datosPasos.indice = e.valor;
+        //   this.servicioDeFormularioService.markFormAsTouched('datosSolicitudForm');
+        //   this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
+        //   this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
+        //   this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+        //   this.servicioDeFormularioService.markFormAsTouched('tercerosForm');
+        //   return;
+        // }
       if (e.valor > 0 && e.valor <= this.pasos.length) {
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
         if (e.accion === 'cont' && this.esFormaValido) {
             this.indice = e.valor + 1;
             this.datosPasos.indice = e.valor + 1;
@@ -154,27 +202,78 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
             this.indice = e.valor - 1;
             this.datosPasos.indice = e.valor - 1;
             this.wizardComponent.atras();
-        } else if (!this.esFormaValido) {
-            this.indice = e.valor;
-            this.datosPasos.indice = e.valor;
-            this.servicioDeFormularioService.markFormAsTouched('datosSolicitudForm');
-            this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
-            this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
-            this.servicioDeFormularioService.markFormAsTouched('representanteForm');
-            this.servicioDeFormularioService.markFormAsTouched('tercerosForm');
-        }
+        } 
       }
     } else {
         if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
         this.esFormaValido = true;
         if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
+          this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
         } else {
           this.wizardComponent.atras();
         }
       }
     }
+  }
+
+  /**
+   * Verifica si se debe navegar al siguiente paso del asistente.
+   * Guarda los datos actuales y muestra notificaciones según el resultado.
+   * @return {Observable<boolean>} Observable que emite true si se debe navegar, false en caso contrario.
+   */
+  private shouldNavigate$(): Observable<boolean> {
+    return this.sharedSvc.getAllState().pipe(
+      take(1),
+      switchMap(data => this.guardar(data)),
+      map(response => {
+        const DATOS = doDeepCopy(response);
+        const OK = response.codigo === '00';
+        if (OK) {
+          this.toastrService.success(DATOS.mensaje);
+        } else {
+          //this.padreBtn = true;
+          this.toastrService.error(DATOS.mensaje);
+        }
+        return OK;
+      })
+    );
+  }
+
+
+  /**   
+    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `shared2605Service`.
+   * @param datos - Los datos que se desean guardar y enviar al servidor.
+   * @returns {Promise<JSONResponse>} Promesa que se resuelve con la respuesta del servidor.
+   */
+    public guardar(datos: Record<string, unknown>): Promise<JSONResponse> {
+      const PAYLOAD = this.sharedSvc.buildPayload(datos,this.idProcedimiento);
+
+      return new Promise((resolve, reject) => {
+        this.sharedSvc.guardarDatosPost(PAYLOAD, this.idProcedimiento.toString()).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe((response) => {
+          if(esValidObject(response)) {
+            const RESPONSE = doDeepCopy(response);
+            this.store.setIdSolicitud(RESPONSE?.datos?.id_solicitud ?? 0);
+            this.guardarIdSolicitud = RESPONSE?.datos?.id_solicitud ?? 0;
+            resolve(response);
+          }
+        },error => {
+          reject(error);
+        });
+      });
   }
 
   /**

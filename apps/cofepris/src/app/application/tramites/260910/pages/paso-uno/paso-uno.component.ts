@@ -161,6 +161,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Observable that tracks if "Prórroga" is selected
+   */
+  isProrrogaSelected$ = this.solicitud260910Query.select(state => {
+    const TIPO_OPERACION_VALUE = state.tipoOperacion;
+    return TIPO_OPERACION_VALUE === 'PRO' || TIPO_OPERACION_VALUE === 'Prórroga';
+  });
+
+  /**
+   * Getter to check if "Prórroga" is selected by reading from the store directly.
+   * @returns {boolean} True if "Prórroga" is selected, false otherwise
+   */
+  get isProrrogaSelected(): boolean {
+    const TIPO_OPERACION_VALUE = this.solicitud260910State?.tipoOperacion;
+    return TIPO_OPERACION_VALUE === 'PRO' || TIPO_OPERACION_VALUE === 'Prórroga';
+  }
+
+  /**
    * Recopila los valores actuales de los formularios hijos.
    * @returns {tercerosRelacionados?: TercerosRelacionados[]} Objeto con los valores del formulario
    */

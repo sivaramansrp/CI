@@ -7,3 +7,5 @@ export const TABLA_ORDEN = [
   { nombre: 'Formulador', orden: 2, esVisible: true },
   { nombre: 'Proveedor', orden: 1, esVisible: true },
 ];
+
+export const TEXTO_DE_PELIGRO = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
