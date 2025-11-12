@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Store de gestión de estado para el trámite 80302
+ * @description Este archivo contiene el store principal que maneja todo el estado
+ * de la aplicación para el trámite 80302, incluyendo datos de solicitud,
+ * información de contenedores, modificaciones y operaciones IMMEX
+ * @author Sistema VUCEM
+ * @version 1.0.0
+ * @since 2024
+ */
+
 import { DatosModificacion, DatosSolicitante } from '../../tramites/80302/estados/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 import { Store, } from '@datorama/akita';
@@ -5,151 +15,216 @@ import { StoreConfig } from '@datorama/akita';
 import { AnexoImportacion, BitacoraModificacion, DatosSocioAccionista, Notario, OperacionsImmex, Planta, ProductoExportacion } from '../../tramites/80302/estados/models/plantas-consulta.model';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 80302
- * @returns Solicitud80302
- */
-
-/**
- * Representa el estado de la solicitud 80302.
+ * Interfaz que representa el estado completo de la solicitud del trámite 80302
+ * @interface Solicitud80302State
+ * @description Define la estructura completa del estado de una solicitud del trámite 80302,
+ * incluyendo todos los datos necesarios para el proceso de modificación de programas IMMEX
  */
 export interface Solicitud80302State {
-    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  /** 
+   * Identificador único de la solicitud
+   * @type {number | null}
+   * @description ID de la solicitud, puede ser nulo si aún no se ha creado
+   */
   idSolicitud: number | null;
+  
   /**
-   * Menú desplegable seleccionado.
+   * Valor del menú desplegable seleccionado
+   * @type {string}
+   * @description Opción actualmente seleccionada en el menú desplegable principal
    */
   menuDesplegable: string;
 
   /**
-   * Datos del solicitante.
+   * Información completa del solicitante
+   * @type {DatosSolicitante}
+   * @description Datos personales y de contacto del solicitante del trámite
    */
   datosSolicitante: DatosSolicitante;
 
   /**
-   * Información relacionada con la modificación.
+   * Datos relacionados con la modificación del programa
+   * @type {DatosModificacion}
+   * @description Información específica sobre las modificaciones solicitadas
    */
   datosModificacion: DatosModificacion;
 
   /**
-   * Datos de modificación relacionados con plantas.
+   * Lista de plantas y sus modificaciones
+   * @type {Planta[]}
+   * @description Array con datos de plantas industriales y sus modificaciones
    */
-  modificacionDatos:Planta[];
+  modificacionDatos: Planta[];
 
   /** 
-   * Lista de datos de complimentaria.
+   * Lista de socios y accionistas
+   * @type {DatosSocioAccionista[]}
+   * @description Array con información de socios y accionistas de la empresa
    */
   datosComplimentaria: DatosSocioAccionista[];
 
   /** 
-   * Lista de datos de federetarios.
+   * Lista de notarios federales
+   * @type {Notario[]}
+   * @description Array con información de notarios federales involucrados
    */
   datosFederetarios: Notario[];
 
   /** 
-   * Lista de datos de operaciones.
+   * Lista de operaciones IMMEX
+   * @type {OperacionsImmex[]}
+   * @description Array con datos detallados de operaciones IMMEX
    */
   datosOperacions: OperacionsImmex[];
 
   /** 
-   * Lista de datos de anexos.
+   * Lista de productos de exportación
+   * @type {ProductoExportacion[]}
+   * @description Array con información de productos destinados a exportación
    */
   datosAnexo: ProductoExportacion[];
 
   /** 
-   * Lista de datos de anexos de importación.
+   * Lista de productos de importación
+   * @type {AnexoImportacion[]}
+   * @description Array con datos de anexos de importación
    */
   datosImportacion: AnexoImportacion[];
 
   /** 
-   * Lista de datos de la bitácora de modificaciones.
+   * Registro de modificaciones realizadas
+   * @type {BitacoraModificacion[]}
+   * @description Array con el historial de modificaciones del sistema
    */
   datosBitacora: BitacoraModificacion[];
 
   /** 
-   * Valor de la certificación SAT.
+   * Certificación del SAT
+   * @type {string}
+   * @description Valor de la certificación emitida por el Servicio de Administración Tributaria
    */
   certificacionSAT: string;
 
   /**
-   * Lista de datos del contenedor.
+   * Datos de contenedores asociados
+   * @type {any[]}
+   * @description Lista de información de contenedores relacionados con la solicitud
    */
   datosDelContenedor: [];
 
   /**
-   * Tipo de búsqueda seleccionada.
+   * Tipo de búsqueda seleccionada
+   * @type {string}
+   * @description Modalidad de búsqueda activa en el sistema
    */
   tipoBusqueda: string;
 
   /**
-   * Aduana seleccionada.
+   * Aduana seleccionada
+   * @type {string}
+   * @description Código o nombre de la aduana seleccionada
    */
   aduana: string;
 
   /**
-   * Fecha de ingreso.
+   * Fecha de ingreso del contenedor
+   * @type {string}
+   * @description Fecha en que el contenedor ingresó al recinto aduanero
    */
   fechaIngreso: string;
 
   /**
-   * Iniciales del contenedor.
+   * Iniciales del equipo contenedor
+   * @type {string}
+   * @description Código de iniciales del contenedor
    */
   inicialesContenedor: string;
 
   /**
-   * Número del contenedor.
+   * Número identificador del contenedor
+   * @type {string}
+   * @description Número único asignado al contenedor
    */
   numeroContenedor: string;
 
   /**
-   * Dígito de control del contenedor.
+   * Dígito verificador del contenedor
+   * @type {string}
+   * @description Dígito de control para validación del número de contenedor
    */
   digitoDeControl: string;
 
   /**
-   * Contenedores asociados.
+   * Lista de contenedores asociados
+   * @type {string}
+   * @description Contenedores relacionados con la operación
    */
   contenedores: string;
 
   /**
-   * Menú desplegable de aduanas.
+   * Opción seleccionada en menú de aduanas
+   * @type {string}
+   * @description Valor seleccionado en el menú desplegable de aduanas
    */
   aduanaMenuDesplegable: string;
 
   /**
-   * Estado de las casillas de verificación individuales.
+   * Estado de casillas de verificación individuales
+   * @type {boolean[]}
+   * @description Array de estados booleanos para casillas de verificación
    */
   casillaDeVerificacionindividual: boolean[];
 
   /**
-   * Número del manifiesto.
+   * Número del manifiesto de carga
+   * @type {number}
+   * @description Número identificador del manifiesto
    */
   numeroManifiesta: number;
 
   /**
-   * Fecha de ingreso del manifiesto.
+   * Fecha de ingreso del manifiesto
+   * @type {string}
+   * @description Fecha de registro del manifiesto en el sistema
    */
   fechaDeIngreso: string;
 
   /**
-   * Archivo seleccionado.
+   * Archivo seleccionado por el usuario
+   * @type {string}
+   * @description Nombre o identificador del archivo seleccionado
    */
   archivoSeleccionado: string;
 
- /** linea
- * @type {string}
- */
+  /** 
+   * Identificador de línea
+   * @type {string}
+   * @description Valor de la línea seleccionada o activa
+   */
   linea: string;
 
   /**
-* linea checkbox
-* @type {string}
-*/
+   * Estado de checkbox de línea
+   * @type {string}
+   * @description Valor del checkbox asociado a la línea
+   */
   lineaCheckbox: string;
 
+  /**
+   * Monto financiero asociado
+   * @type {string}
+   * @description Valor monetario relacionado con la solicitud
+   */
   monto: string;
-
 }
 
+/**
+ * Función para crear el estado inicial de la solicitud 80302
+ * @function createInitialState
+ * @description Genera y retorna el estado inicial por defecto para una nueva solicitud
+ * del trámite 80302, con todos los campos inicializados en valores vacíos o por defecto
+ * @returns {Solicitud80302State} Objeto con el estado inicial de la solicitud
+ */
 export function createInitialState(): Solicitud80302State {
   return {
     idSolicitud: 0,
@@ -194,18 +269,38 @@ export function createInitialState(): Solicitud80302State {
   };
 }
 
+/**
+ * Store principal para la gestión del estado del trámite 80302
+ * @class Tramite80302Store
+ * @description Clase que extiende Store de Akita para manejar el estado completo
+ * de las solicitudes del trámite 80302, incluyendo operaciones CRUD y gestión
+ * de datos de contenedores, plantas, socios y modificaciones
+ * @extends {Store<Solicitud80302State>}
+ * @author Sistema VUCEM
+ * @version 1.0.0
+ * @since 2024
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite80302', resettable: true })
 export class Tramite80302Store extends Store<Solicitud80302State> {
+  
+  /**
+   * Constructor del store del trámite 80302
+   * @constructor
+   * @description Inicializa el store con el estado inicial predefinido
+   */
   constructor() {
     super(createInitialState());
   }
-   /**
-   * Guarda el tipo de solicitud en el estado.
-   *
-   * @param idSolicitud - El identificador de la solicitud que se va a guardar.
+  /**
+   * Establece el identificador de la solicitud en el estado
+   * @method setIdSolicitud
+   * @description Actualiza el ID de la solicitud en el estado del store
+   * @param {number | null} idSolicitud - El identificador de la solicitud que se va a guardar
+   * @returns {void}
+   * @public
    */
   public setIdSolicitud(idSolicitud: number | null): void {
     this.update((state) => ({
@@ -215,9 +310,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Guarda el tipo de solicitud en el estado.
-   *
-   * @param casillaDeVerificacionindividual - El tipo de solicitud que se va a guardar.
+   * Establece el estado de las casillas de verificación individuales
+   * @method setCasillaDeVerificacionindividual
+   * @description Actualiza el array de estados de casillas de verificación
+   * @param {any[]} casillaDeVerificacionindividual - Array con los estados de las casillas
+   * @returns {void}
+   * @public
    */
   public setCasillaDeVerificacionindividual(casillaDeVerificacionindividual: []): void {
     this.update((state) => ({
@@ -227,9 +325,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el número de manifiesta en el estado de la tienda.
-   *
-   * @param numeroManifiesta - El número de manifiesta que se desea asignar.
+   * Establece el número de manifiesto en el estado
+   * @method setNumeroManifiesta
+   * @description Actualiza el número de manifiesta en el estado de la tienda
+   * @param {number} numeroManifiesta - El número de manifiesta que se desea asignar
+   * @returns {void}
+   * @public
    */
   public setNumeroManifiesta(numeroManifiesta: number): void {
     this.update((state) => ({
@@ -239,9 +340,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor del menú desplegable en el estado de la tienda.
-   *
-   * @param menuDesplegable - El nuevo valor para el menú desplegable.
+   * Establece el valor del menú desplegable principal
+   * @method setMenuDesplegable
+   * @description Actualiza la selección del menú desplegable en el estado
+   * @param {string} menuDesplegable - El nuevo valor para el menú desplegable
+   * @returns {void}
+   * @public
    */
   public setMenuDesplegable(menuDesplegable: string): void {
     this.update((state) => ({
@@ -251,10 +355,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor del menú desplegable de aduana en el estado de la tienda.
-   *
-   * @param aduanaMenuDesplegable - El nuevo valor para el menú desplegable de aduana.
-   *                                Este valor se actualizará en el estado de la tienda.
+   * Establece el valor del menú desplegable de aduana
+   * @method setAduanaMenuDesplegable
+   * @description Actualiza la selección de aduana en el menú desplegable
+   * @param {string} aduanaMenuDesplegable - El nuevo valor para el menú desplegable de aduana
+   * @returns {void}
+   * @public
    */
   public setAduanaMenuDesplegable(aduanaMenuDesplegable: string): void {
     this.update((state) => ({
@@ -264,10 +370,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece la fecha de ingreso en el estado de la tienda.
-   *
-   * @param fechaDeIngreso - La nueva fecha de ingreso que se debe establecer en el estado.
-   *                          Debe ser una cadena en formato válido.
+   * Establece la fecha de ingreso del manifiesto
+   * @method setFechaDeIngreso
+   * @description Actualiza la fecha de ingreso en el estado de la tienda
+   * @param {string} fechaDeIngreso - La nueva fecha de ingreso en formato de cadena
+   * @returns {void}
+   * @public
    */
   public setFechaDeIngreso(fechaDeIngreso: string): void {
     this.update((state) => ({
@@ -278,9 +386,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
 
 
   /**
-   * Establece los datos del solicitante en el estado de la tienda.
-   *
-   * @param datosSolicitante - Objeto que contiene la información del solicitante.
+   * Establece los datos del solicitante
+   * @method setDatosSolicitante
+   * @description Actualiza la información completa del solicitante en el estado
+   * @param {DatosSolicitante} datosSolicitante - Objeto con la información del solicitante
+   * @returns {void}
+   * @public
    */
   public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
@@ -290,9 +401,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de modificación en el estado de la tienda.
-   *
-   * @param datosModificacion - Objeto que contiene los datos de modificación que se deben actualizar en el estado.
+   * Establece los datos de modificación del programa
+   * @method setDatosModificacion
+   * @description Actualiza los datos de modificación en el estado de la tienda
+   * @param {DatosModificacion} datosModificacion - Objeto con los datos de modificación
+   * @returns {void}
+   * @public
    */
   public setDatosModificacion(datosModificacion: DatosModificacion): void {
     this.update((state) => ({
@@ -302,9 +416,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de modificación en el estado de la tienda.
-   *
-   * @param modificacionDatos - Un arreglo que contiene los datos de modificación a establecer.
+   * Establece los datos de modificación de plantas
+   * @method setModificacionDatos
+   * @description Actualiza la lista de plantas con sus modificaciones
+   * @param {Planta[]} modificacionDatos - Array con los datos de plantas modificadas
+   * @returns {void}
+   * @public
    */
   public setModificacionDatos(modificacionDatos: Planta[]): void {
     this.update((state) => ({
@@ -314,9 +431,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de complimentaria en el estado de la tienda.
-   *
-   * @param datosComplimentaria - Un arreglo que contiene los datos de complimentaria a establecer.
+   * Establece los datos complementarios de socios
+   * @method setDatosComplimentaria
+   * @description Actualiza la información de socios y accionistas
+   * @param {DatosSocioAccionista[]} datosComplimentaria - Array con datos de socios
+   * @returns {void}
+   * @public
    */
   public setDatosComplimentaria(datosComplimentaria: DatosSocioAccionista[]): void {
     this.update((state) => ({
@@ -326,9 +446,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de federatarios en el estado de la tienda.
-   *
-   * @param datosFederetarios - Un arreglo que contiene los datos de federatarios a establecer.
+   * Establece los datos de notarios federales
+   * @method setDatosFederatarios
+   * @description Actualiza la información de notarios federales
+   * @param {Notario[]} datosFederetarios - Array con datos de notarios
+   * @returns {void}
+   * @public
    */
   public setDatosFederatarios(datosFederetarios: Notario[]): void {
     this.update((state) => ({
@@ -338,9 +461,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de operaciones en el estado de la tienda.
-   *
-   * @param datosOperacions - Un arreglo que contiene los datos de operaciones a establecer.
+   * Establece los datos de operaciones IMMEX
+   * @method setDatosOperacions
+   * @description Actualiza la información de operaciones IMMEX
+   * @param {OperacionsImmex[]} datosOperacions - Array con datos de operaciones
+   * @returns {void}
+   * @public
    */
   public setDatosOperacions(datosOperacions: OperacionsImmex[]): void {
     this.update((state) => ({
@@ -350,9 +476,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de anexos en el estado de la tienda.
-   *
-   * @param datosAnexo - Un arreglo que contiene los datos de anexos a establecer.
+   * Establece los datos de productos de exportación
+   * @method setDatosAnexo
+   * @description Actualiza la información de productos destinados a exportación
+   * @param {ProductoExportacion[]} datosAnexo - Array con datos de productos de exportación
+   * @returns {void}
+   * @public
    */
   public setDatosAnexo(datosAnexo: ProductoExportacion[]): void {
     this.update((state) => ({
@@ -362,9 +491,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de importación en el estado de la tienda.
-   *
-   * @param datosImportacion - Un arreglo que contiene los datos de importación a establecer.
+   * Establece los datos de importación
+   * @method setDatosImportacion
+   * @description Actualiza la información de productos de importación
+   * @param {AnexoImportacion[]} datosImportacion - Array con datos de productos de importación
+   * @returns {void}
+   * @public
    */
   public setDatosImportacion(datosImportacion: AnexoImportacion[]): void {
     this.update((state) => ({
@@ -374,9 +506,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos de la bitácora en el estado de la tienda.
-   *
-   * @param datosBitacora - Un arreglo que contiene los datos de la bitácora a establecer.
+   * Establece los datos de la bitácora de modificación
+   * @method setDatosBitacora
+   * @description Actualiza el registro de modificaciones en la bitácora
+   * @param {BitacoraModificacion[]} datosBitacora - Array con datos de la bitácora de modificaciones
+   * @returns {void}
+   * @public
    */
   public setDatosBitacora(datosBitacora: BitacoraModificacion[]): void {
     this.update((state) => ({
@@ -386,9 +521,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor de la certificación SAT en el estado de la tienda.
-   *
-   * @param certificacionSAT - El nuevo valor para la certificación SAT.
+   * Establece el valor de la certificación SAT
+   * @method setCertificacionSAT
+   * @description Actualiza el valor de la certificación del SAT
+   * @param {string} certificacionSAT - Nuevo valor para la certificación SAT
+   * @returns {void}
+   * @public
    */
   public setCertificacionSAT(certificacionSAT: string): void {
     this.update((state) => ({
@@ -398,12 +536,13 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece los datos del contenedor en el estado de la tienda.
-   *
-   * @param datosDelContenedor - Un arreglo que contiene los datos del contenedor a establecer.
-   * 
-   * @remarks
-   * Este método actualiza el estado de la tienda con los datos proporcionados para el contenedor.
+   * Establece los datos del contenedor
+   * @method setDelContenedor
+   * @description Actualiza los datos del contenedor en el estado
+   * @param {any[]} datosDelContenedor - Array con los datos del contenedor
+   * @returns {void}
+   * @public
+   * @remarks Este método actualiza el estado de la tienda con los datos proporcionados para el contenedor
    */
   public setDelContenedor(datosDelContenedor: []): void {
     this.update((state) => ({
@@ -413,9 +552,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el tipo de búsqueda en el estado de la tienda.
-   *
-   * @param tipoBusqueda - El tipo de búsqueda que se desea establecer.
+   * Establece el tipo de búsqueda
+   * @method setTipoBusqueda
+   * @description Actualiza el tipo de búsqueda seleccionado
+   * @param {string} tipoBusqueda - Tipo de búsqueda que se desea establecer
+   * @returns {void}
+   * @public
    */
   public setTipoBusqueda(tipoBusqueda: string): void {
     this.update((state) => ({
@@ -425,9 +567,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor de la propiedad "aduana" en el estado.
-   *
-   * @param aduana - El nuevo valor para la propiedad "aduana".
+   * Establece el valor de la aduana
+   * @method setAduana
+   * @description Actualiza la aduana seleccionada en el estado
+   * @param {string} aduana - Nuevo valor para la propiedad aduana
+   * @returns {void}
+   * @public
    */
   public setAduana(aduana: string): void {
     this.update((state) => ({
@@ -436,7 +581,14 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
     }));
   }
 
-  
+  /**
+   * Establece la fecha de ingreso
+   * @method setFechaIngreso
+   * @description Actualiza la fecha de ingreso en el estado
+   * @param {string} fechaIngreso - Nueva fecha de ingreso en formato de cadena
+   * @returns {void}
+   * @public
+   */
   public setFechaIngreso(fechaIngreso: string): void {
     this.update((state) => ({
       ...state,
@@ -446,9 +598,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
 
   
   /**
-   * Establece las iniciales del contenedor en el estado de la tienda.
-   *
-   * @param inicialesContenedor - Las iniciales del contenedor que se deben establecer.
+   * Establece las iniciales del contenedor
+   * @method setInicialesContenedor
+   * @description Actualiza las iniciales del contenedor en el estado
+   * @param {string} inicialesContenedor - Iniciales del contenedor que se deben establecer
+   * @returns {void}
+   * @public
    */
   public setInicialesContenedor(inicialesContenedor: string): void {
     this.update((state) => ({
@@ -457,12 +612,13 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
     }));
   }
 
-
   /**
-   * Establece el número de contenedor en el estado de la tienda.
-   *
-   * @param numeroContenedor - El número de contenedor que se va a asignar.
-   * @returns void
+   * Establece el número de contenedor
+   * @method setNumeroContenedor
+   * @description Actualiza el número de contenedor en el estado
+   * @param {string} numeroContenedor - Número de contenedor que se va a asignar
+   * @returns {void}
+   * @public
    */
   public setNumeroContenedor(numeroContenedor: string): void {
     this.update((state) => ({
@@ -471,11 +627,13 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
     }));
   }
 
-  
   /**
-   * Establece el valor del dígito de control en el estado de la tienda.
-   *
-   * @param digitoDeControl - El nuevo valor del dígito de control que se debe establecer.
+   * Establece el dígito de control del contenedor
+   * @method setDigitoDeControl
+   * @description Actualiza el dígito de control en el estado
+   * @param {string} digitoDeControl - Nuevo valor del dígito de control
+   * @returns {void}
+   * @public
    */
   public setDigitoDeControl(digitoDeControl: string): void {
     this.update((state) => ({
@@ -484,11 +642,13 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
     }));
   }
 
-
   /**
-   * Establece el valor de los contenedores en el estado de la tienda.
-   *
-   * @param contenedores - Una cadena que representa los contenedores a establecer en el estado.
+   * Establece la información de contenedores
+   * @method setContenedores
+   * @description Actualiza la cadena de contenedores en el estado
+   * @param {string} contenedores - Cadena que representa los contenedores
+   * @returns {void}
+   * @public
    */
   public setContenedores(contenedores: string): void {
     this.update((state) => ({
@@ -499,9 +659,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
 
 
   /**
-   * Establece el archivo seleccionado en el estado de la tienda.
-   *
-   * @param archivoSeleccionado - El nombre o identificador del archivo que se seleccionará.
+   * Establece el archivo seleccionado
+   * @method setArchivoSeleccionado
+   * @description Actualiza el archivo seleccionado en el estado
+   * @param {string} archivoSeleccionado - Nombre o identificador del archivo seleccionado
+   * @returns {void}
+   * @public
    */
   public setArchivoSeleccionado(archivoSeleccionado: string): void {
     this.update((state) => ({
@@ -511,9 +674,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor de la propiedad `linea` en el estado actual.
-   *
-   * @param linea - El nuevo valor para la propiedad `linea`.
+   * Establece el valor de línea
+   * @method setLinea
+   * @description Actualiza la propiedad línea en el estado actual
+   * @param {string} linea - Nuevo valor para la propiedad línea
+   * @returns {void}
+   * @public
    */
   public setLinea(linea: string): void {
     this.update((state) => ({
@@ -522,11 +688,13 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
     }));
   }
 
-
   /**
-   * Establece el valor de la propiedad `lineaCheckbox` en el estado.
-   *
-   * @param lineaCheckbox - El nuevo valor para la propiedad `lineaCheckbox`.
+   * Establece el valor del checkbox de línea
+   * @method setLineaCheckbox
+   * @description Actualiza el estado del checkbox de línea
+   * @param {string} lineaCheckbox - Nuevo valor para el checkbox de línea
+   * @returns {void}
+   * @public
    */
   public setLineaCheckbox(lineaCheckbox: string): void {
     this.update((state) => ({
@@ -536,9 +704,12 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Establece el valor de "monto" en el estado.
-   *
-   * @param monto - El nuevo valor de "monto" que se asignará al estado.
+   * Establece el valor del monto
+   * @method setMonto
+   * @description Actualiza el monto en el estado
+   * @param {string} monto - Nuevo valor del monto que se asignará al estado
+   * @returns {void}
+   * @public
    */
   public setMonto(monto: string): void {
     this.update((state) => ({
@@ -548,7 +719,11 @@ export class Tramite80302Store extends Store<Solicitud80302State> {
   }
 
   /**
-   * Limpia los datos de la solicitud
+   * Limpia todos los datos de la solicitud
+   * @method limpiarSolicitud
+   * @description Reinicia el estado del store al estado inicial
+   * @returns {void}
+   * @public
    */
   public limpiarSolicitud(): void {
     this.reset();
