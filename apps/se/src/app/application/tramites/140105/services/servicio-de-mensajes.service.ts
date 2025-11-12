@@ -197,6 +197,20 @@ validarFolioTramite(folioTramite: string): Observable<BaseResponse<{ valido: boo
 }
 
 /**
+ * Guarda los datos de la solicitud.
+ * @param {string} tramite - El ID del trámite.
+ * @param {any} payload - Los datos a guardar.
+ * @returns {Observable<BaseResponse<any>>} - Observable con la respuesta del servidor.
+ */
+postGuardarDatos<T>(
+  tramite: string,
+  payload: T
+): Observable<BaseResponse<T>> {
+  const ENDPOINT = `${this.host}sat-t${tramite}/solicitud/guardar`;
+  return this.http.post<BaseResponse<T>>(ENDPOINT, payload);
+}
+
+/**
  * Genera un mensaje de error formateado similar al del ServiciosService.
  * 
  * @param {string} mensaje - El mensaje de error a mostrar

@@ -1,5 +1,5 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TABLA_ORDEN } from '../../constantes/permiso-vegetales-nutrientes.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 
@@ -15,9 +15,30 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+
+  /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosComponent', { static: false }) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * Constante que define el orden de la tabla para los terceros relacionados.
    * Se utiliza para mostrar la tabla en el componente TercerosRelacionadosComponent.
    */
   tablaOrden = TABLA_ORDEN;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260509;
+
+  /** Indica si los campos de terceros relacionados han sido marcados como tocados. */
+  public markTouched: boolean = false;
+
+  /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
+  validarFormulario(): void {
+    this.tercerosRelacionadosComponent.markTouched();
+  }
+
 }

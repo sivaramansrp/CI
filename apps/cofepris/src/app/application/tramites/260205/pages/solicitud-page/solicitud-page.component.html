@@ -3,16 +3,21 @@
     <div class="col-md-12">
       <h1>{{ tituloMensaje || null }}</h1>
     </div>
+    <div class="col-12">
+        @if (esFormaValido) {
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
+      }
+      </div>
     <ng-container *ngIf="indice === 2"> </ng-container>
-    <app-wizard [listaPasos]="pasos"></app-wizard>
+   <app-wizard #WizardComponent [listaPasos]="pasos"></app-wizard>  
   </div>
 
   <div class="row">
     @switch (indice) { @case (1) {
-    <app-paso-uno></app-paso-uno>
+    <app-paso-uno [confirmarSinPagoDeDerechos]="confirmarSinPagoDeDerechos" #PasoUnoComponent></app-paso-uno>
     } @case (2) {
     <app-paso-carga-documento 
-    [idSolicitud]="idSolicitudState"
+    [idSolicitud]="solicitudState.idSolicitud"
     [idTipoTRamite]="idTipoTRamite"
     [cargaArchivosEvento]="cargarArchivosEvento"
     (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
@@ -20,7 +25,7 @@
     (cargaEnProgreso)="onCargaEnProgreso($event)"
     ></app-paso-carga-documento>
     } @case (3) {
-     <paso-firma [idSolicitud]="idSolicitudState" [procedure]="260205" [procedureUrl]="'materias-primas-destinados/solicitud'"></paso-firma>
+     <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260205" [procedureUrl]="'materias-primas-destinados/solicitud'"></paso-firma>
 
     } }
 
@@ -60,3 +65,16 @@
     
   </div>
 </div>
+ @if(indice === 1) {
+    <div class="mt-5">
+      <div class="mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
+    </div>
+    }
+@if(mostrarAlerta){
+  <section>
+    <lib-notificaciones *ngIf="mostrarAlerta && !requiresPaymentData" [notificacionInput]="seleccionarFilaNotificacion" (confirmacionModal)="cerrarModal($event)">
+    </lib-notificaciones>
+  </section>
+  }

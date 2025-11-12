@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite260210State, Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { Tramite260210State, Tramite260210Store } from '../../estados/tramite260210Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { ViewChild } from '@angular/core';
 /**
  * @component PasoUnoComponent
  * @description Container component representing the first step of the procedure form.
- * It handles the selected tab index using state from `Tramite260210Query` and updates it via `Tramite260214Store`.
+ * It handles the selected tab index using state from `Tramite260210Query` and updates it via `Tramite260210Store`.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -27,7 +27,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @property indice
    * @description Indicates the index of the selected tab within the form step.
@@ -51,11 +51,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     @ViewChild(ContenedorDeDatosSolicitudComponent)
     contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
 
+    /**
+     * @ViewChild(PagoDeDerechosContenedoraComponent)
+     * Referencia al componente hijo `PagoDeDerechosContenedoraComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(PagoDeDerechosContenedoraComponent)
     pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
 
+    /**
+     * @ViewChild(TercerosRelacionadosVistaComponent)
+     * Referencia al componente hijo `TercerosRelacionadosVistaComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     */
     @ViewChild(TercerosRelacionadosVistaComponent)
     tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+
+    /**
+     * @property {number} confirmarSinPagoDeDerechos
+     * @description
+     * Indica si se ha confirmado la continuación sin pago de derechos.
+     */
+    @Input() confirmarSinPagoDeDerechos: number = 0;
    
   /**
    * @property destroyNotifier$
@@ -76,11 +93,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Initializes the component with required query and store for state management.
    *
    * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * @param Tramite260210Store Store to update procedure state.
    */
   constructor(
     private Tramite260210Query: Tramite260210Query,
-    private tramite260214Store: Tramite260214Store,
+    private Tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
     private readonly http: HttpClient
   ) {
@@ -89,6 +106,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.consultaState = seccionState;
       })).subscribe();
   }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+        const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+        if (CONFIRMAR_VALOR) {
+          this.seleccionaTab(CONFIRMAR_VALOR);
+        }
+      }
+    }
 
   /**
    * Angular lifecycle method that runs on component initialization.
@@ -131,7 +158,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  *                del tipo de solicitud a actualizar en el store.
  */
 actualizarEstadoFormulario(DATOS: Tramite260210State): void {
-  this.tramite260214Store.update((state) => ({
+  this.Tramite260210Store.update((state) => ({
     ...state,
     ...DATOS
   }))
@@ -155,11 +182,10 @@ actualizarEstadoFormulario(DATOS: Tramite260210State): void {
    * - `false`: si el contenedor no es válido o no está disponible.
    */
    validarPasoUno(): boolean {
-    const esTabValido = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
-    const esTercerosValido = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const esPagoValido = this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
     return (
-      (esTabValido && esTercerosValido&& esPagoValido)? true : false
+      (ESTABVALIDO && ESTERCEROSVALIDO) ? true : false
 
     );
   }
@@ -181,7 +207,7 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260210State> {
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite260214Store.updateTabSeleccionado(i);
+    this.Tramite260210Store.updateTabSeleccionado(i);
   }
 
   /**

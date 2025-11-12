@@ -1,4 +1,4 @@
-import { Input, OnDestroy } from '@angular/core';
+import { Input, OnDestroy, ViewChild } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -82,6 +82,8 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+  @ViewChild('pagoDeDerechosComponent') pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
   /**
    * Constructor de la clase `PagoDeDerechosContenedoraComponent`.
    * 
@@ -112,6 +114,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarFormulario(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
     /**
    * Método que se ejecuta cuando el componente es destruido.

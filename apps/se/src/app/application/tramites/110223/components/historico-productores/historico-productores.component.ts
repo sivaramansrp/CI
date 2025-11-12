@@ -81,6 +81,9 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: TramiteState;
 
+  /** Indica si el formulario es válido. */
+  public isFormValid: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -146,30 +149,51 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadoDeService.obtenerProductorPorExportador()
+    this.certificadoDeService
+      .obtenerProductorPorExportador('AAL0409235E6')
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
-        this.productoresExportador = respuesta.datos;
+      .subscribe({
+        next: (response) => {
+          const DATOS = (response as { datos: unknown[] }).datos;
+          const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+            const PRODUCTOR = item as {
+              nombreCompleto?: string;
+              rfc?: string;
+              direccionCompleta?: string;
+              correoElectronico?: string;
+              telefono?: string;
+              fax?: string;
+            };
+            return {
+              id: index + 1,
+              nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+              numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+              direccion: PRODUCTOR.direccionCompleta ?? '',
+              correoElectronico: PRODUCTOR.correoElectronico ?? '',
+              telefono: PRODUCTOR.telefono ?? '',
+              fax: PRODUCTOR.fax ?? '',
+            };
+          });
+          this.productoresExportador = RESULT;
+          this.store.setProductoresExportador(RESULT);
+        }
       });
   }
+
   /**
    * @descripcion
    * Obtiene la lista de países disponibles.
    */
   facturaOpcion(): void {
-    this.certificadoDeService.getTipoFactura()
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
+    this.certificadoDeService
+      .getTipoFactura()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.optionsTipoFactura = data.datos as Catalogo[];
         this.store.setTipoFacturaOpciones(this.optionsTipoFactura);
       });
   }
 
-  /**
-   * Carga la lista de productores disponibles para el exportador desde el servicio.
-   */
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
@@ -197,20 +221,107 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
 
   /**
    * Establece valores en el store para agregar datos del formulario del productor.
-   * 
    * @param event - Objeto que contiene los datos necesarios para actualizar el store.
    * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
    * @param event.campo - Nombre del campo que se actualizará en el store.
    * @param event.valor - Valor que se asignará al campo en el store.
    * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
-   * 
+   *
    * @returns void
-   * 
+   *
    * @command Actualiza el estado del store con los valores proporcionados.
    */
-  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: string | number | boolean | null, storeStateName: string }): void {
+  setValoresStoreAgregarForm(event: {
+    formGroupName: string;
+    campo: string;
+    valor: string | number | boolean | null;
+    storeStateName: string;
+  }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
+  }
+
+  /**
+   * Emite un evento para agregar un nuevo productor exportador.
+   * 
+   * @param event - Objeto que contiene los datos del productor a agregar.
+   *                Puede ser un objeto con las propiedades del productor o un objeto con el número de registro fiscal.
+   */
+  public emitAgregarExportador(
+    event: { [key: string]: unknown } | HistoricoColumnas
+  ): void {
+    let DATOS: HistoricoColumnas | null = null;
+    if (event && typeof event === 'object' && 'nombreProductor' in event) {
+      DATOS = {
+        id: (event as HistoricoColumnas).id ?? 0,
+        nombreProductor: (event as HistoricoColumnas).nombreProductor ?? '',
+        numeroRegistroFiscal: String(
+          (event as HistoricoColumnas).numeroRegistroFiscal ?? ''
+        ),
+        direccion: String((event as HistoricoColumnas).direccion ?? ''),
+        correoElectronico: String(
+          (event as HistoricoColumnas).correoElectronico ?? ''
+        ),
+        telefono: String((event as HistoricoColumnas).telefono ?? ''),
+        fax: String((event as HistoricoColumnas).fax ?? ''),
+      };
+      this.store.setAgregarProductoresExportador([DATOS]);
+    } else if (
+      event &&
+      typeof event === 'object' &&
+      'numeroRegistroFiscal' in event
+    ) {
+      const PAYLOAD = {
+        rfc_solicitante: String(event['numeroRegistroFiscal'] ?? ''),
+      };
+      this.certificadoDeService
+        .obtenerProductorNuevo(PAYLOAD)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response: unknown) => {
+            
+            if (!response || typeof response !== 'object') {
+              return;
+            }
+            const RESPONSE_OBJ = response as { datos?: unknown[] };
+            const DATOS = RESPONSE_OBJ.datos;
+            
+            if (!DATOS || !Array.isArray(DATOS)) {
+              this.store.setAgregarProductoresExportador([]);
+              return;
+            }
+            
+            const RESULT: HistoricoColumnas[] = DATOS.map((item, index) => {
+              const PRODUCTOR = item as {
+                nombreCompleto?: string;
+                rfc?: string;
+                direccionCompleta?: string;
+                correoElectronico?: string;
+                telefono?: string;
+                fax?: string;
+              };
+              return {
+                id: index + 1,
+                nombreProductor: PRODUCTOR.nombreCompleto ?? '',
+                numeroRegistroFiscal: PRODUCTOR.rfc ?? '',
+                direccion: PRODUCTOR.direccionCompleta ?? '',
+                correoElectronico: PRODUCTOR.correoElectronico ?? '',
+                telefono: PRODUCTOR.telefono ?? '',
+                fax: PRODUCTOR.fax ?? '',
+              };
+            });
+            this.store.setAgregarProductoresExportador(RESULT);
+          },
+          error: () => {
+            this.store.setAgregarProductoresExportador([]);
+          },
+        });
+    }
+  }
+
+  /** Actualiza el estado de validez del formulario según el valor recibido. */
+  public formaValida(event: boolean): void {
+    this.isFormValid = event;
   }
 
   /**

@@ -9,7 +9,7 @@
         <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && fabricanteRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && fabricanteRowData.length === 0) || isfabricanteInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -28,7 +28,7 @@
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && formuladorRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && formuladorRowData.length === 0) || isFormuladorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -46,7 +46,7 @@
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && proveedorRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && proveedorRowData.length === 0) || isProveedorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -110,7 +110,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
               </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -133,7 +133,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+              <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -191,7 +191,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -473,7 +473,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -494,7 +494,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+              <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -517,7 +517,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -828,7 +828,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -849,7 +849,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+              <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -872,8 +872,8 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
@@ -928,7 +928,7 @@
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+              <label class="form-label" for="segundoApellido">Segundo apellido:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
                 class="form-control" />
             </div>

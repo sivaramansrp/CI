@@ -18,6 +18,9 @@ export interface IniciarRequerimientoResponse {
     documentos:[];
     /** Lista de áreas y dependencias disponibles */
     areas_dependencias: AreasDependencia[];
+
+    /** Alcances del requerimiento */
+    alcances_requerimiento?: AreasDependencia[];
 }
 
 /** AreasDependencia */

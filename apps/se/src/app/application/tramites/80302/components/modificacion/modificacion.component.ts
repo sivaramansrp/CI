@@ -36,7 +36,7 @@ import { Tramite80302Query } from '../../../../estados/queries/tramite80302.quer
     TablaDinamicaComponent,
   ],
   templateUrl: './modificacion.component.html',
-  styleUrl: './modificacion.component.css',
+  styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent implements OnInit, OnDestroy {
   /**

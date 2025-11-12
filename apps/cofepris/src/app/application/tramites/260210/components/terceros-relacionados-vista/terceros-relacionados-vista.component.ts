@@ -5,13 +5,13 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { ELEMENTOS_REQUERIDOS_TR, ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ELEMENTOS_REQUERIDOS_TR } from '../../constants/medicos-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
-import { Tramite260214Store } from '../../estados/tramite260210Store.store';
+import { Tramite260210Store } from '../../estados/tramite260210Store.store';
 import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -39,6 +39,13 @@ import { ViewChild } from '@angular/core';
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit {
+
+    /**
+     * @property {string} idProcedimiento
+     * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+     */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
+     
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * @description Almacena los datos de la tabla de fabricantes que se mostrarán en la vista.
@@ -137,6 +144,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
        */
    public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR; 
 
+
+     /**
+   * @property {boolean} estaOculto
+   * @description
+   * Variable booleana que controla si el componente debe estar oculto o no.
+   */
+  estaOculto: boolean = true;
+  
   /**
    * @constructor
    * @description Constructor del componente que inicializa las dependencias necesarias
@@ -147,7 +162,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Durante la construcción, se establece una suscripción al estado de consulta
    * para determinar si el formulario debe estar en modo de solo lectura.
    * 
-   * @param {Tramite260214Store} tramiteStore - Store que gestiona el estado global
+   * @param {Tramite260210Store} tramiteStore - Store que gestiona el estado global
    * de los datos del trámite 260214. Proporciona métodos para actualizar las tablas
    * de fabricantes, destinatarios, proveedores y facturadores.
    * 
@@ -168,7 +183,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * ```
    */
   constructor(
-    private tramiteStore: Tramite260214Store,
+    private tramiteStore: Tramite260210Store,
     private tramiteQuery: Tramite260210Query, 
     private consultaQuery: ConsultaioQuery
   ) {

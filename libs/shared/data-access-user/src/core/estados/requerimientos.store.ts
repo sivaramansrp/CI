@@ -34,6 +34,12 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState> {
         super(createInitialRequerimientosStates());
     }
     /**
+     * Devuelve el idTipoRequerimiento actual del store
+     */
+    getIdTipoRequerimiento(): string {
+        return this.getValue().idTipoRequerimiento;
+    }
+    /**
      * Método para resetear valores
      */
     resetStore(): void {

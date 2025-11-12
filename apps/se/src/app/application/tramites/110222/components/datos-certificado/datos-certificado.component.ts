@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoServices, ConsultaioQuery, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -120,7 +120,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /**
      * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
      */
-    this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
     this.representacionFederal$ = this.tramiteQuery.selectrepresentacionFederal$;
   }

@@ -90,8 +90,9 @@
                     <div class="col-md-12" *ngIf="mostrarButtons">
                         <div class="form-group pull-right">
                             <button type="button" class="btn btn-default" (click)="limpiarCampos()" [disabled]="soloLectura">Limpiar</button>
-                            <button type="button" class="btn btn-primary ms-2" (click)="datosCapturaModal()"
-                                data-bs-toggle="modal" [disabled]="soloLectura">Buscar</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="datosCaptura()"
+                                data-bs-toggle="modal"  [disabled]="!solicitudForm.get('aduana')?.value || !solicitudForm.get('inicialesContenedor')?.value ||
+                !solicitudForm.get('numeroContenedor')?.value || soloLectura" >Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -101,12 +102,16 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
-                            [placeholder]="contenedores.primerOpcion" formControlName="contenedores" [required]="true"
-                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
-                            <div *ngIf="isInvalid('contenedores')" class="mensaje-error">
-                                Este campo es obligatorio.
-                            </div>
+                            <app-catalogo-select 
+                            [catalogo]="contenedores.catalogos" 
+                            [label]="contenedores.labelNombre"
+                            [placeholder]="contenedores.primerOpcion" 
+                            formControlName="contenedores" 
+                            [required]="true"
+                            [markTouched]="solicitudForm.get('contenedores')?.touched??false"
+                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" 
+                            [isDisabled]="soloLectura"></app-catalogo-select>
+                           
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -140,7 +145,8 @@
                         <div class="col-md-12">
                             <div class="form-group pull-right">
                                 <button type="button" class="btn btn-primary ms-2"
-                                    (click)="datosCaptura()" [disabled]="soloLectura">Agregar</button>
+                                    (click)="datosCaptura()"  
+                                    [disabled]="!solicitudForm.get('contenedores')?.value || !solicitudForm.get('fechaIngreso')?.value || !solicitudForm.get('vigencia')?.value || soloLectura" >Agregar</button>
                             </div>
                         </div>
                     </div>
@@ -169,8 +175,8 @@
                                     <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
-                                        disabled>
+                                    <input class="form-control" formControlName="archivoSeleccionadoName" type="text" name="archivoSeleccionadoName" id="archivoSeleccionadoName"
+                                        >
                                 </div>
                             </div>
                         </div>
@@ -221,7 +227,7 @@
                                 </button>
                             </div>
                             <div class="col-md-5" id="botonGuardar">
-                                <button type="submit" class="btn btn-primary" (click)="continuar()">
+                                <button type="submit" class="btn btn-primary" (click)="solicitudGuardar()">
                                     Continuar
                                 </button>
                             </div>

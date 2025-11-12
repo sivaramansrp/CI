@@ -26,6 +26,7 @@ export class TramiteConfigService {
     130118: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
     120301: { habilitarFechas: false, isAntecedentes: false, anexo222se: false },
     110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: true },
+    5701: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: false },
   };
 
   /**
@@ -88,7 +89,7 @@ export class TramiteConfigService {
    * La clave corresponde al `tramiteId`.
    */
   private requerimientoConfig: Record<number, RequerimientoConfig> = {
-    130118: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: false },
+    130118: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: true, isBodyNullDocumentos: true },
     110101: { isTipoRequerimiento: false, isAreaSolicitante: false, isJustificacionRequerimiento: true, isSegundaTabla: true },
   };
 

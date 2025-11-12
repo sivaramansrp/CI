@@ -1,15 +1,13 @@
 <app-datos-certificado-de
-    [idioma]="idioma" 
+    [idioma]="idioma"
     [idiomaDatos]="idiomaDatos || []" 
-    [entidadFederativaDatos]="entidadFederativas || []"
-    [representacionFederalDatos]="representacionFederal || []"
-    (formDatosCertificadoEvent)="obtenerDatosFormulario($event)"
+    [idProcedimiento]="idProcedimiento"
+    [entidadFederativaDatos]="(entidadFederativas$ | async) || []"
+    [representacionFederalDatos]="(representacionFederal$ | async) || []"
+    (formDatosCertificadoEvent)="setValoresStore($event)"
     (idiomaSeleccionEvent)="idiomaSeleccion($event)"
-    (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
-    (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
     [datosFormCertificado]="formDatosCertificadoValues"
     (formaValida)="setFormValida($event)"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
-    [idoPeam]="false"
     #datosCertificadoDe
 ></app-datos-certificado-de>

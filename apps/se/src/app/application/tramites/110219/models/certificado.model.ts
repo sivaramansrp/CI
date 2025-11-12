@@ -6,6 +6,27 @@ export interface ColumnasTabla {
   fechaVencimiento: string;
 }
 
+export interface CertificadoApiData {
+  [key: string]: unknown;
+  numeroCertificado?: string;
+  paisAsociado?: {
+    nombre?: string;
+    codigo?: string;
+    descripcion?: string;
+  };
+  tratadoAsociado?: {
+    nombre?: string;
+    codigo?: string;
+    descripcion?: string;
+  };
+  fechaExpedicion?: string;
+  fechaVencimiento?: string;
+  nombre: string;
+  observaciones?: string;
+  nombreEmbarcacion?: string;
+  mercancias?: MercanciaCertificado[];
+}
+
 export interface MercanciaCertificado {
   numeroOrden: string;
   fraccionArancelaria: string;

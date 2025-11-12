@@ -1,5 +1,5 @@
-import { Catalogo, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoServices, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -58,6 +58,13 @@ export class InsumosComponent implements OnInit, OnDestroy {
    */
   public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
+
+  /**
+   * Identificador único del trámite asociado a la consulta de cupo.
+   * Este valor se utiliza para distinguir el tipo de trámite dentro de la aplicación.
+   */
+  tramiteId: string = '120101';
+
   /**
    * Configuración de las columnas para la tabla de extranjeros.
    */
@@ -94,6 +101,23 @@ export class InsumosComponent implements OnInit, OnDestroy {
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
   /**
+   * Indica si el estado actual es inválido.
+   * 
+   * @remarks
+   * Esta propiedad se utiliza para determinar si existen condiciones que invalidan el proceso o formulario actual.
+   * 
+   * @defaultValue false
+   */
+  public isInvalida: boolean = false;
+
+  @ViewChild('modalAddAgentMercancias') modalElement!: ElementRef;
+
+   /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
    * Constructor del componente.
    * Inyecta los servicios necesarios para manejar los datos y formularios.
    * @param solicitudDeRegistroTplService Servicio para manejar los datos de la solicitud de registro.
@@ -107,6 +131,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
     private servicioDeFormularioService: ServicioDeFormularioService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
+    private catalogoServices: CatalogoServices,
   ) {
     // Reservado para futuras inicializaciones o configuraciones.
   }
@@ -116,22 +141,22 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Configura las suscripciones y carga los datos iniciales.
    */
   ngOnInit(): void {
-      const INSUMOS_GUARDADOS = this.solicitudDeRegistroTplService.obtenerTablaInsumos();
+    const INSUMOS_GUARDADOS = this.solicitudDeRegistroTplService.obtenerTablaInsumos();
 
-      if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
-       
-        const INSUMOS_VALIDOS = INSUMOS_GUARDADOS.filter(item => 
-          Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
-        );
-        
-        if (INSUMOS_VALIDOS.length > 0) {
-          this.tablaInsumos = INSUMOS_VALIDOS;
-        } else {
-          this.tablaInsumos = [];
-        }
+    if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
+
+      const INSUMOS_VALIDOS = INSUMOS_GUARDADOS.filter(item =>
+        Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
+      );
+
+      if (INSUMOS_VALIDOS.length > 0) {
+        this.tablaInsumos = INSUMOS_VALIDOS;
+      } else {
+        this.tablaInsumos = [];
       }
+    }
 
-      this.tramite120101Query.selectSolicitudDeRegistroTpl$
+    this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -176,21 +201,15 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
   public obtenerDatosFraccionArancelaria(): void {
-    this.solicitudDeRegistroTplService
-      .obtenerDatosFraccionArancelaria()
+    this.catalogoServices.fraccionHtsCatalogo(this.tramiteId, "6302530020")
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const FRACCION_FIELD = this.insumosFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'descfraccion'
         ) as ModeloDeFormaDinamica;
         if (FRACCION_FIELD && !FRACCION_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            FRACCION_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            FRACCION_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
@@ -201,31 +220,37 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Actualiza las opciones del formulario dinámico con los datos obtenidos.
    */
   public obtenerDatosEstados(): void {
-    this.solicitudDeRegistroTplService
-      .obtenerDatosEstados()
+    this.catalogoServices.paisesBloqueCatalogo(this.tramiteId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
+      .subscribe((resp) => {
         const PAIS_FIELD = this.insumosFormData.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'Pais'
         ) as ModeloDeFormaDinamica;
         if (PAIS_FIELD && !PAIS_FIELD.opciones) {
-          if (Array.isArray(data)) {
-            PAIS_FIELD.opciones = data.map(
-              (item: { id: number; descripcion: string }) => ({
-                descripcion: item.descripcion,
-                id: item.id,
-              })
-            );
+          if (Array.isArray(resp.datos)) {
+            PAIS_FIELD.opciones = resp.datos as Catalogo[];
           }
         }
       });
   }
 
   /**
-   * Método que agrega un nuevo insumo a la tabla.
-   * Valida el formulario antes de agregar los datos.
+   * Restablece los formularios `ninoFormGroup` y `forma` a sus valores iniciales.
+   * 
+   * Este método se utiliza para limpiar los datos ingresados en ambos formularios,
+   * permitiendo que el usuario comience una nueva entrada sin información previa.
    */
+  agregar():void{
+  this.ninoFormGroup.reset();
+  this.forma.reset();
+  }
+
+
   agregarInsumo(): void {
+    if (this.forma.invalid) {
+      this.forma.markAllAsTouched();
+      return;
+    }
     if (this.forma.valid) {
       const VALORES_NINO = this.ninoFormGroup.value;
 
@@ -234,13 +259,73 @@ export class InsumosComponent implements OnInit, OnDestroy {
         FraccionArancelaria: VALORES_NINO.fraccion,
         PaisDeOrigen: VALORES_NINO.Pais,
       };
-      this.tablaInsumos.push(NUEVA_FILA);
+
+      // Check if tablaInsumos already has any items
+      if (this.tablaInsumos.length > 0) {
+        // Update the first existing row with the new values
+        this.tablaInsumos[0] = NUEVA_FILA;
+      } else {
+        // Add as new row if array is empty
+        this.tablaInsumos.push(NUEVA_FILA);
+      }
+
+      // Refresh array reference for change detection
       this.tablaInsumos = [...this.tablaInsumos];
 
+      this.isInvalida = false;
       this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+      this.cerrarModal();
     }
   }
 
+   /**
+   * Cierra el modal.
+   * 
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
+
+
+  validarFormulario(): void {
+    if (this.tablaInsumos.length === 0) {
+      this.isInvalida = true;
+    } else {
+      this.isInvalida = false;
+    }
+  }
+  /**
+  * Lista de insumos seleccionados en la tabla.
+  */
+  public seleccionados: InsumosTabla[] = [];
+  /**
+   * @param seleccion Lista de insumos seleccionados.
+   */
+  onCambioSeleccion(seleccion: InsumosTabla[]): void {
+    this.seleccionados = seleccion;
+  }
+  /**
+   * Método que elimina los insumos seleccionados de la tabla.
+   * Actualiza la tabla y el store después de la eliminación.
+   */
+  eliminarInsumo(): void {
+    if (this.seleccionados.length > 0) {
+      this.seleccionados.forEach(insumoSeleccionado => {
+        const INDEX = this.tablaInsumos.findIndex(insumo => insumo === insumoSeleccionado);
+        if (INDEX !== -1) {
+          this.tablaInsumos.splice(INDEX, 1);
+        }
+      });
+      this.tablaInsumos = [...this.tablaInsumos];
+      this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
+      this.tramite120101Store.setDynamicFieldValue('tablaInsumos', this.tablaInsumos);
+      this.seleccionados = [];
+    }
+  }
   /**
    * Método que destruye las suscripciones para evitar fugas de memoria.
    */

@@ -10,20 +10,12 @@
             </li>
 
         </ul>
+        @if(esDatosRespuesta){
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-
-            <app-140103solicitante></app-140103solicitante>
-            }
-            @case (2) {
-            @if(esDatosRespuesta){
-            <app-cancelacion-de-certificado (buscarIntento)="onBuscarIntento($event)"></app-cancelacion-de-certificado>
-            <app-detalle></app-detalle>
-            <app-oficio></app-oficio>
-            }
-            }
-            }
+            <app-140103solicitante [hidden]="indice !== 1"></app-140103solicitante>
+            <app-solitude *ngIf="esDatosRespuesta" [hidden]="indice !== 2"></app-solitude>
         </ng-container>
+    }
+        
     </div>
 </div>

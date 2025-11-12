@@ -1,20 +1,23 @@
-import { Component, EventEmitter } from '@angular/core';
-import { DatosPasos, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
-import { PASOS, TITULO_MENSAJE } from '../../constantes/maquila-materias-primas.enum';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AVISO, AlertComponent, DatosPasos, PasoCargaDocumentoComponent, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import {MENSAJE_DE_VALIDACION, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS, TITULO_MENSAJE } from '../../constantes/maquila-materias-primas.enum';
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { GuardarAdapter_260206 } from '../../adapters/guardar-payload.adapter';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Notificacion } from'@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
@@ -30,14 +33,17 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoUnoComponent,
     PasoDosComponent,
     PasoFirmaComponent,
-    PasoCargaDocumentoComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    AlertComponent,
+    PasoCargaDocumentoComponent,
+    NotificacionesComponent
+
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
 
     /**
      * @property {EventEmitter<void>} cargarArchivosEvento
@@ -78,6 +84,38 @@ export class SolicitudPageComponent {
    */
     activarBotonCargaArchivos: boolean = false;
 
+    
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
+    /**
+   * @property {string} TEXTOS
+   * @description
+   * Texto de aviso utilizado en el componente.
+   */
+  TEXTOS: string = AVISO.Aviso;
+    /**
+   * @property {string} infoAlert
+   * @description
+   * Clase CSS para aplicar estilos a los mensajes de información.
+   */
+  public infoAlert = 'alert-info  text-center';
+
+  /**
+   * @property {boolean} requiresPaymentData
+   * @description
+   * Indica si se requieren datos de pago para continuar con el trámite.
+   */
+  public requiresPaymentData: boolean = false;
+
+    /**
+   * @property {number} confirmarSinPagoDeDerechos
+   * @description
+   * Indica si se ha confirmado la continuación sin pago de derechos.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
+
     /**
    * @property {boolean} seccionCargarDocumentos
    * @description
@@ -89,7 +127,12 @@ export class SolicitudPageComponent {
    * @default true - Activa al inicio para mostrar sección inicial
    */
     seccionCargarDocumentos: boolean = true;
-
+  
+    /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
 
         /**
      * @property {boolean} cargaEnProgreso
@@ -118,17 +161,53 @@ export class SolicitudPageComponent {
    */
   pasos: ListaPasosWizard[] = PASOS;
 
+    /**
+     * @property {string} MENSAJE_DE_ERROR
+     * @description
+     * Propiedad usada para almacenar el mensaje de error actual.
+     * Se inicializa como cadena vacía y se actualiza en función
+     * de las validaciones o errores capturados en el flujo.
+     */
+       MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+    
+
   /**
    * @property {number} indice
    * Índice actual del paso seleccionado (empieza en 1).
    */
   indice: number = 1;
 
+  /** Nueva notificación relacionada con el RFC. */
+    public seleccionarFilaNotificacion!: Notificacion;
+
+
+/**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+public mostrarAlerta: boolean = false;
+
+ /**
+      * @property {PasoUnoComponent} pasoUnoComponent
+      * @description
+      * Referencia al componente hijo `PasoUnoComponent` mediante
+      * `@ViewChild`. Permite acceder a sus métodos y propiedades
+      * desde este componente padre.
+      */
+      @ViewChild(PasoUnoComponent)
+      pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * URL de la página actual.
    */
   public solicitudState!: Tramite260206State;
   
+  /**
+     * Identificador numérico de la solicitud actual.
+     * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+     */
+    idSolicitudState: number | null = 0;
+
   /**
    * @property {WizardComponent} wizardComponent
    * Referencia al componente Wizard para controlar navegación entre pasos.
@@ -160,15 +239,23 @@ export class SolicitudPageComponent {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+
+
     constructor(
     private tramiteStore: Tramite260206Store,
-    private tramiteQuery: Tramite260206Query
-  ) {
-    this.tramiteQuery.selectTramiteState$.pipe(takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        ).subscribe();
+    private tramiteQuery: Tramite260206Query,
+    public registroSolicitudService: RegistroSolicitudService,
+    private toastrService: ToastrService
+  ) { }
+
+   ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+    });
   }
 
 
@@ -189,19 +276,124 @@ export class SolicitudPageComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón presionado.
    */
  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = this.obtenerNombreDelTítulo(
-        e.valor
-      );
+    if (e.accion === 'cont') {
+              let isValid = true;
+    
+              if (this.indice === 1 && this.pasoUnoComponent) {
+              isValid = this.pasoUnoComponent.validarPasoUno();
+            }
+    
+            if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+                this.confirmarSinPagoDeDerechos = 2;
+              }else {
+                this.confirmarSinPagoDeDerechos = 3;
+              }
+    
+            if(!this.requiresPaymentData) {
+              if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+                this.mostrarAlerta=true;
+                this.seleccionarFilaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: 'danger',
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+                  cerrar: true,
+                  tiempoDeEspera: 2000,
+                  txtBtnAceptar: 'SI',
+                  txtBtnCancelar: 'NO',
+                  alineacionBtonoCerrar:'flex-row-reverse'
+                }
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+             } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+                         this.confirmarSinPagoDeDerechos = 2;
+                       } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+                         this.confirmarSinPagoDeDerechos = 3;
+                       }
+                   }
+             
+                     if (!isValid) {
+                       this.formErrorAlert = this.MENSAJE_DE_ERROR;
+                       this.esFormaValido = true;
+                       this.datosPasos.indice = this.indice;
+                       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                       return;
+                     }
+             
+                     const PAYLOAD = GuardarAdapter_260206.toFormPayload(this.solicitudState);
+                     let shouldNavigate = false;
+                     this.registroSolicitudService.postGuardarDatos('260206', PAYLOAD).subscribe(response => {
+                       shouldNavigate = response.codigo === '00';
+                       if (!shouldNavigate) {
+                         const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+                         this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+                         this.esFormaValido = true;
+                         this.indice = 1;
+                         this.datosPasos.indice = 1;
+                         this.wizardComponent.indiceActual = 1;
+                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                         return;
+                       }
+                       if(shouldNavigate) {
+                         if(esValidObject(response) && esValidObject(response.datos)) {
+                           this.esFormaValido = false;
+                           const DATOS = response.datos as { id_solicitud?: number };
+                           const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+                           this.idSolicitudState = ID_SOLICITUD;
+                           this.tramiteStore.setIdSolicitud(ID_SOLICITUD);
+                         }
+                         // Calcular el nuevo índice basado en la acción
+                         let indiceActualizado = e.valor;
+                         if (e.accion === 'cont') {
+                           indiceActualizado = e.valor;
+                         }
+                         this.toastrService.success(response.mensaje);
+                         if (indiceActualizado > 0 && indiceActualizado < 5) {
+                           this.indice = indiceActualizado;
+                           this.datosPasos.indice = indiceActualizado;
+                           if (e.accion === 'cont') {
+                             this.wizardComponent.siguiente();
+                           } else {
+                             this.wizardComponent.atras();
+                           }
+                         }
+                       } else {
+                         this.toastrService.error(response.mensaje);
+                       }
+                     });
+                   }else{
+                     this.indice = e.valor;
+                     this.datosPasos.indice = this.indice;
+                     this.wizardComponent.atras();
+                   }
+             
+             
+               }
+                  cerrarModal(value:boolean): void {
+                   if(value){
+                   this.mostrarAlerta = false;
+                   this.requiresPaymentData = true;
+                   } else {
+                     this.mostrarAlerta = false;
+                     this.confirmarSinPagoDeDerechos = 4;
+                   }
+                }
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
+  }             
 
   /**
    * @method obtenerNombreDelTítulo

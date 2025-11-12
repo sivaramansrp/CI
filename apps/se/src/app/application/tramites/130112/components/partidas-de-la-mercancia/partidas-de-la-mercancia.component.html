@@ -2,7 +2,7 @@
   <form [formGroup]="partidasDelaMercanciaForm">
     <div>
       <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
-      <ng-alert [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
+      <ng-alert class="text-center" [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -15,7 +15,7 @@
             <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
 
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">
-                La cantidad no debe ser igual a 0
+                Este campo es obligatorio
               </small>
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('noEsNumero')">
                 Por favor, escribe un número entero válido
@@ -74,7 +74,7 @@
             <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">
-                Debe agregar una descripción
+                Este campo es obligatorio
               </small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
@@ -94,7 +94,7 @@
             <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">
-                Debe agregar el valor en dolares de la partida
+                Este campo es obligatorio
               </small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
@@ -210,7 +210,10 @@
       <div *ngIf="mostrarTabla">
         <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [tipoSeleccionTabla]="CHECKBOX"
-          (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+          (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)"
+          [styleCenter]="true"
+          [isInvalida]="mostrarErrores && tableBodyData.length === 0"
+          >
         </app-tabla-dinamica>
       </div>
 

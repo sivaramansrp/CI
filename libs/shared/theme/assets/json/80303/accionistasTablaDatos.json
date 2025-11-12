@@ -4,31 +4,31 @@
     "data": [
       {
         "id": 1,
-        "RFC": "GARC850101HDF",
-        "Nombres": "Gabriel",
-        "PrimerApellido": "García",
-        "SegundoApellido": "Fernández"
+        "rfc": "GARC850101HDF",
+        "nombre": "Gabriel",
+        "apellidoPrimer": "García",
+        "apellidoSegundo": "Fernández"
       },
       {
         "id": 2,
-        "RFC": "LOPM920304MNL",
-        "Nombres": "Lourdes",
-        "PrimerApellido": "Pérez",
-        "SegundoApellido": "Morales"
+        "rfc": "LOPM920304MNL",
+        "nombre": "Lourdes",
+        "apellidoPrimer": "Pérez",
+        "apellidoSegundo": "Morales"
       },
       {
         "id": 3,
-        "RFC": "MART810715TML",
-        "Nombres": "Martín",
-        "PrimerApellido": "Ruiz",
-        "SegundoApellido": "Torres"
+        "rfc": "MART810715TML",
+        "nombre": "Martín",
+        "apellidoPrimer": "Ruiz",
+        "apellidoSegundo": "Torres"
       },
       {
         "id": 4,
-        "RFC": "JUAN700823BGN",
-        "Nombres": "Juana",
-        "PrimerApellido": "Navarro",
-        "SegundoApellido": "Gómez"
+        "rfc": "JUAN700823BGN",
+        "nombre": "Juana",
+        "apellidoPrimer": "Navarro",
+        "apellidoSegundo": "Gómez"
       }
     ]
   }

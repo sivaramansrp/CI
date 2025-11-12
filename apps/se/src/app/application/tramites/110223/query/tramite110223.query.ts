@@ -132,6 +132,15 @@ export class Tramite110223Query extends Query<TramiteState> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
+
+  /**
+   * @descripcion
+   * Observable que selecciona la tabla de mercancías del estado.
+   */
+  selectmercanciaTablaUno$ = this.select((state) => {
+    return state.disponiblesDatos;
+  });
+  
     /**
    * @descripcion
    *  Observable que selecciona los datos del formulario de certificado.
@@ -146,6 +155,23 @@ export class Tramite110223Query extends Query<TramiteState> {
     formulario$ = this.select((state) => {
       return state.formulario;
     });
+
+    /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de destinatario.
+   */
+  setGrupoReceptor$ = this.select((state) => {
+    return state.grupoReceptor;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona el formulario de destinatario.
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
+
   /**
    * Constructor del servicio TramiteQuery.
    * 

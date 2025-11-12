@@ -118,7 +118,7 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    * // Navegar al paso anterior
    * this.wizardComponent.atras();
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild('wizzard') wizardComponent!: WizardComponent;
   /**
    * @property {PasoUnoComponent} pasoUno
    * @description
@@ -238,11 +238,6 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
    public formErrorAlert!:string;
-   
-   /**
-   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
-   */
-  esFormaValido: boolean = true;
 
   /**
    * Clase CSS para mostrar una alerta de error.
@@ -352,7 +347,7 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
       if (!shouldNavigate) {
         const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
         this.formErrorAlert = ImmexRegistroSolicitudModalityComponent.generarAlertaDeError(ERROR_MESSAGE);
-        this.esFormaValido = false;
+        this.isValid = false;
         this.indice = 1;
         this.datosPasos.indice = 1;
         this.wizardComponent.indiceActual = 1;
@@ -371,7 +366,8 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
         // Calcular el nuevo índice basado en la acción
         let indiceActualizado = e.valor;
         if (e.accion === 'cont') {
-          indiceActualizado = e.valor + 1;
+          indiceActualizado = e.valor;
+          this.indice = indiceActualizado;
         }
         this.toastrService.success(response.mensaje);
         

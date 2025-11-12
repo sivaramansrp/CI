@@ -1,48 +1,37 @@
-/**
- * PasoTresComponent
- * */
-
-import { Component } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { Router } from '@angular/router';
 
 /**
- * PasoTresComponent
- * @nombre PasoTresComponent
- * @descripcion Componente que representa el tercer paso de un proceso. 
- * Este componente maneja la firma electrónica y redirige a otra página cuando se obtiene la firma.
+ * Componente para el paso tres del trámite 260212 de COFEPRIS.
+ *
+ * Este componente representa la tercera etapa del proceso de trámite donde se realiza
+ * la firma electrónica del documento. Utiliza el componente compartido de firma
+ * electrónica para permitir al usuario completar este paso del proceso.
+ *
  */
 @Component({
+  /** Selector CSS para identificar el componente en el DOM */
   selector: 'app-paso-tres',
-  standalone: true, 
-  imports: [
-    CommonModule, 
-    FirmaElectronicaComponent, 
-  ],
-  templateUrl: './paso-tres.component.html', 
+  /** Indica que es un componente independiente (standalone) */
+  standalone: true,
+  /** Módulos y componentes importados necesarios para el funcionamiento */
+  imports: [CommonModule, FirmaElectronicaComponent],
+  /** Ruta del archivo de plantilla HTML del componente */
+  templateUrl: './paso-tres.component.html',
+  /** Ruta del archivo de estilos CSS específicos del componente */
+  styleUrl: './paso-tres.component.css',
 })
 export class PasoTresComponent {
   /**
-   * componente doc
-   * @constructor
-   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
+   * Constructor del componente PasoTresComponent.
+   *
+   * Inicializa el componente para el tercer paso del trámite 260212.
+   * En este paso se maneja la firma electrónica del documento.
+   *
+   * @memberof PasoTresComponent
    */
-  constructor(private router: Router) {
-    // Constructor del componente
-  }
-
-  /**
-   * componente doc
-   * @método obtieneFirma
-   * @descripcion Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
-   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
-   */
-  obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']); // Navegación a la página de acuse
-    }
+  constructor() {
+    // El constructor está vacío ya que no requiere inicialización específica
   }
 }

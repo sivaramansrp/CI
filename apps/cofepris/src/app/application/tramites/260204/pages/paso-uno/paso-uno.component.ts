@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,29 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy {
+export class PasoUnoComponent implements OnDestroy, OnChanges {
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+    /**
+     * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+     * @description
+     * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     *
+     * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+     * a sus propiedades, por ejemplo para delegar la validación del formulario
+     * interno (`validarContenedor()`).
+     *
+     * > Nota: Angular inicializa esta referencia después de que la vista
+     * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+     */
+    @ViewChild(ContenedorDeDatosSolicitudComponent)
+    contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+    @ViewChild(PagoDeDerechosContenedoraComponent)
+    pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
+
+    @ViewChild(TercerosRelacionadosVistaComponent)
+    tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
   /**
    * Índice numérico utilizado como referencia o posición actual.
    * Comienza en 1 por defecto.
@@ -80,6 +102,14 @@ export class PasoUnoComponent implements OnDestroy {
 
   }
 
+    ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
+  }
 
   /**
    * Guarda los datos del formulario y actualiza el estado del formulario en base a la respuesta obtenida.
@@ -133,5 +163,28 @@ export class PasoUnoComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+    /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    const ESTABVALIDO = this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ESTERCEROSVALIDO = this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
+    return (
+      (ESTABVALIDO && ESTERCEROSVALIDO) ? true : false
+
+    );
   }
 }

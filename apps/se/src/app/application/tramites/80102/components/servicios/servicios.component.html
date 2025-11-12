@@ -58,7 +58,7 @@
   </div>
   <div class="row">
     <ng-titulo
-      titulo="Empresas (Nacionales) a las que se les otorgaran servicios"
+      titulo="Empresas (Nacionales) a las que se les otorgarán servicios"
     />
 
     <div class="col-md-4">
@@ -133,7 +133,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="serviciosAutorizados"
-          >Empresas (Nacionales) a las que se les otorgaran servicios:</label
+          >Empresas (Nacionales) a las que se les otorgarán servicios:</label
         >
       </div>
     </div>
@@ -153,7 +153,6 @@
     <form [formGroup]="formularioEmpresaExtranjera" class="row mb-4">
       @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
       'text') {
-
       <div [ngClass]="item.class">
         <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
         <input

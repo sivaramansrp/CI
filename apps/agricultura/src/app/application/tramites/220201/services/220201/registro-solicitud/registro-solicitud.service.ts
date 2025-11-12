@@ -1,14 +1,17 @@
-import { 
+import {
     API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL,
     API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
+    API_GET_SOLICITUDES_GUARDADO_PARCIAL,
     API_GET_SOLICITUDES_NICO_DESCRIPCION,
     API_GET_SOLICITUDES_RECENTES,
-    API_GET_SOLICITUDES_UNIDAD_MEDIDA
+    API_GET_SOLICITUDES_UNIDAD_MEDIDA,
+    API_POST_GUARDAR
 } from '../../../../../core/server/api-router';
-import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { Catalogo, ENVIRONMENT, formatFechaCreacion } from "@libs/shared/data-access-user/src";
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../models/220201/capturar-solicitud.model';
 import { Observable, map } from "rxjs";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
+import { GuardaSolicitud } from '../../../models/220201/guardar-solicitud.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -30,7 +33,7 @@ export class RegistroSolicitudService {
     ) {
         this.host = `${ENVIRONMENT.API_HOST}/api/`;
     }
-    
+
     /**
      * Obtiene los datos de la solicitud para un trámite específico y un RFC dado.
      *
@@ -98,21 +101,28 @@ export class RegistroSolicitudService {
         return this.http.get<BaseResponse<Catalogo>>(ENDPOINT);
     }
 
-}
-
-/**
- * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
- * @param fecha_creacion Fecha en formato ISO (string)
- * @returns Fecha formateada como string
- */
-function formatFechaCreacion(fecha_creacion: string): string {
-    const DATE = new Date(fecha_creacion);
-    if (isNaN(DATE.getTime())) {
-        return fecha_creacion;
+    /**
+     * Guarda una solicitud parcial para el trámite especificado.
+     *
+     * @param tramite - El identificador del trámite para el cual se guarda la solicitud.
+     * @param solicitud - Los datos de la solicitud que se guardarán.
+     * @returns Un observable que emite la respuesta que contiene los datos de la solicitud guardada.
+     */
+    guardaSolicitudParcial(tramite: number, solicitud: GuardaSolicitud): Observable<BaseResponse<SolicitudData>> {
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_GUARDADO_PARCIAL(tramite.toString())}`;
+        return this.http.post<BaseResponse<SolicitudData>>(ENDPOINT, solicitud);
     }
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-    return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
+
+    /**
+     * Guarda una solicitud en el sistema.
+     *
+     * @param tramite - Identificador numérico del trámite.
+     * @param payload - Datos de la solicitud a guardar.
+     * @returns Un observable que emite la respuesta base con los datos de la solicitud.
+     */
+    guardarSolicitud(tramite: number, payload: GuardaSolicitud): Observable<BaseResponse<SolicitudData>> {
+        const ENDPOINT = `${this.host}${API_POST_GUARDAR(tramite.toString())}`;
+        return this.http.post<BaseResponse<SolicitudData>>(ENDPOINT, payload);
+    }
+
 }
-
-
-

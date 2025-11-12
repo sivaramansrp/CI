@@ -1,51 +1,45 @@
+import { AlertComponent, ConsultaioState, ModeloDeFormaDinamica, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
-import { AlertComponent, ModeloDeFormaDinamica, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { EXPRESAS_EXTRANJERAS, EmpresasEXtranjeras, ExpresasConfiguration, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
-import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
-import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
-import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
-import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
-
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import { DATOS_FEDERATARIOS, EXPRESAS, FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
+import { EXPRESAS_EXTRANJERAS, EmpresasEXtranjeras, ExpresasConfiguration, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
+import { FEDERATARIOS_DATOS, PLANTAS_DATOS, PLANTAS_IMMEX } from '../../../tramites/80103/constantes/nuevo-programa.enum';
+import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
+import { Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
+import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { CapacidadInstaladaComponent } from '../capacidad-instalada/capacidad-instalada.component';
+import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
+import { ComplimentosService } from '../../services/complimentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Directos } from '../../constantes/empleados.enum';
 import { EmpleadosComponent } from '../empleados/empleados.component';
+import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
+import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormsModule } from '@angular/forms';
+import { INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inversion.component';
+import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
+import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-
-import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
-
-import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
-import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
-import { ComplimentosService } from '../../services/complimentos.service';
+import { Router } from '@angular/router';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-
-import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
-import { Directos } from '../../constantes/empleados.enum';
-
+import { TEXTO_ALERTA } from '../../models/federatarios-y-plantas.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -278,7 +272,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
-  public textodAlerta = TEXTO_DE_ALERTA;
+  public textodAlerta = TEXTO_ALERTA;
   /**
      * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
      */
@@ -397,8 +391,15 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   @Output() obtenerCapacidadInstaladaTablaDatos: EventEmitter<
     CapacidadInstalada[]
   > = new EventEmitter<CapacidadInstalada[]>(true);
+/** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
 
-
+  
+/**
+ * Contiene la lista de plantas disponibles seleccionadas por el usuario.
+ */
+public seleccionados: PlantasDisponibles[] = [];
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -435,11 +436,16 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+           this.consultaState = seccionState;
+           if (this.consultaState.update) {
+           this.federatariosDatos = FEDERATARIOS_DATOS;
+           this.plantasDisponiblesDatos=PLANTAS_DATOS;
+           this.plantasImmexDatos=PLANTAS_IMMEX;
+           }
           this.inicializarCertificadoFormulario();
         })
       )
-      .subscribe();
-
+      .subscribe();  
     if (!(this.solicitudState['federatariosEstadoOptions'] as Catalogo[])?.length) {
       this.obtenerFederatariosEstados();
     } else {
@@ -698,16 +704,26 @@ buscarPlantasImmex(): void {
 }
 
 /**
+ * Maneja el cambio de selección de plantas disponibles.
+ * Actualiza la propiedad `seleccionados` con los datos seleccionados.
+ * @param event 
+ */
+onSeleccionChange(event: PlantasDisponibles[]): void { 
+  this.seleccionados = event;
+}
+/**
  * Adds IMMEX plant data to the `plantasImmexDatos` array.
  * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
  *
  * @remarks
  * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
  */
-agregarPlantas(): void {
+agregarPlantas(): void { 
+  if(this.seleccionados && this.seleccionados.length >=1){
   this.plantasImmexDatos = [INMEX_PLANTAS];
   this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
   this.datosPlantasImmex.emit(this.plantasImmexDatos);
+  }
 }
 
 

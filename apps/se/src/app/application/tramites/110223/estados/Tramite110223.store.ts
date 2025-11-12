@@ -1,4 +1,5 @@
 import { DestinatarioForm, DomicilioForm, RepresentanteLegalForm } from '../models/registro.model';
+import { GrupoDeDirecciones, GrupoReceptor, GrupoRepresentativo, HistoricoColumnas, MercanciaTabla } from '../models/certificado-origen.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
@@ -80,6 +81,31 @@ export interface TramiteState {
    * Contiene campos como observaciones, idioma, entidad federativa y representación federal.
    */
   formDatosCertificado: { [key: string]: unknown};
+
+  /**
+   * @property {Object} formDatosDelDestinatario - Datos del destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como nombres, apellidos, número de registro fiscal y razón social.
+   */
+  formDatosDelDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formDestinatario - Datos del formulario de destinatario.
+   * @description
+   * Contiene información del destinatario del certificado, como país, ciudad, número de teléfono, fax y correo electrónico.
+   */
+  formDestinatario: { [key: string]: unknown };
+
+  /**
+   * @property {Object} formExportor - Datos del exportador.
+   * @description
+   * Contiene información del exportador, como lugar, nombre de la empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  formExportor: { [key: string]: unknown };
+
+  /** Régimen de la mercancía. */
+  grupoRepresentativo: GrupoRepresentativo;
+
   /**
    * Objeto que contiene datos del formulario de mercancía.
    * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
@@ -125,11 +151,43 @@ export interface TramiteState {
 
   /** Opciones disponibles para el tipo de factura en el formulario, provenientes del catálogo correspondiente. */
   optionsTipoFactura: Catalogo[];
- 
+
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+
+  /** Historial de productores exportador agregados. */
+  agregarProductoresExportador: HistoricoColumnas[];
+
+  /** Lista de mercancías disponibles */
+  disponiblesDatos: Mercancia[];
+
+  /** Lista de mercancías asociadas a los productores en el estado del trámite. */
+  mercanciaProductores: MercanciaTabla[];
+  /** Grupo receptor */
+  grupoReceptor: GrupoReceptor;
+  
+  /** Grupo de direcciones */
+  grupoDeDirecciones: {
+    ciudad: string;
+    numeroLetra: string | number;
+    lada: string | number;
+    telefono: string | number;
+    fax: string | number | null;
+    correoElectronico: string;
+    calle?: string;
+    numeroExterior?: string;
+    numeroInterior?: string;
+    colonia?: string;
+    localidad?: string;
+    municipio?: string;
+    estado?: string;
+    pais?: string;
+    cp?: string;
+  };
 }
-
-
-
 
 /**
  * Estado inicial que se utiliza para crear el store con valores por defecto.
@@ -151,14 +209,25 @@ export const INITIAL_STATE: TramiteState = {
   entidadFederativaSeleccion: { id: -1, descripcion: '' },
   representacionFederalSeleccion: { id: -1, descripcion: '' },
    formCertificado: {
+    si: false,
     entidadFederativa: '',
-    tercerOperador: false,
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    correoElectronico: '',
+    numeroLetra: '',
+    calle: '',
   },
     formulario:{
       datosConfidencialesProductor: false,
@@ -201,7 +270,56 @@ export const INITIAL_STATE: TramiteState = {
       numeroRegistroFiscal: '',
       fax: '',      
     },
-    optionsTipoFactura: []
+    optionsTipoFactura: [],
+  productoresExportador: [],
+  agregarProductoresExportador: [],
+  formDatosDelDestinatario: {
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
+  grupoReceptor: {
+    nombre: '',
+    apellidoPrimer: '',
+    apellidoSegundo: '',
+    numeroFiscal: '',
+    razonSocial: '',
+  },
+  formDestinatario: {
+      paisDestin: '',
+      ciudad: '',
+      celle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  formExportor: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  grupoRepresentativo: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      registroFiscal: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+  disponiblesDatos: [],
+  mercanciaProductores: [],
+  grupoDeDirecciones: {} as GrupoDeDirecciones,
 };
 
 /**
@@ -554,4 +672,194 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       optionsTipoFactura: tipoFactura,
     }));
   }
+
+  /**
+     * @method setProductoresExportador
+     * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+     *
+     * Este método permite establecer los datos de los productores asociados al exportador.
+     *
+     * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+     *
+     * @returns {void}
+     */
+    public setProductoresExportador(
+      productoresExportador: HistoricoColumnas[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        productoresExportador,
+      }));
+    }
+
+    /**
+   * Agrega un productor exportador al arreglo correspondiente en el estado del trámite.
+   * @param productor Objeto de tipo HistoricoColumnas que representa al productor a agregar.
+   */
+    setAgregarProductoresExportador(productor: HistoricoColumnas[]): void {
+      this.update((state) => ({
+        ...state,
+        agregarProductoresExportador: [
+          ...state.agregarProductoresExportador,
+          ...productor.map(item => ({ ...item })),
+        ],
+      }));
+    }
+
+    /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+     * @method setGrupoReceptor
+     * @description Actualiza la información del receptor en el estado del trámite.
+     *
+     * Este método permite establecer los datos del receptor en el grupo receptor del estado.
+     *
+     * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
+     *
+     * @returns {void}
+     */
+    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+      this.update((state) => ({
+        ...state,
+        grupoReceptor,
+      }));
+    }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de destinatario.
+   */
+  setFormDestinatario(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de exportador en el almacén.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
+   */
+  setFormExportador(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formExportor: {
+        ...state.formExportor,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+  * @method setDatosConfidencialesProductor
+  * @description
+  * Actualiza el estado de datos confidenciales del productor en el almacén.
+  * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+  * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de mercancías asociadas a los productores en el estado del trámite.
+   * @param mercancia Arreglo de objetos de tipo MercanciaTabla a asignar.
+   */
+  setMercanciaProductores(mercancia: MercanciaTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaProductores: mercancia,
+    }));
+  }
+
+  /**
+   * Actualiza el nombre del grupo receptor.
+   *
+   * @param {string} nombre - Nombre del grupo receptor.
+   */
+  public setGrupoReceptorNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, nombre },
+    }));
+  }
+
+  /**
+   * Actualiza el primer apellido del grupo receptor.
+   *
+   * @param {string} apellidoPrimer - Primer apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoPrimer },
+    }));
+  }
+
+  /**
+   * Actualiza el segundo apellido del grupo receptor.
+   *
+   * @param {string} apellidoSegundo - Segundo apellido del grupo receptor.
+   */
+  public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, apellidoSegundo },
+    }));
+  }
+
+  /**
+   * Actualiza el número fiscal del grupo receptor.
+   *
+   * @param {string} numeroFiscal - Número fiscal del grupo receptor.
+   */
+  public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, numeroFiscal },
+    }));
+  }
+
+  /**
+   * Actualiza la razón social del grupo receptor.
+   *
+   * @param {string} razonSocial - Razón social del grupo receptor.
+   */
+  public setGrupoReceptorRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor: { ...state.grupoReceptor, razonSocial },
+    }));
+  }
+
+  /**
+   * @method setGrupoDeDirecciones
+   * @description
+   * Actualiza la información de las direcciones en el estado del trámite.
+   *
+   * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+   *
+   * @returns {void}
+   */
+  public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({ ...state, grupoDeDirecciones }));
+  }
+
 }

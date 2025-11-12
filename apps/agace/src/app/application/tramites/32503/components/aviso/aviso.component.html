@@ -15,9 +15,7 @@
     <ng-container formGroupName="datosEmpresa">
       <div class="row">
         <div class="col-md-8">
-          <label for="valorProgramaImmex"> Número de programa IMMEX </label>
-          <span class="require">*</span>
-          <label for="puntos">:</label>
+          <label for="valorProgramaImmex"> Número de programa IMMEX<span class="require" [ngClass]="obtenerMensajeError(datosEmpresa, 'valorProgramaImmex') ? 'text-danger' : ''">*</span>:</label>
           <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control" [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9" formControlName="valorProgramaImmex" (keyup)="desinfectarAlfanumerico(datosEmpresa,'valorProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
           @if (obtenerMensajeError(datosEmpresa, 'valorProgramaImmex')) {
             <div class="text-danger mt-1">{{ obtenerMensajeError(datosEmpresa, 'valorProgramaImmex') }}</div>
@@ -25,9 +23,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="valorAnioProgramaImmex">Año de programa IMMEX</label>
-            <span class="require">*</span>
-            <label for="puntos">:</label>
+            <label for="valorAnioProgramaImmex">Año de programa IMMEX<span class="require" [ngClass]="obtenerMensajeError(datosEmpresa, 'valorAnioProgramaImmex') ? 'text-danger' : ''">*</span>:</label>
             <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text" maxlength="4" formControlName="valorAnioProgramaImmex" [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosEmpresa,'valorAnioProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
             @if (obtenerMensajeError(datosEmpresa, 'valorAnioProgramaImmex')) {
               <div class="text-danger mt-1">{{ obtenerMensajeError(datosEmpresa, 'valorAnioProgramaImmex') }}</div>
@@ -41,9 +37,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-4 p-0">
-            <label for="tipoAviso">Tipo de Aviso</label>
-            <span class="require">*</span>
-            <label for="puntos">:</label>
+            <label for="tipoAviso">Tipo de Aviso<span [ngClass]="obtenerMensajeError(datosAviso, 'tipoAviso') ? 'text-danger' : ''">*</span>:</label>
           </div>
           <div class="radio">
             <div class="col-md-4">
@@ -67,8 +61,7 @@
         <div class="text-alignment" [ngClass]="datosAviso.get('tieneIdTransaccionVucem')?.value === 'si' ? 'col-md-8' : 'col-md-8'">
           @if (datosAviso.get('tieneIdTransaccionVucem')?.value === 'si') {
             <div>
-              <label for="idTransaccion">ID de transacción VUCEM del aviso inicial*</label>
-              <label for="puntos">:</label>
+              <label for="idTransaccion">ID de transacción VUCEM del aviso inicial<span [ngClass]="obtenerMensajeError(datosAviso, 'idTransaccion') ? 'text-danger' : ''">*</span>:</label>
             </div>
             <div>
               <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
@@ -96,9 +89,7 @@
       <div class="row">
         <div class="col-md-12">
           <div>
-            <label for="motivoProrroga">Motivo de la Prórroga</label>
-            <span class="require">*</span>
-            <label for="puntos">:</label>
+            <label for="motivoProrroga">Motivo de la Prórroga<span [ngClass]="obtenerMensajeError(datosAviso, 'motivoProrroga') ? 'text-danger' : ''">*</span>:</label>
           </div>
           <div>
             <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control textarea" [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga" [maxlength]="250" (change)="setValoresStore(datosAviso, 'motivoProrroga', 'setAvisoFormularioMotivoProrroga')"></textarea>
@@ -145,9 +136,7 @@
         </div>
         <div class="col-md-4 mt-2">
           <div>
-            <label for="solicitud.envioAvisos.callePlanta">Calle</label>
-            <span class="require" id="domicilio">*</span>
-            <label for="puntos">:</label>
+            <label for="solicitud.envioAvisos.callePlanta">Calle<span [ngClass]="obtenerMensajeError(direccionOrigen, 'calle') ? 'text-danger' : ''">*</span>:</label>
           </div>
           <div>
             <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'calle', 'setAvisoFormularioCalle')" />
@@ -158,9 +147,7 @@
         </div>
         <div class="col-md-4">
           <div>
-            <label for="solicitud.envioAvisos.exteriorPlanta">No. Exterior</label>
-            <span class="require" id="domicilio">*</span>
-            <label for="puntos">:</label>
+            <label for="solicitud.envioAvisos.exteriorPlanta">No. Exterior<span [ngClass]="obtenerMensajeError(direccionOrigen, 'numeroExterior') ? 'text-danger' : ''">*</span>:</label>
           </div>
           <div>
             <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(direccionOrigen,'numeroExterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
@@ -180,18 +167,16 @@
         </div>
         <div class="col-md-4">
           <div>
-            <label for="solicitud.envioAvisos.codigoPlanta">Código postal</label>
-            <span class="require">*</span>
-            <label for="puntos">:</label>
+            <label for="solicitud.envioAvisos.codigoPlanta">Código postal<span [ngClass]="obtenerMensajeError(direccionOrigen, 'codigoPostal') ? 'text-danger' : ''">*</span>:</label>
           </div>
           <div>
             <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="desinfectarNumerico(direccionOrigen,'codigoPostal',$event)" [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
-            @if (domicilioFormulario.get('codigoPostal')?.hasError('required') &&
-				        domicilioFormulario.get('codigoPostal')?.touched) {
+            @if (avisoFormulario.get('direccionOrigen.codigoPostal')?.hasError('required') &&
+				        avisoFormulario.get('direccionOrigen.codigoPostal')?.touched) {
 				        <div class="text-danger">
 					      <small>Este campo es obligatorio</small>
 				        </div>
-              } 
+              }
           </div>
         </div>
       </div>
@@ -200,9 +185,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-4 p-0">
-          <label for="tipoAviso">Tipo de Carga</label>
-          <span class="require">*</span>
-          <label for="puntos">:</label>
+          <label for="tipoAviso">Tipo de Carga<span [ngClass]="obtenerMensajeError(avisoFormulario, 'tipoCarga') ? 'text-danger' : ''">*</span>:</label>
         </div>
         <div class="radio">
           <div class="col-md-4">
@@ -263,9 +246,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div>
-                  <label for="rfc">RFC</label>
-                  <span class="require">*</span>
-                  <label for="puntos">:</label>
+                  <label for="rfc">RFC<span [ngClass]="obtenerMensajeError(domicilioFormulario, 'rfc') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input id="rfc" name="rfc" class="form-control" maxlength="13" formControlName="rfc" [ngClass]="isValid(domicilioFormulario, 'rfc') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'rfc', 'setDomicilioFormularioRfc')" />
@@ -315,9 +296,7 @@
               </div>
               <div class="col-md-4 mt-2">
                 <div>
-                  <label for="solicitud.envioAvisos.callePlanta">Calle</label>
-                  <span class="require" id="domicilio">*</span>
-                  <label for="puntos">:</label>
+                  <label for="solicitud.envioAvisos.callePlanta">Calle<span [ngClass]="obtenerMensajeError(domicilioFormulario, 'calle') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(domicilioFormulario,'calle') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'calle', 'setDomicilioFormularioCalle')" />
@@ -331,9 +310,7 @@
               </div>
               <div class="col-md-4">
                 <div>
-                  <label for="solicitud.envioAvisos.exteriorPlanta">Número exterior</label>
-                  <span class="require" id="domicilio">*</span>
-                  <label for="puntos">:</label>
+                  <label for="solicitud.envioAvisos.exteriorPlanta">Número exterior<span [ngClass]="obtenerMensajeError(domicilioFormulario, 'numeroExterior') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(domicilioFormulario,'numeroExterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
@@ -408,10 +385,8 @@
                 ></app-catalogo-select>
               </div>
               <div class="col-md-4 datos-trasladara-nico">
-                
-                <label for="nico">NICO</label>
-                <span class="require">*</span>
-                <label for="nico">:</label>
+
+                <label for="nico">NICO<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'nico') ? 'text-danger' : ''">*</span>:</label>
                 <div>
                   <input type="text" id="nico" formControlName="nico" class="form-control validanumericos" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (keyup)="limpiarSoloNumeros($event)" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'nico')) {
@@ -422,9 +397,7 @@
             </div>
             <div class="row mb-5">
               <div class="col-md-4 datos-trasladara-cantidad">
-                <label for="cantidad">Cantidad</label>
-                <span class="require">*</span>
-                <label for="cantidad">:</label>
+                <label for="cantidad">Cantidad<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'cantidad') ? 'text-danger' : ''">*</span>:</label>
                 <div>
                   <input type="text" formControlName="cantidad" id="cantidad" class="form-control validanumericos" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (keyup)="limpiarNumeroDecimal($event)" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'cantidad')) {
@@ -433,15 +406,21 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (keyup)="limpiarNumeroDecimal($event)" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
-                @if (obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida')) {
-                  <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida') }}</div>
-                }
+                <app-catalogo-select 
+                [catalogo]="unidadMedida" 
+                [label]="'Unidad de medida'" 
+                [required]="true" 
+                id="claveUnidadMedida" 
+                formControlName="claveUnidadMedida" 
+                [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" 
+                (keyup)="limpiarNumeroDecimal($event)" 
+                (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" 
+                [isDisabled]="soloLectura"
+                [markTouched]="mercanciaFormulario.get('claveUnidadMedida')?.touched ?? false"
+                ></app-catalogo-select>
               </div>
               <div class="col-md-4 datos-trasladara-cantidad">
-                <label for="valorUSD">Valor USD</label>
-                <span class="require">*</span>
-                <label for="valorUSD">:</label>
+                <label for="valorUSD">Valor USD<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'valorUSD') ? 'text-danger' : ''">*</span>:</label>
                 <div>
                   <input type="text" formControlName="valorUSD" id="valorUSD" class="form-control validanumericos" (keyup)="limpiarNumeroDecimal($event)" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
                   @if (obtenerMensajeError(mercanciaFormulario, 'valorUSD')) {
@@ -453,9 +432,7 @@
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="descripcionMercancia">Descripción de la mercancía</label>
-                  <span class="require">*</span>
-                  <label for="descripcionMercancia">:</label>
+                  <label for="descripcionMercancia">Descripción de la mercancía<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'descripcionMercancia') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="descripcionMercancia" id="descripcionMercancia" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionMercancia') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionMercancia', 'setMercanciaFormularioDescripcionMercancia')">
@@ -468,9 +445,7 @@
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="descripcionProceso">Proceso que se llevará a cabo</label>
-                  <span class="require">*</span>
-                  <label for="descripcionProceso">:</label>
+                  <label for="descripcionProceso">Proceso que se llevará a cabo<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'descripcionProceso') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="descripcionProceso" id="descripcionProceso" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionProceso') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionProceso', 'setMercanciaFormularioDescripcionProceso')">
@@ -483,9 +458,7 @@
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="numPedimentoExportacion">Número de pedimento de exportación por parte de quien transfiere la mercancía.</label>
-                  <span class="require">*</span>
-                  <label for="numPedimentoExportacion">:</label>
+                  <label for="numPedimentoExportacion">Número de pedimento de exportación por parte de quien transfiere la mercancía<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'numPedimentoExportacion') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="numPedimentoExportacion" id="numPedimentoExportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoExportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoExportacion', 'setMercanciaFormularioPedimentoExportacion')" />
@@ -498,9 +471,7 @@
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="numPedimentoImportacion">Número de pedimento de importación temporal por parte de quien recibe la mercancía.</label>
-                  <span class="require">*</span>
-                  <label for="numPedimentoImportacion">:</label>
+                  <label for="numPedimentoImportacion">Número de pedimento de importación temporal por parte de quien recibe la mercancía<span [ngClass]="obtenerMensajeError(mercanciaFormulario, 'numPedimentoImportacion') ? 'text-danger' : ''">*</span>:</label>
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="numPedimentoImportacion" id="numPedimentoImportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoImportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoImportacion', 'setMercanciaFormularioPedimentoImportacion')" />

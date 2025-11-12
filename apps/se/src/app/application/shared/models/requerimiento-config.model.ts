@@ -22,4 +22,9 @@ export interface RequerimientoConfig {
      * Indica si se debe mostrar una segunda tabla en la interfaz.
      */
     isSegundaTabla?: boolean;
+
+    /**
+     * Indica si el cuerpo de los documentos puede ser nulo.
+     */
+    isBodyNullDocumentos?: boolean;
 }

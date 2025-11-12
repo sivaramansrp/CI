@@ -9,8 +9,8 @@ const ROUTES: Routes = [
     canActivate: [IniciarTramiteResolver],
     data: {
       iniciarConfig: {
-        procedureId: '110203',
-      },
+        procedureId: '110203'
+      }
     },
     path: 'solicitante',
     component: DatosBusquedaComponent,

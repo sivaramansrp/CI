@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -151,6 +151,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+  @ViewChild('datosDeLaSolicitud') datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
   /**
    * @constructor
    * @description
@@ -188,7 +190,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            JSON.parse(JSON.stringify(this.tramiteState.tablaMercanciasConfigDatos));
         })
       )
       .subscribe();
@@ -256,6 +258,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+
+  validarFormularioDatos(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

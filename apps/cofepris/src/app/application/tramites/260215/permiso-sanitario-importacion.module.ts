@@ -13,8 +13,11 @@ import { DatosDeLaComponent } from './components/datos-solicitud/datos-solicitud
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { NgModule } from '@angular/core';
-import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src/tramites/components/paso-carga-documento/paso-carga-documento.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src/tramites/components/paso-firma/paso-firma.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoSanitarioImportacionRoutingModule } from './permiso-sanitario-importacion-routing.module';
@@ -31,16 +34,19 @@ import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
     PasoTresComponent,
-    SanitarioComponent,
     PasoDosComponent,
     PasoUnoComponent,
+    SanitarioComponent,
   ],
   imports: [
     CommonModule,
     PermisoSanitarioImportacionRoutingModule,
     BtnContinuarComponent,
     WizardComponent,
-    PagoDeDerechosComponent,
+    // notification modal component (shared)
+    // use forwardRef where necessary in other modules, but direct import works here
+    NotificacionesComponent,
+    PagoDeDerechosContenedoraComponent,
     SolicitanteComponent,
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
@@ -53,7 +59,9 @@ import { provideHttpClient } from '@angular/common/http';
     AgregarDestinatarioFinalContenedoraComponent,
     AgregarProveedorContenedoraComponent,
     AgregarFabricanteContenedoraComponent,
-    ContenedorDeDatosSolicitudComponent
+    ContenedorDeDatosSolicitudComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
 
   ],
   providers: [

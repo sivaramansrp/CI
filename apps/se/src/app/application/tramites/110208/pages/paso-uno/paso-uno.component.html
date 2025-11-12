@@ -17,26 +17,21 @@
       </ul>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
-          <solicitante #Solicitante></solicitante>
-        }
-        @case (2) {
+
+          <solicitante #Solicitante [tabIndex]="1" [hidden]="indice !== 1"></solicitante>
+
           @if(esDatosRespuesta){
-            <app-certificado-origen></app-certificado-origen>
+            <app-certificado-origen #certificadoOrigen [tabIndex]="2" [hidden]="indice !== 2"></app-certificado-origen>
           }
-        } 
-        @case (3) {
+ 
           @if(esDatosRespuesta){
-            <app-destinatario></app-destinatario>
+            <app-destinatario-de #destinatarioDe [tabIndex]="3" [hidden]="indice !== 3"></app-destinatario-de>
           }
-        } 
-        @case (4) {
+ 
           @if(esDatosRespuesta){
-            <app-datos-certificado></app-datos-certificado>
+            <app-datos-certificado #datosCertificado [tabIndex]="4" [hidden]="indice !== 4"></app-datos-certificado>
           }
-        } 
-        }
+        
       </ng-container>
     </div>
   </div>

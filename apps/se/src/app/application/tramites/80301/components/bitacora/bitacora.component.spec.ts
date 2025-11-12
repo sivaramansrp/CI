@@ -5,8 +5,7 @@ import { BitacoraComponent } from './bitacora.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { of as observableOf, throwError } from 'rxjs';
-import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
-import { Bitacora } from '../../models/plantas-consulta.model';
+import { Bitacora } from '../../../../shared/models/bitacora.model';
 
 describe('BitacoraComponent', () => {
   let fixture;
@@ -50,14 +49,10 @@ describe('BitacoraComponent', () => {
     expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
   });
 
-  it('should initialize table configuration correctly', () => {
-    expect(component.configuracionTabla).toBe(CONFIGURACION_BITACORA_TABLA);
-  });
-
   it('should fetch bitacora data in ngOnInit', () => {
     const mockData: Bitacora[] = [{
-      tipoModificion: 'mockTipo',
-      fetchModificion: 'mockFetch',
+      tipoModificacion: 'mockTipo',
+      fechaModificacion: 'mockFetch',
       valoresAnteriores: 'mockValoresAnteriores',
       valoresNuevos: 'mockValoresNuevos'
     }];
@@ -71,8 +66,5 @@ describe('BitacoraComponent', () => {
     jest.spyOn(component.modificionService, 'obtenerBitacora').mockReturnValue(
       throwError(() => new Error('Simulated Error'))
     );
-
-
-
   });
 });

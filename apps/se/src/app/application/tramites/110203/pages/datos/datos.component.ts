@@ -8,6 +8,7 @@
 import { Component,OnInit, ViewChild} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { DatosCertificado110203Component } from '../../components/datos-certificado-110203/datos-certificado-110203.component';
 import { Destinatario110203Component } from '../../components/destinatario-110203/destinatario-110203.component';
 import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
@@ -46,6 +47,10 @@ export class DatosComponent implements OnInit {
    * Referencia al componente hijo "DestinatarioComponent" para acceder a sus métodos y propiedades.
    */
   @ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: Destinatario110203Component;
+  /**
+   * Referencia al componente hijo "DatosCertificadoComponent" para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificado110203Component;
 
 
    /** Constructor que inyecta el servicio del trámite 221601 y el query de consulta.  
@@ -95,9 +100,23 @@ export class DatosComponent implements OnInit {
  */
   public validarFormularios(): boolean {
   let allValid = true;
-  if (this.destinatarioComponent && !this.destinatarioComponent.validarFormularios()) {
-    allValid = false;
-  }
+
+      if (this.destinatarioComponent) {
+      if (!this.destinatarioComponent.validarFormularios()) {
+        allValid = false;
+      }
+    } else {
+      allValid = false;
+    }
+
+    if (this.datosCertificadoComponent) {
+      if (!this.datosCertificadoComponent.validarFormularios()) {
+        allValid = false;
+      }
+    } else {
+      allValid = false;
+    }
+
   return allValid;
   }
 }

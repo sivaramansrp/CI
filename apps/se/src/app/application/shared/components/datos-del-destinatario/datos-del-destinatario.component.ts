@@ -14,10 +14,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Componente para manejar los detalles de la mercancía.
@@ -31,8 +31,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-del-destinatario.component.scss',
 })
 export class DatosDelDestinatarioComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Datos del formulario para inicializar los valores
    * @type { [key: string]: unknown }
@@ -53,7 +52,7 @@ export class DatosDelDestinatarioComponent
    * Constante que define los procedimientos donde el campo "Número de registro fiscal" es obligatorio.
    * @type {number[]}
    */
-  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207];
+  NUMERO_REGISTRO_FISCAL_REQUIRED: number[] = [110205, 110207, 110208, 110212, 110211,110201,110202];
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -107,7 +106,7 @@ export class DatosDelDestinatarioComponent
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService) {
     this.createForm();
   }
   /**
@@ -121,16 +120,43 @@ export class DatosDelDestinatarioComponent
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(
       this.idProcedimiento
     );
+      if (this.idProcedimiento === 110212 || this.idProcedimiento === 110201 || this.idProcedimiento === 110202) {
+      const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else{
+      this.applyNumeroRegistroFiscalValidation();
+    }
     this.inicializarEstadoFormulario();
   }
-
-  /** Método público para marcar todos los campos como tocados y mostrar errores */
-  public markAllFieldsTouched(): void {
-    if (this.formDatosDelDestinatario) {
-      this.formDatosDelDestinatario.markAllAsTouched();
-    }
+  /**
+   * Valida un campo del formulario.
+   *
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
-
+  /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): boolean {
+    if (this.formDatosDelDestinatario.invalid) {
+      this.formDatosDelDestinatario.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
   /**
    * Inicializa el formulario 'formDatosDelDestinatario' con los campos requeridos.
    *
@@ -148,8 +174,24 @@ export class DatosDelDestinatarioComponent
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
-    });  
-    this.updateRequiredValidators();
+    });
+    if (this.idProcedimiento === 110212) {
+      const CONTROLS_TO_CLEAR = ['nombres', 'primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else if(this.idProcedimiento === 110222){
+       const CONTROLS_TO_CLEAR = ['primerApellido', 'segundoApellido', 'razonSocial'];
+      CONTROLS_TO_CLEAR.forEach(key => {
+        this.formDatosDelDestinatario.get(key)?.clearValidators();
+        this.formDatosDelDestinatario.get(key)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+    else {
+      this.updateRequiredValidators();
+    }
   }
 
   /**
@@ -161,12 +203,13 @@ export class DatosDelDestinatarioComponent
    */
   updateRequiredValidators(): void {
     if (this.NUMERO_REGISTRO_FISCAL_REQUIRED.includes(this.idProcedimiento)) {
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
-    }else{
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
-        this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.addValidators(Validators.required);
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    } else {
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.removeValidators(Validators.required);
+      this.formDatosDelDestinatario.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
     }
+
   }
 
   /**
@@ -180,31 +223,36 @@ export class DatosDelDestinatarioComponent
    * * @returns {void} No retorna ningún valor.
    * */
   applyNumeroRegistroFiscalValidation(): void {
-    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get(
-      'numeroDeRegistroFiscal'
-    );
+    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
     const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
+    const NOMBRES = this.formDatosDelDestinatario.get('nombres');
 
-    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) {
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO || !NOMBRES) {
       return;
     }
 
-    if (this.idProcedimiento === 110205) {
+    if (this.idProcedimiento === 110205 || this.idProcedimiento === 110223) {
       NUMERO_REGISTRO_FISCAL.setValidators([
         Validators.required,
         Validators.maxLength(30),
       ]);
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+      NOMBRES.setValidators([
+        Validators.required,
+        Validators.maxLength(20),
+      ]);
     } else {
       NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]);
       PRIMER_APELLIDO.setValidators([
         Validators.required,
         Validators.maxLength(20),
       ]);
+      NOMBRES.setValidators([Validators.maxLength(20)]);
     }
 
     NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
     PRIMER_APELLIDO.updateValueAndValidity();
+    NOMBRES.updateValueAndValidity();
   }
 
   /**
@@ -233,7 +281,7 @@ export class DatosDelDestinatarioComponent
         this.createForm();
       }
     }
-    if (changes['idProcedimiento'].currentValue && changes['idProcedimiento']) {
+    if (changes?.['idProcedimiento']?.currentValue && changes?.['idProcedimiento']) {
       this.updateRequiredValidators();
     }
   }
@@ -264,7 +312,6 @@ export class DatosDelDestinatarioComponent
       storeStateName,
     });
   }
-
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
    */
@@ -272,7 +319,18 @@ export class DatosDelDestinatarioComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+  /**
+   * @description
+   * Valida el estado completo del formulario de datos del destinatario.
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    if (this.formDatosDelDestinatario.valid) {
+      return true;
+    }
+    this.formDatosDelDestinatario.markAllAsTouched();
+    return false;
+  }
   /**
    * @description
    * Valida el estado completo del formulario de datos del certificado.
@@ -292,11 +350,5 @@ export class DatosDelDestinatarioComponent
    * }
    * ```
    */
-  validarFormularios(): boolean {
-    if (this.formDatosDelDestinatario.valid) {
-      return true;
-    }
-    this.formDatosDelDestinatario.markAllAsTouched();
-    return false;
-  }
+
 }

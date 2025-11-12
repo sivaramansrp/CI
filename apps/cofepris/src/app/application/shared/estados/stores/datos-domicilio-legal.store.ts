@@ -1,3 +1,4 @@
+import { MercanciasInfo, NicoInfo } from '../../models/datos-domicilio-legal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -6,6 +7,8 @@ import { Injectable } from '@angular/core';
  * @returns DatosDomicilioLegal
  */
 export interface DatosDomicilioLegalState {
+  objetoImportacionOtro:string;
+  estadoFisicoOtro:string;
   /**
    * claveDeReferencia
    * @type {string}
@@ -213,10 +216,22 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   mensaje: boolean;
+
+  /**
+   * El valor de nicoTabla.
+   */
+  nicoTabla: NicoInfo[],
+
+  /**
+   * El valor de mercanciaTabla.
+   */
+  mercanciaTabla: MercanciasInfo[]
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
   return {
+    objetoImportacionOtro: '',
+    estadoFisicoOtro: '',
     /**
      * claveDeReferencia
      * @type {string}
@@ -422,7 +437,17 @@ export function createInitialState(): DatosDomicilioLegalState {
  /**
      * El valor de mensaje.
      */
-    mensaje: false
+    mensaje: false,
+
+    /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
   };
 }
 
@@ -779,7 +804,12 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       estadoFisico,
     }));
   }
-
+  public setObjetoImportacionOtro(objetoImportacion: string): void {
+    this.update((state) => ({
+      ...state,
+      objetoImportacion
+    }));
+  }
   /**
    * Establece el estado de fraccionArancelaria.
    * @param fraccionArancelaria - El valor de fraccionArancelaria.
@@ -974,6 +1004,28 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         this.update((state) => ({
             ...state,
             mensaje,
+        }));
+    }
+
+    public setEstadoFisicoOtro(estadoFisicoOtro: string):void {
+        this.update((state) => ({
+            ...state,
+            estadoFisicoOtro,
+        }));
+    }
+
+    /** Actualiza el estado con la nueva tabla de información Nico. */
+    setNicoTabla(nicoTabla: NicoInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            nicoTabla,
+        }));
+    }
+
+    setMercanciasTabla(mercanciaTabla: MercanciasInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            mercanciaTabla,
         }));
     }
     

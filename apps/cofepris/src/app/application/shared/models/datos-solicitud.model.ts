@@ -15,6 +15,7 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string;
+  scianDescription?: string;
 }
 /**
  * Interfaz que representa la respuesta de un catálogo.
@@ -249,6 +250,12 @@ export enum TablaSeleccion {
  */
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
+  claveClasificacionProductoObj ?: Catalogo | undefined;
+  especificarClasificacionObj ?: Catalogo | undefined;
+  tipoProductoObj ?: Catalogo | undefined;
+  formaFarmaceuticaObj ?: Catalogo | undefined;
+  estadoFisicoObj ?: Catalogo | undefined;
+  cantidadUMCObj ?: Catalogo | undefined;
   especificarClasificacionProducto: string;
   denominacionEspecificaProducto?: string;
   denominacionDistintiva?: string;
@@ -261,6 +268,7 @@ export interface TablaMercanciasDatos {
   cantidadUMC: string;
   unidadMedidaTarifa: string;
   cantidadUMT: string;
+  cantidadUmtValor?:string;
   presentacion: string;
   numeroRegistroSanitario: string;
   paisOrigen: string;
@@ -278,10 +286,13 @@ export interface TablaMercanciasDatos {
   caducidad?:string;
   marcaComercialDenominacion?:string;
   especifique?: string;
+  especifiqueForma?: string;
+  especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
     paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
+  id?: number
 }
 
 /**
@@ -368,6 +379,7 @@ export interface DatosSolicitudFormState {
   aduana?:string
   manifesto?: boolean;
   manifiestosCasillaDeVerificacion?: boolean;
+  rfcRepresentante?:string;
 }
 
 /**
@@ -416,10 +428,12 @@ export interface MercanciaForm {
   usoEspecifico?: string[]
   marca?: string;
   especifique?: string;
+  especifiqueForma?: string;
   claveDeLos?: string;
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
   especifiqueObligatorio?:string;
+  especifiqueEstado?:string;
 }
 
 /**

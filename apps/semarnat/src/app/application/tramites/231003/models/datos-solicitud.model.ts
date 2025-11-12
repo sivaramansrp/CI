@@ -1,9 +1,11 @@
-import { ResiduoPeligroso } from '../../231002/models/aviso-catalogo.model';
+import { ResiduoPeligroso } from './../../231002/models/aviso-catalogo.model';
 
 /**
  * Estado que representa los valores del formulario de reciclaje.
  */
 export interface EstadoDatoSolicitud {
+  /** ID de la solicitud */
+  idSolicitud: number | null;
   /** Sección de datos de la solicitud */
   solicitudForm: {
     /** Número de registro ambiental */
@@ -77,7 +79,7 @@ export const ADMINISTRAR_RESIDUOS = [
   },
   {
     encabezado: 'NICO',
-    clave: (item: ResiduoPeligroso): string => item.nicoCve,
+    clave: (item: ResiduoPeligroso): string => item.nicoDesc,
     orden: 3,
   },
   {
@@ -139,11 +141,6 @@ export const ADMINISTRAR_RESIDUOS = [
     encabezado: 'Descripción otro estado físico',
     clave: (item: ResiduoPeligroso): string => item.estadoFisicoOtro,
     orden: 15,
-  },
-  {
-    encabezado: 'No. de manifiesto',
-    clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
-    orden: 16,
   },
   {
     encabezado: 'Tipo de contenedor',
