@@ -64,6 +64,7 @@ import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 import { DocumentosEspecificosRequest } from '../core/models/atender-requerimiento/request/documentos-especificos.model';
+import { GenerarDictamenClasificacionComponent } from "../shared/components/generar-dictamen-calificacion/generar-dictamen-clasificacion.component";
 
 /**
  * @component
@@ -100,7 +101,8 @@ import { DocumentosEspecificosRequest } from '../core/models/atender-requerimien
     FirmaElectronicaComponent,
     CapturarRequerimientoComponent,
     SolicitarDocumentosEvaluacionComponent,
-    SolicitarOpinionComponent, NotificacionesComponent],
+    SolicitarOpinionComponent, NotificacionesComponent, 
+    GenerarDictamenClasificacionComponent],
   templateUrl: './evaluar.component.html',
   styleUrl: './evaluar.component.scss',
 })
@@ -1272,6 +1274,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
         id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
+        calificacion_dictaminador_exportador: datosDictamen.clasificacionUE,
+        calificacion_dictaminador_exportador_jpn: datosDictamen.clasificacionJpn,
+        calificacion_descripcion_aladi: datosDictamen.clasificacionAladi,
         criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
@@ -1364,7 +1369,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         apellido_materno: 'PRUEBA'
       },
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
-        criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+         id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
+         calificacion_dictaminador_exportador: datosDictamen.clasificacionUE,
+         calificacion_dictaminador_exportador_jpn: datosDictamen.clasificacionJpn,
+         calificacion_descripcion_aladi: datosDictamen.clasificacionAladi,
+         criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
         })) ?? []

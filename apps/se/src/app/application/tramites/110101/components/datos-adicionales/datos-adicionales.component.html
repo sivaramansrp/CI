@@ -213,9 +213,9 @@
             </span>
         </div>
     </div>
-    @if(formulario.get('representacion')?.invalid && formulario.get('representacion')?.touched) {
+    @if(formulario.get('protesto_verdad')?.invalid && formulario.get('protesto_verdad')?.touched) {
     <div>
-        @if(formulario.get('representacion')?.errors?.['required']) {
+        @if(formulario.get('protesto_verdad')?.errors?.['required']) {
         <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
         }
     </div>

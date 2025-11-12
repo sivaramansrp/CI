@@ -1156,3 +1156,13 @@ export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TR
   * API para obtener la tipo de empresa
  */
 export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
+
+export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
+
+export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medida-tarifaria`;
+
+// export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
+
+export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
+
+export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;

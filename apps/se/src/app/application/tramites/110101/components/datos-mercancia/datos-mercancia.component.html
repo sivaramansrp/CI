@@ -320,7 +320,7 @@
           insumos</button>
       </div>
       <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('INSUMOS')">Carga por
           archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar insumos</button>
       </div>
@@ -348,7 +348,7 @@
           envases</button>
       </div>
       <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('EMPAQUES')">Carga por
           archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar envases</button>
       </div>
@@ -440,6 +440,8 @@
       <div class="modal-body">
         <form [formGroup]="formularioArchivo">
           <div class="row">
+            <ng-titulo
+              [titulo]="'Cargar archivo'" />
             <div class="col-md-12">
 
               <div class="form-group">
@@ -457,7 +459,7 @@
       </div>
       <div class="modal-footer d-flex justify-content-end p-5 gap-3">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
-        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Enviar</button>
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarCsv()">Enviar</button>
       </div>
     </div>
   </div>

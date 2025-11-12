@@ -282,6 +282,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public tercerosForm: FormGroup = new FormGroup({});
 
+    /** Indica si el campo de fabricante es inválido. */
+    public isfabricanteInvalida: boolean = false;
+
+    /** Indica si el campo de Proveedor es inválido. */
+    public isProveedorInvalida: boolean = false;
+
+    /** Indica si el campo de Formulador es inválido. */
+    public isFormuladorInvalida: boolean = false;
+
+
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -1564,6 +1575,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         extranjeroEstado: 'Estado del Extranjero Ejemplo',
         extranjeroColonia: 'Colonia del Extranjero Ejemplo',
       })
+    }
+  }
+
+  /** Marca como inválidos los campos si no contienen datos. */
+  markTouched(): void {
+    if (this.fabricanteRowData.length===0) {
+      this.isfabricanteInvalida=true;
+    }
+    if (this.formuladorRowData.length===0) {
+      this.isFormuladorInvalida=true;
+    }
+    if (this.proveedorRowData.length===0) {
+      this.isProveedorInvalida=true;
     }
   }
 

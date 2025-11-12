@@ -1,10 +1,11 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { BtnContinuarComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
+import {AlertComponent, BtnContinuarComponent, NotificacionesComponent} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { DatosComponent } from '../pages/datos/datos.component';
 import { DatosMercanciaComponent } from '../components/datos-mercancia/datos-mercancia.component';
+import { ExportadorAutorizadoComponent } from '../components/exportador-autorizado/exportador-autorizado.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
 import { NavComponent } from '@ng-mf/data-access-user';
@@ -38,7 +39,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     FirmaElectronicaComponent,
     ProtestoDecirVerdadComponent,
     ProcesosComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    ExportadorAutorizadoComponent,
+    AlertComponent
 ],
 exports: [
     DatosComponent,

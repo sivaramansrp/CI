@@ -197,9 +197,10 @@
    </div>
    <div *ngIf="isAduanasEntradaVisible" class="row">
       <div class="panel-body">
-         <crosslist [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
+         <crosslist formControlName="aduanasEntradas" [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
          [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos" [botones]="aduanasEntradaBotons"
-         (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)" [isDisabled]="esFormularioSoloLectura">
+         (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)" [isDisabled]="esFormularioSoloLectura"
+         [markTouched]="domicilio.get('aduanasEntradas')?.errors?.['required'] && domicilio.get('aduanasEntradas')?.touched ">
          </crosslist>
       </div>
         <div
@@ -245,14 +246,18 @@
          Garantías ofrecidas*:
          </label>
          <textarea id="garantiasOfrecidas" class="form-control text-area-garantias" formControlName="garantiasOfrecidas"
+         [ngClass]="{'tiene-invalido': domicilio.get('garantiasOfrecidas')?.invalid && domicilio.get('garantiasOfrecidas')?.touched}"
             (change)="
             setValoresStore(
-            formMercancias,
+            domicilio,
             'garantiasOfrecidas',
             'setGarantiasOfrecidas'
             )
             "></textarea>
       </div>
+      <p class="mensaje-error" *ngIf="domicilio.get('garantiasOfrecidas')?.errors?.['required'] && domicilio.get('garantiasOfrecidas')?.touched">
+         Este campo es obligatorio
+      </p>
    </div>
 </form>
 <div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
@@ -321,8 +326,8 @@
                   <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
                      setValoresStore(
                      formMercancias,
-                     'denominacionEspecifica',
-                     'setDenominacionEspecifica'
+                     'nombreComercial',
+                     'setNombreComercial'
                      );
                      formMercancias.get('nombreComercial')?.markAsTouched();
                      " 
@@ -347,8 +352,8 @@
                   <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
                      setValoresStore(
                      formMercancias,
-                     'denominacionEspecifica',
-                     'setDenominacionEspecifica'
+                     'nombreComun',
+                     'setNombreComun'
                      );
                      formMercancias.get('nombreComun')?.markAsTouched();
                      "
@@ -372,8 +377,8 @@
                   <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" (change)="
                      setValoresStore(
                      formMercancias,
-                     'denominacionEspecifica',
-                     'setDenominacionEspecifica'
+                     'nombreCientifico',
+                     'setNombreCientifico'
                      );
                      formMercancias.get('nombreCientifico')?.markAsTouched();
                      " 
@@ -710,7 +715,8 @@
                               [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"
                     [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
                     (fechasSeleccionadasChange)="
-                    paisDeOriginSeleccionadasChange($event)">
+                    paisDeOriginSeleccionadasChange($event)"
+                    [markTouched]="formMercancias.get('paisDeOriginDatos')?.errors?.['required'] && formMercancias.get('paisDeOriginDatos')?.touched ">
                   </crosslist>
                            </div>
                         </div>
@@ -733,7 +739,7 @@
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                            <p class="panel-title fw-bold">
-                              País donde se produce o fabrica el ingrediente activo
+                              País donde se fabrica el ingrediente activo (TÉCNICO)
                            </p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
@@ -741,7 +747,10 @@
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
                               <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
-                              [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                              [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"
+                              [fechasSeleccionadas]="seleccionadasPaisfabrica"
+                              (fechasSeleccionadasChange)="paisfabricaSeleccionadasChange($event)"
+                              [markTouched]="formMercancias.get('paisFabrica')?.errors?.['required'] && formMercancias.get('paisFabrica')?.touched "></crosslist>
                            </div>
                         </div>
                         }
@@ -753,14 +762,17 @@
                   <div class="panel-group ficha-collapse" id="accordion">
                      <div class="panel panel-default">
                         <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
-                           <p class="panel-title fw-bold">País donde se elabora el producto</p>
+                           <p class="panel-title fw-bold">País donde se elabora el producto (FORMULADO)</p>
                            <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                         </div>
                         @if (colapsableDuos) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
                               <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisTres" [label]="paisDeDondeLabel"
-                              [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                              [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"
+                              [fechasSeleccionadas]="seleccionadasPaisElaboracion"
+                              (fechasSeleccionadasChange)="paisElaboracionSeleccionadasChange($event)"
+                              [markTouched]="formMercancias.get('paisElaboracion')?.errors?.['required'] && formMercancias.get('paisElaboracion')?.touched "></crosslist>
                            </div>
                         </div>
                         }
@@ -780,7 +792,9 @@
                            <div class="panel-body">
                               <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
                               [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"
-                    ></crosslist>
+                              [fechasSeleccionadas]="seleccionadasPaisProveedor"
+                              (fechasSeleccionadasChange)="paisProveedorSeleccionadasChange($event)"
+                              [markTouched]="formMercancias.get('paisProveedor')?.errors?.['required'] && formMercancias.get('paisProveedor')?.touched "></crosslist>
                            </div>
                         </div>
                         }
@@ -802,11 +816,9 @@
                            <div class="panel-body">
                               <crosslist [fechas]="seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
                               [botones]="paisDeProcedenciaBotonesCinco" [isDisabled]="esFormularioSoloLectura"
-                    [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
-                    (fechasSeleccionadasChange)="
-                      paisDeProcedenciaSeleccionadasChange($event)
-                    "
-                    ></crosslist>
+                              [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
+                              (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"
+                              [markTouched]="formMercancias.get('paisDeProcedenciaDatos')?.errors?.['required'] && formMercancias.get('paisDeProcedenciaDatos')?.touched "></crosslist>
                            </div>
                         </div>
                         }
@@ -877,7 +889,7 @@
             </form>
          </div>
          <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias)"
+            <button type="button" class="btn btn-default" (click)="limpiar(formMercancias, 'mercancias')"
             [disabled]="esFormularioSoloLectura">
             Limpiar
             </button>

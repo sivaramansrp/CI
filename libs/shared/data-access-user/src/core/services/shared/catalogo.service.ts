@@ -11,6 +11,7 @@
  * @author Sistema VUCEM
  */
 import {
+  API_PEXIM_FRACCION_ARANCELARIA,
   AGREGAR_PRODUCTOR,
   API_FRACCIONES_ARANCELARIAS,
   API_UMT,
@@ -60,7 +61,11 @@ import {
   PAISES_POR_BLOQUE,
   PAIS_DESTINO,
   TIPO_EMPRESA,
-  UNIDADES_MEDIDA_COMERCIAL
+  UNIDADES_MEDIDA_COMERCIAL,
+  API_UNIDADES_MEDIDA_TARIFARIA,
+  API_CATALOGOS_PAISES_TODOS,
+  API_MOSTRAR_PARTIDAS_SOLICITUD,
+  // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
 // import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_TRATADOS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_MEXICO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
@@ -73,6 +78,7 @@ import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MostrarPartidas } from '../../models/shared/mostrar-partidas';
 
 /**
  * Servicio centralizado para la gestión de catálogos del sistema VUCEM.
@@ -423,6 +429,65 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${FRACCION_HTS(tramite, id)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+  /**
+  * Obtiene el catálogo de fracciones arancelarias según el trámite e identificador proporcionado.
+  *
+  * Este método realiza una petición HTTP GET al servicio correspondiente para recuperar 
+  * la lista de fracciones arancelarias disponibles.
+  *
+  * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+  * @param {string} id - Identificador específico utilizado para filtrar las fracciones arancelarias.
+  * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de fracciones arancelarias.
+  */
+  fraccionesArancelariasCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+    * Obtiene el catálogo de unidades de medida tarifarias según el trámite e identificador proporcionado.
+    *
+    * Este método realiza una solicitud HTTP GET para recuperar las unidades de medida tarifarias 
+    * asociadas al trámite indicado.
+    *
+    * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+    * @param {string} id - Identificador específico utilizado para filtrar las unidades de medida tarifarias.
+    * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de unidades de medida tarifarias.
+    */
+  unidadesMedidaTarifariaCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+     * Obtiene el catálogo de bloques comerciales (tratados o acuerdos) relacionados con el trámite especificado.
+     *
+     * Este método realiza una solicitud HTTP GET para recuperar la lista de tratados o acuerdos 
+     * comerciales disponibles para el trámite.
+     *
+     * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+     * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de bloques comerciales.
+     */
+  bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, 'TITRAC.TA')}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene la información de las partidas asociadas a una solicitud específica.
+   *
+   * Este método realiza una petición HTTP GET al endpoint correspondiente para recuperar 
+   * la lista de partidas registradas en la solicitud del trámite indicado.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la solicitud.
+   * @param {number} solicitudId - Identificador único de la solicitud cuyas partidas se desean consultar.
+   * @returns {Observable<BaseResponse<MostrarPartidas[]>>} Un observable que emite la respuesta base con la lista de partidas de la solicitud.
+   */
+  mostrarPartidasSolicitud(tramite: string, solicitudId: number): Observable<BaseResponse<MostrarPartidas[]>> {
+    const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
+    return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+  }
   /**
    * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
    *
@@ -446,7 +511,7 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CLASSIFICACIONES_REGIMEN(tramite).replace(CLASIFICACION, cveRegimen)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
- 
+
   /*
    * Obtiene el catálogo de países (bloques).
    * @param {string} tramite - El ID del trámite.
@@ -485,6 +550,20 @@ export class CatalogoServices {
    */
   representacionFederalCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(tramite, cveEntidad)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo completo de países disponibles para el trámite especificado.
+   *
+   * Este método realiza una solicitud HTTP GET al servicio correspondiente para recuperar 
+   * la lista completa de países asociados al trámite.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación para el cual se consultan los países.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo completo de países.
+   */
+  todosPaisesSeleccionados(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_CATALOGOS_PAISES_TODOS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

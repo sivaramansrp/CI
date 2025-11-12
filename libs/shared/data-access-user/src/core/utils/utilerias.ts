@@ -507,3 +507,15 @@ export function formatFechaCreacion(fecha_creacion: string): string {
     const PAD = (n: number): string => n.toString().padStart(2, '0');
     return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
 }
+
+
+/**
+ * Formatea la fecha en formato 'MM/YYYY'.
+ * @param date Objeto Date a formatear.
+ * @returns Fecha formateada como string 'MM/YYYY'.
+ */
+export function formatMonthYear(date: Date): string {
+  const MONTH = String(date.getMonth() + 1).padStart(2, '0');
+  const YEAR = date.getFullYear();
+  return `${MONTH}/${YEAR}`;
+}
