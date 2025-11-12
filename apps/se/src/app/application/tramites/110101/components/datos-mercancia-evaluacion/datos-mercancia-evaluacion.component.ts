@@ -1,0 +1,174 @@
+import { CategoriaMensaje, ConsultaioState, Notificacion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit } from '@angular/core';
+import { EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
+import { MercanciaSolicitudService } from '../../services/mercancia-solicitud.service';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-datos-mercancia-evaluacion',
+  standalone: true,
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  templateUrl: './datos-mercancia-evaluacion.component.html',
+  styleUrl: './datos-mercancia-evaluacion.component.scss',
+})
+export class DatosMercanciaEvaluacionComponent implements OnInit {
+
+  /**
+   * Propiedad que mantiene el estado actual de la consulta dentro del componente.
+   */
+  public consultaState!: ConsultaioState;
+  
+  /**
+   * **Subject para manejar la destrucción del componente**
+   * 
+   * Este `Subject` se utiliza para cancelar suscripciones y evitar 
+   * fugas de memoria cuando el componente es destruido.
+   * Se usa comúnmente en el operador `takeUntil` dentro de los observables.
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Una instancia de FormGroup que representa el formulario para evaluar Mercancia (bienes).
+   * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
+   */
+  public formEvaluarMercancia!: FormGroup;
+
+  /**
+   * Datos de la mercancía obtenidos del servicio de respuesta.
+   */
+  public mercanciaEvaluarData!: EvaluarMercanciaResponse;
+
+  /**
+   * Notificación actual que se muestra en el componente.
+   *
+   * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+   * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Inicializa el componente inyectando las dependencias necesarias
+   * @param fb Constructor del componente datos mercancia evaluar
+   */
+  constructor(private fb: FormBuilder,
+    private mercanciaSolcitudService: MercanciaSolicitudService,
+  ){}
+  
+  /**
+   * @method ngOnInit
+   * @description
+   * Método que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+
+    this.inicializarFormularioEvaluar();
+    this.mercanciaEvaluar();
+  }
+
+  /**
+   * @method inicializarFormularioEvaluar
+   * @description
+   * Inicializa el formulario reactivo `formEvaluarMercancia`, el cual se utiliza para
+   * capturar y evaluar la información relacionada con una mercancía.  
+   * Cada control representa un campo específico de la ficha técnica o clasificación del producto.
+   */
+  public inicializarFormularioEvaluar(): void {
+    this.formEvaluarMercancia = this.fb.group({
+      nombreComercialEvaluar: [{value: '', disabled: true}],
+      nombreInglesEvaluar: [{value: '', disabled: true}],
+      fraccionArancelariaEvaluar: [{value: '', disabled: true}],
+      nombreTecnicoEvaluar: [{value: '', disabled: true}],
+      precioFrancoFabricaEvaluar: [{value: '', disabled: true}],
+      valorTransaccionEvaluar: [{value: '', disabled: true}],
+      costoNetoEvaluar: [{value: '', disabled: true}],
+      costoNetoAPEvaluar: [{value: '', disabled: true}],
+      descripcionJuegoEvaluar: [{value: '', disabled: true}],
+      tipoExportadorEvaluar: [{value: '', disabled: true}],
+      separacionContableEvaluar: [{value: null, disabled: true}],
+      valorTransaccionalFOBEvaluar: [{value: '', disabled: true}],
+      clasificacionNALADIEvaluar: [{value: '', disabled: true}],
+      descripcionNALADIEvaluar: [{value: '', disabled: true}],
+      clasificacionNALADISA1993Evaluar: [{value: '', disabled: true}],
+      descripcionNALADISA1993Evaluar: [{value: '', disabled: true}],
+      clasificacionNALADISA1996Evaluar: [{value: '', disabled: true}],
+      descripcionNALADISA1996Evaluar: [{value: '', disabled: true}],
+      clasificacionNALADISA2002Evaluar: [{value: '', disabled: true}],
+      descripcionNALADISA2002Evaluar: [{value: '', disabled: true}]
+    });
+  }
+
+  /**
+  * @method mercanciaEvaluar
+  * @description Consulta la mercancía asociada a la solicitud actual y maneja la respuesta del servidor.
+  * @returns {void}
+  */
+  mercanciaEvaluar(): void {
+    this.mercanciaSolcitudService.getMercanciaEvaluar("202878126")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.formEvaluarMercancia.patchValue({
+              nombreComercialEvaluar: response.datos?.nombre_comercial,
+              nombreInglesEvaluar: response.datos?.nombre_en_ingles,
+              fraccionArancelariaEvaluar: response.datos?.cve_fraccion,
+              nombreTecnicoEvaluar: response.datos?.nombre_tecnico,
+              precioFrancoFabricaEvaluar: response.datos?.precio_franco_fabrica,
+              valorTransaccionEvaluar: response.datos?.valor_transaccion,
+              costoNetoEvaluar: response.datos?.costo_neto,
+              costoNetoAPEvaluar: response.datos?.costo_neto_ap,
+              descripcionJuegoEvaluar: response.datos?.descripcion_juego,
+              tipoExportadorEvaluar: response.datos?.tipo_exportador,
+              separacionContableEvaluar: response.datos?.separacion_contable,
+              valorTransaccionalFOBEvaluar: response.datos?.valor_transaccion_fob,
+              clasificacionNALADIEvaluar: response.datos?.cve_fraccion_naladi,
+              descripcionNALADIEvaluar: response.datos?.descripcion_naladi,
+              clasificacionNALADISA1993Evaluar: response.datos?.cve_fraccion_naladisa_93,
+              descripcionNALADISA1993Evaluar: response.datos?.descripcion_naladisa_93,
+              clasificacionNALADISA1996Evaluar: response.datos?.cve_fraccion_naladisa_96,
+              descripcionNALADISA1996Evaluar: response.datos?.descripcion_naladisa_96,
+              clasificacionNALADISA2002Evaluar: response.datos?.cve_fraccion_naladisa_02,
+              descripcionNALADISA2002Evaluar: response.datos?.descripcion_naladisa_02
+            });
+            this.mercanciaEvaluarData = response.datos ?? {} as EvaluarMercanciaResponse;
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error en la consultar mercancia.',
+            mensaje: response?.causa || response?.mensaje || 'Error en la consultar mercancia.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error en la consultar mercancia.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+}
