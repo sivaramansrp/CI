@@ -324,6 +324,7 @@ export class GuardarMappingAdapter {
     }
 
     private static mapMercanciasData(arr?: any[]): any[] {
+        // eslint-disable-next-line complexity
         return (arr ?? []).map((m: any) => ({
             claveClasificacionProductoObj: { 
                 clave: m.idClasificacionProducto ?? '',
@@ -357,6 +358,7 @@ export class GuardarMappingAdapter {
     }
 
     private static mapFabricantesData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
         return (grid ?? []).map((p: any) => ({
             nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
             tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
@@ -387,6 +389,7 @@ export class GuardarMappingAdapter {
 
 
     private static mapDestinatariosData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
         return (grid ?? []).map((p: any) => ({
             nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
             tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
@@ -417,6 +420,7 @@ export class GuardarMappingAdapter {
 
 
     private static mapProveedoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
         return (grid ?? []).map((p: any) => ({
             rfc: p.rfc ?? '',
             razonSocial: p.razonSocial ?? '',
@@ -449,6 +453,7 @@ export class GuardarMappingAdapter {
      * Maps API facturador data to internal facturador format
      */
     private static mapFacturadoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
         return (grid ?? []).map((p: any) => ({
             nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
             tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
@@ -503,6 +508,7 @@ export class GuardarMappingAdapter {
      * @param response API response object matching the form payload shape
      * @returns Partial<Tramite260210State>
      */
+    // eslint-disable-next-line complexity
     static fromApiResponse(response: unknown): Partial<Tramite260210State> {
         if (!response || typeof response !== 'object') {
             return {};
