@@ -2,10 +2,11 @@
  * paso-uno.component.ts
  * */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -32,7 +33,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    */
   indice: number = 1;
 
-      /**
+  /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
+
+  /**
    * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
    * La lógica de inicialización se delega a métodos específicos.
    */

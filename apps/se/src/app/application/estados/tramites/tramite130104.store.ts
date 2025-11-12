@@ -11,6 +11,12 @@ import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-
 
 
 export interface Tramite130104State {
+
+  /**
+   * ID de la solicitud asociada al trámite.
+   */
+  idSolicitud: number;
+
   /**
    * Producto seleccionado en el formulario.
    */
@@ -79,7 +85,7 @@ export interface Tramite130104State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -125,6 +131,18 @@ export interface Tramite130104State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+
+  /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
 }
 
 /**
@@ -137,6 +155,7 @@ export interface Tramite130104State {
  */
 export function createInitialState(): Tramite130104State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
@@ -151,7 +170,7 @@ export function createInitialState(): Tramite130104State {
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -160,6 +179,11 @@ export function createInitialState(): Tramite130104State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
   };
 }
 
@@ -179,10 +203,34 @@ export class Tramite130104Store extends Store<Tramite130104State> {
     super(createInitialState());
   }
 
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del trámite con los valores proporcionados.
+   *
+   * @param valores - Un objeto parcial que contiene las propiedades del estado a actualizar.
+   */
   public actualizarEstado(valores: Partial<Tramite130104State>): void {
     this.update((state) => ({
       ...state,
       ...valores,
     }));
+  }
+
+  /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
   }
 }

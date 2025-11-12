@@ -13,9 +13,11 @@ import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptad
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
+import Decimal from 'decimal.js';
 import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
 
 
 /**
@@ -169,6 +171,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
     private seccionState!: Tramite130104State;
 
+    /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
+  isInvalidaPartidas: boolean = false;
+
+  /**
+   * jest.spyOnIdentificador del procedimiento actual.
+   * @type {number}
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * Constructor del componente.
@@ -196,12 +208,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.configuracionFormularioSuscripciones();
-    this.opcionesDeBusqueda();
+    // this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
-    this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
-    this.listaDePaisesDisponibles();
+    // this.obtenerTablaDatos();
+    // this.fetchEntidadFederativa();
+    // this.fetchRepresentacionFederal();
+    // this.listaDePaisesDisponibles();
 
     this.tramite130104Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
@@ -349,38 +361,38 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
  
-  /**
-   * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
-   */
-  opcionesDeBusqueda(): void {
-    this.importacionOtrosVehiculosUsadosService
-      .getSolicitudeOptions()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data) => {
-          this.opcionesSolicitud = data.options;
-          this.tramite130104Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
-        },
-        error: (error) =>
-          console.error('Error loading solicitude options:', error),
-      });
+  // /**
+  //  * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
+  //  */
+  // opcionesDeBusqueda(): void {
+  //   this.importacionOtrosVehiculosUsadosService
+  //     .getSolicitudeOptions()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.opcionesSolicitud = data.options;
+  //         this.tramite130104Store.actualizarEstado({
+  //           solicitud: data.options[0]?.value || '',
+  //           defaultSelect: data.defaultSelect || 'Inicial',
+  //         });
+  //       },
+  //       error: (error) =>
+  //         console.error('Error loading solicitude options:', error),
+  //     });
  
-    this.importacionOtrosVehiculosUsadosService
-      .getProductoOptions()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data) => {
-          this.productoOpciones = data.options;
-          this.tramite130104Store.actualizarEstado({
-            producto: data.options[0]?.value || 'Nuevo',
-            defaultProducto: data.options[0]?.value || 'Nuevo',
-          });
-        },
-      });
-  }
+  //   this.importacionOtrosVehiculosUsadosService
+  //     .getProductoOptions()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.productoOpciones = data.options;
+  //         this.tramite130104Store.actualizarEstado({
+  //           producto: data.options[0]?.value || 'Nuevo',
+  //           defaultProducto: data.options[0]?.value || 'Nuevo',
+  //         });
+  //       },
+  //     });
+  // }
   /**
    * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -394,26 +406,71 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
-/**
- * Método para obtener los datos de la tabla dinámica.
- * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
- * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
- * 
- * - Actualiza `tableBodyData` con los datos obtenidos.
- * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
- * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
- * 
- */
-  obtenerTablaDatos(): void {
-      this.importacionOtrosVehiculosUsadosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-        this.tableBodyData = data;
-        this.formForTotalCount.patchValue({
-          cantidadTotal:data[0].cantidad,
-          valorTotalUSD:data[0].totalUSD
-        });
-      });
-  }
+// /**
+//  * Método para obtener los datos de la tabla dinámica.
+//  * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+//  * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+//  * 
+//  * - Actualiza `tableBodyData` con los datos obtenidos.
+//  * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+//  * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+//  * 
+//  */
+//   obtenerTablaDatos(): void {
+//       this.importacionOtrosVehiculosUsadosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+//         this.tableBodyData = data;
+//         this.formForTotalCount.patchValue({
+//           cantidadTotal:data[0].cantidad,
+//           valorTotalUSD:data[0].totalUSD
+//         });
+//       });
+//   }
  
+  /**
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formDelTramite.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.filaSeleccionada.length === 0) {
+      this.isInvalidaPartidas = true;
+      isValid = false;
+    } else if (this.filaSeleccionada.length > 0) {
+      this.isInvalidaPartidas = false;
+    }
+    if (this.paisForm.invalid) {
+      this.paisForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.frmRepresentacionForm.invalid) {
+      this.frmRepresentacionForm.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  // /**
+  //  * validarYEnviarFormulario
+  //  * Valida el formulario y muestra la tabla dinámica si es válido.
+  //  */
+  // validarYEnviarFormulario(): void {
+  //   if (this.partidasDelaMercanciaForm.invalid) {
+  //     this.partidasDelaMercanciaForm.markAllAsTouched();
+  //   } else {
+  //     this.mostrarTabla = true;
+  //     this.tramite130104Store.actualizarEstado({mostrarTabla:true});
+
+  //   }
+  // }
+
   /**
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
@@ -423,9 +480,49 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130104Store.actualizarEstado({mostrarTabla:true});
-
+      this.tramite130104Store.actualizarEstado({ mostrarTabla: true });
+      const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+      const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
+      const DATOS = [
+        {
+          "id": String(this.tableBodyData.length + 1),
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": UMT || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+        }
+      ];
+      this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.partidasDelaMercanciaForm.reset();
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+      const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+      this.formForTotalCount.patchValue({
+        cantidadTotal: CANTIDAD_TOTAL,
+        valorTotalUSD: TOTAL_USD,
+      });
     }
+  }
+
+  /**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas);
+    const TOTAL_USD = Number(cantidadUSD);
+
+    if (TOTAL_PARTIDAS === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 3;
+    const IMPORTE_UNITARIO_USD = new Decimal(TOTAL_USD).dividedBy(TOTAL_PARTIDAS);
+
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
   }
  
   /**
@@ -438,60 +535,71 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
-/**
- * Método para obtener la lista de entidades federativas.
- */
-fetchEntidadFederativa(): void {
-  this.importacionOtrosVehiculosUsadosService
-    .getEntidadFederativa()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      this.entidadFederativa = data;
+// /**
+//  * Método para obtener la lista de entidades federativas.
+//  */
+// fetchEntidadFederativa(): void {
+//   this.importacionOtrosVehiculosUsadosService
+//     .getEntidadFederativa()
+//     .pipe(takeUntil(this.destroyed$))
+//     .subscribe((data) => {
+//       this.entidadFederativa = data;
+//     });
+// }
+// /**
+// * Método para obtener la lista de representaciones federales.
+// */
+// fetchRepresentacionFederal(): void {
+//   this.importacionOtrosVehiculosUsadosService
+//     .getRepresentacionFederal()
+//     .pipe(takeUntil(this.destroyed$))
+//     .subscribe((data) => {
+//       this.representacionFederal = data;
+//     });
+// }
+// /**
+// * Método para obtener la lista de países disponibles.
+// */
+// listaDePaisesDisponibles(): void {
+//   this.importacionOtrosVehiculosUsadosService
+//     .getListaDePaisesDisponibles()
+//     .pipe(takeUntil(this.destroyed$))
+//     .subscribe((data) => {
+//       this.elementosDeBloque = data;
+//     });
+// }
+// /**
+// * Método para obtener la lista de países por bloque.
+// * Identificador del bloque.
+// */
+// fetchPaisesPorBloque(_bloqueId: number): void {
+//   this.importacionOtrosVehiculosUsadosService
+//     .getPaisesPorBloque(_bloqueId)
+//     .pipe(takeUntil(this.destroyed$))
+//     .subscribe((data) => {
+//       this.paisesPorBloque = data;
+//       this.selectRangoDias = this.paisesPorBloque.map(
+//         (pais: Catalogo) => pais.descripcion
+//       );
+//     });
+// }
+
+  /**
+   *  Obtiene los países por bloque desde el servicio y los asigna a la propiedad `paisesPorBloque`.
+   * @param ID 
+   */
+  getPaisesPorBloque(ID: string): void {
+    this.importacionOtrosVehiculosUsadosService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
+      this.paisesPorBloque = data as Catalogo[];
     });
-}
-/**
-* Método para obtener la lista de representaciones federales.
-*/
-fetchRepresentacionFederal(): void {
-  this.importacionOtrosVehiculosUsadosService
-    .getRepresentacionFederal()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      this.representacionFederal = data;
-    });
-}
-/**
-* Método para obtener la lista de países disponibles.
-*/
-listaDePaisesDisponibles(): void {
-  this.importacionOtrosVehiculosUsadosService
-    .getListaDePaisesDisponibles()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      this.elementosDeBloque = data;
-    });
-}
-/**
-* Método para obtener la lista de países por bloque.
-* Identificador del bloque.
-*/
-fetchPaisesPorBloque(_bloqueId: number): void {
-  this.importacionOtrosVehiculosUsadosService
-    .getPaisesPorBloque(_bloqueId)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      this.paisesPorBloque = data;
-      this.selectRangoDias = this.paisesPorBloque.map(
-        (pais: Catalogo) => pais.descripcion
-      );
-    });
-}
+  }
+
 /**
 * Maneja el cambio de bloque seleccionado.
 * Identificador del bloque seleccionado.
 */
 enCambioDeBloque(bloqueId: number): void {
-  this.fetchPaisesPorBloque(bloqueId);
+  this.getPaisesPorBloque(bloqueId.toString());
 }
   /**
    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
