@@ -5,10 +5,10 @@ import { Solicitud260504State, Tramite260504Store } from '../../../../estados/tr
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-sujetos.enum';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260504Query } from '../../../../estados/queries/260504/tramite260504.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-sujetos.enum';
 
 /**
  * Interfaz para definir la estructura de los botones de acción.
