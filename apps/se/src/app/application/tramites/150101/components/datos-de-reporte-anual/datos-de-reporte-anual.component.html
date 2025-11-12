@@ -1,7 +1,7 @@
-<div class="container">
+
   <form [formGroup]="formReporteAnnual">
     <ng-titulo
-      titulo="Reporte anual balanza comercial(Capture todas las cantidades en miles de pesos)"
+      titulo="Reporte anual balanza comercial (capturar todas las cantidades en miles de pesos)"
     />
 
     <div class="row mt-3">
@@ -28,7 +28,9 @@
           id="totalExportaciones"
           class="form-control"
           formControlName="totalExportaciones"
-          (input)="obtenerTotalExportaciones($event)"
+          pattern="[0-9]*"
+          maxlength="16"
+          (change)="limitarLongitud($event, 16)"
         />
       </div>
       <div class="col-md-4">
@@ -77,4 +79,3 @@
       (onClose)="cerrarNotificacion()">
     </lib-notificaciones>
   }
-</div>

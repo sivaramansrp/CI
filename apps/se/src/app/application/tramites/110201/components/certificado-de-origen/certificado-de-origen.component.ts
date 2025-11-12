@@ -440,7 +440,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
   ngOnInit(): void {
     this.mercanciatable();
     this.inicializarEstadoFormulario();
-    this.getPaises();
       this.getTratadoCertificado();
     this.query.selectSolicitud$
       .pipe(
@@ -590,6 +589,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    */
   onTratadoChange(event: Catalogo): void {
     this.store.setTratadoDescripciones(event.descripcion);
+     if (event.clave !== undefined) {
+      this.getPaisBloque(event.clave);
+    }
   }
 
   /**
@@ -609,24 +611,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * Además, actualiza los catálogos necesarios llamando a los métodos de obtención de catálogos
    */
   buscarMercancias(): void {
-    const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
-    // const NEW_ROW = {
-    //   fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-    //   nombreTecnico: FORM_VALUES.nombreTecnico,
-    //   nombreComercial: FORM_VALUES.nombreComercial,
-    //   numeroRegistroProducto: FORM_VALUES.numeroRegistro,
-    //   fechaExpedicion: FORM_VALUES.fechaInicial,
-    //   fechaVencimiento: FORM_VALUES.fechaFinal,
-    // };
-
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6",
-      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState.tratado || '' },
-      pais: { cvePais: this.solicitudState.pais || '' }
+      tratadoAcuerdo: { idTratadoAcuerdo: this.solicitudState?.tratado || '105' },
+      pais: { cvePais: this.solicitudState?.pais || 'ARG' }
     };
 
     this.registroService.buscarMercanciasCert(PAYLOAD).subscribe(response => {
-      this.mercanciaDisponsiblesTablaDatos = response.datos || [];
+      this.mercanciaDisponsiblesTablaDatos = Array.isArray(response.data) ? response.data as ColumnasTabla[] : [];
       this.store.setMercanciaTabla(this.mercanciaDisponsiblesTablaDatos);
     });
     this.hayMercanciasDisponibles = true;
@@ -1260,19 +1252,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
     this.mostrarMensajeError = false;
   }
   /**
-   * Obtiene la lista de países desde el servicio `complimentosService` y actualiza las opciones
-   * de los campos de formulario correspondientes con los datos recibidos.
-   * 
-   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
-   * Actualiza tanto el campo 'pais' en `camposFormularioDefault` como el campo correspondiente
-   * en `camposFormularioTipoPersona` con las opciones obtenidas.
+   * Obtiene el catálogo de países o bloques desde el servicio y lo asigna a la propiedad `paisBloqueCertificado`.
+   *
+   * @returns {void}
    */
-  getPaises(): void {
-    this.catalogoServices.paisesBloqueCatalogo(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-      this.optionsPais.catalogos = res.datos ?? [];
+  getPaisBloque(clave:string):void{
+    this.catalogoServices.getPaisesPorTratado(this.TramitesID.toString(),clave).subscribe((data) => {
+      this.optionsPais.catalogos = data.datos ?? [];
     });
   }
-
   /**
    * Obtiene la lista de tratados y acuerdos desde el servicio `catalogoServices`
    * y actualiza las opciones del campo de formulario correspondiente con los datos recibidos.
@@ -1280,7 +1268,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy, OnChange
    * Actualiza el campo 'tratado' en `optionsTratado` con las opciones obtenidas.
    */
   getTratadoCertificado(): void {
-    this.catalogoServices.tratadosAcuerdosCatalogo(this.TramitesID, this.tratadoAsociado).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+    this.catalogoServices.tratadoCatalogoPais(this.TramitesID).pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       this.optionsTratado.catalogos = res.datos ?? [];
     });
   }

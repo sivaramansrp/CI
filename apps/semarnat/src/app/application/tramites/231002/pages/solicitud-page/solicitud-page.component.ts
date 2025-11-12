@@ -3,6 +3,7 @@ import {
   BtnContinuarComponent,
   CategoriaMensaje,
   DatosPasos,
+  ERROR_FORMA_ALERT,
   ListaPasosWizard,
   Notificacion,
   NotificacionesComponent,
@@ -105,14 +106,8 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
-  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
-  <div>
-    <div class="col-md-12">
-      Faltan campos por capturar.
-    </div>
-  </div>
-</div>
-`;
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Notificación que se puede utilizar para mostrar mensajes emergentes (toastr).
    * Null cuando no hay notificación nueva.

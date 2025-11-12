@@ -9,6 +9,7 @@ export interface HistoricoColumnas {
   correoElectronico: string;
   telefono: string;
   fax: string;
+  nuevo?: boolean;
 }
 /**
  * Representa los datos del productor exportador.

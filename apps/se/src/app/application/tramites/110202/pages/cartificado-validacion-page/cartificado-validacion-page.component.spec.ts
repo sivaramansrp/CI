@@ -11,12 +11,26 @@ import { CartificadoValidacionPageComponent } from './cartificado-validacion-pag
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import {CertificadoValidacionService} from '../../services/certificado-validacion.service'
 @Injectable()
 class MockTramite110202Query {
   FormaValida$ = observableOf({});
+  seleccionaTab$ = observableOf({});
+  selectSolicitud$ = observableOf({});
 }
 
+class MockCertificadoValidacionService {
+  guardarDatosPost() {
+    return observableOf({});
+  }
+  buildCertificado() {}
+  buildDatosCertificado() {}
+  buildDestinatario() {}
+  buildDetallesCertificado() {}
+  getAllState() {
+    return observableOf({});
+  }
+}
 describe('CartificadoValidacionPageComponent', () => {
   let fixture;
   let component;
@@ -27,7 +41,8 @@ describe('CartificadoValidacionPageComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         SeccionLibStore,
-        { provide: Tramite110202Query, useClass: MockTramite110202Query }
+        { provide: Tramite110202Query, useClass: MockTramite110202Query },
+        { provide: CertificadoValidacionService, useClass: MockCertificadoValidacionService }
       ]
     }).overrideComponent(CartificadoValidacionPageComponent, {
 
@@ -36,10 +51,6 @@ describe('CartificadoValidacionPageComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -52,13 +63,23 @@ describe('CartificadoValidacionPageComponent', () => {
   });
 
   it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
+    component.datosPasos = component.datosPasos || {};
+    component.datosPasos.indice = 'indice';
+    component.validarTodosFormulariosPasoUno = jest.fn();
+    component.obtenerDatosDelStore = jest.fn();
+    component.pasos = component.pasos || {};
+    component.pasoNavegarPor = jest.fn();
     component.getValorIndice({
-      valor: {},
-      accion: {'siguiente': 'siguiente', 'atras': 'atras'}
+      accion: {},
+      valor: {}
     });
   });
+    it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+  });
+
 
 });

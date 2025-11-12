@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ConfiguracionVisibilidad } from '../../../260513/components/datos-solicitud/datos-solicitud.component';
+import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/constante260512.enum';
+import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
-
 
 /**
  * @component DatosComponent
@@ -24,7 +26,15 @@ import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.
 })
 export class DatosComponent implements OnInit, OnDestroy {
   idProcedimiento:number = 260512;
-  
+  isAvisoLicenciaVisible: boolean = true;
+  isAduanasEntradaVisible: boolean = true;
+    @ViewChild(DatosDeLaComponent) datosSolicitudRef!: DatosDeLaComponent;
+    /**
+     * Configuración de visibilidad utilizada para determinar qué elementos
+     * deben ser visibles en el componente. Se inicializa con la configuración
+     * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
+     */
+    configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD;
   @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
     /**
      * @property {PagoDerechosFormState} pagoDerechos
@@ -141,15 +151,17 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-  /**
-   * @method updatePagoDerechos
-   * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
-   * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
-   * @returns {void} No retorna ningún valor.
-   */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
-    // this.tramiteStore.updatePagoDerechos(event);
-  }
+
+   validOnButtonClick():boolean{
+    let isValid = false;
+    if(this.datosSolicitudRef?.validarClickDeBoton()){
+          isValid = true;
+        }
+        else{
+          isValid = false;
+        }
+        return isValid;
+      }
   /**
    * @method ngOnDestroy
    * @description

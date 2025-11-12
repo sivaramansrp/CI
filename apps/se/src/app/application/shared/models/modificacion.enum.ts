@@ -27,6 +27,8 @@ export interface Mercancia {
   nalad?: string;
   fechaFactura?: string;
   marca?: string;
+  marcaBruta?: string;
+  umcMarcaBruta?: string;
   nombreIngles?: string;
   otrasInstancias?: string;
   criterioParaConferirOrigen?: string;

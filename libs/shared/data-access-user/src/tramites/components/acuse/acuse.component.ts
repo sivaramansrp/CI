@@ -26,6 +26,7 @@ import { DocumentosService } from '../../../core/services/shared/documentos.serv
 import { DocumentosT2310Service } from '../../../core/services/shared/documentos-t231001.service';
 import { Router } from '@angular/router';
 
+import { ACUSE_PROCEDURE } from '../../constantes/acuse.enums';
 import { DocumentosT230301Service } from '../../../core/services/shared/documentos-t230301.service';
 import { DocumentosTramiteResolucionService } from '../../../core/services/shared/detalleTramite.service';
 
@@ -124,6 +125,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
   idLlaveArchivo!: string;
   @Input() procedure: number = 0;
 
+  
   constructor(
     private router: Router,
     private documentosService: DocumentoService,
@@ -133,7 +135,8 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     private acuse230301: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
     private aviso230301: DocumentosT230301Service,
-    private documentosResolucinService: DocumentosTramiteResolucionService
+    private documentosResolucinService: DocumentosTramiteResolucionService,
+    
   ) {}
 
   /**
@@ -157,8 +160,6 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     }
   }
 
-
-
   /**
    * Método que genera y muestra los documentos necesarios para el acuse.
    *
@@ -166,18 +167,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (
-      this.url === 'pexim' ||
-      [
-        80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
-        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204, 110205,
-        110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223, 120101,130102,
-        5701, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217, 110218, 110219, 110221, 110222, 110223,130102, 140101,140102,
-        80208, 80210, 80211, 110101, 120301, 110201, 110202, 110203, 110204,
-        110205, 110207, 110208, 110209, 110210, 110212, 110214, 110216, 110217,
-        110218, 110219, 110221, 110222, 110223, 130102, 140101, 140102, 150101, 150102
-      ].includes(this.procedure)
-    ) {
+    if (this.url === 'pexim' || ACUSE_PROCEDURE.includes(this.procedure)) {
       this.documentosService130118
         .guardarAcuse(this.idSolicitud.toString(), this.procedure)
         .pipe(

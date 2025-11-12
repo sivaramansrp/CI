@@ -35,7 +35,7 @@ import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
+import { TEXTO_ALERTA } from '../../models/federatarios-y-plantas.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -272,7 +272,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
-  public textodAlerta = TEXTO_DE_ALERTA;
+  public textodAlerta = TEXTO_ALERTA;
   /**
      * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
      */

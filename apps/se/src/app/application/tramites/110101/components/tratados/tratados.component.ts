@@ -6,7 +6,7 @@ import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
+import { Solicitante110101State,Tramite110101Store, createSolicitanteInitialState} from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -92,6 +92,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<void>}
    */
   @Output() habilitarPestana = new EventEmitter<void>();
+
+
+  /**
+   * @property otrasInstancias - Referencia al componente `OtrasInstanciasComponent` que maneja
+   *                             la lógica y validación de las instancias asociadas dentro del paso actual.
+   * @command El decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('otrasInstancias') otrasInstancias!: OtrasInstanciasComponent;
 
   /**
    * Evento que se emite para deshabilitar o cerrar una pestaña en el flujo del trámite.
@@ -287,10 +295,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
         }
      
       this.getCatalogoCriterios(GETCATALOGO?.id_tratado_acuerdo.toString() ?? "");
-        
+        this.configurarPaisesInstancias(this.solicitudeState.respuestaServiceConfiguracion);
+    }else{
+      this.tramite110101Store.reset();
+       this.cerrarPestana.emit();
     }
     if(this.consultaState.create === true){
         this.getCatalogoPaisBloques();
+    }
+
+    if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false){
+      this.validarFormulario();
     }
   }
 
@@ -668,8 +683,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Criterio de origen", clave: (item) => item.criterio_origen, orden: 3 },
     { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
     { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
-    { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'Aprobado' : 'Rechazado', orden: 6 },
-    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'Aprobado' : 'Rechazado', orden: 7 },
+    { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'APROBADA' : 'NO APROBADA', orden: 6 },
+    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
@@ -680,18 +695,23 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Cada columna corresponde a un campo del objeto {@link InsumoResponse}.
    */  
   public tablaInsumos: ConfiguracionColumna<InsumoResponse>[] = [
-    { encabezado: 'Descripción de la Fracción Arancelaria', clave: (item) => item.descripcion_fraccion, orden: 1 },
-    { encabezado: "Capitulo", clave: (item) => item.capitulo, orden: 2 },
-    { encabezado: "Descripción Capitulo", clave: (item) => item.nombre_capitulo, orden: 3 },
-    { encabezado: "Partida", clave: (item) => item.partida, orden: 4 },
-    { encabezado: "Descripción Partida", clave: (item) => item.nombre_partida, orden: 5 },
-    { encabezado: "Subpartida", clave: (item) => item.subpartida, orden: 6 },
-    { encabezado: "Descripción Subpartida", clave: (item) => item.nombre_subpartida, orden: 7 },
-    { encabezado: "Valor en Dólares", clave: (item) => item.valor, orden: 8 },
-    { encabezado: "Originario/No originario", clave: (item) => item.es_originario, orden: 9 },
-    { encabezado: "Pais de Origen", clave: (item) => item.pais_origen, orden: 10 },
-    { encabezado: "Peso", clave: (item) => item.peso, orden: 11 },
-    { encabezado: "Volumen", clave: (item) => item.volumen, orden: 12 }];
+    { encabezado: "Nombre Técnico", clave: (item) => item.nombre, orden: 1 },
+    { encabezado: "Proveedor", clave: (item) => item.proveedor, orden: 2 },
+    { encabezado: "Fabricante y/o Productor", clave: (item) => item.fabricante_productor, orden: 3 },
+    { encabezado: "RFC Fabricante y/o Productor", clave: (item) => item.rfc_fabricante_productor, orden: 4 },
+    { encabezado: "Fracción Arancelaria", clave: (item) => item.clave_fraccion_arancelaria, orden: 5 },
+    { encabezado: 'Descripción de la Fracción Arancelaria', clave: (item) => item.descripcion_fraccion, orden: 6 },
+    { encabezado: "Capitulo", clave: (item) => item.capitulo, orden: 7 },
+    { encabezado: "Descripción Capitulo", clave: (item) => item.nombre_capitulo, orden: 8 },
+    { encabezado: "Partida", clave: (item) => item.partida, orden: 9 },
+    { encabezado: "Descripción Partida", clave: (item) => item.nombre_partida, orden: 10 },
+    { encabezado: "Subpartida", clave: (item) => item.subpartida, orden: 11 },
+    { encabezado: "Descripción Subpartida", clave: (item) => item.nombre_subpartida, orden: 12 },
+    { encabezado: "Valor en Dólares", clave: (item) => item.valor, orden: 13 },
+    { encabezado: "Originario/No originario", clave: (item) => item.es_originario, orden: 14 },
+    { encabezado: "Pais de Origen", clave: (item) => item.pais_origen, orden: 15 },
+    { encabezado: "Peso", clave: (item) => item.peso, orden: 16 },
+    { encabezado: "Volumen", clave: (item) => item.volumen, orden: 17 }];
 
   /**
    * Configuración de la tabla que presenta la información de los empaques
@@ -719,7 +739,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
  
 agregarTratado(): void {
   if (this.formularioTratados.valid) {
-   
     const PAIS_ID = this.formularioTratados.get('pais')?.value;
     const TRATADO_ID = this.formularioTratados.get('tratado')?.value;
     const ORIGEN_ID = this.formularioTratados.get('origen')?.value;
@@ -877,6 +896,14 @@ agregarTratado(): void {
           this.respuestaTratadosConfiguracion = resp.datos;
           this.tramite110101Store.clearRespuestaServicioDatosConfiguracion();
           this.tramite110101Store.setRespuestaServicioDatosConfiguracion(this.respuestaTratadosConfiguracion ?? {} as CriterioConfiguracionResponse);
+          this.configurarPaisesInstancias(this.respuestaTratadosConfiguracion ?? {} as CriterioConfiguracionResponse);
+          //Se elimina valores guardados en otros tabs por si lleno otros tabs y se cambia a tratados
+          const INITIALSTATE = createSolicitanteInitialState();
+          this.tramite110101Store.update(state => ({
+            ...INITIALSTATE,
+            respuestaServicioDatosTabla: state.respuestaServicioDatosTabla,
+            respuestaServiceConfiguracion: state.respuestaServiceConfiguracion
+          }));
           this.habilitarPestana.emit();
           this.formularioTratados.reset();
         }else{
@@ -994,6 +1021,30 @@ talbleData: RegistroDeSolicitudesTabla = {
   }
 }
 
+/**
+ * Configura los países e instancias basado en los criterios de configuración recibidos.
+ * @param config - Objeto de configuración que contiene las banderas para mostrar las diferentes instancias.
+ */
+configurarPaisesInstancias(config: CriterioConfiguracionResponse): void {
+   if (!config) {
+     return;
+   }
+  this.paisesInstancias = [];
+  if (config.mostrar_otras_instancias) {
+    this.paisesInstancias.push('OTRASINSTANCIAS');
+  }
+  if (config.mostrar_otras_instancias_peru) {
+    this.paisesInstancias.push('INSTANCIASPERU');
+  }
+  if (config.mostrar_otras_instancias_uruguay) {
+    this.paisesInstancias.push('INSTANCIASURUGUAY');
+  }
+  if (config.mostrar_otras_instancias_alianza_p) {
+    this.paisesInstancias.push('INSTANCIASPACIFICO');
+  }
+}
+
+
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
@@ -1012,7 +1063,6 @@ talbleData: RegistroDeSolicitudesTabla = {
    * @returns {void} No retorna ningún valor.
    */
   onTratadoAcuerdo(selectedOption: Catalogo, campo: string): void {
-    const CLAVE = selectedOption.clave || ''
     switch (campo) {
       case 'pais':
         if (selectedOption.bloque === 'false') {
@@ -1021,9 +1071,6 @@ talbleData: RegistroDeSolicitudesTabla = {
           this.getCatalogoTratadoAcuerdoBloque(selectedOption.clave || '');
         }
          
-        if (this.instanciasConfig[CLAVE] && !this.paisesInstancias.includes(CLAVE)) {
-          this.paisesInstancias.push(CLAVE);
-        }
             
         break;
       case 'tratado':
@@ -1045,28 +1092,22 @@ talbleData: RegistroDeSolicitudesTabla = {
    * @returns {void} No retorna ningún valor.
   */
   instanciasConfig: Record<string, { titulo: string; alerta: string, cargarCatalogo: boolean, modificacionText?: boolean}> = {
-    URY: {
-      titulo: 'Otras Instancias para TLC-Uruguay',
-      alerta: this.mensajeGenericoInstancias.MENSAJE,
-      cargarCatalogo: true
-    },
-    CHL: {
-      titulo: 'Otras Instancias para TLC-Chile',
-      alerta: this.mensajeGenericoInstancias.MENSAJE,
-      cargarCatalogo: true
-    },
-    PER: {
-      titulo: 'Otras Instancias para TLC-Perú',
-      alerta: this.mensajeGenericoInstancias.MENSAJE,
-      cargarCatalogo: true
-    },
-    JPN: {
+    OTRASINSTANCIAS: {
       titulo: 'Otras Instancias',
       alerta: this.mensajeGenericoInstancias.MENSAJE,
       cargarCatalogo: false,
     },
-    //Pendiente de checar en uat
-    SHD: {
+    INSTANCIASPERU: {
+      titulo: 'Otras Instancias para TLC-Perú',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: true
+    },
+    INSTANCIASURUGUAY: {
+      titulo: 'Otras Instancias para TLC-Uruguay',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: true
+    },
+    INSTANCIASPACIFICO: {
       titulo: 'Otras Instancias para el Acuerdo alianza del pacifico',
       alerta: this.mensajeAlianza.MENSAJE,
       cargarCatalogo: false,
@@ -1075,19 +1116,7 @@ talbleData: RegistroDeSolicitudesTabla = {
   };
 
 
-  /**
-   * **Ciclo de vida: OnDestroy**
-   * 
-   * Este método se ejecuta cuando el componente se destruye. 
-   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
-   * 
-   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
-   * - Completa `destroy$` para liberar los recursos asociados.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
 /**
  * 
@@ -1133,7 +1162,17 @@ eliminarTratado(): void {
   this.tramite110101Store.setRespuestaServicioDatosTabla(this.respuestaServicioDatosTabla);
 
   this.selectedRows = [];
-  if(!this.respuestaServicioDatosTabla || this.respuestaServicioDatosTabla.length === 0){ 
+  const INITIALSTATE = createSolicitanteInitialState();
+  this.tramite110101Store.update(state => ({
+    ...INITIALSTATE,
+    respuestaServicioDatosTabla: state.respuestaServicioDatosTabla
+  }));
+  if(this.respuestaServicioDatosTabla.length){
+    this.configuracion(this.respuestaServicioDatosTabla) 
+  }
+  
+  if(this.respuestaServicioDatosTabla.length === 0 || this.respuestaServicioDatosTabla.length === 0){ 
+    this.tramite110101Store.reset();
      this.cerrarPestana.emit();
   }
  
@@ -1212,6 +1251,23 @@ eliminarTratado(): void {
     txtBtnCancelar: '',
   };
   }
+
+  /**
+   * Abre el modal de error dictaminador.
+   */
+  abrirModalErrorDictaminador(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'No es posible modificar la calificación  ya que la calificación  del sistema es "NO APROBADA"',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  }
     
 
   /**
@@ -1240,10 +1296,12 @@ eliminarTratado(): void {
     const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
     const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
     if (
-      CRITERIO_ORIGEN === 'OTROS' ||
-      CRITERIO_ORIGEN === 'B' ||
-      CRITERIO_ORIGEN === 'OTRASINST' ||
-      (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+       !(
+    CRITERIO_ORIGEN === 'OTROS' ||
+    CRITERIO_ORIGEN === 'B' ||
+    CRITERIO_ORIGEN === 'OTRASINST' ||
+    (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+  )
     ) {
       this.abrirModalGlobalAccion();
       return;
@@ -1352,7 +1410,12 @@ eliminarTratado(): void {
     if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
       this.abrirModalTratadosEvaluacion();
       return;
-    }          
+    }
+
+    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].criterio_origen
+    if (CRITERIO_ORIGEN === 'OTROS' || CRITERIO_ORIGEN === 'OTRASINST') {
+     
+    
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1390,6 +1453,9 @@ eliminarTratado(): void {
         }
       }
     });
+    }else{
+      this.abrirModalGlobalAccion();
+    }
   }
 
   /**
@@ -1443,7 +1509,7 @@ eliminarTratado(): void {
         return {
           ...tratado,
           cal_aprobada_dictaminador: APROBADO,
-          calificacion_dictaminador: APROBADO ? 'APROBADO' : 'RECHAZADO'
+          calificacion_dictaminador: APROBADO ? 'APROBADA' : 'NO APROBADA'
         };
       }
       return { ...tratado };
@@ -1451,10 +1517,18 @@ eliminarTratado(): void {
 
     // Refresca la tabla
     this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
-
     this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
 
+    this.limpiarSeleccion();
     this.cerrarDialogo();
+  }
+
+  /**
+   * @method limpiarSeleccion
+   * @description Limpia la selección de tratados en la tabla de evaluación.
+   */
+  limpiarSeleccion(): void {
+    this.tratadoSeleccionado = [];
   }
 
   /**
@@ -1463,14 +1537,60 @@ eliminarTratado(): void {
    * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
    */
   abrirModalDictaminador(): void {
-    if(this.tratadoSeleccionado.length === 0) {
+    if(!this.tratadoSeleccionado || this.tratadoSeleccionado.length === 0) {
       this.abrirModal();
       return;
     }
-    if (this.modalElement) {
+      
+    if(this.tratadoSeleccionado[0].cal_aprobada_sistema === false){
+      this.abrirModalErrorDictaminador();
+      return;
+    }
+    const RADIOSELECCIONADO = this.tratadoSeleccionado && 
+                              this.tratadoSeleccionado.length > 0 &&
+                              this.tratadoSeleccionado.every(item => item.id_criterio_tratado);
+
+    if (!RADIOSELECCIONADO) {
+      this.abrirModal();
+      return;
+    }
+
+    if (this.modalElement && this.modalElement.nativeElement) {
+      if (this.modalInstance) {
+        this.modalInstance?.hide?.(); 
+      }
       this.modalInstance = new Modal(this.modalElement.nativeElement);
       this.modalInstance?.show();
     }
+  }
+
+ /**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * Verifica que existan datos en la tabla y que los formularios asociados sean válidos.
+ * @method validarFormulario
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+  validarFormulario(): boolean {
+    // Si no hay datos en la tabla → inválido
+    if (this.solicitudeState.respuestaServicioDatosTabla.length === 0) {
+      return false;
+    }
+    //  Si el componente otrasInstancias no existe → no avanzar, pero sin error
+    if (!this.otrasInstancias) {
+      return true;
+    }
+
+    // Si el formulario dentro de otrasInstancias no existe → no avanzar
+    if (!this.otrasInstancias.formularioInstancias) {
+      return true;
+    }
+
+    // Si el formulario de otras instancias no es válido → inválido
+    if (this.otrasInstancias.formularioInstancias.valid === false) {
+      this.otrasInstancias.formularioInstancias.markAllAsTouched();
+      return false;
+    }
+    return true;
   }
 
  /**
@@ -1485,4 +1605,18 @@ eliminarTratado(): void {
     this.modalInstance?.hide();
   }
 
+  /**
+   * **Ciclo de vida: OnDestroy**
+   * 
+   * Este método se ejecuta cuando el componente se destruye. 
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   * 
+   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
+   * - Completa `destroy$` para liberar los recursos asociados.
+   */
+  ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario() || null);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

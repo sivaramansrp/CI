@@ -193,6 +193,88 @@ export class FirmarSolicitudComponent implements OnInit, OnDestroy {
   cve_rol_capturista: "CapturistaGubernamental",
   cve_usuario_capturista: "Gubernamental",
   fecha_firma: FirmarSolicitudComponent.formatFecha(new Date()),
+  clave_unidad_admin: this.solicitudState.representacion,
+  //ultimo tab
+  clave_entidad: null,
+
+  tratados_agregados: this.solicitudState.tratados_servicio_evaluar.map(item =>
+    ({
+      /** ID del tratado o acuerdo */
+      id_tratado_acuerdo: item.id_tratado_acuerdo,
+
+      /** Nombre del país */
+      clave_pais: item.cve_pais,
+
+      /** Nombre del bloque */
+      id_bloque: item.id_bloque?.toString() || null,
+
+      /** Nombre del grupo de criterio */
+      clave_grupo_criterio: item.cve_grupo_criterio,
+
+      /** Indica si cumple con el juego  */
+      cumple_juego: item.cumple_juego,
+
+      /** Identificador del tipo de proceso de mercancía */
+      ide_tipo_proceso_mercancia: item.ide_tipo_proceso_mercancia
+    })
+  ),
+
+  registro_cuestionario:{
+    /** Indica si la descripción es similar a ALADI */
+    cal_descripcion_similar_aladi: null,
+
+    /** Indica si existe separación contable */
+    separacion_contable: this.solicitudState.metodoSeparacion,
+
+    /** Indica si se solicita exportador autorizado */
+    solicita_exportador_autorizado: this.solicitudState.exportadorAutorizado,
+
+    /** Condición del exportador autorizado */
+    ide_condicion_exportador_autorizado: this.solicitudState.informacionRadios,
+
+    /** Información de la mercancía */
+    mercancia: {
+      /** Nombre comercial de la mercancía */
+      nombre_comercial: this.solicitudState.nombreComercial,
+  
+      /** Nombre en inglés de la mercancía */
+      nombre_ingles: this.solicitudState.nombreIngles,
+  
+      /** Fracción arancelaria */
+      fraccion_arancelaria: this.solicitudState.fraccionArancelaria,
+  
+      /** Precio franco fábrica */
+      precio_franco_fabrica: this.solicitudState.francofabrica,
+  
+      /** Valor transaccional */
+      valor_transaccional: this.solicitudState.valorTransaccion,
+  
+      /** Costo neto */
+      costo_neto: this.solicitudState.costoNetoDolares,
+  
+      /** Clave de fracción NALADI */
+      cve_fraccion_naladi: this.solicitudState.clasificacionNaladi,
+  
+      /** Clave de fracción NALADISA 93 */
+      cve_fraccion_naladisa93: this.solicitudState.clasificacionNaladi1993,
+  
+      /** Clave de fracción NALADISA 96 */
+      cve_fraccion_naladisa96: this.solicitudState.clasificacionNaladi1996,
+  
+      /** Clave de fracción NALADISA 02 */
+      cve_fraccion_naladisa02: this.solicitudState.clasificacionNaladi2002,
+  
+      /** Tipo de método aplicado */
+      tipo_metodo: this.solicitudState.valorMetodoRadioUruguayPanama,
+  
+      /** Procesos solicitados para la mercancía */
+      procesos_solicitados:this.solicitudState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados?.map(item => 
+        ({
+        id_proceso_ceror: item.id_proceso_ceror,
+        cumple_proceso: item.cumple_proceso
+        })) || [],
+    }
+  }
 };
 this.solicitudService.postGenerarCadenaOriginal(this.solicitudState.id_solcitud,PAYLOAD)
   .pipe(takeUntil(this.destroy$))

@@ -16,6 +16,7 @@ describe('ConsultadDomicilios90305Component', () => {
 
   const mockProsecService = {
     getEstadoData: jest.fn(),
+    registrarFormulario: jest.fn(),
   };
 
   const mockTramiteStore = {
@@ -109,7 +110,18 @@ const MOCK_STATE: Tramite90305State = {
     });
 
     it('should initialize form with selectedEstado and disable form when readonly', () => {
-      component.solicitudState = { selectedEstado: 'Estado 2' } as any;
+      const mockStateForTest = {
+        selectedEstado: 'Estado 2',
+        registroFederalContribuyentes: '',
+        representacionFederal: '',
+        tipoModificacion: '',
+        modificacionPrograma: ''
+      };
+      
+      Object.defineProperty(mockTramiteQuery, 'selectSolicitud$', {
+        get: () => of(mockStateForTest),
+      });
+      
       component.esFormularioSoloLectura = true;
       component.guardarDatosFormulario();
       expect(component.formConsulta.get('estadoControl')?.value).toBe('Estado 2');

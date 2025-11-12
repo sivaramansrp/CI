@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent,CargaDocumentoComponent, AnexarDocumentosComponent, BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -24,7 +24,8 @@ import { TemporalContenedoresRoutingModule } from './temporal-contenedores-routi
     WizardComponent,
     AnexarDocumentosComponent,
     AlertComponent,
-    TituloComponent
+    TituloComponent,
+    CargaDocumentoComponent
   ],
   exports: [],
   providers: [
