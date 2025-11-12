@@ -278,6 +278,7 @@ export class Shared2605Service {
     if (!Array.isArray(MERCANCIA_TABLA)) {
       return [];
     }
+
     return MERCANCIA_TABLA.map(item => ({
       "idMercancia": "1",
       "idClasificacionProducto": "325",
@@ -303,8 +304,8 @@ export class Shared2605Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": item['paisOrigen'] as string || "",
-      // "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] as string || "",
+      "nombreCortoPaisOrigen": Array.isArray(item['paisOrigen']) ? item['paisOrigen'].join(', ') : String(item['paisOrigen'] ?? ''),
+      "nombreCortoPaisProcedencia": Array.isArray(item['paisProcedenciaUltimoPuerto']) ? item['paisProcedenciaUltimoPuerto'].join(', ') : String(item['paisProcedenciaUltimoPuerto'] ?? ''),
       "tipoProductoDescripcionOtros": "Analgésico",
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
