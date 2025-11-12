@@ -9,7 +9,7 @@
         <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && fabricanteRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && fabricanteRowData.length === 0) || isfabricanteInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -28,7 +28,7 @@
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && formuladorRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && formuladorRowData.length === 0) || isFormuladorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -46,7 +46,7 @@
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [isInvalida]="tercerosForm.touched && proveedorRowData.length === 0"></ng-table>
+          [isInvalida]="(tercerosForm.touched && proveedorRowData.length === 0) || isProveedorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
