@@ -1065,6 +1065,11 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
   }
 
   public setPaisDeProcedenciaDatos(paisDeProcedenciaDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDeProcedenciaDatos,
+    }));
+  }
 
   /**
   * Establece el estado de garantiasOfrecidas.
