@@ -9,7 +9,8 @@
                             (keydown.space)="seleccionaTab(1)"
                             tabindex="1">Justificación</a>
                         </li>
-                        @if (this.dataIniciarDictamen && this.dataIniciarDictamen.dictaminador_califica_exportador) {
+                        @if ((this.dataIniciarDictamen && this.dataIniciarDictamen.dictaminador_califica_exportador) ||
+                                (this.dataIniciarDictamenAutorizar && this.dataIniciarDictamenAutorizar.mostrar_calificacion_ue)) {
                             <li [ngClass]="indice === 2 ? 'active' : ''">
                                 <a data-toggle="tab" role="button"
                                 (click)="seleccionaTab(2)"
@@ -18,7 +19,8 @@
                                 tabindex="2">Clasificación exportador autorizado UE</a>
                             </li>
                         }
-                         @if (this.dataIniciarDictamen && this.dataIniciarDictamen.dictaminador_califica_exportador_jpn) {
+                         @if ((this.dataIniciarDictamen && this.dataIniciarDictamen.dictaminador_califica_exportador_jpn) ||
+                          (this.dataIniciarDictamenAutorizar && this.dataIniciarDictamenAutorizar.mostrar_calificacion_jpn)) {
                             <li [ngClass]="indice === 3 ? 'active' : ''">
                                 <a data-toggle="tab" role="button"
                                 (click)="seleccionaTab(3)"

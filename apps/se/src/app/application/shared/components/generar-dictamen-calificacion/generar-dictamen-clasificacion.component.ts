@@ -343,8 +343,7 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamen.fecha_fin_vigencia,
       });
       this.evaluarObservacionesDictamen = this.dataIniciarDictamen.historial_observaciones || [];
-      // Lógica para determinar el tipo de calificador
-       this.determinarCalificadorTipo();
+       this.determinarCalificadorTipo(this.dataIniciarDictamen);
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
@@ -355,6 +354,7 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
         fechaInicioVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_fin_vigencia,
       });
+      this.determinarCalificadorTipo(this.dataIniciarDictamenAutorizar);
     }
 
     if (changes['sentidoInput']) {
@@ -381,18 +381,18 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
 /**
  * Determina el tipo de calificador basado en las variables booleanas
  */
-private determinarCalificadorTipo(): void {
-    if (this.dataIniciarDictamen.tiene_fraccion_aladi) {
+private determinarCalificadorTipo(data: IniciarDictamenResponse | IniciarAutorizacionResponse): void {
+    if (this.dataIniciarDictamen?.tiene_fraccion_aladi) {
         this.dictamenForm.get('clasificacionUE')?.setValue(null);
         this.dictamenForm.get('clasificacionJpn')?.setValue(null);
-        this.dictamenForm.get('clasificacionAladi')?.setValue(this.dataIniciarDictamen.calificacion_descripcion_aladi);
-    } else if (this.dataIniciarDictamen.dictaminador_califica_exportador) {
-       this.dictamenForm.get('clasificacionUE')?.setValue(this.dataIniciarDictamen.calificacion_dictaminador_exportador);
+        this.dictamenForm.get('clasificacionAladi')?.setValue(data.calificacion_descripcion_aladi);
+    } else if ((this.dataIniciarDictamen?.dictaminador_califica_exportador) || (this.dataIniciarDictamenAutorizar?.mostrar_calificacion_ue)) {
+       this.dictamenForm.get('clasificacionUE')?.setValue(data.calificacion_dictaminador_exportador);
         this.dictamenForm.get('clasificacionJpn')?.setValue(null);
          this.dictamenForm.get('clasificacionAladi')?.setValue(null);
-    } else if (this.dataIniciarDictamen.dictaminador_califica_exportador_jpn) {
+    } else if ((this.dataIniciarDictamen?.dictaminador_califica_exportador_jpn) || (this.dataIniciarDictamenAutorizar?.mostrar_calificacion_jpn)) {
         this.dictamenForm.get('clasificacionUE')?.setValue(null);
-        this.dictamenForm.get('clasificacionJpn')?.setValue(this.dataIniciarDictamen.calificacion_dictaminador_exportador_jpn);
+        this.dictamenForm.get('clasificacionJpn')?.setValue(data.calificacion_dictaminador_exportador_jpn);
         this.dictamenForm.get('clasificacionAladi')?.setValue(null);
     } else {
       this.dictamenForm.get('clasificacionUE')?.setValue(null);
