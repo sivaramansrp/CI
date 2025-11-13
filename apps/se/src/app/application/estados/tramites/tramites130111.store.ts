@@ -7,9 +7,11 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 export interface Tramite130111State {
+  idSolicitud: number;
   /**
    * Producto seleccionado en el formulario.
    */
@@ -136,6 +138,23 @@ export interface Tramite130111State {
   Valor total en USD de las partidas de la mercancía.
   */
   valorTotalUSD: string;
+    /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
+
+    /**
+     * Lista de partidas a mostrar.
+     */
+    mostrarPartidas: MostrarPartidas[];
+    modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
 }
 
 /**
@@ -148,17 +167,18 @@ export interface Tramite130111State {
  */
 export function createInitialState(): Tramite130111State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: true,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
+    defaultSelect: 'TISOL.I',
     producto: '',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: '',
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.N',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
@@ -173,7 +193,14 @@ export function createInitialState(): Tramite130111State {
     representacion: '',
     tableBodyData: [],
     cantidadTotal: '',
-    valorTotalUSD: ''
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
+    mostrarPartidas: [],
+       modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
   };
 }
 
@@ -203,4 +230,22 @@ export class Tramite130111Store extends Store<Tramite130111State> {
       ...valores,
     }));
   }
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+   /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
+  }
+
 }

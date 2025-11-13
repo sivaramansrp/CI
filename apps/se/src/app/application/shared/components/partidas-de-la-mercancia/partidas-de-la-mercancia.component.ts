@@ -284,6 +284,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
+    this.filaSeleccionadaChange.emit(this.tableBodyData);
   }
 
   /**

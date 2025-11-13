@@ -4,10 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { ImportacionDeVehiculosUsadosRoutingModule } from './importacion-de-vehiculos-usados-routing.module';
 
-import { ImportacionDeVehiculosUsadosComponent } from './pages/importacion-de-vehiculos-usados/importacion-de-vehiculos-usados.component';
-import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
-
-import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InputRadioComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InputRadioComponent, NotificacionesComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 
@@ -16,6 +13,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 
+import { ImportacionDeVehiculosUsadosComponent } from './pages/importacion-de-vehiculos-usados/importacion-de-vehiculos-usados.component';
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -24,9 +22,9 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 @NgModule({
   declarations: [
-    ImportacionDeVehiculosUsadosComponent,
     PasoUnoComponent,
-    SolicitudComponent
+    SolicitudComponent,
+    ImportacionDeVehiculosUsadosComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +35,6 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
-    PasoTresComponent,
     PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
@@ -47,6 +44,9 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     RepresentacionComponent,
     CrosslistComponent,
     AlertComponent,
+    NotificacionesComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent,
     NotificacionesComponent
   ]
 })
