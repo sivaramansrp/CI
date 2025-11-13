@@ -813,13 +813,13 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   patchOpcionesValue(datos1: TablaOpcionConfig): void {
     this.idSolicitudPrellenado.emit(datos1.id_solicitud);
-    this.patchDatosPrincipales(datos1);
-    this.patchDatosRepresentante(datos1);
-    this.patchDatosMercancia(datos1);
-    this.patchDatosOpcionales(datos1);
+    // this.patchDatosPrincipales(datos1);
+    // this.patchDatosRepresentante(datos1);
+    // this.patchDatosMercancia(datos1);
+    // this.patchDatosOpcionales(datos1);
 
-    this.scianConfig.datos = datos1.scian;
-    this.tablaMercanciasConfig.datos = datos1.mercancias;
+    // this.scianConfig.datos = datos1.scian;
+    // this.tablaMercanciasConfig.datos = datos1.mercancias;
   }
 
   private patchDatosPrincipales(datos1: TablaOpcionConfig): void {

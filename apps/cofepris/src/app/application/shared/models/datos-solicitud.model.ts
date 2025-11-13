@@ -293,7 +293,7 @@ export interface TablaMercanciasDatos {
   especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
-    paisDeOriginDatos?: string[];
+  paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
   id?: number
 }

@@ -81,7 +81,7 @@ export class GuardarMappingAdapter {
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
+              "descripcionMercancia": mercancia.denominacionComun,
               "idFormaFarmaceutica": mercancia.formaFarmaceutica,
               "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
               "idEstadoFisico": mercancia.estadoFisico,
@@ -342,6 +342,8 @@ export class GuardarMappingAdapter {
         }));
     }
 
+    
+
     private static mapMercanciasData(arr?: any[]): any[] {
         // eslint-disable-next-line complexity
         return (arr ?? []).map((m: any) => ({
@@ -354,10 +356,11 @@ export class GuardarMappingAdapter {
                 descripcion: m.nombreSubClasificacionProducto ?? ''
             },
             denominacionEspecificaProducto: m.descDenominacionEspecifica ?? '',
+            denominacionComun: m.descripcionMercancia ?? '',
             denominacionDistintiva: m.descDenominacionDistintiva ?? '',
             formaFarmaceutica: m.formaFarmaceuticaDescripcionOtros ?? '',
             estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
-            fraccionArancelaria: m.fraccionArancelaria?.nombre ?? '',
+            fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
             descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
             cantidadUMC: m.cantidadUMCConComas ?? '',
             cantidadUMT: m.cantidadUMTConComas ?? '',
@@ -370,9 +373,10 @@ export class GuardarMappingAdapter {
             fechaCaducidad: m.fechaCaducidadStr ?? '',
             clasificacionProducto: m.idClasificacionProducto ?? '',
             especificarClasificacionProducto: m.ideSubClasificacionProducto ?? '',
+            unidadMedidaComercializacion: m.unidadMedidaComercial?.descripcion ?? '',
             unidadMedidaTarifa: m.unidadMedidaTarifa?.descripcion ?? '',
-            paisOrigen: [],
-            paisProcedencia: [],
+            paisOrigen: m.nombreCortoPaisOrigen ?? "",
+            paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
         }));
     }
 
