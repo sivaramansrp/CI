@@ -505,7 +505,7 @@ public validarFormularios(): boolean | undefined{
 
     const ULTIMO_TAB = this.getTotalTabs();
     if (ULTIMO_TAB === 4) {
-      const VALIDACION_TODOS_TABS = this.validacionFormularios();
+      const VALIDACION_TODOS_TABS = this.validacionFormularios(true);
      return VALIDACION_TODOS_TABS;
     }
     this.seleccionaTab(5);
@@ -547,10 +547,11 @@ public validarFormularios(): boolean | undefined{
    * Si todas las validaciones son exitosas y el control de peticiones está activo, guarda la solicitud completa.
    * @returns {boolean} Retorna `true` si todas las validaciones son exitosas, `false` en caso contrario.
    */
-  private validacionFormularios(): boolean {
+  private validacionFormularios(ignorarProcesos: boolean = false): boolean {
     if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false ||
        this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false ||
-        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false || this.solicitudeState.proceso_seleccionado.length === 0){
+        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false ||
+         (!ignorarProcesos && this.solicitudeState.proceso_seleccionado.length === 0)){
           return false;
     }
     
