@@ -188,3 +188,8 @@ export interface LicitacionResponse {
     nombreProducto: string;
     fechaConcurso: string;
 }
+
+export interface ParticipantesData {
+    rfc: string;
+    montoAdjudicado: number;
+}

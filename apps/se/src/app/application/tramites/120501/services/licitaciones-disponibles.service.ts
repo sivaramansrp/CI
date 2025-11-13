@@ -1,6 +1,6 @@
 import { Adquiriente, DetallesLicitacion, LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL, Catalogo } from '@libs/shared/data-access-user/src';
-import { LicitacionResponse,LicitacionesResponse } from '../models/solicitud.model';
+import { LicitacionResponse,LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../models/solicitud.model';
 import { Solicitud120501State, Tramite120501Store } from '../estados/tramites/tramite120501.store';
 import { catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
@@ -107,6 +107,24 @@ export class LicitacionesDisponiblesService {
     const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
 
     return this.http.get<BaseResponse<LicitacionResponse[]>>(ENDPOINT).pipe(map((response) => {
+      if (!response.datos) {
+          throw new Error('No se encontraron datos en la respuesta');
+        }
+      return response.datos;
+    }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  fetchRFCData(RFC: string, idLicitacion: number): Observable<ParticipantesData> {
+    const ENDPOINT = `${PROC_120501.FETCH_RFC}/` + RFC + '/' + idLicitacion;
+
+    return this.http.get<BaseResponse<ParticipantesData>>(ENDPOINT).pipe(map((response) => {
       if (!response.datos) {
           throw new Error('No se encontraron datos en la respuesta');
         }

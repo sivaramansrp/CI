@@ -1,9 +1,8 @@
-import { AccionBoton, Adquiriente, AlertComponent, Complementaria, CONFIGURACION_ACCIONISTAS_TABLA1, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Complementaria1, DetallesLicitacion } from '@ng-mf/data-access-user';
+import { AccionBoton, Adquiriente, AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_ACCIONISTAS_TABLA, ID_PROCEDIMIENTO } from '../../constantes/cupos-constantes.enum';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { LicitacionResponse, LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../../models/solicitud.model';
 import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
-// import { CONFIGURACION_ACCIONISTAS_TABLA } from '@ng-mf/data-access-user';
-// import { CONFIGURACION_ACCIONISTAS_TABLA1 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -24,9 +23,7 @@ import { Validators } from '@angular/forms';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_ACCIONISTAS_TABLA, ID_PROCEDIMIENTO } from '../../constantes/cupos-constantes.enum';
-import { LicitacionesResponse, LicitacionResponse, ParticipanteLicitacion } from '../../models/solicitud.model';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+
 /**
  * Componente para mostrar las licitaciones vigentes.
  *
@@ -428,11 +425,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
           montoMaximo: LICITACION.licitacionPublica.cantidadMaxima
         });
 
-        this.adquiriente.patchValue({
-          rfc: LICITACION.participante.rfc,
-          adquirienteMontoDisponible: LICITACION.participante.montoDisponible,
-          montoRecibir: LICITACION.montoTransferir
-        });
+        // this.adquiriente.patchValue({
+        //   rfc: LICITACION.participante.rfc,
+        //   adquirienteMontoDisponible: LICITACION.participante.montoDisponible,
+        //   montoRecibir: LICITACION.montoTransferir
+        // });
       });
   }
   /**
@@ -498,8 +495,11 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   agregarRFC1(): void {
     const RFC1VALUE = this.adquiriente.get('rfc1')?.value;
     if (RFC1VALUE) {
-      this.datosParticipantes.push({ rfc: RFC1VALUE, montoDisponible:0 });
-      this.adquiriente.get('rfc1')?.reset();
+      this.service.fetchRFCData(RFC1VALUE, 0).pipe(takeUntil(this.destroyed$)).subscribe((data: ParticipantesData) => {
+        if (data.rfc && data.montoAdjudicado) {
+          this.datosParticipantes.push({ rfc: data.rfc, montoDisponible: data.montoAdjudicado });
+        }
+      });
     }
   }
   /**
