@@ -843,7 +843,7 @@
                      <div class="form-group">
                         <app-catalogo-select [catalogo]="idProcedimiento ? clasificacionToxicologicaLista : estado" formControlName="clasificacionToxicologica"
                         [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                        setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
+                        setValoresStore(formMercancias, 'clasificacionToxicologica', 'setClasificacionToxicologica'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"
                         [markTouched]="!!(formMercancias.get('clasificacionToxicologica')?.invalid && formMercancias.get('clasificacionToxicologica')?.touched)"></app-catalogo-select>
                      </div>
