@@ -95,7 +95,7 @@ export const API_GET_CAT_FRACCIONES_CALZADOS = (CVEREGIMEN: string, CVECLASIFICA
  * @param claveMoneda - Clave de la moneda para la cual se desea obtener el monto de conversión.
  * @returns 
  */
-export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/registro/solicitud/monto-conversion/${claveMoneda}`;
+export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/solicitud/monto-conversion/${claveMoneda}`;
 
 /**
  * Api para consultar un fabricante extranjero por su nombre del tramite 120301.
