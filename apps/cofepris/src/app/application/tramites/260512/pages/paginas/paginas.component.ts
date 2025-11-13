@@ -41,7 +41,7 @@ export class PaginasComponent implements OnInit {
    */
   public indice: number = 1;
 
-  @ViewChild(DatosComponent) pasoUnoComponent!:DatosComponent ;
+  @ViewChild(DatosComponent) datosComponent!:DatosComponent ;
 
     /**
      * Lista de pasos del asistente.
@@ -159,7 +159,7 @@ export class PaginasComponent implements OnInit {
   // public getValorIndice(e: AccionBoton): void {
   //   // Validar formularios antes de continuar desde el paso uno
   //   if (this.indice === 1 && e.accion === 'cont') {
-  //     const ISVALID = this.pasoUnoComponent.validOnButtonClick();
+  //     const ISVALID = this.datosComponent.validOnButtonClick();
   //     if (!ISVALID) {
   //       this.esFormaValido = true;
   //       return; // Detener ejecución si los formularios son inválidos
@@ -188,30 +188,37 @@ export class PaginasComponent implements OnInit {
   //     }
   //   }
   // }
-    getValorIndice(e: AccionBoton): void {
-       const NEXT_INDEX = e.valor;
+getValorIndice(e: AccionBoton): void {
+  const NEXT_INDEX = e.valor;
 
   if (NEXT_INDEX > 0 && NEXT_INDEX <= this.pantallasPasos.length) {
     if (e.accion === 'cont') {
-      this.shouldNavigate$()
-        .subscribe((shouldNavigate) => {
-          if (shouldNavigate) {
+      this.shared260512Service.getAllState().pipe(take(1)).subscribe(data => {
+        if (this.datosComponent?.obtenerValorCheckboxAviso) {
+          data['avisoCheckbox'] = this.datosComponent.obtenerValorCheckboxAviso();
+        }
+        this.guardar(data).then(response => {
+          const OK = (response as any).codigo === '00';
+          if (OK) {
+            this.toastrService.success((response as any).mensaje);
             this.indice = NEXT_INDEX;
             this.datosPasos.indice = NEXT_INDEX;
             this.wizardService.cambio_indice(NEXT_INDEX);
             this.wizardComponent.siguiente();
           } else {
+            this.toastrService.error((response as any).mensaje);
             this.indice = e.valor;
             this.datosPasos.indice = e.valor;
           }
         });
+      });
     } else {
       this.indice = NEXT_INDEX;
       this.datosPasos.indice = NEXT_INDEX;
       this.wizardComponent.atras();
     }
   }
-    }
+}
   
     /**
      * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
@@ -274,7 +281,7 @@ export class PaginasComponent implements OnInit {
      */
     validarFormulariosPasoActual(): boolean {
       if (this.indice === 1) {
-        return this.pasoUnoComponent?.validOnButtonClick() ?? true;
+        return this.datosComponent?.validOnButtonClick() ?? true;
       }
       return true;
     }

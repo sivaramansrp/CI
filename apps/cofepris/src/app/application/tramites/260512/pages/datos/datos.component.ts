@@ -180,4 +180,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  obtenerValorCheckboxAviso(): boolean {
+  return this.datosDeLaComponent?.obtenerValorCheckboxAviso() ?? false;
+}
 }
