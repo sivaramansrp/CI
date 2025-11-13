@@ -72,6 +72,8 @@ export interface Catalogo {
   bloque?: string;
   /** Descripción del NICO, cuando se requiera. */
   nicoDescription?: string;
+  /** Clave de la unidad de medida, cuando se requiera. */
+  cve_unidad_medida?: string;
 }
 
 
