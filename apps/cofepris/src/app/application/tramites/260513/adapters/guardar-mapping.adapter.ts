@@ -41,18 +41,18 @@ export class GuardarAdapter_260513 {
       solicitante: {
         rfc: this.solicitudDatos.rfc ?? "",
         nombre: this.solicitudDatos.nombre ?? "",
-        actividadEconomica: "", 
+        actividadEconomica: "",
         correoElectronico: this.solicitudDatos.correo ?? "",
         domicilio: {
-          pais: "México", 
+          pais: "México",
           codigoPostal: this.solicitudDatos.codigoPostal ?? "",
           estado: this.solicitudDatos.estado ?? "",
           municipioAlcaldia: this.solicitudDatos.muncipio ?? "",
           localidad: this.solicitudDatos.localidad ?? "",
           colonia: this.solicitudDatos.colonia ?? "",
           calle: this.solicitudDatos.calle ?? "",
-          numeroExterior: "", 
-          numeroInterior: "", 
+          numeroExterior: "",
+          numeroInterior: "",
           lada: this.solicitudDatos.lada ?? "",
           telefono: this.solicitudDatos.telefono ?? ""
         }
@@ -73,7 +73,7 @@ export class GuardarAdapter_260513 {
           lada: this.solicitudDatos.lada ?? "",
           telefono: this.solicitudDatos.telefono ?? ""
         },
-        original: "", 
+        original: "",
         avisoFuncionamiento: this.solicitudDatos.avisoCheckbox ?? false,
         numeroLicencia: this.solicitudDatos.licenciaSanitaria ?? "",
         aduanas: this.solicitudDatos.aduanasDeEntrada?.toString() ?? ""
@@ -102,6 +102,10 @@ export class GuardarAdapter_260513 {
           clave: m.fraccionArancelaria ?? "",
           descripcion: m.descripcionFraccion ?? ""
         },
+        clasificacionToxicologica: {
+          idClasificacionToxicologicaTipoTramite: this.solicitudDatos.especificar,
+          clasificacionToxicologica: "Descripción opcional (string)"
+        },
         unidadMedidaComercial: {
           descripcion: m.UMC ?? ""
         },
@@ -119,7 +123,7 @@ export class GuardarAdapter_260513 {
       })),
       representanteLegal: {
         rfc: this.solicitudDatos.rfc ?? "",
-        resultadoIDC: "", 
+        resultadoIDC: "",
         nombre: this.solicitudDatos.nombre ?? "",
         apellidoPaterno: this.solicitudDatos.apellidoPaterno ?? "",
         apellidoMaterno: this.solicitudDatos.apellidoMaterno ?? ""
@@ -128,12 +132,11 @@ export class GuardarAdapter_260513 {
         discriminatorValue: 260513,
         declaracionesSeleccionadas: this.solicitudDatos.mensaje ?? false,
         regimen: this.solicitudDatos.regimen ?? "",
-        aduanaAIFA: "", 
+        aduanaAIFA: "",
         informacionConfidencial: this.solicitudDatos.cumplimiento === 'Si' ? true : false
       },
       datosSCIAN: this.solicitudDatos.nicoTabla ?? []
-      };
-    }
-    
+    };
   }
-  
+
+}
