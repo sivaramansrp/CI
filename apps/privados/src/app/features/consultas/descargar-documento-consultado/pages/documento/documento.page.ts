@@ -15,7 +15,6 @@ export class DocumentoPage {
 
   goBack() {
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       CONSULTAS_ROUTES.DESCARGAR_DOCUMENTO_CONSULTADO,
     ]);
