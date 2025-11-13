@@ -27,6 +27,14 @@ export class ConsultasPage {
           title: 'Consulta Guías Aereas',
           route: CONSULTAS_ROUTES.CONSULTA_GUIAS_AEREAS,
         },
+        {
+          title: 'Consulta de Estados de Guías Aereas',
+          route: CONSULTAS_ROUTES.CONSULTA_GUIAS_AEREAS_ESTADOS,
+        },
+        {
+          title: 'Consulta de Transbordo',
+          route: CONSULTAS_ROUTES.CONSULTA_TRANSBORDO,
+        },
       ],
       open: false,
     },

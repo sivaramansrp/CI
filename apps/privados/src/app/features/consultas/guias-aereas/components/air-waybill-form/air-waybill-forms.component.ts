@@ -1,6 +1,6 @@
 import { ButtonComponent } from '@/shared/components/button/button.component';
 import { FormUtils } from '@/shared/utils/formUtils';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { TypeSearch } from '../../interfaces/air-waybill-forms.interface';
@@ -39,7 +39,7 @@ import { AuthInformationService } from '@/features/auth/services/auth-informatio
   ],
   templateUrl: './air-waybill-forms.component.html',
 })
-export class AirWaybillFormsComponent implements OnInit {
+export class AirWaybillFormsComponent implements OnInit, OnDestroy {
   @ViewChild(ManifestFormComponent) manifestComponent!: ManifestFormComponent;
   @ViewChild(MasterFormComponent) masterComponent!: MasterFormComponent;
   @ViewChild(HouseFormComponent) houseComponent!: HouseFormComponent;
@@ -130,24 +130,32 @@ export class AirWaybillFormsComponent implements OnInit {
   displayTable(form: TypeSearch) {
     if (form === TypeSearch.MANIFEST) {
       if (this.displayManifestTable()) {
+        this.manifestTable.getManifests();
         this.manifestTable.manifestSelected.set(false);
       } else {
         this.displayManifestTable.set(true);
       }
     } else if (form === TypeSearch.MASTER) {
-      if (!this.displayMasterTable()) {
+      if (this.displayMasterTable()) {
+        this.masterTable.getMasters();
+      } else {
         this.displayMasterTable.set(true);
       }
     } else if (form === TypeSearch.HOUSE) {
-      if (!this.displayHouseTable()) {
+      if (this.displayHouseTable()) {
+        this.houseTable.getHouseGuides();
+      } else {
         this.displayHouseTable.set(true);
       }
     } else if (form === TypeSearch.FLIGHT) {
-      if (!this.displayFlightTable()) {
+      if (this.displayFlightTable()) {
+        this.flightTable.getFlights();
+      } else {
         this.displayFlightTable.set(true);
       }
     } else if (form === TypeSearch.CAAT) {
       if (this.displayCaatTable()) {
+        this.manifestTable.getManifests(true);
         this.manifestTable.manifestSelected.set(false);
       } else {
         this.displayCaatTable.set(true);
@@ -212,5 +220,9 @@ export class AirWaybillFormsComponent implements OnInit {
       this.airWaybillService.searchType.set(stored);
       this.searchType = stored;
     }
+  }
+
+  ngOnDestroy(): void {
+    // this.cleanParamsFromSessionStorage(); // TODO: VER DONDE APLICARLO
   }
 }
