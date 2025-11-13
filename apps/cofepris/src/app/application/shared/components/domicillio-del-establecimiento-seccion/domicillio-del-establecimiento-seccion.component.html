@@ -58,7 +58,7 @@
   <div class="row">
     <div id="establecimientoDomicilioCalle" class="col-md-8">
       <label for="establecimientoDomicilioCalle">Calle <span>*</span>: <span class="bi bi-question-circle-fill require"
-          data-bs-toggle="tooltip"></span></label>
+          data-bs-toggle="tooltip" title="Domicilio, calle, número interior, número exterior, lote"></span></label>
       <div>
         <input type="text" maxlength="245" id="establecimientoDomicilioCalleId"
           formControlName="establecimientoDomicilioCalle" class="form-control"
@@ -139,8 +139,10 @@
       </div>
     </div>
     <div class="col-md-4">
-      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria : <span class="bi bi-question-circle-fill require"
-          data-bs-toggle="tooltip"></span></label>
+      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria: <span
+            title="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
+            <i class="bi bi-question-circle-fill"></i>
+          </span></label>
 
       <div class="d-flex flex-column align-items-end">
         <input type="text" maxlength="245" id="noDeLicenciaSanitariaId" formControlName="noDeLicenciaSanitaria"
