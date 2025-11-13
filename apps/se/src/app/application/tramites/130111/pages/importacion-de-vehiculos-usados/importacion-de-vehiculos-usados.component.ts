@@ -213,7 +213,7 @@ export class ImportacionDeVehiculosUsadosComponent implements OnDestroy {
         this.esFormaValido = true;
         return;
       }
-      this.obtenerDatosDelStore(e);
+      this.obtenerDatosDelStore();
     } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
       this.pasoNavegarPor(e);
     }
@@ -222,7 +222,7 @@ export class ImportacionDeVehiculosUsadosComponent implements OnDestroy {
   /**
     * Obtiene los datos del store y los guarda utilizando el servicio.
     */
-  obtenerDatosDelStore(e: AccionBoton): void {
+  obtenerDatosDelStore(): void {
     this.importacionDeVehiculosService.getAllState()
       .pipe(take(1))
       .subscribe((data) => {

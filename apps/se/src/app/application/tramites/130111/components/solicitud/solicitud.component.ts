@@ -12,27 +12,24 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130111/partidas-de-la.json';
-import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import fractionValues from '@libs/shared/theme/assets/json/130111/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130111/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130111/unidad_da.json';
-
-import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
-import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-
 import {
   Tramite130111State,
   Tramite130111Store,
 } from '../../../../estados/tramites/tramites130111.store';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-de-vehiculos-usados-pasos.enum';
+import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130111/partidas-de-la.json';
+import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
+import fractionValues from '@libs/shared/theme/assets/json/130111/fraccion_arancelaria.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130111/solicitud-select.json';
 
 /**
  * jest.spyOnComponente para gestionar la solicitud de mercancías.
@@ -126,7 +123,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
@@ -240,7 +237,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private tramite130111Store: Tramite130111Store,
+    public tramite130111Store: Tramite130111Store,
     private tramite130111Query: Tramite130111Query,
     private importaciondeVehiculosService: ImportacionDeVehiculosService,
     private consultaioQuery: ConsultaioQuery

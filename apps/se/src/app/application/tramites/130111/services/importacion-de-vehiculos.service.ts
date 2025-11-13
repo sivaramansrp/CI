@@ -21,7 +21,7 @@ export class ImportacionDeVehiculosService {
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient,private tramite130111Store: Tramite130111Store,public catalogoServices: CatalogoServices,public tramite130111Query: Tramite130111Query) {
+  constructor(private http: HttpClient, private tramite130111Store: Tramite130111Store, public catalogoServices: CatalogoServices, public tramite130111Query: Tramite130111Query) {
     //
   }
 
@@ -80,7 +80,7 @@ export class ImportacionDeVehiculosService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-    'assets/json/130111/producto-otions.json'
+      'assets/json/130111/producto-otions.json'
     );
   }
 
@@ -90,23 +90,23 @@ export class ImportacionDeVehiculosService {
    */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-          'assets/json/130111/partidas-de-la.json'
-        );
+      'assets/json/130111/partidas-de-la.json'
+    );
   }
-    /**
-   * Actualiza el estado del formulario en el store.
-   * @param DATOS Estado actualizado del trámite.
-   */
+  /**
+ * Actualiza el estado del formulario en el store.
+ * @param DATOS Estado actualizado del trámite.
+ */
   actualizarEstadoFormulario(DATOS: Tramite130111State): void {
-      this.tramite130111Store.actualizarEstado(DATOS);
+    this.tramite130111Store.actualizarEstado(DATOS);
   }
   /**
  * Obtiene los datos de la solicitud.
  * @returns Observable con los datos de la solicitud.
  */
-getDatosDeLaSolicitud(): Observable<Tramite130111State> {
+  getDatosDeLaSolicitud(): Observable<Tramite130111State> {
     return this.http.get<Tramite130111State>('assets/json/130111/datos-de-la-solicitud.json');
-}
+  }
 
 
   /**
@@ -243,16 +243,22 @@ getDatosDeLaSolicitud(): Observable<Tramite130111State> {
         map(res => res?.datos ?? [])
       );
   }
-    /**
-       * Obtiene todos los datos del estado almacenado en el store.
-       * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
-       */
-    getAllState(): Observable<Tramite130111State> {
-      return this.tramite130111Query.selectSolicitud$;
-    }
+  /**
+     * Obtiene todos los datos del estado almacenado en el store.
+     * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+     */
+  getAllState(): Observable<Tramite130111State> {
+    return this.tramite130111Query.selectSolicitud$;
+  }
 
-     buildPartidasMercancia(item: Tramite130111State): unknown {
-  return (item.tableBodyData ?? []).map(row => ({
+  /**
+   * Construye las partidas de mercancía a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con las partidas de mercancía construidas
+   */
+ buildPartidasMercancia(item: Tramite130111State): unknown {
+  const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
+  return ROWS.map(row => ({
     unidadesSolicitadas: Number(row.cantidad),
     unidadesAutorizadas: Number(item.cantidadPartidasDeLaMercancia),
     descripcionSolicitada: row.descripcion,
@@ -267,57 +273,78 @@ getDatosDeLaSolicitud(): Observable<Tramite130111State> {
   }));
 }
 
- buildMercancia(item: Tramite130111State):unknown {
-  return {
-    cantidadComercial: 0,
-    cantidadTarifaria: Number(item.cantidad),
-    valorFacturaUSD: Number(item.valorFacturaUSD),
-    condicionMercancia: item.producto,
-    tipo_solicitud_pexim: item.solicitud,
-    descripcion: item.descripcion,
-    usoEspecifico: item.usoEspecifico,
-    justificacionImportacionExportacion: item.justificacionImportacionExportacion,
-    observaciones: item.observaciones,
-    unidadMedidaTarifaria: { clave: item.unidadMedida },
-    fraccionArancelaria: { cveFraccion: item.fraccion },
-    partidasMercancia: this.buildPartidasMercancia(item)
-  };
-}
 
- buildProductor():unknown {
-  return {
-    tipo_persona: true,
-    nombre: "Juan",
-    apellido_materno: "López",
-    apellido_paterno: "Norte",
-    razon_social: "Aceros Norte",
-    descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
-    rfc: "AAL0409235E6",
-    pais: "SIN"
-  };
-}
+  /**
+   * Construye la información de la mercancía a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de la mercancía construida
+   */
+  buildMercancia(item: Tramite130111State): unknown {
+    return {
+      cantidadComercial: 0,
+      cantidadTarifaria: Number(item.cantidad),
+      valorFacturaUSD: Number(item.valorFacturaUSD),
+      condicionMercancia: item.producto,
+      tipo_solicitud_pexim: item.solicitud,
+      descripcion: item.descripcion,
+      usoEspecifico: item.usoEspecifico,
+      justificacionImportacionExportacion: item.justificacionImportacionExportacion,
+      observaciones: item.observaciones,
+      unidadMedidaTarifaria: { clave: item.unidadMedida },
+      fraccionArancelaria: { cveFraccion: item.fraccion },
+      partidasMercancia: this.buildPartidasMercancia(item)
+    };
+  }
 
- buildSolicitante():unknown{
-  return {
-    rfc: "AAL0409235E6",
-    nombre: "Juan Pérez",
-    es_persona_moral: true,
-    certificado_serial_number: ""
-  };
-}
+  /** Construye la información del productor.
+   * @returns Objeto con la información del productor
+   */
+  buildProductor(): unknown {
+    return {
+      tipo_persona: true,
+      nombre: "Juan",
+      apellido_materno: "López",
+      apellido_paterno: "Norte",
+      razon_social: "Aceros Norte",
+      descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
+      rfc: "AAL0409235E6",
+      pais: "SIN"
+    };
+  }
 
- buildRepresentacionFederal(item: Tramite130111State): unknown {
-  return {
-    cve_entidad_federativa: item.entidad,
-    cve_unidad_administrativa: item.representacion
-  };
-}
+  /**
+   * Construye la información del solicitante.
+   * @returns Objeto con la información del solicitante
+   */
+  buildSolicitante(): unknown {
+    return {
+      rfc: "AAL0409235E6",
+      nombre: "Juan Pérez",
+      es_persona_moral: true,
+      certificado_serial_number: ""
+    };
+  }
 
- buildEntidadesFederativas(item: Tramite130111State): unknown {
-  return {
-    cveEntidad: item.entidad
-  };
- }
+  /** Construye la información de la representación federal a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de la representación federal construida
+   */
+  buildRepresentacionFederal(item: Tramite130111State): unknown {
+    return {
+      cve_entidad_federativa: item.entidad,
+      cve_unidad_administrativa: item.representacion
+    };
+  }
 
-  
+  /** Construye la información de las entidades federativas a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de las entidades federativas construida
+   */
+  buildEntidadesFederativas(item: Tramite130111State): unknown {
+    return {
+      cveEntidad: item.entidad
+    };
+  }
+
+
 }
