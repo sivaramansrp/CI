@@ -46,7 +46,8 @@ import { provideHttpClient } from '@angular/common/http';
     DatosSolicitudComponent,
     PagoDerechosComponent,
     TercerosRelacionadosFabricanteComponent,NotificacionesComponent,
-    PasoFirmaComponent,PasoCargaDocumentoComponent
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [
     ToastrService,

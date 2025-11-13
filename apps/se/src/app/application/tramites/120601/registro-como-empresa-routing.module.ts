@@ -6,9 +6,16 @@ import { DatosGeneralesSociosComponent } from './component/datos-generales-socio
 import { DomicilioComponent } from './component/domicilio/domicilio.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '120601'
+      }
+    },
     path: 'datos',
     component: DatosComponent,
 

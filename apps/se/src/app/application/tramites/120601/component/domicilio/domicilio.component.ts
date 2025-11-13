@@ -5,8 +5,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } 
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
+import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import {Tramite120601Store} from '../../estados/tramite-120601.store';
 /**
  * `DomicilioComponent` maneja los datos del formulario relacionados con el domicilio
  * y gestiona la entrada del usuario para diferentes tipos de personas 
@@ -19,7 +21,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './domicilio.component.html',
   styleUrl: './domicilio.component.scss',
 })
-export class DomicilioComponent implements OnInit, OnDestroy {
+export class DomicilioComponent implements OnDestroy {
   /**
    * Propiedad de entrada para establecer dinámicamente el tabindex.
    */
@@ -56,18 +58,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
+    private tramite120601Store: Tramite120601Store
   ) {
     this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
-  }
-
-  /**
-   * Método del ciclo de vida de Angular.
-   * Se ejecuta al inicializar el componente y obtiene los datos generales del solicitante.
-   */
-  ngOnInit(): void {
-    this.getDatosGenerales();
   }
 
    /**
@@ -146,26 +141,36 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los datos generales del solicitante y los asigna al formulario.
-   */
-  getDatosGenerales(): void {
-    this.subscription.add(
-      this.solicitanteServicio.getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
-        .pipe(
-          tap((response) => {
-            if (response) {
-              const DATOS = JSON.parse(response.data);
-              const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
-              const CAMPOS_DATOS_DOMICILIO_FISCAL = FormulariosService.obtenerNombresCamposForm(this.domicilioFiscalForm);
+ * Guarda los datos del domicilio fiscal en el store.
+ */
+  guardarDomicilioFiscal(): void {
+    const DOMICILIO_DATOS = this.domicilioFiscalForm.value;
+    this.tramite120601Store.setDomicilioFiscal(DOMICILIO_DATOS);
+  }
 
-              CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
-                FormulariosService.agregarValorCampoDesactivado(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
-              });
-            }
-          })
-        )
-        .subscribe()
-    );
+  /**
+ * Prellena el formulario de domicilio fiscal con los datos de la primera planta
+ * y guarda automáticamente la información en el store.
+ */
+  prellenarDomicilioForm(plantasData: RepresentacionFederal[]): void {
+    if (plantasData.length > 0) {
+      const PLANTA = plantasData[0]; 
+      this.domicilioFiscalForm.patchValue({
+        calle: PLANTA.calle,
+        nInt: PLANTA.numeroInterior,
+        nExt: PLANTA.numeroExterior,
+        codigoPostal: PLANTA.codigoPostal,
+        colonia: PLANTA.colonia,
+        localidad: PLANTA.localidad,
+        municipio: PLANTA.municipio,
+        entidadFederativa: PLANTA.estado,
+        pais: PLANTA.pais,
+        lada: PLANTA.lada,
+        telefono: PLANTA.telefono,
+      });
+
+      this.guardarDomicilioFiscal();
+    }
   }
 }
 
