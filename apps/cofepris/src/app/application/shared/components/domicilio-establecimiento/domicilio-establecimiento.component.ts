@@ -1611,8 +1611,16 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
+      else{
+        this.formMercancias.get("estadoFisicoOtro")?.setValidators([]);
+        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
+      }
       if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
+      }
+      else{
+           this.formMercancias.get("objetoImportacionOtro")?.setValidators([]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
     const VALOR = form.get(campo)?.value;
@@ -1993,6 +2001,21 @@ onConfirmacionModal(accion: boolean): void {
       this.listaMercancias = [...this.mercanciasTablaDatos];
       this.seleccionarlistaMercancias = [];
     }
+       else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
+    
   }
 
   /**
@@ -2040,6 +2063,20 @@ onConfirmacionModal(accion: boolean): void {
       : SELECTED.paisProcedenciaUltimoPuerto
         ? [SELECTED.paisProcedenciaUltimoPuerto]
         : []; }
+        else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
   }
   ngAfterViewInit(): void {
     if (this.identificacion) {
