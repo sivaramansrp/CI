@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
 import { map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
@@ -39,12 +39,32 @@ export class PlaguicidasComponent implements OnInit,OnDestroy{
    */
   public guardarIdSolicitud: number = 0;
   /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+  /**
    * @property wizardService
    * @description
    * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
    * @type {WizardService}
    */
     wizardService = inject(WizardService);
+      /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -116,18 +136,24 @@ constructor(
    *
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
-  getValorIndice(e: AccionBoton): void {
-      const NEXT_INDEX =
+getValorIndice(e: AccionBoton): void {
+    const NEXT_INDEX =
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
+ 
+    // if (this.indice === 1 && e.accion === 'cont') {
+    //   const ES_VALIDO = this.validarFormulariosPasoActual();
+    //   if (!ES_VALIDO) {
+    //     this.isPeligro = true;
+    //     return;
+    //   }
+    //   this.isPeligro = false;
+    // }
     if (e.valor > 0 && e.valor < this.pasos.length) {
-      this.indice = e.valor;
-      this.getDatosDomicilioLegalState();
-      this.getSolicitudPagoBancoState();
-      this.getTercerosFabricanteState();  
-      if (e.accion === 'cont') {  
-        this.shouldNavigate$()
+      if (e.accion === 'cont') {
+        if (this.indice === 1) {
+            this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
             if (shouldNavigate) {
               this.indice = NEXT_INDEX;
@@ -139,6 +165,12 @@ constructor(
               this.datosPasos.indice = e.valor;
             }
           });
+        } else {
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardService.cambio_indice(NEXT_INDEX);
+          this.wizardComponent.siguiente();
+        }
       } else {
         this.indice = NEXT_INDEX;
         this.datosPasos.indice = NEXT_INDEX;
@@ -259,6 +291,38 @@ constructor(
       });
   }
 
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+    /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /** Actualiza el estado de carga en progreso. */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
     /**
  * Lógica de limpieza para cancelar la suscripción a los observables cuando el componente es destruido.
  */
