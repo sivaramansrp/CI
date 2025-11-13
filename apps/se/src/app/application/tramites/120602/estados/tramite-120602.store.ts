@@ -1,21 +1,3 @@
-/**
- * Clase: Tramite120602Store
- * -------------------------
- * Esta clase gestiona el estado global del trámite 120602 utilizando Akita Store.
- * Permite almacenar, actualizar y consultar los datos generales de socios, solicitud,
- * representación federal y domicilio fiscal, centralizando la información relevante del proceso.
- *
- * Uso:
- * Inyectar Tramite120602Store en componentes o servicios para manipular el estado del trámite.
- *
- * Funcionalidad:
- * - Permite actualizar campos individuales o secciones completas del estado.
- * - Provee métodos para modificar datos de socios, solicitud, representación federal y domicilio fiscal.
- * - Facilita la gestión reactiva y centralizada del estado en la aplicación.
- *
- * Autor: [Agregar nombre del autor si se desea]
- * Fecha: 12/11/2025
- */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -23,6 +5,8 @@ import { Injectable } from '@angular/core';
  * Interfaz que define la estructura del estado para el trámite 120602.
  */
 export interface Tramites120602State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud?: number | null;
   /** Datos generales de los socios */
   datosGeneralesSocios: {
     pais?: string;
@@ -61,19 +45,31 @@ export interface Tramites120602State {
     /** Representación seleccionada */
     representacion: string;
   },
-  domicilioFiscal: {
-    calle?: string;
-    nInt?: string;
-    nExt?: string;
-    codigoPostal?: string;
-    colonia?: string;
-    localidad?: string;
-    municipio?: string;
-    entidadFederativa?: string;
-    pais?: string;
-    lada?: string;
-    telefono?: string;
-  };
+domicilioFiscal: {
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Número interior del domicilio fiscal */
+  nInt?: string;
+  /** Número exterior del domicilio fiscal */
+  nExt?: string;
+  /** Código postal del domicilio fiscal */
+  codigoPostal?: string;
+  /** Colonia del domicilio fiscal */
+  colonia?: string;
+  /** Localidad del domicilio fiscal */
+  localidad?: string;
+  /** Municipio del domicilio fiscal */
+  municipio?: string;
+  /** Estado o entidad federativa del domicilio fiscal */
+  entidadFederativa?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
+  /** LADA o clave de la zona telefónica */
+  lada?: string;
+  /** Teléfono del domicilio fiscal */
+  telefono?: string;
+};
+
 }
 
 /**
@@ -84,6 +80,7 @@ export interface Tramites120602State {
  */
 export function createInitialState(): Tramites120602State {
   return {
+    idSolicitud: 0,
     datosGeneralesSocios: {
       nacionalidad: 'Si',
       persona: 'Si',
@@ -117,7 +114,7 @@ export function createInitialState(): Tramites120602State {
       pais: '',
       lada: '',
       telefono: ''
-    }
+  }
   };  
 }
 
@@ -242,14 +239,14 @@ export class Tramite120602Store extends Store<Tramites120602State> {
   public establecerDatos(datos: Partial<Tramites120602State>): void {
     this.update((state) => ({
       ...state,
-      datosGeneralesSocios: {
+      datosGeneralesSocios:{
         ...state.datosGeneralesSocios,
         ...datos,
       },
     }));
   }
 
-  /**
+    /**
    * Guarda el ID de la solicitud en el estado.
    *
    * @param idSolicitud - El ID de la solicitud que se va a guardar.
@@ -261,6 +258,10 @@ export class Tramite120602Store extends Store<Tramites120602State> {
     }));
   }
 
+  /**
+ * Actualiza el estado del domicilio fiscal en el store
+ * combinando los valores existentes con los proporcionados.
+ */
   public setDomicilioFiscal(domicilioFiscal: Partial<Tramites120602State['domicilioFiscal']>): void {
     this.update((state) => ({
       ...state,

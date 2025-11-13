@@ -1,22 +1,3 @@
-/**
- * Componente: DatosDeLaSolicitudComponent
- * ----------------------------------------
- * Este componente representa y gestiona los datos de la solicitud en un proceso de múltiples pasos.
- * Permite al usuario capturar y visualizar información relevante sobre la solicitud,
- * como el tipo de empresa y la actividad económica, integrando formularios reactivos y catálogos.
- *
- * Uso:
- * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
- *
- * Funcionalidad:
- * - Permite la captura y edición de los datos de la solicitud mediante un formulario reactivo.
- * - Consulta y muestra catálogos de tipo de empresa y actividad económica.
- * - Soporta modo de solo lectura para visualizar información sin editar.
- * - Sincroniza los datos con el store y servicios relacionados.
- *
- * Autor: [Agregar nombre del autor si se desea]
- * Fecha: 12/11/2025
- */
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -153,15 +134,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       actividadEconomicaDescripcion: [{ value: '', disabled: true }]
     });
   }
-
-  /**
-   * Obtiene la lista de tipos de empresa.
-   */
-  // public getTipoDeEmpresa(): void {
-  //   this.service.obtenerEstado().subscribe((data)=>{
-  //     this.tipoDeEmpresa = data;
-  //   })
-  // }
 
   /**
    * Maneja la selección de un documento.
