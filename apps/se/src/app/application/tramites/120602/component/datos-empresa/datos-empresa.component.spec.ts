@@ -50,4 +50,92 @@ describe('DatosEmpresaComponent', () => {
     expect(COMPILED.querySelector('app-datos-generales-socios')).toBeTruthy();
     expect(COMPILED.querySelector('app-cargar-archivos')).toBeTruthy();
   });
+
+  describe('validarFormularios', () => {
+    function mockForm(valid: boolean) {
+      return {
+        invalid: !valid,
+        markAllAsTouched: jest.fn()
+      };
+    }
+
+    it('debe devolver true si todos los formularios son válidos', () => {
+      component.representacionFederal = { formulario: mockForm(true) } as any;
+      component.datosSolicitud = { solicitudForm: mockForm(true) } as any;
+      component.domicilio = { form: mockForm(true) } as any;
+      component.datosGenerales = { FormSolicitud: mockForm(true) } as any;
+      expect(component.validarFormularios()).toBe(true);
+    });
+
+    it('debe marcar como tocado y devolver false si representacionFederal es inválido', () => {
+      const repFed = { formulario: mockForm(false) } as any;
+      component.representacionFederal = repFed;
+      component.datosSolicitud = { solicitudForm: mockForm(true) } as any;
+      component.domicilio = { form: mockForm(true) } as any;
+      component.datosGenerales = { FormSolicitud: mockForm(true) } as any;
+      expect(component.validarFormularios()).toBe(false);
+      expect(repFed.formulario.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('debe marcar como tocado y devolver false si datosSolicitud es inválido', () => {
+      const datosSol = { solicitudForm: mockForm(false) } as any;
+      component.representacionFederal = { formulario: mockForm(true) } as any;
+      component.datosSolicitud = datosSol;
+      component.domicilio = { form: mockForm(true) } as any;
+      component.datosGenerales = { FormSolicitud: mockForm(true) } as any;
+      expect(component.validarFormularios()).toBe(false);
+      expect(datosSol.solicitudForm.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('debe marcar como tocado y devolver false si domicilio es inválido', () => {
+      const domicilio = { form: mockForm(false) } as any;
+      component.representacionFederal = { formulario: mockForm(true) } as any;
+      component.datosSolicitud = { solicitudForm: mockForm(true) } as any;
+      component.domicilio = domicilio;
+      component.datosGenerales = { FormSolicitud: mockForm(true) } as any;
+      expect(component.validarFormularios()).toBe(false);
+      expect(domicilio.form.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('debe marcar como tocado y devolver false si datosGenerales es inválido', () => {
+      const datosGen = { FormSolicitud: mockForm(false) } as any;
+      component.representacionFederal = { formulario: mockForm(true) } as any;
+      component.datosSolicitud = { solicitudForm: mockForm(true) } as any;
+      component.domicilio = { form: mockForm(true) } as any;
+      component.datosGenerales = datosGen;
+      expect(component.validarFormularios()).toBe(false);
+      expect(datosGen.FormSolicitud.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('debe manejar componentes hijos indefinidos sin lanzar error', () => {
+      component.representacionFederal = undefined as any;
+      component.datosSolicitud = undefined as any;
+      component.domicilio = undefined as any;
+      component.datosGenerales = undefined as any;
+      expect(component.validarFormularios()).toBe(true);
+    });
+
+    it('debe manejar formularios hijos nulos sin lanzar error', () => {
+      component.representacionFederal = { formulario: undefined } as any;
+      component.datosSolicitud = { solicitudForm: undefined } as any;
+      component.domicilio = { form: undefined } as any;
+      component.datosGenerales = { FormSolicitud: undefined } as any;
+      expect(component.validarFormularios()).toBe(true);
+    });
+  });
+
+  describe('onPlantasDataReceived', () => {
+    it('debe llamar prellenarDomicilioForm con los datos recibidos', () => {
+      const plantasData = [{}, {}] as any;
+      component.domicilio = {
+        prellenarDomicilioForm: jest.fn()
+      } as any;
+      component.onPlantasDataReceived(plantasData);
+      expect(component.domicilio.prellenarDomicilioForm).toHaveBeenCalledWith(plantasData);
+    });
+    it('no debe lanzar error si domicilio es undefined', () => {
+      component.domicilio = undefined as any;
+      expect(() => component.onPlantasDataReceived([])).toThrow();
+    });
+  });
 });

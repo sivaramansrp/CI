@@ -64,6 +64,7 @@ export class DatosEmpresaComponent {
   public validarFormularios(): boolean {
     let isValid = true;
 
+
     // Validar formulario de representación federal
     if (this.representacionFederal && this.representacionFederal.formulario) {
       if (this.representacionFederal.formulario.invalid) {
