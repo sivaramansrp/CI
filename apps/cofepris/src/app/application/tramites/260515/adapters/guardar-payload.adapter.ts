@@ -44,23 +44,27 @@ export class GuardarAdapter_260515 {
   public toFormPayload(): unknown {
     return {
       "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "María Fernanda Torres",
-        "actividadEconomica": "Comercio al por mayor de productos farmacéuticos",
-        "correoElectronico": "mfernanda.torres@example.com",
-        "domicilio": {
-            "pais": "México",
-            "codigoPostal": "03100",
-            "estado": "Ciudad de México",
-            "municipioAlcaldia": "Benito Juárez",
-            "localidad": "Narvarte",
-            "colonia": "Colonia Narvarte Poniente",
-            "calle": "Av. Universidad 300",
-            "numeroExterior": "300",
-            "numeroInterior": "12",
-            "lada": "55",
-            "telefono": "5556789012"
-        },
+        "rfc": this.solicitudDatos.rfc ?? "",
+        "nombre": this.solicitudDatos.nombre ?? "",
+        "actividadEconomica": "",
+        "correoElectronico": this.solicitudDatos.correo ?? "",
+   "domicilio": {
+              "codigoPostal": this.solicitudDatos.codigoPostal,
+              "entidadFederativa": {
+                  "clave": "09"
+              },
+              "descripcionMunicipio": this.solicitudDatos.muncipio,
+              "informacionExtra": this.solicitudDatos.localidad,
+              "descripcionColonia": this.solicitudDatos.colonia,
+              "calle": this.solicitudDatos.calle,
+              "colonia": this.solicitudDatos.colonia,
+              "estado":this.solicitudDatos.estado,
+              "numeroExterior":"300",
+              "numeroInterior": "12",
+              "municipioAlcaldia": this.solicitudDatos.muncipio,
+              "lada": this.solicitudDatos.lada,
+              "telefono": this.solicitudDatos.telefono
+          },
       },
       "establecimiento": {
           "rfcResponsableSanitario": this.establecimientDatos.rfcDel,
@@ -79,6 +83,8 @@ export class GuardarAdapter_260515 {
               "telefono": this.solicitudDatos.telefono
           },
           "original": "",
+          "avisoFuncionamiento": this.solicitudDatos.avisoCheckbox ?? false,
+          "numeroLicencia": this.solicitudDatos.licenciaSanitaria ?? "",
           "aduanas": this.solicitudDatos.aduanasDeEntrada?.toString()
       },
       "pagoDeDerechos": {
@@ -144,12 +150,13 @@ export class GuardarAdapter_260515 {
           "apellidoMaterno": this.solicitudDatos.apellidoMaterno
       },
       "solicitud": {
-          "discriminatorValue": 260516,
+          "discriminatorValue": 260515,
           "declaracionesSeleccionadas": this.solicitudDatos.mensaje,
           "regimen": "",
           "aduanaAIFA": "",
           "informacionConfidencial": this.solicitudDatos.cumplimiento === 'Si' ? true : false
       },
+      "datosSCIAN": this.solicitudDatos.nicoTabla ?? []
     }
   }
 }
