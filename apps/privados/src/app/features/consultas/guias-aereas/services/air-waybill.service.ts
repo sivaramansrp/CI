@@ -269,7 +269,6 @@ export class AirWaybillService {
 
   private navigateToDetailsPage() {
     this.routingService.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       GUIAS_AEREAS_ROUTES.CONSULTA_AEREO_DETALLE,
       this.idHead(),

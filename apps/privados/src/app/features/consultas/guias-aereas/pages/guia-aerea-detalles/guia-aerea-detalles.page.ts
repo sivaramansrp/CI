@@ -77,14 +77,12 @@ export class GuiaAereaDetallesPage implements OnInit {
       this.isHouseSelected.set(false);
       this.peopleComp.getMerchandisesAndPersons();
       this.routingService.navigate([
-        APP_ROUTES.VUCEM,
         STORE_FRONT_ROUTES.CONSULTAS,
         GUIAS_AEREAS_ROUTES.CONSULTA_AEREO_DETALLE,
         idHead,
       ]);
     } else {
       this.routingService.navigate([
-        APP_ROUTES.VUCEM,
         STORE_FRONT_ROUTES.CONSULTAS,
         CONSULTAS_ROUTES.CONSULTA_GUIAS_AEREAS,
       ]);

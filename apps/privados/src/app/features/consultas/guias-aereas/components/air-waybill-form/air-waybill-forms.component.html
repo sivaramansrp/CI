@@ -25,7 +25,7 @@
       </label>
     </div>
 
-    <div class="radio mt-1" *ngIf="authInformationService.authInfo.rol2 === 'funcionario'">
+    <div class="radio mt-1" *ngIf="authInformationService.authInfo.rol === 'funcionario'">
       <label>
         <input type="radio" [(ngModel)]="searchType" [value]="searchTypeEnum.CAAT" (ngModelChange)="onSearchTypeChange()"/>
         CAAT
