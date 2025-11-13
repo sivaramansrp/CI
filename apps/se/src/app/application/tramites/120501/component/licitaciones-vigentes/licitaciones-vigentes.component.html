@@ -114,8 +114,11 @@
         <form [formGroup]="adquiriente">
           <div class="row">
             <div class="col-md-4">
-              <label class="form-label" for="rfc">RFC*:</label>
+              <label class="form-label" for="rfc">RFC<span [ngClass]="{'text-danger': isInvalid('rfc')}">*</span>:</label>
               <input type="text" class="form-control" id="rfc" formControlName="rfc">
+              <div *ngIf="isInvalid('rfc')" class="text-danger">
+                Este campo es obligatorio
+              </div>
             </div>
             <div class="col-md-4">
               <label class="form-label" for="adquirienteMontoDisponible">Monto disponible:</label>
@@ -147,7 +150,7 @@
             </div>
 
             <div class="col-md-4">
-              <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
+              <label class="form-label" for="montoRecibir">Monto a recibir<span [ngClass]="{'text-danger': isInvalid('montoRecibir')}">*</span>:</label>
               <input type="text" class="form-control" id="montoRecibir" formControlName="montoRecibir"
                 [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
                 (change)="setValoresStore(adquiriente, 'montoRecibir')">

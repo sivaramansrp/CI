@@ -36,7 +36,7 @@ export const PROC_120501 = {
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar`,
     FETCH_RFC: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}`,
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/guardar`,
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };

@@ -1,5 +1,5 @@
 import { Adquiriente, DetallesLicitacion, LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
-import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL, Catalogo } from '@libs/shared/data-access-user/src';
+import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL, Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { LicitacionResponse,LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../models/solicitud.model';
 import { Solicitud120501State, Tramite120501Store } from '../estados/tramites/tramite120501.store';
 import { catchError, map, throwError } from 'rxjs';
@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { PROC_120501 } from '../servers/api-route';
+import { Tramite120501Query } from '../estados/queries/tramite120501.query';
 
 /**
  * Servicio encargado de gestionar las operaciones relacionadas con las licitaciones disponibles,
@@ -39,7 +40,7 @@ export class LicitacionesDisponiblesService {
    * Servicio HttpClient para realizar peticiones HTTP.
    * Store para gestionar el estado del trámite 120501.
    */
-  constructor(private http: HttpClient, private tramite120501Store: Tramite120501Store) {
+  constructor(private http: HttpClient, private tramite120501Store: Tramite120501Store, private tramiteQuery: Tramite120501Query) {
     this.host = `${COMUN_URL.BASE_URL}`;
   }
 
@@ -94,11 +95,20 @@ export class LicitacionesDisponiblesService {
   // }
 
   /**
+    * Obtiene todos los datos del estado almacenado en el store.
+    * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+    */
+    getAllState(): Observable<Solicitud120501State> {
+      return this.tramiteQuery.selectSolicitud$;
+    }
+  
+
+  /**
    * Obtiene los datos del adquiriente.
    */
-  getAdquiriente(): Observable<Adquiriente> {
-    return this.http.get<Adquiriente>('assets/json/120501/adquiriente.json');
-  }
+  // getAdquiriente(): Observable<Adquiriente> {
+  //   return this.http.get<Adquiriente>('assets/json/120501/adquiriente.json');
+  // }
 
   /**
    * Obtiene los datos para poblar la tabla dinámica.
@@ -154,6 +164,16 @@ export class LicitacionesDisponiblesService {
       })
     );
 }
+
+ /**
+     * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+     *
+     * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+     * @returns Observable con la respuesta de la solicitud POST.
+     */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_120501.GUARDAR, body);
+  }
 
 
   /**

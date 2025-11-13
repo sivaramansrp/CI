@@ -1,4 +1,4 @@
-import { AccionBoton, Adquiriente, AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AccionBoton, Adquiriente, AlertComponent, ConsultaioQuery, LoginQuery } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_ACCIONISTAS_TABLA, ID_PROCEDIMIENTO } from '../../constantes/cupos-constantes.enum';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LicitacionResponse, LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../../models/solicitud.model';
@@ -160,7 +160,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Indica si se muestra la representación federal.
    */
-  showRepresentacionFederal: boolean = false;
+  showRepresentacionFederal: boolean = true;
 
   /**
   * Indica si se muestra la selección de participante.
@@ -185,14 +185,18 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
  * los formularios del componente con los valores correspondientes a la solicitud en curso.
  */
   private seccionState!: Solicitud120501State;
+
+  loginRfc: string = '';
   /**
    * Constructor del componente.
    * Servicio para obtener datos de licitaciones disponibles.
    */
-  constructor(private service: LicitacionesDisponiblesService, private fb: FormBuilder,
+  constructor(private service: LicitacionesDisponiblesService, 
+    private fb: FormBuilder,
     private tramite120501Store: Tramite120501Store,
     private tramite120501Query: Tramite120501Query,
-    private consultaioQuery: ConsultaioQuery,) {
+    private consultaioQuery: ConsultaioQuery,
+    private loginQuery: LoginQuery) {
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -200,6 +204,14 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+        this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.loginRfc = seccionState.rfc;
         })
       )
       .subscribe();
@@ -212,7 +224,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.getEntidadFederativa();
     // this.getDetallesDelalicitacion();
-    this.getAdquiriente();
+    // this.getAdquiriente();
     this.obtenerDatosDeTabla();
     this.fillFormLicitacionesFormData();
   }
@@ -391,7 +403,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     * 
     */
   obtenerDatosDeTabla(): void {
-    this.service.getLicitacionesDisponiblesData('DSH120709TW1').pipe(takeUntil(this.destroyed$)).subscribe((data: LicitacionResponse[]) => {
+    this.service.getLicitacionesDisponiblesData(this.loginRfc).pipe(takeUntil(this.destroyed$)).subscribe((data: LicitacionResponse[]) => {
       this.licitacionTablaDatos = data || [];
     }
     );
@@ -399,7 +411,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
 
   fillFormLicitacionesFormData(): void {
     const REQUEST_DATA = {
-      rfc: 'DSH120709TW1',
+      rfc: this.loginRfc,
       idAsignacion: 52777
     }
     this.service.getLicitacionesFormData(REQUEST_DATA)
@@ -437,16 +449,16 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    *
    * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
    */
-  getAdquiriente(): void {
-    this.service.getAdquiriente()
-      .pipe(takeUntil(this.destroyed$)).subscribe(
-        (data: Adquiriente) => {
-          this.adquiriente.patchValue({
-            rfc: data.rfc,
-            adquirienteMontoDisponible: data.adquirienteMontoDisponible,
-          })
-        })
-  }
+  // getAdquiriente(): void {
+  //   this.service.getAdquiriente()
+  //     .pipe(takeUntil(this.destroyed$)).subscribe(
+  //       (data: Adquiriente) => {
+  //         this.adquiriente.patchValue({
+  //           rfc: data.rfc,
+  //           adquirienteMontoDisponible: data.adquirienteMontoDisponible,
+  //         })
+  //       })
+  // }
   /**
        * Establece los valores en el store del trámite 120501.
        *
@@ -510,7 +522,18 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     const INDEX = this.datosParticipantes.indexOf(selectedEntry);
     if (INDEX !== -1 && selectedEntry.rfc) {
       this.adquiriente.get('rfc')?.setValue(selectedEntry.rfc);
+      this.adquiriente.get('adquirienteMontoDisponible')?.setValue(selectedEntry.montoDisponible)
       this.datosParticipantes.splice(INDEX, 1);
     }
+  }
+
+  validarFormulario(): boolean {
+    let valid = true;
+    if (this.adquiriente.invalid && this.formulario.invalid) {
+      this.adquiriente.markAllAsTouched();
+      this.formulario.markAllAsTouched();
+      valid = false;
+    }
+    return valid;
   }
 }

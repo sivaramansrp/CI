@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud120501
  */
 export interface Solicitud120501State {
-  idSolicitud?: number;
+  idSolicitud: number;
   entidadFederativa: string;
   representacionFederal: string;
   numeraDelicitacion: string;
