@@ -99,7 +99,7 @@ export class GuardarAdapter_260515 {
           "fecPago": this.pagoDerechosDatos.fechaPago,
           "impPago": this.pagoDerechosDatos.importePago
       },
-      "mercancias":  {
+      "mercancias": [ {
           "objetoImportacionEnum": "CLAVE_DEL_CATALOGO",
           "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
           "descOtroObjetoImportacion": "Descripción cuando se selecciona 'Otro' (opcional)",
@@ -142,7 +142,7 @@ export class GuardarAdapter_260515 {
           "nombreCortoUsoEspecifico": this.solicitudDatos.acondicionamiento,
           "fechaCaducidadStr": "",
           "idEstadoFisico": this.solicitudDatos.estadoFisico,
-      },
+      }],
       "representanteLegal": {
           "rfc": this.solicitudDatos.rfc,
           "resultadoIDC": "",
