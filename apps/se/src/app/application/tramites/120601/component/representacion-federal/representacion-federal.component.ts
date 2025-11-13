@@ -120,6 +120,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private store: Tramite120601Store,
     private datosEmpresaService: DatosEmpresaService,
     private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices,
   ) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(

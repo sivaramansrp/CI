@@ -2,6 +2,7 @@ import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } f
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
@@ -46,12 +47,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  private tramites:string='120601';
+
+  /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+ *  Ayuda a prevenir fugas de memoria en flujos observables. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Constructor de DatosDeLaSolicitudComponent.
    * @param fb El servicio FormBuilder.
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private service: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private service: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,private catalogoService: CatalogoServices) {
     // Initialization logic can be added here if needed
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -69,7 +82,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.crearFormulario();
-    this.getTipoDeEmpresa();
+    // this.getTipoDeEmpresa();
+    this.obtenerTipoDeEmpresa();
 
     this.query.selectTipoDeEmpresa$.pipe(
       takeUntil(this.destroyed$)
@@ -141,6 +155,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public setActividadEconomicaClave(): void {
     this.store.setActividadEconomicaClave(this.solicitudForm.get('actividadEconomicaClave')?.value);
   }
+
+/**
+ * @description Obtiene el catálogo de tipos de empresa desde el servicio y asigna los datos a la variable `tipoDeEmpresa`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+obtenerTipoDeEmpresa(): void {
+      this.catalogoService.obtenerTipoEmpresaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipoDeEmpresa = response?.datos ?? [];
+        }
+      });
+}
+
 /**
    * @method crearFormCombinacion
    * @description Método para crear el formulario formCombinacion.

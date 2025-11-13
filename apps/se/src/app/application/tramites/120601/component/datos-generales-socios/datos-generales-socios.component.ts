@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERALES_EXTRANJEROS } from '@ng-mf/data-access-user';
 import { DATOS_GENERALES_SOCIOS } from '@ng-mf/data-access-user';
@@ -128,7 +129,7 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,private catalogoService: CatalogoServices) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
     this.consultaioQuery.selectConsultaioState$
     .pipe(
