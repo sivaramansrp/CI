@@ -558,6 +558,16 @@ public validarFormularios(): boolean | undefined{
     return true;
   }
 
+  /**
+   * @method descripcionesAdicionales
+   * @description
+   * Activa las descripciones adicionales utilizando los datos de validación de solicitud.
+   * @param {ValidarSolicitudResponse} data - Datos de validación de la solicitud.
+   * @returns {void}
+   */
+  public descripcionesAdicionales(data: ValidarSolicitudResponse): void {
+    this.datosAdicionales.activarDescripciones(data);
+  }
 
  
   
