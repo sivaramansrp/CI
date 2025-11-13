@@ -30,18 +30,6 @@ export class DatosDeLaSolicitudComponent {
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
   isAduanasEntradaVisible: boolean = true;
-
-  /**
-   * Indica si se debe mostrar la sección de Garantías Ofrecidas
-   */
-  isGarantiasOfrecidasVisible: boolean = true;
-
-  /**
-   * Indica si el campo de domicilio debe estar habilitado en el formulario.
-   * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
-   */
-  tieneDomicilioHabilitar: boolean = true;
-
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,

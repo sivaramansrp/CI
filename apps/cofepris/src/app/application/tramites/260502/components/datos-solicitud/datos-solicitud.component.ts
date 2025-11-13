@@ -26,18 +26,6 @@ export class DatosSolicitudComponent {
    */
   isAvisoLicenciaVisible: boolean = false;
 
- 
-
-  /**
-   * Indica si se debe mostrar la sección de Garantías Ofrecidas
-   */
-  isGarantiasOfrecidasVisible: boolean = true;
-
-  /**
-   * Indica si el campo de domicilio debe estar habilitado en el formulario.
-   * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
-   */
-  tieneDomicilioHabilitar: boolean = true;
     /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
      * Proporciona acceso a sus métodos y propiedades.
      */
