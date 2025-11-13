@@ -504,11 +504,11 @@ public validarFormularios(): boolean | undefined{
     }
 
     const ULTIMO_TAB = this.getTotalTabs();
-
     if (ULTIMO_TAB === 4) {
       const VALIDACION_TODOS_TABS = this.validacionFormularios();
      return VALIDACION_TODOS_TABS;
     }
+    this.seleccionaTab(5);
     return true;
   }
 
@@ -521,8 +521,7 @@ public validarFormularios(): boolean | undefined{
  */
   private validarTabProcesos(): boolean {
    const ULTIMO_TAB = this.getTotalTabs();
-
-    if (ULTIMO_TAB === 4) {
+    if (ULTIMO_TAB === 5) {
      return this.validacionFormularios();
     }
     return true;
@@ -551,7 +550,7 @@ public validarFormularios(): boolean | undefined{
   private validacionFormularios(): boolean {
     if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false ||
        this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false ||
-        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false){
+        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false || this.solicitudeState.proceso_seleccionado.length === 0){
           return false;
     }
     
