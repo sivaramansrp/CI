@@ -41,9 +41,26 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDerechosComponent;
   
-  private isDatosDeLaSolicitudComponentValid: boolean = false;
-  private isTercerosComponentValid: boolean = false;
-  private isPagoDeDerechosComponentValid: boolean = false;
+/**
+ * Indica si el componente de "Datos de la Solicitud" ha sido validado correctamente.
+ * Se utiliza para verificar que toda la información general de la solicitud
+ * esté completa antes de avanzar al siguiente paso del trámite.
+ */
+private isDatosDeLaSolicitudComponentValid: boolean = false;
+
+/**
+ * Indica si el componente de "Terceros" es válido.
+ * Permite confirmar que los datos correspondientes a terceros 
+ * (personas físicas, morales o representantes) estén correctos y completos.
+ */
+private isTercerosComponentValid: boolean = false;
+
+/**
+ * Indica si el componente de "Pago de Derechos" ha pasado su validación.
+ * Se utiliza para asegurar que la información relacionada con los pagos
+ * y comprobantes de derechos se haya capturado y validado correctamente.
+ */
+private isPagoDeDerechosComponentValid: boolean = false;
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
