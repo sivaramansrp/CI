@@ -1,10 +1,12 @@
+import { Component, ViewChild } from '@angular/core';
 import {
   ConfiguracionVisibilidad,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
 } from '../../constantes/permiso-nutrientes-exportacion.enum';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
+
+import { Tramite260511Store } from '../../../../shared/estados/stores/260511/tramite260511.store';
 
 /**
  * Componente que muestra la sección de Datos de la Solicitud.
@@ -18,6 +20,10 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosDeLaComponent', { static: false }) datosDeLaComponent!: DatosDeLaComponent;
 
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
@@ -29,7 +35,11 @@ export class DatosSolicitudComponent {
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
   isAvisoLicenciaVisible: boolean = false;
-
+ /**
+   * Indica si el campo de domicilio debe estar habilitado en el formulario.
+   * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
+   */
+  tieneDomicilioHabilitar: boolean = true;
   /**
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
@@ -47,4 +57,35 @@ export class DatosSolicitudComponent {
    */
   configuracionVisibilidad: ConfiguracionVisibilidad =
     DEFAULT_CONFIGURACION_VISIBILIDAD;
+     /** Constructor que inicializa el store del trámite 260509. */
+  constructor(
+    public store: Tramite260511Store,
+  ) {
+    //
+  }
+
+  /** Actualiza la validez del formulario de datos del establecimiento en el store. */
+  datosEstabelicimientoFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('datosEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de domicilio del establecimiento en el store. */
+  domicilioFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('domicilioEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de manifiestos en el store. */
+  manifiestosFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('manifiestos', event);
+  }
+
+  /** Actualiza la validez del formulario de representante legal en el store. */
+  representanteLegalFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('representanteLegal', event);
+  }
+
+  /** Ejecuta la validación del formulario desde el componente de datos. */
+  validarFormulario(): void {
+    this.datosDeLaComponent?.validarClickDeBoton();
+  }
 }

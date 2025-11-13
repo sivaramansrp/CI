@@ -3,9 +3,14 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { Tramite260511Query } from '../../../../shared/estados/queries/260511/tramite260511.query';
+import { Tramite260511Store } from '../../../../shared/estados/stores/260511/tramite260511.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -20,7 +25,25 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosSolicitudComponent', { static: false }) datosSolicitudComponent!: DatosSolicitudComponent;
 
+  /** Referencia al componente 'TercerosRelacionadosFabricanteComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosFabricanteComponent', { static: false }) tercerosRelacionadosFabricanteComponent!: TercerosRelacionadosFabricanteComponent;
+
+  /** Referencia al componente 'PagoDerechosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDerechosComponent;
+  
+  private isDatosDeLaSolicitudComponentValid: boolean = false;
+  private isTercerosComponentValid: boolean = false;
+  private isPagoDeDerechosComponentValid: boolean = false;
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
@@ -64,7 +87,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     public store: Tramite260511Store,
+    public query: Tramite260511Query,
   ) {}
 
   /**
@@ -116,7 +141,31 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
+ /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.query.getValue().formValidity?.datosEstablecimiento && 
+      this.query.getValue().formValidity?.domicilioEstablecimiento &&
+      this.query.getValue().formValidity?.manifiestos &&
+      this.query.getValue().formValidity?.representanteLegal ) ?? false;
+    this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
+      this.query.getValue().formValidity?.formuladorTablaValid &&
+      this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
 
+    if (!this.isDatosDeLaSolicitudComponentValid) {
+      this.datosSolicitudComponent?.validarFormulario(); 
+    }
+
+    if (!this.isTercerosComponentValid) {
+      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
+    }
+
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
+
+  }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.
