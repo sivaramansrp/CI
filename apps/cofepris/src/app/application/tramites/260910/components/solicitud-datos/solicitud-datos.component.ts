@@ -149,7 +149,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal SCIAN.
    */
-  @ViewChild('modal-agregar-scian') modalElementSCIAN!: ElementRef;
+  @ViewChild('modalAgregarScian') modalElementSCIAN!: ElementRef;
 
   /**
    * Tipo seleccionado para acciones.
@@ -988,6 +988,15 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   esValido(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) === true;
+  }
+
+  /**
+   * Método para validar si la prórroga está seleccionada.
+   * @returns {boolean} Regresa un booleano si el campo es inválido o no.
+   */
+  public isProrrogaSelected(): boolean {
+    const TIPO_OPERACION_VALUE = this.solicitudForm.get('tipoOperacion')?.value;
+    return TIPO_OPERACION_VALUE === 'PRO' || TIPO_OPERACION_VALUE === 'Prórroga';
   }
 
   /**

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12 mt-3 text-center">
+    <div class="col-md-12 mt-3">
       <app-table
         title="Guías House"
         [tableData]="tableHousesData"
@@ -8,6 +8,9 @@
         [hiddenData]="hiddenHousesData"
         [error]="errorHousesData"
         [hasRedirect]="true"
+        [hasPagination]="true"
+        [pagination]="pagination()"
+        (pageChange)="onHousesPageChange($event)"
         (onRowClicked)="houseSelected($event)"
       />
     </div>

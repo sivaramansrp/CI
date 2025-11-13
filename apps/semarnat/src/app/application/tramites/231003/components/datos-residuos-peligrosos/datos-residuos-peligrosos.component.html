@@ -19,7 +19,7 @@
     </div>
     <ng-titulo titulo="Materias primas relacionadas" />
     <div class="col-12">
-      @if (!esFormaValido) {
+      @if (!esFormaValido && alertaErrorFormulario) {
       <div
         class="alert alert-info alert-danger text-center"
         [innerHTML]="alertaErrorFormulario"
@@ -171,6 +171,7 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <app-tabla-dinamica
+          [styleCenter]="true"
           [isInvalida]="submitted && materiasPrimasTabla.length === 0"
           [configuracionTabla]="configuracionTablaMaterias"
           [datos]="materiasPrimasTabla"
