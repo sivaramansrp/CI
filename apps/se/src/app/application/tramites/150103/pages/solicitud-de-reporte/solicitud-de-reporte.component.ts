@@ -1,9 +1,9 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DatosPasos, JSONResponse, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ALERT_DOS, ERROR_FORMA_ALERT_QUAD, ERROR_FORMA_ALERT_TRES, REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
-import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
+import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';

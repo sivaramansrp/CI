@@ -276,7 +276,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
 
   /**
    * @method showAlert
-   * @description Shows a general alert notification
+   * @description Muestra una notificación de alerta informando al usuario que el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
    */
   showAlert(): void {
     this.nuevaNotificacion = {

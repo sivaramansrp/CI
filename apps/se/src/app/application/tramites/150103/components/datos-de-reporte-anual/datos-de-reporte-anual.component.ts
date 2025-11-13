@@ -46,7 +46,7 @@ consultaDatos!: ConsultaioState;
    * @descripcion
    * Mensaje de alerta que se muestra al usuario.
    */
-  mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+  public mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
 
   /**
    * Objeto que representa una nueva notificación a mostrar al usuario.
