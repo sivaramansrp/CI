@@ -1,4 +1,4 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import {ERROR_FORMA_ALERT,ListaPasosWizard, PASOS,RegistroSolicitudService,esValidObject, getValidDatos} from '@libs/shared/data-access-user/src';
 import { Tramite260515State, Tramite260515Store } from '../../estados/stores/tramite260515Store.store';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
@@ -26,7 +26,7 @@ interface AccionBoton {
   selector: 'app-plaguicidas',
   templateUrl: './plaguicidas.component.html',
 })
-export class PlaguicidasComponent {
+export class PlaguicidasComponent implements OnInit {
         /**
    * @property {boolean} isSaltar
    * @description
@@ -106,6 +106,11 @@ export class PlaguicidasComponent {
   constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService, private tramite260515Query:Tramite260515Query,
   private guardarAdapter260515: GuardarAdapter_260515,private registroSolicitudService: RegistroSolicitudService, private tramite260515Store:Tramite260515Store, private toastrService: ToastrService,
   ) {
+  }
+  ngOnInit(): void {
+  this.tramite260515Query.select().subscribe(state => {
+  this.solicitudState = state;
+});
   }
   /**
    * Maneja la acción del botón en el asistente.
