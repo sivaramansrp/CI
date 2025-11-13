@@ -80,7 +80,8 @@ export class GuardarAdapter_260515 {
               "descripcionColonia": this.solicitudDatos.colonia,
               "calle": this.solicitudDatos.calle,
               "lada": this.solicitudDatos.lada,
-              "telefono": this.solicitudDatos.telefono
+              "telefono": this.solicitudDatos.telefono,
+              "localidad":this.solicitudDatos.localidad,
           },
           "original": "",
           "avisoFuncionamiento": this.solicitudDatos.avisoCheckbox ?? false,
