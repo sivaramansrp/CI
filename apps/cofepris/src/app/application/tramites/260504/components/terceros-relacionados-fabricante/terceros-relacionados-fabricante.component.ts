@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constantes/permiso-sujetos.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { Tramite260504Store } from '../../../../estados/tramites/260504/tramite260504.store';
 
 /**
  * Componente `TercerosRelacionadosFabricanteComponent`
@@ -36,6 +37,26 @@ export class TercerosRelacionadosFabricanteComponent {
    * como catálogos o listas asociadas.
    */
   public idProcedimiento: number = 260504;
+
+  /** Constructor que inicializa el store del trámite 260504. */
+  constructor(
+    public store: Tramite260504Store,
+  ) {
+    //
+  }
+
+/** Maneja el evento de validez de tabla y actualiza el estado correspondiente en el store. */
+onTableValidEvent(event: string): void {
+  if (event === 'fabricante') {
+    this.store.setFormValidity('fabricanteTablaValid', true);
+  }
+  if (event === 'formulador') {
+    this.store.setFormValidity('formuladorTablaValid', true);
+  }
+  if (event === 'proveedor') {
+    this.store.setFormValidity('proveedorTablaValid', true);
+  }
+}
 
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
   validarFormulario(): void {
