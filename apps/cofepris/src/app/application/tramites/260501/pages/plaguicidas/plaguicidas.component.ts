@@ -244,7 +244,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * Valida los formularios del paso actual antes de permitir continuar.
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
    */
-  validarFormulariosPasoActual(): boolean {
+  private validarFormulariosPasoActual(): boolean {
     if (this.indice === 1) {
       return this.pasoUnoComponent?.validarFormularios() ?? true;
     }
@@ -266,7 +266,6 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         if (OK) {
           this.toastrService.success(DATOS.mensaje);
         } else {
-          //this.padreBtn = true;
           this.toastrService.error(DATOS.mensaje);
         }
         return OK;
