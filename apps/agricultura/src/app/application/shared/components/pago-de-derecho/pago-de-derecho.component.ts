@@ -45,6 +45,11 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    */
   public setFecha = true;
 
+  /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
+
 
   /**
    * Formulario reactivo que gestiona los campos del pago de derechos.
@@ -319,9 +324,13 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
   onBorrar(): void {
     this.setFecha = false;
     const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
-    this.pagoForm.reset();
+    // this.pagoForm.reset();
     this.pagoForm.patchValue({
       exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
+      fechaPago: '',
+      llavePago: '',
+      banco: '',
+      justificacion: ''
     });
     setTimeout(() => {
       this.setFecha = true;
@@ -338,6 +347,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   validarFormulario(): boolean {
+    this.markTouched = true;
     if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
       this.pagoForm.get('justificacion')?.setValidators([Validators.required]);
       this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);

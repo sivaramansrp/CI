@@ -57,11 +57,8 @@
           name="aduanaIngreso"
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(); catalogoOficinas(datosMercanciaFormGroup);"
+          [markTouched]='markTouched'
         ></app-catalogo-select>
-          <div
-          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.touched">
-          <small class="mensaje-error">Este campo es obligatorio.</small>
-        </div>
       </div>
       <div class="col-md-8">
         <app-catalogo-select
@@ -72,11 +69,8 @@
           name="oficinaInspeccion"
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(); obtenerPuntoInspeccion(datosMercanciaFormGroup)"
-        ></app-catalogo-select>
-           <div
-          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.touched">
-          <small class="mensaje-error">Este campo es obligatorio.</small>
-        </div>
+          [markTouched]='markTouched'
+        ></app-catalogo-select>           
       </div>
       <div class="col-md-8">
         <app-catalogo-select
@@ -88,11 +82,8 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="
           setValoresStore()" 
-          ></app-catalogo-select>
-          <div
-          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.touched">
-          <small class="mensaje-error">Este campo es obligatorio.</small>
-        </div>
+          [markTouched]='markTouched'
+          ></app-catalogo-select>          
       </div>
       <div class="col-md-4"></div>
       <div class="col-md-4 form-group">
@@ -124,11 +115,8 @@
         " 
         [tooltipQuestionCircle]="true"
         [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
-        ></app-catalogo-select>
-           <div
-          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.regimen'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.regimen'))?.touched">
-          <small class="mensaje-error">Este campo es obligatorio.</small>
-        </div>
+        [markTouched]='markTouched'
+        ></app-catalogo-select>           
       </div>
     </div>
     <div class="row">

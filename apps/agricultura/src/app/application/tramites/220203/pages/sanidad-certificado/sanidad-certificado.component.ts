@@ -33,7 +33,7 @@ export class SanidadCertificadoComponent {
    * @default false
    * @memberof SanidadCertificadoComponent
    */
-  esFormaValido: boolean = false;
+  esFormaInValido: boolean = false;
 
   /**
    * Mensaje de error que se muestra cuando la validación de formularios falla.
@@ -71,6 +71,9 @@ export class SanidadCertificadoComponent {
    */
   indice: number = 1;
 
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
+
   /**
    * Objeto con la configuración de los textos y número de pasos del wizard.
    * @public
@@ -80,7 +83,7 @@ export class SanidadCertificadoComponent {
   datosPasos: DatosPasos = {
     nroPasos: this.PASOS.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
@@ -108,34 +111,26 @@ export class SanidadCertificadoComponent {
    * @memberof SanidadCertificadoComponent
    */
   getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false;
+    this.esFormaInValido = false;
 
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
       const ES_VALIDO = this.validarTodosFormulariosPasoUno();
       if (!ES_VALIDO) {
-        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        this.esFormaInValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
     }
-    // Calcular el nuevo índice basado en la acción
-    let indiceActualizado = e.valor;
-    if (e.accion === 'cont') {
-      indiceActualizado = e.valor + 1;
-    } else if (e.accion === 'ant') {
-      indiceActualizado = e.valor - 1;
-    }
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.PASOS.length) {
+    if (e.valor > 0 && e.valor <= this.PASOS.length) {
+      this.indice = e.valor;
 
       // Actualizar el índice y datosPasos
-      this.indice = indiceActualizado;
-      this.datosPasos.indice = indiceActualizado;
-
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else if (e.accion === 'ant') {
+      } else {
         this.wizardComponent.atras();
       }
     }

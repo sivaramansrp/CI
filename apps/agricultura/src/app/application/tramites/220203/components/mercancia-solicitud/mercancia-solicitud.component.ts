@@ -38,7 +38,7 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @type {Detalles}
    * @memberof MercanciaSolicitudComponent
    */
-  detallesSeleccionados: Detalles = {} as Detalles;
+  detallesSeleccionados: Detalles[] = [];
 
   /**
    * Evento emitido al cerrar el formulario de mercancía.
@@ -127,6 +127,14 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @memberof MercanciaSolicitudComponent
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaInValido: boolean = false;
+
   /**
    * Constructor del componente MercanciaSolicitudComponent.
    * Inicializa los servicios necesarios y obtiene los catálogos requeridos.
@@ -416,8 +424,11 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   agregarFilaDetalle(): void {
-    this.cuerpoTablaDetalle.push(this.detallesGroup.getRawValue());
+    const nuevoDetalle = this.detallesGroup.getRawValue() as Detalles;
+    if (nuevoDetalle.nombreCientifico || nuevoDetalle.nombreCientifico.trim() != '') {
+      this.cuerpoTablaDetalle = [...this.cuerpoTablaDetalle, nuevoDetalle];
     this.detallesGroup.reset();
+    }
   }
   /**
    * Crea el grupo de formularios principal para los datos de mercancía.
@@ -519,6 +530,14 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   agregarFila(): void {
+    if (this.mercanciaGroup.invalid) {
+      this.mercanciaGroup.markAllAsTouched();
+      this.esFormaInValido = true;
+    }
+
+    else {
+
+
     const NUEVO_DETALLE: FilaSolicitud = this.mercanciaGroup.getRawValue();
     const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
     let FILTERED_VALOR: FilaSolicitud[] = [];
@@ -540,6 +559,7 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.detallesGroup.reset();
     this.cerrar.emit();
   }
+  }
   /**
    * Inicia el proceso de eliminación de una fila de detalle.
    * Muestra una notificación de confirmación antes de proceder con la eliminación.
@@ -555,7 +575,7 @@ export class MercanciaSolicitudComponent implements OnInit {
       categoria: 'danger',
       modo: 'action',
       titulo: 'Eliminar datos de la tabla',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
+      mensaje: '¿Está seguro que desea eliminar estos datos?',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -578,9 +598,8 @@ export class MercanciaSolicitudComponent implements OnInit {
     if (borrar) {
       this.eliminarDatosTabla = false;
       this.cuerpoTablaDetalle = this.cuerpoTablaDetalle.filter(
-        (item) => item !== this.detallesSeleccionados
+        item => !this.detallesSeleccionados.includes(item)
       );
-      this.detallesSeleccionados = {} as Detalles;
     } else {
       this.eliminarDatosTabla = false;
     }
@@ -596,6 +615,6 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   seleccionTabla(event: Detalles[]): void {
-    this.detallesSeleccionados = event[0] || {} as Detalles;
+    this.detallesSeleccionados = event || {} as Detalles;
   }
 }

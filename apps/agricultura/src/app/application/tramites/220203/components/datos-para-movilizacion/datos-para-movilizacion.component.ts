@@ -93,6 +93,11 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
   esFormularioSoloLectura: boolean = false;
 
   /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
+
+  /**
    * Constructor del componente DatosParaMovilizacionComponent.
    * Inicializa los servicios necesarios y establece la suscripción al estado del formulario.
    * 
@@ -240,6 +245,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    * @returns {boolean} True si el formulario es válido, false en caso contrario
    */
   public validarFormulario(): boolean {
+    this.markTouched = true;
     if (this.formularioMovilizacion.invalid) {
       this.formularioMovilizacion.markAllAsTouched();
       return false;

@@ -159,48 +159,27 @@ export class PasoUnoComponent implements OnDestroy {
    */ 
 public validarFormularios(): boolean {
   let isValid = true;
-   if (this.solicitante?.form) {
-      if (this.solicitante.form.invalid) {
-        this.solicitante.form.markAllAsTouched();
+
+  const tabsValidadas = [
+    { index: 2, ref: this.datosSolicitud },
+    { index: 3, ref: this.datosParaMovilizacion },
+    { index: 4, ref: this.tercerospage },
+    { index: 5, ref: this.pagoDerechos }
+  ];
+
+  for (const tab of tabsValidadas) {
+
+    var validaPestañas = tab.ref.validarFormulario();
+    if (tab.ref && !validaPestañas) {
+      this.indice = tab.index; // mover a la pestaña con error
         isValid = false;
-      }
-    } else {
-      isValid = false;
+      return isValid;
     }
-    if(this.datosSolicitud.datosMercanciaFormGroup){
-      if(!this.datosSolicitud.validarFormulario()){
-        isValid = false;
-      }
     }
-    else{
-      isValid = false;
-    }
-    if(this.datosParaMovilizacion.formularioMovilizacion){
-      if(!this.datosParaMovilizacion.validarFormulario()){
-        isValid = false;
-      }
-    }
-    else{
-      isValid = false;
-    }
-    if(this.pagoDerechos){
-      if(!this.pagoDerechos.validarFormulario()){
-        isValid = false;
-      }
-    }
-    else{
-      isValid = false;
-    }
-    if(this.tercerospage){
-      if(!this.tercerospage.validarFormulario()){
-        isValid = false;
-      }
-    }
-    else{
-      isValid = false;
-    }
+
   return isValid;
 }
+
   /**
    * Obtiene los datos de acuicultura y actualiza el estado del formulario.
    * Realiza una suscripción al observable que retorna los datos de acuicultura.

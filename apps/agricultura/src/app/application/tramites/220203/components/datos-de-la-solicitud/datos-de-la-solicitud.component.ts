@@ -481,6 +481,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 // }
 
   /**
+  * bandera para indicar que el formulario fue tocado
+  */
+  markTouched: boolean = false;
+
+  /**
    * Obtiene los datos del catálogo de Unidades de Medida Comercial (UMC).
    * Carga las opciones disponibles para UMC y fracciones arancelarias.
    * 
@@ -796,6 +801,8 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @returns {boolean} True si tanto el formulario como la tabla son válidos, false en caso contrario
    */
   public validarFormulario(): boolean {
+    // Marcar los select customizados
+    this.markTouched = true;
     this.tableErrorMeassageDispaly = this.cuerpoTablaFila.length === 0 ? true : false;
     if (this.datosMercanciaFormGroup.invalid) {
       this.datosMercanciaFormGroup.markAllAsTouched();

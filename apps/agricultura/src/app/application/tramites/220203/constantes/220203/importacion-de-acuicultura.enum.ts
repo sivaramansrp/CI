@@ -110,8 +110,7 @@ export const ERROR_FORMA_ALERT =
 <div class="d-flex justify-content-center text-center">
   <div>
     <div class="col-md-12">
-      Faltan campos por capturar.
-    </div>
+    <strong>¡Error de registro! </strong> Faltan campos por capturar</div>
   </div>
 </div>
 `
