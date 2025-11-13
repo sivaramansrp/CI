@@ -285,7 +285,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       return this.informeAnualService.getAllState().pipe(
         take(1),
         switchMap(data => this.guardar(data)),
-        map((response: any) => {
+        map((response: any) => { 
           const OK = response.codigo === '00';
           if (OK) {
             this.toastrService.success(response.mensaje);
