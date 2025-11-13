@@ -271,7 +271,10 @@ public descripcionesPorTipo: {
       juegosSurtidosBooleanMexicoPanama: [this.solicitudeState?.juegosSurtidosBooleanMexicoPanama],
       juegosSurtidosBooleanAlianzaPacifico: [this.solicitudeState?.juegosSurtidosBooleanAlianzaPacifico],
       protesto_verdad: [this.solicitudeState?.protesto_verdad, Validators.requiredTrue],
-      valorDescripcion:[]
+      descripcionUE: [this.solicitudeState?.descripcionUE],
+      descripcionAELC: [this.solicitudeState?.descripcionAELC],
+      descripcionSGP: [this.solicitudeState?.descripcionSGP],
+      descripcionACE: [this.solicitudeState?.descripcionACE],
     });
   }
 
@@ -499,12 +502,11 @@ public descripcionesPorTipo: {
  * @param {ValidarSolicitudResponse} data - Datos de respuesta de la validación que contienen la información de mercancía.
  * @returns {void}
  */
-  public activarDescripciones(data: ValidarSolicitudResponse): void {
-  if (!data || !data.mercancia) {
+  public activarDescripciones(data: Mercancia): void {
+  if (!data) {
     this.descripcionesMostrar = false;
     return;
   }
-  const MERCANCIA: Mercancia = data.mercancia;
   this.descripcionesPorTipo = [];
   const TIPOS: { key: keyof Mercancia; label: string }[] = [
     { key: 'descripciones_alternas_ue', label: 'la Unión Europea (UE)' },
@@ -514,7 +516,7 @@ public descripcionesPorTipo: {
   ];
 
   for (const TIPO of TIPOS) {
-       const LISTA = MERCANCIA[TIPO.key];
+       const LISTA = data[TIPO.key];
     if (Array.isArray(LISTA) && LISTA.length > 0) {
       this.descripcionesPorTipo.push({
         tipo: TIPO.label,
@@ -529,6 +531,30 @@ public descripcionesPorTipo: {
   this.descripcionesMostrar = this.descripcionesPorTipo.length > 0;
       
   }
+
+  /**
+   * @method getFormControlName
+   * @description
+   * Obtiene el nombre del control del formulario según el tipo de descripción.
+   * Asocia cada tipo de acuerdo comercial con su correspondiente control en el formulario.
+   * @param {string} tipo - Tipo de descripción (UE, AELC, SGP, ACE).
+   * @returns {string} Nombre del control del formulario correspondiente al tipo.
+   */
+  public getFormControlName(tipo: string): string {
+  switch (tipo) {
+    case 'la Unión Europea (UE)':
+      return 'descripcionUE';
+    case 'la Asociación Europea de Libre Comercio (AELC)':
+      return 'descripcionAELC';
+    case 'el SGP':
+      return 'descripcionSGP';
+    case 'la ACE':
+      return 'descripcionACE';
+    default:
+      return '';
+  }
+}
+
 
   /**
    * **Ciclo de vida: Destruye las suscripciones y limpia recursos**
