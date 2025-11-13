@@ -89,8 +89,8 @@ private isDatosDeLaSolicitudComponentValid: boolean = false;
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
     private consultaQuery: ConsultaioQuery,
-      public store: Tramite260510Store,
-    public query: Tramite260510Query,
+      private store: Tramite260510Store,
+    private query: Tramite260510Query,
   ) {}
 
   /**

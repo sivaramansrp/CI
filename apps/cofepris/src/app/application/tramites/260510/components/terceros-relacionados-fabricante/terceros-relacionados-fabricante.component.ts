@@ -31,7 +31,7 @@ export class TercerosRelacionadosFabricanteComponent {
   public idProcedimiento: number = 260510;
    /** Constructor que inicializa el store del trámite 260504. */
     constructor(
-      public store: Tramite260510Store,
+      private store: Tramite260510Store,
     ) {
       //
     }
