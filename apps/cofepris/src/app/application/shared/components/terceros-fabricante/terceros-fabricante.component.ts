@@ -361,6 +361,52 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            PROVEEDOR_DATA.forEach((item: any) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            FABRICANTE_DATA.forEach((item: any) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            FORMULADOR_DATA.forEach((item: any) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
