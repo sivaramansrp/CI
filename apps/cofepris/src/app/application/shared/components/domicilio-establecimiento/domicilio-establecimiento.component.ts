@@ -1577,6 +1577,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           const DATOS = doDeepCopy(fraccionResponse);
           if(esValidObject(DATOS.datos)) {
               this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              this.setValoresStore(this.formMercancias, 'descripcionFraccion', 'setDescripcionFraccion'); 
               return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
           }
         }
@@ -1587,6 +1588,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         const UNIDAD_DATOS = doDeepCopy(unidadResponse);
         if(esValidObject(UNIDAD_DATOS.datos)) {
           this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+          this.setValoresStore(this.formMercancias, 'UMT', 'setUMT'); 
         }
       },
       error: (error) => {
