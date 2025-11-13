@@ -21,7 +21,14 @@
         @switch (indice) { @case (1) {
         <app-paso-uno></app-paso-uno>
         } @case (2) {
-        <app-paso-dos></app-paso-dos>
+        <app-paso-carga-documento 
+          [idSolicitud]="guardarIdSolicitud"
+          [idTipoTRamite]="'260510'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
         } @case (3) {
           <paso-firma [idSolicitud]="guardarIdSolicitud" [procedure]="260501" [procedureUrl]="'permiso-plaguicidas/plaguicidas'"></paso-firma>
         } }

@@ -578,11 +578,11 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.mostrarErrores.aduanas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
-      paisDeOriginDatos: events,
+      aduanasEntradas: events,
     });
     this.setValoresStore(
       this.domicilio,
-      "paisDeOriginDatos",
+      "aduanasEntradas",
       "setAduanasDeEntrada",
     );
   }
@@ -1577,6 +1577,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           const DATOS = doDeepCopy(fraccionResponse);
           if(esValidObject(DATOS.datos)) {
               this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              this.setValoresStore(this.formMercancias, 'descripcionFraccion', 'setDescripcionFraccion'); 
               return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
           }
         }
@@ -1587,6 +1588,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         const UNIDAD_DATOS = doDeepCopy(unidadResponse);
         if(esValidObject(UNIDAD_DATOS.datos)) {
           this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+          this.setValoresStore(this.formMercancias, 'UMT', 'setUMT'); 
         }
       },
       error: (error) => {
@@ -2092,7 +2094,7 @@ onConfirmacionModal(accion: boolean): void {
   validatorButtonClick(): boolean {
    let ISVALID = true;
   // Check all required fields in 'domicilio' and set mostrarErrores accordingly
-  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  const REQUIREDFIELDS = [
   'codigoPostal',
   'estado',
   'muncipio',
@@ -2100,10 +2102,11 @@ onConfirmacionModal(accion: boolean): void {
   'telefono',
   'deOrigen',
   'deProcedencia',
-  'aduanas',
-  'avisoCheckbox',
-  'licenciaSanitaria',
-];
+  'aduanas'
+] as (keyof typeof this.mostrarErrores)[];
+if (this.isAvisoLicenciaVisible) {
+  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
+}
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;
