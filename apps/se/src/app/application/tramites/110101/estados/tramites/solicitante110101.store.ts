@@ -166,7 +166,14 @@ export interface Solicitante110101State {
     validacion_tab_mercancia: boolean | null;
     validacion_tab_datos_adicionales: boolean | null;
   };
-
+  /** Descripción AELC */
+  descripcionAELC: number | null;
+  /** Descripción UE */
+  descripcionUE: number | null;
+  /** Descripción ACE */
+  descripcionACE: number | null;
+  /** Descripción SGP */
+  descripcionSGP : number | null;
 }
 
 
@@ -239,7 +246,11 @@ export function createSolicitanteInitialState(): Solicitante110101State {
       validacion_tab_mercancia: null,
       validacion_tab_datos_adicionales: null
     },
+    descripcionAELC: null,
+    descripcionUE: null,
+    descripcionACE: null,
     valorFobDolares: null,
+    descripcionSGP:  null,
     respuestaServiceConfiguracion: {
       mostrar_datos_mercancia: false,
       mostrar_insumos: false,

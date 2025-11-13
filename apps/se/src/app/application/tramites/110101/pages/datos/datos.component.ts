@@ -13,7 +13,7 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { TratadosComponent } from '../../components/tratados/tratados.component';
 
-import { ValidarSolicitudResponse } from '../../models/response/validar-solicitud-response.model';
+import { Mercancia, ValidarSolicitudResponse } from '../../models/response/validar-solicitud-response.model';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 110101
@@ -562,10 +562,10 @@ public validarFormularios(): boolean | undefined{
    * @method descripcionesAdicionales
    * @description
    * Activa las descripciones adicionales utilizando los datos de validación de solicitud.
-   * @param {ValidarSolicitudResponse} data - Datos de validación de la solicitud.
+   * @param {Mercancia} data - Datos de validación de la solicitud.
    * @returns {void}
    */
-  public descripcionesAdicionales(data: ValidarSolicitudResponse): void {
+  public descripcionesAdicionales(data: Mercancia): void {
     this.datosAdicionales.activarDescripciones(data);
   }
 
