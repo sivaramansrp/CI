@@ -120,6 +120,11 @@ export class PlaguicidasComponent implements OnInit,OnDestroy {
   ) {}
 
 
+  /**   
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la solicitud para mantener el estado local actualizado.
+   * {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this._query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;

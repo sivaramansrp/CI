@@ -119,6 +119,14 @@ onFormValidityChange(isValid: boolean):void {
    */
   public notificacionContinuarServicios!: Notificacion;
 
+  /**  
+   * Constructor del componente.
+   * Inyecta los servicios necesarios para la funcionalidad del componente.
+   * @param sharedSvc Servicio compartido para operaciones comunes.
+   * @param toastrService Servicio para mostrar notificaciones al usuario.
+   * @param store Almacén de estado para gestionar los datos del trámite.
+   * @param query Consulta para acceder a los datos del trámite.
+   */
   constructor(
     private sharedSvc: Shared2605Service,
     private toastrService: ToastrService,
@@ -126,6 +134,11 @@ onFormValidityChange(isValid: boolean):void {
     private query: Tramite260502Query
   ) {}
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la solicitud para mantener el estado local actualizado.
+   * {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
