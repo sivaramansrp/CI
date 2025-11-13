@@ -1,13 +1,14 @@
 import { AVISO,AccionBoton, ListaPasosWizard, Notificacion, PASOS, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
-import { ToastrService } from 'ngx-toastr';
+import { Component, EventEmitter, OnInit,ViewChild,inject} from '@angular/core';
+import { Observable,map,switchMap, take } from 'rxjs';
 import { Solicitud260502State, Tramite260502Store } from '../../../../shared/estados/stores/260502/tramite260502.store';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constant/muestras-plaguicida.enum';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260502Query } from '../../../../shared/estados/queries/260502/tramite260502.query';
-import { map, Observable, switchMap, take } from 'rxjs';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 /**
  * Componente principal para la gestión de plaguicidas.
  * Contiene la lógica y la estructura del asistente de plaguicidas.
@@ -33,7 +34,16 @@ export class PlaguicidasComponent implements OnInit {
    * Se obtiene de una constante definida en otro archivo.
    */
   pasos: ListaPasosWizard[] = PASOS;
-
+   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
+  /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
+  public textoPeligro: string = TEXTO_DE_PELIGRO;
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
    /**
    * 
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -104,6 +114,7 @@ export class PlaguicidasComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  
    /**
    * Actualiza el estado local de validez del formulario.
    * Este método recibe el valor emitido por el componente hijo.
@@ -112,6 +123,7 @@ export class PlaguicidasComponent implements OnInit {
 onFormValidityChange(isValid: boolean):void {
   this.isFormValid = isValid;
 }
+
 /**
    * @description
    * Objeto que representa una notificación de confirmación para agregar servicios.
@@ -157,14 +169,14 @@ onFormValidityChange(isValid: boolean):void {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
  
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = true;
-    //     return;
-    //   }
-    //   this.isPeligro = false;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
+      }
+      this.isPeligro = false;
+    }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
         if (this.indice === 1) {
@@ -193,7 +205,16 @@ onFormValidityChange(isValid: boolean):void {
       }
     }
   }
-
+ /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
+  }
   /**
    * Verifica si se debe navegar al siguiente paso.
    * Realiza una llamada para guardar los datos y determina si la navegación es exitosa.
@@ -278,5 +299,4 @@ onFormValidityChange(isValid: boolean):void {
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
-
 }
