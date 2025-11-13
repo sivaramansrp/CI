@@ -363,10 +363,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
             this.solicitudState = seccionState;
 
             const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            PROVEEDOR_DATA.forEach((item: any) => {
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.proveedorRowData.some(existing =>
                   JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
@@ -378,10 +377,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
             });
 
             const FABRICANTE_DATA = seccionState.Fabricante ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            FABRICANTE_DATA.forEach((item: any) => {
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.fabricanteRowData.some(existing =>
                   JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
@@ -393,10 +391,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
             });
 
             const FORMULADOR_DATA = seccionState.Formulador ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            FORMULADOR_DATA.forEach((item: any) => {
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.formuladorRowData.some(existing =>
                   JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
