@@ -10,7 +10,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -20,18 +19,14 @@ import {
 
 import { CommonModule } from '@angular/common';
 
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
 
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Modal } from 'bootstrap';
 
-import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
@@ -42,25 +37,27 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@libs/shared/data-access-user/src';
+  NotificacionesComponent,
+  Notificacion,
+  ConsultaioQuery,
+} from '@ng-mf/data-access-user';
+
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
+import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
 import { DatosDeLaProductoModel } from '../../models/datos-de-la-solicitud.model';
-
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
-import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
-
-import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
-
-import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
-import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
+
+import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
+import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
+import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
+
 /**
  * Componente `EstablecimientoComponent`
  * Componente que gestiona los datos del establecimiento.
@@ -76,6 +73,7 @@ import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionami
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    NotificacionesComponent,
     DomicillioDelEstablecimientoSeccionComponent,
     ManifiestosRepresentanteSeccionComponent,
     DatosDelEstablecimientoSeccionComponent,
@@ -83,11 +81,12 @@ import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionami
   templateUrl: './establecimiento.component.html',
   styleUrl: './establecimiento.component.scss',
 })
-/**
- * compo doc
- * @description
- */
 export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
   /**
    * Lista de países disponibles para la selección de procedencia.
    */
@@ -152,11 +151,6 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] = DATOS_DE_LA_PRODUCTO_MODEL;
 
   /**
-   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
    * Enumeración para la selección de tablas.
    */
   TablaSeleccion = TablaSeleccion;
@@ -207,6 +201,51 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Almacena los productos seleccionados en la tabla.
+   */
+  public productosSeleccionados: DatosDeLaProductoModel[] = [];
+
+  /**
+   * Controla la visibilidad del modal de alerta para selección.
+   */
+  public mostrarAlertaSeleccion: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de confirmación de eliminación.
+   */
+  public mostrarConfirmacionEliminacion: boolean = false;
+
+  /**
+   * Notificación para mostrar cuando no hay filas seleccionadas.
+   */
+  public notificacionSeleccion: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Debe seleccionar al menos una fila para realizar esta acción.',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+
+  /**
+   * Notificación para confirmación de eliminación.
+   */
+  public notificacionEliminacion: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'warning',
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Está seguro que desea eliminar los elementos seleccionados?',
+    cerrar: true,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
@@ -220,15 +259,40 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
     private establecimientoQuery: DatosDelSolicituteSeccionQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
+
+    this.initializeForms();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState?.readonly || false;
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
+  }
+
+  /**
+   * Inicializa los formularios reactivos
+   */
+  private initializeForms(): void {
+    this.datosMercanciaForm = this.fb.group({
+      nombreEspecifico: ['', Validators.required],
+      tipoDeProducto: ['', Validators.required],
+      fraccionArancelaria: ['', Validators.required],
+      descripcionFraccionArancelaria: [''],
+      cantidadUMT: ['', Validators.required],
+      umt: [''],
+      cantidadOVolumen: ['', Validators.required],
+      unidadDeMedida: ['', Validators.required],
+      presentacionaFrmaceutica: ['', Validators.required],
+      almacenamientoEnvasePrimario: [''],
+      almacenamientoEnvaseSecundario: [''],
+      transporteEnvasePrimario: [''],
+      transporteEnvaseSecundario: [''],
+      usoEspecifico: ['', Validators.required],
+      paisDeDestino: ['']
+    });
   }
 
   /**
@@ -246,56 +310,49 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    * Inicializa los formularios y carga los datos iniciales.
    */
   ngOnInit(): void {
-    this.loadEstado();
+    this.estadoActualizacion();
+    this.loadCatalogData();
+  }
+
+  /**
+   * Ciclo de vida OnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Carga los datos de catálogos - Fixed method name and implementation
+   */
+  private loadCatalogData(): void {
     this.loadTipoProducto();
     this.loadUnidadDeMedida();
     this.loadUsoEspecifico();
-
-    this.datosMercanciaForm = this.fb.group({
-      nombreEspecifico: ['', Validators.required],
-      tipoDeProducto: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccionArancelaria: [{ value: null, disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
-      umt: [{ value: null, disabled: true }, Validators.required],
-      cantidadOVolumen: ['', Validators.required],
-      unidadDeMedida: ['', Validators.required],
-      transporteEnvaseSecundario: [''],
-      transporteEnvasePrimario: [''],
-      almacenamientoEnvaseSecundario: [''],
-      usoEspecifico: ['', Validators.required],
-      almacenamientoEnvasePrimario: [''],
-      presentacionaFrmaceutica: ['', Validators.required],
-    });
-    this.estadoActualizacion();
-    this.inicializarEstadoFormulario();
-    this.establecimientoService.getDatosDelProducto().pipe(takeUntil(this.destroy$))
-      .subscribe((response: DatosDeLaProductoModel[]) => {
-        this.establecimientoData= response;
-     });
+    this.loadEstado();
   }
 
-    /**
-     * Inicializa el estado del formulario según el modo de solo lectura.
-     * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, actualiza el estado.
-     */
-    inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.guardarDatosFormulario();
-      } 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, actualiza el estado.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
     }
+  }
 
-    /**
-     * Guarda el estado del formulario y lo deshabilita si está en modo solo lectura.
-     * Si no está en modo solo lectura, habilita el formulario.
-     */
-    guardarDatosFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.datosMercanciaForm?.disable();
-      } else {
-        this.datosMercanciaForm?.enable();
-      }
+  /**
+   * Guarda el estado del formulario y lo deshabilita si está en modo solo lectura.
+   * Si no está en modo solo lectura, habilita el formulario.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.datosMercanciaForm?.disable();
+    } else {
+      this.datosMercanciaForm?.enable();
     }
+  }
 
   /**
    * Actualiza el estado de los datos del establecimiento desde el store.
@@ -303,9 +360,9 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   estadoActualizacion(): void {
     this.establecimientoQuery
       .select('establecimientoData')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.establecimientoData = data;
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: DatosDeLaProductoModel[]) => {
+        this.establecimientoData = data || [];
       });
   }
 
@@ -315,9 +372,6 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    */
   paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.datosMercanciaForm.patchValue({
-      paisDeOriginDatos: events,
-    });
   }
 
   /**
@@ -326,16 +380,139 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    */
   paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
+  }
+
+  /**
+   * Add the missing method for the blur event
+   */
+  onRepresentanteRfcBlur(): void {
+    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get('fraccionArancelaria')?.value;
+
+    if (FRACCION_ARANCELARIA) {
+      this.datosMercanciaForm.patchValue({
+        descripcionFraccionArancelaria: 'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
+        umt: 'Kilogramo',
+      });
+    }
+  }
+
+  /**
+   * Maneja la selección de filas en la tabla de productos.
+   * @param productos Lista de productos seleccionados
+   */
+  onProductosSeleccionados(productos: DatosDeLaProductoModel[]): void {
+    this.productosSeleccionados = productos;
+  }
+
+  /**
+   * Modifica el producto seleccionado.
+   * Abre el modal con los datos del producto para edición.
+   */
+  modificarProducto(): void {
+    if (!this.productosSeleccionados.length) {
+      this.mostrarAlertaSeleccion = true;
+      return;
+    }
+
+    if (this.productosSeleccionados.length > 1) {
+      this.notificacionSeleccion.mensaje = 'Solo puede modificar un producto a la vez.';
+      this.mostrarAlertaSeleccion = true;
+      return;
+    }
+    const PRODUCTOSELECCIONADO = this.productosSeleccionados[0];
+    this.cargarDatosEnFormulario(PRODUCTOSELECCIONADO);
+    this.openDatosMercanciaModal();
+  }
+
+  /**
+   * Carga los datos de un producto en el formulario para edición.
+   * @param producto Producto a cargar
+   */
+  private cargarDatosEnFormulario(producto: DatosDeLaProductoModel): void {
     this.datosMercanciaForm.patchValue({
-      paisDeProcedenciaDatos: events,
+      nombreEspecifico: producto.nombreEspecifico,
+      tipoDeProducto: producto.tipoDeProducto,
+      fraccionArancelaria: producto.fraccionArancelaria,
+      descripcionFraccionArancelaria: producto.descripcionDeLaFraccion,
+      cantidadUMT: producto.cantidadUMT,
+      umt: producto.unidadDeMedidaDeTarifa,
+      cantidadOVolumen: producto.cantidadOVolumen,
+      unidadDeMedida: producto.unidadDeMedida,
+      presentacionaFrmaceutica: producto.Presentacion,
+      almacenamientoEnvasePrimario: producto.envasePrimario,
+      almacenamientoEnvaseSecundario: producto.envaseSecundario,
+      usoEspecifico: producto.usoEpecifico,
     });
+
+    if (producto.paisDeOrigen) {
+      this.seleccionadasPaisDeOriginDatos = producto.paisDeOrigen.split(', ');
+    }
+    if (producto.paisDeProcedencia) {
+      this.seleccionadasPaisDeProcedenciaDatos = producto.paisDeProcedencia.split(', ');
+    }
+  }
+
+  /**
+   * Elimina los productos seleccionados.
+   */
+  eliminarProductos(): void {
+    if (!this.productosSeleccionados.length) {
+      this.mostrarAlertaSeleccion = true;
+      return;
+    }
+
+    this.mostrarConfirmacionEliminacion = true;
+  }
+
+  /**
+   * Confirma la eliminación de productos.
+   * @param confirmar True si se confirma la eliminación
+   */
+  confirmarEliminacion(confirmar: boolean): void {
+    this.mostrarConfirmacionEliminacion = false;
+
+    if (confirmar) {
+
+      this.establecimientoData = this.establecimientoData.filter(producto =>
+        !this.productosSeleccionados.some(seleccionado =>
+          this.compararProductos(producto, seleccionado)
+        )
+      );
+      this.establecimientoStore.update({ establecimientoData: this.establecimientoData });
+      this.productosSeleccionados = [];
+      this.notificacionSeleccion.mensaje = 'Productos eliminados correctamente.';
+      this.notificacionSeleccion.categoria = 'success';
+      this.mostrarAlertaSeleccion = true;
+    }
+  }
+
+  /**
+   * Compara dos productos para determinar si son iguales.
+   * @param producto1 Primer producto
+   * @param producto2 Segundo producto
+   * @returns True si son iguales
+   */
+  private compararProductos(producto1: DatosDeLaProductoModel, producto2: DatosDeLaProductoModel): boolean {
+    return producto1.nombreEspecifico === producto2.nombreEspecifico &&
+      producto1.fraccionArancelaria === producto2.fraccionArancelaria &&
+      producto1.tipoDeProducto === producto2.tipoDeProducto;
+  }
+
+  /**
+   * Cierra el modal de alerta.
+   */
+  cerrarAlerta(): void {
+    this.mostrarAlertaSeleccion = false;
+    this.notificacionSeleccion.mensaje = 'Debe seleccionar al menos una fila para realizar esta acción.';
+    this.notificacionSeleccion.categoria = 'danger';
   }
 
   /**
    * Guarda los datos de la mercancía y los agrega a la tabla.
+   * Modificado para manejar tanto agregar como modificar.
    */
   guardarDatosMercancia(): void {
-    if (this.datosMercanciaForm) {
+    if (this.datosMercanciaForm.valid) {
       const MERCANCIA_DATA: DatosDeLaProductoModel = {
         tipoDeProducto: this.datosMercanciaForm.get('tipoDeProducto')?.value,
         nombreEspecifico: this.datosMercanciaForm.get('nombreEspecifico')?.value,
@@ -354,31 +531,31 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
         usoEpecifico: this.datosMercanciaForm.get('usoEspecifico')?.value,
       };
 
-      const IS_EMPTY = Object.values(MERCANCIA_DATA).every((value) => !value);
+      let UPDATED_DATA: DatosDeLaProductoModel[];
+      if (this.productosSeleccionados.length === 1) {
+        const PRODUCTTOORIGINAL = this.productosSeleccionados[0];
+        const INDEX = this.establecimientoData.findIndex(producto =>
+          this.compararProductos(producto, PRODUCTTOORIGINAL)
+        );
 
-      if (IS_EMPTY) {
-        return;
+        if (INDEX !== -1) {
+          UPDATED_DATA = [...this.establecimientoData];
+          UPDATED_DATA[INDEX] = MERCANCIA_DATA;
+        } else {
+          UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
+        }
+      } else {
+
+        UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
       }
 
-      const UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
       this.establecimientoStore.update({ establecimientoData: UPDATED_DATA });
 
       this.datosMercanciaForm.reset();
+      this.productosSeleccionados = [];
+      this.seleccionadasPaisDeOriginDatos = [];
+      this.seleccionadasPaisDeProcedenciaDatos = [];
       this.closeDatosMercanciaModal();
-    }
-  }
-
-  /**
-   * Maneja el evento blur en el campo RFC del representante.
-   */
-  onRepresentanteRfcBlur(): void {
-    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get('fraccionArancelaria')?.value;
-
-    if (FRACCION_ARANCELARIA) {
-      this.datosMercanciaForm.patchValue({
-        descripcionFraccionArancelaria: 'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
-        umt: 'Kilogramo',
-      });
     }
   }
 
@@ -387,6 +564,8 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    */
   limpiarFormulario(): void {
     this.datosMercanciaForm.reset();
+    this.seleccionadasPaisDeOriginDatos = [];
+    this.seleccionadasPaisDeProcedenciaDatos = [];
   }
 
   /**
@@ -395,7 +574,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   loadEstado(): void {
     this.establecimientoService
       .getEstadoData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: Catalogo[]) => {
         this.estadoJson = resp;
       });
@@ -407,7 +586,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   loadTipoProducto(): void {
     this.establecimientoService
       .getTipoDeProductoData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: Catalogo[]) => {
         this.catalogoTipoProducto = resp;
       });
@@ -419,7 +598,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   loadUnidadDeMedida(): void {
     this.establecimientoService
       .getUnidadDeMedidaData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: Catalogo[]) => {
         this.unidadDeMedida = resp;
       });
@@ -431,7 +610,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   loadUsoEspecifico(): void {
     this.establecimientoService
       .getUsoEspecificoData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: Catalogo[]) => {
         this.usoEspecifico = resp;
       });
@@ -464,7 +643,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   ];
 
   /**
-   * Botones para gestionar la lista cruzada de países de origen.
+   * Botones para gestionar la lista cruzada de países de origen - Fixed duplicate property
    */
   paisDeOriginBotons = [
     {
@@ -493,14 +672,18 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    * Abre el modal de datos de mercancía.
    */
   openDatosMercanciaModal(): void {
-    this.datosModalInstance.show();
+    if (this.datosModalInstance) {
+      this.datosModalInstance.show();
+    }
   }
 
   /**
    * Cierra el modal de datos de mercancía.
    */
   closeDatosMercanciaModal(): void {
-    this.datosModalInstance.hide();
+    if (this.datosModalInstance) {
+      this.datosModalInstance.hide();
+    }
   }
 
   /**
@@ -515,14 +698,5 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    */
   mostrar_colapsable_pais_procedencia(): void {
     this.colapsable_procedencia = !this.colapsable_procedencia;
-  }
-
-  /**
-   * Ciclo de vida `OnDestroy`.
-   * Limpia las suscripciones para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }
