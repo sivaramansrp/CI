@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constant/muestras-plaguicida.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite260502.store';
 
 @Component({
   selector: 'app-terceros-relacionados-fabricante',
@@ -28,6 +29,25 @@ export class TercerosRelacionadosFabricanteComponent {
      * Se utiliza para mostrar la tabla en el componente TercerosRelacionadosComponent.
      */
     tablaOrden = TABLA_ORDEN;
+    /** Constructor que inicializa el store del trámite 260504. */
+    constructor(
+      public store: Tramite260502Store,
+    ) {
+      //
+    }
+
+  /** Maneja el evento de validez de tabla y actualiza el estado correspondiente en el store. */
+  onTableValidEvent(event: string): void {
+    if (event === 'fabricante') {
+      this.store.setFormValidity('fabricanteTablaValid', true);
+    }
+    if (event === 'formulador') {
+      this.store.setFormValidity('formuladorTablaValid', true);
+    }
+    if (event === 'proveedor') {
+      this.store.setFormValidity('proveedorTablaValid', true);
+    }
+  }
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
   validarFormulario(): void {
     this.tercerosRelacionadosComponent.markTouched();

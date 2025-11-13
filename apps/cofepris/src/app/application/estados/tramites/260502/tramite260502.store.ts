@@ -19,7 +19,9 @@ export interface Solicitud260502State {
     domicilioEstablecimiento?: boolean;
     manifiestos?: boolean;
     representanteLegal?: boolean;
-    terceros?: boolean;
+    fabricanteTablaValid?: boolean;
+    formuladorTablaValid?: boolean;
+    proveedorTablaValid?: boolean;
     pagoDeDerechos?: boolean;
   };
 }
