@@ -1,8 +1,8 @@
-import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
+import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-import { Destinatario } from '../models/destinatario.model';
+import { Destinatario } from '../../../models/destinatario.model';
 
 /**
  * Interfaz que define el estado de la solicitud 260702.

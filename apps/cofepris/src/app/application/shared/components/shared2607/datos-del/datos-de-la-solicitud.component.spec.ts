@@ -15,9 +15,9 @@ declare global {
 import { Component, ChangeDetectorRef } from '@angular/core';
 import{DatosdelasolicitudComponent} from './datos-de-la-solicitud.component';
 import { FormBuilder } from '@angular/forms';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Solicitud260702Store } from '../../estados/tramites260702.store';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
+import { Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 @Injectable()

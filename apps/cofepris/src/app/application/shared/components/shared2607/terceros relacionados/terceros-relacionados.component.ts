@@ -37,21 +37,21 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
 import {
   TEXTOS,
   TIPO_PERSONA_RADIO_OPTIONS,
-} from '../../constants/constantes.enum';
-import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
+} from '../../../constantes/constantes.enum';
+import { DESTINATARIO_CONFIGURACION_TABLA } from '../../../constantes/column-config.enum';
 
 // Models
-import { Destinatario } from '../../models/destinatario.model';
+import { Destinatario } from '../../../models/destinatario.model';
 
 // Services
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
+import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 
 // State Management
 import {
   Solicitud260702State,
   Solicitud260702Store,
-} from '../../estados/tramites260702.store';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+} from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 
 /**
  * Componente para gestionar los terceros relacionados en el trámite.

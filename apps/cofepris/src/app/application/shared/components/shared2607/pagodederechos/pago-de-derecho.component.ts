@@ -23,15 +23,15 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 import{ConsultaioQuery} from '@ng-mf/data-access-user';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
+import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 
 import {
   Solicitud260702State,
   Solicitud260702Store,
-} from '../../estados/tramites260702.store';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+} from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 
-import { BANCO_DATA } from '../../constants/catalogs.enum';
+import { BANCO_DATA } from '../../../constantes/catalogs.enum';
 
 /**
  * Componente para gestionar el pago de derechos en el trámite.

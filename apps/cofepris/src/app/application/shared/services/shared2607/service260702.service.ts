@@ -1,7 +1,7 @@
 import {
   Solicitud260702State,
   Solicitud260702Store,
-} from '../estados/tramites260702.store';
+} from '../../estados/stores/shared2607/tramites260702.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

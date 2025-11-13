@@ -1,10 +1,10 @@
-import { FilaData2, ListaClave } from '../models/fila-modal';
+import { FilaData2, ListaClave } from '../../models/fila-modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MercanciaCrossList } from '../models/mercancia.model';
+import { MercanciaCrossList } from '../../models/mercancia.model';
 import { Observable } from 'rxjs';
-import { TramitesAsociados } from '../models/destinatario.model';
+import { TramitesAsociados } from '../../models/destinatario.model';
 
 /**
  * Servicio para gestionar las solicitudes MCP.

@@ -9,9 +9,9 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import{TercerosrelacionadosComponent} from './terceros-relacionados.component';
 import { FormBuilder } from '@angular/forms';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Solicitud260702Store } from '../../estados/tramites260702.store';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
+import { Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 @Injectable()
 class MockRegistrarSolicitudMcpService {

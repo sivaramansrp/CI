@@ -7,13 +7,13 @@ import {
   ESTADO_DATA,
   REGIMEN_AL_QUE_DATA,
   TIPO_PRODUCTO_DATA,
-} from '../../constants/catalogs.enum';
+} from '../../../constantes/catalogs.enum';
 
 import {
   CONFIGURACION_COLUMNAS_LISTA_CLAVE,
   CONFIGURACION_COLUMNAS_MERCANCIAS,
   CONFIGURACION_COLUMNAS_SOLI,
-} from '../../constants/column-config.enum';
+} from '../../../constantes/column-config.enum';
 import {
   Catalogo,
   InputFecha,
@@ -35,14 +35,14 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { CrossList, MercanciaCrossList } from '../../models/mercancia.model';
-import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
+import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
+import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud260702State,
   Solicitud260702Store,
-} from '../../estados/tramites260702.store';
+} from '../../../estados/stores/shared2607/tramites260702.store';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
@@ -50,9 +50,9 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
-import { TEXTOS } from '../../constants/constantes.enum';
+import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
+import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
+import { TEXTOS } from '../../../constantes/constantes.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 

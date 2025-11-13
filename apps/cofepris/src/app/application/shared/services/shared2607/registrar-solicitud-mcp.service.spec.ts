@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { RegistrarSolicitudMcpService } from './registrar-solicitud-mcp.service';
-import { FilaData2, ListaClave } from '../models/fila-modal';
+import { FilaData2, ListaClave } from '../../models/fila-modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { MercanciaCrossList } from '../models/mercancia.model';
-import { TramitesAsociados } from '../models/destinatario.model';
+import { MercanciaCrossList } from '../../models/mercancia.model';
+import { TramitesAsociados } from '../../models/destinatario.model';
 
 describe('RegistrarSolicitudMcpService', () => {
   let service: RegistrarSolicitudMcpService;
