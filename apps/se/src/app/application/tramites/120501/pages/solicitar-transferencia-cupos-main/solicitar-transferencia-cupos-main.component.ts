@@ -206,42 +206,34 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
      * La llamada al servicio actualmente está comentada.
      */
   guardar(item: Solicitud120501State, e: AccionBoton): Promise<JSONResponse> {
-    console.log('Datos a guardar:', item);
     const PAYLOAD = {
       "entidadFederativa": {
         "entidad": {
-          "clave": "BCN"
+          "clave": item.entidadFederativa
         }
       },
-      "idSolicitud":null,
+      "idSolicitud":0,
       "unidadAdministrativaRepresentacionFederal": {
-        "clave": "1016"
+        "clave": item.representacionFederal
       },
       "licitacion": {
         "idLicitacion": 21,
         "anio": 2011,
         "cantidadMaxima": 18000,
         "fechaLimiteCalificacion": "2011-10-27",
-        "fechaConcurso": "2011-10-27",
-        "fechaInicioVigencia": "2011-10-27T00:00:00.000-05:00",
-        "fechaFinVigencia": "2012-10-26T00:00:00.000-05:00",
+        "fechaConcurso": item.fechaDelEventoDelicitacion,
+        "fechaInicioVigencia": item.fechaDeiniciodeVigenciadelCupo,
+        "fechaFinVigencia": item.fechaDefindeVigenciadelCupo,
         "fundamento": "Convocatoria para participar en la Licitación Pública Nacional No. 005/2011 para asignar el cupo para importar juguetes publicada en el Diario Oficial de la Federación el 29 de septiembre de 2011",
         "ideTipoConstancia": "TICONS.AN",
         "ideTipoLicitacion": "TILIC.PO",
-        "numeroLicitacion": "005/2011",
+        "numeroLicitacion": item.numeraDelicitacion,
         "idMecanismoAsignacion": 143
       },
-      "fraccionArancelaria": [
-        "61012003",
-        "61013001",
-        "61013099",
-        "61019091",
-        "61021001",
-        "61022003"
-      ],
+      "fraccionArancelaria": item.fraccionArancelaria,
       "solicitud": {
         "participante": {
-          "rfc": "AAL0409235E6"
+          "rfc": item.rfc
         },
         "solicitante": {
           "rfc": "AAL0409235E6",
@@ -275,11 +267,11 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
                 }
           }
         },
-        "maximoTransferir": 17001,
+        "maximoTransferir": item.montoMaximo,
         "montoTransferir": 1,
-        "idAsignacion":307
+        "idAsignacion":item.adquirienteMontoDisponible
     
-      }
+      } 
     };
     return new Promise((resolve, reject) => {
       let shouldNavigate = false;
