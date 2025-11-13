@@ -5,7 +5,7 @@ import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component'
 const ROUTES: Routes = [
    {
         path: 'plaguicidas',
-        component: PlaguicidasComponent
+        component: PlaguicidasComponent,
       },
       {
         path: '',
