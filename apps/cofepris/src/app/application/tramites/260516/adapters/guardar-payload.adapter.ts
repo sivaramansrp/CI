@@ -42,6 +42,8 @@ export class GuardarAdapter_260516 {
   }
 
   public toFormPayload(): unknown {
+    console.log("solictiat",this.solicitudDatos)
+    console.log("pago",this.pagoDerechosDatos)
     return {
       "solicitante": {
         "rfc": "AAL0409235E6",
@@ -60,7 +62,7 @@ export class GuardarAdapter_260516 {
             "numeroInterior": "12",
             "lada": "55",
             "telefono": "5556789012"
-        },
+        }
       },
       "establecimiento": {
           "rfcResponsableSanitario": this.establecimientDatos.rfcDel,
@@ -85,17 +87,17 @@ export class GuardarAdapter_260516 {
           "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
           "cadenaPagoDependencia": this.pagoDerechosDatos.cadenaDependencia,
           "banco": {
-              "clave": this.pagoDerechosDatos.banco,
-              "descripcion": ""
+              "clave": this.pagoDerechosDatos.banco ?? "",
+              "descripcion": this.pagoDerechosDatos.bancoObject?.descripcion ?? ""
           },
           "llaveDePago": this.pagoDerechosDatos.llavePago,
           "fecPago": this.pagoDerechosDatos.fechaPago,
           "impPago": this.pagoDerechosDatos.importePago
       },
-      "mercancias":  {
-          "objetoImportacionEnum": "CLAVE_DEL_CATALOGO",
+      "mercancias":  [{
+          "objetoImportacionEnum": "",
           "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
-          "descOtroObjetoImportacion": "Descripción cuando se selecciona 'Otro' (opcional)",
+          "descOtroObjetoImportacion": this.solicitudDatos.objetoImportacionOtro,
           "clasificacionToxicologica": {
             "idClasificacionToxicologicaTipoTramite": this.solicitudDatos.especificar,
             "clasificacionToxicologica": "Descripción opcional (string)"
@@ -106,13 +108,6 @@ export class GuardarAdapter_260516 {
           "nombreComun": this.solicitudDatos.nombreComun,
           "nombreCientifico": this.solicitudDatos.nombreCientifico,
           "idMercancia": "1",
-          "idClasificacionProducto": "",
-          "nombreClasificacionProducto": "",
-          "ideSubClasificacionProducto": "",
-          "nombreSubClasificacionProducto": "",
-          "descDenominacionEspecifica":"",
-          "descDenominacionDistintiva": "",
-          "descripcionMercancia": "",
           "formaFarmaceuticaDescripcionOtros": "",
           "estadoFisicoDescripcionOtros": this.solicitudDatos.estadoFisicoOtro,
           "fraccionArancelaria": {
@@ -135,7 +130,8 @@ export class GuardarAdapter_260516 {
           "nombreCortoUsoEspecifico": this.solicitudDatos.acondicionamiento,
           "fechaCaducidadStr": "",
           "idEstadoFisico": this.solicitudDatos.estadoFisico,
-      },
+      }],
+      "datosSCIAN": this.solicitudDatos.nicoTabla ?? [],
       "representanteLegal": {
           "rfc": this.solicitudDatos.rfc,
           "resultadoIDC": "",
@@ -146,10 +142,9 @@ export class GuardarAdapter_260516 {
       "solicitud": {
           "discriminatorValue": 260516,
           "declaracionesSeleccionadas": this.solicitudDatos.mensaje,
-          "regimen": "",
           "aduanaAIFA": "",
           "informacionConfidencial": this.solicitudDatos.cumplimiento === 'Si' ? true : false
-      },
+      }
     }
   }
 }

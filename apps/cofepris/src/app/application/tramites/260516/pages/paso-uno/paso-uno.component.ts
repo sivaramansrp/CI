@@ -60,6 +60,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+  @ViewChild(DatosSolicitudComponent) contenedorDeDatosSolicitudComponent!: DatosSolicitudComponent;
+
   /**
    * Constructor del componente Datos260502Component.
    *
@@ -133,6 +135,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         return isValid;
       }
   
+      validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validOnButtonClick() ?? false;
+    return (
+      (ES_TAB_VALIDO) ? true : false
+
+    );
+  }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.

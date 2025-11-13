@@ -88,6 +88,8 @@ public formErrorAlert = ERROR_FORMA_ALERT;
    */
   seccionCargarDocumentos: boolean = true;
 
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * Notificador para destruir observables al destruir el componente.
    */
@@ -113,13 +115,13 @@ public formErrorAlert = ERROR_FORMA_ALERT;
 
   getValorIndice(e: AccionBoton): void {
       if (e.accion === 'cont') {
-              // let isValid = true;
+    //           let isValid = true;
     
     //           if (this.indice === 1 && this.pasoUnoComponent) {
     //           isValid = this.pasoUnoComponent.validarPasoUno();
     //         }
     
-    //         if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+    //         if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validOnButtonClick() && this.requiresPaymentData) {
     //             this.confirmarSinPagoDeDerechos = 2;
     //           }else {
     //             this.confirmarSinPagoDeDerechos = 3;
@@ -156,7 +158,7 @@ public formErrorAlert = ERROR_FORMA_ALERT;
     //         }
             const PAYLOAD = this.GuardarAdapter260516.toFormPayload();
             let shouldNavigate = false;
-            this.registroSolicitudService.postGuardarDatos('260214', PAYLOAD).subscribe(response => {
+            this.registroSolicitudService.postGuardarDatos('260516', PAYLOAD).subscribe(response => {
               shouldNavigate = response.codigo === '00';
               if (!shouldNavigate) {
                 const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
