@@ -1,5 +1,5 @@
 import { DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
-import { Destinatario ,Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Destinatario ,Fabricante, Facturador, PagoDerechosFormState, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Injectable } from '@angular/core';
@@ -260,6 +260,12 @@ destinatarioFinalTablaDatos: Destinatario[];
   /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
   idSolicitud: number | null;
 
+   /**
+     * Estado del formulario de pago de derechos.
+     */
+    pagoDerechos: PagoDerechosFormState;
+    
+
 }
 
 export function createInitialState(): Solicitud260215State {
@@ -271,14 +277,14 @@ export function createInitialState(): Solicitud260215State {
    * Lista de facturadores relacionados con el trámite.
    */
     opcionesColapsableState:false,
-  datosSolicitudFormState: {} as DatosSolicitudFormState,
+    datosSolicitudFormState: {} as DatosSolicitudFormState,
     tablaMercanciasConfigDatos: [],
-  scianConfigDatos: [],
+    scianConfigDatos: [],
     opcionConfigDatos: [],
-  destinatarioFinalTablaModificaDatos:[],
-  fabricanteTablaModificaDatos:[],
-  facturadorTablaModificaDatos: [],
-  proveedorTablaModificaDatos: [],
+    destinatarioFinalTablaModificaDatos:[],
+    fabricanteTablaModificaDatos:[],
+    facturadorTablaModificaDatos: [],
+    proveedorTablaModificaDatos: [],
     fabricanteTablaDatos: [],
     facturadorTablaDatos: [],
     /**
@@ -286,6 +292,17 @@ export function createInitialState(): Solicitud260215State {
      * @type {string}
      */
     claveDeReferencia: '',
+    /**
+     * Inicialización de pagoDerechos
+     */
+   pagoDerechos: {
+      claveReferencia: '',
+      cadenaDependencia: '',
+      estado: '',
+      llavePago: '',
+      fechaPago: '',
+      importePago: '',
+    },
 
     /**
      * cadenaDependencia
@@ -490,7 +507,7 @@ export function createInitialState(): Solicitud260215State {
               datos: [],
     idTipoTramite: 260214,
     motivoCancelacion: '',
-    idSolicitud: 202808106,
+    idSolicitud: 0,
     claveEntidadFederativa: '09',
 
   };
@@ -507,6 +524,30 @@ export class Tramite260215Store extends Store<Solicitud260215State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Actualiza el ID de la solicitud en el estado.
+   * @param {number} idSolicitud - Nuevo ID de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud: idSolicitud,
+    }));
+  }
+
+   /**
+   * @method updatePagoDerechos
+   * @description Actualiza el estado del formulario de pago de derechos.
+   * @param {PagoDerechosFormState} nuevoPagoDerechos - Nuevo estado del formulario.
+   */
+  public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechos: nuevoPagoDerechos,
+    }));
   }
 
   /**

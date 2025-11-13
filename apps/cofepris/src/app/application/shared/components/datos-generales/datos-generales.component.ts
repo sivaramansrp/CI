@@ -130,6 +130,32 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   enviarFormulario(): void {
     this.formularioGuardar.emit(this.datosGeneralesForm.value);
   }
+
+  /**
+   * @method onLimpiarClick
+   * @description Maneja el evento del botón "Limpiar". Limpia todos los datos del formulario.
+   */
+  onLimpiarClick(): void {
+    
+    this.datosGeneralesForm.reset();
+    this.datosGeneralesForm.patchValue({
+      tipoPersona: '',
+      razonSocial: '',
+      pais: '',
+      estado: '',
+      codigoPostal: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      lada: '',
+      telefono: '',
+      correoElectronico: '',
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: ''
+    });
+  }
+
   /**
    * @inheritdoc
    * @description Este método se ejecuta automáticamente cuando el componente se destruye.

@@ -14,7 +14,7 @@
  * @see Router
  */
 
-import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DocumentoService, DocumentosFirmaQuery, DocumentosFirmaStore, Notificacion, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { FirmarService } from '../../services/firmar.service';
@@ -23,9 +23,9 @@ import { Router } from '@angular/router';
 import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
+import { DocumentoRequeridoFirmar, FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Firmar120301Request } from '../../models/request/firmar-request.model';
-import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 
 /**
  * Componente para el paso tres del trámite 120301.
@@ -120,7 +120,16 @@ Mantener la coherencia en la navegación del proceso de trámite
     fechaFin: string;
   };
 
+  /**
+ * Array que almacena las cadenas originales de los documentos que requieren firma.
+ */
+  public cadenasOriginalesDocumentos: string[] = [];
 
+  /** Lista de documentos que requieren firma electrónica.
+   * Esta lista se obtiene del store `DocumentosFirmaStore` a través del query `DocumentosFirmaQuery`.
+   * Se utiliza para mostrar los documentos al usuario y procesar la firma de cada uno.
+   */
+  public documentosFirma: DocumentoRequeridoFirmar[] = [];
 
   /**
    * Constructor del componente.
@@ -131,6 +140,8 @@ Mantener la coherencia en la navegación del proceso de trámite
     private firmarService: FirmarService,
     private tramiteQuery: Tramite120301Query,
     private documentoService: DocumentoService,
+    private documentosFirmaQuery: DocumentosFirmaQuery,
+    private documentosFirmaStore: DocumentosFirmaStore,
     private tramiteStore: TramiteFolioStore,) { }
 
   ngOnInit(): void {
@@ -139,6 +150,13 @@ Mantener la coherencia en la navegación del proceso de trámite
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
         this.solicitudState = state;
+      });
+
+    this.documentosFirmaQuery.documentos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((docs) => {
+        this.documentosFirma = docs;
+        this.cadenasOriginalesDocumentos = docs.map(d => d.hash_documento);
       });
 
     // Obtener la cadena original del trámite
@@ -209,6 +227,21 @@ Mantener la coherencia en la navegación del proceso de trámite
     this.obtieneFirma(datos.firma);
   }
 
+    /**
+   * Maneja los documentos firmados y actualiza el store con los sellos correspondientes.
+   * @param sellos - Array de cadenas que representan los sellos de los documentos firmados.
+   */
+  onDocumentosFirmados(sellos: string[]): void {
+    // Mezclas los sellos con los documentos de Akita
+    const DOCUMENTOS = this.documentosFirma.map((doc, i) => ({
+      ...doc,
+      hash_documento: encodeToISO88591Hex(doc.hash_documento),
+      sello_documento: base64ToHex(sellos[i] || '')
+    }));
+
+    this.documentosFirmaStore.update({ documentos: DOCUMENTOS });
+  }
+
   /**
      * Método para obtener la firma del documento.
      * Este método se encarga de enviar la solicitud de firma al servicio correspondiente.
@@ -246,7 +279,7 @@ Mantener la coherencia en la navegación del proceso de trámite
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
+            documentos_requeridos: this.documentosFirma || response.datos?.documentos_requeridos || [],
           };
 
           return this.firmarService.postFirma(this.solicitudState.idSolicitud, PAYLOAD);

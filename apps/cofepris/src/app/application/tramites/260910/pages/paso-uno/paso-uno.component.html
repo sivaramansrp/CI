@@ -56,7 +56,9 @@
         }
         @case(3) {
           @if(esDatosRespuesta) {
-            <app-terceros-relacionados-fab-seccion></app-terceros-relacionados-fab-seccion>
+            <app-terceros-relacionados-fab-seccion 
+            [hideAgregarBtn]="(isProrrogaSelected$ | async) || false"
+            ></app-terceros-relacionados-fab-seccion>
           }
         }
         @case(4) {

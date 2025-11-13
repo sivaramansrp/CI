@@ -276,7 +276,7 @@ export class ConsultasAereosService {
     const params: ParamsMessages = {
       ...formData,
       rfc: this.authInformationService.authInfo.rfc,
-      rol: this.authInformationService.authInfo.rol, // TODO: ES EL MISMO ROL QUE FUNCIONARIO?S
+      rol: this.authInformationService.authInfo.subrol,
     };
     this.sessionStorage.set('paramsToGetMessages', params);
     this.paramsToGetMenssages.set(params);
