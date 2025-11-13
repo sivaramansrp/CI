@@ -6,8 +6,8 @@ import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
-import { Tramite120601Query } from '../../estados/tramite-120601.query';
-import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { Tramite120602Query } from '../../estados/tramite-120602.query';
+import { Tramite120602Store } from '../../estados/tramite-120602.store';
 /**
  * Componente que representa la representación federal en un proceso de múltiples pasos.
  */
@@ -90,7 +90,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @remarks
    * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
    */
-  tramites:string='120601';
+  tramites:string='120602';
 
   /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
   *  Ayuda a prevenir fugas de memoria en flujos observables. */
@@ -116,11 +116,11 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private query: Tramite120601Query,
-    private store: Tramite120601Store,
+    private query: Tramite120602Query,
+    private store: Tramite120602Store,
     private datosEmpresaService: DatosEmpresaService,
     private consultaioQuery: ConsultaioQuery,
-    private catalogoService: CatalogoServices,
+    private catalogoService: CatalogoServices
   ) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(
