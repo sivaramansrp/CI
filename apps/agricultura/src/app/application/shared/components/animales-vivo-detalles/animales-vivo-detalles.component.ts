@@ -209,12 +209,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
+      clave_fraccion: [''],
       descripcionFraccion: [{ value: 'Descripción', disabled: true }, [Validators.required]],
       nico: ['', Validators.required],
       descripcionNico: [{ value: 'Detalle', disabled: true }, [Validators.required]],
       descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '1', disabled: true }, Validators.required],
+      clave_umt: [''],
       descripcionUMT: [''],
       cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
@@ -301,7 +303,8 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       Uso: this.detalleForm.value.uso,
       PaisDeOrigen: this.detalleForm.value.paisDeOrigen,
       PaisDeProcedencia: this.detalleForm.value.paisDeProcedencia,
-      
+      umt: this.detalleForm.value.umt,
+      umc: this.detalleForm.value.umc,
     };
     this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, DETALLE];
     this.detalleForm.reset();
