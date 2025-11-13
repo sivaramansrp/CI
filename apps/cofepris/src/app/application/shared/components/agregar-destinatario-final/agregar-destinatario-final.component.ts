@@ -361,6 +361,7 @@ private setupEditMode(): void {
               this.aplicarValoresDespuesDeCarga();
             }));
           }));
+
         } else {
           this.aplicarValoresDespuesDeCarga();
         }
@@ -419,7 +420,7 @@ private aplicarValoresDespuesDeCarga(): void {
     // Código Postal
     let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
     if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
-      const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
+       const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
         cp.clave!== null && cp.descripcion === valorCodigoPostal);
       valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
     }
@@ -428,7 +429,8 @@ private aplicarValoresDespuesDeCarga(): void {
     let valorColonia = this.datoSeleccionado?.[0]?.colonia;
     if (valorColonia && this.coloniasDatos.length > 0) {
       const COLONIA_ENCONTRADA = this.coloniasDatos.find(c => 
-        c.clave!== null && c.descripcion === valorColonia
+        c.descripcion === valorColonia || 
+        c.clave?.toString() === valorColonia?.toString()
       );
       valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
     }
@@ -824,9 +826,6 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
     this.cargarDatos(this.tramiteID);
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
-      if(this.datoSeleccionado?.[0].localidad && this.agregarDestinatarioFinal.get('codigoPostal')?.value) {
-    this.cargarLocalidades();
-  }
     this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
@@ -1095,7 +1094,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
       case 260207:
       case 260209:
       case 260208:
-      case 260210:
+        case 260210:
       case 260218:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['colonia'];
@@ -1325,7 +1324,7 @@ private updateDenominacionRazonValidation(): void {
   }
 
 
-  getMunicipioSeleccionado(val: string): string {
+   getMunicipioSeleccionado(val: string): string {
     if (!val || this.municipiosDatos.length === 0) {
       return '';
     }
@@ -1344,7 +1343,7 @@ private updateDenominacionRazonValidation(): void {
     
     return '';
   }
-
+  
   /**
    * Carga la lista de códigos postales cuando se selecciona una localidad.
    *

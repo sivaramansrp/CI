@@ -778,14 +778,11 @@ cerrarFacturadorModal(): void {
   this.destinatarioSeleccionadoParaModificar = this.destinatarioSeleccionadoDatos.map(d => ({ ...d }));
   this.destinatarioModalAbierto = true;
 
-
   const MODALELEMENT = document.getElementById('destinatarioModal');
   if (MODALELEMENT) {
     const MODAL = new (window as unknown as { bootstrap: { Modal: new (element: HTMLElement) => { show(): void } } }).bootstrap.Modal(MODALELEMENT);
     MODAL.show();
   }
-
-  
 }
 
 
