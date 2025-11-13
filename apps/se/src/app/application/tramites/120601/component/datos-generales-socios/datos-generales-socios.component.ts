@@ -266,7 +266,6 @@ actualizarEstadoFormulario(): void {
    * Agrega un nuevo socio a la lista de socios.
    * Dependiendo de los campos de entrada, agrega un socio regular o un socio extranjero.
    */
-  // eslint-disable-next-line complexity
 agregarSocio(): void {
   const VALOR_FORMULARIO = this.FormSolicitud.get('datosGeneralesSocios')?.value || {};
   const RFC = VALOR_FORMULARIO.cadenaDependencia || '';

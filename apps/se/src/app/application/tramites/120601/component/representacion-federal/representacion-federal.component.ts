@@ -96,6 +96,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   *  Ayuda a prevenir fugas de memoria en flujos observables. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**  
+ * @Output() plantasDataEmitted — Emite un arreglo de objetos `RepresentacionFederal`  
+ * para comunicar los datos de plantas al componente padre.  
+ */ 
    @Output() plantasDataEmitted = new EventEmitter<RepresentacionFederal[]>();
 
   /**
@@ -151,7 +155,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  
      this.obtenerEstado();
      this.suscribirCambioEstado();
-    //  this.obtenerRepresentacionFederal()
   }
 
   /**
