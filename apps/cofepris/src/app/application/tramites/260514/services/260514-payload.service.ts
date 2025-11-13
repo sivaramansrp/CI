@@ -112,14 +112,6 @@ export class Shared260514Service {
     const FABRICANTE_TABLA = Shared260514Service.buildTercerosTablaDatos(data['Fabricante'] as Array<{ tbodyData?: Array<unknown> }>);
     const PAGO_DERECHOS = Shared260514Service.buildPagoDerechos(data);
 
-    console.log("DATOS_SCIAN",DATOS_SCIAN, 
-    "MERCANCIAS",MERCANCIAS,
-    "REPRESENTANTE_LEGAL",REPRESENTANTE_LEGAL,
-    "PROVEEDOR_TABLA",PROVEEDOR_TABLA,
-    "FORMULADOR_TABLA",FORMULADOR_TABLA,
-    "FABRICANTE_TABLA",FABRICANTE_TABLA,
-    "PAGO_DERECHOS",PAGO_DERECHOS
-    );
     
 
     return {
@@ -218,7 +210,6 @@ export class Shared260514Service {
  *          listo para integrarse en el payload de la solicitud.
  */
   static buildEstablecimiento(data: Record<string, unknown>): Record<string, unknown> {
-    console.log("buildEstablecimiento",data);
     
     return {
       "RFCResponsableSanitario": data['rfcDel'] || "",
@@ -294,7 +285,6 @@ export class Shared260514Service {
     if (!Array.isArray(MERCANCIA_TABLA)) {
       return [];
     }
-            console.log("item MERCANCIA_TABLA",MERCANCIA_TABLA)
 
     return MERCANCIA_TABLA.map(item => ({
         
@@ -302,8 +292,8 @@ export class Shared260514Service {
       "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
       "descOtroObjetoImportacion": item['objetoImportacionOtro'] as string || "",
       "clasificacionToxicologica": {
-             "idClasificacionToxicologicaTipoTramite": "CLAVE_DEL_CATALOGO",
-             "clasificacionToxicologica": "Descripción opcional"
+             "idClasificacionToxicologicaTipoTramite": item['clasificacionToxicologica'] as string || "",
+             "clasificacionToxicologica": ""
             },
      "numeroCAS": "34121",
      "porcentajeConcentracion": item['porcentajeConcentracion'] as string || "",
