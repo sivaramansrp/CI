@@ -480,7 +480,7 @@ private aplicarValoresDespuesDeCarga(): void {
             CONTROL?.setValue(null);
           }
         });
-        this.agregarDestinatarioFinal.get('pais')?.setValue('2');
+        this.agregarDestinatarioFinal.patchValue({pais: 'DEU'});
         this.forzarDeshabilitarPais();
         this.estaDeshabilitadoDesplegable = true;
       }
@@ -654,16 +654,26 @@ private guardarDestinatarioModal(): void {
  * Handles normal form save logic for chequeoValidacionAlGuardar === false
  */
 private guardarDestinatarioNormal(): void {
-    const VALIDATION_ERRORS = this.validateModalForm();
-    if (VALIDATION_ERRORS.length > 0) {
+    if (this.chequeoValidacionAlGuardar && this.agregarDestinatarioFinal.invalid) {
       Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
       });
+      this.mensajeDeError = 'Faltan campos por capturar.';
       return;
     }
-    
+    this.mensajeDeError = '';
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
+    
+  let nombreRazonSocial: string;
+
+  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+    nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
+  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+  } else {
+    nombreRazonSocial = '';
+  }
     
     const NUEVO_DESTINATARIO: Destinatario = VALOR_FORMULARIO as Destinatario;
     
@@ -706,14 +716,6 @@ private guardarDestinatarioNormal(): void {
     NUEVO_DESTINATARIO.entidadFederativa = '';
     NUEVO_DESTINATARIO.coloniaEquivalente = VALOR_FORMULARIO.coloniaEquivalente || '';
 
-    let nombreRazonSocial: string;
-    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-        nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-        nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
-    } else {
-        nombreRazonSocial = '';
-    }
     NUEVO_DESTINATARIO.nombreRazonSocial = nombreRazonSocial;
     
     NUEVO_DESTINATARIO.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
@@ -884,9 +886,9 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', [Validators.required]],
       rfc: [
-        this.obtenerValor('rfc'), [Validators.required],
+        this.obtenerValor('rfc'),
       ],
-      curp: ['', this.chequeoValidacionAlGuardar ? [] : [Validators.required]],
+      curp: [''],
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
@@ -894,25 +896,11 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
             : this.obtenerValor('nombres'),
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
-        this.chequeoValidacionAlGuardar 
-          ? [Validators.pattern(REGEX_NOMBRE)]
-          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        this.chequeoValidacionAlGuardar
-          ? [
-              Validators.required,
-              (control: AbstractControl): ValidationErrors | null => {
-                const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-                if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
-                  return { conditionalRequired: true };
-                }
-                return null;
-              },
-              Validators.pattern(REGEX_NOMBRE)
-            ]
-          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         {
@@ -921,9 +909,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
             : this.obtenerValor('primerApellido'),
           disabled: this.elementosDeshabilitados.includes('primerApellido'),
         },
-        this.chequeoValidacionAlGuardar 
-          ? [Validators.pattern(REGEX_NOMBRE)]
-          : [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+       [Validators.pattern(REGEX_NOMBRE)],
       ],
       segundoApellido: [
         {
@@ -952,9 +938,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
       codigoPostal: [this.obtenerValor('codigoPostal'), [Validators.required]],
       colonia: [
         this.obtenerValor('colonia'),
-        this.idProcedimiento === 260911 
-        ? [] 
-        :!this.elementosNoRequeridos.includes('colonia')
+        !this.elementosNoRequeridos.includes('colonia')
           ? [Validators.required]
           : [],
       ], 
@@ -1021,7 +1005,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         }
       );
       
-      this.agregarDestinatarioFinal.get('pais')?.setValue('2');
+      this.agregarDestinatarioFinal.patchValue({pais: 'DEU'});
       
       this.estaDeshabilitadoDesplegable = true;
       
@@ -1131,7 +1115,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
 
   /**
    * @method limpiarFormulario
-   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   * @description Resetea el formulario reactivo `agregarDestinatarioFinal` para limpiar todos los campos.
    *
    * @returns {void} Este método no retorna ningún valor.
    */
@@ -1176,105 +1160,100 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
    *
    * @returns {void} No retorna ningún valor.
    */
-changeNacionalidad(): void {
-  if (this.chequeoValidacionAlGuardar) {
-    const NOMBRES_CONTROL = this.agregarDestinatarioFinal.get('nombres');
-    if (NOMBRES_CONTROL) {
-      const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-      if (TIPO_PERSONA === this.tipoPersona.FISICA) {
-        NOMBRES_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-      } else {
-        NOMBRES_CONTROL.clearValidators();
-        NOMBRES_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
-      }
-      NOMBRES_CONTROL.updateValueAndValidity();
-    }
-    const PRIMER_APELLIDO_CONTROL = this.agregarDestinatarioFinal.get('primerApellido');
-    if (PRIMER_APELLIDO_CONTROL) {
-      const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-      if (TIPO_PERSONA === this.tipoPersona.FISICA) {
-        PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-      } else {
-        PRIMER_APELLIDO_CONTROL.clearValidators();
-        PRIMER_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
-      }
-      PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
-    }
-    const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
-    if (CURP_CONTROL) {
-      CURP_CONTROL.clearValidators();
-      CURP_CONTROL.updateValueAndValidity();
-    }
-  }
-
-  const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
-  const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-
-  if (!TIPO_PERSONA || TIPO_PERSONA === '') {
-    this.estaDeshabilitadoDesplegable = true;
-    Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
-      this.agregarDestinatarioFinal.get(controlName)?.disable();
-      if (controlName === 'tipoPersona') {
-        this.agregarDestinatarioFinal.get(controlName)?.enable();
-      }
-    });
-  } else {
-    if (TIPO_PERSONA) {
-      const RFC_CONTROL = this.agregarDestinatarioFinal.get('rfc');
-      if (RFC_CONTROL) {
-        RFC_CONTROL.setValidators([
-          Validators.required,
-          AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
-        ]);
-        
-        RFC_CONTROL.updateValueAndValidity();
-      }
-      
-      if (!this.chequeoValidacionAlGuardar) {
-        const DENOMINACION_RAZON_CONTROL = this.agregarDestinatarioFinal.get('denominacionRazon');
-        if (DENOMINACION_RAZON_CONTROL) {
-          DENOMINACION_RAZON_CONTROL.setValidators([
-            (control: AbstractControl): ValidationErrors | null => {
-              const TIPO_PERSONA = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
-              if (TIPO_PERSONA === this.tipoPersona.MORAL && !control.value) {
-                return { required: true };
-              }
-              return null;
-            },
-            Validators.pattern(REGEX_NOMBRE)
-          ]);
-          DENOMINACION_RAZON_CONTROL.updateValueAndValidity();
-        }
-        const CURP_CONTROL = this.agregarDestinatarioFinal.get('curp');
-        if (CURP_CONTROL) {
-          CURP_CONTROL.setValidators([Validators.required]);
-          CURP_CONTROL.updateValueAndValidity();
-        }
-      }
-
-      this.estaDeshabilitadoDesplegable = false;
+ changeNacionalidad(): void {
+    if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
       Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
-        if (!this.elementosDeshabilitados.includes(controlName)) {
+        this.agregarDestinatarioFinal.get(controlName)?.disable();
+        if (controlName === 'tipoPersona') {
           this.agregarDestinatarioFinal.get(controlName)?.enable();
         }
       });
-
-      if (!this.isEditMode) {
-        this.agregarDestinatarioFinal.patchValue({
-          pais: 'MEX'
-        });
+    } else {
+      if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+          (controlName) => {
+            if (
+              controlName !== 'tipoPersona'
+            ) {
+              this.agregarDestinatarioFinal.get(controlName)?.reset();
+            }
+          }
+        );
       }
-        if(this.idProcedimiento === 260201){
-        this.agregarDestinatarioFinal.get('pais')?.disable();
-      }
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
+        this.agregarDestinatarioFinal.get(controlName)?.enable();
+        this.estaDeshabilitadoDesplegable = false;
+      });
     }
+    this.forzarDeshabilitarPais();
+    this.agregarDestinatarioFinal.patchValue({pais: 'DEU'});
+    this.updateDenominacionRazonValidation();
+  }
+
+  /**
+   * Actualiza las validaciones del campo denominacionRazon basado en el valor de tipoPersona
+   */
+private updateDenominacionRazonValidation(): void {
+   const DENOMINACIONRAZONCONTROL = this.agregarDestinatarioFinal?.get('denominacionRazon');
+  const NOMBRESCONTROL = this.agregarDestinatarioFinal?.get('nombres');
+  const PRIMERAPELLIDOCONTROL = this.agregarDestinatarioFinal?.get('primerApellido');
+  const RFC = this.agregarDestinatarioFinal?.get('rfc');
+  const CURP = this.agregarDestinatarioFinal?.get('curp');
+  if (!DENOMINACIONRAZONCONTROL || !NOMBRESCONTROL || !PRIMERAPELLIDOCONTROL || !RFC || !CURP) {
+    return;
   }
   
-  if (this.elementosDeshabilitados.includes('pais')) {
-    this.agregarDestinatarioFinal.get('pais')?.disable();
+   const TIPOPERSONAVALUE = this.agregarDestinatarioFinal?.get('tipoPersona')?.value;
+  
+  if (TIPOPERSONAVALUE === this.tipoPersona.MORAL) {
+    DENOMINACIONRAZONCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    RFC.setValidators([Validators.required]);
+
+
+  } else if (TIPOPERSONAVALUE === this.tipoPersona.FISICA) {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    RFC.setValidators([Validators.required]);
+    
+    NOMBRESCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    PRIMERAPELLIDOCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+  }
+  else if(TIPOPERSONAVALUE === this.tipoPersona.NO_CONTRIBUYENTE){
+    CURP.setValidators([Validators.required]);
+     NOMBRESCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    PRIMERAPELLIDOCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+
+  } 
+  else {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
   }
   
-  this.forzarDeshabilitarPais();
+  DENOMINACIONRAZONCONTROL.updateValueAndValidity();
+  NOMBRESCONTROL.updateValueAndValidity();
+  PRIMERAPELLIDOCONTROL.updateValueAndValidity();
+  RFC.updateValueAndValidity();
+  CURP.updateValueAndValidity();
+
 }
 
   /**

@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ModificacionRoutingModule } from './modificacion.routing.module';
 import { NgModule } from '@angular/core';
@@ -24,7 +24,9 @@ import { ToastrService } from 'ngx-toastr';
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   exports: [],
   providers: [

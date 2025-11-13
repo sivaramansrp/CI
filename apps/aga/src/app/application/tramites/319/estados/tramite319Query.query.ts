@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
 import { Tramite319Store } from "./tramite319Store.store";
 
-import { Solicitar } from "../models/personas.module";
+import { Solicitar } from "../models/personas";
 
 import { FinalDataToSend } from "../models/tramite319-state.model";
 
@@ -41,7 +41,7 @@ export class Tramite319Query extends Query<FinalDataToSend> {
      * 
      * @returns {Observable<Solicitar[]>}
      */
-    selectDatos$ = this.select(estado => estado.datos);
+    selectDatos$ = this.select(estado => estado.lista_periodos_solicitud);
 
     /**
      * @descripcion
@@ -49,7 +49,7 @@ export class Tramite319Query extends Query<FinalDataToSend> {
      * 
      * @returns {Observable<string>}
      */
-    selectOperacion$ = this.select(estado => estado.operacion);
+    selectOperacion$ = this.select(estado => estado.numero_registro);
 
     /**
      * @descripcion
@@ -58,7 +58,7 @@ export class Tramite319Query extends Query<FinalDataToSend> {
      * @returns {Solicitar[]}
      */
     get datos(): Solicitar[] {
-        return this.getValue().datos;
+        return this.getValue().lista_periodos_solicitud;
     }
 
     /**
@@ -68,6 +68,6 @@ export class Tramite319Query extends Query<FinalDataToSend> {
      * @returns {string}
      */
     get operacion(): string {
-        return this.getValue().operacion;
+        return this.getValue().numero_registro;
     }
 }

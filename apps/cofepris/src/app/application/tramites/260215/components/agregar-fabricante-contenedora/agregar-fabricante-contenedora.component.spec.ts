@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AgregarFabricanteContenedoraComponent } from './agregar-fabricante-contenedora.component';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
-import { Tramite260214Query } from '../../estados/tramite260214Query.query';
+import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
@@ -16,8 +16,8 @@ import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud
 describe('AgregarFabricanteContenedoraComponent', () => {
   let component: AgregarFabricanteContenedoraComponent;
   let fixture: any;
-  let mockStore: jest.Mocked<Tramite260214Store>;
-  let mockQuery: Partial<Tramite260214Query>;
+  let mockStore: jest.Mocked<Tramite260215Store>;
+  let mockQuery: Partial<Tramite260215Query>;
   let mockActivatedRoute: any;
 
   const mockState = {
@@ -114,8 +114,8 @@ describe('AgregarFabricanteContenedoraComponent', () => {
       ],
       providers: [
         provideHttpClientTesting(),
-        { provide: Tramite260214Store, useValue: mockStore },
-        { provide: Tramite260214Query, useValue: mockQuery },
+        { provide: Tramite260215Store, useValue: mockStore },
+        { provide: Tramite260215Query, useValue: mockQuery },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
     }).compileComponents();

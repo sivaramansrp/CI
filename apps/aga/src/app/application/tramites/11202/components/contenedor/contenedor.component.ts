@@ -388,7 +388,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Agrega un nuevo contenedor al grid.
    */
-  agregarGrid(): void {
+ agregarGrid(): void {
     const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;

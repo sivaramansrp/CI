@@ -42,3 +42,9 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
     INSTRUCCIONES: `<h5 style="text-align: center;">No se ha seleccionado ningún archivo</h5>
  `
   }
+
+  /**
+   * Lista de IDs de trámites que requieren la selección de partidas.
+   * 
+   */
+  export const PARTIDAS_SELECCIONADAS_REQUIRED = [130105];

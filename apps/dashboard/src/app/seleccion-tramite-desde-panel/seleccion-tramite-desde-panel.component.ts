@@ -1,6 +1,7 @@
-import { AMBIENTES, OrigenPeticion, TramiteDetails, TramiteStore} from '@ng-mf/data-access-user';
+import { AMBIENTES, OrigenPeticion, TramiteDetails, TramiteStore } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RfcSolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { RouterModule } from '@angular/router';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
@@ -9,7 +10,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
   selector: 'seleccion-tramite-desde-panel',
   templateUrl: './seleccion-tramite-desde-panel.component.html',
   styleUrl: './seleccion-tramite-desde-panel.component.scss',
-  imports: [TituloComponent,RouterModule, CommonModule],
+  imports: [TituloComponent, RouterModule, CommonModule, RfcSolicitanteComponent],
   standalone: true
 })
 export class SeleccionTramiteDesdePanelComponent implements OnInit {
@@ -24,7 +25,7 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
    * Cada elemento en el arreglo es de tipo `TramiteDetails`.
    * Estos datos se utilizan para gestionar y mostrar información relacionada con diferentes trámites.
    */
-  
+
   public tramiteData: TramiteDetails[] = [];
 
   constructor(
@@ -53,4 +54,3 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
     this.tramiteStore.establecerOrigenPeticion(OrigenPeticion.NUEVA);
   }
 }
-   

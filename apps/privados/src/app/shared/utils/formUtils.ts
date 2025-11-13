@@ -19,6 +19,7 @@ export class FormUtils {
         case 'customRequired':
         case 'broadcastDateRequired':
         case 'numFlightRequired':
+        case 'transferDateRequired':
           return 'Este campo es obligatorio';
         case 'missingStartDate':
           return 'Selecciona primero fecha de inicio';
@@ -30,8 +31,11 @@ export class FormUtils {
     return null;
   }
 
-  static isValidField(form: FormGroup, fieldName: string): boolean | null {
-    return !!form.controls[fieldName].errors && form.controls[fieldName].touched;
+  static isValidField(form: FormGroup, fieldName: string): boolean {
+    const control = form.controls[fieldName];
+    if (!control) return false;
+
+    return !!control.errors && control.touched;
   }
 
   static getFieldError(form: FormGroup, fieldName: string): string | null {
