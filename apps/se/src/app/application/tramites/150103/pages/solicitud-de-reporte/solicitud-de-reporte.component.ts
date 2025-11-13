@@ -1,13 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { DatosPasos, JSONResponse, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ALERT_DOS, ERROR_FORMA_ALERT_QUAD, ERROR_FORMA_ALERT_TRES, REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
-import { take, takeUntil } from 'rxjs/operators';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
-import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
-import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -96,6 +98,66 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValidoDos: boolean = false;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValidoTres: boolean = false;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValidoCuatro: boolean = false;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlertDos = ERROR_FORMA_ALERT_DOS;
+  
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlertTres = ERROR_FORMA_ALERT_TRES;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlertQuad = ERROR_FORMA_ALERT_QUAD;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * @property toastrService
+   * @description
+   * Inyección del servicio `ToastrService` para mostrar notificaciones al usuario.
+   * @type {ToastrService}
+   */
+  toastrService = inject(ToastrService);
+
+  /**
+   * @property wizardService
+   * @description
+   * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+   * @type {WizardService}
+   */
+  wizardService = inject(WizardService);
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
    */
@@ -119,23 +181,127 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       });
 
   }
+
+  /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+  alCambiarPestana(): void {
+    this.esFormaValido = false;
+    this.esFormaValidoDos = false;
+    this.esFormaValidoTres = false;
+    this.esFormaValidoCuatro = false;
+  }
   
   /**
-   * Obtiene el valor del índice de la acción del botón.
-   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   *
-   * Si la acción es 'cont', pasa al siguiente paso. Si la acción es 'atras', regresa al paso anterior.
-   *
-   * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
+   * Método que actualiza el índice del paso actual basado en la acción del botón.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción ('cont' para continuar, 'atras' para retroceder) y el valor del índice del paso.
+   * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (this.indice === 1 && e.accion === 'cont') {
-      this.datosPasos.indice = 1;
-      this.obtenerDatosDelStore();
-    } else if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      this.pasoNavegarPor(e);
+    const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+    let noError=0;    
+    if (this.indice === 1 ) {
+      if (this.pasoUnoComponent && typeof this.pasoUnoComponent.validarTodosLosFormularios === 'function') {
+        noError = this.pasoUnoComponent.validarTodosLosFormularios();
+      } else {
+        noError = 1;
+      }
+    }
+    if (noError===1) {
+      this.esFormaValido = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError === 2) {
+      this.esFormaValidoDos = true;
+      this.esFormaValido = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError === 3) {
+      this.esFormaValidoTres = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError === 4) {
+      this.esFormaValidoCuatro = true;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if(noError === 5) {
+      this.esFormaValido = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    } 
+    this.esFormaValido = false;
+    this.esFormaValidoDos = false;
+    this.esFormaValidoTres = false;
+    this.esFormaValidoCuatro = false;
+    if (e.accion === 'cont') {
+      this.shouldNavigate$()
+        .subscribe((shouldNavigate) => {
+          if (shouldNavigate) {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardService.cambio_indice(NEXT_INDEX);
+            this.wizardComponent.siguiente();
+          } else {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+          }
+        });
+    } else {
+      this.indice = NEXT_INDEX;
+      this.datosPasos.indice = NEXT_INDEX;
+      this.wizardComponent.atras();
     }
   }
+
+  /**
+   * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+   *
+   * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+   * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+   * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+   * hacia adelante o atrás según el tipo de acción.
+   *
+   * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+   */
+    private shouldNavigate$(): Observable<boolean> {
+      return this.informeAnualService.getAllState().pipe(
+        take(1),
+        switchMap(data => this.guardar(data)),
+        map((response: any) => { 
+          const OK = response.codigo === '00';
+          if (OK) {
+            this.toastrService.success(response.mensaje);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+          return OK;
+        })
+      );
+    }
+
   
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -198,7 +364,6 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
         if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
           if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
             this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud));
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
           } else {
             this.store.setIdSolicitud(0);
           }
