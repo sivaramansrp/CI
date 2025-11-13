@@ -37,10 +37,9 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  NotificacionesComponent,
-  Notificacion,
-  ConsultaioQuery,
-} from '@ng-mf/data-access-user';
+ } from '@ng-mf/data-access-user';
+
+import {ConsultaioQuery, Notificacion,NotificacionesComponent} from '@ng-mf/data-access-user';
 
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
@@ -475,7 +474,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
 
       this.establecimientoData = this.establecimientoData.filter(producto =>
         !this.productosSeleccionados.some(seleccionado =>
-          this.compararProductos(producto, seleccionado)
+          EstablecimientoComponent.compararProductos(producto, seleccionado)
         )
       );
       this.establecimientoStore.update({ establecimientoData: this.establecimientoData });
@@ -492,7 +491,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
    * @param producto2 Segundo producto
    * @returns True si son iguales
    */
-  private compararProductos(producto1: DatosDeLaProductoModel, producto2: DatosDeLaProductoModel): boolean {
+  private static compararProductos(producto1: DatosDeLaProductoModel, producto2: DatosDeLaProductoModel): boolean {
     return producto1.nombreEspecifico === producto2.nombreEspecifico &&
       producto1.fraccionArancelaria === producto2.fraccionArancelaria &&
       producto1.tipoDeProducto === producto2.tipoDeProducto;
@@ -535,7 +534,7 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
       if (this.productosSeleccionados.length === 1) {
         const PRODUCTTOORIGINAL = this.productosSeleccionados[0];
         const INDEX = this.establecimientoData.findIndex(producto =>
-          this.compararProductos(producto, PRODUCTTOORIGINAL)
+          EstablecimientoComponent.compararProductos(producto, PRODUCTTOORIGINAL)
         );
 
         if (INDEX !== -1) {
