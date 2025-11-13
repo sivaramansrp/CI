@@ -1,6 +1,7 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
+import { Tramite260505Store } from '../../../../estados/tramites/260505/tramite260505.store';
 
 /**
  * Componente que muestra la sección de Datos de la Solicitud.
@@ -14,6 +15,10 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosDeLaComponent', { static: false }) datosDeLaComponent!: DatosDeLaComponent;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
@@ -29,4 +34,36 @@ export class DatosSolicitudComponent {
    * como catálogos o listas asociadas.
    */
   public idProcedimiento: number = 260505;
+
+  /** Constructor que inicializa el store del trámite 260504. */
+    constructor(
+      public store: Tramite260505Store,
+    ) {
+      //
+    }
+
+  /** Actualiza la validez del formulario de datos del establecimiento en el store. */
+  datosEstabelicimientoFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('datosEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de domicilio del establecimiento en el store. */
+  domicilioFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('domicilioEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de manifiestos en el store. */
+  manifiestosFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('manifiestos', event);
+  }
+
+  /** Actualiza la validez del formulario de representante legal en el store. */
+  representanteLegalFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('representanteLegal', event);
+  }
+
+  /** Ejecuta la validación del formulario desde el componente de datos. */
+  validarFormulario(): void {
+    this.datosDeLaComponent?.validarClickDeBoton();
+  }
 }
