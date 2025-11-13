@@ -361,44 +361,45 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
             const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            PROVEEDOR_DATA.forEach((item: any) => {
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const PROVEEDOR_NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.proveedorRowData.some(existing =>
-                  JSON.stringify(existing.tbodyData) === JSON.stringify(PROVEEDOR_NEW_DATA)
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
+
                 if (!EXISTS) {
-                  this.proveedorRowData.push({ tbodyData: PROVEEDOR_NEW_DATA });
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
                 }
               }
             });
 
             const FABRICANTE_DATA = seccionState.Fabricante ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            FABRICANTE_DATA.forEach((item: any) => {
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const FABRICANTE_NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.fabricanteRowData.some(existing =>
-                  JSON.stringify(existing.tbodyData) === JSON.stringify(FABRICANTE_NEW_DATA)
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
+
                 if (!EXISTS) {
-                  this.fabricanteRowData.push({ tbodyData: FABRICANTE_NEW_DATA });
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
                 }
               }
             });
 
             const FORMULADOR_DATA = seccionState.Formulador ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            FORMULADOR_DATA.forEach((item: any) => {
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
               if (Array.isArray(item.tbodyData)) {
-                const FORMULADOR_NEW_DATA = item.tbodyData.map((val: unknown) => val ?? '');
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
                 const EXISTS = this.formuladorRowData.some(existing =>
-                  JSON.stringify(existing.tbodyData) === JSON.stringify(FORMULADOR_NEW_DATA)
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
                 );
+
                 if (!EXISTS) {
-                  this.formuladorRowData.push({ tbodyData: FORMULADOR_NEW_DATA });
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
                 }
               }
             });
