@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
@@ -24,6 +25,15 @@ import { Solicitud150103Store } from '../../estados/solicitud150103.store';
 export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   formProgrmasReporte!: FormGroup;
+
+  /**
+    * @public
+    * @property {Notificacion} nuevaNotificacion
+    * @description Representa una nueva notificación que se utilizará en el componente.
+    * @command Este campo debe ser inicializado antes de su uso.
+    */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * @description Configuración del componente `BsDatepicker`.
    * Permite establecer el formato de la fecha y restringir la selección a nivel de mes y año.
@@ -87,6 +97,25 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   ) {
     this.setDefaultDates();
     
+    this.solicitud150103Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((respuesta: Solicitud150103State) => {
+          this.solicitud150103State = respuesta;
+          if (this.formProgrmasReporte) {
+            this.formProgrmasReporte.patchValue({
+              reporteAnualFechaInicio: respuesta.inicio,
+              reporteAnualFechaFin: respuesta.fin,
+              folioPrograma: respuesta.folioPrograma,
+              modalidad: respuesta.modalidad,
+              tipoPrograma: respuesta.tipoPrograma,
+              estatus: respuesta.estatus,
+            });
+          }
+        })
+      )
+      .subscribe();
+
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
@@ -244,6 +273,25 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       this.formProgrmasReporte?.disable();
     }
   }
+
+  /**
+   * @method showAlert
+   * @description Shows a general alert notification
+   */
+  showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.
