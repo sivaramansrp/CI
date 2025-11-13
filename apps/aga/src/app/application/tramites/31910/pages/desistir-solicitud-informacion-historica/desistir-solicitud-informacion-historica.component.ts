@@ -6,18 +6,23 @@ import {
   ERROR_FORMA_ALERT,
   ErrorModelo,
   ListaPasosWizard,
+  LoginQuery,
   Notificacion,
   NotificacionesComponent,
   PAGO_DE_DERECHOS,
   PASOS2,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   MSG_REGISTRO_EXITOSO,
   PASOS_EXPORTACION,
 } from '../../constants/solicitud-modificacion-permiso-salida-territorio.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import {
+  Solicitud31910State,
+  Tramite31910Store,
+} from '../../estados/stores/tramite31910.store';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
@@ -27,7 +32,7 @@ import { GuardarT31910Request } from '../../models/guardar-t31910.request';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ResultadoSolicitud } from '../../models/ResultadoSolicitud';
-import { Tramite31910Store } from '../../estados/stores/tramite31910.store';
+import { Tramite31910Query } from '../../estados/queries/tramite31910.query';
 
 /** Representa la forma cruda que puede venir desde el backend */
 interface ErrorModeloRaw {
@@ -54,7 +59,7 @@ interface ErrorModeloRaw {
   selector: 'app-desistir-solicitud-informacion-historica',
   templateUrl: './desistir-solicitud-informacion-historica.component.html',
 })
-export class DesistirSolicitudInformacionHistoricaComponent {
+export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
   /**
    * Folio temporal asignado a la solicitud.
    */
@@ -138,10 +143,49 @@ export class DesistirSolicitudInformacionHistoricaComponent {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * RFC del usuario logueado.
+   * @type {string}
+   */
+  rfcLogueado: string = '';
+
+  /**
+   * Estado de la solicitud actual.
+   * @type {Solicitud31910State}
+   */
+  estadoSolicitud!: Solicitud31910State;
+
   constructor(
     private guardarService: GuardarServiceT31910,
-    private store: Tramite31910Store
+    private store: Tramite31910Store,
+    private query: Tramite31910Query,
+    private loginQuery: LoginQuery
   ) {}
+
+  /**
+   * Inicializa el componente y suscribe al estado del usuario logueado para obtener el RFC.
+   * Este método se ejecuta una vez que el componente ha sido inicializado.
+   */
+  ngOnInit(): void {
+    this.loginQuery
+      .select()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((res) => (this.rfcLogueado = res.rfc));
+    this.obtenerEstadoSolicitud();
+  }
+
+  /**
+   * Obtiene el estado actual de la solicitud desde el store.
+   * Actualiza la propiedad `estadoSolicitud` con los datos obtenidos.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.query
+      .select()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((res) => {
+        this.estadoSolicitud = res;
+      });
+  }
 
   /**
    * Cambia el índice del paso actual en el asistente.
@@ -156,6 +200,7 @@ export class DesistirSolicitudInformacionHistoricaComponent {
       if (!FORM_VALIDO) {
         this.datosPasos.indice = this.indice;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
       }
       this.ejecutarPostGuardar(e);
     } else {
@@ -272,10 +317,11 @@ export class DesistirSolicitudInformacionHistoricaComponent {
    * @returns Observable<ResultadoSolicitud> con el resultado del intento de guardado.
    */
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
+    const JUSTIFICACION = this.estadoSolicitud.justificacion;
     const PAYLOAD: GuardarT31910Request = {
-      justificacion: 'por que quiero compa',
+      justificacion: JUSTIFICACION,
       solicitante: {
-        rfc: 'AAL0409235E6',
+        rfc: this.rfcLogueado,
         nombre: 'IGNACIO EDUARDO',
         es_persona_moral: true,
         certificado_serial_number: '3082054030820428a00302010',

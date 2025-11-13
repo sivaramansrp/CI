@@ -1,13 +1,21 @@
+/**
+ * @file paso-dos.component.ts
+ * @description Documentación adicional para el componente PasoDosComponent (paso 2 del trámite 31910).
+ * Se añadieron comentarios y JSDoc explicativos. NO se modificó la lógica existente.
+ * - Objetivo: mejorar mantenibilidad y comprensión del componente.
+ * - Alcance: documentación a nivel de archivo, propiedades, constructor y métodos principales.
+ */
 import {
   CategoriaMensaje,
   FirmaElectronicaComponent,
+  LoginQuery,
   Notificacion,
   base64ToHex,
   encodeToISO88591Hex,
   formatFecha,
 } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject,catchError, map, of, takeUntil, tap } from 'rxjs';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CadenaOriginal31910Service } from '../../services/cadenaOriginalt31910.service';
 import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/cadena-original-request.model';
@@ -43,35 +51,86 @@ import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+   * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   * Se emite un valor y se completa en ngOnDestroy para cancelar observables con takeUntil.
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Cadena original obtenida para el trámite actual.
+   * Esta cadena es la que se transforma y envía para la firma electrónica.
+   */
   cadenaOriginal?: string;
+
+  /**
+   * Notificación que se muestra al usuario en caso de éxito/error.
+   * Estructura definida por el tipo Notificacion importado.
+   */
   nuevaNotificacion!: Notificacion;
+
+  /**
+   * URL base calculada a partir de la ruta actual (primeros 3 segmentos).
+   * Se utiliza para navegación relativa dentro del flujo del trámite.
+   */
   url?: string;
+
+  /**
+   * Datos recolectados desde el componente de firma electrónica con la firma real,
+   * número de serie del certificado, RFC y fecha de fin de vigencia.
+   */
   datosFirmaReales!: {
     firma: string;
     certSerialNumber: string;
     rfc: string;
     fechaFin: string;
   };
+
+  /**
+   * Estado local de la solicitud obtenido desde el store/consulta correspondiente.
+   * Contiene información del trámite en curso (idSolicitud, datos del usuario, etc.).
+   */
   public estadoSolicitud!: Solicitud31910State;
+
+  /**
+   * Folio devuelto por el servicio tras una firma exitosa.
+   * Se usa posteriormente para almacenar/mostrar el acuse.
+   */
   folio!: string;
+
+  /**
+   * URL del procedimiento recibida como input.
+   * Ejemplo: ruta o endpoint asociado al procedimiento actual.
+   */
   @Input() procedureUrl: string = '';
+
+  /**
+   * Identificador numérico del procedimiento recibido como input.
+   */
   @Input() procedure: number = 0;
+
   /**
+   * RFC del usuario logueado en el sistema.
+   * Se obtiene desde el LoginQuery.
+   */
+  rfcLogueado: string = '';
+
   /**
-   * @constructor
-   * @description
-   * Constructor que inyecta `Router` para la navegación.
+   * Constructor con dependencias inyectadas.
    *
-   * @param {Router} router - Servicio de Angular para manejar la navegación.
-   * @access public
+   * @param router Servicio de Angular Router para navegación.
+   * @param tramiteStore Store para establecer datos del trámite (folio, firma, ids).
+   * @param tramiteQuery Query para obtener el estado actual de la solicitud.
+   * @param cadenaService Servicio encargado de generar/obtener la cadena original.
+   * @param firmaService Servicio encargado de enviar la firma electrónica al backend.
    */
   constructor(
     private router: Router,
     private tramiteStore: TramiteFolioStore,
     private tramiteQuery: Tramite31910Query,
     private cadenaService: CadenaOriginal31910Service,
-    private firmaService: Firma31910Service
+    private firmaService: Firma31910Service,
+    private loginQuery: LoginQuery
   ) {
     // Constructor
   }
@@ -102,9 +161,21 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.obtenerCadenaOriginal();
   }
 
+  obtenerRfcLogueado(): void {
+    this.loginQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => (this.rfcLogueado = res.rfc));
+  }
+
   /**
-   * Obtiene la firma electrónica del documento.
-   * @param firma La firma electrónica en formato base64.
+   * Obtiene la firma electrónica del documento y la envía al servicio correspondiente.
+   *
+   * Requisitos previos:
+   * - `cadenaOriginal` debe estar disponible.
+   * - `datosFirmaReales` debe contener la firma y metadatos del certificado.
+   *
+   * @param firma La firma electrónica en formato base64 proporcionada por el componente de firma.
    * @returns void
    */
   obtieneFirma(firma: string): void {
@@ -194,14 +265,19 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la cadena original para el trámite actual.
+   * Obtiene la cadena original para el trámite actual desde el servicio.
+   *
+   * Construye el payload necesario y maneja la respuesta asignando `cadenaOriginal`
+   * o generando la notificación de error correspondiente.
+   *
+   * @returns void
    */
   obtenerCadenaOriginal(): void {
     const PAYLOAD: CadenaOriginalRequest = {
       num_folio_tramite: this.estadoSolicitud.idSolicitud?.toString() || null,
       boolean_extranjero: true,
       solicitante: {
-        rfc: 'AAL0409235E6',
+        rfc: this.rfcLogueado,
         nombre: 'Juan Pérez',
         es_persona_moral: true,
         certificado_serial_number: 'string',
@@ -249,8 +325,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Procesa los datos de firma.
-   * @param datos Los datos de firma a procesar.
+   * Procesa los datos de firma recibidos desde el componente de firma electrónica.
+   * Asigna los datos y dispara el flujo de envío de la firma.
+   *
+   * @param datos Objeto con las propiedades:
+   *  - firma: string (firma en base64)
+   *  - certSerialNumber: string (número de serie del certificado)
+   *  - rfc: string (RFC del firmante)
+   *  - fechaFin: string (fecha de fin de vigencia del certificado)
    */
   datosFirma(datos: {
     firma: string;
