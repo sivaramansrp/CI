@@ -78,6 +78,7 @@ export class GuardarAdapter_260513 {
         numeroLicencia: this.solicitudDatos.licenciaSanitaria ?? "",
         aduanas: this.solicitudDatos.aduanasDeEntrada?.toString() ?? ""
       },
+      datosSCIAN: this.solicitudDatos.nicoTabla ?? [],
       pagoDeDerechos: {
         claveDeReferencia: this.pagoDerechosDatos.claveReferencia ?? "",
         cadenaPagoDependencia: this.pagoDerechosDatos.cadenaDependencia ?? "",
@@ -90,37 +91,43 @@ export class GuardarAdapter_260513 {
         impPago: this.pagoDerechosDatos.importePago ?? ""
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mercancias: (this.solicitudDatos.mercanciaTabla ?? []).map((m: any) => ({
-        idMercancia: m.idMercancia ?? "",
-        nombreComercial: m.nombreComercial ?? "",
-        nombreComun: m.nombreComun ?? "",
-        nombreCientifico: m.nombreCientifico ?? "",
-        acondicionamiento: m.acondicionamiento ?? "",
-        estadoFisico: m.estadoFisico ?? "",
-        estadoFisicoDescripcionOtros: m.estadoFisicoOtro ?? "",
-        fraccionArancelaria: {
-          clave: m.fraccionArancelaria ?? "",
-          descripcion: m.descripcionFraccion ?? ""
-        },
+      mercancias: [{
+        objetoImportacionEnum: "",
+        objetoImportacionDesc: "Descripción (opcional, desde catálogo)",
+        descOtroObjetoImportacion: this.solicitudDatos.objetoImportacionOtro,
         clasificacionToxicologica: {
           idClasificacionToxicologicaTipoTramite: this.solicitudDatos.especificar,
           clasificacionToxicologica: "Descripción opcional (string)"
         },
+        numeroCAS: this.solicitudDatos.numeroRegistroSanitario,
+        porcentajeConcentracion: this.solicitudDatos.denominacionEspecifica,
+        nombreComercial: this.solicitudDatos.nombreComercial,
+        nombreComun: this.solicitudDatos.nombreComun,
+        nombreCientifico: this.solicitudDatos.nombreCientifico,
+        idMercancia: "1",
+        formaFarmaceuticaDescripcionOtros: "",
+        estadoFisicoDescripcionOtros: this.solicitudDatos.estadoFisicoOtro,
+        fraccionArancelaria: {
+          clave: this.solicitudDatos.fraccionArancelaria,
+          descripcion: this.solicitudDatos.descripcionFraccion
+        },
         unidadMedidaComercial: {
-          descripcion: m.UMC ?? ""
+          descripcion: this.solicitudDatos.UMC
         },
-        cantidadUMCConComas: m.cantidadUMC ?? "",
+        cantidadUMCConComas: this.solicitudDatos.cantidadUMC,
         unidadMedidaTarifa: {
-          descripcion: m.UMT ?? ""
+          descripcion: this.solicitudDatos.UMT
         },
-        cantidadUMTConComas: m.cantidadUMT ?? "",
-        presentacion: m.presentacion ?? "",
-        registroSanitarioConComas: m.numeroRegistroSanitario ?? "",
-        nombreCortoPaisOrigen: m.paisDeOriginDatos?.toString() ?? "",
-        nombreCortoPaisProcedencia: m.paisDeProcedenciaDatos?.toString() ?? "",
-        porcentajeConcentracion: m.porcentajeConcentracion ?? "",
-        fechaCaducidadStr: m.fechaCaducidad ?? ""
-      })),
+        cantidadUMTConComas: this.solicitudDatos.cantidadUMT,
+        presentacion: "",
+        registroSanitarioConComas: "",
+        nombreCortoPaisOrigen: this.solicitudDatos.paisDeOriginDatos?.toString(),
+        nombreCortoPaisProcedencia: this.solicitudDatos.paisDeProcedenciaDatos?.toString(),
+        tipoProductoDescripcionOtros: "",
+        nombreCortoUsoEspecifico: this.solicitudDatos.acondicionamiento,
+        fechaCaducidadStr: "",
+        idEstadoFisico: this.solicitudDatos.estadoFisico,
+      }],
       representanteLegal: {
         rfc: this.solicitudDatos.rfc ?? "",
         resultadoIDC: "",
@@ -135,7 +142,7 @@ export class GuardarAdapter_260513 {
         aduanaAIFA: "",
         informacionConfidencial: this.solicitudDatos.cumplimiento === 'Si' ? true : false
       },
-      datosSCIAN: this.solicitudDatos.nicoTabla ?? []
+    
     };
   }
 
