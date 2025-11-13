@@ -1,10 +1,12 @@
-import { CategoriaMensaje, ConsultaioState, Notificacion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
 import { MercanciaSolicitudService } from '../../services/mercancia-solicitud.service';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 
@@ -62,7 +64,17 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
    */
   constructor(private fb: FormBuilder,
     private mercanciaSolcitudService: MercanciaSolicitudService,
-  ){}
+    private consultaioQuery: ConsultaioQuery,
+  ){
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => { 
+          this.consultaState= seccionState;
+        })
+      )
+      .subscribe();
+  }
   
   /**
    * @method ngOnInit
@@ -95,6 +107,8 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
       descripcionJuegoEvaluar: [{value: '', disabled: true}],
       tipoExportadorEvaluar: [{value: '', disabled: true}],
       separacionContableEvaluar: [{value: null, disabled: true}],
+      calificacion_fraccion_aladi: [{value: null, disabled: true}],
+      tiene_fraccion_aladi: [{value: null, disabled: true}],
       valorTransaccionalFOBEvaluar: [{value: '', disabled: true}],
       clasificacionNALADIEvaluar: [{value: '', disabled: true}],
       descripcionNALADIEvaluar: [{value: '', disabled: true}],
@@ -113,7 +127,7 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
   * @returns {void}
   */
   mercanciaEvaluar(): void {
-    this.mercanciaSolcitudService.getMercanciaEvaluar("202878126")
+    this.mercanciaSolcitudService.getMercanciaEvaluar(this.consultaState.id_solicitud)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -131,6 +145,8 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
               tipoExportadorEvaluar: response.datos?.tipo_exportador,
               separacionContableEvaluar: response.datos?.separacion_contable,
               valorTransaccionalFOBEvaluar: response.datos?.valor_transaccion_fob,
+              calificacion_fraccion_aladi: response.datos?.calificacion_fraccion_aladi,
+              tiene_fraccion_aladi: response.datos?.tiene_fraccion_aladi,
               clasificacionNALADIEvaluar: response.datos?.cve_fraccion_naladi,
               descripcionNALADIEvaluar: response.datos?.descripcion_naladi,
               clasificacionNALADISA1993Evaluar: response.datos?.cve_fraccion_naladisa_93,
@@ -169,6 +185,50 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
           txtBtnCancelar: '',
         }
       }
+    });
+  }
+
+  /**
+   * @method hasAladiData
+   * @description
+   * Verifica si el formulario contiene datos relacionados con ALADI.
+   * Con el objetivo de decidir si se debe mostrar o no la sección correspondiente en la interfaz.
+   * @returns 
+   */
+  hasAladiData(): boolean {
+    if (!this.formEvaluarMercancia) {
+      return false;
+    }
+    const KEYS = [
+      'valorTransaccionalFOBEvaluar',
+      'calificacion_fraccion_aladi',
+      'tiene_fraccion_aladi',
+      'clasificacionNALADIEvaluar',
+      'descripcionNALADIEvaluar',
+      'clasificacionNALADISA1993Evaluar',
+      'descripcionNALADISA1993Evaluar',
+      'clasificacionNALADISA1996Evaluar',
+      'descripcionNALADISA1996Evaluar',
+      'clasificacionNALADISA2002Evaluar',
+      'descripcionNALADISA2002Evaluar'
+    ];
+
+    return KEYS.some(key => {
+      const CONTROL = this.formEvaluarMercancia.get(key);
+      if (!CONTROL) {
+        return false;
+      }
+      const V = CONTROL.value;
+      if (key === 'tiene_fraccion_aladi' && V === false) {
+        return false;
+      }
+      if (key === 'tiene_fraccion_aladi' && V === true) {
+        return true;
+      }
+      if (typeof V === 'boolean') {
+        return true;
+      }
+      return V !== null && V !== undefined && String(V).trim() !== '';
     });
   }
 }
