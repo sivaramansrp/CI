@@ -95,9 +95,9 @@ export class Tramite260502Store extends Store<Solicitud260502State> {
       },
     }));
   }
-
   /** Establece el ID de la solicitud en el estado actual. */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
+  
 }

@@ -148,13 +148,7 @@ onFormValidityChange(isValid: boolean):void {
    *
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
-   /**
-   * Maneja la acción del botón en el asistente.
-   * Cambia el paso actual según la acción del botón.
-   *
-   * @param e - Objeto que contiene la acción y el valor del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
+   getValorIndice(e: AccionBoton): void {
     const NEXT_INDEX =
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
@@ -170,18 +164,25 @@ onFormValidityChange(isValid: boolean):void {
     }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
-        this.shouldNavigate$()
-        .subscribe((shouldNavigate) => {
-          if (shouldNavigate) {
-            this.indice = NEXT_INDEX;
-            this.datosPasos.indice = NEXT_INDEX;
-            this.wizardService.cambio_indice(NEXT_INDEX);
-            this.wizardComponent.siguiente();
-          } else {
-            this.indice = e.valor;
-            this.datosPasos.indice = e.valor;
-          }
-        });
+        if (this.indice === 1) { 
+            this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+        } else {
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardService.cambio_indice(NEXT_INDEX);
+          this.wizardComponent.siguiente();
+        }
       } else {
         this.indice = NEXT_INDEX;
         this.datosPasos.indice = NEXT_INDEX;
