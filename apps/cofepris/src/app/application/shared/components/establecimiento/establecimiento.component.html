@@ -2,42 +2,55 @@
 
 <app-domicillio-del-establecimiento-seccion></app-domicillio-del-establecimiento-seccion>
 
-  <label class="mt-5"> Datos del producto*: </label>
-  <app-tabla-dinamica
-    [configuracionTabla]="configuracionTablaDatosProducto"
-    [datos]="establecimientoData"
-    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-  ></app-tabla-dinamica>
+<label class="mt-5"> Datos del producto*: </label>
+<app-tabla-dinamica
+  [configuracionTabla]="configuracionTablaDatosProducto"
+  [datos]="establecimientoData"
+  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+  (listaDeFilaSeleccionada)="onProductosSeleccionados($event)"
+></app-tabla-dinamica>
 
-  <div class="row">
-    <div class="col-md-12 d-flex justify-content-end mt-5">
-      <div class="btn-group">
-        @if(establecimientoData.length !== 0) {
-            <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-        }
-        @if(establecimientoData.length !== 0) {
-            <button class="btn btn-default ms-2" type="button" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-        }
-        <button
-          type="button"
-          class="btn btn-primary ms-2"
-         
-          (click)="openDatosMercanciaModal()"
-          [disabled]="esFormularioSoloLectura ? true : false"
+<div class="row">
+  <div class="col-md-12 d-flex justify-content-end mt-5">
+    <div class="btn-group">
+      @if(productosSeleccionados.length === 1) {
+        <button 
+          class="btn btn-default me-2" 
+          type="button" 
+          [disabled]="esFormularioSoloLectura"
+          (click)="modificarProducto()"
         >
-          Agregar
+          Modificar
         </button>
-      </div>
+      }
+      @if(productosSeleccionados.length > 0) {
+        <button 
+          class="btn btn-danger me-2" 
+          type="button" 
+          [disabled]="esFormularioSoloLectura"
+          (click)="eliminarProductos()"
+        >
+          Eliminar
+        </button>
+      }
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openDatosMercanciaModal()"
+        [disabled]="esFormularioSoloLectura"
+      >
+        Agregar
+      </button>
     </div>
   </div>
+</div>
 <app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
 
 <div
   class="modal fade"
   #datosMercanciaModal
   tabindex="-1"
-  
   aria-hidden="true"
 >
   <div class="modal-dialog modal-xl">
@@ -275,10 +288,29 @@
             class="btn btn-primary"
             (click)="guardarDatosMercancia()"
           >
-            Agregar
+            {{ productosSeleccionados.length === 1 ? 'Modificar' : 'Agregar' }}
           </button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<!-- Alert Modals -->
+@if(mostrarAlertaSeleccion) {
+  <section>
+    <lib-notificaciones
+      [notificacionInput]="notificacionSeleccion"
+      (confirmacionModal)="cerrarAlerta()"
+    ></lib-notificaciones>
+  </section>
+}
+
+@if(mostrarConfirmacionEliminacion) {
+  <section>
+    <lib-notificaciones
+      [notificacionInput]="notificacionEliminacion"
+      (confirmacionModal)="confirmarEliminacion($event)"
+    ></lib-notificaciones>
+  </section>
+}
