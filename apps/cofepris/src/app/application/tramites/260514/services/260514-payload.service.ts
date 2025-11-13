@@ -320,17 +320,17 @@ export class Shared260514Service {
       "descDenominacionDistintiva": "Paracetamol Tabletas 500mg",
       "descripcionMercancia": "Acetaminophen",
       "formaFarmaceuticaDescripcionOtros": "Tableta",
-      "estadoFisicoDescripcionOtros": item['estadoFisico'] as string || "",
+      "estadoFisicoDescripcionOtros": item['estadoFisicoOtro'] as string || "",
       "fraccionArancelaria": {
           "clave": item['fraccionArancelaria'] as string || "",
-          "descripcion": "Los demás medicamentos constituidos por productos mezclados"
+          "descripcion": item['descripcionFraccion'] as string || ""
       },
       "unidadMedidaComercial": {
-          "descripcion": item['umc'] as string || ""
+          "descripcion": item['UMC'] as string || ""
       },
       "cantidadUMCConComas": item['cantidadUmc'] as string || "",
       "unidadMedidaTarifa": {
-          "descripcion": item['unidadMedidaTarifa'] as string || ""
+          "descripcion": item['UMT'] as string || ""
       },
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
