@@ -190,6 +190,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
     this.esFormaValido = false;
     this.esFormaValidoDos = false;
     this.esFormaValidoTres = false;
+    this.esFormaValidoCuatro = false;
   }
   
   /**
@@ -215,7 +216,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       this.datosPasos.indice = this.indice;
       return;
     }
-    else if (noError===2) {
+    else if (noError === 2) {
       this.esFormaValidoDos = true;
       this.esFormaValido = false;
       this.esFormaValidoTres = false;
@@ -223,7 +224,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       this.datosPasos.indice = this.indice;
       return;
     }
-    else if (noError===3) {
+    else if (noError === 3) {
       this.esFormaValidoTres = true;
       this.esFormaValidoDos = false;
       this.esFormaValido = false;
@@ -231,7 +232,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       this.datosPasos.indice = this.indice;
       return;
     }
-    else if (noError===4) {
+    else if (noError === 4) {
       this.esFormaValidoCuatro = true;
       this.esFormaValidoTres = false;
       this.esFormaValidoDos = false;
@@ -239,7 +240,7 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       this.datosPasos.indice = this.indice;
       return;
     }
-    else if(noError===5) {
+    else if(noError === 5) {
       this.esFormaValido = false;
       this.esFormaValidoDos = false;
       this.esFormaValidoTres = false;
@@ -359,7 +360,6 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
         if(esValidObject(API_RESPONSE) && esValidObject(API_RESPONSE.datos)) {
           if(getValidDatos(API_RESPONSE.datos.id_solicitud)) {
             this.store.setIdSolicitud((API_RESPONSE.datos.id_solicitud));
-            this.pasoNavegarPor({ accion: 'cont', valor: 2 });
           } else {
             this.store.setIdSolicitud(0);
           }
