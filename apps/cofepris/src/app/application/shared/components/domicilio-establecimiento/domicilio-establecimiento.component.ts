@@ -578,11 +578,11 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.mostrarErrores.aduanas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
-      paisDeOriginDatos: events,
+      aduanasEntradas: events,
     });
     this.setValoresStore(
       this.domicilio,
-      "paisDeOriginDatos",
+      "aduanasEntradas",
       "setAduanasDeEntrada",
     );
   }
@@ -2092,7 +2092,7 @@ onConfirmacionModal(accion: boolean): void {
   validatorButtonClick(): boolean {
    let ISVALID = true;
   // Check all required fields in 'domicilio' and set mostrarErrores accordingly
-  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  const REQUIREDFIELDS = [
   'codigoPostal',
   'estado',
   'muncipio',
@@ -2100,10 +2100,11 @@ onConfirmacionModal(accion: boolean): void {
   'telefono',
   'deOrigen',
   'deProcedencia',
-  'aduanas',
-  'avisoCheckbox',
-  'licenciaSanitaria',
-];
+  'aduanas'
+] as (keyof typeof this.mostrarErrores)[];
+if (this.isAvisoLicenciaVisible) {
+  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
+}
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;
