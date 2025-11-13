@@ -37,7 +37,7 @@ export class DatosSolicitudComponent {
 
   /** Constructor que inicializa el store del trámite 260504. */
     constructor(
-      public store: Tramite260505Store,
+      private store: Tramite260505Store,
     ) {
       //
     }

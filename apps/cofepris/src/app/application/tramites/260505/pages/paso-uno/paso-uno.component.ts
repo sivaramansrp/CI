@@ -9,7 +9,6 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 import { Tramite260505Query } from '../../../../estados/queries/260505/tramite260505.query';
-import { Tramite260505Store } from '../../../../estados/tramites/260505/tramite260505.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -85,8 +84,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
     private consultaQuery: ConsultaioQuery,
-    public store: Tramite260505Store,
-    public query: Tramite260505Query,
+    private query: Tramite260505Query,
   ) {}
 
   /**
