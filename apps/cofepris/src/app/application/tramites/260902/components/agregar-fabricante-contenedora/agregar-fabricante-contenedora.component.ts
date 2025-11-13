@@ -1,4 +1,4 @@
-import {AgregarFabricanteModificacionComponent } from '../../../../shared/components/agregar-fabricante-modificacion/agregar-fabricante-modificacion.component';
+import {AgregarFabricanteModificacionComponent } from '../../../../shared/components/shared2609/agregar-fabricante-modificacion/agregar-fabricante-modificacion.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';

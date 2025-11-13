@@ -19,7 +19,7 @@ import {
   PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
   
-} from '../../constantes/datos-solicitud.enum';
+} from '../../../constantes/datos-solicitud.enum';
 import {
   Component,
   ElementRef,
@@ -40,14 +40,14 @@ import {
   MENSAJE_TABLA_OBLIGATORIA,
   PROVEEDOR_ENCABEZADO_DE_TABLA,
   Proveedor,
-} from '../../models/terceros-relacionados.model';
+} from '../../../models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalModificacionComponent } from '../agregar-destinatario-final-modificacion/agregar-destinatario-final-modificacion.component';
 import { AgregarFabricanteModificacionComponent } from '../agregar-fabricante-modificacion/agregar-fabricante-modificacion.component';
 import { AgregarFacturadorModificacionComponent } from '../agregar-facturador-modificacion/agregar-facturador-modificacion.component';
 import { AgregarProveedorModificacionComponent} from '../agregar-proveedor-modificacion/agregar-proveedor-modificacion.component';
 import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
+import { TercerosRelacionadosFebService } from '../../../services/tereceros-relacionados-feb.service';
 import { ToastrService } from 'ngx-toastr';
 
 /**

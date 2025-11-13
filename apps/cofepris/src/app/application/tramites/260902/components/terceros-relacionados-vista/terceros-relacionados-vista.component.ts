@@ -9,7 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 //import {ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
-import { TercerosRelacionadosModificacionComponent} from '../../../../shared/components/terceros-relacionados-modificacion/terceros-relacionados.component';
+import { TercerosRelacionadosModificacionComponent} from '../../../../shared/components/shared2609/terceros-relacionados-modificacion/terceros-relacionados.component';
 //import { Tramite260209Query } from '../../estados/tramite260209Query.query';
 //import { Tramite260209Store } from '../../estados/tramite260209Store.store';
 

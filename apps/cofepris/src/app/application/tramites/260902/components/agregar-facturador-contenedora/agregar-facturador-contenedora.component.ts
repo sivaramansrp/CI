@@ -1,4 +1,4 @@
-import { AgregarFacturadorModificacionComponent} from '../../../../shared/components/agregar-facturador-modificacion/agregar-facturador-modificacion.component';
+import { AgregarFacturadorModificacionComponent} from '../../../../shared/components/shared2609/agregar-facturador-modificacion/agregar-facturador-modificacion.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';

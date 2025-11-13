@@ -25,12 +25,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../../../constantes/datos-solicitud.enum';
 import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Proveedor } from '../../models/terceros-relacionados.model';
-import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
+import { DatosSolicitudService } from '../../../services/datos-solicitud.service';
+import { Proveedor } from '../../../models/terceros-relacionados.model';
+import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 

@@ -1,4 +1,4 @@
-import { AgregarProveedorModificacionComponent } from '../../../../shared/components/agregar-proveedor-modificacion/agregar-proveedor-modificacion.component';
+import { AgregarProveedorModificacionComponent } from '../../../../shared/components/shared2609/agregar-proveedor-modificacion/agregar-proveedor-modificacion.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';

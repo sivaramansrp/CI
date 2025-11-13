@@ -28,9 +28,9 @@ import {
 } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Facturador } from '../../models/terceros-relacionados.model';
-import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
+import { DatosSolicitudService } from '../../../services/datos-solicitud.service';
+import { Facturador } from '../../../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../../constantes/datos-solicitud.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 

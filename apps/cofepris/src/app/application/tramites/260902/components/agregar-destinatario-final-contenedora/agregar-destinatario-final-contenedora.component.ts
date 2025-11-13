@@ -1,4 +1,4 @@
-import {  AgregarDestinatarioFinalModificacionComponent } from '../../../../shared/components/agregar-destinatario-final-modificacion/agregar-destinatario-final-modificacion.component';
+import {  AgregarDestinatarioFinalModificacionComponent } from '../../../../shared/components/shared2609/agregar-destinatario-final-modificacion/agregar-destinatario-final-modificacion.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';

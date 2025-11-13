@@ -33,12 +33,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../../constantes/datos-solicitud.enum';
 import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { DEFAULT_TABLA_ORDENS } from '../../constantes/terceros-fabricante.enum';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Destinatario } from '../../models/terceros-relacionados.model';
+import { DEFAULT_TABLA_ORDENS } from '../../../constantes/terceros-fabricante.enum';
+import { DatosSolicitudService } from '../../../services/datos-solicitud.service';
+import { Destinatario } from '../../../models/terceros-relacionados.model';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
