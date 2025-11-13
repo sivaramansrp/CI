@@ -5,9 +5,9 @@ import { DeclaracionDatosResponse } from '../../models/response/declaracion-dato
 import { FraccionValidarResponse, ProcesoSolicitado } from '../../models/response/validar-fraccion-response.model';
 
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
+import { Mercancia, TratadoAgregado } from '../../models/response/validar-solicitud-response.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { TratadoAgregado } from '../../models/response/validar-solicitud-response.model';
 
 
 /**
@@ -174,6 +174,9 @@ export interface Solicitante110101State {
   descripcionACE: number | null;
   /** Descripción SGP */
   descripcionSGP : number | null;
+
+  /** Mercancia de servicio eveluar*/
+  descripcion_evaluar: Mercancia | null;
 }
 
 
@@ -251,6 +254,7 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     descripcionACE: null,
     valorFobDolares: null,
     descripcionSGP:  null,
+    descripcion_evaluar: null,
     respuestaServiceConfiguracion: {
       mostrar_datos_mercancia: false,
       mostrar_insumos: false,
@@ -759,6 +763,17 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       tratados_servicio_evaluar: tratado_servicio,
+    }));
+  }
+
+  /**
+   * Agregar respuesta de descripciones 'Mercancia'
+   * @param descripcion_evaluar 
+   */
+  public addDescripcionServicioEvaluar(descripcion_evaluar: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      descripcion_evaluar: descripcion_evaluar,
     }));
   }
 

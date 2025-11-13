@@ -439,8 +439,8 @@ export class PantallasComponent implements OnInit {
             if (response.datos?.mercancia?.descripciones_alternas_ue?.length || 
                 response.datos?.mercancia?.descripciones_alternas_aelc?.length || 
                 response.datos?.mercancia?.descripciones_alternas_sgp?.length) {
+                this.tramite110101Store.addDescripcionServicioEvaluar(response.datos.mercancia);
               this.pasoTabsInternos.descripcionesAdicionales(response.datos.mercancia);
-             
             }
 
             if(response.datos?.errores?.length && response.datos.errores.length > 0){

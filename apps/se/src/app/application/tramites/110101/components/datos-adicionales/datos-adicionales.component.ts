@@ -247,6 +247,10 @@ public descripcionesPorTipo: {
       this.formulario.markAllAsTouched();
       this.validarFormularioAdicionales();
     }
+
+    if(this.solicitudeState.descripcion_evaluar){
+      this.activarDescripciones(this.solicitudeState.descripcion_evaluar);
+    }
   
   }
 
