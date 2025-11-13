@@ -373,6 +373,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Método para agregar animales a la lista de datos sensibles.
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
+  // eslint-disable-next-line complexity
   agregarAnimales(): void {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
@@ -399,6 +400,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
         descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.mercanciaForm.get('paisDeOrigen')?.value)?.descripcion || '',
         descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.mercanciaForm.get('paisDeProcedencia')?.value)?.descripcion || '',
         certificadoInternacionalElectronico: this.mercanciaForm.get('numeroCertificadoInternacional')?.value || '',
+        fraccionArancelaria: this.mercanciaForm.get('clave_fraccion')?.value || '',
+        descripcionFraccion: this.mercanciaForm.get('descripcionFraccion')?.value || '',
+        nico: this.mercanciaForm.get('nico')?.value || '',
+        umt: this.mercanciaForm.get('clave_umt')?.value || '',
+        umc: this.mercanciaForm.get('umc')?.value || '',
+        tipoPlanta: this.mercanciaForm.get('tipoPlanta')?.value || '',
+        plantaAutorizadaOrigen: this.mercanciaForm.get('plantaAutorizadaOrigen')?.value || '',
+        tipoPresentacionDescripcion: this.mercanciaForm.get('tipoPresentacion')?.value || '',
       });
 
       SENSIBLES_FORM_ARRAY.clear();
@@ -448,6 +457,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
         (response: BaseResponse<Catalogo>) => {
           if (response && response.codigo === '00' && response.datos) {
+            this.mercanciaForm.get('clave_umt')?.setValue(response.datos.cve_unidad_medida);   
             this.mercanciaForm.get('umt')?.setValue(response.datos.descripcion);
           } else {
             this.mercanciaForm.get('umt')?.setValue('');

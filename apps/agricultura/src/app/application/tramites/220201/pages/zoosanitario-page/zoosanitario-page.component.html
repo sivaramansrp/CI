@@ -15,7 +15,7 @@
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-dos></app-paso-dos>
+      <app-paso-uno (tabChanged)="enTabChange($event)" #pasoUnoRef></app-paso-uno>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
           <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
