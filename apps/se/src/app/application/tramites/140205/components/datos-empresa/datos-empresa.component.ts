@@ -223,16 +223,19 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
       GRUPO_EMPRESA_CONTROL instanceof FormGroup
         ? GRUPO_EMPRESA_CONTROL.get('rfc')
         : null;
-    if (RFC_CONTROL?.valid) {
-      this.fetchGetDatos();
-      this.mostrarDatosGenerales = true;
-      this.BUSCAR_EMPRESA_ERROR = '';
-      this.datosEmpresaBuscar.emit(false);
-    } else {
-      this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
-      this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
-      this.datosEmpresaBuscar.emit(true);
-    }
+        if(!RFC_CONTROL?.valid || (RFC_CONTROL.value as string).length > 13||!REGEX_RFC.test(RFC_CONTROL.value as string)){
+          this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
+          this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
+          this.datosEmpresaBuscar.emit(true);
+        }
+        else{
+          this.fetchGetDatos();
+          this.mostrarDatosGenerales = true;
+          this.BUSCAR_EMPRESA_ERROR = '';
+          this.datosEmpresaBuscar.emit(false);
+        }
+
+   
   }
 
   /**

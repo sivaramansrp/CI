@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject, JSONResponse, WizardService } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/260501constante.enum';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
@@ -35,6 +35,27 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   public guardarIdSolicitud: number = 0;
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+/**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -157,6 +178,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         ).subscribe();
   }
 
+
   /**
    * Maneja la acción del botón en el asistente.
    * Cambia el paso actual según la acción del botón.
@@ -168,48 +190,19 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
-    if (!this.consultaState.readonly && !this.consultaState.update) {
-      this.esFormaValido = this.verificarLaValidezDelFormulario();
-        // if (!this.esFormaValido) {
-        //   this.indice = e.valor;
-        //   this.datosPasos.indice = e.valor;
-        //   this.servicioDeFormularioService.markFormAsTouched('datosSolicitudForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('representanteForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('tercerosForm');
-        //   return;
-        // }
-      if (e.valor > 0 && e.valor <= this.pasos.length) {
-        this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-        if (e.accion === 'cont' && this.esFormaValido) {
-            this.indice = e.valor + 1;
-            this.datosPasos.indice = e.valor + 1;
-            this.wizardService.cambio_indice(this.datosPasos.indice);
-            this.wizardComponent.siguiente();
-        } else if (e.accion === 'ant' && this.esFormaValido) {
-            this.indice = e.valor - 1;
-            this.datosPasos.indice = e.valor - 1;
-            this.wizardComponent.atras();
-        } 
-      }
-    } else {
-        if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        this.esFormaValido = true;
-        if (e.accion === 'cont') {
-          this.shouldNavigate$()
+ 
+    // if (this.indice === 1 && e.accion === 'cont') {
+    //   const ES_VALIDO = this.validarFormulariosPasoActual();
+    //   if (!ES_VALIDO) {
+    //     this.isPeligro = true;
+    //     return;
+    //   }
+    //   this.isPeligro = false;
+    // }
+    if (e.valor > 0 && e.valor < this.pasos.length) {
+      if (e.accion === 'cont') {
+        if (this.indice === 1) {
+            this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
             if (shouldNavigate) {
               this.indice = NEXT_INDEX;
@@ -222,8 +215,15 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
             }
           });
         } else {
-          this.wizardComponent.atras();
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardService.cambio_indice(NEXT_INDEX);
+          this.wizardComponent.siguiente();
         }
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
       }
     }
   }
@@ -295,6 +295,39 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
       (this.servicioDeFormularioService.isFormValid('tercerosForm') ??
       false)
     );
+  }
+
+      /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+/**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /** Actualiza el estado de carga en progreso. */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
   /**

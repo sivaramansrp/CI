@@ -361,6 +361,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
@@ -383,6 +426,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
