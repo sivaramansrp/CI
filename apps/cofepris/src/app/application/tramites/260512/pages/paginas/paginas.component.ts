@@ -108,6 +108,14 @@ export class PaginasComponent implements OnInit {
    * Indica si la carga de archivos está en progreso.
    */
   cargaEnProgreso: boolean = true;
+          /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
 
   /**
      * Constructor que inyecta los servicios necesarios para el componente.
@@ -127,12 +135,17 @@ export class PaginasComponent implements OnInit {
   
       /** Se ejecuta al inicializar el componente y suscribe al estado de la solicitud. */
   ngOnInit(): void {
-    this.query.selectSolicitud$.pipe().subscribe((data) => {
+    this.query.select().subscribe((data) => {
       this.solicitudState = data;
     });
+    
   }
 
-
+// ngOnInit(): void {
+//       this.tramite260512Query.select().subscribe(state => {
+//       this.solicitudState = state;
+//     });
+//   }
   /**
    * @method getValorIndice
    * @description
@@ -176,39 +189,28 @@ export class PaginasComponent implements OnInit {
   //   }
   // }
     getValorIndice(e: AccionBoton): void {
-      const NEXT_INDEX =
-          e.accion === 'cont' ? e.valor + 1 :
-          e.accion === 'ant' ? e.valor - 1 :
-          e.valor;
-  
-      // if (this.indice === 1 && e.accion === 'cont') {
-      //   const ES_VALIDO = this.validarFormulariosPasoActual();
-      //   if (!ES_VALIDO) {
-      //     this.isPeligro = true;
-      //     return;
-      //   }
-      //   this.isPeligro = false;
-      // }
-      if (e.valor > 0 && e.valor < this.pasos.length) {
-        if (e.accion === 'cont') {
-          this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-        } else {
-          this.indice = NEXT_INDEX;
-          this.datosPasos.indice = NEXT_INDEX;
-          this.wizardComponent.atras();
-        }
-      }
+       const NEXT_INDEX = e.valor;
+
+  if (NEXT_INDEX > 0 && NEXT_INDEX <= this.pantallasPasos.length) {
+    if (e.accion === 'cont') {
+      this.shouldNavigate$()
+        .subscribe((shouldNavigate) => {
+          if (shouldNavigate) {
+            this.indice = NEXT_INDEX;
+            this.datosPasos.indice = NEXT_INDEX;
+            this.wizardService.cambio_indice(NEXT_INDEX);
+            this.wizardComponent.siguiente();
+          } else {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+          }
+        });
+    } else {
+      this.indice = NEXT_INDEX;
+      this.datosPasos.indice = NEXT_INDEX;
+      this.wizardComponent.atras();
+    }
+  }
     }
   
     /**
@@ -309,4 +311,37 @@ export class PaginasComponent implements OnInit {
     onCargaEnProgreso(carga: boolean): void {
       this.cargaEnProgreso = carga;
     }
+    /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+   /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
+    /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
 }

@@ -1052,8 +1052,8 @@
   {
     "id": 152,
     "tramite": 260512,
-    "linkDashboard": "/cofepris/Permiso-de-importacion/pantallaspage",
-    "linkDepartment": "/pago/Permiso-de-importacion/pantallaspage",
+    "linkDashboard": "/cofepris/permiso-de-importacion/pantallaspage",
+    "linkDepartment": "/pago/permiso-de-importacion/pantallaspage",
     "department": "cofepris"
   },
   {

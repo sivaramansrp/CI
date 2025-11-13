@@ -237,7 +237,7 @@ export class Shared260512Service {
           "telefono": data['telefono'] || "",
       },
       "original": "",
-      "avisoFuncionamiento": data['avisoCheckbox'] || false,
+      "avisoFuncionamiento": true,
       "numeroLicencia": data['licenciaSanitaria'] || "",
       "aduanas": data['aduanasDeEntrada']?.toString() || "",
       "solicitud": {
