@@ -19,7 +19,9 @@ export interface Solicitud260507State {
     domicilioEstablecimiento?: boolean;
     manifiestos?: boolean;
     representanteLegal?: boolean;
-    terceros?: boolean;
+    fabricanteTablaValid?: boolean;
+    formuladorTablaValid?: boolean;
+    proveedorTablaValid?: boolean;
     pagoDeDerechos?: boolean;
   };
 }
@@ -93,9 +95,9 @@ export class Tramite260507Store extends Store<Solicitud260507State> {
       },
     }));
   }
-
   /** Establece el ID de la solicitud en el estado actual. */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
+  
 }
