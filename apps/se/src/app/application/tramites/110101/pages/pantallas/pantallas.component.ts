@@ -436,6 +436,13 @@ export class PantallasComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
+            if (response.datos?.mercancia?.descripciones_alternas_ue?.length || 
+                response.datos?.mercancia?.descripciones_alternas_aelc?.length || 
+                response.datos?.mercancia?.descripciones_alternas_sgp?.length) {
+              this.pasoTabsInternos.descripcionesAdicionales(response.datos);
+             
+            }
+
             if(response.datos?.errores?.length && response.datos.errores.length > 0){
                this.mostrarMensajeServicio = true;
                 this.mensajeErrores = response.datos.errores;
