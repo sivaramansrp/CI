@@ -31,7 +31,7 @@ export class TercerosRelacionadosFabricanteComponent {
     tablaOrden = TABLA_ORDEN;
     /** Constructor que inicializa el store del trámite 260504. */
     constructor(
-      public store: Tramite260502Store,
+      private store: Tramite260502Store,
     ) {
       //
     }

@@ -11,7 +11,9 @@ import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite2
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
-
+  /**
+   * Indica si se debe mostrar la sección de Aduanas de Entrada
+   */
   isAduanasEntradaVisible: boolean = true;
     /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
@@ -42,7 +44,7 @@ export class DatosSolicitudComponent {
     @ViewChild('DatosDeLaComponent', { static: false }) datosDeLaComponent!: DatosDeLaComponent;
      /** Constructor que inicializa el store del trámite 260509. */
       constructor(
-        public store: Tramite260502Store,
+        private store: Tramite260502Store,
       ) {
         //
       }

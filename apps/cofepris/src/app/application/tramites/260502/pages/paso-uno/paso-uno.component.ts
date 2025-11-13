@@ -110,8 +110,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     private solicitud260502Service: DatosDomicilioLegalService,
     private consultaQuery: ConsultaioQuery,
     private pagoBancoService: PagoBancoService,
-    public store: Tramite260502Store,
-        public query: Tramite260502Query,
+    private store: Tramite260502Store,
+    private query: Tramite260502Query,
   ) {}
 
   /**

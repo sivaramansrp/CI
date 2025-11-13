@@ -1,16 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { TercerosRelacionados260507Component } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { TercerosRelacionados260507Component } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260507Query } from '../../../../estados/queries/260507/tramite260507.query';
 import { Tramite260507Store } from '../../../../estados/tramites/260507/tramite260507.store';
-import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
-
-
 /**
  * Componente para gestionar el paso uno del trámite.
  */
@@ -86,8 +84,17 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
+/**
+ * Indica si el componente de "Datos de la Solicitud" ha pasado su validación.
+ * Se utiliza para controlar el flujo del formulario o asistente (wizard) 
+ * antes de permitir avanzar al siguiente paso.
+ */
  private isDatosDeLaSolicitudComponentValid: boolean = false;
+ /**
+ * Indica si el componente de "Terceros" es válido.
+ * Permite verificar que la información de terceros (personas, empresas, etc.)
+ * haya sido completada correctamente antes de continuar.
+ */
   private isTercerosComponentValid: boolean = false;
   /**
  * Constructor del componente PasoUnoComponent.
