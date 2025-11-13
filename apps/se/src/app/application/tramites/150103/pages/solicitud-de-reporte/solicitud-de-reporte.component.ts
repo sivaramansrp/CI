@@ -204,9 +204,13 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
-    let noError=0;
+    let noError=0;    
     if (this.indice === 1 ) {
-      noError = this.pasoUnoComponent.validarTodosLosFormularios();
+      if (this.pasoUnoComponent && typeof this.pasoUnoComponent.validarTodosLosFormularios === 'function') {
+        noError = this.pasoUnoComponent.validarTodosLosFormularios();
+      } else {
+        noError = 1;
+      }
     }
     if (noError===1) {
       this.esFormaValido = true;
