@@ -1,28 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosSolicitudComponent', () => {
-  let component: DatosSolicitudComponent;
-  let fixture: ComponentFixture<DatosSolicitudComponent>;
+	let component: DatosSolicitudComponent;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule,DatosSolicitudComponent],
-    }).compileComponents();
+	beforeEach(() => {
+		component = new DatosSolicitudComponent();
+		component.datosDeLaComponent = { validarClickDeBoton: jest.fn().mockReturnValue(true) } as any;
+	});
 
-    fixture = TestBed.createComponent(DatosSolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  it('should create', () => {
-    fixture.detectChanges(); // Ensure change detection runs again
-    expect(component).toBeTruthy();
-  });
+	it('should have default values', () => {
+		expect(component.idProcedimiento).toBe(260513);
+		expect(component.isAvisoLicenciaVisible).toBe(true);
+		expect(component.isAduanasEntradaVisible).toBe(true);
+		expect(component.configuracionVisibilidad).toBeDefined();
+	});
 
-  it('should not throw ExpressionChangedAfterItHasBeenCheckedError after state change', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-  });
+	it('should call validarClickDeBoton on child component', () => {
+		const spy = jest.spyOn(component.datosDeLaComponent, 'validarClickDeBoton');
+		const result = component.validarClickDeBoton();
+		expect(spy).toHaveBeenCalled();
+		expect(result).toBe(true);
+	});
 });
