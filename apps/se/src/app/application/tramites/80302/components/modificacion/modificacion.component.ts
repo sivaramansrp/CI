@@ -1,67 +1,153 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
-import { DatosModificacion } from '../../../../shared/models/modificacion.model';
-import { EliminacionModificacionComponent } from '../../../../shared/components/modificacion/modificacion.component';
-import { SolicitudService } from '../../service/solicitud.service';
+/**
+ * @fileoverview Componente para gestión de modificaciones del trámite 80302
+ * @author Sistema VUCEM
+ * @version 1.0.0
+ * @since 2024
+ */
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, SolicitanteQuery, SolicitanteState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
+import { Planta } from '../../estados/models/plantas-consulta.model';
+import { SolicitudService } from '../../service/solicitud.service';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
+
+/**
+ * Componente para gestión de modificaciones del programa IMMEX
+ * 
+ * @export
+ * @class ModificacionComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-modificacion',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     CommonModule,
-    EliminacionModificacionComponent
+    FormsModule,
+    TituloComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent implements OnInit, OnDestroy {
   /**
-   * Constructor del componente ModificacionComponent.
-   * @param solicitudService Servicio para manejar solicitudes relacionadas con el trámite.
-   * @param consultaioQuery Estado de la consulta.
+   * Constructor del componente de modificación
+   * 
+   * @param {FormBuilder} fb Constructor de formularios reactivos de Angular
+   * @param {SolicitudService} solicitudService Servicio para consultas y actualizaciones de solicitudes
+   * @param {Tramite80302Store} tramite80302Store Store de Akita para gestión del estado del trámite
+   * @param {Tramite80302Query} tramite80302Query Query para consultas reactivas del estado del trámite
+   * @param {ConsultaioQuery} consultaioQuery Query para consultas de datos generales
+   * @param {ToastrService} toastr Servicio para notificaciones al usuario
+   * @param {SolicitanteQuery} solicitanteQuery Query para datos del solicitante
+   * @memberof ModificacionComponent
    */
   constructor(
+    private fb: FormBuilder,
     private solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private tramite80302Store: Tramite80302Store,
+    private tramite80302Query: Tramite80302Query,
+    private consultaioQuery: ConsultaioQuery,
+    private toastr: ToastrService,
+    private solicitanteQuery: SolicitanteQuery
   ) {}
 
   /**
-   * Observable para notificar la destrucción del componente.
-   * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
+   * Formulario reactivo para gestión de datos de modificación
+   * 
+   * @type {FormGroup}
+   * @memberof ModificacionComponent
    */
-  public destroyNotifier$: Subject<void> = new Subject();  
+  modificacionForm!: FormGroup;
 
   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
+   * Subject para gestión de destrucción del componente
+   * 
+   * @type {Subject<void>}
+   * @memberof ModificacionComponent
    */
-  datosTabla: DatosDelModificacion[] = [];
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   * Estado actual del trámite 80302
+   * 
+   * @type {Solicitud80302State}
+   * @memberof ModificacionComponent
+   */
+  public derechoState: Solicitud80302State = {} as Solicitud80302State;
+
+  /**
+   * Referencia a la clase TablaSeleccion para uso en template
+   * 
+   * @type {typeof TablaSeleccion}
+   * @readonly
+   * @memberof ModificacionComponent
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Configuración de columnas para la tabla dinámica de plantas
+   * 
+   * @type {ConfiguracionColumna<Planta>[]}
+   * @readonly
+   * @memberof ModificacionComponent
+   */
+  public encabezadoDeTabla: ConfiguracionColumna<Planta>[] = CONFIGURACION_MODIFICACION as ConfiguracionColumna<Planta>[];
+
+  /**
+   * Datos de plantas para mostrar en la tabla dinámica
+   * 
+   * @type {Planta[]}
+   * @memberof ModificacionComponent
+   */
+  datosTabla: Planta[] = [];
+
+  /**
+   * Estado de datos de consulta general
+   * 
+   * @type {ConsultaioState}
+   * @memberof ModificacionComponent
    */
   consultaDatos!: ConsultaioState;
 
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * Estado de datos del solicitante
+   * 
+   * @type {SolicitanteState}
+   * @memberof ModificacionComponent
    */
-  soloLectura: boolean = false;
+  solicitanteState!: SolicitanteState;
 
   /**
-   * @property {DatosModificacion} datosModificacion
-   * @description Datos relacionados con la modificación del trámite.
-  */
-  datosModificacion!: DatosModificacion;
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario, carga los datos de modificación y los datos de la tabla.
+   * Indicador de modo de solo lectura
+   * 
+   * @type {boolean}
+   * @memberof ModificacionComponent
+   */
+  soloLectura: boolean = false;  /**
+   * Método del ciclo de vida de Angular para inicialización del componente
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
    */
   ngOnInit(): void {
+    this.tramite80302Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.derechoState = {
+            ...this.derechoState,
+            ...seccionState,
+          };
+        })).subscribe();
+
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -72,74 +158,168 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     )
     .subscribe();
 
+    this.solicitanteQuery.selectSeccionState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitanteState = seccionState;
+      })
+    )
+    .subscribe();
+    
+    this.inicializarFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
   }
 
   /**
-   * Carga los datos de modificación desde el servicio.
-   * Actualiza el estado del trámite y los valores del formulario.
-   */
-  loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((datos) => {
-      this.datosModificacion = datos;
-    });
-  }
-
-  /**
-   * Cargar datos de la tabla.
-   *
-   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
-   * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
-   * cuando el componente se destruye, evitando fugas de memoria.
-   *
-   * @example
-   * // Llamar al método para cargar los datos de la tabla
-   * this.loadDatosTablaData();
-   */
-  loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((data) => {
-      this.datosTabla = data;
-    });
-  }
-
-  /**
-   * Alterna el estado de un registro en la tabla entre 'Baja' y 'Activada'.
-   *
-   * @param row - El registro de la tabla que se desea modificar. Debe contener un identificador único (`id`).
-   *
-   * @remarks
-   * Este método busca el índice del registro en la tabla `datosTabla` utilizando el identificador (`id`) del registro proporcionado.
-   * Luego, cambia el valor de la propiedad `desEstatus` del registro encontrado:
-   * - Si el estado actual es 'Baja', se cambia a 'Activada'.
-   * - Si el estado actual es diferente de 'Baja', se cambia a 'Baja'.
-   *
-   * @example
-   * ```typescript
-   * const registro = { id: 1, desEstatus: 'Baja' };
-   * this.valorDeAlternancia(registro);
-   * // Ahora, registro.desEstatus será 'Activada'.
-   * ```
-   */
-  valorDeAlternancia(event: {
-    row: unknown;
-    column: string;
-  }):void { 
-    const ROW = event.row as DatosDelModificacion;
-    const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id);
-    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
-  }  
-
-  /**
-   * Método que se ejecuta cuando el componente es destruido.
-   * Notifica a todos los observables que deben completarse y limpia las suscripciones.
+   * Método del ciclo de vida de Angular para limpieza al destruir el componente
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
-    this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
+  }
+
+  /**
+   * Inicializa el formulario reactivo de modificación
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  inicializarFormulario(): void {
+    this.modificacionForm = this.fb.group({
+      rfc: [this.solicitanteState?.rfc_original ?? '', []],
+      federal: ['', []],
+      tipo: [this.solicitanteState?.tipo_sociedad ?? '', []],
+      programa: [this.solicitanteState?.email ?? '', []],
+    });
+  }
+
+  /**
+   * Carga los datos de modificación desde el servicio
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  loadDatosModificacion(): void {
+    this.solicitudService.getDatosModificacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+        (this.tramite80302Store.setDatosModificacion as (valor: unknown) => void)(datos);
+        this.setFormValues();
+      });
+  }
+
+  /**
+   * Carga los datos de plantas para la tabla dinámica
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  loadDatosTablaData(): void {
+    const PAYLOAD ={
+      "rfc": "AAL970927390",
+      "idPrograma": "121119",
+      "tipoPrograma": "TICPSE.PROSEC",
+      "folioPrograma": "9415",
+      "discriminator": "80302"
+    }
+    this.solicitudService
+      .obtenerListaDomicilios(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos?.plantas)) {
+              this.datosTabla = RESPONSE.datos?.plantas.filter(
+                (obj: Planta) => Object.values(obj).some(value => value !== null)
+              );
+              this.tramite80302Store.setModificacionDatos(this.datosTabla);
+            }
+          }
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones');
+        }
+      );
+  }
+
+  /**
+   * Establece los valores del formulario con datos del solicitante
+   * 
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  setFormValues(): void {
+    this.modificacionForm.get('rfc')?.setValue(this.solicitanteState?.rfc_original ?? '');
+    this.modificacionForm.get('federal')?.setValue('');
+    this.modificacionForm.get('tipo')?.setValue(this.solicitanteState?.tipo_sociedad ?? '');
+    this.modificacionForm.get('programa')?.setValue(this.solicitanteState?.email ?? '');
+  }
+
+  /**
+   * Establece valores en el store del trámite mediante invocación dinámica de métodos
+   * 
+   * @param {FormGroup} form Formulario reactivo del cual extraer el valor
+   * @param {string} campo Nombre del control del formulario
+   * @param {keyof Tramite80302Store} metodoNombre Nombre del método del store a invocar
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite80302Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite80302Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Maneja el evento de alternancia de estado en la tabla de plantas
+   * 
+   * @param {unknown} event Evento de la tabla que contiene los datos de la fila
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  valorDeAlternancia(event: unknown): void {
+    if (event && typeof event === 'object' && 'row' in event) {
+      const ROW = (event as { row: Planta }).row;
+      const INDEX = this.datosTabla.findIndex((x) => x.idPlanta === ROW.idPlanta);
+      this.updateTablaData(this.datosTabla[INDEX]);
+    }
+  }
+
+  /**
+   * Actualiza los datos de una planta mediante el servicio correspondiente
+   * 
+   * @param {Planta} datos Datos de la planta que se va a actualizar
+   * @returns {void}
+   * @memberof ModificacionComponent
+   */
+  updateTablaData(datos: Planta): void {
+    const PAYLOAD ={
+      plantas: [datos],
+      idFraccion: "1",
+      status: datos.estatus ? "true" : "false",
+      tipoFraccion: "Plantas",
+      idSolicitud: "202744086"
+    }
+    this.solicitudService
+      .actualizarDomicilios(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (data) => {
+          if(esValidObject(data)) {
+            const RESPONSE = doDeepCopy(data);
+            if(esValidArray(RESPONSE.datos?.plantas)) {
+              this.datosTabla = RESPONSE.datos?.plantas.filter(
+                (obj: Planta) => Object.values(obj).some(value => value !== null)
+              );
+            }
+          }
+        },
+        () => {
+          this.toastr.error('Error al cargar las operaciones');
+        }
+      );
   }
 }

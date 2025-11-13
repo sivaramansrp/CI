@@ -5,7 +5,7 @@
          <div class="alert alert-info">
             <div class="row align-items-center justify-content-start py-2">
                <div class="col-auto d-flex align-items-start pt-1">
-                  <input class="form-check-input me-3" type="checkbox" id="mensaje" formControlName="mensaje"  />
+                  <input class="form-check-input me-3" type="checkbox" id="mensaje" formControlName="mensaje"  (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"/>
                   <label class="form-check-label ms-2 mt-2" for="mensaje" >
                   <span [ngClass]="
                      manifiestos.get('mensaje')?.invalid &&

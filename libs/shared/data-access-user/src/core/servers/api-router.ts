@@ -1143,7 +1143,7 @@ export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string =>
 /*
   * API para obtener la tipo de empresa
  */
-// export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
+export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
 
 /*API para obtener el catálogo de fracciones arancelarias*/
 export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;

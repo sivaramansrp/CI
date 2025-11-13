@@ -260,18 +260,33 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   }
 
   validatorButtonClick(): boolean {
-    if(!this.tieneElBotonSeleccionClicado){
+    let allValid = true;
+
+    // Check denominacionRazonSocial
+    if (this.datosDelForm.get('denominacionRazonSocial')?.value === '' || this.datosDelForm.get('denominacionRazonSocial')?.invalid) {
       this.mostrarErrores.denominacionRazonSocial = true;
+      allValid = false;
+    } else {
+      this.mostrarErrores.denominacionRazonSocial = false;
+    }
+
+    if (this.datosDelForm.get('correoElectronico')?.value === '' || this.datosDelForm.get('correoElectronico')?.invalid) {
       this.mostrarErrores.correoElectronico = true;
-    return false;
+      allValid = false;
+    } else {
+      this.mostrarErrores.correoElectronico = false;
     }
-    if(this.datosDelForm.invalid){
+    if (!allValid) {
       this.datosDelForm.markAllAsTouched();
-      return true;
+      return false;
     }
-    this.mostrarErrores.denominacionRazonSocial = false;
-    this.mostrarErrores.correoElectronico = false;
-    return this.datosDelForm.invalid;
+
+    // If form is invalid for any other reason, mark all as touched and return false
+    if (this.datosDelForm.invalid) {
+      this.datosDelForm.markAllAsTouched();
+      return false;
+    }
+    return true;
   }
 
   /**

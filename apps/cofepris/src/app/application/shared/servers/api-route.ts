@@ -57,3 +57,5 @@ export const FRACCION_DESCRIPCION = (clave: string, idTipoTramite: string): stri
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/unidad-medida?cveFraccion=01012101
  */
 export const UNIDAD_MEDIDA = (cveFraccion: string, idTipoTramite: string): string => `${BASE_URL}${API}/sat-t${idTipoTramite}${SOLICITUD}/unidad-medida?cveFraccion=${cveFraccion}`;
+
+export const GUARDAR_SOLICITUD = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/guardar`;
