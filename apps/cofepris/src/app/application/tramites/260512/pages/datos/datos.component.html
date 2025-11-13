@@ -5,38 +5,38 @@
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Datos de la
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos de la
                     solicitud</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Terceros
-                    relacionados</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros
+                    Relacionados</a>
             </li>
             <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Pago de
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Pago de
                     derechos</a>
             </li>
+
         </ul>
         <ng-container>
-            <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
-            <app-datos-de-la
-            [hidden]="indice !== 2 || !esDatosRespuesta"
-            [isAvisoLicenciaVisible]="isAvisoLicenciaVisible"
-            [isAduanasEntradaVisible]="isAduanasEntradaVisible"
-            [configuracionVisibilidad]="configuracionVisibilidad"
-            [identificacion]="true"
-            [estadoValidte]="true"
-            ></app-datos-de-la>
-            <app-aviso-terceros-relacionados
-            [hidden]="indice !== 3 || !esDatosRespuesta"
-            ></app-aviso-terceros-relacionados>
-            <app-pago-de-derechos
-            [hidden]="indice !== 4 || !esDatosRespuesta"
-            #pagoDeDerechosComponent
-            [idProcedimiento]="idProcedimiento"
-            [pagoDerechoFormState]="pagoDerechos"
-            [formularioDeshabilitado]="formularioDeshabilitado"
-            ></app-pago-de-derechos>
+            
+            <solicitante [hidden]="indice !== 1"></solicitante>
+            
+            @if(esDatosRespuesta){
+                <app-datos-de-la [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+                [isAduanasEntradaVisible]="isAduanasEntradaVisible" [configuracionVisibilidad]="configuracionVisibilidad" 
+                [idProcedimiento]="idProcedimiento"[identificacion]="true"
+[estadoValidte]="true" [hidden]="indice !== 2"></app-datos-de-la>
+            }
+            
+            @if(esDatosRespuesta){
+            <app-aviso-terceros-relacionados [hidden]="indice !== 3"></app-aviso-terceros-relacionados>
+            }
+           
+            @if(esDatosRespuesta){
+            <app-pago-de-derechos-contenedora [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
+            }
+            
         </ng-container>
     </div>
 </div>

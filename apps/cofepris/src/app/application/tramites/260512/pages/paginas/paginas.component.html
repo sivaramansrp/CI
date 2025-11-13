@@ -1,9 +1,8 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-12 mb-3">
-            <h1>Permiso de importación de muestras experimentales con fines de pruebas de calidad relativas a la garantía de composición de las sustancias tóxicas</h1>
-        </div>
-        @if (!esFormaValido && esFormaValido !== undefined) {
+        <div class="col-md-6">
+ <h1>Permiso de importación de muestras experimentales con fines de pruebas de calidad relativas a la garantía de composición de las sustancias tóxicas</h1>        </div>
+        @if (esFormaValido) {
           <div class="col-md-12">
             <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
           </div>
@@ -15,20 +14,24 @@
         @case (1) {
           <app-datos></app-datos>
         } @case (2) {
-          <app-paso-dos></app-paso-dos>
+<app-paso-carga-documento 
+          [idSolicitud]="solicitudState.idSolicitud"
+          [idTipoTRamite]="'260512'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
         } @case (3) {
-          <app-paso-tres></app-paso-tres>
+       <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260512" [procedureUrl]="'Permiso-de-importacion/pantallaspage'"></paso-firma>
         }
        }
       </div>
       <btn-continuar
       [datos]="datosPasos"
-      [dePadre]="true"
       (continuarEvento)="getValorIndice($event)"
+      [dePadre]="true"
     >
     </btn-continuar>
-
-    <div class="mt-5">
-        <ng-alert [CONTENIDO]="avisoPrivacidadAlert"></ng-alert>
-      </div>
+    <app-aviso-de-privacidad *ngIf="indice === 1"></app-aviso-de-privacidad>
 </div>
