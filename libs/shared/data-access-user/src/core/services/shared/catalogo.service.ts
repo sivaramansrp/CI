@@ -60,6 +60,7 @@ import {
   FRACCION_HTS,
   PAISES_POR_BLOQUE,
   PAIS_DESTINO,
+  TIPO_EMPRESA,
   UNIDADES_MEDIDA_COMERCIAL,
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_CATALOGOS_PAISES_TODOS,
@@ -1046,6 +1047,19 @@ export class CatalogoServices {
   getpaisesBloqueCatalogo(tramite: string, claveBloque: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${PAISES_POR_BLOQUE(tramite, claveBloque)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+/**
+ * Obtiene el catálogo tipo de empresa.
+ * 
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de empresa
+ * @see CATALOGO_TIPO_EMPRESA
+ */
+  obtenerTipoEmpresaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${TIPO_EMPRESA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
   }
 
 }

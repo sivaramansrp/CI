@@ -16,7 +16,7 @@ import {
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
   TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
@@ -72,6 +72,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+
+  /** Evento emitido cuando la tabla es válida. */
+  @Output() tableValidEvent = new EventEmitter<string>();
 
   /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
    * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
@@ -358,6 +361,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
@@ -1155,15 +1201,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del fabricante.
-     */
-    this.fabricanteRowData.push(FABRICANTE_FILA);
-
-    /**
      * Actualiza el estado del store con los nuevos datos del fabricante.
      */
-    this.tercerosFabricanteStore.setFabricante(this.fabricanteRowData);
+    this.tercerosFabricanteStore.setFabricante([FABRICANTE_FILA]);
 
+    this.tableValidEvent.emit('fabricante');
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
@@ -1301,18 +1343,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del formulador.
+     * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.formuladorRowData.push(FORMULADOR_FILA);
+    this.tercerosFabricanteStore.setFormulador([FORMULADOR_FILA]);
 
-    /**
-     * Actualiza el estado del store con los nuevos datos del formulador.
-     */
-    this.tercerosFabricanteStore.setFormulador(this.formuladorRowData);
+    this.tableValidEvent.emit('formulador');
 
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
     this.showTableDiv = !this.showTableDiv;
     this.showFormulador = !this.showFormulador;
   }
@@ -1447,14 +1483,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del proveedor.
-     */
-    this.proveedorRowData.push(PROVEEDOR_FILA);
-
-    /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setProveedor(this.proveedorRowData);
+    this.tercerosFabricanteStore.setProveedor([PROVEEDOR_FILA]);
+
+    this.tableValidEvent.emit('proveedor');
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1584,7 +1617,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.isfabricanteInvalida=true;
     }
     if (this.formuladorRowData.length===0) {
-      this.isFormuladorInvalida=true;
+      this.isFormuladorInvalida=true; 
     }
     if (this.proveedorRowData.length===0) {
       this.isProveedorInvalida=true;

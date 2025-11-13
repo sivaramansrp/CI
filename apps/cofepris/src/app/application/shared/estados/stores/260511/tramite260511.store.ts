@@ -7,11 +7,11 @@ import { Injectable } from '@angular/core';
  * Representa el estado de Solicitud260509State.
  * Es un objeto dinámico donde las claves son cadenas y los valores pueden ser de cualquier tipo.
  * 
- * @interface Solicitud260509State
+ * @interface Solicitud260511State
  * @property {string} [key] - Las claves son cadenas que representan los nombres de los campos.
  * @property {any} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
  */
-export interface Solicitud260509State {
+export interface Solicitud260511State {
     [key: string]: any;
     idSolicitud: number;
     formValidity?: {
@@ -19,18 +19,16 @@ export interface Solicitud260509State {
     domicilioEstablecimiento?: boolean;
     manifiestos?: boolean;
     representanteLegal?: boolean;
-    fabricanteTablaValid?: boolean;
-    formuladorTablaValid?: boolean;
-    proveedorTablaValid?: boolean;
+    terceros?: boolean;
     pagoDeDerechos?: boolean;
   };
 }
 
 /**
- * Crea el estado inicial para Solicitud260509State.
- * @returns {Solicitud260509State} Un objeto vacío que representa el estado inicial del estado de Solicitud260509State.
+ * Crea el estado inicial para Solicitud260511State.
+ * @returns {Solicitud260511State} Un objeto vacío que representa el estado inicial del estado de Solicitud260511State.
  */
-export function createInitialState(): Solicitud260509State {
+export function createInitialState(): Solicitud260511State {
     return {
         idSolicitud: 0,
         formValidity: {},
@@ -55,12 +53,16 @@ export function createInitialState(): Solicitud260509State {
  * @property {string} name - Nombre del store, utilizado para identificarlo.
  * @property {boolean} resettable - Indica si el estado del store puede ser reiniciado.
  */
-@StoreConfig({ name: 'tramite260509', resettable: true })
+@StoreConfig({ name: 'tramite260510', resettable: true })
 
-export class Tramite260509Store extends Store<Solicitud260509State> {
+/**
+ * Clase que representa el store para Tramite260510.
+ * Extiende la clase Store de Akita para gestionar el estado de Solicitud260510State.
+ */
+export class Tramite260511Store extends Store<Solicitud260511State> {
 
     /**
-     * Constructor de la clase Tramite260509Store.
+     * Constructor de la clase Tramite260511Store.
      * 
      * Este constructor inicializa el estado del store utilizando la función `createInitialState`.
      * La función `createInitialState` devuelve un objeto vacío que representa el estado inicial.
@@ -96,7 +98,10 @@ export class Tramite260509Store extends Store<Solicitud260509State> {
     }));
   }
 
-  /** Establece el ID de la solicitud en el estado actual. */
+  /**
+   * Establece el ID de la solicitud en el estado del store.
+   * @param idSolicitud El ID de la solicitud a establecer.
+   */
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
