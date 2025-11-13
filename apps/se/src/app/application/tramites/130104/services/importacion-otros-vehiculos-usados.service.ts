@@ -201,17 +201,17 @@ export class ImportacionOtrosVehiculosUsadosService {
       );
   }
 
-  /**
-   * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
-   * @param tramitesID Identificador del trámite
-   * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
-   */
-  getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
-    const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
-    return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
-      .pipe(
-        map(res => res?.datos ?? [])
-      );
-  }
+  // /**
+  //  * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
+  //  * @param tramitesID Identificador del trámite
+  //  * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
+  //  */
+  // getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+  //   const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
+  //   return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
+  //     .pipe(
+  //       map(res => res?.datos ?? [])
+  //     );
+  // }
   
 }
