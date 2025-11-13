@@ -157,7 +157,6 @@ export class PlaguicidasComponent {
     //           return;
     //         }
             const PAYLOAD = this.guardarAdapter260515.toFormPayload();
-            console.log('PAYLOAD', PAYLOAD);
             let shouldNavigate = false;
             this.registroSolicitudService.postGuardarDatos('260215', PAYLOAD).subscribe(response => {
               shouldNavigate = response.codigo === '00';
