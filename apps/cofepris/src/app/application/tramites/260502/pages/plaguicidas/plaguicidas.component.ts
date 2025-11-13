@@ -34,6 +34,10 @@ export class PlaguicidasComponent implements OnInit {
    * Se obtiene de una constante definida en otro archivo.
    */
   pasos: ListaPasosWizard[] = PASOS;
+   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
   /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
   public textoPeligro: string = TEXTO_DE_PELIGRO;
   /**
