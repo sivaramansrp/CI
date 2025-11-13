@@ -19,7 +19,8 @@ import { DatosDelSolicitudModificacionComponent } from '../../shared/components/
 import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { PasoDosComponent } from '../260401/components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../260401/components/paso-tres/paso-tres.component';
-import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { TercerosRelacionadosModificacionComponent } from '../../shared/components/terceros-relacionados-modificacion/terceros-relacionados.component';
+import {TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { ToastrService } from 'ngx-toastr';
@@ -38,9 +39,10 @@ import { ToastrService } from 'ngx-toastr';
     DatosDelSolicitudModificacionComponent,
     ModificacionPermisoSanitarioRoutingModule,
     TramitesAsociadosSeccionComponent,
-    TercerosRelacionadosFabricanteComponent,
+    TercerosRelacionadosModificacionComponent,
     PagoDeDerechosEntradaComponent,
     PasoTresComponent,PasoDosComponent,
+    TercerosRelacionadosVistaComponent,
   ],
    providers: [ToastrService ],
 })
