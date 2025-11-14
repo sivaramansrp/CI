@@ -93,6 +93,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
 
+  /**
+   * ID de la solicitud actual.
+   * @property {string | undefined} idsolicitud
+   */
+  idsolicitud?: string;
+
+  @Output() solicitudGuardada = new EventEmitter<string>();
+
 
   /**
    * Constructor del componente.
@@ -241,8 +249,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   guardadoTotal(): void {
     this.solicitud.guardarTotal();
   }
-
-
 
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
