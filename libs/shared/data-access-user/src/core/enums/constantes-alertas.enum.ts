@@ -122,10 +122,10 @@ export const MENSAJE_ALERTA_TRATADOS = {
   MENSAJE_ALERTA: `
 <ul>
   Para seleccionar un tratado y criterio, siga los siguientes pasos:
-  <li>Primero seleccione un país o bloque</li>
-  <li>Después seleccione un tratado o acuerdo</li>
-  <li>Seleccione el criterio para conferir origen</li>
-  <li>Finalmente, agregue su selección a la lista de tratados</li>
+  <li>Primero seleccione un país o bloque.</li>
+  <li>Después seleccione un tratado o acuerdo.</li>
+  <li>Seleccione el criterio para conferir origen.</li>
+  <li>Finalmente, agregue su selección a la lista de tratados.</li>
 </ul>
 `,
 };
