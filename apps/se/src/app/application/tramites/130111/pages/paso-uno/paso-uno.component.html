@@ -12,16 +12,12 @@
     </ul>
 
     <ng-container>
-      @switch (indice) {
-      @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      }
-      @case (2) {
-         @if(esDatosRespuesta){
-          <app-solicitud [tabindex]="2"></app-solicitud>
-         }
-      }
-      }
+
+      <solicitante  [hidden]="indice !== 1"></solicitante>
+    
+      @if(esDatosRespuesta){ 
+      <app-solicitud  [hidden]="indice !== 2"></app-solicitud>
+      } 
     </ng-container>
   </div>
 </div>

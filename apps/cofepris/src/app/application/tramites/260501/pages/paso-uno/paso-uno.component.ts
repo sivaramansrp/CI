@@ -158,6 +158,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
     if (event === 'proveedor') {
       this.store.setFormValidity('proveedorTablaValid', true);
     }
+    this.tercerosRelacionadosComponent?.markTouched();
   }
 
   /** Actualiza la validez del formulario de datos del establecimiento en el store. */

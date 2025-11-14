@@ -296,28 +296,7 @@ nombresCampos:boolean = false;
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
-  estadoFisicoCatalogo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: "Selecciona un valor",
-    },
-    {
-      id: 2,
-      descripcion: "Sólido",
-    },
-    {
-      id: 3,
-      descripcion: "Líquido",
-    },
-    {
-      id: 4,
-      descripcion: "Gaseoso",
-    },
-    {
-      id: 5,
-      descripcion: "Otro",
-    },
-  ];
+  estadoFisicoCatalogo: Catalogo[] = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -362,6 +341,19 @@ nombresCampos:boolean = false;
       this.obtenerDataMercanciasDatos();
     }
   }
+
+  /**
+     * Método para obtener el catálogo de estado físico de mercancía.
+     */
+    obtenerEstadoFisicoCatalogo(): void {
+      if (this.idProcedimiento) {
+        this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((response) => {
+            this.estadoFisicoCatalogo = response.datos ?? [];
+          });
+      }
+    }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -897,6 +889,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
+    this.obtenerEstadoFisicoCatalogo();
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,

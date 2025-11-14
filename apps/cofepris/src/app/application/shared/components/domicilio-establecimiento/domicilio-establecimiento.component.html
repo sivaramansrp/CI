@@ -429,13 +429,13 @@
                }
                @if(estadoValidte){
                <div class="form-group">
-                  <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
+                    <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
                   name="estadoFisico" [placeholder]="'Seleccione un valor'" 
                   (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
                   [isDisabled]="esFormularioSoloLectura ||  (formMercancias.get('estadoFisico')?.disabled ?? false)"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
                </div>
                }
-               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">
+               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === 'ESFIMG.OTR'">
                   <label for="estadoFisicoOtro">
                   Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('estadoFisicoOtro')?.invalid && formMercancias.get('estadoFisicoOtro')?.touched}">*</span>:
                   </label>
