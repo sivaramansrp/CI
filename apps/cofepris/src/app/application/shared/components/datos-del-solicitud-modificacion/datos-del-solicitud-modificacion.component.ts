@@ -21,11 +21,12 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_RFC_FISICA,
+  REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   SOLO_REGEX_NUMEROS,
   
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -121,6 +122,7 @@ export class DatosDelSolicitudModificacionComponent
  * @default true
  */
   @Input() mostrarScianBotones: boolean = true;
+
   
   /**
  * @input mostrarNumeroYFecha
@@ -539,6 +541,8 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla mercancías.
    */
   public seleccionados: MercanciasInfo[] = [];
+
+  public scianSeleccionados: ScianModel[] = [];
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
@@ -636,6 +640,10 @@ export class DatosDelSolicitudModificacionComponent
 onSeleccionChange(event:any): void {
   this.seleccionados = event;
 }
+
+onScianSeleccionChange(event:any): void {
+  this.scianSeleccionados = event;
+}
 /**
  * @method loadScian
  * @description 
@@ -677,6 +685,7 @@ modificarMercancias(): void {
       seleccionadasPaisDeOriginDatos: DATOS.paisDeOrigen,
       seleccionadasPaisDeProcedenciaDatos: DATOS.paisDeProcedencia,
       seleccionadasEspecificoDatos: DATOS.usoEspecifico,
+      denominacionDistintiva: DATOS.denominacionDistintiva,
     });
     this.seleccionadasPaisDeOriginDatos = Array.isArray(DATOS.paisDeOrigen)
     ?DATOS.paisDeOrigen
@@ -700,10 +709,27 @@ modificarMercancias(): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         response?.forEach((resp: ScianModel) => {
-          this.personaparas = [...this.personaparas, resp];
+          this.datosData = [...this.personaparas, resp];
         })
       });
   }
+
+  eliminarScianSeleccionados(): void {
+    this.scianSeleccionados.forEach(row => {
+      const INDEX = this.datosData.findIndex(
+        item => item.claveScian=== row.claveScian
+      );
+      if (INDEX > -1) {
+        this.datosData.splice(INDEX, 1);
+      }
+    });
+    this.datosData = [...this.datosData];
+    this.scianSeleccionados = [];
+  }
+
+ 
+
+ 
 
   /**
    * Método que agrega los controles 'numeroRegistro' y 'fechaCaducidad' al formulario
@@ -760,7 +786,7 @@ modificarMercancias(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC), Validators.maxLength(13)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
@@ -803,6 +829,7 @@ modificarMercancias(): void {
       seleccionadasPaisDeOriginDatos: ['', Validators.required],
       seleccionadasPaisDeProcedenciaDatos: ['', Validators.required],
       seleccionadasEspecificoDatos: ['', Validators.required],
+      denominacionDistintiva:['', Validators.required],
     });
 
   }
@@ -892,6 +919,7 @@ modificarMercancias(): void {
       this.modalInstance.hide();
     }
   }
+  
   /**
    * @method abrirModal
    * @description
@@ -965,15 +993,12 @@ modificarMercancias(): void {
         claveScian: this.scianForm.get('scian')?.value,
         descripcionScian: this.scianForm.get('descripcionScian')?.value,
       };
+     
+      this.datosData.push(SCIAN_DATA);
+      this.datosData = [...this.datosData];
 
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
-      this.datosData = [...this.personaparas];
-
-      // Limpiar el formulario
       this.scianForm.reset();
 
-      // Cerrar el modal
       this.closeScianModal();
     }
   }
