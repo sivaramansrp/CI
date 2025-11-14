@@ -17,13 +17,23 @@
     </div>
 
     <div class="row">
-      @switch (indice) { @case (1) {
-      <app-paso-uno #pasoUnoRef></app-paso-uno>
+      @switch (indice) { 
+        @case (1) {
+      <app-paso-uno></app-paso-uno>
       } @case (2) {
-      <app-paso-dos></app-paso-dos>
+        <app-paso-carga-documento 
+          [idSolicitud]="guardarIdSolicitud"
+          [idTipoTRamite]="'260505'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } }
+        <paso-firma 
+        [idSolicitud]="guardarIdSolicitud" [procedure]="260505" [procedureUrl]="'permiso-transformacion-maquila/plaguicidas'"></paso-firma>
+      } 
+    }
 
       <btn-continuar
         [datos]="datosPasos"

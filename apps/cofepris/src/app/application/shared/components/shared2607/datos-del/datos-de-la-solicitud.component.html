@@ -36,12 +36,31 @@
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
                 (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
                 />
+          @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.denominacion')?.hasError('required') &&
+          dataDeLaSolicitudForm.get('datosDelTramiteRealizar.denominacion')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="correoelectronico">Correo electronico*:</label>
                 <input class="form-control" id="correoelectronico" type="text" formControlName="correoElectronico"
                 (change)="setValoresStore(datosDelTramiteRealizar,'correoElectronico', 'setCorreoElectronico')"
                 />
+              @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico')?.hasError('required') &&
+              dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico')?.touched) {
+              <div class="text-danger">
+                <small>Este campo es obligatorio</small>
+              </div>
+              }
+              @else if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico')?.hasError('pattern') &&
+              dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico')?.touched) {
+              <div class="text-danger">
+                <small>Por favor, escribe una dirección de correo válida</small>
+              </div>
+              }
+
             </div>
         </div>
         <ng-titulo titulo="Domicilio del establecimiento" />
@@ -95,6 +114,12 @@
                 <label class="form-label" for="calle">Calle*:</label>
                 <input class="form-control" id="calle" type="text" formControlName="calle"
                 (change)="setValoresStore(datosDelTramiteRealizar,'calle', 'setCalle')"/>
+          @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.calle')?.hasError('required') &&
+          dataDeLaSolicitudForm.get('datosDelTramiteRealizar.calle')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
             </div>
         </div>
         <div class="row">
@@ -107,6 +132,17 @@
                 <label class="form-label" for="telefono">Telefono*:</label>
                 <input class="form-control" id="telefono" type="text" formControlName="telefono"
                 (change)="setValoresStore(datosDelTramiteRealizar,'telefono', 'setTelefono')"/>
+              @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.telefono')?.hasError('required') &&
+              dataDeLaSolicitudForm.get('datosDelTramiteRealizar.telefono')?.touched) {
+              <div class="text-danger">
+                <small>Este campo es obligatorio</small>
+              </div>
+              } @else if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.telefono')?.hasError('pattern') &&
+              dataDeLaSolicitudForm.get('datosDelTramiteRealizar.telefono')?.touched) {
+              <div class="text-danger">
+                <small>Por favor, escribe un número entero válido</small>
+              </div>
+              }
             </div>
         </div>
       </ng-container>
@@ -468,6 +504,12 @@
     <input class="form-control" type="text" formControlName="rfc"
     (change)="setValoresStore(datosDelTramiteRealizar,'rfc', 'setRfc')"
     />
+       @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.rfc')?.hasError('required') &&
+        dataDeLaSolicitudForm.get('datosDelTramiteRealizar.rfc')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
   </div>
   <div class="col-md-2 mt-4">
     <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
@@ -479,6 +521,12 @@
     <input class="form-control" type="text" formControlName="legalRazonSocial"
     (change)="setValoresStore(datosDelTramiteRealizar,'legalRazonSocial', 'setLegalRazonSocial')"
     />
+      @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.legalRazonSocial')?.hasError('required') &&
+        dataDeLaSolicitudForm.get('datosDelTramiteRealizar.legalRazonSocial')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
   </div>
   <div class="col-md-4 mt-4">
     <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
@@ -486,6 +534,12 @@
     (change)="setValoresStore(datosDelTramiteRealizar,'apellidoPaterno', 'setApellidoPaterno')"
 
     />
+     @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.apellidoPaterno')?.hasError('required') &&
+        dataDeLaSolicitudForm.get('datosDelTramiteRealizar.apellidoPaterno')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
   </div>
   <div class="col-md-4 mt-4">
     <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
