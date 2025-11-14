@@ -43,10 +43,15 @@ export const REPORTE_ANUAL_PASOS = [
 
     /**
      * Indica si el paso ha sido completado (true) o está pendiente (false).
-     */    
-    completado: false,
+     */      completado: false,
   },
 ];
+
+/**
+ * Mensaje de validación cuando las ventas totales son menores que cero.
+ */
+export const VENTAS_TOTALES_MENSAJES =
+  "Ventas totales deben ser mayores o iguales a cero.";
 
 /**
  * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.

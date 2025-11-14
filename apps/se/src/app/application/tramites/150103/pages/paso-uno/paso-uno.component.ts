@@ -181,34 +181,31 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */  
   public validarTodosLosFormularios(): number {
-    
-    if (this.datosDeComp && this.datosDeComp.formReporteAnnual) {
+    console.log(this.programasDeComp?.formProgrmasReporte.get('estatus')?.value!=='');
+    if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
       this.datosDeComp.formReporteAnnual.markAllAsTouched();
-      const VENTAS_TOTALES = this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value;
-      const TOTAL_EXPORTACIONES = this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value;
-      
-      if((VENTAS_TOTALES === '' || VENTAS_TOTALES === null) && (TOTAL_EXPORTACIONES === null || TOTAL_EXPORTACIONES === '')){
+      if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
         return 1;
       }
-      else if((VENTAS_TOTALES === '' || VENTAS_TOTALES === null) && TOTAL_EXPORTACIONES >= 0){
+      else if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value>=0){
         this.datosDeComp.diferenciaTotal();
         return 2;
+
       }
-      else if(Number(VENTAS_TOTALES) < Number(TOTAL_EXPORTACIONES)){
+      else if(Number(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value) < Number(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value)){
        this.datosDeComp.diferenciaTotal();
         return 3;
       }
-      else if(VENTAS_TOTALES >= 0 && (TOTAL_EXPORTACIONES === null || TOTAL_EXPORTACIONES === '')){
+      else if(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value>=0 && (this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
         return 4;
       }
-    }
-    
-    // Check programa validation - should validate when trying to proceed from any step
-    if(this.programasDeComp?.formProgrmasReporte.get('estatus')?.value === '' && this.solicitudState.folioPrograma === ''){
+     
+    } else if(this.indice===2&& this.programasDeComp?.formProgrmasReporte.get('estatus')?.value!==''){
       this.programasDeComp?.showAlert();
       return 5;
+    } else if (this.indice===1 && this.solicitudState.folioPrograma ==='' && this.solicitudState.totalExportaciones === '') {
+      return 5;
     }
-    
      return 0;
   }
 

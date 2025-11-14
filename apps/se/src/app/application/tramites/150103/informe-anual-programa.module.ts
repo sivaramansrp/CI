@@ -3,6 +3,7 @@ import { AlertComponent,
   BtnContinuarComponent, 
   FirmaElectronicaComponent, 
   InputFechaComponent, 
+  NotificacionesComponent, 
   PasoFirmaComponent,
   SolicitanteComponent, 
   TablaDinamicaComponent, 
@@ -51,7 +52,7 @@ import { provideHttpClient } from '@angular/common/http';
     TablaDinamicaComponent,
     WizardComponent,
     BsDatepickerModule.forRoot(),
-    
+    NotificacionesComponent
   ],
   providers: [provideHttpClient(),ToastrService,InformeAnualProgramaService],
 })

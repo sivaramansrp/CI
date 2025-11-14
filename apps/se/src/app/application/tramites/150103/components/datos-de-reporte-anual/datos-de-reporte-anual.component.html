@@ -27,7 +27,7 @@
             id="totalExportaciones"
             class="form-control"
             formControlName="totalExportaciones"
-            (input)="obtenerTotalExportaciones($event)"
+            (input)="limitarLongitud($event, 16)"
             [disabled]="esFormularioSoloLectura"
             pattern="[0-9]*"
             maxlength="16"
@@ -43,6 +43,7 @@
             class="form-control"
             formControlName="totalImportaciones"
             (input)="obtenerTotalImportaciones($event)"
+            [disabled]="true"
           />
         </div>
         <div class="col-md-4">
@@ -52,6 +53,7 @@
             id="saldo"
             class="form-control"
             formControlName="saldo"
+            [disabled]="true"
           />
         </div>
         <div class="col-md-4">
@@ -63,9 +65,17 @@
             id="porcentajeExportacion"
             class="form-control"
             formControlName="porcentajeExportacion"
+            [disabled]="true"
           />
         </div>
-      </div>
-    </form>
+      </div>    </form>
+
+    <!-- Notification Component -->
+    @if(nuevaNotificacion) {
+      <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        (cerrarNotificacion)="cerrarNotificacion()"
+      ></lib-notificaciones>
+    }
   </div>
   

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, TituloComponent, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { Solicitud150103Store } from '../../estados/solicitud150103.store';
 @Component({
   selector: 'app-datos-de-reporte-anual',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './datos-de-reporte-anual.component.html',
   styleUrl: './datos-de-reporte-anual.component.scss',
 })
@@ -156,11 +156,16 @@ consultaDatos!: ConsultaioState;
     const TOTAL_PORCENTAJE_VALUE = Number.isFinite(TOTAL_PORCENTAJE)
       ? TOTAL_PORCENTAJE.toString()
       : '0';
-    this.solicitud150103Store.actualizarPorcentajeExportacion(
-      TOTAL_PORCENTAJE_VALUE
-    );
+    
+    this.solicitud150103Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+    
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150103Store.actualizarSaldo(TOTAL_SALDO.toString());
+
+    this.formReporteAnnual.patchValue({
+      saldo: TOTAL_SALDO.toString(),
+      porcentajeExportacion: TOTAL_PORCENTAJE_VALUE
+    }, { emitEvent: false });
   }
 
   /**
@@ -168,9 +173,24 @@ consultaDatos!: ConsultaioState;
    * @param evento - Evento del input que contiene el valor de exportaciones.
    */
   obtenerTotalExportaciones(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud150103Store.actualizarTotalExportaciones(VALOR);
+    // Validar que sea un entero antes de procesar
+    if (!this.validarEntero(evento, 'Total exportaciones')) {
+      return;
+    }
+
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.solicitud150103Store.actualizarTotalExportaciones(VALUE);
+
+    const VENTAS_TOTALES =
+      parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES =
+      parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+    const TOTAL: number = VENTAS_TOTALES - TOTAL_EXPORTACIONES;
+
+    const TOTAL_VALUE = Number.isFinite(TOTAL) ? TOTAL : 0;
+    this.solicitud150103Store.actualizarSaldo(TOTAL_VALUE.toString());
     this.calcularReporteAnnual();
+    this.diferenciaTotal();
   }
 
   /**
@@ -178,10 +198,17 @@ consultaDatos!: ConsultaioState;
    * @param evento - Evento del input que contiene el valor de ventas.
    */
   obtenerVentasTotales(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud150103Store.actualizarVentasTotales(VALOR);
+    // Validar que sea un entero antes de procesar
+    if (!this.validarEntero(evento, 'Ventas totales')) {
+      return;
+    }
+
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.solicitud150103Store.actualizarVentasTotales(VALUE);
     this.calcularReporteAnnual();
+    this.verificarDiferenciaTotal();
   }
+
   /**
    * Actualiza el valor de las importaciones totales y recalcula el reporte anual.
    * @param evento - Evento del input que contiene el valor de importaciones.
@@ -263,13 +290,130 @@ inicializarEstadoFormulario(): void {
     }
   }
 
+  /**
+   * @description Limita la longitud del valor del input a un máximo especificado.
+   * @param event - Evento del input para capturar el valor introducido.
+   * @param maxLength - Longitud máxima permitida para el valor del input.
+   * @return {void}
+   */
+  limitarLongitud(event: Event, maxLength: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.value.length > maxLength) {
+      INPUT.value = INPUT.value.slice(0, maxLength);
+    }
+
+    // Validar que sea un entero
+    if (!this.validarEntero(event, 'Total exportaciones')) {
+      return;
+    }
+
+    this.obtenerTotalExportaciones(event);
+    this.diferenciaTotal();
+  }
+
+  /**
+   * @method validarEntero
+   * @description Valida que el valor ingresado sea un número entero
+   * @param event - Evento del input para capturar el valor introducido
+   * @param fieldName - Nombre del campo que se está validando
+   * @returns {boolean} True si es válido, false si no
+   */
+  validarEntero(event: Event, fieldName: string): boolean {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value.trim();
+
+    // Si está vacío, permitir (será validado por required)
+    if (!VALUE) {
+      return true;
+    }
+
+    // Verificar si el valor es un número entero válido
+    if (isNaN(Number(VALUE)) || !Number.isInteger(Number(VALUE)) || Number(VALUE) < 0) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: `${fieldName} deben ser mayores o iguales a cero`,
+        cerrar: false,
+        tiempoDeEspera: 7000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+
+      // Establecer el valor a 0
+      INPUT.value = '0';
+      const CONTROL_NAME = this.getFormControlName(fieldName);
+      if (CONTROL_NAME) {
+        this.formReporteAnnual.get(CONTROL_NAME)?.setValue('0');
+        this.formReporteAnnual.get(CONTROL_NAME)?.markAsTouched();
+      }
+
+      // Recalcular el reporte
+      setTimeout(() => {
+        this.calcularReporteAnnual();
+      }, 100);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * @description Nueva función que verifica la diferencia total sin sobrescribir notificaciones existentes
+   * @returns {void}
+   */
+  private verificarDiferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES && !this.nuevaNotificacion) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    }
+  }
+
+  /**
+   * @method getFormControlName
+   * @description Obtiene el nombre del control del formulario basado en el nombre del campo
+   * @param fieldName - Nombre del campo
+   * @returns {string} Nombre del control del formulario
+   */
+  private getFormControlName(fieldName: string): string {
+    switch (fieldName) {
+      case 'Ventas totales':
+        return 'ventasTotales';
+      case 'Total exportaciones':
+        return 'totalExportaciones';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * @method cerrarNotificacion
+   * @description Cierra la notificación actual
+   * @returns {void}
+   */
+  cerrarNotificacion(): void {
+    this.nuevaNotificacion = null;
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(); // Notifica a las suscripciones que deben finalizar
-    this.destroyed$.complete(); // Completa el Subject para evitar fugas de memoria
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
