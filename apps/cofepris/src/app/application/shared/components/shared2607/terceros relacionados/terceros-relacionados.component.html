@@ -139,11 +139,23 @@
                 <label class="form-label" for="nombre">Nombre(s)*:</label>
                 <input class="form-control" id="nombre" type="number" formControlName="nombre"
                   (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" />
+                   @if (destinatarioForm.get(['datosPersonales', 'nombre'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'nombre'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
                 <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
                   (change)="setValoresStore(agregarDestinatario,'primerApellido', 'setPrimerApellido')" />
+                @if (destinatarioForm.get(['datosPersonales', 'primerApellido'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'primerApellido'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="segundoApellido">Segundo apellido:</label>
@@ -157,6 +169,12 @@
                 <label class="form-label" for="nombre">Denominación/razón social*:</label>
                 <input class="form-control" id="nombre" type="text" formControlName="nombre"
                   (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'nombre'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'nombre'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
               </div>
             </div>
             }
@@ -177,6 +195,12 @@
                 <label class="form-label" for="estado">Estado*:</label>
                 <input class="form-control" id="estado" type="text" formControlName="estado"
                   (change)="setValoresStore(agregarDestinatario,'estado', 'setEstado')" />
+                  @if (destinatarioForm.get(['datosPersonales', 'estado'])?.hasError('required') &&
+                  destinatarioForm.get(['datosPersonales', 'estado'])?.touched) {
+                  <div class="text-danger">
+                    <small>Este campo es obligatorio</small>
+                  </div>
+                  }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
@@ -189,11 +213,23 @@
                 <label class="form-label" for="calle">Calle*:</label>
                 <input class="form-control" id="calle" type="text" formControlName="calle"
                   (change)="setValoresStore(agregarDestinatario,'calle', 'setCalle')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'calle'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'calle'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="numeroexterior">Numero exterior*:</label>
                 <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
                   (change)="setValoresStore(agregarDestinatario,'numeroExterior', 'setNumeroExterior')" />
+                        @if (destinatarioForm.get(['datosPersonales', 'numeroExterior'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'numeroExterior'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
               </div>
             </div>
             <div class="row">
@@ -201,6 +237,12 @@
                 <label class="form-label" for="numerointerior">Numero interior*:</label>
                 <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior"
                   (change)="setValoresStore(agregarDestinatario,'numeroInterior', 'setNumeroInterior')" />
+                       @if (destinatarioForm.get(['datosPersonales', 'numeroInterior'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'numeroInterior'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
               </div>
               <div class="col-md-1 mb-3">
                 <label class="form-label" for="lada">Lada:</label>
