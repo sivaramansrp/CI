@@ -1,18 +1,15 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
+import { Subject } from 'rxjs';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
-import { Subject, map, takeUntil } from 'rxjs';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
-import { EventEmitter } from '@angular/core';
-import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -158,7 +155,6 @@ export class ZoosanitarioPageComponent implements OnInit {
    * @method constructor
    */
   constructor(
-    private tramite220201Query: ZoosanitarioQuery,
     private solicitudService: SolicitudService
 
   ) {

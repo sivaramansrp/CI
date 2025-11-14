@@ -85,8 +85,8 @@ export class AcusePageComponent implements OnInit {
     this.folio = this.tramiteQueries.getTramite();
     this.idSolicitud = this.tramiteQueries.getIdSolicitud();
     this.procedure = this.tramiteQueries.getProcedure();
-    console.warn('ID SOLICITUD EN ACUSE PAGE:', this.idSolicitud);
-    console.warn('PROCEDURE EN ACUSE PAGE:', this.procedure);
+    // Si no se obtienen idSolicitud y procedure del servicio, intentar obtenerlos del localStorage.
+    // los micro frontends no comparten estado, por lo que se usa localStorage como medio de comunicación.
     if (this.idSolicitud === 0 && this.procedure === 0) {
       const SOLICITUD_DATA = localStorage.getItem('solicitud');
       if (SOLICITUD_DATA) {
