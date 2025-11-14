@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
 
 /**
@@ -9,10 +7,10 @@ import { Injectable } from '@angular/core';
  * 
  * @interface Solicitud260503State
  * @property {string} [key] - Las claves son cadenas que representan los nombres de los campos.
- * @property {any} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
+ * @property {unknown} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
  */
 export interface Solicitud260503State {
-    [key: string]: any;
+    [key: string]: unknown;
     idSolicitud: number;
     formValidity?: {
     datosEstablecimiento?: boolean;
@@ -74,7 +72,7 @@ export class Tramite260503Store extends Store<Solicitud260503State> {
      * @param fieldName The name of the field to update.
      * @param value The value to set.
      */
-    public setDynamicFieldValue(fieldName: string, value: any): void {
+    public setDynamicFieldValue(fieldName: string, value: unknown): void {
         this.update((state) => ({
         ...state,
         [fieldName]: value,
