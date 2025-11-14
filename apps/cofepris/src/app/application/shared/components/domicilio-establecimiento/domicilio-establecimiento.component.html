@@ -168,11 +168,10 @@
             <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched || (mostrarErrores.avisoCheckbox && domicilio.get('avisoCheckbox')?.value === false)}">*</span></span>
             </label>
          </div>
-         @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox) {
-         <div class="mensaje-error mt-2">
+         <div *ngIf="domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox"
+               class="mensaje-error">
             Este campo es obligatorio.
          </div>
-         }
       </div>
       <div class="col-md-4">
          <div class="form-group">
