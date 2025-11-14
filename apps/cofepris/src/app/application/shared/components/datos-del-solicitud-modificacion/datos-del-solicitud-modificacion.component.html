@@ -141,7 +141,7 @@
               sanitario<span
               [ngClass]="
             {
-              'text-danger': domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required'] && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
+              'text-danger': (domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
             }"
               >*</span
             >:</label>
@@ -400,8 +400,8 @@
     <div class="row" class="mt-5">
       <div class="form-group">
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" >
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" (listaDeFilaSeleccionada)="onScianSeleccionChange($event)" >
         </app-tabla-dinamica>
         <div *ngIf="DatosDelSolicitudModificacionComponent.hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
           La clave S.C.I.A.N. es obligatoria.
@@ -415,7 +415,7 @@
 
     @if (mostrarScianBotones) {
       <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false">
+      <button type="button" class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarScianSeleccionados()">
         Eliminar
       </button>
       <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
@@ -620,6 +620,37 @@
               {{ getErrorMessage('denominacionEspecifica') }}
             </div>
           </div>
+         
+              <div class="form-group">
+                <label class="form-label" for="denominacionDistintiva"
+                  >Denominación distintiva<span
+                  [ngClass]="
+                {
+                  'text-danger': formMercancias.get('denominacionDistintiva')?.errors?.['required'] && formMercancias.get('denominacionDistintiva')?.touched
+                }"
+                  >*</span
+                >:</label
+                >
+                <input
+                  class="form-control"
+                  id="denominacionDistintiva"
+                  type="text"
+                  formControlName="denominacionDistintiva"
+                  maxlength="1000"
+                  [ngClass]="{
+                    'is-invalid':
+                    formMercancias.get('denominacionDistintiva')?.invalid &&
+                    formMercancias.get('denominacionDistintiva')?.touched
+                  }"
+                />
+                <div
+                  class="mensaje-error"
+                  *ngIf="formMercancias.get('denominacionDistintiva')?.errors?.['required'] && formMercancias.get('denominacionDistintiva')?.touched"
+                >
+                  Este campo es obligatorio.
+                </div>
+              </div>
+           
           <div class="form-group">
             <label for="denominacionComun">
               Denominación o nombre científico*:
