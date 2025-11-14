@@ -1,9 +1,29 @@
-import { ALERT_TEXTO, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/220202/fitosanitario.enums';
-import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
-import { Component, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  ALERT_TEXTO,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOS,
+} from '../../constantes/220202/fitosanitario.enums';
+import {
+  AccionBoton,
+  FilaSolicitud,
+  ListaDeDatosFinal,
+  ListaPasosWizard,
+  TercerosrelacionadosExportadorTable,
+  TercerosrelacionadosdestinoTable,
+} from '../../models/220202/fitosanitario.model';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  DatosPasos,
+  WizardComponent,
+  convertDate,
+} from '@ng-mf/data-access-user';
+import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { map, Subject, takeUntil } from 'rxjs';
+import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -22,16 +42,15 @@ import { map, Subject, takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-agricultura',
-  templateUrl: './agricultura.component.html'
+  templateUrl: './agricultura.component.html',
 })
-export class AgriculturaComponent {
-
+export class AgriculturaComponent implements OnInit {
   /**
    * @description Texto que se muestra en la alerta del formulario.
    * Este texto es utilizado para proporcionar información al usuario sobre el propósito del formulario.
    * @type {string}
    */
-  public readonly alertText = ALERT_TEXTO;
+  public readonly alertText: string = ALERT_TEXTO;
 
   /**
    * @description Array de objetos que definen los pasos del formulario.
@@ -45,32 +64,32 @@ export class AgriculturaComponent {
   /**
    * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
    */
-  mensajePasos: string = "";
+  mensajePasos: string = '';
 
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
    * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
-   * 
+   *
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
   @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
 
-  //   /**
-  //  * @description Referencia al componente btn-continuar.
-  //  * Esta referencia permite acceder a los métodos y propiedades del componente btn-continuar,
-  //  *
-  //  * @type {BtnContinuarComponent}
-  //  * @viewChild BtnContinuarComponent
-  //  */
+  /**
+   * @description Referencia al componente btn-continuar.
+   * Esta referencia permite acceder a los métodos y propiedades del componente btn-continuar,
+   *
+   * @type {BtnContinuarComponent}
+   * @viewChild BtnContinuarComponent
+   */
   @ViewChild(PasoUnoComponent) pasoUnoRef!: PasoUnoComponent;
 
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
    * Este índice se utiliza para determinar qué paso se muestra en cada momento.
    * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
-   * 
+   *
    * @type {number}
    * @default 1
    */
@@ -83,24 +102,25 @@ export class AgriculturaComponent {
   public btnGuardarVisible: string = 'visible';
 
   /**
- * Mensaje de error del formulario para mostrar en el alert.
- *
- * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
- */
-  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string =
+    '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
- * Indica si el formulario tiene errores de validación.
- *
- * Se utiliza para mostrar/ocultar el alert de errores en el modal.
- */
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
   esFormaInValido: boolean = false;
 
   /**
-* Indica si ya se llenaron todos los formularios del paso 1.
-*
-* Se utiliza para mostrar/ocultar el alert azul.
-*/
+   * Indica si ya se llenaron todos los formularios del paso 1.
+   *
+   * Se utiliza para mostrar/ocultar el alert azul.
+   */
   esPasoUnoCompleto: boolean = false;
 
   /**
@@ -108,15 +128,26 @@ export class AgriculturaComponent {
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número total de pasos, el índice del paso actual
    * y los textos de los botones de navegación (anterior y siguiente).
-   * 
+   *
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
-
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
+  };
+
+  valoresComplemento: {
+    rfc: string;
+    tipoPersona: string;
+    razon_social: string;
+    nombre: string;
+  } = {
+    rfc: '',
+    tipoPersona: '',
+    razon_social: '',
+    nombre: '',
   };
 
   /**
@@ -137,52 +168,50 @@ export class AgriculturaComponent {
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(
-    private consultaQuery: ConsultaioQuery,
-  ) {
-  }
+  private agriculturaApiService: AgriculturaApiService = inject(
+    AgriculturaApiService
+  );
+  private registroSolicitudService: RegistroSolicitudService = inject(
+    RegistroSolicitudService
+  );
+  constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
-    console.log('ngOnInit agricuktura');
-
-    this.obtenerDatosDelStore()
+    this.obtenerDatosDelStore();
   }
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
    * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
    * del formulario.
-   * 
+   *
    * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
    * y el valor del índice del paso al que se debe navegar.
-   * 
+   *
    * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
    *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
    *   (valor `cont`) o retroceder (valor `atras`).
-   * 
+   *
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-
-    console.log('getValorIndice Agricultura', this.indice);
     // Si estamos en el paso 1, validar antes de continuar
-
     if (this.indice === 1) {
-      var validaPestañas = this.pasoUnoRef?.validarFormularios();
-      if (!validaPestañas.valido) {
+      const VALIDAPESTANAS = this.pasoUnoRef?.validarFormularios();
+      if (!VALIDAPESTANAS.valido) {
         // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
 
-        if (validaPestañas.mensaje) {
-          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' + validaPestañas.mensaje;
-        }
-        else {
-          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+        if (VALIDAPESTANAS.mensaje) {
+          this.formErrorAlert =
+            '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' +
+            VALIDAPESTANAS.mensaje;
+        } else {
+          this.formErrorAlert =
+            '<strong>¡Error de registro! </strong> Faltan campos por capturar';
         }
         return;
       }
-
-
     }
 
     this.esFormaInValido = false;
@@ -197,22 +226,186 @@ export class AgriculturaComponent {
     }
   }
 
-
   /**
-* Obtiene los datos del store y los guarda utilizando el servicio.
-*/
-  // eslint-disable-next-line class-methods-use-this
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
   obtenerDatosDelStore(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          var nuevo = MENSAJE_DE_EXITO_ETAPA_UNO.replace("_folio_", this.consultaState.id_solicitud ?? "0");
-          this.mensajePasos = nuevo;
+          this.mensajePasos = MENSAJE_DE_EXITO_ETAPA_UNO.replace(
+            '_folio_',
+            this.consultaState.id_solicitud ?? '0'
+          );
         })
       )
       .subscribe();
+  }
 
+  guardarDatosFormulario(): void {
+    this.agriculturaApiService
+      .getAllDatosForma()
+      .pipe(
+        take(1), // solo la primera emisión
+        map((datos) => this.crearPayload(datos)), // crear payload
+        switchMap((payload) => {
+          return this.registroSolicitudService
+            .guardarParcialSolicitud(220202, payload)
+            .pipe(take(1));
+        }),
+        map((data) => data.codigo),
+        catchError((err) => {
+          console.error('Error guardando solicitud:', err);
+          // return throwError(() => err);
+          return 'error';
+        })
+      )
+      .subscribe();
+  }
+
+  private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
+    return {
+      id_solicitud:
+        this.consultaState?.id_solicitud !== null &&
+        this.consultaState?.id_solicitud !== '' &&
+        !isNaN(Number(this.consultaState?.id_solicitud))
+          ? Number(this.consultaState?.id_solicitud)
+          : null,
+      datos_solicitud: {
+        cve_aduana: datos.datos.aduanaDeIngreso!,
+        oficina_inspeccion_sanidad_agropecuaria:
+          datos.datos.oficinaDeInspeccion,
+        punto_inspeccion: datos.datos.puntoDeInspeccion,
+        numero_autorizacion: datos.datos.numeroDeGuia!,
+        clave_regimen: datos.datos.regimen,
+        numero_carro_ferrocarril: datos.datos.numeroDeCarro!,
+        mercancia: (datos.tablaDatos ?? []).map((t: FilaSolicitud) => ({
+          tipo_requisito: Number(t.tipoRequisito) ?? 0,
+          requisito: t.requisito ?? '',
+          numero_certificado: t.numeroCertificadoInternacional ?? '',
+          cve_fraccion: t.fraccionArancelaria ?? '',
+          id_fraccion_gubernamental: t.idDescripcionFraccion,
+          clave_nico: t.nico ?? '',
+          descripcion_mercancia: t.descripcion ?? '',
+          cantidad_umt: Number(t.cantidadUMT) ?? 0,
+          clave_unidad_medida: t.umt ?? '',
+          cantidad_umc: Number(t.cantidadUMC) ?? 0,
+          clave_unidad_comercial: t.umc ?? '',
+          id_uso_mercancia_tipo_tramite: Number(t.uso) ?? 0,
+          id_tipo_producto_tipo_tramite: Number(t.tipoDeProducto) ?? 0,
+          numero_lote: t.numeroDeLote ?? 0,
+          clave_paises_origen: t.paisDeOrigen ?? '',
+          clave_paises_procedencia: t.paisDeProcedencia ?? '',
+          idNombreCientifico: '',
+          lista_detalle_mercancia: (t.detalleVidaSilvestre ?? []).map((x) => ({
+            id_vida_silvestre: String(x.idVidaSilvestre),
+          })),
+        })),
+      },
+
+      transporte: {
+        ide_medio_transporte: datos.movilizacion.transporte,
+        identificacion_transporte: datos.movilizacion.identificacion,
+        ide_punto_verificacion: Number(datos.movilizacion.puntoVerificacion),
+        razon_social: datos.movilizacion.empresaTransportista,
+      },
+
+      terceros: {
+        terceros_exportador: (datos.datosForma ?? []).map(
+          (t: TercerosrelacionadosExportadorTable) => ({
+            tipo_persona_sol: 'TIPERS.EXP',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            descripcion_ubicacion: t.domicilio ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
+
+        terceros_destinatario: (datos.tercerosRelacionados ?? []).map(
+          (t: TercerosrelacionadosdestinoTable) => ({
+            tipo_persona_sol: 'TIPERS.DES',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            num_establ_tif: '',
+            nom_establ_tif: '',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            codigo_postal: t.codigoPostal,
+            cve_entidad: t.estado,
+            cve_deleg_mun: t.municipio ?? '',
+            cve_colonia: t.colonia ?? '',
+            calle: t.calle,
+            num_exterior: t.numeroExterior,
+            num_interior: t.numeroInterior ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
+      },
+
+      pago: {
+        exento_pago: AgriculturaComponent.verificaBoolean(
+          datos?.pago?.exentoPago
+        ),
+        ide_motivo_exento_pago: datos.pago.justificacion,
+        cve_referencia_bancaria: datos.pago.claveReferencia,
+        cadena_pago_dependencia: datos.pago.cadenaDependencia,
+        cve_banco: datos.pago.banco,
+        llave_pago: datos.pago.llavePago,
+        fec_pago: convertDate(datos.pago.fechaPago) ?? '',
+        imp_pago: Number(datos.pago.importePago),
+      },
+      // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
+      solicitante: {
+        rfc: this.valoresComplemento.rfc,
+        rol_capturista: 'Solicitante', // suponemos se saca de la sesion pero aun no funciona login
+        nombre:
+          this.valoresComplemento.tipoPersona.toLowerCase() === 'm'
+            ? this.valoresComplemento.razon_social ?? ''
+            : this.valoresComplemento.nombre ?? '',
+        es_persona_moral:
+          this.valoresComplemento.tipoPersona.toLowerCase() === 'm',
+        certificado_serial_number: 0, // no sabemos de donde se obtiene
+      },
+
+      representacion_federal: {
+        cve_entidad_federativa: 'DGO', // aun no estan los datos login
+        cve_unidad_administrativa: '1016', // aun no hay datos login
+      },
+    };
+  }
+
+  /**
+   * Verifica si el valor viene como string y si es 'si' lo convierte en booleano
+   * @param valor valor a verificar
+   */
+  static verificaBoolean(valor: string | boolean): boolean {
+    if (typeof valor === 'string') {
+      return valor.toLowerCase() === 'si';
+    }
+    return valor;
+  }
+
+  /**
+   * metodo para obtener rfc e y nombre de compoennete hijo
+   * */
+  valoresPasoUno(event: {
+    rfc: string,
+    tipoPersona: string,
+    razon_social: string,
+    nombre: string,
+  }): void {
+    this.valoresComplemento = event;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
 import { catchError, map, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -24,7 +24,7 @@ import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
 
 /**
  * @title PasoUnoComponent
- * @description 
+ * @description
  * Componente que representa el primer paso de un formulario multipaso.
  * Gestiona la navegación entre diferentes pestañas/pasos del formulario,
  * cada uno representado por un componente específico.
@@ -86,6 +86,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @default 1
    */
   indice: number = 1;
+  @Output() subirValores: EventEmitter<{rfc:string,tipoPersona:string,razon_social:string,nombre:string}> = new EventEmitter();
 
     /**
    * @method seleccionaTab
@@ -129,11 +130,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   public personas: PersonaTerceros[] = [];
 
   /**
-   * @description 
+   * @description
    * Array de objetos que representan las diferentes secciones del formulario.
    * Cada objeto contiene el índice, título y el nombre del componente correspondiente.
    * Este arreglo es utilizado para navegar entre los diferentes pasos del formulario.
-   * 
+   *
    * @type {Array<{ index: number, title: string, component: string }>}
    */
   seccionesDeLaSolicitud = [
@@ -151,7 +152,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(private readonly seccionStore: SeccionLibStore, 
+  constructor(private readonly seccionStore: SeccionLibStore,
     private agriculturaApiService: AgriculturaApiService,
     private consultaQuery: ConsultaioQuery,
     private consultaioStore: ConsultaioStore,
@@ -160,10 +161,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([true]);
-    
+
   }
 
-  
+
   ngOnInit(): void {
   this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -180,7 +181,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     )
     .subscribe();
   }
-  
+
     guardarDatosFormulario(): void {
       this.agriculturaApiService
         .getDatosDeLaSolicitudData().pipe(
@@ -195,11 +196,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     }
 
   /**
-   * @description 
+   * @description
    * Método que se ejecuta al seleccionar una pestaña/paso del formulario.
    * Actualiza el índice de la pestaña/paso actual, permitiendo la navegación
    * entre las diferentes secciones del formulario multipaso.
-   * 
+   *
    * @method seleccionaPestana
    * @param {number} i - Índice de la pestaña/paso seleccionada.
    * @returns {void}
@@ -222,7 +223,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       { index: 5, ref: this.pagoDeDerechosComponentRef }
     ];
 
-    let esValido = true;   
+    let esValido = true;
 
     for (const tab of tabsValidadas) {
 
@@ -283,7 +284,12 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   }
 
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
-
+    this.subirValores.emit({
+      rfc:this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
+      tipoPersona: this.solicitanteComponentRef.datosGenerales?.datos.identificacion?.tipo_persona ??'',
+      razon_social: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '',
+      nombre:this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''
+    });
     return {
       id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
         && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
@@ -377,10 +383,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
         rfc: this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
-        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login 
+        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login
         nombre: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''),
         es_persona_moral: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
-        certificado_serial_number: 0 // no sabemos de donde se obtiene 
+        certificado_serial_number: 0 // no sabemos de donde se obtiene
       },
 
       representacion_federal: {
@@ -393,7 +399,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   /**
  * Convierte una fecha en formato dd/MM/yyyy o dd-MM-yyyy
  * a una cadena ISO válida (UTC).
- * 
+ *
  * @param fechaStr - Ejemplo: "07/11/2025" o "07-11-2025"
  * @returns string - Ejemplo: "2025-11-07 00:00:00"
  */
