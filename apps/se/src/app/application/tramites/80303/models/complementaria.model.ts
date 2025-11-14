@@ -37,49 +37,49 @@ export interface Federatario {
    * Nombre del federatario público.
    * @optional
    */
-  Nombre?: string;
+  nombreNotario?: string;
 
   /**
    * Primer apellido del federatario público.
    * @optional
    */
-  PrimerApellido?: string;
+  apellidoMaterno?: string;
 
   /**
    * Segundo apellido del federatario público.
    * @optional
    */
-  SegundoApellido?: string;
+  apellidoPaterno?: string;
 
   /**
    * Número del acta asociada al federatario público.
    * @optional
    */
-  NumeroActa?: string;
+  numeroActa?: string;
 
   /**
    * Fecha en la que se emitió el acta asociada al federatario público.
    * @optional
    */
-  FechaActa?: string;
+  fechaActa?: string;
 
   /**
    * Número de la notaría donde trabaja el federatario público.
    * @optional
    */
-  NumeroNotaria?: string;
+  numeroNotaria?: string;
 
   /**
    * Municipio o delegación donde se encuentra la notaría del federatario público.
    * @optional
    */
-  MunicipioDelegacion?: string;
+  delegacionMunicipio?: string;
 
   /**
    * Estado o distrito donde se encuentra la notaría del federatario público.
    * @optional
    */
-  EstadoDistrito?: string;
+  entidadFederativa?: string;
 }
 
 
@@ -324,32 +324,32 @@ export interface DatosPlantaManufacturera {
 /**
  * Representa un servicio IMMEX con información detallada sobre su descripción, tipo, estado y estatus.
  */
-export interface ServicioImmex {
+export interface ServiciosImmex {
   /**
-   * La descripción del servicio IMMEX.
-   * Puede ser opcional y proporcionar detalles sobre el servicio.
+   * ID único del servicio (opcional)
    */
-  descripcionServicio?: string;
+  id?: number;
 
   /**
-   * El tipo de servicio IMMEX.
-   * Indica la categoría o clasificación del servicio.
+   * Estatus del servicio
    */
-  tipoServicio?: string;
+  desEstatus?: string;
 
   /**
-   * El estado del servicio IMMEX.
-   * Representa el estado actual del servicio, como "activo" o "inactivo".
+   * Descripción del servicio
    */
-  testado?: string;
+  descripcion?: string;
 
   /**
-   * El estatus del servicio IMMEX.
-   * Define el nivel o condición del servicio en un momento dado.
+   * Tipo de servicio
    */
-  estatus?: string;
+  descripcionTipo?: string;
+
+  /**
+   * Testado del servicio
+   */
+  descripcionTestado?: string;
 }
-
 /**
  * Representa un anexo de exportación con información detallada sobre la fracción arancelaria, descripción y tipo de fracción.
  */
@@ -404,6 +404,7 @@ export interface AnexoImportacion {
    * @optional
    */
   tipoFraccion?: string;
+  
 }
 
 
@@ -435,4 +436,25 @@ export interface Sensible {
    * @example "kilogramos"
    */
   unidadMedida?: string;
+}
+export interface JSONRespuesta<T> {
+  /**
+   * Causa del error, si aplica.
+   */
+  causa?: string;
+
+  /**
+   * Código de estado HTTP o personalizado.
+   */
+  codigo?: string;
+
+  /**
+   * Mensaje descriptivo de la respuesta.
+   */
+  mensaje: string;
+
+  /**
+   * Datos retornados por la API, de tipo genérico T.
+   */
+  datos?: T;
 }

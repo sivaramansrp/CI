@@ -3,11 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDatos } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite80303Store } from '../estados/tramite80303Store.store';
 
+import { Tramite80303Query } from '../estados/tramite80303Query.query';
+import { Tramite80303State } from '../estados/tramite80303Store.store';
+
+import { JSONRespuesta } from '../models/complementaria.model';// Add the correct import path for JSONRespuesta
+
+import { ProgramaLista } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; // Make sure this path is correct
+
+import { ExportacionImportacionPayload, ImportacionExportacionFracciones } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; // Add the correct import path for ExportacionImportacionPayload and ImportacionExportacionFracciones
+
+import { JSONResponse} from '@libs/shared/data-access-user/src';
 import { PROC_80303 } from '../servers/api-route';
 
+import{DatosModificacionRespuesta} from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 /**
  * Decorador que marca una clase como un servicio que puede ser inyectado en otros componentes o servicios.
  * 
@@ -32,7 +45,8 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
    */
   constructor(
     public httpServicios: HttpClient,
-    public tramite80303Store: Tramite80303Store
+    public tramite80303Store: Tramite80303Store,
+    private tramite80303Query: Tramite80303Query
   ) {}
 
   /**
@@ -78,18 +92,6 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
         }));
       });
   }
-
-  /**
-   * Obtiene los datos del formulario de modificación.
-   * 
-   * @returns {Observable<DatosModificacion>} Observable con los datos de modificación.
-   * Obtiene los datos de modificación desde un archivo JSON local.
-   */
-  obtenerModificacionFormDatos(): Observable<DatosModificacion> {
-    return this.httpServicios.get<DatosModificacion>(
-      'assets/json/80303/modificacion-datos.json'
-    );
-  }
  consultarMercanciasImportacion(idSolicitud: string): Observable<any> {
     const url = PROC_80303.CONSULTA_MERCANCIAS_IMPORTACION(idSolicitud);
     return this.httpServicios.get<any>(url);
@@ -130,8 +132,82 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
     const url = PROC_80303.CONSULTA_PLANTAS;
     return this.httpServicios.post<any>(url, body);
   }
-  buscarEmpresas(body: any): Observable<any> {
+buscarEmpresas(body: any): Observable<any> {
   const url = PROC_80303.BUSCAR_EMPRESAS;
   return this.httpServicios.post<any>(url, body);
 }
+
+buscarDatosCertificacionSAT(rfc: string): Observable<any> {
+    const url = `${PROC_80303.BUSCAR_DATOS_CERTIFICACION_SAT}?rfc=${rfc}`;
+    return this.httpServicios.get<any>(url);
+  }
+
+  /**
+   * Obtiene la lista de programas asociados a un RFC y tipo de programa específico.
+   *
+   * @param rfc El RFC para el cual se obtendrán los programas.
+   * @param tipoPrograma El tipo de programa para filtrar la lista.
+   * @returns {Observable<JSONRespuesta<ProgramaLista[]>>} Observable con la lista de programas.
+   */
+  obtenerListaProgramas(
+    rfc: string,
+    tipoPrograma: string
+  ): Observable<JSONRespuesta<ProgramaLista[]>> {
+    return this.httpServicios.get<JSONRespuesta<ProgramaLista[]>>(
+      PROC_80303.LISTA_PROGRAMAS + `${rfc}&tipoPrograma=${tipoPrograma}`
+    );
+  }
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Solicitud80301State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite80303State> {
+    return this.tramite80303Query.selectSolicitud$;
+  }
+  /**
+   * Guarda los datos del formulario de modificación en el servidor.
+   * @param body Objeto que contiene los datos a guardar.
+   * @returns {Observable<JSONResponse>} Observable con la respuesta del guardado.
+   */
+  postGuardarDatos(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpServicios.post<JSONResponse>(PROC_80303.GUARDAR, {
+      body: body,
+    });
+  }
+  /**
+   * Obtiene los datos de exportación para la tabla dinámica.
+   *
+   * @returns {Observable<JSONRespuesta<ImportacionExportacionFracciones[]>>} Observable con los datos de exportación.
+   */
+  getDatosExportacionTableData(
+    payload: ExportacionImportacionPayload
+  ): Observable<JSONRespuesta<ImportacionExportacionFracciones[]>> {
+    return this.httpServicios.post<
+      JSONRespuesta<ImportacionExportacionFracciones[]>
+    >(PROC_80303.FRACCIONES_EXPORTACION, {
+      body: payload,
+    });
+  }
+   /**
+   * Obtiene los datos de modificación desde un archivo JSON local.
+   *
+   * @returns {Observable<JSONRespuesta<DatosModificacion>>} Observable con los datos de modificación.
+   */
+  getDatosModificacion(): Observable<JSONRespuesta<DatosModificacion>> {
+    return this.httpServicios
+      .get<JSONRespuesta<DatosModificacionRespuesta>>(
+        PROC_80303.DATOS_MODIFICACION
+      )
+      .pipe(
+        map((response) => ({
+          ...response,
+          datos: {
+            rfc: response.datos?.rfc_original ?? '',
+            representacionFederal: '',
+            tipo: response.datos?.identificacion?.tipo_sociedad ?? '',
+            programa: response.datos?.identificacion?.email ?? '',
+          },
+        }))
+      );
+  }
 }

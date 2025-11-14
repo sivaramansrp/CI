@@ -9,14 +9,19 @@ import { Component, OnDestroy } from '@angular/core';
 import {
   Federatario,
   FederatarioRealizaranLasOperaciones,
-  ServicioImmex,
+  ServiciosImmex,
 } from '../../models/complementaria.model';
+
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
+
+import { Operacions } from '../../../80302/estados/models/plantas-consulta.model';
+
+import { CONFIGURACION_OPERACIONES } from '../../../80302/constantes/modificacion.enum';
 
 /**
  * Decorador `@Component` utilizado para definir un componente en Angular.
@@ -106,7 +111,17 @@ export class ComplementarioComponent implements OnDestroy {
    */
   public configuracionPlantasManufacturerasTabla: ConfiguracionColumna<Plantas>[] =
     CONFIGURACION_PLANTAS_MANUFACTURERAS;
-
+/**
+   * Configuración de las columnas de la tabla para las operaciones.
+   * @type {ConfiguracionColumna<Operacions>[]}
+   */
+  configuracionOperacion: ConfiguracionColumna<Operacions>[] =
+    CONFIGURACION_OPERACIONES;
+/**
+   * Datos de las operaciones obtenidos desde el servicio.
+   * @type {Operacions[]}
+   */
+  datosOperacions: Operacions[] = [];
   /**
    * Datos que se mostrarán en la tabla de plantas manufactureras.
    */
@@ -119,7 +134,7 @@ export class ComplementarioComponent implements OnDestroy {
    * los servicios relacionados con el programa IMMEX. Se utiliza para
    * gestionar y mostrar la información correspondiente en la tabla de datos.
    */
-  public serviciosImmexTablaDatos: ServicioImmex[] = [];
+  public serviciosImmexTablaDatos: ServiciosImmex[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
@@ -127,6 +142,8 @@ export class ComplementarioComponent implements OnDestroy {
    * suscripciones activas y prevenir fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  certificacionSAT: string = '';
 
   /**
    * Constructor de la clase `ComplementariaComponent`.
@@ -148,7 +165,7 @@ export class ComplementarioComponent implements OnDestroy {
      this.fetchAccionistasTablaDatos(); // Fetch accionistas data dynamically
       this.fetchFederatariosTablaDatos(); // Fetch federatarios data dynamically
      this.fetchPlantasIMMEXDatos(); // Fetch plantas IMMEX data dynamically
-
+    this.fetchDatosCertificacionSAT('AAL0409235E6');
      this.fetchEmpresasSubmanufacturerasTablaDatos('202734892'); 
 
       this.fetchPlantasManufacturerasTablaDatos('202734892,202734901'); 
@@ -300,8 +317,8 @@ fetchPlantasIMMEXDatos(): void {
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.plantasIMMEXDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Plantas IMMEX Datos:', this.plantasIMMEXDatos);
+          this.datosOperacions = response.datos; // Assign the `datos` array to the table data
+          console.log('Plantas IMMEX Datos:', this.datosOperacions);
         } else {
           console.error('Unexpected response format:', response);
         }
@@ -311,6 +328,18 @@ fetchPlantasIMMEXDatos(): void {
       }
     );
 }
+fetchDatosCertificacionSAT(rfc: string): void {
+    this.modificacionProgramaImmexBajaSubmanufactureraService.buscarDatosCertificacionSAT(rfc).subscribe(
+      (response) => {
+
+        this.certificacionSAT = response; // Assign the fetched data
+        console.log('datosCertificacionSAT:', this.certificacionSAT);
+      },
+      (error) => {
+        console.error('Error fetching datosCertificacionSAT:', error);
+      }
+    );
+  }
 
   /**
 * Método que se ejecuta cuando el componente es destruido.

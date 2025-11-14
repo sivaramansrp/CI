@@ -14,13 +14,13 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
+import {SolicitudPageComponent} from './pages/solicitud-page/solicitud-page.component';
 @NgModule({
   declarations: [
-    SolicitudPageComponent,
-    PasoUnoComponent,
+  PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
   ],
@@ -41,10 +41,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     MontoYFactorComponent,
   ],
   exports: [
+  SolicitudPageComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    SolicitudPageComponent,
   ],
 })
 export class ModificacionProgramaImmexBajaSubmanufactureraModule {}

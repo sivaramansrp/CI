@@ -43,4 +43,12 @@ export class Tramite80303Query extends Query<Tramite80303State> {
    * @property {Observable<string>} getSubTabSeleccionado$
    */
     public getSubTabSeleccionado$ = this.select((state) => state.subTabSeleccionado);
+    
+   /**
+    * Selector para obtener el estado completo de la solicitud del trámite 80301.
+    * @returns {Solicitud80301State} El estado completo de la solicitud.
+    */
+   selectSolicitud$ = this.select((state) => {
+     return state;
+   });
 }

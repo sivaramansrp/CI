@@ -3,18 +3,22 @@ import {
   AnexoImportacion,
   Federatario,
   FederatarioRealizaranLasOperaciones,
-  ServicioImmex,
+  ServiciosImmex,
 } from '../models/complementaria.model';
 import {
   Bitacora,
+  DatosModificacion,
   EmpresaSubmanufacturera,
   ModificacionDatos,
+  
 } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { Complimentaria, Empresas, Plantas } from '../../../shared/models/complementaria.model';
 import { Anexo } from '../../../shared/models/anexos.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+
+import{ProgramaLista} from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 
 
 /**
@@ -86,7 +90,7 @@ export interface Tramite80303State {
    * Datos de la tabla de servicios IMMEX.
    * @type {ServicioImmex[]}
    */
-  serviciosImmexTablaDatos: ServicioImmex[];
+  serviciosImmexTablaDatos: ServiciosImmex[];
 
   /**
    * Datos de la tabla de bitácora.
@@ -105,6 +109,36 @@ export interface Tramite80303State {
    * @type {ModificacionDatos}
    */
   modificacionDatos: ModificacionDatos;
+  
+  /**
+   * Folio del programa seleccionado.
+   */
+  selectedFolioPrograma: string;
+
+  /**
+   * Información relacionada con la modificación.
+   */
+  datosModificacion: DatosModificacion | undefined;
+  /**
+   * Tipo de programa seleccionado.
+   */
+  selectedTipoPrograma: string;
+
+  /**
+   * ID del programa seleccionado.
+   */
+  selectedIdPrograma: string;
+
+  /**
+   * Certificación SAT
+   * @type {string}
+   */
+  certificacionSAT: string;
+   /**
+   * ID de la solicitud.
+   * @type {number}
+   */
+  idSolicitud: number;
 }
 
 /**
@@ -128,12 +162,23 @@ export function createInitialState(): Tramite80303State {
     serviciosImmexTablaDatos: [],
     bitacoraTablaDatos: [],
     submanufacturerasTablaDatos: [],
+    selectedFolioPrograma: '',
+    selectedTipoPrograma: '',
+    selectedIdPrograma: '',
+    certificacionSAT: '',
+    datosModificacion: {
+      rfc: '',
+      representacionFederal: '',
+      tipo: '',
+      programa: ''
+    },
     modificacionDatos: {
       rfc: '',
       representacionFederal: '',
       tipoModificacion: '',
       modificacionPrograma: '',
     },
+     idSolicitud: 0,
   };
 }
 
@@ -312,7 +357,7 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * @returns {void}
    */
   public updateServiciosImmexTablaDatos(
-    serviciosImmexTablaDatos: ServicioImmex[]
+    serviciosImmexTablaDatos: ServiciosImmex[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -349,4 +394,75 @@ export class Tramite80303Store extends Store<Tramite80303State> {
       submanufacturerasTablaDatos,
     }));
   }
+  /**
+   * Establece el RFC de inicio de sesión en el estado.
+   *
+   * @param loginRfc - RFC del usuario que ha iniciado sesión.
+   */
+  public setLoginRfc(loginRfc: string): void {
+    this.update((state) => ({
+      ...state,
+      loginRfc,
+    }));
+  }
+/**
+   * Establece el tipo de programa seleccionado en el estado.
+   * 
+   * @param selectedTipoPrograma - El tipo de programa seleccionado.
+   */
+  public setSelectedTipoPrograma(selectedTipoPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedTipoPrograma,
+    }));
+  }
+
+  /**
+   * Establece la lista de datos del programa en el estado.
+   * 
+   * @param programaListaDatos - Arreglo de objetos ProgramaLista que representan la lista de datos del programa.
+   */
+  public setProgramaListaDatos(programaListaDatos: ProgramaLista[]): void {
+    this.update((state) => ({
+      ...state,
+      programaListaDatos,
+    }));
+  }
+
+  /**
+   * Establece el folio del programa seleccionado en el estado.
+   *
+   * @param selectedFolioPrograma - El folio del programa seleccionado.
+   */
+  public setSelectedFolioPrograma(selectedFolioPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedFolioPrograma,
+    }));
+  }
+  /**
+   * Establece el ID del programa seleccionado en el estado.
+   *
+   * @param selectedIdPrograma - El ID del programa seleccionado.
+   */
+  public setSelectedIdPrograma(selectedIdPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedIdPrograma,
+    }));
+  }
+ 
+  /**
+   * Establece el ID de la solicitud a establecer en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud a establecer en el estado.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
+  
 }
