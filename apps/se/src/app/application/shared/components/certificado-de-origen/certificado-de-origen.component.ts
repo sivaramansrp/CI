@@ -82,8 +82,7 @@ export const FECHA_FIN = {
   styleUrl: './certificado-de-origen.component.scss',
 })
 export class CertificadoDeOrigenComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Título mostrado en el componente.
    * Puede ser personalizado desde el componente padre mediante [title].
@@ -188,7 +187,7 @@ export class CertificadoDeOrigenComponent
   /**
    * Propiedad de entrada que recibe los datos de los países.
    */
-  pais?:Catalogo[];
+  pais?: Catalogo[];
 
   /*
    * Propiedad de entrada que recibe los datos de los países bloqueados.
@@ -307,6 +306,10 @@ export class CertificadoDeOrigenComponent
    */
   @Output() filaClics = new EventEmitter<Mercancia>();
 
+  /** * Propiedad de salida que emite un valor booleano cuando se selecciona "Sí" en el formulario.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() seleccionadoSi: EventEmitter<boolean> = new EventEmitter<boolean>();
   /**
    * Propiedad de salida que emite la fila seleccionada de mercancia.
    * @type {EventEmitter<Mercancia>}
@@ -443,7 +446,7 @@ export class CertificadoDeOrigenComponent
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   @Input() cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] =
-    CARGA_MERCANCIA_SELECCIONADAS;
+  CARGA_MERCANCIA_SELECCIONADAS;
 
   /**
    * @description
@@ -575,6 +578,11 @@ export class CertificadoDeOrigenComponent
    */
   procedimientoExcluded = PROCEDIMIENTO_EXCLUDED;
 
+  /**   * @property {Notificacion} SiNuevaNotificacion
+   * @description Representa una notificación que se utilizará en el componente.
+   * @command Este campo debe ser inicializado antes de su uso.
+   */
+  public SiNuevaNotificacion!: Notificacion;
   /**
    * @property {boolean} isInvalidaMercanciaSeleccion
    * @description
@@ -655,7 +663,7 @@ export class CertificadoDeOrigenComponent
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
 
-    if(this.idProcedimiento && MERCANCIA_SELECCIONADAS_REQUIRED?.includes(this.idProcedimiento)){
+    if (this.idProcedimiento && MERCANCIA_SELECCIONADAS_REQUIRED?.includes(this.idProcedimiento)) {
       this.formCertificado.get('mercanciasSeleccionadas')?.setValidators(matrizRequerida);
     }
 
@@ -691,11 +699,11 @@ export class CertificadoDeOrigenComponent
       this.formCertificado.addControl('lada', new FormControl(''));
       this.formCertificado.addControl('telefono', new FormControl(''));
       this.formCertificado.addControl('fax', new FormControl(''));
-      this.formCertificado.addControl('correo', new FormControl('')); 
+      this.formCertificado.addControl('correo', new FormControl(''));
     }
 
     if (this.idProcedimiento === 110204 || this.idProcedimiento === 110212 || this.idProcedimiento === 110216) {
-      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido','segundoApellido','razonSocial','numeroLetra','ciudad','pais','telefono','lada','correo'];
+      const CONTROLS_TO_CLEAR = ['nombres', 'calle', 'primerApellido', 'segundoApellido', 'razonSocial', 'numeroLetra', 'ciudad', 'pais', 'telefono', 'lada', 'correo'];
       CONTROLS_TO_CLEAR.forEach(key => {
         this.formCertificado.get(key)?.clearValidators();
         this.formCertificado.get(key)?.updateValueAndValidity({ emitEvent: false });
@@ -749,7 +757,7 @@ export class CertificadoDeOrigenComponent
     return this.validacionesService.isValid(form, field) || false;
   }
 
- /** Método público para marcar todos los campos como tocados y mostrar errores */
+  /** Método público para marcar todos los campos como tocados y mostrar errores */
   public markAllFieldsTouched(): void {
     if (this.formCertificado && this.formularioArchivo) {
       this.formCertificado.markAllAsTouched();
@@ -957,7 +965,7 @@ export class CertificadoDeOrigenComponent
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
-    this.applyTercerOperadorValidation(); 
+    this.applyTercerOperadorValidation();
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
     this.getPais();
@@ -1436,8 +1444,8 @@ export class CertificadoDeOrigenComponent
    *
    * @returns {void}
    */
-  getPaisBloque(clave:string):void{
-    this.service.getPaises(this.idProcedimiento.toString(),clave).subscribe((data) => {
+  getPaisBloque(clave: string): void {
+    this.service.getPaises(this.idProcedimiento.toString(), clave).subscribe((data) => {
       this.paisBloqueCertificado = data as Catalogo[];
     });
   }
@@ -1447,7 +1455,7 @@ export class CertificadoDeOrigenComponent
    *
    * @returns {void}
    */
-  getPais():void{
+  getPais(): void {
     this.service.getDatos(this.idProcedimiento.toString()).subscribe((data) => {
       this.circulacion = data as Catalogo[];
     });
@@ -1482,10 +1490,10 @@ export class CertificadoDeOrigenComponent
    * Si `paisBloqueCertificado` tiene datos, retorna ese arreglo; de lo contrario, retorna `paisBloqu`.
    * @returns {Catalogo[]} El catálogo de países.
    */
-  get paisGet(): Catalogo[]{
+  get paisGet(): Catalogo[] {
     return this.circulacion?.length
-    ? this.circulacion
-    : this.paises;
+      ? this.circulacion
+      : this.paises;
   }
 
   /**
@@ -1536,8 +1544,45 @@ export class CertificadoDeOrigenComponent
   esCampoRequerido(campo: string): boolean {
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
-}
 
+  /**
+   * Maneja el evento de eliminación de error en el formulario.
+   * @param {boolean} event - Indica si se debe eliminar el error.
+   * @returns {void}
+   */
+  SiEliminarErrorMessage(event: boolean): void {
+    const VAL = this.formCertificado.get('si')?.value 
+    if (!event) {
+      this.formCertificado.get('si')?.setValue(!VAL);
+    } else {
+      this.guardarClicado = [];
+      this.seleccionadoSi.emit(true);
+    }
+    this.setValoresStore('formCertificado', 'si', 'setFormCertificadoGenric');
+  }
+
+  /**
+   * Maneja el cambio de entrada en el formulario.
+   * @returns {void}
+   */
+  cambioDeEntrada(): void {
+    if (this.guardarClicado.length > 0) {
+      this.SiNuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La lista de mercancías seleccionadas se eliminará',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    } else {
+      this.setValoresStore('formCertificado', 'si', 'setFormCertificadoGenric');
+    }
+  }
+}
 /**
  * Valida que el valor del control sea una matriz no vacía.
  *

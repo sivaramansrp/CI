@@ -21,7 +21,7 @@ import { StoreConfig } from '@datorama/akita';
  * del trámite, incluyendo datos del productor, receptor, transporte, mercancía, entre otros.
  */
 export interface Tramite110212State {
- id: number | null;
+  id: number | null;
   /** ID de la solicitud */
   idSolicitud: number | null;
 
@@ -157,10 +157,10 @@ export interface Tramite110212State {
    * Cada clave representa una sección del formulario.
    */
   formaValida: { [key: string]: boolean };
-    /**
-   * @description
-   * Objeto que contiene los valores actuales del formulario de certificado.
-   */
+  /**
+ * @description
+ * Objeto que contiene los valores actuales del formulario de certificado.
+ */
   formCertificado: { [key: string]: unknown };
 }
 
@@ -282,7 +282,7 @@ export function createInitialState(): Tramite110212State {
       fax: '',
       correoElectronico: ''
     },
-      formCertificado: {
+    formCertificado: {
       si: false,
       entidadFederativa: '',
       bloque: '',
@@ -1428,8 +1428,21 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       const UPDATEDLIST = LISTAEXISTENTE.map((ITEM) =>
         ITEM.id === NUEVOARTICULO.id ? { ...ITEM, ...NUEVOARTICULO } : ITEM
       );
-            return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
+      return { ...STATE, mercanciaSeleccionadasTablaDatos: UPDATEDLIST };
     });
+  }
+
+  /**
+   * @method updateMercanciaSeleccionadasTablaDatos
+   * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
+   * *
+   * Este método permite actualizar las mercancías seleccionadas por el usuario en la tabla de datos.
+   */
+  updateMercanciaSeleccionadasTablaDatos(mercanciaSeleccionadasTablaDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaDatos,
+    }));
   }
   /**
    * @method setMercanciaDisponsiblesTablaDatos
@@ -1527,19 +1540,19 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     }));
   }
 
-    /**
-   * @method setFormCertificadoGenric
-   * @description
-   * Actualiza los datos del formulario de certificado en el almacén.
-   * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
-   */
+  /**
+ * @method setFormCertificadoGenric
+ * @description
+ * Actualiza los datos del formulario de certificado en el almacén.
+ * @param values Objeto que contiene los valores a actualizar en el formulario de certificado.
+ */
   setFormCertificadoGenric(values: {
     [key: string]: undefined | boolean | string | number | object;
   }): void {
     this.update((state) => ({
       formCertificado: {
-      ...state.formCertificado,
-      ...values,
+        ...state.formCertificado,
+        ...values,
       },
     }));
   }
@@ -1570,24 +1583,24 @@ export class Tramite110212Store extends Store<Tramite110212State> {
       disponiblesDatos,
     }));
   }
-    /**
-   * @method setBloque
-   * @description
-   * Actualiza los bloques de países en el almacén.
-   * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
-   */
+  /**
+ * @method setBloque
+ * @description
+ * Actualiza los bloques de países en el almacén.
+ * @param paisBloques Array de objetos `Catalogo` que representa los bloques de países.
+ */
   setBloque(paisBloques: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       paisBloques,
     }));
   }
-    /**
-   * @method setEstado
-   * @description
-   * Actualiza el estado seleccionado en el almacén.
-   * @param estado Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
-   */
+  /**
+ * @method setEstado
+ * @description
+ * Actualiza el estado seleccionado en el almacén.
+ * @param estado Objeto de tipo `Catalogo` que contiene la información del estado a actualizar.
+ */
   setEstado(estado: Catalogo): void {
     this.update((state) => ({
       ...state,

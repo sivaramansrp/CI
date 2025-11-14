@@ -450,7 +450,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
       paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
-
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
     if (this.isGarantiasOfrecidasVisible) {
       this.domicilio.addControl(
         "garantiasOfrecidas",
