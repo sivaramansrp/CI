@@ -455,8 +455,8 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
 
     if (this.isGarantiasOfrecidasVisible) {
@@ -1809,7 +1809,10 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+    this.domicilio.patchValue({
+      paisDeProcedenciaDatos: events,
+    });
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
     this.setValoresStore(
@@ -1889,7 +1892,10 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+    this.domicilio.patchValue({
+      paisDeOriginDatos: events,
+    });
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
     this.setValoresStore(
@@ -1897,6 +1903,7 @@ openModal():void {
       "paisDeOriginDatos",
       "setPaisDeOriginDatos",
     );
+
   }
 
   /**

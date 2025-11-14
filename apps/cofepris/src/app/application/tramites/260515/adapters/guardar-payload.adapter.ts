@@ -142,7 +142,6 @@ export class GuardarAdapter_260515 {
           "nombreCortoUsoEspecifico": this.solicitudDatos.acondicionamiento,
           "fechaCaducidadStr": "",
           "idEstadoFisico": this.solicitudDatos.estadoFisico,
-          "avisoFuncionamientoLicencia": ''
       }],
       "representanteLegal": {
           "rfc": this.solicitudDatos.rfc,

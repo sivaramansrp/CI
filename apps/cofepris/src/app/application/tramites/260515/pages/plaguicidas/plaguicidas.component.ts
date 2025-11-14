@@ -163,7 +163,7 @@ export class PlaguicidasComponent implements OnInit {
     //         }
             const PAYLOAD = this.guardarAdapter260515.toFormPayload();
             let shouldNavigate = false;
-            this.registroSolicitudService.postGuardarDatos('260215', PAYLOAD).subscribe(response => {
+            this.registroSolicitudService.postGuardarDatos('260515', PAYLOAD).subscribe(response => {
               shouldNavigate = response.codigo === '00';
               if (!shouldNavigate) {
                 const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
