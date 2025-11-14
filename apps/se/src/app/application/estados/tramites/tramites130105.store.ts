@@ -162,6 +162,7 @@ export interface Tramite130105State {
     */
   fechasSeleccionadas: string[];
 
+  /** Lista de partidas de la mercancía asociadas al trámite. */
   tableBodyData: PartidasDeLaMercanciaModelo[];
 }
 
