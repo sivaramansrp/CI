@@ -226,15 +226,15 @@ export class IntroPermisoComponent implements OnInit {
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        this.wizardComponent.siguiente();
-        return;
       }
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
+      this.wizardComponent.siguiente();
+      return;
     }
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
 
   /**
@@ -300,7 +300,7 @@ export class IntroPermisoComponent implements OnInit {
         valor_total_factura: Number(DATOS_GENERALES.datosMercanica.valor_total_factura),
         pais_destino_clave: DATOS_GENERALES.datosMercanica.pais_exportador,
         pais_origen_clave: DATOS_GENERALES.datosMercanica.pais_origen,
-        observaciones: DATOS_GENERALES.datosMercanica.otro_umc,
+        observaciones: DATOS_GENERALES.datosExportador.observaciones,
         numero_factura: (DATOS_GENERALES.datosMercanica.factura_numero).toString(),
         fecha_factura: FECHA_FACTURA,
         capacidad: Number(DATOS_GENERALES.datosMercanica.factor_conversion),
@@ -322,7 +322,7 @@ export class IntroPermisoComponent implements OnInit {
         nombre: DATOS_GENERALES.datosExportador.personales_nombre,
         apellido_paterno: DATOS_GENERALES.datosExportador.primer_apellido,
         apellido_materno: DATOS_GENERALES.datosExportador.segundo_apellido,
-        razon_social: DATOS_GENERALES.datosExportador.razon_social,
+        razon_social: DATOS_GENERALES.datosExportador.denominacion_razon_social_exportador,
         descripcion_ubicacion: DATOS_GENERALES.datosExportador.domicilio,
       },
       datos_genericos_solicitud:
