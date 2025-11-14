@@ -1,16 +1,16 @@
-import { SolitudeComponent } from './solitude.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PasoUnoComponent } from './paso-uno.component';
 
-describe('SolitudeComponent', () => {
-  let component: SolitudeComponent;
-  let fixture: ComponentFixture<SolitudeComponent>;
+describe('PasoUnoComponent', () => {
+  let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolitudeComponent],
+      imports: [PasoUnoComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolitudeComponent);
+    fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

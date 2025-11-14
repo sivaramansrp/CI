@@ -34,6 +34,8 @@ import {
   CATALOGO_MEDIO_TRANSPORTE,
   CATALOGO_MUNICIPIOS_DELEGACIONES,
   CATALOGO_NICO,
+  CATALOGO_NOMBRE_PRODUCTO,
+  CATALOGO_NOMBRE_SUBPRODUCTO,
   CATALOGO_PAISES,
   CATALOGO_PAISES_BLOQUE,
   CATALOGO_PAISES_DESTINO,
@@ -44,6 +46,7 @@ import {
   CATALOGO_SCIAN,
   CATALOGO_SECTORES,
   CATALOGO_SELECCIONAR_REGLA,
+  CATALOGO_TIPO_MECANISMO_ASIGNACION,
   CATALOGO_TIPOS_PRODUCTO,
   CATALOGO_TIPO_FACTURA,
   CATALOGO_TRATADOS_ACUERDOS,
@@ -51,6 +54,7 @@ import {
   CATALOGO_TRATADO_ACUERDOS,
   CATALOGO_TRATADO_ACUERDO_NEW,
   CATALOGO_TRATADO_ACUERDO_PAIS,
+  CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC,
   CATALOGO_UNIDAD_DE_MASA_BRUTA,
   CATALOGO_UNIDAD_MASA_BRUTA,
   CLASIFICACION,
@@ -60,6 +64,7 @@ import {
   FRACCION_HTS,
   PAISES_POR_BLOQUE,
   PAIS_DESTINO,
+  REPRESENTACION_FEDERAL_CATALOGO,
   TIPO_EMPRESA,
   UNIDADES_MEDIDA_COMERCIAL,
   API_UNIDADES_MEDIDA_TARIFARIA,
@@ -1062,4 +1067,55 @@ export class CatalogoServices {
    
   }
 
+/**
+ * Obtiene el catálogo de tipos de mecanismo de asignación según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de mecanismo de asignación
+ * @see CATALOGO_TIPO_MECANISMO_ASIGNACION
+ */
+tipoMecanismoAsignacionCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_TIPO_MECANISMO_ASIGNACION(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene el catálogo de nombres de producto según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de nombres de producto
+ * @see CATALOGO_NOMBRE_PRODUCTO
+ */
+nombreProductoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_NOMBRE_PRODUCTO(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene el catálogo de nombres de subproducto según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de nombres de subproducto
+ * @see CATALOGO_NOMBRE_SUBPRODUCTO
+ */
+nombreSubproductoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_NOMBRE_SUBPRODUCTO(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+/**
+ * Obtiene el catálogo de tratados y acuerdos (TITRAC) para un trámite específico.
+ * @param tramite Identificador del trámite para el cual se requiere el catálogo TITRAC.
+ * @returns Observable que emite la respuesta base con el arreglo de elementos del catálogo TITRAC.
+ */
+tratadoAcuerdoPaisTitracCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * Obtiene el catálogo de representación federal para un trámite específico.
+ * @param tramite Identificador del trámite para el cual se requiere el catálogo de representación federal.
+ * @returns Observable que emite la respuesta base con el arreglo de elementos del catálogo de representación federal.
+ */
+catalogoRepresentacionFederal(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${REPRESENTACION_FEDERAL_CATALOGO(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }

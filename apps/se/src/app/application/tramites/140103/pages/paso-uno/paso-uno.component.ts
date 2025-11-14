@@ -1,26 +1,24 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CancelacionDeCertificateComponent } from '../../components/cancelacionde/cancelacion-de-certificado.component';
 import { Solicitud140103Service } from '../../services/service140103.service';
 
-@Component({
-  selector: 'app-datos',
-  templateUrl: './datos.component.html',
-})
-export class DatosComponent implements OnInit, OnDestroy {
 
+@Component({
+  selector: 'app-paso-uno',
+  templateUrl: './paso-uno.component.html',
+  styleUrls: ['./paso-uno.component.css'],
+})
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  @ViewChild('cancelacionDeCertificateComponent', { static: false }) cancelacionDeCertificateComponent: CancelacionDeCertificateComponent | undefined;
   /**
    * @description
    * Este componente maneja los datos del trámite 140103, permitiendo la visualización y edición de los datos del establecimiento.
    * Utiliza un servicio para obtener y actualizar los datos del formulario.
    */
   @Input() showBuscarError: boolean = false;
-  /**
-   * @description
-   * Evento que se emite al intentar buscar datos.
-   * Contiene el estado del formulario (si fue enviado y si es inválido).
-   */
-  @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
+
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -35,6 +33,8 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
   indice: number = 1;
+
+  public formFieldValidado: boolean = true;
   /**
    * Este método se utiliza para establecer el índice del subtítulo.
    */
@@ -82,17 +82,22 @@ export class DatosComponent implements OnInit, OnDestroy {
       });
   }
 
-  
-
-/**
-   * Método que se invoca al intentar buscar datos.
-   * Emite un evento con el estado del formulario (si fue enviado y si es inválido).
-   *
-   * @param event - Objeto que contiene el estado del formulario.
-   */
-  onBuscarIntento(event: { submitted: boolean; invalid: boolean }): void {
-    this.buscarIntento.emit(event);
+public validarFormularios(): boolean {
+  let allFormsValid = true;
+  if (this.cancelacionDeCertificateComponent) {
+    if(this.cancelacionDeCertificateComponent?.isFormValido() === false) {
+      this.formFieldValidado = false;
+      return false;
+    }
+    this.formFieldValidado = true;
+    if (!this.cancelacionDeCertificateComponent?.CuposDisponiblesDatos.length) {
+      allFormsValid = true;
+      this.formFieldValidado = false;
+    }
   }
+  return allFormsValid;
+}
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
