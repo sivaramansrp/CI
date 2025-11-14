@@ -104,41 +104,20 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    // this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
 
-  /**
-   * @method updatePagoDerechos
-   * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
-   * Este método actúa como un puente entre el componente hijo `PagoDeDerechosComponent` y el store
-   * del trámite, permitiendo que los cambios realizados en el formulario se reflejen en el estado global.
-   *
-   * Cuando se produce un cambio en el formulario hijo, este método recibe el nuevo estado
-   * y lo propaga al store correspondiente, asegurando que la información esté sincronizada
-   * en toda la aplicación.
-   *
-   * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
-   *                                        Contiene todos los datos del formulario incluyendo montos,
-   *                                        conceptos, fechas y demás información relevante del pago.
-   *
-   * @returns {void} Este método no retorna ningún valor.
-   *
-   * @example
-   * // Ejemplo de uso cuando se actualiza el formulario
-   * const nuevoEstado: PagoDerechosFormState = {
-   *   monto: 1500.00,
-   *   concepto: 'Permiso de importación',
-   *   // ... otros campos
-   * };
-   * this.updatePagoDerechos(nuevoEstado);
-   *
-   * @memberof PagoDeDerechosContenedoraComponent
-   */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
-    //this.tramiteStore.updatePagoDerechos(event);
-  }
 
   validarContenedor(): boolean {
-    return (
-      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
-    );
+    if (this.pagoDeDerechosComponent) {
+        const FORMDATA = this.pagoDeDerechosComponent.pagoDerechosForm.getRawValue();
+            const HASVALUE = Object.values(FORMDATA).some(
+        value => value !== null && value !== undefined && value !== ''
+      );
+      if (HASVALUE) {
+        return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
+      } 
+        return true; 
+
+    }
+    return false;
   }
 
   /**
