@@ -6,7 +6,9 @@ import {
   ConfiguracionColumna,
   Notificacion,
   NotificacionesComponent,
-  TablaDinamicaComponent, TablaDinamicaExpandidaComponent,
+  SolicitanteQuery,
+  TablaDinamicaComponent,
+  TablaDinamicaExpandidaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -428,43 +430,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   cuerpoTablaSolicitud: SolicitudData[] = [];
 
-  // /**
-  //  * Arreglo que contiene las filas de la tabla de solicitudes.
-  //  * @type {SolicitudFilaTabla[]}
-  //  */
-  // cuerpoTablaSolicitud: SolicitudFilaTabla[] = [
-  //   {
-  //     fechaCreacion: '2025-06-17 10:30:00',
-  //     mercancia: 'Laptop HP',
-  //     cantidad: 5,
-  //     proveedor: 'Tech Solutions Inc.',
-  //   },
-  //   {
-  //     fechaCreacion: '2025-06-16 14:15:30',
-  //     mercancia: 'Monitor Dell 27"',
-  //     cantidad: 10,
-  //     proveedor: 'Global Electronics',
-  //   },
-  //   {
-  //     fechaCreacion: '2025-06-15 09:00:00',
-  //     mercancia: 'Teclado Mecánico RGB',
-  //     cantidad: 8,
-  //     proveedor: 'Peripherals World',
-  //   },
-  //   {
-  //     fechaCreacion: '2025-06-14 17:45:10',
-  //     mercancia: 'Mouse Inalámbrico Logitech',
-  //     cantidad: 12,
-  //     proveedor: 'Tech Accessories Co.',
-  //   },
-  //   {
-  //     fechaCreacion: '2025-06-13 11:20:05',
-  //     mercancia: 'Impresora Epson EcoTank',
-  //     cantidad: 3,
-  //     proveedor: 'Print Masters',
-  //   },
-  // ];
-
   /**
    * Configuración para el select de régimen.--220201
    * @property {Catalogo[]} regimen
@@ -488,11 +453,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * bandera para indicar que el formulario fue tocado
  */
   markTouched: boolean = false;
+  /**
+   * Rfc de la pantalla solicitante
+   */
+  rfcOriginal: string = '';
 
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
+   * @param consultaioQuery
+   * @param router
+   * @param activatedRoute
+   * @param fitosanitarioStore
+   * @param catalogosService
+   * @param fitosanitarioQuery
+   * @param registroSolicitudService
+   * @param solicitanteQuery
    */
   constructor(
     public fb: FormBuilder,
@@ -503,7 +480,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fitosanitarioStore: FitosanitarioStore,
     public catalogosService: CatalogosService,
     public fitosanitarioQuery: FitosanitarioQuery,
-    public registroSolicitudService: RegistroSolicitudService
+    public registroSolicitudService: RegistroSolicitudService,
+    public solicitanteQuery: SolicitanteQuery
   ) {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -553,6 +531,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.obtenerTodosLosDatosDeLaLista();
     this.createFromFields();
     this.initActionFormBuild();
+    this.obtieneDatosTabSolicitud();
+  }
+
+  /**
+   * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+   */
+  obtieneDatosTabSolicitud() {
+    this.solicitanteQuery.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+      this.rfcOriginal = seccionState.rfc_original;
+    })
   }
 
   /**
@@ -611,6 +599,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   obtenerDatosTablaSolicitud(): void {
     // TODO: recibir el parametro de rfc de la sesion
     this.registroSolicitudService
+      // .obtieneDatosDeLaSolicitud(220202, this.rfcOriginal)
       .obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -931,12 +920,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
+      // TODO: sustituir metodos con flujo normal y borrar con datos en duro
       // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
+      // this.obtenerPrellenadoTercerosRelacionados(event.id_solicitud);
+      // this.obtenerPrellenadoPagoDerechos(event.id_solicitud);
       this.obtenerPrellenadoMovilizacionNacional('202850466');
       this.obtenerPrellenadoTercerosRelacionados('202850466');
       this.obtenerPrellenadoPagoDerechos('202850466');
       this.catalogosService
-        // .obtenSolicitudPrellenado(event.id_solicitud)
         .obtenSolicitudPrellenado(220202, true, '202850466' ?? '')
         // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
@@ -996,20 +987,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                     nombreCientifico: vidaSilvestre.nombre_cientifico || '',
                   })) as DetalleVidaSilvestre[]) || [];
 
-                // const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
-                //   noPartida: mercancia.numero_partida.toString(),
-                //   NumeroLote: animal.numero_lote_detalle || '',
-                //   ColorPelaje: animal.color_pelaje_detalle || '',
-                //   EdadAnimal: animal.edad_animal_detalle || '',
-                //   FaseDesarrollo: animal.fase_desarrollo_detalle || '',
-                //   FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
-                //   NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
-                //   Raza: animal.raza_detalle || '',
-                //   Sexo: animal.id_sexo_detalle || '',
-                //   NombreCientifico: animal.nombre_cientifico_detalle || '',
-                //   NombreMercancia: animal.nombre_mercancia_detalle || '',
-                // })) as Sensible[] || [];
-
                 const FILAS: FilaSolicitud = {
                   id: mercancia.id_mercancia_gob || false,
                   noPartida: mercancia.numero_partida.toString(),
@@ -1058,7 +1035,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
               this.fitosanitarioStore.updateFilaSolicitud(FILAS_SOLICITUD);
             }
-            // this.radioBotonSeleccionado()
           },
           error: (error) => {
             console.error(
@@ -1088,6 +1064,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoMovilizacionNacional(idSolicitud: string) :void {
+    // this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -1111,6 +1088,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoTercerosRelacionados(idSolicitud: string) :void {
+    // TODO: sustituir metodos con flujo normal y borrar con datos en duro
+    // this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -1174,6 +1153,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoPagoDerechos(idSolicitud: string) :void {
+    // TODO: sustituir metodos con flujo normal y borrar con datos en duro
+    // this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -1466,7 +1447,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-  };
+  }
 
   /**
    * @description Valida todos los campos del formulario y marca los campos como touched
@@ -1493,20 +1474,5 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
 
     return { valido: true };
-  }
-
-  /**
-   * @description Valida formulario
-   * @method validarFormulario
-   * @returns {boolean}
-   */
-  validarFormularioJavi(): boolean {
-    this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true : false;
-    if (this.forma.valid) {
-      return this.mensajeErrorTabla;
-    }
-
-    this.forma.markAllAsTouched();
-    return false
   }
 }
