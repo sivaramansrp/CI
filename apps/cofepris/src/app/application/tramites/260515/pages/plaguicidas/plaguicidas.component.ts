@@ -4,6 +4,7 @@ import { Tramite260515State, Tramite260515Store } from '../../estados/stores/tra
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { GuardarAdapter_260515 } from '../../adapters/guardar-payload.adapter';
+import { MENSAJE_DE_VALIDACION } from '../../constantes/datos-solicitud.enum';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
@@ -27,6 +28,14 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit {
+    /**
+   * @property {string} MENSAJE_DE_ERROR
+   * @description
+   * Propiedad usada para almacenar el mensaje de error actual.
+   * Se inicializa como cadena vacía y se actualiza en función
+   * de las validaciones o errores capturados en el flujo.
+   */
+     MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
         /**
    * @property {boolean} isSaltar
    * @description
@@ -120,47 +129,19 @@ export class PlaguicidasComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
       if (e.accion === 'cont') {
-              // let isValid = true;
+              let isValid = true;
 
-    //           if (this.indice === 1 && this.pasoUnoComponent) {
-    //           isValid = this.pasoUnoComponent.validarPasoUno();
-    //         }
+              if (this.indice === 1 && this.pasoUnoComponent) {
+              isValid = this.pasoUnoComponent.validOnButtonClick();
+            }
 
-    //         if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
-    //             this.confirmarSinPagoDeDerechos = 2;
-    //           }else {
-    //             this.confirmarSinPagoDeDerechos = 3;
-    //           }
-
-    //         if(!this.requiresPaymentData) {
-    //           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-    //             this.mostrarAlerta=true;
-    //             this.seleccionarFilaNotificacion = {
-    //               tipoNotificacion: 'alert',
-    //               categoria: 'danger',
-    //               modo: 'action',
-    //               titulo: '',
-    //               mensaje: MENSAJE_DE_VALIDACION,
-    //               cerrar: true,
-    //               tiempoDeEspera: 2000,
-    //               txtBtnAceptar: 'SI',
-    //               txtBtnCancelar: 'NO',
-    //               alineacionBtonoCerrar:'flex-row-reverse'
-    //             }
-    //             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-    //  } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
-    //             this.confirmarSinPagoDeDerechos = 2;
-    //           } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
-    //             this.confirmarSinPagoDeDerechos = 3;
-    //           }
-    //       }
-    //         if (!isValid) {
-    //           this.formErrorAlert = this.MENSAJE_DE_ERROR;
-    //           this.esFormaValido = true;
-    //           this.datosPasos.indice = this.indice;
-    //           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-    //           return;
-    //         }
+            if (!isValid) {
+              this.formErrorAlert = this.MENSAJE_DE_ERROR;
+              this.esFormaValido = true;
+              this.datosPasos.indice = this.indice;
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+              return;
+            }
             const PAYLOAD = this.guardarAdapter260515.toFormPayload();
             let shouldNavigate = false;
             this.registroSolicitudService.postGuardarDatos('260515', PAYLOAD).subscribe(response => {
