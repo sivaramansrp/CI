@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -68,6 +69,7 @@ import { ServicioDeFormularioService } from "../../services/forma-servicio/servi
 import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
+
 
 export interface RespuestaTabla {
   code: number;
@@ -1643,6 +1645,14 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1657,17 +1667,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion)
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -2030,10 +2041,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
