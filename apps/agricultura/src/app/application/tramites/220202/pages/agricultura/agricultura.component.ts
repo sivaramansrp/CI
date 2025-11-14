@@ -274,6 +274,9 @@ export class AgriculturaComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Guarda los datos del formulario.
+   */
   guardarDatosFormulario(): void {
     this.agriculturaApiService
       .getAllDatosForma()
@@ -295,6 +298,11 @@ export class AgriculturaComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Crea el payload para el guardado de los datos.
+   * @param {ListaDeDatosFinal} datos - Datos de la lista de datos final.
+   * @returns {GuardarSolicitud}
+   */
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
     return {
       id_solicitud:

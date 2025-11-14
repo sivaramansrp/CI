@@ -1,14 +1,14 @@
-import { Catalogo, ConsultaioQuery, Notificacion, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { HttpClient } from '@angular/common/http';
 import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220202/fitosanitario.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
 
 /**
  * Componente para el formulario de pago de derechos.

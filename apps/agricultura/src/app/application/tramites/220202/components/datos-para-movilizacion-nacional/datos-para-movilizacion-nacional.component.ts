@@ -1,4 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, Notificacion, TituloComponent, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  Notificacion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
@@ -28,7 +33,7 @@ import { Movilizacion } from '../../models/220202/fitosanitario.model';
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrls: ['./datos-para-movilizacion-nacional.component.scss'],
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, NotificacionesComponent],
+  imports: [TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
   
@@ -222,7 +227,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     this.markTouched = true;
     this.forma.markAllAsTouched();
     this.forma.updateValueAndValidity();
-    console.log('entra a datosmovil', this.forma.valid);
     // Retornar si el formulario es válido
     if (!this.forma.valid) {
       return { valido: false };

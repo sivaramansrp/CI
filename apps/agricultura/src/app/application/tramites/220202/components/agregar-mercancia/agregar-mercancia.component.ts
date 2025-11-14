@@ -1,10 +1,10 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
 import {
   AnimalesEventos,
   DetalleVidaSilvestre,
 } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { DatosMercancia, FilaSolicitud } from '../../models/220202/fitosanitario.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';

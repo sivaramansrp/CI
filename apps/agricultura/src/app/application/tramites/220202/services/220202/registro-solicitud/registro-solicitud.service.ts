@@ -9,15 +9,12 @@ import {
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../../220201/models/220201/capturar-solicitud.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {
-  Documentos,
-  SolicitudFilaTabla,
-} from '../../../models/220202/fitosanitario.model';
+import { Documentos } from '../../../models/220202/fitosanitario.model';
 import { GuardarSolicitud } from '../../../models/220202/guardar-solicitud.model';
+import { Injectable } from '@angular/core';
 import { ResponseParcial } from '../../../models/220202/response-guardado-parcial.model';
 
 @Injectable({
@@ -68,10 +65,10 @@ export class RegistroSolicitudService {
     */
   obtieneUnidadMedida(tramite: number, cveFraccion: string): Observable<BaseResponse<Catalogo>> {
     const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_UNIDAD_MEDIDA(tramite.toString(), cveFraccion)}`;
-    return this.http.get<BaseResponse<any>>(ENDPOINT).pipe(
+    return this.http.get<BaseResponse<Catalogo>>(ENDPOINT).pipe(
       map(response => {
         // Transformar el dato para que cumpla con la interfaz Catalogo
-        const nuevoCatalogo: Catalogo = {
+        const NUEVOCATALOGO: Catalogo = {
           clave: response.datos?.cve_unidad_medida ?? '',
           descripcion: response.datos?.descripcion ?? '',
           id: 0
@@ -80,7 +77,7 @@ export class RegistroSolicitudService {
         // Retornar la misma estructura de BaseResponse pero con Catalogo mapeado
         return {
           ...response,
-          datos: nuevoCatalogo
+          datos: NUEVOCATALOGO
         } as BaseResponse<Catalogo>;
       })
     );

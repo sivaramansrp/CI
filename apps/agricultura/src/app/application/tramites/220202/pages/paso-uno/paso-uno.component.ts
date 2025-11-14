@@ -1,16 +1,16 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
-import { catchError, map, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import { FilaSolicitud, ListaDeDatosFinal, TercerosrelacionadosExportadorTable, TercerosrelacionadosdestinoTable, } from '../../models/220202/fitosanitario.model';
+import { Observable, catchError, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { FilaSolicitud, ListaDeDatosFinal, TercerosrelacionadosdestinoTable, TercerosrelacionadosExportadorTable } from '../../models/220202/fitosanitario.model';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { Subject } from 'rxjs';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
-import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
-import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Subject } from 'rxjs';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -216,7 +216,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   public validarFormularios(): { valido: boolean; mensaje?: string } {
 
-    const tabsValidadas = [
+    const TABS_VALIDADAS = [
       { index: 2, ref: this.datosSolicitudRef },
       { index: 3, ref: this.datosParaMovilizacionRef },
       { index: 4, ref: this.tercerosPageComponentRef },
@@ -225,13 +225,13 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
 
     let esValido = true;
 
-    for (const tab of tabsValidadas) {
+    for (const TAB of TABS_VALIDADAS) {
 
-      var validaPestañas = tab.ref.validarFormulario();
-      if (tab.ref && !validaPestañas.valido) {
-        this.indice = tab.index; // mover a la pestaña con error
+      const VALIDA_PESTAÑAS = TAB.ref.validarFormulario();
+      if (TAB.ref && !VALIDA_PESTAÑAS.valido) {
+        this.indice = TAB.index; // mover a la pestaña con error
         esValido = false;
-        return { valido: esValido, mensaje: validaPestañas.mensaje! };
+        return { valido: esValido, mensaje: VALIDA_PESTAÑAS.mensaje! };
       }
     }
     if (esValido) {
@@ -239,11 +239,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         next: codigo => {
           if (codigo === "00") {
             return { valido: esValido, mensaje: this.consultaState.id_solicitud };
-          }
-          else {
+          } 
             esValido = false;
             return { valido: esValido };
-          }
+          
         }
       })
     }
@@ -261,12 +260,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       .pipe(
         take(1), // solo la primera emisión
         map(datos => this.crearPayload(datos)), // crear payload
-        tap(payload => console.log('payloadGuardar', JSON.stringify(payload))), // debug
         switchMap(payload =>
           this.registroSolicitudService.guardarSolicitud(220202, payload).pipe(take(1))
         ),
         tap(data => {
-          console.log("respuesta de guardar", data);
           // id_solicitud: 202875826, fecha_actualización: '2025-11-10 19:02:00'
           this.consultaioStore.update(state => ({
             ...state,
@@ -377,7 +374,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         cadena_pago_dependencia: datos.pago.cadenaDependencia,
         cve_banco: datos.pago.banco,
         llave_pago: datos.pago.llavePago,
-        fec_pago: this.convertirFechaFormato(datos.pago.fechaPago) ?? '',
+        fec_pago: PasoUnoComponent.convertirFechaFormato(datos.pago.fechaPago) ?? '',
         imp_pago: Number(datos.pago.importePago)
       },
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
@@ -397,21 +394,23 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   }
 
   /**
- * Convierte una fecha en formato dd/MM/yyyy o dd-MM-yyyy
- * a una cadena ISO válida (UTC).
- *
- * @param fechaStr - Ejemplo: "07/11/2025" o "07-11-2025"
- * @returns string - Ejemplo: "2025-11-07 00:00:00"
- */
-  convertirFechaFormato(fecha: string | Date): string {
-    if (!fecha) return '';
+   * Convierte una fecha en formato dd/MM/yyyy o dd-MM-yyyy
+   * a una cadena ISO válida (UTC).
+   *
+   * @param fecha - Ejemplo: "07/11/2025" o "07-11-2025"
+   * @returns string - Ejemplo: "2025-11-07 00:00:00"
+   */
+  static convertirFechaFormato(fecha: string | Date): string {
+    if (!fecha) {
+      return '';
+    }
 
-    const d = new Date(fecha);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
+    const D = new Date(fecha);
+    const YEAR = D.getFullYear();
+    const MONTH = String(D.getMonth() + 1).padStart(2, '0');
+    const DAY = String(D.getDate()).padStart(2, '0');
 
-    return `${year}-${month}-${day} 00:00:00`;
+    return `${YEAR}-${MONTH}-${DAY} 00:00:00`;
   }
 
 
@@ -420,3 +419,5 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.destroyNotifier$.complete();
   }
 }
+
+

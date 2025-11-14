@@ -9,13 +9,13 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { TercerosRelacionados,TercerosrelacionadosExportadorTable, TercerosrelacionadosdestinoTable } from '../../models/220202/fitosanitario.model';
 import { AgregarExportadorComponent } from '../agregar-exportador/agregar-exportador.component';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -239,10 +239,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
   */
   public validarFormulario(): { valido: boolean; mensaje?: string } {
-    var valido = true;
-
-
-    console.log('fitosanitarioStoreTerceros', JSON.stringify(this.fitosanitarioStore.getValue()))
+    let valido = true;
     // Verificar si hay datos en la tabla
     const TABLE_DESTINATARIO = this.fitosanitarioStore.getValue().tercerosRelacionados;
     const TABLE_EXPORTADOR = this.fitosanitarioStore.getValue().datosForma;
