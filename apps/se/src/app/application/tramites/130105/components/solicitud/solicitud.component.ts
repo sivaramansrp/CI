@@ -213,6 +213,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
+    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
@@ -222,6 +223,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
+      });
+
+      this.tramite130105Query.select(state => state.tableBodyData)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableBodyData = data || [];
       });
   }
 
@@ -346,10 +353,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
       isValid = false;
     }
-    if (this.filaSeleccionada.length === 0) {
+    if (this.tableBodyData.length === 0) {
       this.isInvalidaPartidas = true;
       isValid = false;
-    } else if (this.filaSeleccionada.length > 0) {
+    } else if (this.tableBodyData.length > 0) {
       this.isInvalidaPartidas = false;
     }
     if (this.paisForm.invalid) {
@@ -642,9 +649,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMostrarPartidas(): void {
-    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
-      this.mostrarPartidas = data as MostrarPartidas[];
-      this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(202859165).subscribe((data) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
     });
   }
 

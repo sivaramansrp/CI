@@ -2,6 +2,7 @@
 import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
@@ -91,7 +92,7 @@ export class ImportacionVehiculosUsadosDonacionService {
    * @returns Observable con un arreglo de fracciones arancelarias (o vacío si no hay datos)
    */
   getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
-    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130116')
+    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130105')
       .pipe(
         map(res => res?.datos ?? [])
       );
@@ -163,11 +164,9 @@ export class ImportacionVehiculosUsadosDonacionService {
    * @param ID Identificador para obtener las mostrar partidas
    * @returns Observable con un arreglo de mostrar partidas (o vacío si no hay datos)
    */
-  getMostrarPartidasService(tramite: string, ID: number): Observable<MostrarPartidas[]> {
-    return this.catalogoServices.mostrarPartidasSolicitud(tramite, ID)
-      .pipe(
-        map(res => res?.datos ?? [])
-      );
+  getMostrarPartidasService(solicitud_id: number): Observable<BaseResponse<MostrarPartidas[]>> {
+    const ENDPOINT = PROC_130105.MOSTAR_PARTIDAS + solicitud_id;
+    return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
   }
 
   /**
@@ -182,5 +181,27 @@ export class ImportacionVehiculosUsadosDonacionService {
       .pipe(
         map(res => res?.datos ?? [])
       );
+  }
+
+  /**
+   *  
+   * @param item 
+   * @returns 
+   */
+  getPayloadDatos(item: Tramite130105State): unknown {
+    const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
+    return ROWS.map(row => ({
+      unidadesSolicitadas: Number(row.cantidad),
+      unidadesAutorizadas: Number(item.cantidadPartidasDeLaMercancia),
+      descripcionSolicitada: row.descripcion,
+      descripcionAutorizada: item.descripcionPartidasDeLaMercancia,
+      importeUnitarioUSD: Number(row.precioUnitarioUSD),
+      importeTotalUSD: Number(row.totalUSD),
+      autorizada: true,
+      importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
+      importeTotalUSDAutorizado: Number(item.valorPartidaUSDPartidasDeLaMercancia),
+      fraccionArancelariaClave: item.fraccion,
+      unidadMedidaClave: item.unidadMedida
+    }));
   }
 }

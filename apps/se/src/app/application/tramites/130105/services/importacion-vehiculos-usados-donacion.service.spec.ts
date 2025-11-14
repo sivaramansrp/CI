@@ -273,7 +273,7 @@ describe('ImportacionVehiculosUsadosDonacionService', () => {
         };
         mockCatalogoServices.mostrarPartidasSolicitud.mockReturnValue(of(mockResponse));
 
-        service.getMostrarPartidasService('test-tramite', 123).subscribe(result => {
+        service.getMostrarPartidasService(123).subscribe(result => {
             expect(result).toEqual(mockData);
         });
 
