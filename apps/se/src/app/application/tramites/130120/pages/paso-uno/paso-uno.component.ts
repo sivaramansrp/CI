@@ -1,20 +1,21 @@
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
-import { CommonModule } from '@angular/common';
-
 import { Component, ViewChild } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PermisoImportacionService } from "../../services/permiso-importacion.service";
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
+import { DetalleResponse, Mercancia, Productor, RepresentacionFederal, Solicitante } from "../../models/detalle-response.model";
+import { CommonModule } from '@angular/common';
 import { DatosExportadorComponent } from "../../components/datos-exportador/datos-exportador.component";
 import { DatosMercanciaComponent } from "../../components/datos-mercancia/datos-mercancia.component";
 import { DatosProductorComponent } from "../../components/datos-productor/datos-productor.component";
+import { DetalleEvaluaconSolicitudService } from "../../services/detalleEvaluaconSolicitud.service";
 import { DocumentoExportacionComponent } from "../../components/documento-exportacion/documento-exportacion.component";
+import { Exportador } from '../../models/guardar-solicitud-request.model';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PermisoImportacionService } from "../../services/permiso-importacion.service";
 import { RepresentacionFederalComponent } from "../../components/representacion-federal/representacion-federal.component";
+import { Subject } from 'rxjs';
 import { TramiteRealizerComponent } from "../../components/tramite_realizer/tramite_realizer.component";
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para el paso uno del trámite 130120.
@@ -68,6 +69,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   indice: number = 1;
 
   /**
+   * Número de folio del trámite.
+   */
+  numeroFolio: string = '';
+
+  /**
    * Constructor del componente.
    * Suscribe al estado de consulta y actualiza la propiedad consultaState.
    * @param consultaQuery Servicio para consultar el estado de la consulta.
@@ -76,13 +82,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private permisoImportacionService: PermisoImportacionService,
+    private servicioDetalle: DetalleEvaluaconSolicitudService
   ) {
-    this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
+
   }
 
   /**
@@ -90,6 +92,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Si hay datos para actualizar, llama a guardarDatosFormulario; si no, activa el modo de respuesta.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.numeroFolio = this.consultaState.folioTramite;
+      })
+    ).subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -102,14 +111,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Actualiza el estado del formulario con la respuesta del servidor.
    */
   guardarDatosFormulario(): void {
-    this.permisoImportacionService
-      .obtenerRegistroTomarMuestrasDatos().pipe(
+    this.servicioDetalle
+      .getDetalleEvaluacionSolicitud(this.numeroFolio).pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if (resp) {
+        if (resp && resp.datos) {
           this.esDatosRespuesta = true;
-          this.permisoImportacionService.actualizarEstadoFormulario(resp);
+          this.permisoImportacionService.actualizarEstadoFormulario(resp.datos);
         }
       });
   }

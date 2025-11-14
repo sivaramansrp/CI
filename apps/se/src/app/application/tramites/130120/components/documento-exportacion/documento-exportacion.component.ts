@@ -44,7 +44,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule, TituloComponent, InputFechaComponent],
   templateUrl: './documento-exportacion.component.html',
-  styleUrl: './documento-exportacion.component.css',
+  styleUrl: './documento-exportacion.component.scss',
 })
 export class DocumentoExportacionComponent implements OnInit, OnDestroy {
 
