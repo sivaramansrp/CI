@@ -35,6 +35,8 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit,OnDestroy {
+    /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
    /**
    * Referencia al componente `PasoUnoComponent`.
    */
@@ -140,6 +142,7 @@ export class PlaguicidasComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this._query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -161,6 +164,7 @@ export class PlaguicidasComponent implements OnInit,OnDestroy {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this._store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;
