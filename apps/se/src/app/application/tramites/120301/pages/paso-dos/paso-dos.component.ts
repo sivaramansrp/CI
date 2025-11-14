@@ -33,7 +33,15 @@ export class PasoDosComponent implements OnInit, OnDestroy {
  */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
 
+  /**
+ * ID del tipo de trámite actual.
+ */
   @Input() idTipoTRamite!: string;
+
+  /**
+ * ID de la solicitud actual.
+ */
+  @Input() idSolicitud!: string;
 
   /**
     * Evento que se emite para reenviar la solicitud de carga de documentos.

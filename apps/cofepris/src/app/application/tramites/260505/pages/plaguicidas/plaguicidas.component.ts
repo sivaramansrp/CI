@@ -1,6 +1,8 @@
 import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
 import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { TEXTO_DE_PELIGRO } from '../../constantes/260505constante.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
 import { ToastrService } from 'ngx-toastr';
@@ -117,6 +119,19 @@ export class PlaguicidasComponent implements OnInit {
     });
   }
   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
+
+  /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
+  public textoPeligro: string = TEXTO_DE_PELIGRO;
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Maneja la acción del botón en el asistente.
    * Cambia el paso actual según la acción del botón.
    *
@@ -128,14 +143,14 @@ export class PlaguicidasComponent implements OnInit {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
  
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = true;
-    //     return;
-    //   }
-    //   this.isPeligro = false;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
+      }
+      this.isPeligro = false;
+    }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
         if (this.indice === 1) {
@@ -162,7 +177,19 @@ export class PlaguicidasComponent implements OnInit {
         this.datosPasos.indice = NEXT_INDEX;
         this.wizardComponent.atras();
       }
+      this.isPeligro = false;
     }
+  }
+
+  /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  private validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
   }
 
   /**

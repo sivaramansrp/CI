@@ -161,7 +161,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoEntidadesFederativasGeneral(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadesFederativas(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogosDatos.estados = data.datos ?? [];
     });
   }

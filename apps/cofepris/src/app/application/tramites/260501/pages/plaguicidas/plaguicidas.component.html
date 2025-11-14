@@ -4,7 +4,7 @@
         <h1>
           Permiso de importación de plaguicidas
         </h1>
-        @if (!esFormaValido && esFormaValido !== undefined) {
+        @if (isPeligro) {
           <div class="col-md-12">
             <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
           </div>
@@ -19,7 +19,7 @@
   
       <div class="row">
         @switch (indice) { @case (1) {
-        <app-paso-uno></app-paso-uno>
+        <app-paso-uno #pasoUnoRef></app-paso-uno>
         } @case (2) {
         <app-paso-carga-documento 
           [idSolicitud]="guardarIdSolicitud"

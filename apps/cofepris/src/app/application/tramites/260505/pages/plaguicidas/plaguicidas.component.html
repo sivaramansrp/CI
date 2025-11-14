@@ -10,7 +10,9 @@
           territorio nacional
         </h3>
       </div>
-
+       <div *ngIf="isPeligro" class="alert alert-danger text-center" role="alert" [innerHTML]="textoPeligro">
+        {{textoPeligro}}
+      </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 

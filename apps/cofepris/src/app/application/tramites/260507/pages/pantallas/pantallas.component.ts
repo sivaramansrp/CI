@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { map, Observable, switchMap, take } from 'rxjs';
 import { Solicitud260507State, Tramite260507Store } from '../../../../shared/estados/stores/260507/tramite260507.store';
 import { Tramite260507Query } from '../../../../shared/estados/queries/260507/tramite260507.query';
+import { DatosComponent } from '../datos/datos.component';
+import { TEXTO_DE_PELIGRO } from '../../constantes/importacion-plafest.enum';
 
 
 /**
@@ -39,14 +41,23 @@ export class PantallasComponent implements OnInit {
    * @default 1
    */
   public indice: number = 1;
-
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: DatosComponent;
   /**
    * 
    * Una cadena que representa la clase CSS para una alerta de información.
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
   public infoAlert = 'alert-info';
+   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
 
+  /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
+  public textoPeligro: string = TEXTO_DE_PELIGRO;
   /**
    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
@@ -140,14 +151,14 @@ export class PantallasComponent implements OnInit {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
  
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = true;
-    //     return;
-    //   }
-    //   this.isPeligro = false;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
+      }
+      this.isPeligro = false;
+    }
     if (e.valor > 0 && e.valor < this.pantallasPasos.length) {
       if (e.accion === 'cont') {
         if (this.indice === 1) {
@@ -174,6 +185,7 @@ export class PantallasComponent implements OnInit {
         this.datosPasos.indice = NEXT_INDEX;
         this.wizardComponent.atras();
       }
+      this.isPeligro = false;
     }
   }
 
@@ -261,4 +273,15 @@ export class PantallasComponent implements OnInit {
     onCargaEnProgreso(carga: boolean): void {
       this.cargaEnProgreso = carga;
     }
+
+  /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
+  }
 }

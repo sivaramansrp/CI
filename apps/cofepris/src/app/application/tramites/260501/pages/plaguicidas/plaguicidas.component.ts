@@ -1,16 +1,17 @@
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject, JSONResponse, WizardService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, JSONResponse, WizardService, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/260501constante.enum';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
-import { TEXTOS } from '../../constantes/260501constante.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
-import { ToastrService } from 'ngx-toastr';
 import { Solicitud260501State, Tramite260501Store } from '../../../../shared/estados/stores/260501/tramite260509.store';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTOS } from '../../constantes/260501constante.enum';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -25,6 +26,12 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
@@ -100,6 +107,11 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
 
   /**
  * @property esFormaValido
@@ -191,14 +203,14 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
  
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = true;
-    //     return;
-    //   }
-    //   this.isPeligro = false;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
+      }
+      this.isPeligro = false;
+    }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
         if (this.indice === 1) {
@@ -229,6 +241,17 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  private validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
+  }
+
+  /**
    * Verifica si se debe navegar al siguiente paso del asistente.
    * Guarda los datos actuales y muestra notificaciones según el resultado.
    * @return {Observable<boolean>} Observable que emite true si se debe navegar, false en caso contrario.
@@ -243,7 +266,6 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         if (OK) {
           this.toastrService.success(DATOS.mensaje);
         } else {
-          //this.padreBtn = true;
           this.toastrService.error(DATOS.mensaje);
         }
         return OK;

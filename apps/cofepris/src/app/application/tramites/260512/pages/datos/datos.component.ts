@@ -1,19 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionVisibilidad, DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/constante260512.enum';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ConfiguracionVisibilidad } from '../../../260513/components/datos-solicitud/datos-solicitud.component';
-import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/constante260512.enum';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
-import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
-import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
+import { ViewChild } from '@angular/core';
+
 
 /**
  * @component DatosComponent
  * @description
- * Componente principal para gestionar la selección de subtítulos en la página de datos.
+ * Componente principal para gestionar la selección de subtítulos en la página de datos del trámite 260512.
  * Permite cambiar entre diferentes secciones o pestañas utilizando un índice que representa el subtítulo seleccionado.
  * Además, maneja la obtención y actualización de datos del formulario y la limpieza de recursos al destruirse.
  * 
@@ -25,30 +24,13 @@ import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
-  idProcedimiento:number = 260512;
-  isAvisoLicenciaVisible: boolean = true;
-  isAduanasEntradaVisible: boolean = true;
-    @ViewChild(DatosDeLaComponent) datosSolicitudRef!: DatosDeLaComponent;
-    /**
-     * Configuración de visibilidad utilizada para determinar qué elementos
-     * deben ser visibles en el componente. Se inicializa con la configuración
-     * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
-     */
-    configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD;
-  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
-    /**
-     * @property {PagoDerechosFormState} pagoDerechos
-     * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
-     */
-    public pagoDerechos!: PagoDerechosFormState;
 
-    formularioDeshabilitado: boolean = false;
-  
   /**
    * @property indice
    * @description
-   * Variable que almacena el índice del subtítulo seleccionado.
-   * Por defecto, el índice inicial es `1`.
+   * Índice del subtítulo seleccionado.
+   * Se utiliza para determinar qué sección de datos se muestra.
+   * Inicialmente, el valor es 1.
    */
   public indice: number = 1;
 
@@ -86,6 +68,28 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Estado de los datos del domicilio legal, utilizado para manejar información relacionada con el domicilio legal.
    */
   public DatosDomicilioLegalState!: DatosDomicilioLegalState;
+
+  idProcedimiento:number = 260512;
+
+  @ViewChild(DatosDeLaComponent)
+    datosDeLaComponent!: DatosDeLaComponent;
+
+   /**
+     * Indica si se debe mostrar la sección de Aviso de Licencia
+     */
+    isAvisoLicenciaVisible: boolean = true;
+  
+    /**
+     * Indica si se debe mostrar la sección de Aduanas de Entrada
+     */
+    isAduanasEntradaVisible: boolean = true;
+  
+    /**
+     * Configuración de visibilidad utilizada para determinar qué elementos
+     * deben ser visibles en el componente. Se inicializa con la configuración
+     * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
+     */
+    configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
   /**
    * @constructor
@@ -144,17 +148,20 @@ export class DatosComponent implements OnInit, OnDestroy {
   /**
    * @method seleccionaTab
    * @description
-   * Método que establece el índice del subtítulo seleccionado.
-   * Este método se utiliza para cambiar entre diferentes subtítulos o pestañas.
-   * @param i Índice del subtítulo que se desea seleccionar.
+   * Método para cambiar el índice del subtítulo seleccionado.
+   * @param i - Índice del nuevo subtítulo seleccionado.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-   validOnButtonClick():boolean{
+  validarClickDeBoton(): boolean {
+    return this.datosDeLaComponent.validarClickDeBoton();
+  }
+
+  validOnButtonClick():boolean{
     let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
+    if(this.validarClickDeBoton()){
           isValid = true;
         }
         else{
@@ -162,6 +169,7 @@ export class DatosComponent implements OnInit, OnDestroy {
         }
         return isValid;
       }
+
   /**
    * @method ngOnDestroy
    * @description
@@ -172,4 +180,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  obtenerValorCheckboxAviso(): boolean {
+  return this.datosDeLaComponent?.obtenerValorCheckboxAviso() ?? false;
+}
 }
