@@ -20,6 +20,9 @@ export interface Solicitud260511State {
     manifiestos?: boolean;
     representanteLegal?: boolean;
     terceros?: boolean;
+    fabricanteTablaValid?: boolean;
+    formuladorTablaValid?: boolean;
+    proveedorTablaValid?: boolean;
     pagoDeDerechos?: boolean;
   };
 }
