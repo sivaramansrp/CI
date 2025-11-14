@@ -225,10 +225,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.mostrarTabla = mostrarTabla;
       });
 
-      this.tramite130105Query.select(state => state.tableBodyData)
+      this.tramite130105Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.tableBodyData = data || [];
+        this.tableBodyData = data.tableBodyData || [];
       });
   }
 
@@ -455,6 +455,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cantidadTotal: CANTIDAD_TOTAL,
         valorTotalUSD: TOTAL_USD,
       });
+      this.tramite130105Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     }
   }
 
@@ -514,6 +517,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
@@ -530,13 +534,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       if (item.id === evento.id) {
         return {
           ...item,
-          cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-          totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-          descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+          cantidad: evento.cantidad,
+          totalUSD: evento.totalUSD,
+          precioUnitarioUSD: evento.precioUnitarioUSD,
+          descripcion: evento.descripcion,
         };
       }
       return item;
     });
+     const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+
+        this.tramite130105Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
   }
 
   /**

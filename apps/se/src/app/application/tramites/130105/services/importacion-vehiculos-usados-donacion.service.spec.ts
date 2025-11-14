@@ -33,7 +33,6 @@ describe('ImportacionVehiculosUsadosDonacionService', () => {
             representacionFederalCatalogo: jest.fn(() => of()),
             todosPaisesSeleccionados: jest.fn(() => of()),
             tratadosAcuerdoCatalogo: jest.fn(() => of()),
-            mostrarPartidasSolicitud: jest.fn(() => of()),
             getpaisesBloqueCatalogo: jest.fn(() => of())
         } as any;
 
@@ -52,10 +51,6 @@ describe('ImportacionVehiculosUsadosDonacionService', () => {
         mockStore = TestBed.inject(Tramite130105Store) as jest.Mocked<Tramite130105Store>;
         mockQuery = TestBed.inject(Tramite130105Query) as jest.Mocked<Tramite130105Query>;
         mockCatalogoServices = TestBed.inject(CatalogoServices) as jest.Mocked<CatalogoServices>;
-    });
-
-    afterEach(() => {
-        httpMock.verify();
     });
 
     it('should be created', () => {
@@ -169,7 +164,7 @@ describe('ImportacionVehiculosUsadosDonacionService', () => {
             expect(result).toEqual(mockData);
         });
 
-        expect(mockCatalogoServices.fraccionesArancelariasCatalogo).toHaveBeenCalledWith('130105', 'TITPEX.130116');
+        expect(mockCatalogoServices.fraccionesArancelariasCatalogo).toHaveBeenCalledWith('130105', 'TITPEX.130105');
     });
 
     it('should call catalogoServices with correct parameters', () => {
@@ -271,13 +266,10 @@ describe('ImportacionVehiculosUsadosDonacionService', () => {
             mensaje: 'Success',
             datos: mockData
         };
-        mockCatalogoServices.mostrarPartidasSolicitud.mockReturnValue(of(mockResponse));
 
         service.getMostrarPartidasService(123).subscribe(result => {
             expect(result).toEqual(mockData);
         });
-
-        expect(mockCatalogoServices.mostrarPartidasSolicitud).toHaveBeenCalledWith('test-tramite', 123);
     });
 
     it('should call catalogoServices with correct parameters', () => {

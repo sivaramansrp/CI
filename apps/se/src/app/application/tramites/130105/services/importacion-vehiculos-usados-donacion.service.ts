@@ -183,23 +183,33 @@ export class ImportacionVehiculosUsadosDonacionService {
       );
   }
 
+
   /**
-   *  
-   * @param item 
-   * @returns 
+   * Genera el payload de datos para el trámite 130105 basado en la información proporcionada.
+   *
+   * @param {Tramite130105State} item - Objeto que contiene la información del trámite,
+   * incluyendo datos de tabla y valores autorizados.
+   *
+   * @returns {any[]} Arreglo de objetos con los datos transformados para ser enviados
+   * en el payload del trámite.
+   *
+   * @description
+   * Este método toma las filas de `tableBodyData` dentro del objeto `item` y construye un
+   * arreglo de objetos con los valores solicitados y autorizados.  
+   * Convierte valores numéricos, extrae descripciones y agrega claves arancelarias y de unidad de medida.
    */
   getPayloadDatos(item: Tramite130105State): unknown {
     const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
     return ROWS.map(row => ({
       unidadesSolicitadas: Number(row.cantidad),
-      unidadesAutorizadas: Number(item.cantidadPartidasDeLaMercancia),
+      unidadesAutorizadas: Number(item.cantidad),
       descripcionSolicitada: row.descripcion,
-      descripcionAutorizada: item.descripcionPartidasDeLaMercancia,
+      descripcionAutorizada: item.descripcion,
       importeUnitarioUSD: Number(row.precioUnitarioUSD),
       importeTotalUSD: Number(row.totalUSD),
       autorizada: true,
       importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
-      importeTotalUSDAutorizado: Number(item.valorPartidaUSDPartidasDeLaMercancia),
+      importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
       fraccionArancelariaClave: item.fraccion,
       unidadMedidaClave: item.unidadMedida
     }));
