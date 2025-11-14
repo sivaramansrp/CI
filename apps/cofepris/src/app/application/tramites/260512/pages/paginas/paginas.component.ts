@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import { DatosPasos,ListaPasosWizard,PASOS, RegistroSolicitudService,WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_VALIDACION } from '../../constantes/constante260512.enum';
 import { Tramite260512State, Tramite260512Store } from '../../estados/stores/tramite260512Store.store';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { DatosComponent } from '../datos/datos.component';
-import { ERROR_FORMA_ALERT, MENSAJE_DE_VALIDACION } from '../../constantes/constante260512.enum';
 import { GuardarAdapter_260512 } from '../../adapters/guardar-payload.adapter';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260512Query } from '../../estados/queries/tramite260512Query.query';
@@ -132,44 +132,14 @@ export class PaginasComponent implements OnInit {
             return;
             }
  
-    //         
-    //         if(!this.requiresPaymentData) {
-    //           if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-    //             this.mostrarAlerta=true;
-    //             this.seleccionarFilaNotificacion = {
-    //               tipoNotificacion: 'alert',
-    //               categoria: 'danger',
-    //               modo: 'action',
-    //               titulo: '',
-    //               mensaje: MENSAJE_DE_VALIDACION,
-    //               cerrar: true,
-    //               tiempoDeEspera: 2000,
-    //               txtBtnAceptar: 'SI',
-    //               txtBtnCancelar: 'NO',
-    //               alineacionBtonoCerrar:'flex-row-reverse'
-    //             }
-    //             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-    //  } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
-    //             this.confirmarSinPagoDeDerechos = 2;
-    //           } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
-    //             this.confirmarSinPagoDeDerechos = 3;
-    //           }
-    //       }
-    //         if (!isValid) {
-    //           this.formErrorAlert = this.MENSAJE_DE_ERROR;
-    //           this.esFormaValido = true;
-    //           this.datosPasos.indice = this.indice;
-    //           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-    //           return;
-    //         }
             const PAYLOAD = this.guardarAdapter260512.toFormPayload();
             console.log('PAYLOAD', PAYLOAD);
             let shouldNavigate = false;
-            this.registroSolicitudService.postGuardarDatos('260215', PAYLOAD).subscribe(response => {
+            this.registroSolicitudService.postGuardarDatos('260512', PAYLOAD).subscribe(response => {
               shouldNavigate = response.codigo === '00';
               if (!shouldNavigate) {
                 const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
-                this.formErrorAlert = PaginasComponent.generarAlertaDeError(ERROR_MESSAGE);
+                //this.formErrorAlert = PaginasComponent.generarAlertaDeError(ERROR_MESSAGE);
                 this.esFormaValido = true;
                 this.indice = 1;
                 this.datosPasos.indice = 1;

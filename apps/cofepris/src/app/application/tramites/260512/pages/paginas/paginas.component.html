@@ -22,6 +22,7 @@
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"
           (cargaEnProgreso)="onCargaEnProgreso($event)"
+          (enBlancoObligatoria)="onBlancoObligatoria($event)"
         ></app-paso-carga-documento>
         } @case (3) {
        <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260512" [procedureUrl]="'permiso-de-importacion/pantallaspage'"></paso-firma>

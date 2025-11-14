@@ -55,15 +55,4 @@ export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
   paisProveedor: false,
   paisProcedencia: true
 };
-/**
- * Mensaje de validación que solicita confirmación al usuario
- * sobre la ausencia de datos relacionados con el pago de derechos.
- */
-export const MENSAJE_DE_VALIDACION = `
-<div class="d-flex justify-content-center text-center">
-  <div>
-    <strong>¡Error de registro!</strong>
-    <div>Faltan campos por capturar.</div>
-  </div>
-</div>
-`;
+export const MENSAJE_DE_VALIDACION = '<div style="text-align: center;"><b>¡Error de registro!</b> Faltan campos por capturar.</div>';
