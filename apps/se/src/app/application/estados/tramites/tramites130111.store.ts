@@ -11,6 +11,9 @@ import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 export interface Tramite130111State {
+  /**
+   * ID de la solicitud asociada al trámite.
+   */
   idSolicitud: number;
   /**
    * Producto seleccionado en el formulario.
