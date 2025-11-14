@@ -5,6 +5,8 @@ import {
   CatalogosService,
   FirmaElectronicaComponent,
   InicioSesionService,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   SolicitanteComponent,
   SubirDocumentoService,
   TituloComponent,
@@ -30,7 +32,7 @@ import { provideHttpClient } from '@angular/common/http';
       PasoUnoComponent,
       PasoTresComponent,
       PasoDosComponent,
-      PlaguicidasComponent,
+     PlaguicidasComponent,
     ],
    imports: [
       CommonModule,
@@ -46,6 +48,8 @@ import { provideHttpClient } from '@angular/common/http';
       TercerosRelacionadosFabricanteComponent,
       PagoDerechosComponent,
       AvisoDePrivacidadComponent,
+      PasoCargaDocumentoComponent,
+      PasoFirmaComponent
     ],
   providers: [
       ToastrService,
