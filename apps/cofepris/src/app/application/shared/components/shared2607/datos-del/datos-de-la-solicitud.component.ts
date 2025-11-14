@@ -21,6 +21,7 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_CORREO_ELECTRONICO,
   REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
   REGEX_SOLO_DIGITOS,
   TablaSeleccion,
@@ -432,11 +433,11 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         ],
         denominacion: [
           this.dataDeLaSolicitudState?.denominacion,
-         [Validators.maxLength(100)],
+         [Validators.required, Validators.maxLength(100)],
         ],
         correoElectronico: [
           this.dataDeLaSolicitudState?.correoElectronico,
-          [Validators.email, Validators.maxLength(100)],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO), Validators.maxLength(100)],
         ],
         codigopostal: [
           this.dataDeLaSolicitudState?.codigopostal,
@@ -460,7 +461,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           ],
         ],
         colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
-        calle: [this.dataDeLaSolicitudState?.calle,[Validators.maxLength(100)]],
+        calle: [this.dataDeLaSolicitudState?.calle,[Validators.required, Validators.maxLength(100)]],
         lada: [this.dataDeLaSolicitudState?.lada,[
                     Validators.required,
                     Validators.minLength(5),
