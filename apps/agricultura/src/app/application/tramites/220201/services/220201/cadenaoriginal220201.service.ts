@@ -25,7 +25,7 @@ export class CadenaOriginal220201Service {
      * @param body Objeto que contiene los datos necesarios para generar la cadena original.
      * @returns Un observable que emite la respuesta del servidor con la cadena original.
      */
-    obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
+    obtenerCadenaOriginal<T>(idSolicitud: string, body: unknown): Observable<BaseResponse<T>> {
         const ENDPOINT = `${this.urlServer}/api/` + API_POST_CADENA_ORIGINAL('220201', idSolicitud);
 
         return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(

@@ -11,6 +11,7 @@ import {
   ConfiguracionColumna,
   SeccionLibQuery,
   SeccionLibState,
+  formatearFechaYyyyMmDd,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -37,13 +38,12 @@ import { Tramite110208Query } from '../../../../estados/queries/tramite110208.qu
 @Component({
   selector: 'app-certificado-origen',
   standalone: true,
-  imports:[CommonModule, ReactiveFormsModule,MercanciaComponent,CertificadoDeOrigenComponent],
+  imports: [CommonModule, ReactiveFormsModule, MercanciaComponent, CertificadoDeOrigenComponent],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @descripcion
    * Lista de estados disponibles.
@@ -193,7 +193,7 @@ export class CertificadoOrigenComponent
     private query: Tramite110208Query,
     private seccionQuery: SeccionLibQuery,
     public consultaQuery: ConsultaioQuery
-  ) {}
+  ) { }
 
   /**
    * @descripcion
@@ -255,34 +255,39 @@ export class CertificadoOrigenComponent
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || '105' },
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] || "ARG" },
+      fraccionArancelaria: this.certificadoState.formCertificado['fraccionArancelariaForm'] || '',
+      numeroRegistro: this.certificadoState.formCertificado['registroProductoForm'] || null,
+      nombreComercial: this.certificadoState.formCertificado['nombreComercialForm'] || '',
+      fechaInicio: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaInicioInput'] as string) || "",
+      fechaFin: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaFinalInput'] as string) || "",
     };
 
- this.solicitudService
-   .buscarMercanciasCert(PAYLOAD)
-   .pipe(takeUntil(this.destroyNotifier$))
-   .subscribe({
-     next: (res) => {
-       const RESPONSE = res as unknown as BuscarMercanciasResponse;
- 
-       const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
-         id: item.idMercancia,
-         fraccionArancelaria: item.fraccionArancelaria || '',
-         numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
-         fechaExpedicion: item.fechaExpedicion || '',
-         fechaVencimiento: item.fechaVencimiento || '',
-         nombreTecnico: item.nombreTecnico || '',
-         nombreComercial: item.nombreComercial || '',
-         criterioParaConferirOrigen: item.criterioOrigen || '',
-         valorDeContenidoRegional: item.valorContenidoRegional || '',
-         normaOrigen: item.normaOrigen || '',
-         nombreIngles: item.nombreIngles || '',
-       }));
- 
-       this.disponiblesDatos = MAPPED_DATA;
-       this.store.setDisponsiblesDatos(MAPPED_DATA);
-     },
-   });
-   }
+    this.solicitudService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (res) => {
+          const RESPONSE = res as unknown as BuscarMercanciasResponse;
+
+          const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+            id: item.idMercancia,
+            fraccionArancelaria: item.fraccionArancelaria || '',
+            numeroRegistroProducto: item.numeroRegistroProducto || '',
+            fechaExpedicion: item.fechaExpedicion || '',
+            fechaVencimiento: item.fechaVencimiento || '',
+            nombreTecnico: item.nombreTecnico || '',
+            nombreComercial: item.nombreComercial || '',
+            criterioParaConferirOrigen: item.criterioOrigen || '',
+            valorDeContenidoRegional: item.valorContenidoRegional || '',
+            normaOrigen: item.normaOrigen || '',
+            nombreIngles: item.nombreIngles || '',
+          }));
+
+          this.disponiblesDatos = MAPPED_DATA;
+          this.store.setDisponsiblesDatos(MAPPED_DATA);
+        },
+      });
+  }
   /**
    * @descripcion
    * Actualiza el almacén con el estado seleccionado.

@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -33,10 +34,12 @@ import {
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -66,6 +69,7 @@ import { ServicioDeFormularioService } from "../../services/forma-servicio/servi
 import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
+
 
 export interface RespuestaTabla {
   code: number;
@@ -102,19 +106,16 @@ export interface MercanciasTabla {
 export class DomicilioComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
+@Output() formValidityChange = new EventEmitter<boolean>();
 public mostrarErrores = {
   codigoPostal: false,
   estado: false,
   muncipio: false,
   calle: false,
   telefono: false,
-  deOrigen: false,
-  deProcedencia: false,
-  aduanas:false ,
+  aduanasEntradas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
-
-
 };
 /**
  * Indica si se deben mostrar los nombres (etiquetas) de los campos en el componente.
@@ -171,6 +172,28 @@ nombresCampos:boolean = false;
    */
    public seleccionadasPaisDeOriginDatos: string[] = [];
 
+   /**
+   * @property {string[]} seleccionadasPaisfabrica
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisfabrica: string[]= [];
+
+   /**
+   * @property {string[]} seleccionadasPaisElaboracion
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisElaboracion: string[] = [];
+
+   /**
+   * @property {string[]} seleccionadasPaisProveedor
+   * Lista de países seleccionados como origen.
+   */
+   public seleccionadasPaisProveedor: string[] = [];
+
+   /**
+   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
+   * Lista de países seleccionados como origen.
+   */
    seleccionadasPaisDeProcedenciaDatos: string[] = [];
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
@@ -273,28 +296,7 @@ nombresCampos:boolean = false;
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
-  estadoFisicoCatalogo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: "Selecciona un valor",
-    },
-    {
-      id: 2,
-      descripcion: "Sólido",
-    },
-    {
-      id: 3,
-      descripcion: "Líquido",
-    },
-    {
-      id: 4,
-      descripcion: "Gaseoso",
-    },
-    {
-      id: 5,
-      descripcion: "Otro",
-    },
-  ];
+  estadoFisicoCatalogo: Catalogo[] = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -336,22 +338,22 @@ nombresCampos:boolean = false;
       this.inicializarFormulario();
     }
     if (this.esFormularioSoloLectura || this.esFormularioActualizacion) {
-      this.obtenerScianTablaDatos();
       this.obtenerDataMercanciasDatos();
     }
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   */
-  obtenerScianTablaDatos(): void {
-    this.service
-      .getObtenerScianTablaDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
-  }
+     * Método para obtener el catálogo de estado físico de mercancía.
+     */
+    obtenerEstadoFisicoCatalogo(): void {
+      if (this.idProcedimiento) {
+        this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((response) => {
+            this.estadoFisicoCatalogo = response.datos ?? [];
+          });
+      }
+    }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -384,6 +386,12 @@ nombresCampos:boolean = false;
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          if (seccionState.nicoTabla.length) {
+            this.nicoTablaDatos = seccionState.nicoTabla;
+          }
+          if (seccionState.mercanciaTabla.length) {
+            this.mercanciasTablaDatos = seccionState.mercanciaTabla;
+          }
         }),
       )
       .subscribe();
@@ -436,18 +444,30 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           Validators.pattern(/^-?(0|[1-9]\d*)?$/),
         ],
       ],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
-        [Validators.required, Validators.maxLength(50)],
-      ],
       regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
+    if (this.isGarantiasOfrecidasVisible) {
+      this.domicilio.addControl(
+        "garantiasOfrecidas",
+        this.fb.control(this.solicitudState?.garantiasOfrecidas, [Validators.required]),
+      );
+    }
+
+    if (this.isAvisoLicenciaVisible) {
+      this.domicilio.addControl(
+        "avisoCheckbox",
+        this.fb.control(this.solicitudState?.avisoCheckbox),
+      );
+      this.domicilio.addControl(
+        "licenciaSanitaria",
+        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+      );
+    }
 
     /**
      * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
@@ -498,7 +518,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
    */
   public seleccionarAduanasEntrada: string[] = [];
 
-  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  /** Lista del catálogo de aduanasEntradas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**
@@ -541,21 +561,21 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
   /**
-   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Maneja el evento de cambio para las entradas de aduanasEntradas seleccionadas.
    * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanasEntradas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
-    this.mostrarErrores.aduanas =false;
+    this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
-      paisDeOriginDatos: events,
+      aduanasEntradas: events,
     });
     this.setValoresStore(
       this.domicilio,
-      "paisDeOriginDatos",
-      "setPaisDeOriginDatos",
+      "aduanasEntradas",
+      "setAduanasDeEntrada",
     );
   }
 
@@ -634,12 +654,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaDatos: string[] = [];
 
@@ -869,6 +889,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
+    this.obtenerEstadoFisicoCatalogo();
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
@@ -883,7 +904,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       nombreComercial: [""],
       nombreComun: [""],
       nombreCientifico: [""],
-      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         "",
         [
@@ -928,8 +948,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
        "",
         [Validators.maxLength(100)],
       ],
-      paisDeOriginDatos:[ this.seleccionadasPaisDeOriginDatos, Validators.required],
-      paisDeProcedenciaDatos:[ this.seleccionadasPaisDeProcedenciaDatos, Validators.required],
       numeroRegistroSanitario:[],
     });
 
@@ -947,6 +965,50 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.fb.control("", [Validators.required, Validators.maxLength(50)]),
       );
     }
+
+    if (this.configuracionVisibilidad.paisOrigen) {
+      this.formMercancias.addControl(
+        "paisDeOriginDatos",
+        this.fb.control(this.seleccionadasPaisDeOriginDatos, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisFabrica) {
+      this.formMercancias.addControl(
+        "paisFabrica",
+        this.fb.control(this.seleccionadasPaisfabrica, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisElaboracion) {
+      this.formMercancias.addControl(
+        "paisElaboracion",
+        this.fb.control(this.seleccionadasPaisElaboracion, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProveedor) {
+      this.formMercancias.addControl(
+        "paisProveedor",
+        this.fb.control(this.seleccionadasPaisProveedor, [Validators.required]),
+      );
+    }
+
+    if (this.configuracionVisibilidad.paisProcedencia) {
+      this.formMercancias.addControl(
+        "paisDeProcedenciaDatos",
+        this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+    if(this.tieneUsoEspecifico) {
+      this.formMercancias.addControl(
+        "usoEspecifico",
+        this.fb.control("", [Validators.required, Validators.maxLength(1000)]),
+      );
+    }
+
+
 
     this.seleccionadasAduanasEntradaDatos =
       this.solicitudState?.aduanasDeEntrada;
@@ -1014,11 +1076,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       if (!EXISTS) {
         this.nicoTablaDatos.push(NUEVO_DATO);
         this.nicoTablaDatos = [...this.nicoTablaDatos];
+        this.datosDomicilioLegalStore.setNicoTabla(this.nicoTablaDatos);
         this.formAgente.reset();
         this.cerrarModalScian();
-        
-    }
-    else{
+    } else {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: 'info',
@@ -1515,6 +1576,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           const DATOS = doDeepCopy(fraccionResponse);
           if(esValidObject(DATOS.datos)) {
               this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              this.setValoresStore(this.formMercancias, 'descripcionFraccion', 'setDescripcionFraccion'); 
               return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
           }
         }
@@ -1525,6 +1587,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         const UNIDAD_DATOS = doDeepCopy(unidadResponse);
         if(esValidObject(UNIDAD_DATOS.datos)) {
           this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+          this.setValoresStore(this.formMercancias, 'UMT', 'setUMT'); 
         }
       },
       error: (error) => {
@@ -1547,8 +1610,16 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
-      if(this.formMercancias.getRawValue()?.objetoImportacion === '5' && this.estadoValidte){
+      else{
+        this.formMercancias.get("estadoFisicoOtro")?.setValidators([]);
+        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
+      }
+      if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
+      }
+      else{
+           this.formMercancias.get("objetoImportacionOtro")?.setValidators([]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
     const VALOR = form.get(campo)?.value;
@@ -1560,6 +1631,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.servicioDeFormularioService.setFormValue("domicilioForm", {
       [campo]: VALOR,
     });
+    this.formValidityChange.emit(this.domicilio.valid);
   }
 
   agregarMercanciaModal(): void {
@@ -1571,9 +1643,20 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.formMercancias.reset();
     this.seleccionadasPaisDeOriginDatos=[];
     this.seleccionadasPaisDeProcedenciaDatos=[];
+    this.seleccionadasPaisfabrica=[];
+    this.seleccionadasPaisElaboracion=[];
+    this.seleccionadasPaisProveedor=[];
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1588,17 +1671,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion)
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1614,8 +1698,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.listaMercancias.push(NUEVA_MERCANCIA);
       }
       this.mercanciasTablaDatos = [...this.listaMercancias];
+      this.datosDomicilioLegalStore.setMercanciasTabla(this.mercanciasTablaDatos);
       this.formMercancias.reset();
       this.seleccionadasPaisDeOriginDatos=[];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       this.seleccionadasPaisDeProcedenciaDatos=[];
       
     
@@ -1719,7 +1807,10 @@ openModal():void {
     this.seleccionarOrigenDelPaisCinco = [];
   }
       this.seleccionadasPaisDeOriginDatos = [];
-      this.seleccionadasPaisDeProcedenciaDatos = [];    
+      this.seleccionadasPaisDeProcedenciaDatos = [];
+      this.seleccionadasPaisfabrica=[];
+      this.seleccionadasPaisElaboracion=[];
+      this.seleccionadasPaisProveedor=[];
       forma.reset();
     }
   }
@@ -1734,9 +1825,74 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
+    this.setValoresStore(
+      this.formMercancias,
+      "paisDeProcedenciaDatos",
+      "setPaisDeProcedenciaDatos",
+    );
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisProveedorSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisProveedor = events;
+    this.formMercancias.patchValue({
+      paisProveedor: events,
+    });
+    this.setValoresStore(
+      this.formMercancias,
+      "paisProveedor",
+      "setPaisProveedor",
+    );
+  }
+
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisElaboracionSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisElaboracion = events;
+    this.formMercancias.patchValue({
+      paisElaboracion: events,
+    });
+    this.setValoresStore(
+      this.formMercancias,
+      "paisElaboracion",
+      "setPaisElaboracion",
+    );
+  }
+
+   /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisfabricaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisfabrica = events;
+    this.formMercancias.patchValue({
+      paisFabrica: events,
+    });
+    this.setValoresStore(
+      this.formMercancias,
+      "paisFabrica",
+      "setPaisFabrica",
+    );
   }
 
 
@@ -1749,9 +1905,15 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
+    this.setValoresStore(
+      this.formMercancias,
+      "paisDeOriginDatos",
+      "setPaisDeOriginDatos",
+    );
+
   }
 
   /**
@@ -1848,6 +2010,21 @@ onConfirmacionModal(accion: boolean): void {
       this.listaMercancias = [...this.mercanciasTablaDatos];
       this.seleccionarlistaMercancias = [];
     }
+       else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
+    
   }
 
   /**
@@ -1869,10 +2046,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
@@ -1895,6 +2072,20 @@ onConfirmacionModal(accion: boolean): void {
       : SELECTED.paisProcedenciaUltimoPuerto
         ? [SELECTED.paisProcedenciaUltimoPuerto]
         : []; }
+        else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
   }
   ngAfterViewInit(): void {
     if (this.identificacion) {
@@ -1948,16 +2139,25 @@ onConfirmacionModal(accion: boolean): void {
   }
   validatorButtonClick(): boolean {
    let ISVALID = true;
-   if(!this.rfcValido){
-    this.mostrarErrores.codigoPostal = true;
-    this.mostrarErrores.estado = true;
-    this.mostrarErrores.muncipio = true;
-    this.mostrarErrores.calle = true;
-    this.mostrarErrores.telefono = true;
-    this.mostrarErrores.avisoCheckbox = true;
-    this.mostrarErrores.licenciaSanitaria = true;
-    ISVALID = false;
-   }
+  // Check all required fields in 'domicilio' and set mostrarErrores accordingly
+  const REQUIREDFIELDS = [
+  'codigoPostal',
+  'estado',
+  'muncipio',
+  'calle',
+  'telefono',
+  'aduanasEntradas'
+] as (keyof typeof this.mostrarErrores)[];
+if (this.isAvisoLicenciaVisible) {
+  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
+}
+REQUIREDFIELDS.forEach((field) => {
+    const VALUE = this.domicilio.get(field)?.value;
+    this.mostrarErrores[field] = !VALUE;
+    if (!VALUE) {
+      ISVALID = false;
+    }
+  });
    if(this.domicilio.invalid){
     this.domicilio.markAllAsTouched();
     ISVALID = false;
@@ -1978,7 +2178,7 @@ onConfirmacionModal(accion: boolean): void {
     this.mercanciasTablaCheck=false;
    }
    if(this.seleccionadasAduanasEntradaDatos.length === 0){
-    this.mostrarErrores.aduanas =true;
+    this.mostrarErrores.aduanasEntradas =true;
      ISVALID = false;
    }
    return ISVALID;

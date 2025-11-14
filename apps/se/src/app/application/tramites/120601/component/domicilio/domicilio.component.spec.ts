@@ -3,44 +3,41 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { DomicilioComponent } from './domicilio.component';
-import {
-  SolicitanteService,
-  FormulariosService,
-  TIPO_PERSONA,
-  CATALOGOS_ID,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA
-} from '@ng-mf/data-access-user';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { SolicitanteService } from '@ng-mf/data-access-user';
 
 describe('DomicilioComponent', () => {
   let component: DomicilioComponent;
   let fixture: ComponentFixture<DomicilioComponent>;
+  let tramite120601StoreMock: any;
   let solicitanteServiceMock: any;
 
   beforeEach(async () => {
+    tramite120601StoreMock = {
+      setDomicilioFiscal: jest.fn(),
+    };
+
     solicitanteServiceMock = {
       getDatosGenerales: jest.fn().mockReturnValue(of({
         data: JSON.stringify({
           domicilioFiscal: {
             calle: 'Calle 1',
             numero: '123',
-            colonia: 'Centro'
-          }
-        })
-      }))
+            colonia: 'Centro',
+          },
+        }),
+      })),
     };
 
-    jest.spyOn(FormulariosService, 'obtenerNombresCamposForm').mockReturnValue(['calle', 'numero', 'colonia']);
-    jest.spyOn(FormulariosService, 'agregarValorCampoDesactivado').mockImplementation(() => {});
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule , DomicilioComponent],
+      imports: [ReactiveFormsModule,DomicilioComponent],
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitanteService, useValue: solicitanteServiceMock }
+        { provide: Tramite120601Store, useValue: tramite120601StoreMock },
+        { provide: SolicitanteService, useValue: solicitanteServiceMock },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioComponent);
@@ -52,53 +49,41 @@ describe('DomicilioComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar tipoPersona y domicilioFiscal como nacional por defecto', () => {
-    expect(component.tipoPersona).toBe(TIPO_PERSONA.FISICA_NACIONAL);
-    expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
-  });
 
-  it('debe establecer domicilioFiscal a la configuración extranjera cuando tipoPersona es extranjera', () => {
-    component.obtenerTipoPersona(TIPO_PERSONA.FISICA_EXTRANJERA);
-    expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA);
+  it('should prefill the domicilioFiscal form with provided data', () => {
+    const plantasData = [
+      {
+        calle: 'Calle 2',
+        numeroInterior: '456',
+        numeroExterior: '789',
+        codigoPostal: '12345',
+        colonia: 'Zona Norte',
+        localidad: 'Localidad 1',
+        municipio: 'Municipio 1',
+        estado: 'Estado 1',
+        pais: 'México',
+        lada: '55',
+        telefono: '1234567890',
+      },
+    ];
+    component.prefillDomicilioForm(plantasData);
+    expect(component.domicilioFiscalForm.value).toEqual({
+      calle: 'Calle 2',
+      nInt: '456',
+      nExt: '789',
+      codigoPostal: '12345',
+      colonia: 'Zona Norte',
+      localidad: 'Localidad 1',
+      municipio: 'Municipio 1',
+      entidadFederativa: 'Estado 1',
+      pais: 'México',
+      lada: '55',
+      telefono: '1234567890',
+    });
+    expect(tramite120601StoreMock.setDomicilioFiscal).toHaveBeenCalled();
   });
-
-  it('debe llamar a getDatosGenerales en ngOnInit', () => {
-    const spy = jest.spyOn(component, 'getDatosGenerales');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('debe desuscribirse en ngOnDestroy', () => {
-    if (component['subscription']) {
-      const spy = jest.spyOn(component['subscription'], 'unsubscribe');
-      component.ngOnDestroy();
-      expect(spy).toHaveBeenCalled();
-    } else {
-      expect(() => component.ngOnDestroy()).not.toThrow();
-    }
-  });
-
-  it('debe llamar a agregarValorCampoDesactivado por cada campo en getDatosGenerales', () => {
-    component.getDatosGenerales();
-    expect(FormulariosService.agregarValorCampoDesactivado).toHaveBeenCalledWith(
-      component.domicilioFiscalForm,
-      'calle',
-      'Calle 1'
-    );
-    expect(FormulariosService.agregarValorCampoDesactivado).toHaveBeenCalledWith(
-      component.domicilioFiscalForm,
-      'numero',
-      '123'
-    );
-    expect(FormulariosService.agregarValorCampoDesactivado).toHaveBeenCalledWith(
-      component.domicilioFiscalForm,
-      'colonia',
-      'Centro'
-    );
-  });
-
 });

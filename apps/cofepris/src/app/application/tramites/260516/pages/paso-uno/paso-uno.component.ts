@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
@@ -17,23 +17,12 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-    @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
-    @ViewChild(PagoDerechosComponent) pagoDerechosRef!:PagoDerechosComponent;
-
-  /**
-   * Se ejecuta después de que la vista ha sido inicializada.
-   * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-   * para establecer el tipo de persona como MORAL_NACIONAL.
-   */
-  ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
 
   /**
    * Índice del tab seleccionado.
@@ -59,6 +48,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Se obtiene a través de la consulta ConsultaioQuery.
    */
   public consultaState!: ConsultaioState;
+
+  @ViewChild(DatosSolicitudComponent) contenedorDeDatosSolicitudComponent!: DatosSolicitudComponent;
+
+  @ViewChild(PagoDerechosComponent) pagoDeDerechosComponent!: PagoDerechosComponent;
+
+  @Input() confirmarSinPagoDeDerechos: number = 0;
 
   /**
    * Constructor del componente Datos260502Component.
@@ -95,6 +90,24 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /**
+   * Se ejecuta después de que la vista ha sido inicializada.
+   * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
+   * para establecer el tipo de persona como MORAL_NACIONAL.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  }
+
+  /**
    * Método para guardar los datos del formulario.
    * Se suscribe al servicio `getRegistroTomaMuestrasMercanciasData` para obtener los datos del formulario.
    * Si la respuesta es válida, se actualiza el estado del formulario con los datos obtenidos.
@@ -121,18 +134,14 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
-  validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validOnButtonClick()){
-          isValid = true;
-        }
-        else {
-          isValid = false;
-        }
   
-        return isValid;
-      }
-  
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDeDatosSolicitudComponent?.validOnButtonClick() ?? false;
+    return (
+      (ES_TAB_VALIDO) ? true : false
+
+    );
+  }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.

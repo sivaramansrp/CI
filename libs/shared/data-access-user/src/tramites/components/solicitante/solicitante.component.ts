@@ -371,6 +371,8 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
               this.solicitanteStore.setMaterno(IDENTIFICACION.ap_materno ?? '');
               this.solicitanteStore.setRazonSocial(IDENTIFICACION.razon_social ?? '');
               this.solicitanteStore.setTipoPersona(IDENTIFICACION.tipo_persona ?? '');
+              this.solicitanteStore.setTipoSociedad(IDENTIFICACION.tipo_sociedad ?? '');
+              this.solicitanteStore.setEmail(IDENTIFICACION.email ?? '');
             }
           })
         )

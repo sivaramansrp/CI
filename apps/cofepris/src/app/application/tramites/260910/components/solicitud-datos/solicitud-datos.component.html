@@ -406,8 +406,6 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
-          data-bs-toggle="modal"
-          data-bs-target="#modal-agregar-scian"
           (click)="openAgregarSCIAN()"
           [disabled]="esFormularioSoloLectura"
         >
@@ -720,6 +718,7 @@
 <div
   class="modal fade"
   id="modal-agregar-scian"
+  #modalAgregarScian
   tabindex="-1"
   aria-labelledby="SCIANLabel"
 >

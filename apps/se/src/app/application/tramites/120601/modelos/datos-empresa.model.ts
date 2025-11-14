@@ -72,6 +72,8 @@ export interface RepresentacionFederal {
     localidad: string;
     /** Teléfono */
     telefono: string;
+    /** lada */
+    lada?: string;
 }
 
 /**

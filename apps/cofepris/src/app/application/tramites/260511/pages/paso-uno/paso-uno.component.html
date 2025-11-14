@@ -51,11 +51,11 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-datos-solicitud></app-datos-solicitud>
+      <app-datos-solicitud #DatosSolicitudComponent [isContinuarTriggered]="isContinuarTriggered" ></app-datos-solicitud>
       } @case (3) {
-      <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
+      <app-terceros-relacionados-fabricante #TercerosRelacionadosFabricanteComponent [isContinuarTriggered]="isContinuarTriggered" ></app-terceros-relacionados-fabricante>
       } @case (4) {
-      <app-pago-derechos></app-pago-derechos>
+      <app-pago-derechos #PagoDerechosComponent></app-pago-derechos>
       } }
     </ng-container>
   </div>

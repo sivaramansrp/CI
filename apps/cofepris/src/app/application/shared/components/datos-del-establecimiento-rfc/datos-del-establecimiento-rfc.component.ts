@@ -32,6 +32,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
  */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+  /** Emite un evento cuando cambia la validez del formulario. */
+  @Output() formValidityChange = new EventEmitter<boolean>();
   @Output() rfcValidoChange = new EventEmitter<boolean>(); 
     @Input() public idProcedimiento!: number;
 
@@ -254,20 +256,37 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('datosDelEstablecimientoRFCForm', {
         [campo]: VALOR,
       });
+    this.formValidityChange.emit(this.datosDelForm.valid);
   }
+
   validatorButtonClick(): boolean {
-    if(!this.tieneElBotonSeleccionClicado){
+    let allValid = true;
+
+    // Check denominacionRazonSocial
+    if (this.datosDelForm.get('denominacionRazonSocial')?.value === '' || this.datosDelForm.get('denominacionRazonSocial')?.invalid) {
       this.mostrarErrores.denominacionRazonSocial = true;
+      allValid = false;
+    } else {
+      this.mostrarErrores.denominacionRazonSocial = false;
+    }
+
+    if (this.datosDelForm.get('correoElectronico')?.value === '' || this.datosDelForm.get('correoElectronico')?.invalid) {
       this.mostrarErrores.correoElectronico = true;
-    return false;
+      allValid = false;
+    } else {
+      this.mostrarErrores.correoElectronico = false;
     }
-    if(this.datosDelForm.invalid){
+    if (!allValid) {
       this.datosDelForm.markAllAsTouched();
-      return true;
+      return false;
     }
-    this.mostrarErrores.denominacionRazonSocial = false;
-    this.mostrarErrores.correoElectronico = false;
-    return this.datosDelForm.invalid;
+
+    // If form is invalid for any other reason, mark all as touched and return false
+    if (this.datosDelForm.invalid) {
+      this.datosDelForm.markAllAsTouched();
+      return false;
+    }
+    return true;
   }
 
   /**
