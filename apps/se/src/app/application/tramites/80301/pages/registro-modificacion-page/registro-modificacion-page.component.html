@@ -40,7 +40,7 @@
         </div>
         }@case(2){
         <app-paso-carga-documento
-          [idSolicitud]="solicitudState.idSolicitud"
+          [idSolicitud]="idSolicitud"
           [idTipoTRamite]="'80301'"
           [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
@@ -49,9 +49,9 @@
         ></app-paso-carga-documento>
         }@case(3){
         <paso-firma
-          [idSolicitud]="solicitudState.idSolicitud"
+          [idSolicitud]="idSolicitud"
           [procedure]="80301"
-          [procedureUrl]="'registro-solicitud/registro-solicitud'"
+          [procedureUrl]="'registro-solicitud/registro-modificacion-page'"
         ></paso-firma>
         }}
 

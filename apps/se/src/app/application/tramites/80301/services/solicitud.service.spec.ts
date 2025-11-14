@@ -14,6 +14,7 @@ import {
 import {
   ImportacionExportacionFracciones,
   DatosDelModificacion,
+  JSONRespuesta,
 } from '../models/datos-tramite.model';
 
 import {
@@ -27,6 +28,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { PROC_80301 } from '../servers/api-route';
 
 describe('SolicitudService', () => {
   let service: SolicitudService;
@@ -168,6 +170,24 @@ describe('SolicitudService', () => {
 
     const req = httpMock.expectOne((r) => r.method === 'GET');
     req.flush({ data: mockData });
+  });
+
+  it('should call GET and return certificacionSAT data', () => {
+    const RFC = 'ABC123456789';
+    const MOCK_RESPONSE: JSONRespuesta<{ certificacionSAT: string }> = {
+      datos: { certificacionSAT: 'CERT-OK' },
+      mensaje: ''
+    };
+
+    service.obtenerDatosCertificacionSAT(RFC).subscribe((resp) => {
+      expect(resp).toEqual(MOCK_RESPONSE);
+    });
+
+    const req = httpMock.expectOne(PROC_80301.CERTIFICACION_SAT + RFC);
+
+    expect(req.request.method).toBe('GET');
+
+    req.flush(MOCK_RESPONSE);
   });
 
   it('actualizarEstadoFormulario should call store methods', () => {
