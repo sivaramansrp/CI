@@ -367,16 +367,16 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
 
   validarClickDeBoton(): boolean {
     let ISVALID = true;
-    if(this.datosDelEstablecimientoRfcComp.validatorButtonClick() === true){
+    if(!this.datosDelEstablecimientoRfcComp.validatorButtonClick() ){
       ISVALID = false;
     }
-    if(this.domicilioComp.validatorButtonClick() === false){
+    if(!this.domicilioComp.validatorButtonClick()){
       ISVALID = false;
     }
-    if(this.manifiestosComp.validarClickDeBoton() === false){
+    if(!this.manifiestosComp.validarClickDeBoton()){
       ISVALID = false;
     }
-    if(this.representanteLegalRfcComp.validarClickDeBoton() === false){
+    if(!this.representanteLegalRfcComp.validarClickDeBoton()){
       ISVALID = false;
     }
     return ISVALID;

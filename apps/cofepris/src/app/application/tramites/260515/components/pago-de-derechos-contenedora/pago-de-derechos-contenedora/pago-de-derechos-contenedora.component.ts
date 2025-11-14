@@ -69,6 +69,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @memberof PagoDeDerechosContenedoraComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
 
   /**
    * @constructor
@@ -131,14 +132,20 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    *
    * @memberof PagoDeDerechosContenedoraComponent
    */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
-    //this.tramiteStore.updatePagoDerechos(event);
-  }
 
   validarContenedor(): boolean {
-    return (
-      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    if (this.pagoDeDerechosComponent) {
+      const FORMDATA = this.pagoDeDerechosComponent.pagoDerechosForm.getRawValue();
+          const HASVALUE = Object.values(FORMDATA).some(
+      value => value !== null && value !== undefined && value !== ''
     );
+     if (HASVALUE) {
+      return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
+    } 
+      return true; 
+    
+  }
+  return false;
   }
 
   /**

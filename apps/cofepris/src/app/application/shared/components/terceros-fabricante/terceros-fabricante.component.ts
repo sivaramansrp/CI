@@ -1616,12 +1616,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   markTouched(): void {
     if (this.fabricanteRowData.length===0) {
       this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
     }
     if (this.formuladorRowData.length===0) {
       this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
     }
     if (this.proveedorRowData.length===0) {
       this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
     }
   }
 

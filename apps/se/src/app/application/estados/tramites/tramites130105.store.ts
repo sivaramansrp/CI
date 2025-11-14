@@ -161,6 +161,9 @@ export interface Tramite130105State {
     * Fechas seleccionadas en el formulario.
     */
   fechasSeleccionadas: string[];
+
+  /** Lista de partidas de la mercancía asociadas al trámite. */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
 }
 
 /**
@@ -206,6 +209,7 @@ export function createInitialState(): Tramite130105State {
     cantidadTotal: '',
     valorTotalUSD: '',
     fechasSeleccionadas: [],
+    tableBodyData: [],
   };
 }
 

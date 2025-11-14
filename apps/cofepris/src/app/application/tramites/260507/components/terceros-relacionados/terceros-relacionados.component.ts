@@ -54,6 +54,7 @@ export class TercerosRelacionados260507Component {
     if (event === 'proveedor') {
       this.store.setFormValidity('proveedorTablaValid', true);
     }
+    this.validarFormulario();
   }
 
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */

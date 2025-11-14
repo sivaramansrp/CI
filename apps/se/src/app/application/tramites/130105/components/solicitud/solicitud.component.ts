@@ -213,6 +213,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
+    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
@@ -222,6 +223,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
+      });
+
+      this.tramite130105Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableBodyData = data.tableBodyData || [];
       });
   }
 
@@ -346,10 +353,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
       isValid = false;
     }
-    if (this.filaSeleccionada.length === 0) {
+    if (this.tableBodyData.length === 0) {
       this.isInvalidaPartidas = true;
       isValid = false;
-    } else if (this.filaSeleccionada.length > 0) {
+    } else if (this.tableBodyData.length > 0) {
       this.isInvalidaPartidas = false;
     }
     if (this.paisForm.invalid) {
@@ -448,6 +455,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cantidadTotal: CANTIDAD_TOTAL,
         valorTotalUSD: TOTAL_USD,
       });
+      this.tramite130105Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     }
   }
 
@@ -507,6 +517,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
@@ -523,13 +534,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       if (item.id === evento.id) {
         return {
           ...item,
-          cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-          totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-          descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+          cantidad: evento.cantidad,
+          totalUSD: evento.totalUSD,
+          precioUnitarioUSD: evento.precioUnitarioUSD,
+          descripcion: evento.descripcion,
         };
       }
       return item;
     });
+     const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+
+        this.tramite130105Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
   }
 
   /**
@@ -642,9 +664,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMostrarPartidas(): void {
-    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
-      this.mostrarPartidas = data as MostrarPartidas[];
-      this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(202859165).subscribe((data) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
     });
   }
 

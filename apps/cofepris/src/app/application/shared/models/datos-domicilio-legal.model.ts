@@ -292,4 +292,4 @@ export interface PermisoModel {
    * @module app/application/shared/models/datos-domicilio-legal.model
    * @compodoc
    */
-  export const NOMBRES_CAMPOS = [260512,260513,260516];
+  export const NOMBRES_CAMPOS = [260512,260513,260516,260515];
