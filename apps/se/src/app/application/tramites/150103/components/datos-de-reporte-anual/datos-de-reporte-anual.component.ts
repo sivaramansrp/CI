@@ -83,14 +83,14 @@ consultaDatos!: ConsultaioState;
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150103State.ventasTotales, disabled: false },
-        [Validators.maxLength(16)],
+        [Validators.required, Validators.maxLength(16)],
       ],
       totalExportaciones: [
         {
           value: this.solicitud150103State.totalExportaciones,
           disabled: false,
         },
-        [Validators.maxLength(16)],
+        [Validators.required, Validators.maxLength(16)],
       ],
       totalImportaciones: [
         {

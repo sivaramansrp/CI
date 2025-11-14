@@ -14,7 +14,8 @@
             formControlName="ventasTotales"
             (change)="obtenerVentasTotales($event)"
             [disabled]="esFormularioSoloLectura"
-            
+            pattern="[0-9]*"
+            maxlength="16"
           />
         </div>
         <div class="col-md-4">
@@ -28,7 +29,8 @@
             formControlName="totalExportaciones"
             (input)="obtenerTotalExportaciones($event)"
             [disabled]="esFormularioSoloLectura"
-            
+            pattern="[0-9]*"
+            maxlength="16"
           />
         </div>
         <div class="col-md-4">

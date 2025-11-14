@@ -203,13 +203,9 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
       }
     }
     
-    // Check programa validation for indice 2
-    if(this.indice === 2 && this.programasDeComp?.formProgrmasReporte.get('estatus')?.value !== ''){
+    // Check programa validation - should validate when trying to proceed from any step
+    if(this.programasDeComp?.formProgrmasReporte.get('estatus')?.value === '' && this.solicitudState.folioPrograma === ''){
       this.programasDeComp?.showAlert();
-      return 5;
-    } 
-    
-    if (this.indice === 1 && this.solicitudState.folioPrograma === '' && this.solicitudState.totalExportaciones === '') {
       return 5;
     }
     
