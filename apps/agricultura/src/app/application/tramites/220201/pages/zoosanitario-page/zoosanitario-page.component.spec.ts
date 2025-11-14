@@ -15,7 +15,8 @@ describe('ZoosanitarioPageComponent', () => {
   };
 
   beforeEach(() => {
-    component = new ZoosanitarioPageComponent();
+    const tramite220201QueryMock = {} as any; // Mock the required dependency
+    component = new ZoosanitarioPageComponent(tramite220201QueryMock);
 
     (component as any).wizardComponent = wizardMock;
     (component as any).pasoUnoComponent = pasoUnoMock;

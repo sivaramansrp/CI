@@ -390,5 +390,10 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-  
+  /**
+   * Obtiene el valor del checkbox de aviso desde el componente de domicilio.      
+   */
+  obtenerValorCheckboxAviso(): boolean {
+  return this.domicilioComp?.domicilio?.get('avisoCheckbox')?.value ?? false;
+}
 }

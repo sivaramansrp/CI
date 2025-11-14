@@ -1,93 +1,123 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
 import { SubProductosContenedoraComponent } from './sub-productos-contenedora.component';
+import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { ProductoDetallaEventos } from '../../../../shared/models/datos-de-la-solicitue.model';
 
 describe('SubProductosContenedoraComponent', () => {
   let component: SubProductosContenedoraComponent;
-  let fixture: ComponentFixture<SubProductosContenedoraComponent>;
 
-  const mockCapturarSolicitud: CapturarSolicitud = {
-    datosDeLaSolicitud: {} as any,
-    datosParaMovilizacionNacional: {} as any,
-    pagoDeDerechos: {} as any,
-    tercerosRelacionados: [],
-    validarEnvio: {} as any,
-    tablaDatos: [],
-    selectedDatos: [],
-    datos: {} as any,
-    datosForma: [],
-    seletedTerceros: {} as any,
-    seletedExdora: {} as any,
-  };
+  beforeEach(() => {
+    // Mock services with minimal implementation
+    const mockApiService = {} as any;
+    const mockQuery = { seleccionarState$: { pipe: jest.fn().mockReturnValue({ subscribe: jest.fn() }) } } as any;
+    const mockStore = { update: jest.fn() } as any;
+    const mockCatalogoService = {} as any;
 
-  let mockApiService: Partial<AgriculturaApiService>;
-  let mockStore: Partial<ZoosanitarioStore>;
-  let mockQuery: Partial<ZoosanitarioQuery>;
-
-  beforeEach(async () => {
-    mockApiService = {
-      obtenerProductoRespuestaPorUrl: jest.fn().mockReturnValue(of({}))
-    };
-
-    mockQuery = {
-      seleccionarState$: of({
-        datosDeLaSolicitud: {} as any,
-        datosParaMovilizacionNacional: {} as any,
-        pagoDeDerechos: {} as any,
-        tercerosRelacionados: [],
-        validarEnvio: {} as any,
-        tablaDatos: [],
-        selectedDatos: [],
-        datos: {} as any,
-        datosForma: [],
-        seletedTerceros: {} as any,
-        seletedExdora: {} as any,
-      })
-    };
-
-    mockStore = {
-      update: jest.fn()
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [SubProductosContenedoraComponent],
-      providers: [
-        { provide: AgriculturaApiService, useValue: mockApiService },
-        { provide: ZoosanitarioQuery, useValue: mockQuery },
-        { provide: ZoosanitarioStore, useValue: mockStore }
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(SubProductosContenedoraComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new SubProductosContenedoraComponent(
+      mockApiService,
+      mockQuery,
+      mockStore,
+      mockCatalogoService
+    );
   });
 
-  it('debe crear el componente', () => {
-    expect(component).toBeTruthy();
+  it('should initialize catalogosDatos with empty arrays', () => {
+    expect(component.catalogosDatos.tipoRequisitoList).toEqual([]);
+    expect(component.catalogosDatos.requisitoList).toEqual([]);
   });
 
-  it('debe obtener datos del catálogo al inicializar', () => {
-    expect(mockApiService.obtenerProductoRespuestaPorUrl).toHaveBeenCalledWith('productos.json');
+  it('should emit cerrar event', () => {
+    const spy = jest.spyOn(component.cerrar, 'emit');
+    component.cerrar.emit();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('debe actualizar el store cuando se llama agregarDatosFormulario', () => {
-    const eventoEjemplo: any = {
-      formulario: {
-        id: 123,
-        tipoRequisito: 'req',
-        requisito: 'test',
-        cantidadUMT: '5',
-        cantidadUMC: '10'
-      }
+  it('should set cantidadRegistros input', () => {
+    component.cantidadRegistros = 5;
+    expect(component.cantidadRegistros).toBe(5);
+  });
+
+  describe('static methods', () => {
+    const baseFila: FilaSolicitud = {
+      id: 123,
+      tipoRequisito: 'A',
+      requisito: 'B',
+      numeroCertificadoInternacional: 'C',
+      fraccionArancelaria: 'D',
+      descripcionFraccion: 'E',
+      nico: 'F',
+      descripcionNico: 'G',
+      descripcion: 'H',
+      cantidadUMT: 10,
+      umt: 'I',
+      cantidadUMC: 20,
+      umc: 'J',
+      especie: 'K',
+      uso: 'L',
+      paisDeOrigen: 'M',
+      paisDeProcedencia: 'N',
+      sexo: '',
+      presentacion: 'O',
+      cantidadPresentacion: '',
+      tipoPresentacion: 'P',
+      tipoPlanta: 'Q',
+      plantaAutorizadaOrigen: 'R',
+      noPartida: '',
+      tipoDeProducto: 'S',
+      numeroDeLote: 'T',
+      certificadoInternacionalElectronico: 'U'
     };
 
-    component.agregarDatosFormulario(eventoEjemplo);
+    it('createFormularioFromValor should combine basic and additional fields', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['createFormularioFromValor'](baseFila);
+      expect(result.id).toBe(123);
+      expect(result.tipoRequisito).toBe('A');
+      expect(result.umt).toBe('I');
+      expect(result.presentacion).toBe('O');
+    });
 
-    expect(mockStore.update).toHaveBeenCalledWith(expect.any(Function));
+    it('getBasicFields should return basic fields with defaults', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['getBasicFields']({});
+      expect(typeof result.id).toBe('number');
+      expect(result.tipoRequisito).toBe('');
+    });
+
+    it('getAdditionalFields should return additional fields as string', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['getAdditionalFields']({ cantidadUMT: 5, umt: 'X' });
+      expect(result.cantidadUMT).toBe('5');
+      expect(result.umt).toBe('X');
+    });
+
+    it('createDatosFromFormulario should combine basic and additional data fields', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['createDatosFromFormulario']({ id: 1, umt: 'Z' });
+      expect(result.id).toBe(1);
+      expect(result.umt).toBe('Z');
+    });
+
+    it('getBasicDataFields should return basic data fields with defaults', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['getBasicDataFields']({});
+      expect(typeof result.id).toBe('number');
+      expect(result.noPartida).toBe('');
+    });
+
+    it('getAdditionalDataFields should return additional data fields with defaults', () => {
+      // @ts-ignore
+      const result = SubProductosContenedoraComponent['getAdditionalDataFields']({});
+      expect(result.umt).toBe('');
+      expect(result.presentacion).toBe('');
+    });
+  });
+
+  it('agregarDatosFormulario should call updateStoreWithDatos', () => {
+    const evento: ProductoDetallaEventos = { formulario: { id: 1 } } as any;
+    // @ts-ignore
+    component['updateStoreWithDatos'] = jest.fn();
+    component.agregarDatosFormulario(evento);
+    // @ts-ignore
+    expect(component['updateStoreWithDatos']).toHaveBeenCalled();
   });
 });

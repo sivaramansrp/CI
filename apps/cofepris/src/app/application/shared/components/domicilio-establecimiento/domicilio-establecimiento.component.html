@@ -230,14 +230,17 @@
          </app-table-pagination>
       </div>
       <div class="container text-end mt-5">
-         @if(seleccionarlistaMercancias.length !== 0) {
+          @if(mercanciasTablaDatos.length === 0) {
+         <button class="btn btn-primary me-2"  
+         [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
+           }
+         @else {
          <button class="btn btn-default me-2" 
          [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
+
          <button class="btn btn-danger me-2" data-bs-toggle="modal"
          [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
          }
-         <button class="btn btn-primary me-2"  
-         [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
       </div>
    </div>
    <div class="row" *ngIf="isGarantiasOfrecidasVisible">
@@ -840,7 +843,7 @@
                      <div class="form-group">
                         <app-catalogo-select [catalogo]="idProcedimiento ? clasificacionToxicologicaLista : estado" formControlName="clasificacionToxicologica"
                         [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                        setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
+                        setValoresStore(formMercancias, 'clasificacionToxicologica', 'setClasificacionToxicologica'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"
                         [markTouched]="!!(formMercancias.get('clasificacionToxicologica')?.invalid && formMercancias.get('clasificacionToxicologica')?.touched)"></app-catalogo-select>
                      </div>
