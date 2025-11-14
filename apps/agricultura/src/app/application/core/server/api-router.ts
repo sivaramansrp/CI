@@ -338,6 +338,29 @@ export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) :
  */
 export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
 
+/**
+ * Genera la ruta de la API para obtener los documentos opcionales de una solicitud.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_GET_DOCUMENTOS_OPCIONALES = (TRAMITE: string, idSolicitud: number | undefined, especifico: boolean) : string => {
+  let url = `sat-t${TRAMITE}/solicitud/documentos`;
+  const PARAMS: string[] = [];
+  if (idSolicitud !== undefined && idSolicitud !== null) {
+    PARAMS.push(`idSolicitud=${idSolicitud}`);
+  }
+  if (especifico !== undefined && especifico !== null) {
+    PARAMS.push(`especifico=${especifico}`);
+  }
+
+  if (PARAMS.length > 0) {
+    url += `?${PARAMS.join('&')}`;
+  }
+
+  return url;
+}
+
 
 /**
  * API para firmar una solicitud de un trámite específico.

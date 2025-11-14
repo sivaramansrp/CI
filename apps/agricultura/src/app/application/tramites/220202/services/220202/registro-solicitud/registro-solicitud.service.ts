@@ -1,9 +1,10 @@
 import {
+  API_GET_DOCUMENTOS_OPCIONALES,
   API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
   API_GET_SOLICITUDES_NICO_DESCRIPCION,
   API_GET_SOLICITUDES_RECENTES,
   API_GET_SOLICITUDES_UNIDAD_MEDIDA,
-  API_POST_SOLICITUD_GUARDAR
+  API_POST_SOLICITUD_GUARDAR,
 } from '../../../../../core/server/api-router';
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../../220201/models/220201/capturar-solicitud.model';
@@ -11,7 +12,10 @@ import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SolicitudFilaTabla } from '../../../models/220202/fitosanitario.model';
+import {
+  Documentos,
+  SolicitudFilaTabla,
+} from '../../../models/220202/fitosanitario.model';
 import { GuardarSolicitud } from '../../../models/220202/guardar-solicitud.model';
 
 @Injectable({
@@ -104,6 +108,17 @@ export class RegistroSolicitudService {
         return response;
       })
     );
+  }
+
+  /**
+   * Obtiene los documentos opcionales de la solicitud para un trámite específico.
+   *
+   * @param tramite - El identificador numérico del trámite.
+   * @returns Un observable que emite la respuesta de solicitudes recientes.
+   */
+  obtieneDocumentosOpcionales(tramite: number, idSolicitud?: number, especifico: boolean = true): Observable<BaseResponse<Documentos>> {
+    const ENDPOINT = `${this.host}${API_GET_DOCUMENTOS_OPCIONALES(tramite.toString(), idSolicitud, especifico)}`;
+    return this.http.get<BaseResponse<Documentos>>(ENDPOINT);
   }
 
   guardarSolicitud(tramite: number, solicitud: GuardarSolicitud): Observable<BaseResponse<any>> {

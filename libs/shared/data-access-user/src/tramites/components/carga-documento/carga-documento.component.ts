@@ -314,10 +314,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna nada.
    */
   getDocumentosDesdeSolicitud(): void {
-    // const ESPECIFICO = true;
-    const ESPECIFICO = false;
+    const ESPECIFICO = this.esDocumentosAgricultura ? false : true;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
+      .getDocumentosSolicitud(Number(this.idTipoTRamite), ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -342,10 +341,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna nada.
    */
   getDocumentosDesdeSolicitudOpcionales(): void {
-    // const ESPECIFICO = false;
-    const ESPECIFICO = true;
+    const ESPECIFICO = this.esDocumentosAgricultura ? true : false;
     this.catalogoDocumentosService
-      .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
+      .getDocumentosSolicitud(Number(this.idTipoTRamite), ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
@@ -365,7 +363,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
         },
         error: (err) => {
-          console.error('Error obteniendo documentos desde 130118', err);
+          console.error('Error obteniendo documentos desde solicitud', err);
         }
       });
   }

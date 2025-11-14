@@ -1,9 +1,21 @@
-import { ALERT_TEXTO, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/220202/fitosanitario.enums';
-import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
-import { Component, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  ALERT_TEXTO,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOS,
+} from '../../constantes/220202/fitosanitario.enums';
+import {
+  AccionBoton,
+  ListaPasosWizard,
+} from '../../models/220202/fitosanitario.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  DatosPasos,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -22,10 +34,9 @@ import { map, Subject, takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-agricultura',
-  templateUrl: './agricultura.component.html'
+  templateUrl: './agricultura.component.html',
 })
-export class AgriculturaComponent {
-
+export class AgriculturaComponent implements OnInit {
   /**
    * @description Texto que se muestra en la alerta del formulario.
    * Este texto es utilizado para proporcionar información al usuario sobre el propósito del formulario.
@@ -45,13 +56,13 @@ export class AgriculturaComponent {
   /**
    * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
    */
-  mensajePasos: string = "";
+  mensajePasos: string = '';
 
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
    * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
-   * 
+   *
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
@@ -70,7 +81,7 @@ export class AgriculturaComponent {
    * @description Índice actual del paso en el que se encuentra el usuario.
    * Este índice se utiliza para determinar qué paso se muestra en cada momento.
    * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
-   * 
+   *
    * @type {number}
    * @default 1
    */
@@ -83,24 +94,25 @@ export class AgriculturaComponent {
   public btnGuardarVisible: string = 'visible';
 
   /**
- * Mensaje de error del formulario para mostrar en el alert.
- *
- * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
- */
-  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string =
+    '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
- * Indica si el formulario tiene errores de validación.
- *
- * Se utiliza para mostrar/ocultar el alert de errores en el modal.
- */
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
   esFormaInValido: boolean = false;
 
   /**
-* Indica si ya se llenaron todos los formularios del paso 1.
-*
-* Se utiliza para mostrar/ocultar el alert azul.
-*/
+   * Indica si ya se llenaron todos los formularios del paso 1.
+   *
+   * Se utiliza para mostrar/ocultar el alert azul.
+   */
   esPasoUnoCompleto: boolean = false;
 
   /**
@@ -108,11 +120,10 @@ export class AgriculturaComponent {
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
    * y el componente Wizard, como el número total de pasos, el índice del paso actual
    * y los textos de los botones de navegación (anterior y siguiente).
-   * 
+   *
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
-
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
@@ -131,58 +142,59 @@ export class AgriculturaComponent {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
+   * Variable para almacenar el id de la solicitud.
+   * @private
+   */
+  public idSolicitud: number = 0;
+  /**
    * Constructor del componente.
    * Este constructor inicializa el componente y establece el estado inicial de la validación
    * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
    * @constructor
-   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
+   * @param consultaQuery
    */
-  constructor(
-    private consultaQuery: ConsultaioQuery,
-  ) {
-  }
+  constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
     console.log('ngOnInit agricuktura');
 
-    this.obtenerDatosDelStore()
+    this.obtenerDatosDelStore();
   }
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
    * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
    * del formulario.
-   * 
+   *
    * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
    * y el valor del índice del paso al que se debe navegar.
-   * 
+   *
    * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
    *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
    *   (valor `cont`) o retroceder (valor `atras`).
-   * 
+   *
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-
     console.log('getValorIndice Agricultura', this.indice);
     // Si estamos en el paso 1, validar antes de continuar
 
     if (this.indice === 1) {
-      var validaPestañas = this.pasoUnoRef?.validarFormularios();
-      if (!validaPestañas.valido) {
+      const VALIDA_PESTANAS = this.pasoUnoRef?.validarFormularios();
+      if (!VALIDA_PESTANAS.valido) {
         // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
 
-        if (validaPestañas.mensaje) {
-          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' + validaPestañas.mensaje;
-        }
-        else {
-          this.formErrorAlert = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+        if (VALIDA_PESTANAS.mensaje) {
+          this.formErrorAlert =
+            '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' +
+            VALIDA_PESTANAS.mensaje;
+        } else {
+          this.formErrorAlert =
+            '<strong>¡Error de registro! </strong> Faltan campos por capturar';
         }
         return;
       }
-
-
     }
 
     this.esFormaInValido = false;
@@ -197,10 +209,9 @@ export class AgriculturaComponent {
     }
   }
 
-
   /**
-* Obtiene los datos del store y los guarda utilizando el servicio.
-*/
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
   // eslint-disable-next-line class-methods-use-this
   obtenerDatosDelStore(): void {
     this.consultaQuery.selectConsultaioState$
@@ -208,11 +219,14 @@ export class AgriculturaComponent {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          var nuevo = MENSAJE_DE_EXITO_ETAPA_UNO.replace("_folio_", this.consultaState.id_solicitud ?? "0");
-          this.mensajePasos = nuevo;
+          this.idSolicitud = parseInt(seccionState.id_solicitud, 10);
+          const NUEVO = MENSAJE_DE_EXITO_ETAPA_UNO.replace(
+            '_folio_',
+            this.consultaState.id_solicitud ?? '0'
+          );
+          this.mensajePasos = NUEVO;
         })
       )
       .subscribe();
-
   }
 }

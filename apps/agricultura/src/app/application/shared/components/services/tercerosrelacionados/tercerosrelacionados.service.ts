@@ -85,7 +85,7 @@ export class TercerosrelacionadosService {
    */
   obtieneCatalogoEntidadesFederativasGeneral(
     tramite: number,
-    cvePais: string
+    cvePais: string = 'MEX'
   ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${
       this.host

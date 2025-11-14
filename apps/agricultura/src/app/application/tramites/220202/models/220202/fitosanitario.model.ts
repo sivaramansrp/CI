@@ -1028,3 +1028,55 @@ export interface TercerosrelacionadosExportadorTable {
      */
     lada?: string;
 }
+
+
+
+export interface Documentos {
+  documento_fraccion_esquema?: [],
+  documento_fraccion?: [],
+  documento_programa?: [],
+  // documento_tramite?: DocumentoTramite[]
+  documento_tramite?: [
+    {
+      tipo_documento: {
+        id_tipo_documento: number,
+        tipo_documento: string,
+        fecha_captura: string,
+        fecha_fin_vigencia: string,
+        fecha_ini_vigencia: string,
+        activo: boolean,
+        ide_rango_resolucion_imagen: string,
+        tamanio_maximo: number
+      },
+      especifico: boolean,
+      ide_clasificacion_documento: string,
+      ide_tipo_solicitante_rfe: string,
+      fecha_ini_vigencia: string,
+      fecha_fin_vigencia: string,
+      activo: boolean,
+      solo_anexar: boolean | null,
+      ide_regla_anexado: string
+    }
+  ]
+}
+
+export interface DocumentoTramite {
+  tipo_documento: {
+    id_tipo_documento: number,
+    tipo_documento: string,
+    fecha_captura: string,
+    fecha_fin_vigencia: string,
+    fecha_ini_vigencia: string,
+    activo: boolean,
+    ide_rango_resolucion_imagen: string,
+    tamanio_maximo: number
+  },
+  especifico: boolean,
+  ide_clasificacion_documento: string,
+  ide_tipo_solicitante_rfe: string,
+  fecha_ini_vigencia: string,
+  fecha_fin_vigencia: string,
+  activo: boolean,
+  solo_anexar: boolean | null,
+  ide_regla_anexado: string
+}
