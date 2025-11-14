@@ -7,7 +7,7 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestro
 import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State,Tramite110101Store, createSolicitanteInitialState} from '../../estados/tramites/solicitante110101.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
@@ -18,6 +18,7 @@ import { CriterioConfiguracionResponse } from '../../models/response/tratado-con
 import { DatosCriterioResumenResponse } from '../../models/response/tratado-criterio-resumen-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
+import { GenerarDictamenClasificacionService } from '../../../../shared/services/generar-dictamen-clasificacion.service';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
@@ -227,8 +228,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
 
   /** Almacena las filas seleccionadas de la tabla */
   public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
-
+  /** Estado de la consulta */
   public consultaState!: ConsultaioState;
+  /** Suscripción para manejo de observables */
+  private subscription!: Subscription;
+  /** Bandera de aladi */
+  public noAceptada = false;
     /**
      * Inicializa el TratadosComponent.
      * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
@@ -248,7 +253,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private catalogosTramiteService: CatalogosTramiteService,
     private cd: ChangeDetectorRef,
     private tratadosSolicitudService: TratadosSolicitudService,
-    private evaluacionTratadosService: EvaluacionTratadosService
+    private evaluacionTratadosService: EvaluacionTratadosService,
+    private generarDictamenClasificacionService: GenerarDictamenClasificacionService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -277,6 +283,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
+     this.subscription = this.generarDictamenClasificacionService.noAceptada$.subscribe(valor => {
+      this.noAceptada = valor;
+
+      if (valor) {
+        this.modificarRegistrosAladi();
+      } 
+    });
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
 
@@ -1495,7 +1508,6 @@ eliminarTratado(): void {
    */
   modificarRegistros(): void {
     if (!this.tratadoSeleccionado) {
-      console.warn('No hay tratado seleccionado.');
       return;
     }
 
@@ -1521,6 +1533,25 @@ eliminarTratado(): void {
 
     this.limpiarSeleccion();
     this.cerrarDialogo();
+  }
+
+/**
+ * @method modificarRegistrosAladi
+ * @description Este método modifica los registros ALADI en la tabla de evaluación de tratados.
+ * Establece como no aprobados los tratados con IDs específicos restringidos.
+ * @returns void
+ */
+  modificarRegistrosAladi():void{
+   const IDS_RESTRINGIDOS = [102, 103, 104, 105, 106];
+
+  this.tratadosEvaluacionTablaDatos.forEach(item => {
+    if (IDS_RESTRINGIDOS.includes(item.id_tratado_acuerdo)) {
+      item.cal_aprobada_dictaminador = false;
+      item.calificacion_dictaminador = 'NO APROBADO';
+    }
+  });
+  this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
+   this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
   }
 
   /**
@@ -1618,5 +1649,6 @@ eliminarTratado(): void {
     this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario() || null);
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }
