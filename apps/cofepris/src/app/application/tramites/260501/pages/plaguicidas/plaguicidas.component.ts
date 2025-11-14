@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject, JSONResponse, WizardService } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, JSONResponse, WizardService, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/260501constante.enum';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
-import { TEXTOS } from '../../constantes/260501constante.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
-import { ToastrService } from 'ngx-toastr';
 import { Solicitud260501State, Tramite260501Store } from '../../../../shared/estados/stores/260501/tramite260509.store';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTOS } from '../../constantes/260501constante.enum';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -25,6 +26,12 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
@@ -35,6 +42,27 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   public guardarIdSolicitud: number = 0;
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+/**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -81,6 +109,11 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
+
+  /**
  * @property esFormaValido
  * @description
  * Indica si el formulario actual es válido. Se utiliza para habilitar o deshabilitar la navegación entre pasos en el wizard.
@@ -118,6 +151,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
  */
   public formSuccessAlert = MSG_REGISTRO_EXITOSO(String(this.folioTemporal));
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**
    * @constructor
    * @description
@@ -147,6 +183,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState.continuarTriggered ?? false;
     });
     this.consultaQuery.selectConsultaioState$
         .pipe(
@@ -156,6 +193,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
           })
         ).subscribe();
   }
+
 
   /**
    * Maneja la acción del botón en el asistente.
@@ -168,48 +206,20 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         e.accion === 'cont' ? e.valor + 1 :
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
-    if (!this.consultaState.readonly && !this.consultaState.update) {
-      this.esFormaValido = this.verificarLaValidezDelFormulario();
-        // if (!this.esFormaValido) {
-        //   this.indice = e.valor;
-        //   this.datosPasos.indice = e.valor;
-        //   this.servicioDeFormularioService.markFormAsTouched('datosSolicitudForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('representanteForm');
-        //   this.servicioDeFormularioService.markFormAsTouched('tercerosForm');
-        //   return;
-        // }
-      if (e.valor > 0 && e.valor <= this.pasos.length) {
-        this.shouldNavigate$()
-          .subscribe((shouldNavigate) => {
-            if (shouldNavigate) {
-              this.indice = NEXT_INDEX;
-              this.datosPasos.indice = NEXT_INDEX;
-              this.wizardService.cambio_indice(NEXT_INDEX);
-              this.wizardComponent.siguiente();
-            } else {
-              this.indice = e.valor;
-              this.datosPasos.indice = e.valor;
-            }
-          });
-        if (e.accion === 'cont' && this.esFormaValido) {
-            this.indice = e.valor + 1;
-            this.datosPasos.indice = e.valor + 1;
-            this.wizardService.cambio_indice(this.datosPasos.indice);
-            this.wizardComponent.siguiente();
-        } else if (e.accion === 'ant' && this.esFormaValido) {
-            this.indice = e.valor - 1;
-            this.datosPasos.indice = e.valor - 1;
-            this.wizardComponent.atras();
-        } 
+ 
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true);
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
       }
-    } else {
-        if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        this.esFormaValido = true;
-        if (e.accion === 'cont') {
-          this.shouldNavigate$()
+      this.isPeligro = false;
+    }
+    if (e.valor > 0 && e.valor < this.pasos.length) {
+      if (e.accion === 'cont') {
+        if (this.indice === 1) {
+            this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
             if (shouldNavigate) {
               this.indice = NEXT_INDEX;
@@ -222,10 +232,28 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
             }
           });
         } else {
-          this.wizardComponent.atras();
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardService.cambio_indice(NEXT_INDEX);
+          this.wizardComponent.siguiente();
         }
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  private validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
   }
 
   /**
@@ -243,7 +271,6 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         if (OK) {
           this.toastrService.success(DATOS.mensaje);
         } else {
-          //this.padreBtn = true;
           this.toastrService.error(DATOS.mensaje);
         }
         return OK;
@@ -295,6 +322,39 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
       (this.servicioDeFormularioService.isFormValid('tercerosForm') ??
       false)
     );
+  }
+
+      /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+/**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /** Actualiza el estado de carga en progreso. */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
   /**

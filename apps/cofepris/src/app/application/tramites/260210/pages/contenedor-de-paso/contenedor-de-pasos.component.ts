@@ -701,11 +701,16 @@ onClickCargaArchivos(): void {
     if(value){
     this.mostrarAlerta = false;
     this.requiresPaymentData = true;
+    if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 2;
+        }else {
+          this.confirmarSinPagoDeDerechos = 3;
+        }
     } else {
       this.mostrarAlerta = false;
       this.confirmarSinPagoDeDerechos = 4;
     }
-  } 
+  }
 
   /**
    * Genera una alerta de error con los mensajes proporcionados.

@@ -323,7 +323,7 @@
     <div class="row mt-2">
       <div class="col-md-4 mt-4">
         <div class="form-check mt-4">
-          <input class="form-check-input" type="checkbox" (change)="cambioAviso($event);actualizarStore()" id="aviso"
+          <input class="form-check-input" type="checkbox" (change)="cambioAviso();actualizarStore()" id="aviso"
             formControlName="aviso" />
           <label class="form-check-label fw-300" for="aviso">Aviso de funcionamiento<span
               *ngIf="esCampoRequerido('aviso')">*</span>:
@@ -339,7 +339,7 @@
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria" maxlength="20"
-            (change)="cambioLicenciaSanitaria($event);actualizarStore();" />
+            (change)="cambioLicenciaSanitaria();actualizarStore();" />
         </div>
       </div>
     </div>

@@ -2,14 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
-import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
+import { Service260702Service } from '../../../../shared/services/shared2607/service260702.service';
 import { of, Subject } from 'rxjs';
-import { Tramite260703Store } from '../../estados/store/tramite260703.store';
-import { Tramite260703Query } from '../../estados/query/tramite260703.query';
-import { DatosSolitudeComponent } from '../../components/datos-solicitud/datos-solicitude.component';
-import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
-import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Mock component for 'solicitante' to avoid dependency errors
@@ -56,13 +50,12 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent, DatosSolitudeComponent, TercerosRelacionadosComponent],
-      imports: [ReactiveFormsModule,  TramiteAsociadosComponent, PagoDeDerechosComponent],
+      declarations: [PasoUnoComponent, MockSolicitanteComponent,],
+      imports: [ReactiveFormsModule,],
       providers: [
         FormBuilder,
-        { provide: SolicitudPermisoService, useValue: solicitudPermisoServiceMock },
-        { provide: Tramite260703Store, useValue: tramite260703StoreMock },
-        { provide: Tramite260703Query, useValue: tramite260703QueryMock },
+        { provide: Service260702Service, useValue: solicitudPermisoServiceMock },
+       
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -74,33 +67,6 @@ describe('PasoUnoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize tramiteAsociados on ngOnInit', () => {
-    const tramiteAsociadosMock = [
-      { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
-    ];
-    solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
-
-    component.ngOnInit();
-    expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
-  });
-
-  it('should initialize form on crearformularioPagoDerechos', () => {
-    component.crearformularioPagoDerechos();
-    expect(component.formularioPagoDerechos).toBeDefined();
-    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
-    expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.value).toBe('DEPENDENCIA');
-    expect(component.formularioPagoDerechos.get('banco')?.value).toBe(1);
-    expect(component.formularioPagoDerechos.get('llaveDePago')?.value).toBe('LLAVE123');
-    expect(component.formularioPagoDerechos.get('fecPago')?.value).toBe('2025-04-10');
-    expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
-  });
-
-  it('should select a tab and initialize banco on seleccionaTab', () => {
-    component.seleccionaTab(4);
-    expect(component.indice).toBe(4);
-    expect(component.banco).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

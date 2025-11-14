@@ -306,7 +306,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'Permiso-de-importacion',
+    path: 'permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule

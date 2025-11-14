@@ -3,8 +3,8 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
-  ValidationErrors
+  ValidationErrors,
+  Validators
 } from '@angular/forms';
 import {
   AlertComponent,
@@ -257,6 +257,7 @@ verificarAlerta:number[]=[];
       .subscribe();
   }
 
+
   /**
    * @method ngOnInit
    * @description Hook que se ejecuta al inicializar el componente.
@@ -282,7 +283,7 @@ verificarAlerta:number[]=[];
 
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-      this.solicitudState?.claveReferencia || '',
+      this.pagoDerechoFormState?.claveReferencia || '',
       [
         Validators.maxLength(9),
         Validators.required,
@@ -290,32 +291,32 @@ verificarAlerta:number[]=[];
       ],
       ],
       cadenaDependencia: [
-      this.solicitudState?.cadenaDependencia || '',
+      this.pagoDerechoFormState?.cadenaDependencia || '',
       [
         Validators.maxLength(14),
         Validators.required,
       ],
       ],
-      estado: [this.solicitudState?.estado || '', Validators.required],
-      banco: [this.solicitudState?.banco || '', Validators.required],
+      estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
+      banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
       llavePago: [
-      this.solicitudState?.llavePago || '',
+      this.pagoDerechoFormState?.llavePago || '',
       [
         Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         Validators.maxLength(30),
         Validators.required,
       ],
       ],
-      fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
+      fechaPago: [this.pagoDerechoFormState?.fechaPago || '', Validators.required],
       importePago: [
-      this.solicitudState?.importePago || '',
+      this.pagoDerechoFormState?.importePago || '',
       [
         importePagoValidator,
         Validators.maxLength(16),
         Validators.required,
       ],
       ],
-      bancoObject: [this.solicitudState?.bancoObject || ''],
+      bancoObject: [this.pagoDerechoFormState?.bancoObject || ''],
     });
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
@@ -337,6 +338,15 @@ verificarAlerta:number[]=[];
    * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
    */
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['pagoDerechoFormState'] &&
+      changes['pagoDerechoFormState'].currentValue &&
+      this.pagoDerechosForm
+    ) {
+      this.pagoDerechosForm.patchValue(
+        changes['pagoDerechoFormState'].currentValue
+      );
+    }
+
     if (changes['formularioDeshabilitado'] && this.pagoDerechosForm) {
       if (this.formularioDeshabilitado) {
         this.pagoDerechosForm.disable();
