@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/definiciones.enum';
+import { Notificacion, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { Subject, firstValueFrom, map, take, takeUntil } from 'rxjs';
 import { Tramite120602Store, Tramites120602State } from '../../estados/tramite-120602.store';
-import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT } from '../../constantes/definiciones.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -109,6 +109,31 @@ export class DatosComponent implements OnInit{
    */
   idSolicitud: number = 0;
 
+   /**
+   * Emite evento para iniciar carga de archivos
+   * @method onClickCargaArchivos
+   * @description Dispara el evento cargarArchivosEvento para notificar a componentes
+   * hijo que deben iniciar el proceso de carga de archivos
+   * @returns {void}
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+    /**
+   * Navega al siguiente paso con validación de documentos
+   * @method siguiente
+   * @description Ejecuta la navegación al siguiente paso del wizard después de validar
+   * que todos los documentos requeridos hayan sido cargados correctamente
+   * @returns {void}
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
   /** Mensaje de confirmación al guardar la solicitud.
    * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
    */
@@ -143,6 +168,10 @@ export class DatosComponent implements OnInit{
  * Permite comunicar esta acción a otros componentes o servicios suscritos.
  */
   cargarArchivosEvento = new EventEmitter<void>();
+
+  public alertaNotificacion!: Notificacion;
+ 
+  public folioTemporal: number = 0;
 
   /**
  * Inyecta los servicios y la store necesarios para gestionar el trámite 120602.
@@ -224,9 +253,20 @@ export class DatosComponent implements OnInit{
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
+     
 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+            this.alertaNotificacion = {
+                    tipoNotificacion: 'banner',
+                    categoria: 'success',
+                    modo: 'action',
+                    titulo: '',
+                    mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                    cerrar: true,
+                    txtBtnAceptar: '',
+                    txtBtnCancelar: '',
+                  };
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
@@ -323,5 +363,17 @@ export class DatosComponent implements OnInit{
             reject(error);
           });
           });
+  }
+
+    /**
+   * Navega al paso anterior del wizard
+   * @method anterior
+   * @description Retrocede un paso en el wizard y actualiza los índices correspondientes
+   * @returns {void}
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 }
