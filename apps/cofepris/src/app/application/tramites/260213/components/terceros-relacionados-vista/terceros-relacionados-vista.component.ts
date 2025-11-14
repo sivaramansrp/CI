@@ -9,7 +9,7 @@
  * Este componente actúa como una vista de solo lectura para mostrar los datos de terceros relacionados en el trámite 260213.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -107,6 +107,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @private
    */
   private destroy$ = new Subject<void>();
+    /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description Referencia al componente hijo `TercerosRelacionadosComponent`
+   * que se utiliza para mostrar las tablas de terceros relacionados.
+   */
+  @ViewChild(TercerosRelacionadosComponent) TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
   /**
    * @constructor
@@ -195,5 +201,24 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+    /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `TercerosRelacionadosComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

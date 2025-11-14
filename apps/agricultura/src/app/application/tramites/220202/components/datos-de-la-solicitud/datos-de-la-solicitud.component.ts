@@ -609,6 +609,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDatosTablaSolicitud(): void {
+    // TODO: recibir el parametro de rfc de la sesion
     this.registroSolicitudService
       .obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6')
       .pipe(takeUntil(this.destroyNotifier$))

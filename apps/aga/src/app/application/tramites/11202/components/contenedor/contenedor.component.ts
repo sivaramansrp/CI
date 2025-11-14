@@ -10,6 +10,7 @@ import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
+
 /**
  * @component ContenedorComponent
  * @description
@@ -215,7 +216,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private datosTramiteService: DatosTramiteService,
     private contenedorStore: Contenedor11202Store,
     private contenedorQuery: Contenedor11202Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) { 
     this.contenedore = {
       catalogos: [],
@@ -337,7 +338,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Agrega un nuevo contenedor al grid.
    */
-  agregarGrid(): void {
+ agregarGrid(): void {
     const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;

@@ -209,12 +209,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
+      clave_fraccion: [''],
       descripcionFraccion: [{ value: 'Descripción', disabled: true }, [Validators.required]],
       nico: ['', Validators.required],
       descripcionNico: [{ value: 'Detalle', disabled: true }, [Validators.required]],
       descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '1', disabled: true }, Validators.required],
+      clave_umt: [''],
       descripcionUMT: [''],
       cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
@@ -301,7 +303,8 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       Uso: this.detalleForm.value.uso,
       PaisDeOrigen: this.detalleForm.value.paisDeOrigen,
       PaisDeProcedencia: this.detalleForm.value.paisDeProcedencia,
-      
+      umt: this.detalleForm.value.umt,
+      umc: this.detalleForm.value.umc,
     };
     this.sensiblesTablaDatos = [...this.sensiblesTablaDatos, DETALLE];
     this.detalleForm.reset();
@@ -370,6 +373,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Método para agregar animales a la lista de datos sensibles.
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
+  // eslint-disable-next-line complexity
   agregarAnimales(): void {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
@@ -396,6 +400,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
         descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.mercanciaForm.get('paisDeOrigen')?.value)?.descripcion || '',
         descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.mercanciaForm.get('paisDeProcedencia')?.value)?.descripcion || '',
         certificadoInternacionalElectronico: this.mercanciaForm.get('numeroCertificadoInternacional')?.value || '',
+        fraccionArancelaria: this.mercanciaForm.get('clave_fraccion')?.value || '',
+        descripcionFraccion: this.mercanciaForm.get('descripcionFraccion')?.value || '',
+        nico: this.mercanciaForm.get('nico')?.value || '',
+        umt: this.mercanciaForm.get('clave_umt')?.value || '',
+        umc: this.mercanciaForm.get('umc')?.value || '',
+        tipoPlanta: this.mercanciaForm.get('tipoPlanta')?.value || '',
+        plantaAutorizadaOrigen: this.mercanciaForm.get('plantaAutorizadaOrigen')?.value || '',
+        tipoPresentacionDescripcion: this.mercanciaForm.get('tipoPresentacion')?.value || '',
       });
 
       SENSIBLES_FORM_ARRAY.clear();
@@ -445,6 +457,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
         (response: BaseResponse<Catalogo>) => {
           if (response && response.codigo === '00' && response.datos) {
+            this.mercanciaForm.get('clave_umt')?.setValue(response.datos.cve_unidad_medida);   
             this.mercanciaForm.get('umt')?.setValue(response.datos.descripcion);
           } else {
             this.mercanciaForm.get('umt')?.setValue('');

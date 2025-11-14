@@ -196,7 +196,7 @@ export function createInitialState(): Tramite260205State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -301,7 +301,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [ ...newFabricantes],
     }));
   }
 
@@ -332,7 +332,6 @@ export class Tramite260205Store extends Store<Tramite260205State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -362,7 +361,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [ ...newProveedores],
     }));
   }
 
@@ -389,7 +388,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [ ...newFacturadores],
     }));
   }
 

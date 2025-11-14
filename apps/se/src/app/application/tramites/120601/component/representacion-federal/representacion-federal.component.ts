@@ -1,7 +1,8 @@
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
@@ -83,6 +84,23 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite que se está gestionando en el componente.
+   */
+  tramites:string='120601';
+
+  /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+  *  Ayuda a prevenir fugas de memoria en flujos observables. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**  
+ * @Output() plantasDataEmitted — Emite un arreglo de objetos `RepresentacionFederal`  
+ * para comunicar los datos de plantas al componente padre.  
+ */ 
+   @Output() plantasDataEmitted = new EventEmitter<RepresentacionFederal[]>();
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -102,6 +120,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private store: Tramite120601Store,
     private datosEmpresaService: DatosEmpresaService,
     private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices,
   ) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -117,9 +136,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.getEntidadFederativa();
-    this.getRepresentacionFederal();
-    this.getDatosSocios();
 
     this.query.selectEstado$.pipe(
       takeUntil(this.destroyed$)
@@ -137,6 +153,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       })
     })
  
+     this.obtenerEstado();
+     this.suscribirCambioEstado();
   }
 
   /**
@@ -213,6 +231,91 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setRepresentacion(this.formulario.get('representacion')?.value);
   }
+
+/**
+ * @description Obtiene el estado desde el servicio y asigna los datos a la variable `estado`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+  obtenerEstado(): void {
+    this.catalogoService.estadosCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.estado = response?.datos ?? [];
+        }
+      });
+  }
+
+/**
+ * @description Obtiene el representación federal desde el servicio y asigna los datos a la variable `representacion`.
+ * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
+ */
+  obtenerRepresentacionFederal(claveEstado: string): void {
+    this.catalogoService.representacionFederalCatalogo(this.tramites, claveEstado)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.representacion = response?.datos ?? [];
+          if (this.representacion.length > 0) {
+          const OPCION_PRESELECCIONADA = this.representacion[0];
+          this.representacion = [OPCION_PRESELECCIONADA];
+        }
+        }
+      });
+  }
+
+  /**
+ * Recupera y establece la información de las plantas según el estado seleccionado.
+ * @param estadoId El ID del estado seleccionado.
+ * @returns {void}
+ */
+obtenerPlantasPorEstado(estadoId: string): void {
+  this.datosEmpresaService.obtenerPlantas(estadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (response?.datos?.length > 0) {
+          this.datosSocios = response.datos.map((planta: RepresentacionFederal) => ({
+            calle: planta.calle,
+            numeroInterior: planta.numeroInterior,
+            numeroExterior: planta.numeroExterior,
+            codigoPostal: planta.codigoPostal,
+            colonia: planta.colonia,
+            localidad: planta.localidad,
+            municipio: planta.municipio,
+            estado: planta.estado,
+            pais: planta.pais,
+          }));
+          this.plantasDataEmitted.emit(this.datosSocios);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener las plantas:', err);
+      }
+    });
+}
+
+/**
+ * Suscribe al cambio de valor del dropdown de estado.
+ * Llama a la API de plantas cuando se selecciona un estado.
+ */
+suscribirCambioEstado(): void {
+  this.formulario.get('estado')?.valueChanges
+    .pipe(
+      debounceTime(300), 
+      distinctUntilChanged(),
+      takeUntil(this.destroyNotifier$))
+      .subscribe((cveEntidad) => {
+      if (cveEntidad) {
+        const ESTADO_SELECCIONADO = this.estado.find((item) => item.clave === cveEntidad);
+        const CLAVE_ESTADO = ESTADO_SELECCIONADO?.clave;
+        if (CLAVE_ESTADO) {
+          this.obtenerRepresentacionFederal(CLAVE_ESTADO);
+        }
+        this.obtenerPlantasPorEstado(cveEntidad);
+      }
+    });
+}
 
   /**
    * Método que se ejecuta cuando se destruye el componente.

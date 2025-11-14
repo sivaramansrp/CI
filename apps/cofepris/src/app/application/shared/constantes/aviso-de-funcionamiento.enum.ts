@@ -19,8 +19,8 @@ export const DESPACHO_LDA = {
  * Declaración de manifiestos para cumplir con normatividad.
  */
 export const MANIFIESTOS_DECLARACION = {
-  MANIFIESTOS:
-    'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.',
+  MANIFIESTOS: `Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.`
+
 };
 
 export const TRAMITES_ASOCIADOS : ConfiguracionColumna<Asociados>[] = [
@@ -371,7 +371,7 @@ export const MENSAJE_DE_VALIDACI0N : { [key: string]: string } = {
   tipoDeProducto: 'El tipo de producto es obligatorio.',
   estadoFisico: 'El estado físico es obligatorio.',
   estadoFormaFarmaceutica: 'La forma farmacéutica es obligatoria.',
-  fraccionArancelaria: 'La fracción arancelaria es obligatoria.',
+  fraccionArancelaria: 'Este campo es obligatorio.',
   descripcionFraccion: 'La descripción de la fracción es obligatoria.',
   cantidadUMT: 'La cantidad UMT es obligatoria.',
   UMT: 'La unidad de medida UMT es obligatoria.',

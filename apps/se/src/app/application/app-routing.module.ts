@@ -1,5 +1,5 @@
-import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent, AcuseResolucionComponent } from '@libs/shared/data-access-user/src';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
@@ -58,8 +58,8 @@ const ROUTES: Routes = [
   {
     path: 'empresa-frontera',
     loadChildren: () =>
-      import('./tramites/120602/empresa-frontera-solicitud.module').then(
-        (m) => m.EmpresaFronteraSolicitudModule
+      import('./tramites/120602/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
       ),
   },
   {

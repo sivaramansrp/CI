@@ -11,11 +11,18 @@ import {
   TercerosrelacionadosExportadorTable,
   TercerosrelacionadosdestinoTable,
 } from '../../models/220202/fitosanitario.model';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
   DatosPasos,
+  Usuario,
   WizardComponent,
   convertDate,
 } from '@ng-mf/data-access-user';
@@ -24,6 +31,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -162,6 +170,34 @@ export class AgriculturaComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
+   * Variable para almacenar el id de la solicitud.
+   * @private
+   */
+  public idSolicitud: string = '';
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true;
+
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
    * Constructor del componente.
    * Este constructor inicializa el componente y establece el estado inicial de la validación
    * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
@@ -196,16 +232,16 @@ export class AgriculturaComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     // Si estamos en el paso 1, validar antes de continuar
     if (this.indice === 1) {
-      const VALIDAPESTANAS = this.pasoUnoRef?.validarFormularios();
-      if (!VALIDAPESTANAS.valido) {
+      const VALIDA_PESTANAS = this.pasoUnoRef?.validarFormularios();
+      if (!VALIDA_PESTANAS.valido) {
         // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
 
-        if (VALIDAPESTANAS.mensaje) {
+        if (VALIDA_PESTANAS.mensaje) {
           this.formErrorAlert =
             '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' +
-            VALIDAPESTANAS.mensaje;
+            VALIDA_PESTANAS.mensaje;
         } else {
           this.formErrorAlert =
             '<strong>¡Error de registro! </strong> Faltan campos por capturar';
@@ -235,10 +271,12 @@ export class AgriculturaComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          this.mensajePasos = MENSAJE_DE_EXITO_ETAPA_UNO.replace(
+          this.idSolicitud = seccionState.id_solicitud;
+          const NUEVO = MENSAJE_DE_EXITO_ETAPA_UNO.replace(
             '_folio_',
             this.consultaState.id_solicitud ?? '0'
           );
+          this.mensajePasos = NUEVO;
         })
       )
       .subscribe();
@@ -387,6 +425,66 @@ export class AgriculturaComponent implements OnInit {
   }
 
   /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param cargando Valor booleano que indica si la carga está en progreso.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.componenteWizard.atras();
+    this.indice = this.componenteWizard.indiceActual + 1;
+    this.datosPasos.indice = this.componenteWizard.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.componenteWizard.siguiente();
+    this.indice = this.componenteWizard.indiceActual + 1;
+    this.datosPasos.indice = this.componenteWizard.indiceActual + 1;
+  }
+  /**
    * Verifica si el valor viene como string y si es 'si' lo convierte en booleano
    * @param valor valor a verificar
    */
@@ -401,10 +499,10 @@ export class AgriculturaComponent implements OnInit {
    * metodo para obtener rfc e y nombre de compoennete hijo
    * */
   valoresPasoUno(event: {
-    rfc: string,
-    tipoPersona: string,
-    razon_social: string,
-    nombre: string,
+    rfc: string;
+    tipoPersona: string;
+    razon_social: string;
+    nombre: string;
   }): void {
     this.valoresComplemento = event;
   }

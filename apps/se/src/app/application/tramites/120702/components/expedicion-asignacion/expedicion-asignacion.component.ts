@@ -55,17 +55,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './expedicion-asignacion.component.scss',
 })
 export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
- /**
- * Arreglo de montos que representa las filas de la tabla.
- * Cada elemento corresponde a un registro de tipo `Monto`.
- * Inicializado con los datos de `MONTO_DATOS`.
- */
- saldo: Monto[] =MONTO_DATOS; 
- /**
- * Configuración de las columnas de la tabla dinámica.
- * Define encabezados, claves de acceso a los datos y orden de cada columna.
- * Utiliza la constante `CONFIGURATION_TABLA_MONTO` para la inicialización.
- */configuracionTablas: ConfiguracionColumna<Monto>[] = CONFIGURATION_TABLA_MONTO;
+  /**
+   * Arreglo de montos que representa las filas de la tabla.
+   * Cada elemento corresponde a un registro de tipo `Monto`.
+   * Initialize as empty array instead of MONTO_DATOS
+   */
+  saldo: Monto[] = []; // Changed from MONTO_DATOS to empty array
+  /**
+   * Configuración de las columnas de la tabla dinámica.
+   * Define encabezados, claves de acceso a los datos y orden de cada columna.
+   * Utiliza la constante `CONFIGURATION_TABLA_MONTO` para la inicialización.
+   */configuracionTablas: ConfiguracionColumna<Monto>[] = CONFIGURATION_TABLA_MONTO;
    /**
    * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
    * @type {Monto[]}
@@ -179,12 +179,16 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
     });
 
+    // Remove the automatic addition of default data
+    // Comment out or remove this section:
+    /*
     if (this.montoTablaFilaDatos.length === 0) {
       const OBRA_DE_ARTE_ROW: TablaDatos = {
       tbodyData: ["10"],
     };
     this.montoTablaFilaDatos.push(OBRA_DE_ARTE_ROW);
-  }
+    }
+    */
 
     this.expedicionCertificadosFronteraService
       .getAnoOficioDatos()
@@ -249,15 +253,13 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   establecerAsignacionFormGroup(): void {
     this.asignacionForm = this.fb.group({
-      // Existing controls
+    
       anoDelOficio: ['', [Validators.required]],
       numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
       montoADisponible: [''],
       fechaInicioVigencia: [''],
       fechaFinVigencia: [''],
-      
-      // Missing controls that are causing errors
       estado: [''],
       representacionFederal: [''],
       montoAsignado: [''],
@@ -282,8 +284,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
         }
       });
       
-  // Log individual control errors
-      Object.keys(this.asignacionForm.controls).forEach(key => {
+  Object.keys(this.asignacionForm.controls).forEach(key => {
         const CONTROL = this.asignacionForm.get(key);
         if (CONTROL && CONTROL.errors) {
             // El control tiene errores de validación; manejar o registrar si es necesario
@@ -341,88 +342,132 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
  eliminarSeleccionados(): void {
- // Validar si hay elementos seleccionados
   if (this.seleccionadaguardarClicado.length === 0) {
-   this.mensajeError = 'Seleccione el monto a eliminar';
+    this.mensajeError = 'Debe seleccionar al menos un registro para eliminar.';
+    this.mostrarError = true;
     this.mostrarModalConfirmacion = true;
     return;
   }
-  this.mensajeError = '¿Estás seguro que deseas eliminar los registros marcados?';
+
+  this.mensajeError = `¿Está seguro que desea eliminar ${this.seleccionadaguardarClicado.length} registro(s)?`;
   this.mostrarModalConfirmacion = true;
 }
 
-  /**
-   * Confirma la eliminación de los registros seleccionados
-   */
-  confirmarEliminacion(): void {
+/**
+ * Confirma la eliminación de los registros seleccionados
+ */
+confirmarEliminacion(): void {
+  if (this.seleccionadaguardarClicado.length > 0) {
    
- if (this.seleccionadaguardarClicado.length > 0) {
-      this.saldo = this.saldo.filter(item => !this.seleccionadaguardarClicado.includes(item));
-       this.seleccionadaguardarClicado = [];
-       this.recalcularTotalAExpedir();
-      }
-    this.cerrarModal();
-  }
-
-  /**
-   * Cancela la eliminación y cierra el modal
-   */
-  cancelarEliminacion(): void {
-   this.cerrarModal();
-  }
-
-  /**
-   * Cierra el modal de confirmación
-   */
-  private cerrarModal(): void {
-   this.mostrarModalConfirmacion = false;
-   this.mensajeError = '';
-  }
-
-  /**
-   * Recalcula el total a expedir basado en los montos restantes
-   */
-  private recalcularTotalAExpedir(): void {
-    const TOTAL = this.saldo.reduce((sum, item) => {
-      return sum + (parseFloat(item.Montoaexpedir) || 0);
-    }, 0);
-
-    this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL);
-    
-  }
-
-  /**
-   * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
-   */
-  public enviarMontoFormulario(): void {
-    const MONTO_A_EXPEDIR = this.asignacionForm.get('montoAExpedir')?.value || 0;
-
-    const MONTO_DISPONIBLE = this.asignacionForm.get('montoADisponible')?.value || this.defaultMontoDisponible;
-    const UPDATED_MONTO_DISPONIBLE = MONTO_DISPONIBLE - MONTO_A_EXPEDIR;
-
-    this.asignacionForm.get('montoADisponible')?.setValue(
-      UPDATED_MONTO_DISPONIBLE >= 0 ? UPDATED_MONTO_DISPONIBLE : 0
+    this.saldo = this.saldo.filter(item => 
+      !this.seleccionadaguardarClicado.some(selected => 
+        selected.Montoaexpedir === item.Montoaexpedir
+      )
     );
 
-    const MONTO_A_EXPEDIR_FILA: Monto = {
-    Montoaexpedir: MONTO_A_EXPEDIR.toString(),
-    };
-    this.saldo.push(MONTO_A_EXPEDIR_FILA);
-    this.saldo = [...this.saldo];  
+    
+    this.seleccionadaguardarClicado = [];
+    
+   
+    this.calcularTotalAExpedir();
+  }
+  
+  this.mostrarModalConfirmacion = false;
+}
 
-    const TOTAL_A_EXPEDIR = this.asignacionForm.get('totalAExpedir')?.value || 0;
-    this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL_A_EXPEDIR + MONTO_A_EXPEDIR);
+/**
+ * Cancela la eliminación y cierra el modal
+ */
+cancelarEliminacion(): void {
+  this.mostrarModalConfirmacion = false;
+  this.mostrarError = false;
+}
 
-    this.asignacionForm.get('montoAExpedir')?.setValue('');
-    this.asignacionForm.get('montoAExpedir')?.markAsUntouched();
+/**
+ * Calcula el total de los montos a expedir y actualiza el campo totalAExpedir
+ */
+public calcularTotalAExpedir(): void {
+  const TOTAL = this.saldo.reduce((sum, item) => {
+    const MONTO = parseFloat(item.Montoaexpedir) || 0;
+    return sum + MONTO;
+  }, 0);
+  
+this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL);
+  }
+
+/**
+ * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
+ */
+public enviarMontoFormulario(): void {
+
+  const MONTOEXPEDIR = this.asignacionForm.get('montoAExpedir')?.value;
+  
+
+  if (MONTOEXPEDIR === null || MONTOEXPEDIR === undefined || MONTOEXPEDIR === '') {
+   
+    return;
+  }
+  
+const PARSEDVALUE = parseFloat(MONTOEXPEDIR);
+  if (isNaN(PARSEDVALUE)) {
+    
+    return;
+  }
+
+  const NUEVOMONTO: Monto = {
+    Montoaexpedir: PARSEDVALUE.toString() 
+  };
+  
+this.saldo.push(NUEVOMONTO);
+this.saldo = [...this.saldo];
+this.asignacionForm.get('montoAExpedir')?.setValue('');
+this.calcularTotalAExpedir();
+  
   }
 /**
  * Método que se ejecuta al hacer clic en el botón "Buscar".
+ * Valida que los campos requeridos tengan valores antes de mostrar las secciones.
  */
 onBuscarClick(): void {
-  this.mostrarSecciones = true; // Muestra el contenido que está debajo
+ 
+  this.asignacionForm.get('anoDelOficio')?.markAsTouched();
+  this.asignacionForm.get('numeroOficio')?.markAsTouched();
+
+  
+  const ANODELOFICIO = this.asignacionForm.get('anoDelOficio')?.value;
+  const NUMEROOFICIO = this.asignacionForm.get('numeroOficio')?.value;
+  const ISANOOFICIOVALID = ANODELOFICIO && ANODELOFICIO.trim() !== '';
+  const ISNUMEROOFICIOVALID = NUMEROOFICIO && 
+    NUMEROOFICIO.trim() !== '' && 
+    this.asignacionForm.get('numeroOficio')?.valid;
+
+  if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
+    this.mostrarSecciones = true; 
+    
+  this.cargarDatosAsignacion();
+  } else {
+   this.mostrarSecciones = false; 
+  }
 }
-  /**
+
+/**
+ * Carga los datos de la asignación cuando la búsqueda es exitosa.
+ * Este método puede ser expandido para cargar datos reales desde un servicio.
+ */
+private cargarDatosAsignacion(): void {
+  
+  this.asignacionForm.patchValue({
+    estado: 'Estado ejemplo',
+    representacionFederal: 'Representación ejemplo',
+    montoAsignado: 1000,
+    montoExpedido: 630,
+    montoDisponible: this.defaultMontoDisponible,
+    datosNumeroOficio: this.asignacionForm.get('numeroOficio')?.value,
+    montoADisponible: this.defaultMontoDisponible
+  });
+}
+
+/**
    * Método del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera las suscripciones activas.
    */

@@ -21,6 +21,12 @@ export interface GuardarDictamenRequest {
     id_solicitud?: number;
     /** Lista de criterios asociados a tratados */
     criterios_tratados?: CriterioTratado[];
+    /** Indica si el dictaminador califica como exportador */
+    calificacion_dictaminador_exportador?: boolean | null;
+    /** Indica si el dictaminador califica como exportador JPN */
+    calificacion_dictaminador_exportador_jpn?: boolean | null;
+    /** Indica si la descripción ALADI es correcta */
+    calificacion_descripcion_aladi?: boolean | null;
 }
 
 export interface CriterioTratado {

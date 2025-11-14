@@ -1,15 +1,15 @@
-import {
-  Catalogo,
-  RespuestaCatalogos,
-} from '@libs/shared/data-access-user/src';
+import { CATALOGO_ESTADOS, CATALOGO_SCIAN, Catalogo} from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
 
+import { CATALOGO_ADUANAS, CATALOGO_PAISES, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '@libs/shared/data-access-user/src/core/servers/api-router';
+import { CATALOGO_CLASIFICACION_TOXICOLOGICA, CATALOGO_OBJETO_IMPORTACION } from '../servers/api-route';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { Observable, Subject } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -29,13 +29,36 @@ export class DatosDomicilioLegalService {
      * Suscríbete a este observable para escuchar notificaciones de eventos.
      */
     event$ = this.eventSubject.asObservable();
+
+    /**
+     * URL base del host para todas las consultas de catálogos.
+     *
+     * Esta propiedad almacena la URL base configurada desde las variables de entorno
+     * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+     *
+     * @type {string}
+     * @readonly
+     * @since 1.0.0
+     */
+    host!: string;
+
   /**
    * Servicio para obtener datos de terceros relacionados y permisos.
    *
    * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
    */
   constructor(public http: HttpClient,private query: DatosDomicilioLegalQuery, private datosDomicilioLegalStore: DatosDomicilioLegalStore,) {
-    // Constructor del servicio
+    this.host = `${COMUN_URL.BASE_URL}`;
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  obtenerEstadoList(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ESTADOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**
@@ -47,6 +70,60 @@ export class DatosDomicilioLegalService {
     return this.http.get<Catalogo[]>(
       'assets/json/260512/clavescian.json'
     );
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getClaveSvianList(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_SCIAN(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getUMCList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${UNIDADES_MEDIDA_COMERCIAL(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getAduanasList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_ADUANAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getClasificacionToxicologicaList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_TOXICOLOGICA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getObjetoImportacionList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_OBJETO_IMPORTACION(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getPaisesList(tramite: string): Observable<BaseResponse<Catalogo[]>> { 
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**

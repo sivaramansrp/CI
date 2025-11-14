@@ -11,7 +11,7 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 
-import { MENSAJE_DE_PAGE,MENSAJE_DE_VALIDACION,PASOS, TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
+import { MENSAJE_DE_PAGE, MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/tratamientos-especiales.enum';
 
 import { GuardarAdapter_260207 } from '../../adapters/guardar-payload.adapter';
 
@@ -96,15 +96,15 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   seccionCargarDocumentos: boolean = true;
 
- /**
-       * @property {string} MENSAJE_DE_ERROR
-       * @description
-       * Propiedad usada para almacenar el mensaje de error actual.
-       * Se inicializa como cadena vacía y se actualiza en función
-       * de las validaciones o errores capturados en el flujo.
-       */
-   MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
-      
+  /**
+        * @property {string} MENSAJE_DE_ERROR
+        * @description
+        * Propiedad usada para almacenar el mensaje de error actual.
+        * Se inicializa como cadena vacía y se actualiza en función
+        * de las validaciones o errores capturados en el flujo.
+        */
+  MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+
 
   /**
    * Indica si la carga de archivos está en progreso.
@@ -125,13 +125,25 @@ export class ContenedorDePasosComponent implements OnInit {
   /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
-   public formErrorAlert!:string;
+  public formErrorAlert!: string;
 
- 
-
-   /**
-   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+  /**
+   * Indica si se requieren datos de pago para el trámite actual.
+   * @remarks
+   * Esta propiedad controla la visualización y el manejo de información relacionada con pagos en el componente.
    */
+  public requiresPaymentData: boolean = false;
+
+  /**
+   * Indica si la confirmación sin pago de derechos está activa.
+   * Valor 0 significa que no está confirmada, otros valores pueden indicar diferentes estados.
+   */
+  public confirmarSinPagoDeDerechos: number = 0;
+
+
+  /**
+  * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+  */
   set esFormaValido(val: boolean) {
     this._esFormaValido = val;
   }
@@ -155,27 +167,35 @@ export class ContenedorDePasosComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
-   /** Nueva notificación relacionada con el RFC. */
-      public seleccionarFilaNotificacion!: Notificacion;
-  
-  
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+
+    /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false; 
   /**
      * Controla la visibilidad del modal de alerta.
      * @property {boolean} mostrarAlerta
      */
   public mostrarAlerta: boolean = false;
-  
-   /**
-        * @property {PasoUnoComponent} pasoUnoComponent
-        * @description
-        * Referencia al componente hijo `PasoUnoComponent` mediante
-        * `@ViewChild`. Permite acceder a sus métodos y propiedades
-        * desde este componente padre.
-        */
-        @ViewChild(PasoUnoComponent)
-        pasoUnoComponent!: PasoUnoComponent;
 
-  
+  /**
+       * @property {PasoUnoComponent} pasoUnoComponent
+       * @description
+       * Referencia al componente hijo `PasoUnoComponent` mediante
+       * `@ViewChild`. Permite acceder a sus métodos y propiedades
+       * desde este componente padre.
+       */
+  @ViewChild(PasoUnoComponent)
+  pasoUnoComponent!: PasoUnoComponent;
+
+
 
   /**
    * Constructor del componente ContenedorDePasosComponent.
@@ -205,9 +225,9 @@ export class ContenedorDePasosComponent implements OnInit {
    * @version 2.0.0
    */
   constructor(
-    private tramiteQuery: Tramite260207Query, 
-    private tramite260207Store: Tramite260207Store, 
-    public registroSolicitudService: RegistroSolicitudService, 
+    private tramiteQuery: Tramite260207Query,
+    private tramite260207Store: Tramite260207Store,
+    public registroSolicitudService: RegistroSolicitudService,
     private toastrService: ToastrService
   ) {
     // No se necesita lógica de inicialización adicional.
@@ -257,7 +277,7 @@ export class ContenedorDePasosComponent implements OnInit {
   ngOnInit(): void {
     this.tramiteQuery.selectTramiteState$.pipe().subscribe((data) => {
       this.storeData = data;
-    }); 
+    });
   }
 
   /**
@@ -281,26 +301,27 @@ export class ContenedorDePasosComponent implements OnInit {
       if (this.indice === 1 && this.pasoUnoComponent) {
         isValid = this.pasoUnoComponent.validarPasoUno();
       }
-      if (this.pasoUnoComponent && this.pasoUnoComponent.pagoDeDerechosContenedoraComponent &&
-          !this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()) {
+      if (!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData) {
         this.mostrarAlerta = true;
+        this.confirmarSinPagoDeDerechos = 2;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
           titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
+          mensaje: MENSAJE_DE_PAGE,
           cerrar: true,
           tiempoDeEspera: 2000,
           txtBtnAceptar: 'SI',
           txtBtnCancelar: 'NO',
+          alineacionBtonoCerrar: 'flex-row-reverse'
         };
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
       if (!isValid) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
-       // return;
+        // return;
       }
       const PAYLOAD = GuardarAdapter_260207.toFormPayload(this.storeData);
       let shouldNavigate = false;
@@ -328,13 +349,17 @@ export class ContenedorDePasosComponent implements OnInit {
           // Calcular el nuevo índice basado en la acción
           let indiceActualizado = e.valor;
           if (e.accion === 'cont') {
-            indiceActualizado = e.valor + 1;
+            indiceActualizado = 2;
           }
           this.toastrService.success(response.mensaje);
           // Ajusta el rango según el número de pasos reales (ejemplo: 1 < indiceActualizado < 4)
           if (indiceActualizado > 0 && indiceActualizado < 4) {
             this.indice = indiceActualizado;
             this.datosPasos.indice = indiceActualizado;
+            // Show document upload section and button like 260215
+            this.seccionCargarDocumentos = true;
+            this.activarBotonCargaArchivos = false;
+            this.cargaEnProgreso = false;
             if (e.accion === 'cont') {
               this.wizardComponent.siguiente();
             }
@@ -348,7 +373,48 @@ export class ContenedorDePasosComponent implements OnInit {
       this.datosPasos.indice = this.indice;
       this.wizardComponent.atras();
     }
-      }
+  }
+
+  /**
+   * Cierra el modal y realiza acciones según el valor proporcionado.
+   *
+   * @param value - Indica si se debe proceder con el pago de derechos. Si es `true`, se oculta la alerta y se requiere información de pago. Si es `false`, se oculta la alerta y se establece la confirmación sin pago de derechos.
+   */
+  cerrarModal(value: boolean): void {
+    if (value) {
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
+  }
+
+
+  /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
+
 
   /**
    * Emite un evento para cargar archivos.
@@ -440,7 +506,7 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {number} valor - Índice del paso.
    * @returns {string} Título del paso.
    */
-   static obtenerNombreDelTítulo(valor: number): string {
+  static obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
         return TITULOMENSAJE;
@@ -453,7 +519,7 @@ export class ContenedorDePasosComponent implements OnInit {
     }
   }
 
-  public static generarAlertaDeError(mensajes:string): string {
+  public static generarAlertaDeError(mensajes: string): string {
     const ALERTA = `
       <div class="d-flex justify-content-center text-center">
         <div class="col-md-12 p-3  border-danger  text-danger rounded">
@@ -466,6 +532,6 @@ export class ContenedorDePasosComponent implements OnInit {
         </div>
       </div>
       `;
-      return ALERTA;
+    return ALERTA;
   }
 }

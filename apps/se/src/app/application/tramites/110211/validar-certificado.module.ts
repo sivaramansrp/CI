@@ -1,21 +1,19 @@
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { CommonModule } from '@angular/common';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
-
+import { PasoFirmaComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
     CamCertificadoComponent,
-    PasoDosComponent
-     ],
+  ],
   imports: [
     CommonModule,
     ValidarCertificadoRoutingModule,
@@ -33,7 +31,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     AlertComponent,
     PasoFirmaComponent
   ],
-    providers: [
+  providers: [
     ToastrService
   ]
 })

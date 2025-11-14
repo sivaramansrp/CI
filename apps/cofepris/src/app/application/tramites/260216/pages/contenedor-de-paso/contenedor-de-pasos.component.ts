@@ -32,17 +32,17 @@ import {
   Notificacion,
   NotificacionesComponent,
   PasoCargaDocumentoComponent,
-  PasoFirmaComponent,
   RegistroSolicitudService,
   esValidObject,
   getValidDatos
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { FALTAN_CAMPOS_POR_CAPTURAR, MENSAJE_DE_PAGE, MENSAJE_DE_VALIDACION, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import { FALTAN_CAMPOS_POR_CAPTURAR, MENSAJE_DE_VALIDACION, MENSAJE_DE_VALIDACION_PAGO_DERECHOS, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { GuardarAdapter_260216 } from '../../adapters/guardar-payload.adapter';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';
@@ -96,6 +96,43 @@ export class ContenedorDePasosComponent implements OnInit{
    */
   tituloMensaje: string | null = TITULOMENSAJE;
 
+   /**
+     * Clase CSS para mostrar una alerta de error.
+     */
+    infoError = 'alert-danger text-center';
+      /**
+     * @property {string} TEXTOS
+     * @description
+     * Texto de aviso utilizado en el componente.
+     */
+    TEXTOS: string = AVISO.Aviso;
+      /**
+     * @property {string} infoAlert
+     * @description
+     * Clase CSS para aplicar estilos a los mensajes de información.
+     */
+    public infoAlert = 'alert-info  text-center';
+  
+    /**
+     * @property {boolean} requiresPaymentData
+     * @description
+     * Indica si se requieren datos de pago para continuar con el trámite.
+     */
+    public requiresPaymentData: boolean = false;
+  
+      /**
+     * @property {number} confirmarSinPagoDeDerechos
+     * @description
+     * Indica si se ha confirmado la continuación sin pago de derechos.
+     */
+    public confirmarSinPagoDeDerechos: number = 0;
+  
+     /**
+       * Identificador numérico de la solicitud actual.
+       * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+       */
+      idSolicitudState: number | null = 0;
+    
   /**
    * @property {ListaPasosWizard[]} pasos
    * @description Lista de pasos del wizard.
@@ -109,8 +146,6 @@ export class ContenedorDePasosComponent implements OnInit{
    * Inicializado con el valor `1`.
    */
   indice: number = 1;
-
-    TEXTOS: string = AVISO.Aviso;
   
    /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
@@ -188,18 +223,6 @@ export class ContenedorDePasosComponent implements OnInit{
     this.indice = i;
   }
 
-  /**
-   *
-   * Una cadena que representa la clase CSS para una alerta de información.
-   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-   */
-  public infoAlert = 'alert-info';
-
-  /**
-   * Clase CSS para mostrar una alerta de error.
-   */
-  infoError = 'alert-danger text-center';
-
 
   /**
  * @property {PasoUnoComponent} pasoUnoComponent
@@ -225,76 +248,108 @@ export class ContenedorDePasosComponent implements OnInit{
    * ```
    */
   getValorIndice(e: AccionBoton): void {
-  console.log("this.storeData",this.storeData)
         if (e.accion === 'cont') {
-             let isValid = true;
+                 let isValid = true;
        
-               if (this.indice === 1 && this.pasoUnoComponent) {
-               isValid = this.pasoUnoComponent.validarPasoUno();
-             }
-             if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
-               this.mostrarAlerta=true;
-               this.seleccionarFilaNotificacion = {
-                 tipoNotificacion: 'alert',
-                 categoria: 'danger',
-                 modo: 'action',
-                 titulo: '',
-                 mensaje: MENSAJE_DE_PAGE,
-                 cerrar: true,
-                 tiempoDeEspera: 2000,
-                 txtBtnAceptar: 'SI',
-                 txtBtnCancelar: 'NO',
+                 if (this.indice === 1 && this.pasoUnoComponent) {
+                 isValid = this.pasoUnoComponent.validarPasoUno();
                }
-              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-  
-             }
-             if (!isValid) {
-               this.esFormaValido = true;
-               this.datosPasos.indice = this.indice;
-               return;
-             }
        
-              const PAYLOAD = GuardarAdapter_260216.toFormPayload(this.storeData);
-                  let shouldNavigate = false;
-                  this.registroSolicitudService.postGuardarDatos('260216', PAYLOAD).subscribe(response => {
-                    shouldNavigate = response.codigo === '00';
-                    if (!shouldNavigate) {
-                      const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
-                      this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
-                      this.esFormaValido = false;
-                      this.indice = 1;
-                      this.datosPasos.indice = 1;
-                      this.wizardComponent.indiceActual = 1;
-                      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-                      return;
-                    }
-                    if(shouldNavigate) {
-                      if(esValidObject(response) && esValidObject(response.datos)) {
-                        const DATOS = response.datos as { id_solicitud?: number };
-                        if(getValidDatos(DATOS.id_solicitud)) {
-                          this.tramite260216Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-                        } else {
-                          this.tramite260216Store.setIdSolicitud(0);
-                        }
-                      }
-                      const INDICE_ACTUALIZADO = this.indice + 1;
-                      this.toastrService.success(response.mensaje);
-                      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO < 5) {
-                        this.indice = INDICE_ACTUALIZADO;
-                        this.datosPasos.indice = INDICE_ACTUALIZADO;
-                        this.esFormaValido = false;
-                        this.wizardComponent.siguiente();
-                      }
-                    } else {
-                      this.toastrService.error(response.mensaje);
-                    }
-                  });
-                }else{
-                  this.indice = e.valor;
-                  this.datosPasos.indice = this.indice;
-                  this.wizardComponent.atras();
-                }
-    }
+               if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+                   this.confirmarSinPagoDeDerechos = 2;
+                 }else {
+                   this.confirmarSinPagoDeDerechos = 3;
+                 }
+       
+               if(!this.requiresPaymentData) {
+                 if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+                   this.mostrarAlerta=true;
+                   this.seleccionarFilaNotificacion = {
+                     tipoNotificacion: 'alert',
+                     categoria: 'danger',
+                     modo: 'action',
+                     titulo: '',
+                     mensaje: MENSAJE_DE_VALIDACION_PAGO_DERECHOS,
+                     cerrar: true,
+                     tiempoDeEspera: 2000,
+                     txtBtnAceptar: 'SI',
+                     txtBtnCancelar: 'NO',
+                     alineacionBtonoCerrar:'flex-row-reverse'
+                   }
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+   } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 2;
+          } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+            this.confirmarSinPagoDeDerechos = 3;
+          }
+      }
+
+        if (!isValid) {
+          this.formErrorAlert = this.MENSAJE_DE_ERROR;
+          this.esFormaValido = true;
+          this.datosPasos.indice = this.indice;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+
+        const PAYLOAD = GuardarAdapter_260216.toFormPayload(this.storeData);
+        let shouldNavigate = false;
+        this.registroSolicitudService.postGuardarDatos('260216', PAYLOAD).subscribe(response => {
+          shouldNavigate = response.codigo === '00';
+          if (!shouldNavigate) {
+            const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+            this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = true;
+            this.indice = 1;
+            this.datosPasos.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+          if(shouldNavigate) {
+            if(esValidObject(response) && esValidObject(response.datos)) {
+              this.esFormaValido = false;
+              const DATOS = response.datos as { id_solicitud?: number };
+              const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+              this.idSolicitudState = ID_SOLICITUD;
+              this.tramite260216Store.setIdSolicitud(ID_SOLICITUD);
+            }
+            // Calcular el nuevo índice basado en la acción
+            let indiceActualizado = e.valor;
+            if (e.accion === 'cont') {
+              indiceActualizado = e.valor;
+            }
+            this.toastrService.success(response.mensaje);
+            if (indiceActualizado > 0 && indiceActualizado < 5) {
+              this.indice = indiceActualizado;
+              this.datosPasos.indice = indiceActualizado;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+        });
+      }else{
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        this.wizardComponent.atras();
+      }
+
+
+  }
+     cerrarModal(value:boolean): void {
+      if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+      } else {
+        this.mostrarAlerta = false;
+        this.confirmarSinPagoDeDerechos = 4;
+      }
+   }
 
   /**
    * @method obtenerNombreDelTítulo

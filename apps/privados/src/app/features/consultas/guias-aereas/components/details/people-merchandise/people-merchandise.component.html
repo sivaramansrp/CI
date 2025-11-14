@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-md-12 mt-3">
+    <h2>Mercancías</h2>
+    <hr class="red" />
+    <app-table
+      title="Mercancías"
+      [tableData]="tableMerchandiseData"
+      [borderedStyle]="true"
+      [isLoading]="isLoadingMerchandiseDataTable"
+      [error]="errorMerchandiseData"
+    />
+  </div>
+  <div class="col-md-12">
+    <h2 >Personas</h2>
+    <hr class="red" />
+    <app-table
+      title="Personas"
+      [tableData]="tablePersonData"
+      [borderedStyle]="true"
+      [isLoading]="isLoadingPersonDataTable"
+      [error]="errorPersonData"
+    />
+  </div>
+  </div>

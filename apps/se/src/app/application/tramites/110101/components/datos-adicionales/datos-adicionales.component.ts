@@ -1,4 +1,4 @@
-import { AlertComponent, CONDICIONES_JUEGOS_SURTIDOS, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, MENSAJE_DE_SELECCION, Notificacion } from '@ng-mf/data-access-user';
+import { AlertComponent, CONDICIONES_JUEGOS_SURTIDOS, CONDICIONES_JUEGOS_SURTIDOS_ALIANZA, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, MENSAJE_DE_SELECCION, Notificacion } from '@ng-mf/data-access-user';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
@@ -6,13 +6,15 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { PROTESTA } from '@ng-mf/data-access-user';
+import { REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 
 import { OPCIONES, RADIO_OPCIONS, SELECCIONAR_TRANSFORMACION} from '../constante110101.enum';
+import { MensajePantallaService } from '../../services/validaciones-tabs.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -158,6 +160,21 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   condiciones = CONDICIONES_JUEGOS_SURTIDOS;
 
   /**
+   * Mensaje de alerta para juegos o surtidos México - Panamá
+   * @property {string} condicionAlianza - Contiene las condiciones para juegos o surtidos México - Panamá
+   */
+  condicionAlianza = CONDICIONES_JUEGOS_SURTIDOS_ALIANZA;
+
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
+
+  /**
+   * Una constante que contiene la cadena de mensaje requerida.
+   * Este mensaje se utiliza para indicar que un campo es obligatorio.
+   */
+  public MENSAJE_REQUERIDO = REQUERIDO;
+
+  /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
    * Crea el formulario
@@ -168,15 +185,14 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
-    private catalogoTramiteService: CatalogosTramiteService
-
+    private catalogoTramiteService: CatalogosTramiteService,
+    private mensajeService: MensajePantallaService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.crearFormulario();
           if (seccionState.update) {
             this.actualizacionCounsulta = seccionState.update;
 
@@ -191,23 +207,28 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.getEntidadFederativa();
-    this.getDeclaracionDatos();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$), map((seccionState) => {
       this.solicitudeState = seccionState;
     })).subscribe();
-    this.crearFormulario();
-  }
-  /**
-   * Crea el formulario con los campos necesarios y sus validaciones.
-   * @returns {void}
-   */
-  crearFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
+    this.inicializarFormulario();
+    this.getEntidadFederativa();
+    this.getDeclaracionDatos();
+    
+    this.formulario.statusChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_value) => {
+          this.validarFormulario = this.formulario.valid;
+          this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.formulario.valid);
+        })
+      )
+      .subscribe(); 
+
+     if(this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false){
+      this.formulario.markAllAsTouched();
+      this.validarFormularioAdicionales();
     }
+  
   }
 
   /**
@@ -220,26 +241,18 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     this.formulario = this.fb.group({
       entidad: [this.solicitudeState?.entidad, Validators.required],
       representacion: [this.solicitudeState?.representacion, Validators.required],
-      metodoSeparacion: [Boolean(this.solicitudeState?.metodoSeparacion), Validators.required],
-      exportadorAutorizado: [Boolean(this.solicitudeState?.exportadorAutorizado), Validators.required],
+      metodoSeparacion: [Boolean(this.solicitudeState?.metodoSeparacion)],
+      exportadorAutorizado: [Boolean(this.solicitudeState?.exportadorAutorizado)],
+      exportadorAutorizadoJPN: [Boolean(this.solicitudeState?.exportadorAutorizadoJPN)],
       informacionRadios: [this.solicitudeState?.informacionRadios],
-      juegoSurtido:[],
-      descripcionJuegoSurtido: ['', Validators.required],
-      protesto_verdad: [false, Validators.requiredTrue]
+      informacionRadiosJPN: [this.solicitudeState?.informacionRadiosJPN],
+      transformacion53:[this.solicitudeState?.transformacion53],
+      descripcionJuegoSurtido: [this.solicitudeState?.juegos_surtidos_tab_procesos],
+      juegosSurtidosBooleanMexicoPeru: [this.solicitudeState?.juegosSurtidosBooleanMexicoPeru],
+      juegosSurtidosBooleanMexicoPanama: [this.solicitudeState?.juegosSurtidosBooleanMexicoPanama],
+      juegosSurtidosBooleanAlianzaPacifico: [this.solicitudeState?.juegosSurtidosBooleanAlianzaPacifico],
+      protesto_verdad: [this.solicitudeState?.protesto_verdad, Validators.requiredTrue]
     });
-  }
-
-  /**
- * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
- * Luego reinicializa el formulario con los valores actualizados desde el store.
- */
-  public guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.formulario.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.formulario.enable();
-    }
   }
 
   /**
@@ -267,6 +280,19 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+          
+        const VALOR_GUARDADO = this.formulario.get('entidad')?.value;
+        if (VALOR_GUARDADO) {
+          const OPCION = this.entidad.find(
+                (c) => c.clave === VALOR_GUARDADO || c.id === VALOR_GUARDADO);
+          
+          this.formulario.patchValue({
+            entidad: OPCION?.id,
+          }, { emitEvent: false }); // IMPORTANTE: evitar bucles
+          this.getRepresentacionFederal(OPCION?.clave || '');
+          
+
+        }
         }else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -324,6 +350,13 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+          const VALOR_GUARDADO_REPRESENTACION = this.formulario.get('representacion')?.value;
+          const OPCION_REPRESENTACION = this.representacion.find(
+            (c) => c.clave === VALOR_GUARDADO_REPRESENTACION || c.id === VALOR_GUARDADO_REPRESENTACION
+          );
+          this.formulario.patchValue({
+            representacion: OPCION_REPRESENTACION?.id
+          }, { emitEvent: false }); // IMPORTANTE: evitar bucles
         }else{
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -403,12 +436,38 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store, campoStore?: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (metodoNombre === 'setValor' ) {
+      const CAMPO = (campoStore) as keyof Solicitante110101State;
+      this.tramite110101Store.setValor(CAMPO, VALOR);
+    }else{
+      (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
   }
 
+  /**
+   * Busca un país en la tabla de datos del servicio de solicitud.
+   * @param country - El código del país a buscar.
+   * @returns true si el país se encuentra en la tabla, false en caso contrario.
+   */
+  busquedaPaises(country: string): boolean {
+  const DATA = this.solicitudeState?.respuestaServicioDatosTabla;
+  return Array.isArray(DATA) ? DATA.some(item => item?.cve_pais === country) : false;
+}
 
+/**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * @method validarFormularioAdicionales
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+ validarFormularioAdicionales(): boolean {
+    if (this.formulario.valid === false) {
+     this.formulario.markAllAsTouched();
+      return false;
+    }
+    return true
+  }
 
   /**
    * **Ciclo de vida: Destruye las suscripciones y limpia recursos**
@@ -418,6 +477,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * - Esto previene fugas de memoria al garantizar que las suscripciones dependientes de `takeUntil(this.destroy$)` se cancelen correctamente.
    */
   ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_datos_adicionales', this.validarFormularioAdicionales() ?? null);
     this.destroy$.next(); // Notifica a las suscripciones activas que deben finalizar
     this.destroy$.complete(); // Completa el Subject para evitar futuras emisiones
   }

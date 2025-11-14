@@ -164,7 +164,7 @@ export const TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE = [
  * @description Contiene un arreglo de identificadores numéricos que representan
  * los campos que son obligatorios para el destinatario en el contexto de la solicitud.
  */
-export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111,240105,240117];
+export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111,240105,240117,260208];
 
 /**
  * @const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR

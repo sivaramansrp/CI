@@ -144,7 +144,7 @@ export function createInitialState(): Tramite260208State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -245,7 +245,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
+        // ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));

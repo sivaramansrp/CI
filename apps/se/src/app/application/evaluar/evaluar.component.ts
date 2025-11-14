@@ -64,6 +64,7 @@ import { TramiteConfig } from '../shared/models/tramite-config.model';
 import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 import { DocumentosEspecificosRequest } from '../core/models/atender-requerimiento/request/documentos-especificos.model';
+import { GenerarDictamenClasificacionComponent } from "../shared/components/generar-dictamen-calificacion/generar-dictamen-clasificacion.component";
 
 /**
  * @component
@@ -100,7 +101,8 @@ import { DocumentosEspecificosRequest } from '../core/models/atender-requerimien
     FirmaElectronicaComponent,
     CapturarRequerimientoComponent,
     SolicitarDocumentosEvaluacionComponent,
-    SolicitarOpinionComponent, NotificacionesComponent],
+    SolicitarOpinionComponent, NotificacionesComponent, 
+    GenerarDictamenClasificacionComponent],
   templateUrl: './evaluar.component.html',
   styleUrl: './evaluar.component.scss',
 })
@@ -1148,7 +1150,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
              this.obtenerCriterios();
           }
           if(this.vistasModificacion110101.actualizarVista){
-            this.sentidoInputTramite110101 = resp.datos?.sentido_dictamen === "Rechazado" ? false: true;
+            const SENTIDO = resp.datos?.sentido_dictamen;
+
+            if (SENTIDO !== undefined && SENTIDO !== null) {
+              this.sentidoInputTramite110101 = SENTIDO === "Rechazado" ? false : true;
+            }
           }
         }
 
@@ -1268,6 +1274,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
         id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
+        calificacion_dictaminador_exportador: datosDictamen.clasificacionUE,
+        calificacion_dictaminador_exportador_jpn: datosDictamen.clasificacionJpn,
+        calificacion_descripcion_aladi: datosDictamen.clasificacionAladi,
         criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
@@ -1360,7 +1369,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         apellido_materno: 'PRUEBA'
       },
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
-        criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
+         id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
+         calificacion_dictaminador_exportador: datosDictamen.clasificacionUE,
+         calificacion_dictaminador_exportador_jpn: datosDictamen.clasificacionJpn,
+         calificacion_descripcion_aladi: datosDictamen.clasificacionAladi,
+         criterios_tratados: this.tratadosParaEvaluar?.map(tratado => ({
           id_criterio_tratado: tratado.id_criterio_tratado,
           calificacion_aprobada_dictaminador: tratado.cal_aprobada_dictaminador,
         })) ?? []
@@ -1914,15 +1927,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Maneja la respuesta mostrando notificaciones de éxito o error según corresponda.
    */
   postDocumentosEspecificos(): void {
-    const PAYLOAD: DocumentosEspecificosRequest = {
-      id_pexim: 0,
-      list_fraccion_arancelarias: [],
-      list_mecanismo_asignaciones: [],
-      list_tratamientos: [],
-      clave_tipo_accion_mecanismo: '',
-      descripcion_tipo_accion_mecanismo: '',
-      esquema_regla_octava: 0
-    };
+    const PAYLOAD = this.requerimientoConfig.isBodyNullDocumentos === true
+    ? null
+    : {
+        id_pexim: 0,
+        list_fraccion_arancelarias: [],
+        list_mecanismo_asignaciones: [],
+        list_tratamientos: [],
+        clave_tipo_accion_mecanismo: '',
+        descripcion_tipo_accion_mecanismo: '',
+        esquema_regla_octava: 0
+      } as DocumentosEspecificosRequest;
     const IDREQUERMIENTO = this.dataIniciarRequerimiento?.id_requerimiento;
     const IDSOLICITUD = this.guardarDatos.id_solicitud;
 
@@ -1979,7 +1994,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @param idSolicitud - Identificador de la solicitud.
    * @param payload - Objeto con los parámetros necesarios para la petición.
    */
-  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest): void {
+  cargarDocumentosGuardados(idRequerimiento: number, idSolicitud: string, payload: DocumentosEspecificosRequest | null): void {
     this.guardarRequerimientoService
       .postDocumentosEspecificos(this.tramite, idSolicitud, true, idRequerimiento, payload)
       .subscribe({

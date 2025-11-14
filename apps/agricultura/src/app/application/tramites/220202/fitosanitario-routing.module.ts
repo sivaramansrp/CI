@@ -1,4 +1,5 @@
 import { RouterModule, Routes} from '@angular/router';
+import { AcusePageComponent } from '@ng-mf/data-access-user';
 import { AgregarExportadorComponent } from './components/agregar-exportador/agregar-exportador.component';
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AgregardestinatarioComponent } from './components/agregardestinatario/agregardestinatario.component';
@@ -41,6 +42,10 @@ export const ROUTES_FITOSANITARIO: Routes = [
   {
     path: 'sub-productos',
     component: SubProductosContenedoraComponent
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
   },
   {
     path: '',

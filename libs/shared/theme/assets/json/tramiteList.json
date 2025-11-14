@@ -492,8 +492,8 @@
   {
     "id": 71,
     "tramite": 220201,
-    "linkDashboard": "/agricultura/certificado-zoosanitario/zoosanitario",
-    "linkDepartment": "/pago/certificado-zoosanitario/zoosanitario",
+    "linkDashboard": "/agricultura/certificado-zoosanitario/registrozoosanitario",
+    "linkDepartment": "/pago/certificado-zoosanitario/registrozoosanitario",
     "department": "agricultura"
   },
   {
@@ -1017,8 +1017,8 @@
   {
     "id": 147,
     "tramite": 260213,
-    "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
+    "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal/contenedor-de-pasos",
     "department": "cofepris"
   },
   {

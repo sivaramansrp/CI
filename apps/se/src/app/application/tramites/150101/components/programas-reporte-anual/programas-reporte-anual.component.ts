@@ -2,8 +2,8 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ConfiguracionColumna, ENVIRONMENT, NotificacionesComponent, TablaDinamicaComponent, TituloComponent, doDeepCopy, getValidDatos } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, LoginQuery } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
@@ -158,7 +158,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   ];
 
   // Valor de RFC de ejemplo
-  private loginRfc: string = ENVIRONMENT.RFC;
+  private loginRfc: string = '';
 
   /**
    * @constructor
@@ -175,7 +175,8 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     public solicitud150101Query: Solicitud150101Query,
     public solicitudService: SolicitudService,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private loginQuery: LoginQuery,
   ) {
     this.inicializarFormulario();
     this.consultaioQuery.selectConsultaioState$
@@ -184,6 +185,14 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
           this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.loginRfc = seccionState.rfc;
         })
       )
       .subscribe();
@@ -309,8 +318,8 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'info',
       modo: 'action',
-      titulo: 'Programa seleccionado',
-      mensaje: 'Se ha seleccionado un programa correctamente.',
+      titulo: '',
+      mensaje: 'El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.',
       cerrar: false,
       tiempoDeEspera: 3000,
       txtBtnAceptar: 'Aceptar',

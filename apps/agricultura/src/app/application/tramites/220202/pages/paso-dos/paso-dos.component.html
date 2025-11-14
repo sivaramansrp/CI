@@ -3,5 +3,15 @@
 
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <anexar-documentos></anexar-documentos>
+<!--  <anexar-documentos [catalogoDocumentos]="catalogoDocumentos"></anexar-documentos>-->
+
+  <carga-documento
+    [idTipoTRamite]="idTipoTRamite"
+    [datosUsuario]="datosUsuario"
+    [cargaArchivosEvento]="reenviarEvento"
+    (cargaRealizada)="documentosCargados($event)"
+    (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+    (cargaEnProgreso)="onCargaEnProgreso($event)"
+    [esDocumentosAgricultura]="true">
+  </carga-documento>
 </div>
