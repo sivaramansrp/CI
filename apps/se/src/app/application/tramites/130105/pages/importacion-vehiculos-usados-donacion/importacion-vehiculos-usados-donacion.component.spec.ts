@@ -45,6 +45,7 @@ describe('ImportacionVehiculosUsadosDonacionComponent', () => {
       getBloqueService: jest.fn(() => of()),
       getMostrarPartidasService: jest.fn(() => of()),
       getPaisesPorBloqueService: jest.fn(() => of()),
+      getPayloadDatos:jest.fn(()=> of()),
       http: jest.fn(() => of()) as any,
       tramite130105Store: jest.fn(() => of()) as any,
       tramite130105Query: jest.fn(() => of()) as any,

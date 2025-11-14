@@ -275,6 +275,9 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
           if(this.idMecanismo){
             PAYLOAD={...PAYLOAD, id_mecanismo: this.idMecanismo};
           }
+          if (this.procedure === 80302) {
+            PAYLOAD = renameKey(PAYLOAD as unknown as Record<string, unknown>, 'rfc_solicitante', 'rfcSolicitante') as unknown as FirmarRequest;
+          }
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
         }),
         tap((firmaResponse: BaseResponse<string>) => {

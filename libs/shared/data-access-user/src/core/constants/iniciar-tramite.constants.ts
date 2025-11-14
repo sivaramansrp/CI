@@ -20,7 +20,8 @@ export interface IniciarRequest {
   folio_programa?:string;
   idTipoTramite?:number;
   discriminador?:string;
-
+  tipoPrograma?:string;
+  idProgramaAutorizado?:string
 }
 
 /**

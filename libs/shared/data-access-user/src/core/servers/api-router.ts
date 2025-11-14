@@ -1147,6 +1147,11 @@ export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string =>
  * @returns 
  */
 export const OPCIONES_PRELLENADO_SOLICITUD = (TRAMITE: number, rfc: string): string => `sat-t${TRAMITE}/solicitud/recientes/${rfc}`
+/*
+  * API para obtener la tipo de empresa
+ */
+export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
+
 /*API para obtener el catálogo de fracciones arancelarias*/
 export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
 
@@ -1157,14 +1162,20 @@ export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fr
  */
 export const API_POST_PARCHE_PRELLENADAS = (TRAMITE: number, idSolicitud: number): string => `sat-t${TRAMITE}/solicitud/mostrar?idSolicitud=${idSolicitud}`;
 
+/**
+ * API para obtener la solicitud por ID
+ */
+export const API_GET_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud-servicio/${IDSOLICITUD}`;
+ 
 export const PAISES_POR_BLOQUE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${CLAVEBLOQUE}`;
 
 /*API para obtener el catálogo de clasificaciones de régimen*/
 export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/clasificaciones-regimen/${CLASIFICACION}`;
 
+
 export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
 
-export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medida-tarifaria`;
+export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
 
 // export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
 
