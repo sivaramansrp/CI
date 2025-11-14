@@ -30,8 +30,6 @@ export interface DomicilioInfo {
   idSolicitud?: string;
   /** Razón social de la empresa asociada */
   razonSocial?: string;
-  /** Estatus en texto legible: 'Activada' o 'Baja' */
-  desEstatus?: 'Baja' | 'Activada';
   /** Estatus booleano (true para activo, false para inactivo) */
   estatus?: boolean;
   /** Registro Federal de Contribuyentes (RFC) */
@@ -47,9 +45,9 @@ export interface Complimentaria {
   /** Nombre(s) del accionista o representante */
   nombre?: string;
   /** Primer apellido */
-  apellidoPrimer?: string;
+  apellidoPaterno?: string;
   /** Segundo apellido */
-  apellidoSegundo?: string;
+  apellidoMaterno?: string;
 }
 
 /**
@@ -59,38 +57,40 @@ export interface Federetarios {
   /** ID único del fedatario (opcional) */
   id?: number;
   /** Nombre del fedatario */
-  nombre?: string;
+  nombreNotario?: string;
   /** Primer apellido del fedatario */
-  apellidoPrimer?: string;
+  apellidoPaterno?: string;
   /** Segundo apellido del fedatario */
-  apellidoSegundo?: string;
+  apellidoMaterno?: string;
   /** Número de acta notarial */
   numeroActa?: string;
   /** Fecha del acta (puede contener error de tipografía: "fetchActa") */
-  fetchActa?: string;
+  fechaActa?: string;
   /** Número de la notaría */
   numeroNotaria?: string;
   /** Municipio o delegación donde se emitió el acta */
-  municipioDelegacion?: string;
+  delegacionMunicipio?: string;
   /** Estado o entidad federativa correspondiente */
-  estado?: string;
+  entidadFederativa?: string;
 }
-
 
 /**
  * Representa los datos relacionados con una operación registrada dentro del trámite IMMEX.
- * 
+ *
  * Esta interfaz extiende de:
  * - `Complimentaria`: para incluir información del contribuyente o persona.
  * - `Federetarios`: para incluir información notarial relacionada.
  * - `DomicilioInfo`: para incluir los datos de ubicación del establecimiento.
  */
-export interface Operacions extends Complimentaria, Federetarios, DomicilioInfo {
+export interface Operacions
+  extends Complimentaria,
+    Federetarios,
+    DomicilioInfo {
   /** Razón social del establecimiento u operación */
   razonSocial?: string;
 
   /** Domicilio fiscal del solicitante que presenta la operación */
-  fiscalSolicitante?: string;
+  domicilioFiscal?: string;
 
   /** Tipo de operación que se realiza en la planta (por ejemplo: almacenaje, maquila, transformación) */
   operacion?: string;
@@ -164,12 +164,11 @@ export interface Operacions extends Complimentaria, Federetarios, DomicilioInfo 
   idSolicitud?: string;
 
   /** Estado descriptivo del registro: 'Baja' o 'Activada' */
-  desEstatus?: 'Baja' | 'Activada';
+  desEstatus?: string;
 
   /** Indicador booleano del estatus (true = activa, false = baja) */
   estatus?: boolean;
 }
-
 
 /**
  * Representa un registro en la bitácora de modificaciones.
@@ -199,4 +198,116 @@ export interface Anexo {
   descripcion?: string;
   /** Valores anteriores, si aplica para trazabilidad o auditoría */
   valoresAnteriores?: string;
+  /** Fracción arancelaria */
+  fraccionArancelaria?: {
+    descripcion: string;
+  };
+  /** Complemento */
+  complemento?: {
+    descripcion: string;
+  };
+}
+
+/**
+ * Representa un programa IMMEX en una lista o tabla.
+ * Contiene información básica del programa.
+ * @interface ProgramaLista
+ */
+export interface ProgramaLista {
+  /**
+   * Identificador único del programa autorizado.
+   */
+  idProgramaAutorizado?: string;
+
+  /**
+   * Folio único del programa IMMEX.
+   */
+  folioPrograma?: string;
+
+  /**
+   * Tipo de programa IMMEX.
+   */
+  tipoPrograma: string;
+
+  /**
+   * RFC asociado al programa IMMEX.
+   */
+  rfc?: string;
+
+  /**
+   * Identificador compuesto del programa IMMEX.
+   */
+  idProgramaCompuesto: string;
+}
+
+/**
+ * Representa la respuesta de datos de modificación.
+ * @interface DatosModificacionRespuesta
+ */
+export interface DatosModificacionRespuesta {
+  /**
+   * RFC original del solicitante.
+   * @type {string}
+   */
+  rfc_original: string;
+
+  /**
+   * Información de identificación del solicitante.
+   * @type {object}
+   */
+  identificacion: {
+    /**
+     * Tipo de sociedad del solicitante.
+     * @type {string}
+     */
+    tipo_sociedad: string;
+
+    /**
+     * Correo electrónico del solicitante.
+     * @type {string}
+     */
+    email: string;
+  };
+}
+
+/**
+ * Payload para la obtención de datos de exportación e importación.
+ * @interface ExportacionImportacionPayload
+ */
+export interface ExportacionImportacionPayload {
+  /**
+   * Identificador de la solicitud.
+   * @type {string | number}
+   */
+  idSolicitud: string | number;
+
+  /**
+   * Discriminador del tipo de solicitud.
+   * @type {string}
+   */
+  discriminatorValue: string;
+
+  /** 
+   * Registro Federal de Contribuyentes (RFC).
+   * @type {string}
+   */
+  rfc: string;
+
+  /**
+   * Folio del programa IMMEX.
+   * @type {string}
+   */
+  folioPrograma: string;
+
+  /** 
+   * Tipo de programa IMMEX.
+   * @type {string}
+   */
+  tipoPrograma: string;
+
+  /** 
+   * Identificador del programa IMMEX.
+   * @type {string}
+   */
+  idPrograma: string;
 }

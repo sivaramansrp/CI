@@ -1109,7 +1109,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         id: 'solicitud',
         componentPath: () =>
           import(
-            '../../tramites/80301/pages/registro-modificacion-page/paso-uno/paso-uno.component'  
+            '../../tramites/80301/pages/paso-uno/paso-uno.component'  
           ).then((m) => m.PasoUnoComponent),
         componentName: 'PasoUnoComponent',
       },

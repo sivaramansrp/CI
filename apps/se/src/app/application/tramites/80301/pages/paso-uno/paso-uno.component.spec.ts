@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitudService } from '../../../services/solicitud.service';
-import { Tramite80301Store } from '../../../estados/tramite80301.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite80301Store } from '../../estados/tramite80301.store';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ComplementariaImmexComponent } from '../../../components/complementaria-immex/complementaria-immex.component';
-import { BitacoraComponent } from '../../../components/bitacora/bitacora.component';
-import { ModificacionComponent } from '../../../components/modificacion/modificacion.component';
+import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
+import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
+import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {

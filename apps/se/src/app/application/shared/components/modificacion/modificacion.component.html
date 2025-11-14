@@ -53,7 +53,7 @@
       [tipoSeleccionTabla]="TablaSeleccion.BUTTON"
       [configuracionTabla]="exportacionTablaConfiguracion"
       [datos]="exportacionDatosTabla"
-      (alternarValor)="onAlternarValor($event)"
+      (alternarValor)="onAlternarExportacionValor($event)"
       [desactivarButton]="soloLectura"
     ></app-tabla-dinamica>
   </div>
@@ -65,7 +65,7 @@
       [tipoSeleccionTabla]="TablaSeleccion.BUTTON"
       [configuracionTabla]="importacionTablaConfiguracion"
       [datos]="importacionDatosTabla"
-      (alternarValor)="onAlternarValor($event)"
+      (alternarValor)="onAlternarImportacionValor($event)"
       [desactivarButton]="soloLectura"
     ></app-tabla-dinamica>
   </div>

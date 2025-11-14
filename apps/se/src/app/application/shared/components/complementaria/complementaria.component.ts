@@ -126,16 +126,30 @@ export class ComplementariaComponent<T> {
    * Formulario reactivo para la certificación.
    * @type {FormGroup}
    */
-  certificionForm!: FormGroup;
+  certificacionForm!: FormGroup;
+
+  /**
+   * Certificación SAT.
+   * @type {string}
+   */
+  @Input() certificacionSAT: string = '';
 
   /**
    * Constructor de la clase.
-   * Inicializa el formulario reactivo `certificionForm` con el valor "Si" y deshabilitado.
+   * Inicializa el formulario reactivo `certificacionForm` con el valor "Si" y deshabilitado.
    * @param {FormBuilder} fb - Instancia de `FormBuilder` utilizada para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
+    this.certificacionForm = this.fb.group({
+      certificacion: [{ value: '', disabled: true }],
     });
+  }
+
+  ngOnChanges() {
+    if (this.certificacionSAT) {
+      this.certificacionForm.patchValue({
+        certificacion: this.certificacionSAT,
+      });
+    }
   }
 }

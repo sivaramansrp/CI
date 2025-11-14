@@ -8,13 +8,11 @@ import {
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { BitacoraComponent } from '../../../components/bitacora/bitacora.component';
+import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
-import { ComplementariaImmexComponent } from '../../../components/complementaria-immex/complementaria-immex.component';
-import { ModificacionComponent } from '../../../components/modificacion/modificacion.component';
+import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudService } from '../../../services/solicitud.service';
-import { Tramite80301Store } from '../../../estados/tramite80301.store';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * @component PasoUnoComponent
@@ -25,8 +23,12 @@ import { Tramite80301Store } from '../../../estados/tramite80301.store';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent ,ReactiveFormsModule,ComplementariaImmexComponent,BitacoraComponent,ModificacionComponent],
+  imports: [CommonModule, SolicitanteComponent ,ReactiveFormsModule,BitacoraComponent,ModificacionComponent],
 })
+/**
+ * Clase que representa el componente del primer paso en un formulario multipaso.
+ * @class PasoUnoComponent
+ */
 export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @property {number} indice
@@ -76,10 +78,17 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    public solicitudService: SolicitudService,
-    private store: Tramite80301Store
-  ) {}
-  ngOnInit(): void {
+    public solicitudService: SolicitudService
+  ) {
+    // Constructor vacío
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Aquí se configuran las suscripciones necesarias para obtener los datos iniciales.
+   * @return {void}
+   */
+  ngOnInit(): void {    
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -103,7 +112,6 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.solicitudService
       .obtenerTramiteDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-
       .subscribe((resp) => {
         if (resp?.datosModificacion) {
           this.esDatosRespuesta = true;

@@ -221,12 +221,12 @@ export interface Complimentaria {
   /**
    * Primer apellido
    */
-  apellidoPrimer?: string;
+  apellidoPaterno?: string;
 
   /**
    * Segundo apellido
    */
-  apellidoSegundo?: string;
+  apellidoMaterno?: string;
 }
 
 /**
@@ -337,6 +337,16 @@ export interface ServiciosImmex {
    * Testadoo del servicio
    */
   testado?: string;
+
+  /**
+   * Descripción del testado del servicio
+   */
+  descripcionTestado?: string;
+
+  /**
+   * Descripción del tipo de servicio
+   */
+  descripcionTipo?: string;
 }
 
 /**

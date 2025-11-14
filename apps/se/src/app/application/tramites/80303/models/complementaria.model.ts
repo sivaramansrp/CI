@@ -359,7 +359,12 @@ export interface AnexoExportacion {
    * Representa el código utilizado para clasificar productos en el comercio internacional.
    * @optional
    */
-  fraccionArancelaria?: string;
+  fraccionArancelaria?: {
+    /**
+     * El descripción de la fracción arancelaria.
+     */
+    descripcion: string;
+  };
 
   /**
    * Una descripción detallada del producto o elemento relacionado con la exportación.

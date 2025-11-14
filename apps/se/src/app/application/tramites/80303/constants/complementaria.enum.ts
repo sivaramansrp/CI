@@ -385,7 +385,7 @@ export const CONFIGURACION_SERVICIOS_IMMEX = [
 export const CONFIGURACION_ANEXO_EXPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: AnexoExportacion): string | undefined => ele.fraccionArancelaria,
+    clave: (ele: AnexoExportacion): string | undefined => ele.fraccionArancelaria?.descripcion,
     orden: 1,
   },
   {
