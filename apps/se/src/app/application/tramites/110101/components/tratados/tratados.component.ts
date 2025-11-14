@@ -1219,7 +1219,7 @@ eliminarTratado(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'Seleccione un pais/tratado/criterio',
+    mensaje: 'Seleccione un país/tratado/criterio',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
