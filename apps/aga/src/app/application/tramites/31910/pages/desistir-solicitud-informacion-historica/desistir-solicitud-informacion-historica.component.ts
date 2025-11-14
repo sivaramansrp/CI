@@ -25,6 +25,7 @@ import {
 } from '../../estados/stores/tramite31910.store';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
+import { ActivatedRoute } from '@angular/router';
 import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
 import { CommonModule } from '@angular/common';
 import { GuardarServiceT31910 } from '../../services/guardar.service';
@@ -155,11 +156,16 @@ export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
    */
   estadoSolicitud!: Solicitud31910State;
 
+  /**
+   * FolioTramite a desistir
+   */
+  folioTramite: string = '';
   constructor(
     private guardarService: GuardarServiceT31910,
     private store: Tramite31910Store,
     private query: Tramite31910Query,
-    private loginQuery: LoginQuery
+    private loginQuery: LoginQuery,
+    private route: ActivatedRoute
   ) {}
 
   /**
@@ -167,6 +173,10 @@ export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
    * Este método se ejecuta una vez que el componente ha sido inicializado.
    */
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      this.folioTramite = params['folioTramite'];
+      this.store.actualizarEstado({ folioTramite: this.folioTramite });
+    });
     this.loginQuery
       .select()
       .pipe(takeUntil(this.destroyed$))
@@ -319,7 +329,8 @@ export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
     const JUSTIFICACION = this.estadoSolicitud.justificacion;
     const PAYLOAD: GuardarT31910Request = {
-      justificacion: JUSTIFICACION,
+      justificacion_tecnica: JUSTIFICACION,
+      numero_folio_tramite_original: this.estadoSolicitud.folioTramite || '',
       solicitante: {
         rfc: this.rfcLogueado,
         nombre: 'IGNACIO EDUARDO',

@@ -16,6 +16,12 @@ export interface Solicitud31910State {
    * justificacion relacionadas con la solicitud.
    */
   justificacion: string;
+
+
+  /**
+   * Folio del trámite a desistir.
+   */
+  folioTramite?: string;
 }
 
 /**

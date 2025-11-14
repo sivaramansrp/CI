@@ -5,15 +5,7 @@
  * - Objetivo: mejorar mantenibilidad y comprensión del componente.
  * - Alcance: documentación a nivel de archivo, propiedades, constructor y métodos principales.
  */
-import {
-  CategoriaMensaje,
-  FirmaElectronicaComponent,
-  LoginQuery,
-  Notificacion,
-  base64ToHex,
-  encodeToISO88591Hex,
-  formatFecha,
-} from '@ng-mf/data-access-user';
+import { CategoriaMensaje, FirmaElectronicaComponent, LoginQuery, Notificacion, base64ToHex, encodeToISO88591Hex, formatFecha, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
@@ -45,7 +37,7 @@ import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
  */
 @Component({
   standalone: true,
-  imports: [FirmaElectronicaComponent],
+  imports: [FirmaElectronicaComponent, NotificacionesComponent],
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',

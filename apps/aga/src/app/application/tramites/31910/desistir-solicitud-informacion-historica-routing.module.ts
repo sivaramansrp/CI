@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
-    path: 'desistir-informacion-historica',
+    path: '',
     component: DesistirSolicitudInformacionHistoricaComponent,
   },
   {
@@ -15,7 +15,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'desistir-informacion-historica',
+    redirectTo: '',
   },
 ];
 

@@ -1955,8 +1955,8 @@
   {
     "id": 281,
     "tramite": 31910,
-    "linkDashboard": "/aga/desistir-solicitud-informacion-historica/desistir-informacion-historica",
-    "linkDepartment": "/pago/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+    "linkDashboard": "/aga/319/desistir/:folioTramite",
+    "linkDepartment": "/pago/319/desistir/:folioTramite",
     "department": "aga"
   },
   {

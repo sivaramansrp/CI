@@ -20,5 +20,13 @@ export interface GuardarT31910Request {
     certificado_serial_number: string;
   };
 
-  justificacion: string;
+  /**
+    * Justificación técnica para desistir la solicitud de información histórica.
+   */
+  justificacion_tecnica: string;
+
+/**
+ * Número de folio del trámite original que se desea desistir.
+ */
+  numero_folio_tramite_original: string;
 }

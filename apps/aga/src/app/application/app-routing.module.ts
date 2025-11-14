@@ -290,7 +290,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'desistir-solicitud-informacion-historica',
+    path: '319/desistir/:folioTramite',
     loadChildren: () =>
       import(
         './tramites/31910/desistir-solicitud-informacion-historica.module'
