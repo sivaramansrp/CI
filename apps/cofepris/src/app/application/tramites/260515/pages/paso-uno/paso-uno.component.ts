@@ -5,6 +5,7 @@ import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
@@ -22,7 +23,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-     @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
+  @ViewChild(DatosSolicitudComponent) datosSolicitudRef!: DatosSolicitudComponent;
+  @ViewChild(PagoDeDerechosContenedoraComponent) pagoDeDerechosContenedoraRef!: PagoDeDerechosContenedoraComponent;
+
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -120,13 +123,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       });
   }
   validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
-          isValid = true;
-        }
-        else{
+    let isValid = true;
+    if(!this.datosSolicitudRef?.validarClickDeBoton()){
           isValid = false;
         }
+        if(!this.pagoDeDerechosContenedoraRef?.validarContenedor()){
+          isValid = false;
+        } 
         return isValid;
       }
   /**

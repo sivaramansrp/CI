@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -69,6 +70,7 @@ import { Shared2605Service } from "../../services/shared2605/shared2605.service"
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -111,9 +113,7 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
-  deOrigen: false,
-  deProcedencia: false,
-  aduanas:false ,
+  aduanasEntradas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
 };
@@ -447,10 +447,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
-
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
     if (this.isGarantiasOfrecidasVisible) {
       this.domicilio.addControl(
         "garantiasOfrecidas",
@@ -518,7 +518,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
    */
   public seleccionarAduanasEntrada: string[] = [];
 
-  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  /** Lista del catálogo de aduanasEntradas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**
@@ -561,13 +561,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
   /**
-   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Maneja el evento de cambio para las entradas de aduanasEntradas seleccionadas.
    * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanasEntradas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
-    this.mostrarErrores.aduanas =false;
+    this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       aduanasEntradas: events,
@@ -654,12 +654,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaDatos: string[] = [];
 
@@ -904,7 +904,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       nombreComercial: [""],
       nombreComun: [""],
       nombreCientifico: [""],
-      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         "",
         [
@@ -999,6 +998,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       this.formMercancias.addControl(
         "paisDeProcedenciaDatos",
         this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+    if(this.tieneUsoEspecifico) {
+      this.formMercancias.addControl(
+        "usoEspecifico",
+        this.fb.control("", [Validators.required, Validators.maxLength(1000)]),
       );
     }
 
@@ -1643,6 +1649,14 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1657,17 +1671,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion)
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1810,11 +1825,11 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeProcedenciaDatos",
       "setPaisDeProcedenciaDatos",
     );
@@ -1834,7 +1849,7 @@ openModal():void {
       paisProveedor: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisProveedor",
       "setPaisProveedor",
     );
@@ -1854,7 +1869,7 @@ openModal():void {
       paisElaboracion: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisElaboracion",
       "setPaisElaboracion",
     );
@@ -1874,7 +1889,7 @@ openModal():void {
       paisFabrica: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisFabrica",
       "setPaisFabrica",
     );
@@ -1890,14 +1905,15 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeOriginDatos",
       "setPaisDeOriginDatos",
     );
+
   }
 
   /**
@@ -2030,10 +2046,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
@@ -2130,9 +2146,7 @@ onConfirmacionModal(accion: boolean): void {
   'muncipio',
   'calle',
   'telefono',
-  'deOrigen',
-  'deProcedencia',
-  'aduanas'
+  'aduanasEntradas'
 ] as (keyof typeof this.mostrarErrores)[];
 if (this.isAvisoLicenciaVisible) {
   REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
@@ -2164,7 +2178,7 @@ REQUIREDFIELDS.forEach((field) => {
     this.mercanciasTablaCheck=false;
    }
    if(this.seleccionadasAduanasEntradaDatos.length === 0){
-    this.mostrarErrores.aduanas =true;
+    this.mostrarErrores.aduanasEntradas =true;
      ISVALID = false;
    }
    return ISVALID;
