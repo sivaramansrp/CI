@@ -178,6 +178,12 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   @Input() documentosAdicionales: DocumentoRequerimiento[] = [];
 
   /**
+   * @description Indica si los documentos son relacionados con agricultura.
+   * @type {boolean}
+   */
+  @Input() esDocumentosAgricultura: boolean = false;
+
+  /**
    * @description Estado de los documentos.
    * @type {DocumentosState}
    */
@@ -203,8 +209,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     private cargarDocumentoService: CargarDocumentoService,
     private http: HttpClient,
     private documentosFirmaStore: DocumentosFirmaStore,
-  ) { 
-    
+  ) {
+
   }
 
   ngOnInit(): void {
@@ -257,7 +263,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         map((response) => {
           if (response.datos.documento_tramite.length === 0) {
             this.enBlancoObligatoria.emit(true);
-          }else{
+          } else {
             this.enBlancoObligatoria.emit(false);
           }
           response.datos.documento_tramite.forEach((documento: Documento) => {
@@ -308,7 +314,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna nada.
    */
   getDocumentosDesdeSolicitud(): void {
-    const ESPECIFICO = true;
+    // const ESPECIFICO = true;
+    const ESPECIFICO = false;
     this.catalogoDocumentosService
       .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
@@ -335,17 +342,27 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna nada.
    */
   getDocumentosDesdeSolicitudOpcionales(): void {
-    const ESPECIFICO = false;
+    // const ESPECIFICO = false;
+    const ESPECIFICO = true;
     this.catalogoDocumentosService
       .getDocumentosSolicitud(Number(this.idTipoTRamite),ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
-          this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
-            ...doc.tipo_documento,
-            adicionales: [],
-            cargado: false,
-          }));
+          if (this.esDocumentosAgricultura) {
+            this.catalogoDocumentosOpcionales = response.datos.documento_tramite.map((doc) => ({
+              ...doc.tipo_documento,
+              adicionales: [],
+              cargado: false,
+            }));
+          } else {
+            this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
+              ...doc.tipo_documento,
+              adicionales: [],
+              cargado: false,
+            }));
+          }
+
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde 130118', err);

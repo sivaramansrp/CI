@@ -339,4 +339,7 @@ export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) :
 export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
 
 
-
+/**
+ * API para firmar una solicitud de un trámite específico.
+ */
+export const API_POST_FIRMA = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/firmar`;

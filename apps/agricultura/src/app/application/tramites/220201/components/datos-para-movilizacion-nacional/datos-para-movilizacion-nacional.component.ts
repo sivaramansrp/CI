@@ -134,7 +134,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         this.movilizacionForm.patchValue({
           coordenadas: data.coordenadas,
           medio: data.ide_medio_transporte,
-          transporte: data.identificacion_transporte,
+          transporte: data.id_transporte,
           punto: data.id_punto_verificacion,
           nombre: data.razon_social
         }); 
