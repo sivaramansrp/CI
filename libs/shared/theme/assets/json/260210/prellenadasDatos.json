@@ -58,14 +58,14 @@
     "mercancias": [
       {
         "idMercancia": "1",
-        "idClasificacionProducto": "325",
+        "idClasificacionProducto": "32",
         "nombreClasificacionProducto": "Fab. sustancias químicas básicas",
         "ideSubClasificacionProducto": "32541",
-        "nombreSubClasificacionProducto": "Fab. productos farmacéuticos",
+        "nombreSubClasificacionProducto": "II) Homeopáticos.",
         "descDenominacionEspecifica": "Medicamentos para uso humano",
         "descDenominacionDistintiva": "Paracetamol Tabletas 500mg",
         "descripcionMercancia": "Acetaminophen",
-        "formaFarmaceuticaDescripcionOtros": "Tableta",
+        "formaFarmaceuticaDescripcionOtros": "Suspensiones",
         "estadoFisicoDescripcionOtros": "Sólido",
         "fraccionArancelaria": {
           "clave": "30049099",
@@ -83,8 +83,8 @@
         "registroSanitarioConComas": "COFEPRIS-REG-001-2024-SSA1",
         "nombreCortoPaisOrigen": "ANTIGUA Y BARBUDA,ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA),ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE),ARGENTINA (REPÚBLICA),AUSTRALIA (COMMONWEALTH OF),AUSTRIA (REPUBLIC OF),BAHAMAS (COMMONWEALTH OF THE),BAHRAIN (KINGDOM OF)",
         "nombreCortoPaisProcedencia": "ALBANIA (REPÚBLICA DE),ALEMANIA (REPÚBLICA FEDERAL DE),ANDORRA (PRINCIPADO DE)",
-        "tipoProductoDescripcionOtros": "Analgésico",
-        "nombreCortoUsoEspecifico": "Uso humano",
+        "tipoProductoDescripcionOtros": "Aditivo",
+        "nombreCortoUsoEspecifico": "Lodoso",
         "fechaCaducidadStr": "31/12/2026"
       }
     ],

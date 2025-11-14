@@ -371,12 +371,13 @@ export class GuardarMappingAdapter {
             tipoProducto: m.tipoProductoDescripcionOtros ?? '',
             usoEspecifico: m.nombreCortoUsoEspecifico ?? '',
             fechaCaducidad: m.fechaCaducidadStr ?? '',
-            clasificacionProducto: m.idClasificacionProducto ?? '',
-            especificarClasificacionProducto: m.ideSubClasificacionProducto ?? '',
+            clasificacionProducto: m.nombreClasificacionProducto ?? '',
+            especificarClasificacionProducto: m.nombreSubClasificacionProducto ?? '',
             unidadMedidaComercializacion: m.unidadMedidaComercial?.descripcion ?? '',
             unidadMedidaTarifa: m.unidadMedidaTarifa?.descripcion ?? '',
             paisOrigen: m.nombreCortoPaisOrigen ?? "",
             paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
+            id: m.idMercancia || null,
         }));
     }
 

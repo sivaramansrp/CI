@@ -1155,7 +1155,8 @@ export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fr
 
 /** API para prellenadasDatos la solicitud del tramite generico.
  */
-export const API_POST_PARCHE_PRELLENADAS = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+export const API_POST_PARCHE_PRELLENADAS = (TRAMITE: number, idSolicitud: number): string => `sat-t${TRAMITE}/solicitud/mostrar?idSolicitud=${idSolicitud}`;
+
 export const PAISES_POR_BLOQUE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${CLAVEBLOQUE}`;
 
 /*API para obtener el catálogo de clasificaciones de régimen*/

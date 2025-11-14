@@ -239,7 +239,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
 enIdSolicitudPrellenado($event:number): void {
     const SOLICITUDE_ID = $event;
-    this.registroSolicitudService.parcheOpcionesPrellenadas(SOLICITUDE_ID).subscribe((res:any) => {
+    this.registroSolicitudService.parcheOpcionesPrellenadas(260213, SOLICITUDE_ID).subscribe((res:any) => {
       if(res && res.datos){
         GuardarMappingAdapter.patchToStore(res.datos, this.tramite260210Store);
       }
@@ -352,10 +352,17 @@ enIdSolicitudPrellenado($event:number): void {
 
 
   cargarTablaOpcionConfigSolicitud(): void {    
-    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
-    const DATOS = res.datos as TablaOpcionConfig[];
-    this.opcionConfig.datos = DATOS;
-    this.opcionSeleccionado(DATOS);
+    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(260213, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+      const DATOS = res.datos as TablaOpcionConfig[];
+      
+      // Procesar los datos para manejar valores nulos en el proveedor
+      const DATOS_PROCESADOS = DATOS.map(item => ({
+        ...item,
+        proveedor: item.proveedor && item.proveedor.trim() !== '' ? item.proveedor : 'N/A'
+      }));
+      
+      this.opcionConfig.datos = DATOS_PROCESADOS;
+      this.opcionSeleccionado(DATOS_PROCESADOS);
     });
   }
 
