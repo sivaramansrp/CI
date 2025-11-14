@@ -22,21 +22,21 @@
         <ng-container>
             @switch (indice) {
             @case (1) {
-            <solicitante [tabindex]="1"></solicitante>
+            <solicitante [tabindex]="1" #Solicitante></solicitante>
             }
             @case (2) {
             @if(esDatosRespuesta){
-            <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
+            <app-datos-de-la-solicitud [tabindex]="2" #DatosSolicitudComponent></app-datos-de-la-solicitud>
             }
             } 
             @case (3) {
             @if(esDatosRespuesta){
-            <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
+            <app-terceros-relacionados [tabindex]="3"  #TercerosRelacionadosFabricanteComponent></app-terceros-relacionados>
             }
             }
             @case (4) {
             @if(esDatosRespuesta){
-            <app-pago-de-derechos [tabindex]="4"></app-pago-de-derechos>
+            <app-pago-de-derechos [tabindex]="4"  #PagoDerechosComponent></app-pago-de-derechos>
             }
             }
             }

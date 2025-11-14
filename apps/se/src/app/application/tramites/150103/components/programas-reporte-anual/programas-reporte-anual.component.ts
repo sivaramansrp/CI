@@ -1,14 +1,34 @@
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, TablaSeleccion, doDeepCopy, esValidArray, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
+
+/**
+ * 
+ * @param control 
+ * @returns 
+ */
+function integerValidator(control: AbstractControl): ValidationErrors | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === '' || VALUE === undefined) {
+    return null;
+  }
+
+  const NUMVALUE = Number(VALUE);
+  if (isNaN(NUMVALUE) || !Number.isInteger(NUMVALUE) || NUMVALUE < 0) {
+    return { 'notInteger': { value: control.value } };
+  }
+
+  return null;
+}
 
 /**
  * @description Componente para gestionar el reporte anual de programas.
@@ -24,6 +44,15 @@ import { Solicitud150103Store } from '../../estados/solicitud150103.store';
 export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   formProgrmasReporte!: FormGroup;
+
+  /**
+    * @public
+    * @property {Notificacion} nuevaNotificacion
+    * @description Representa una nueva notificación que se utilizará en el componente.
+    * @command Este campo debe ser inicializado antes de su uso.
+    */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * @description Configuración del componente `BsDatepicker`.
    * Permite establecer el formato de la fecha y restringir la selección a nivel de mes y año.
@@ -85,8 +114,27 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     public informaAnualPrograma: InformeAnualProgramaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.setDefaultDates();
+    this.inicializarFormulario();
     
+    this.solicitud150103Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((respuesta: Solicitud150103State) => {
+          this.solicitud150103State = respuesta;
+          if (this.formProgrmasReporte) {
+            this.formProgrmasReporte.patchValue({
+              inicio: respuesta.inicio,
+              fin: respuesta.fin,
+              folioPrograma: respuesta.folioPrograma,
+              modalidad: respuesta.modalidad,
+              tipoPrograma: respuesta.tipoPrograma,
+              estatus: respuesta.estatus,
+            });
+          }
+        })
+      )
+      .subscribe();
+
     if (this.solicitud150103Query.getValue().solicitudDato?.length) {
       this.solicitudDatos = this.solicitud150103Query.getValue().solicitudDato ?? [];
     } else {
@@ -95,70 +143,39 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Establece las fechas predeterminadas de inicio y fin en el store.
-   * La fecha de inicio se establece en el mes y año actuales,
-   * mientras que la fecha de fin se establece en el mes anterior del mismo año.
-   */
-  private setDefaultDates(): void {
-    const FECHA_ACTUAL = new Date();
-    const MES_FECHA = new Date(FECHA_ACTUAL);
-    MES_FECHA.setMonth(FECHA_ACTUAL.getMonth() - 1);
-    
-    const FORMATTED_INICIO_DATE = this.formatDateToMonthYear(FECHA_ACTUAL.toISOString());
-    const FORMATTED_FIN_DATE = this.formatDateToMonthYear(MES_FECHA.toISOString());
-    
-    this.solicitud150103Store.actualizarInicio(FORMATTED_INICIO_DATE);
-    this.solicitud150103Store.actualizarFin(FORMATTED_FIN_DATE);
-  }
-
-  /**
    * @description Método que se ejecuta al inicializar el componente.
    * Configura el formulario y sincroniza los datos iniciales con el estado.
    */
   ngOnInit(): void {
-    this.formProgrmasReporte = this.fb.group({
-      inicio: [{ value: this.solicitud150103State.inicio, disabled: true }],
-      fin: [{ value: this.solicitud150103State.fin, disabled: true }],
-      folioPrograma: [
-        { value: this.solicitud150103State.folioPrograma, disabled: true },
-      ],
-      modalidad: [
-        { value: this.solicitud150103State.modalidad, disabled: true },
-      ],
-      tipoPrograma: [
-        { value: this.solicitud150103State.tipoPrograma, disabled: true },
-      ],
-      estatus: [{ value: this.solicitud150103State.estatus, disabled: true }],
-    });
-
-    this.solicitud150103Query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((respuesta: Solicitud150103State) => {
-          this.solicitud150103State = respuesta;
-          this.formProgrmasReporte.patchValue({
-            inicio: this.solicitud150103State.inicio,
-            fin: this.solicitud150103State.fin,
-            folioPrograma: this.solicitud150103State.folioPrograma,
-            modalidad: this.solicitud150103State.modalidad,
-            tipoPrograma: this.solicitud150103State.tipoPrograma,
-            estatus: this.solicitud150103State.estatus,
-          });
-        })
-      )
-      .subscribe();
-      this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
       this.inicializarEstadoFormulario();
   }
+
+  /**
+   * @method inicializarFormulario
+   * @description
+   * Inicializa el formulario `periodoReporteAnual` con los valores actuales del estado de la solicitud.
+   * Establece los valores iniciales y el estado habilitado/deshabilitado de los controles.
+   * Este método debe llamarse al crear el componente o cuando se actualiza el estado de la solicitud.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
+    this.formProgrmasReporte = this.fb.group({
+        inicio: [{ value: this.solicitud150103State.inicio, disabled: true }],
+        fin: [{ value: this.solicitud150103State.fin, disabled: true }],
+        folioPrograma: [
+          { value: this.solicitud150103State.folioPrograma, disabled: true },
+        ],
+        modalidad: [
+          { value: this.solicitud150103State.modalidad, disabled: true },
+        ],
+        tipoPrograma: [
+          { value: this.solicitud150103State.tipoPrograma, disabled: true },
+        ],
+        estatus: [{ value: this.solicitud150103State.estatus, disabled: true }],
+        ventasTotales: ['', [Validators.required, integerValidator]],
+        totalExportaciones: ['', [Validators.required, integerValidator]]
+      });
+    }
 
   /**
    * @method obtenerProgramasReporte
@@ -167,7 +184,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
    * Actualiza la propiedad `solicitudDatos` con los datos obtenidos.
    *
    * @returns {void}
-   */  
+   */    
   obtenerProgramasReporte(): void {
     this.informaAnualPrograma
       .obtenerProgramasReporte(this.LOGIN_RFC)
@@ -176,6 +193,8 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
         next: (respuesta) => {
           const API_RESPONSE = doDeepCopy(respuesta);
           if(esValidObject(API_RESPONSE) && esValidArray(API_RESPONSE.datos)) {
+            this.solicitud150103Store.actualizarInicio(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaInicioVigencia));
+            this.solicitud150103Store.actualizarFin(this.formatDateToMonthYear(API_RESPONSE?.datos[0]?.fechaFinVigencia));
             this.solicitudDatos = this.mapProgramasResponse(API_RESPONSE.datos);
           }
         },
@@ -244,6 +263,25 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       this.formProgrmasReporte?.disable();
     }
   }
+
+  /**
+   * @method showAlert
+   * @description Muestra una notificación de alerta informando al usuario que el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
+   */
+  showAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.

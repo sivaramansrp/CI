@@ -41,10 +41,8 @@ export class PagoDerechosComponent {
            * }
            */
           validOnButtonClick(): boolean {
-            let isValid: boolean = false;
-            if(this.pagoDeDerechosComponent.formularioSolicitudValidacion()){
-                  isValid = true;
-            }
-            return isValid;
+            return (
+            this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+          );
           }
 }

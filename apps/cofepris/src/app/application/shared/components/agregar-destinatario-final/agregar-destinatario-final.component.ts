@@ -352,8 +352,16 @@ private setupEditMode(): void {
             const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
             this.coloniasDatos = COLONIAS_DATOS;
             
-            this.aplicarValoresDespuesDeCarga();
+            // Load postal codes after municipio and colonias are loaded, then apply values
+            this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, claveMunicipio).pipe(
+              takeUntil(this.unsubscribe$)
+            ).subscribe((codigosData) => {
+              const CODIGOS_DATOS = codigosData.datos as Catalogo[];
+              this.codigosPostalesDatos = CODIGOS_DATOS;
+              this.aplicarValoresDespuesDeCarga();
+            }));
           }));
+
         } else {
           this.aplicarValoresDespuesDeCarga();
         }
@@ -412,10 +420,8 @@ private aplicarValoresDespuesDeCarga(): void {
     // Código Postal
     let valorCodigoPostal = this.datoSeleccionado?.[0]?.codigoPostal;
     if (valorCodigoPostal && this.codigosPostalesDatos.length > 0) {
-      const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
-        cp.descripcion === valorCodigoPostal || 
-        cp.clave?.toString() === valorCodigoPostal?.toString()
-      );
+       const CODIGO_POSTAL_ENCONTRADO = this.codigosPostalesDatos.find(cp => 
+        cp.clave!== null && cp.descripcion === valorCodigoPostal);
       valorCodigoPostal = CODIGO_POSTAL_ENCONTRADO ? CODIGO_POSTAL_ENCONTRADO.clave : valorCodigoPostal;
     }
 
@@ -537,7 +543,14 @@ private setupNonModalMode(): void {
             const COLONIAS_DATOS = coloniasData.datos as Catalogo[];
             this.coloniasDatos = COLONIAS_DATOS;
             
-            this.aplicarValoresDespuesDeCarga();
+            // Load postal codes after municipio and colonias are loaded, then apply values
+            this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, claveMunicipio).pipe(
+              takeUntil(this.unsubscribe$)
+            ).subscribe((codigosData) => {
+              const CODIGOS_DATOS = codigosData.datos as Catalogo[];
+              this.codigosPostalesDatos = CODIGOS_DATOS;
+              this.aplicarValoresDespuesDeCarga();
+            }));
           }));
         } else {
           this.aplicarValoresDespuesDeCarga();
@@ -1081,6 +1094,8 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
       case 260207:
       case 260209:
       case 260208:
+        case 260210:
+      case 260218:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['colonia'];
         break;
@@ -1308,6 +1323,27 @@ private updateDenominacionRazonValidation(): void {
 
   }
 
+
+   getMunicipioSeleccionado(val: string): string {
+    if (!val || this.municipiosDatos.length === 0) {
+      return '';
+    }
+    
+    // First try to find by description
+    const MUNICIPIO_POR_DESCRIPCION = this.municipiosDatos.find(res => res.descripcion === val);
+    if (MUNICIPIO_POR_DESCRIPCION) {
+      return MUNICIPIO_POR_DESCRIPCION.clave || '';
+    }
+    
+    // If not found by description, check if it's already a clave
+    const MUNICIPIO_POR_CLAVE = this.municipiosDatos.find(res => res.clave === val);
+    if (MUNICIPIO_POR_CLAVE) {
+      return val; // It's already a clave
+    }
+    
+    return '';
+  }
+  
   /**
    * Carga la lista de códigos postales cuando se selecciona una localidad.
    *
@@ -1319,10 +1355,17 @@ private updateDenominacionRazonValidation(): void {
    * - Asigna la lista recibida a la propiedad `codigosPostalesDatos`.
    * - Si no existe el campo 'municipio', limpia la lista de códigos postales.
    */
-  cargarLocalidades(_evento: Catalogo): void {
+  cargarLocalidades(_evento?: Catalogo): void {
     const MUNICIPIO_SELECCIONADO = this.agregarDestinatarioFinal.get('municipio')?.value;
-    if (this.agregarDestinatarioFinal.contains('municipio')) {
-      this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, MUNICIPIO_SELECCIONADO).pipe(
+    
+    // Convert description to clave if needed
+    const MUNICIPIO_CLAVE = this.getMunicipioSeleccionado(MUNICIPIO_SELECCIONADO);
+    
+    if (this.agregarDestinatarioFinal.contains('municipio') && (MUNICIPIO_CLAVE || MUNICIPIO_SELECCIONADO)) {
+      // Use the clave if we found it, otherwise use the original value
+      const FINAL_MUNICIPIO_VALUE = MUNICIPIO_CLAVE || MUNICIPIO_SELECCIONADO;
+      
+      this.subscription.add(this.catalogoServices.codigoCatalogo(this.tramiteID, FINAL_MUNICIPIO_VALUE).pipe(
         takeUntil(this.unsubscribe$)
       ).subscribe((data) => {
         const DATOS = data.datos as Catalogo[];
