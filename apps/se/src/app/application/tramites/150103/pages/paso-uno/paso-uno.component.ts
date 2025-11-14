@@ -181,7 +181,6 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */  
   public validarTodosLosFormularios(): number {
-    console.log(this.programasDeComp?.formProgrmasReporte.get('estatus')?.value!=='');
     if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
       this.datosDeComp.formReporteAnnual.markAllAsTouched();
       if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
