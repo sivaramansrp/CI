@@ -248,7 +248,8 @@ export class ImportacionDeVehiculosUsadosComponent implements OnDestroy {
       solicitante: this.importacionDeVehiculosService.buildSolicitante(),
       representacion_federal: this.importacionDeVehiculosService.buildRepresentacionFederal(item),
       entidades_federativas: this.importacionDeVehiculosService.buildEntidadesFederativas(item),
-      lista_paises: item.fechasSeleccionadas ?? []
+      lista_paises: item.fechasSeleccionadas ?? [],
+      tipo_solicitud_pexim: item.solicitud,
     };
 
     return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constant/muestras-plaguicida.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
@@ -12,6 +12,10 @@ import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite2
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,

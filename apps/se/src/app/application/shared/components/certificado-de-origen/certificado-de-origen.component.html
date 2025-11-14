@@ -10,12 +10,7 @@
         <div class="col">
           <div class="form-check">
             <lib-input-check [id]="'si'" [label]="'Si'" [required]="false" formControlName="si" (change)="
-                setValoresStore(
-                  'formCertificado',
-                  'si',
-                  'setFormCertificadoGenric'
-                )
-              " [isDisabled]="esFormularioSoloLectura"></lib-input-check>
+                cambioDeEntrada()" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
           </div>
         </div>
       </div>
@@ -961,3 +956,8 @@
   </lib-notificaciones>
 </section>
 }
+@if(SiNuevaNotificacion){
+<lib-notificaciones [notificacionInput]="SiNuevaNotificacion"
+  (confirmacionModal)="SiEliminarErrorMessage($event)"></lib-notificaciones>
+}
+ 

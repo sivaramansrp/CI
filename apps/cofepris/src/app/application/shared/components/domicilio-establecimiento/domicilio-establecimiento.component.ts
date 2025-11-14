@@ -113,9 +113,7 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
-  deOrigen: false,
-  deProcedencia: false,
-  aduanas:false ,
+  aduanasEntradas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
 };
@@ -449,10 +447,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
-
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
     if (this.isGarantiasOfrecidasVisible) {
       this.domicilio.addControl(
         "garantiasOfrecidas",
@@ -520,7 +518,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
    */
   public seleccionarAduanasEntrada: string[] = [];
 
-  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  /** Lista del catálogo de aduanasEntradas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**
@@ -563,13 +561,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
   /**
-   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Maneja el evento de cambio para las entradas de aduanasEntradas seleccionadas.
    * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanasEntradas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
-    this.mostrarErrores.aduanas =false;
+    this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       aduanasEntradas: events,
@@ -656,12 +654,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaDatos: string[] = [];
 
@@ -1821,11 +1819,11 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeProcedenciaDatos",
       "setPaisDeProcedenciaDatos",
     );
@@ -1845,7 +1843,7 @@ openModal():void {
       paisProveedor: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisProveedor",
       "setPaisProveedor",
     );
@@ -1865,7 +1863,7 @@ openModal():void {
       paisElaboracion: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisElaboracion",
       "setPaisElaboracion",
     );
@@ -1885,7 +1883,7 @@ openModal():void {
       paisFabrica: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisFabrica",
       "setPaisFabrica",
     );
@@ -1901,14 +1899,15 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeOriginDatos",
       "setPaisDeOriginDatos",
     );
+
   }
 
   /**
@@ -2141,9 +2140,7 @@ onConfirmacionModal(accion: boolean): void {
   'muncipio',
   'calle',
   'telefono',
-  'deOrigen',
-  'deProcedencia',
-  'aduanas'
+  'aduanasEntradas'
 ] as (keyof typeof this.mostrarErrores)[];
 if (this.isAvisoLicenciaVisible) {
   REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
@@ -2175,7 +2172,7 @@ REQUIREDFIELDS.forEach((field) => {
     this.mercanciasTablaCheck=false;
    }
    if(this.seleccionadasAduanasEntradaDatos.length === 0){
-    this.mostrarErrores.aduanas =true;
+    this.mostrarErrores.aduanasEntradas =true;
      ISVALID = false;
    }
    return ISVALID;
