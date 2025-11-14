@@ -22,10 +22,16 @@
         } @case (2) {
         <app-paso-dos
           [idTipoTRamite]="'220202'"
+          [datosUsuario]="datosUsuario"
+          [idSolicitud]="idSolicitud"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgresoChange)="onCargaEnProgresoPadre($event)"
         ></app-paso-dos>
         } @case (3) {
 <!--        <app-paso-tres></app-paso-tres>-->
-          <paso-firma [idSolicitud]="idSolicitud" [procedure]="220202" [procedureUrl]="'agricultura'"></paso-firma>
+          <paso-firma [idSolicitud]="+idSolicitud" [procedure]="220202" [procedureUrl]="'agricultura'"></paso-firma>
         }
         @default {
           <app-paso-uno></app-paso-uno>
@@ -33,13 +39,38 @@
         }
   
       </div>
-    <btn-continuar
-      [datos]="datosPasos"
-      [btnGuardar]="btnGuardar"
-      [btnGuardarVisible]="btnGuardarVisible"
-      (continuarEvento)="getValorIndice($event)"
-      [btnHabilitarContinuar] = "true"
-    ></btn-continuar>
+
+      <div class="row">
+        <div class="col-md-12">
+          @if (indice !== 2) {
+            <btn-continuar
+              [datos]="datosPasos"
+              [btnGuardar]="btnGuardar"
+              [btnGuardarVisible]="btnGuardarVisible"
+              (continuarEvento)="getValorIndice($event)"
+              [btnHabilitarContinuar] = "true"
+            ></btn-continuar>
+          } @else {
+            <div class="mt-5 mb-3 d-flex justify-content-end">
+              <button type="button" class="btn btn-default" (click)="anterior()" *ngIf="seccionCargarDocumentos">
+                Anterior
+              </button>
+              <button class="btn btn-primary ms-3"
+                      (click)="seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()"
+                      [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)">
+                {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+<!--    <btn-continuar-->
+<!--      [datos]="datosPasos"-->
+<!--      [btnGuardar]="btnGuardar"-->
+<!--      [btnGuardarVisible]="btnGuardarVisible"-->
+<!--      (continuarEvento)="getValorIndice($event)"-->
+<!--      [btnHabilitarContinuar] = "true"-->
+<!--    ></btn-continuar>-->
 
                     <div class="row">
                       <ng-alert [CONTENIDO]="alertText"></ng-alert>

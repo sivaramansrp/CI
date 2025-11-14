@@ -6,13 +6,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 import { TEXTOS_REQUISITOS } from '../../constantes/220202/fitosanitario.enums';
-import {
-  Documentos,
-  DocumentoTramite,
-} from '../../models/220202/fitosanitario.model';
 import { Usuario } from '@ng-mf/data-access-user';
 
 /**
@@ -41,7 +37,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   public destroyNotifier$ = new Subject<void>();
 
+    /**
+   * Id del tipo de trámite actual.
+   */
   @Input() idTipoTRamite!: string;
+  /**
+   * Id de la solicitud actual.
+   */
+  @Input() idSolicitud!: string;
   /**
    * Servicio para gestionar los catálogos.
    */
@@ -95,7 +98,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map(() => {
-          console.log(`[paso-dos.component.ts] this.reenviarEvento: ${this.reenviarEvento}`);
           this.reenviarEvento.emit();
         })
       )
@@ -109,7 +111,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
-    console.log(`[paso-dos.component.ts] this.cargaRealizada: ${this.cargaRealizada}`);
     this.reenviarCargaRealizada.emit(this.cargaRealizada);
   }
 
@@ -129,7 +130,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
-    console.log(`[paso-dos.component.ts] this.cargaEnProgreso: ${this.cargaEnProgreso}`);
     this.cargaEnProgresoChange.emit(this.cargaEnProgreso);
   }
 
