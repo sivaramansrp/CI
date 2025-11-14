@@ -46,14 +46,7 @@ export class DatosSolicitudComponent {
   configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
     validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
-          isValid = true;
-        }
-        else{
-          isValid = false;
-        }
-        return isValid;
+    return this.datosSolicitudRef.validarClickDeBoton();
       }
   
 }

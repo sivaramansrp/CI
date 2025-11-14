@@ -5,6 +5,7 @@ import {
   CatalogosService,
   FirmaElectronicaComponent,
   InicioSesionService,
+  NotificacionesComponent,
   PasoCargaDocumentoComponent,
   PasoFirmaComponent,
   SolicitanteComponent,
@@ -48,7 +49,8 @@ import { provideHttpClient } from '@angular/common/http';
      PagoDerechosComponent,
      AvisoDePrivacidadComponent,
      PasoCargaDocumentoComponent,
-     PasoFirmaComponent
+     PasoFirmaComponent,
+     NotificacionesComponent
    ],
    providers: [ToastrService,
      CatalogosService,
