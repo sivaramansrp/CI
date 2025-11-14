@@ -43,7 +43,8 @@ export const REPORTE_ANUAL_PASOS = [
 
     /**
      * Indica si el paso ha sido completado (true) o está pendiente (false).
-     */      completado: false,
+     */      
+    completado: false,
   },
 ];
 

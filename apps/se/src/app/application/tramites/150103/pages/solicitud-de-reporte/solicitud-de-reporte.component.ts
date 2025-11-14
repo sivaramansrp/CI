@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DatosPasos, JSONResponse, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ALERT_DOS, ERROR_FORMA_ALERT_QUAD, ERROR_FORMA_ALERT_TRES, REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
-import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
@@ -290,12 +290,12 @@ export class SolicitudDeReporteComponent implements OnInit, OnDestroy {
       return this.informeAnualService.getAllState().pipe(
         take(1),
         switchMap(data => this.guardar(data)),
-        map((response: any) => { 
+        map((response: JSONResponse) => { 
           const OK = response.codigo === '00';
           if (OK) {
-            this.toastrService.success(response.mensaje);
+            this.toastrService.success(response.mensaje || 'Operación exitosa');
           } else {
-            this.toastrService.error(response.mensaje);
+            this.toastrService.error(response.mensaje || 'Error en la operación');
           }
           return OK;
         })
