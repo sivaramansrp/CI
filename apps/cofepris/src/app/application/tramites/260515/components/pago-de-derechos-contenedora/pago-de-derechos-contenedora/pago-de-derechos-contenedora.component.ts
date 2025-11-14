@@ -5,6 +5,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 
 
@@ -143,10 +144,21 @@ validarContenedor(): boolean {
     if (HASVALUE) {
       return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
     }
+    this.markFormUntouched(this.pagoDeDerechosComponent.pagoDerechosForm);
     return true;
   }
   return true;
 }
+markFormUntouched(form: AbstractControl):void {
+  form.markAsUntouched();
+  if (form instanceof FormGroup) {
+    Object.values(form.controls).forEach(control => this.markFormUntouched(control));
+  }
+  if (form instanceof FormArray) {
+    form.controls.forEach(control => this.markFormUntouched(control));
+  }
+}
+
 
 
   /**
