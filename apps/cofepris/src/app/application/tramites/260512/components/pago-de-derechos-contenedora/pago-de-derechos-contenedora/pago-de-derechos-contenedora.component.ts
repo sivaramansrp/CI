@@ -106,19 +106,20 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
 
 
   validarContenedor(): boolean {
-    if (this.pagoDeDerechosComponent) {
-        const FORMDATA = this.pagoDeDerechosComponent.pagoDerechosForm.getRawValue();
-            const HASVALUE = Object.values(FORMDATA).some(
-        value => value !== null && value !== undefined && value !== ''
-      );
-      if (HASVALUE) {
-        return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
-      } 
-        return true; 
-
+  if (this.pagoDeDerechosComponent) {
+    const FORMDATA = this.pagoDeDerechosComponent.pagoDerechosForm.getRawValue();
+ 
+    const HASVALUE = Object.values(FORMDATA).some(
+      value => value !== null && value !== undefined && value !== ''
+    );
+    if (HASVALUE) {
+      return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
     }
-    return false;
+    this.pagoDeDerechosComponent.pagoDerechosForm.markAsUntouched();
+    return true;
   }
+  return true;
+}
 
   /**
    * @method ngOnDestroy
