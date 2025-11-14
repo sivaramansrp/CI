@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoData, Detalles, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { CatalogosService } from '../../services/220203/catalogos/catalogos.service';
 import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
+import { ERROR_FORMA_ALERT } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 /**
  * Componente para gestionar la solicitud de mercancías en el trámite de importación de acuicultura 220203.
@@ -27,7 +28,8 @@ import { RegistroSolicitudService } from '../../services/220203/registro-solicit
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     CommonModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    AlertComponent
 ],
   templateUrl: './mercancia-solicitud.component.html',
   styleUrl: './mercancia-solicitud.component.scss',
@@ -60,6 +62,22 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @memberof MercanciaSolicitudComponent
    */
   mercanciaGroup!: FormGroup;
+
+  /**
+ * Indica si el formulario tiene errores de validación.
+ *
+ * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+ */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error que se muestra cuando la validación de formularios falla.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
+   */
+  public readonly FORM_ERROR_ALERT = ERROR_FORMA_ALERT;
 
   /**
    * Grupo de formularios para los detalles adicionales de la mercancía.

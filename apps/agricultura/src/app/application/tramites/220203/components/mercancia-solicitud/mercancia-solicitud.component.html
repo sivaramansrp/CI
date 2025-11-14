@@ -1,4 +1,7 @@
     <div class="container">
+    @if (esFormaInValido) {<div class="col-md-12">
+      <ng-alert [CONTENIDO]="FORM_ERROR_ALERT" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+    </div>}
     <div class="row">
       <div class="col-md-12">
         <ng-titulo [titulo]="'Datos mercancía'"></ng-titulo>
@@ -232,27 +235,21 @@ mercanciaGroup.get('descripcion')?.touched){
           <small>Por favor, escribe un valor menor o igual a 999999999999.999</small>
         </div>
         <div
-          *ngIf="
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.hasError('maxDecimals') &&
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.touched
-                                                                                                                                                                                  "
+          *ngIf="mercanciaGroup.get('cantidadUMC')?.hasError('maxDecimals') &&
+          mercanciaGroup.get('cantidadUMC')?.touched" 
           class="text-danger">
           <small>Este campo permite doce números enteros y hasta tres
             decimales</small>
         </div>
         <div
-          *ngIf="
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.hasError('maxWholeNumbers') &&
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.touched
-                                                                                                                                                                                  "
+          *ngIf="mercanciaGroup.get('cantidadUMC')?.hasError('maxWholeNumbers') 
+          && mercanciaGroup.get('cantidadUMC')?.touched"
           class="text-danger">
           <small>Por favor, escribe un valor menor o igual a 999999999999.999</small>
         </div>
         <div
-          *ngIf="
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.hasError('required') &&
-                                                                                                                                                                                    mercanciaGroup.get('cantidadUMC')?.touched
-                                                                                                                                                                                  "
+          *ngIf="mercanciaGroup.get('cantidadUMC')?.hasError('required') &&
+          mercanciaGroup.get('cantidadUMC')?.touched"
           class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
