@@ -1,17 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-
 import { CommonModule } from '@angular/common';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
-
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
-
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 
 /**
  * Componente para gestionar los datos del reporte anual.
@@ -45,6 +42,18 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
  */
 consultaDatos!: ConsultaioState;
 
+  /**
+   * @descripcion
+   * Mensaje de alerta que se muestra al usuario.
+   */
+  public mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+
+  /**
+   * Objeto que representa una nueva notificación a mostrar al usuario.
+   * Puede incluir información como el tipo, mensaje, duración, etc.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+  
   /**
    * @property {boolean} soloLectura
    * @description Indica si el formulario o los campos están en modo de solo lectura.
@@ -213,6 +222,48 @@ inicializarEstadoFormulario(): void {
       }
     }
 }
+
+  /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  diferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    } else {
+      this.nuevaNotificacion = null;
+    }
+  }
+
+  /**
+   * @method mostrarNotificacion
+   * @description Muestra una notificación y la limpia después del tiempo especificado
+   * @param notificacion - Objeto de notificación a mostrar
+   */
+  private mostrarNotificacion(notificacion: Notificacion): void {
+    this.nuevaNotificacion = notificacion;
+
+    if (notificacion.tiempoDeEspera) {
+      setTimeout(() => {
+        this.nuevaNotificacion = null;
+      }, notificacion.tiempoDeEspera);
+    }
+  }
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.

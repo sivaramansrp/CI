@@ -123,7 +123,7 @@ export interface Mercancia {
     tipo_mercancia: string,
     tipo_requisito: number,
     requisito: string,
-    numero_certificado: number,
+    numero_certificado: string,
     cve_fraccion: string,
     id_fraccion_gubernamental: number,
     clave_nico: string,
@@ -248,4 +248,13 @@ export interface Tercerosrelacionados {
             correo: string
         }
     ]
+}
+
+/**
+ * Represents the response received after saving a request.
+ */
+export interface RespuestaGuardarSolicitud {
+    codigo: string;
+    id_solicitud: number;
+    fecha_actualización: string;
 }
