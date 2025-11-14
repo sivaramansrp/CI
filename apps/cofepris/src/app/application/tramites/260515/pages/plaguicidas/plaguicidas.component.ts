@@ -142,6 +142,7 @@ export class PlaguicidasComponent implements OnInit {
               setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
               return;
             }
+            
             const PAYLOAD = this.guardarAdapter260515.toFormPayload();
             let shouldNavigate = false;
             this.registroSolicitudService.postGuardarDatos('260515', PAYLOAD).subscribe(response => {
