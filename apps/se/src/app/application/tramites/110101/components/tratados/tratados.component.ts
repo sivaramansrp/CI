@@ -697,7 +697,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
     { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
     { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'APROBADA' : 'NO APROBADA', orden: 6 },
-    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
+    { encabezado: "Calificación dictaminador", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
