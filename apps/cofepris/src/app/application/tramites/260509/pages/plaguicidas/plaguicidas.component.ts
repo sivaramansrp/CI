@@ -148,18 +148,25 @@ export class PlaguicidasComponent implements OnInit {
     }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
-        this.shouldNavigate$()
-        .subscribe((shouldNavigate) => {
-          if (shouldNavigate) {
-            this.indice = NEXT_INDEX;
-            this.datosPasos.indice = NEXT_INDEX;
-            this.wizardService.cambio_indice(NEXT_INDEX);
-            this.wizardComponent.siguiente();
-          } else {
-            this.indice = e.valor;
-            this.datosPasos.indice = e.valor;
-          }
-        });
+        if (this.indice === 1) { 
+            this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+              this.wizardComponent.siguiente();
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+        } else {
+          this.indice = NEXT_INDEX;
+          this.datosPasos.indice = NEXT_INDEX;
+          this.wizardService.cambio_indice(NEXT_INDEX);
+          this.wizardComponent.siguiente();
+        }
       } else {
         this.indice = NEXT_INDEX;
         this.datosPasos.indice = NEXT_INDEX;

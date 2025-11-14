@@ -125,6 +125,12 @@ export interface DatosDomicilioLegalState {
    * El valor de especificar.
    */
   especificar: string;
+
+   /**
+   * El valor de clasificacionToxicologica.
+   */
+  clasificacionToxicologica: string;
+  
   /**
    * El valor de denominacionEspecifica.
    */
@@ -378,6 +384,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de especificar.
      */
     especificar: '',
+
+    /**
+     * El valor de clasificacionToxicologica.
+     */
+    clasificacionToxicologica: '',
     /**
      * El valor de denominacionEspecifica.
      */
@@ -809,6 +820,18 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       especificar,
     }));
   }
+
+   /**
+   * Establece el estado de clasificacionToxicologica.
+   * @param clasificacionToxicologica - El valor de clasificacionToxicologica.
+   */
+  public setClasificacionToxicologica(clasificacionToxicologica: string): void {
+    this.update((state) => ({
+      ...state,
+      clasificacionToxicologica,
+    }));
+  }
+
 
   /**
    * Establece el estado de denominacionEspecifica.

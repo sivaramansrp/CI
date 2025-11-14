@@ -1,6 +1,7 @@
 import {
   CatalogosService,
   InicioSesionService,
+  PasoCargaDocumentoComponent,
   PasoFirmaComponent,
   SubirDocumentoService,
 } from '@libs/shared/data-access-user/src';
@@ -44,7 +45,8 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [
     ToastrService,
