@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Service260702Service } from '../../services/service260702.service';
+import { Service260702Service } from '../../../../shared/services/shared2607/service260702.service';
 
 /**
  * Componente que representa el paso uno del trámite.
