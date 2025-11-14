@@ -16,7 +16,7 @@ import {
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
   TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
@@ -71,7 +71,10 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
 
   /** Evento emitido cuando la tabla es válida. */
   @Output() tableValidEvent = new EventEmitter<string>();
@@ -454,6 +457,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.tercerosForm.markAllAsTouched();
       }
     })
+  }
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.markTouched();
+      });
+    }
   }
 
   /**
@@ -1616,12 +1631,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   markTouched(): void {
     if (this.fabricanteRowData.length===0) {
       this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
     }
     if (this.formuladorRowData.length===0) {
       this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
     }
     if (this.proveedorRowData.length===0) {
       this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
     }
   }
 

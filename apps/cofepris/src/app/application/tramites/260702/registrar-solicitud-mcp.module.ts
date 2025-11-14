@@ -10,14 +10,14 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
-import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component';
+import { DatosdelasolicitudComponent } from '../../shared/components/shared2607/datos-del/datos-de-la-solicitud.component';
+import { PagoDeDerechoComponent } from '../../shared/components/shared2607/pagodederechos/pago-de-derecho.component';
 import { RegistrarSolicitudMCPRoutingModule } from './registrar-solicitud-mcp-routing.module';
-import { RegistrarSolicitudMcpService } from './services/registrar-solicitud-mcp.service';
+import { RegistrarSolicitudMcpService } from './../../shared/services/shared2607/registrar-solicitud-mcp.service';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
-import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
+import { TercerosrelacionadosComponent } from '../../shared/components/shared2607/terceros relacionados/terceros-relacionados.component';
 import { ToastrService } from 'ngx-toastr';
-import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
+import { TramitesAsociadosComponent } from '../../shared/components/shared2607/tramitesasociados/tramites-asociados.component';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';

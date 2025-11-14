@@ -19,11 +19,11 @@
   
       <div class="row">
         @switch (indice) { @case (1) {
-        <app-paso-uno #pasoUnoRef></app-paso-uno>
+        <app-paso-uno #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-paso-uno>
         } @case (2) {
         <app-paso-carga-documento 
           [idSolicitud]="guardarIdSolicitud"
-          [idTipoTRamite]="'260510'"
+          [idTipoTRamite]="'260501'"
           [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"

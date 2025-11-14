@@ -151,6 +151,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
  */
   public formSuccessAlert = MSG_REGISTRO_EXITOSO(String(this.folioTemporal));
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**
    * @constructor
    * @description
@@ -180,6 +183,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState.continuarTriggered ?? false;
     });
     this.consultaQuery.selectConsultaioState$
         .pipe(
@@ -204,6 +208,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

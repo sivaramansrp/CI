@@ -31,7 +31,7 @@ export class DatosSolicitudComponent {
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
-  isAvisoLicenciaVisible: boolean = true;
+  isAvisoLicenciaVisible: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de Aduanas de Entrada
@@ -46,14 +46,7 @@ export class DatosSolicitudComponent {
   configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 
     validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
-          isValid = true;
-        }
-        else{
-          isValid = false;
-        }
-        return isValid;
+    return this.datosSolicitudRef.validarClickDeBoton();
       }
   
 }

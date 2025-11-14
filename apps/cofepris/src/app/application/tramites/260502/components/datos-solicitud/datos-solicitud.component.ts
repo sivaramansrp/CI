@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite260502.store';
@@ -11,6 +11,10 @@ import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite2
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
   /**
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
@@ -26,18 +30,6 @@ export class DatosSolicitudComponent {
    */
   isAvisoLicenciaVisible: boolean = false;
 
- 
-
-  /**
-   * Indica si se debe mostrar la sección de Garantías Ofrecidas
-   */
-  isGarantiasOfrecidasVisible: boolean = true;
-
-  /**
-   * Indica si el campo de domicilio debe estar habilitado en el formulario.
-   * Cuando se establece en `true`, el campo de domicilio está activo y puede ser interactuado.
-   */
-  tieneDomicilioHabilitar: boolean = true;
     /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
      * Proporciona acceso a sus métodos y propiedades.
      */

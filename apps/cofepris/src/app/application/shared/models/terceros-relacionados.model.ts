@@ -386,7 +386,7 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
 export interface PagoDerechosFormState {
   claveReferencia: string;
   cadenaDependencia: string;
-  estado: string;
+  estado?: string;
   llavePago: string;
   fechaPago: string;
   importePago: string;

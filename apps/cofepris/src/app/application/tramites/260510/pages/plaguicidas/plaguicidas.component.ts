@@ -1,18 +1,20 @@
-import { Component, EventEmitter, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
-import { map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild,inject } from '@angular/core';
+import { ListaPasosWizard, PASOS, WizardService,doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Observable, Subject, map,switchMap, take, takeUntil } from 'rxjs';
+import { Solicitud260510State, Tramite260510Store } from '../../../../shared/estados/stores/260510/tramite260510.store';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
 import { SolicitudPagoBancoState } from '../../../../shared/estados/stores/pago-banco.store';
+import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-pruebas-nutrientes.enum';
 import { TercerosFabricanteService } from '../../../../shared/services/terceros-fabricante.service';
 import { TercerosFabricanteState } from '../../../../shared/estados/stores/terceros-fabricante.store';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { Solicitud260510State, Tramite260510Store } from '../../../../shared/estados/stores/260510/tramite260510.store';
 import { ToastrService } from 'ngx-toastr';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
 import { Tramite260510Query } from '../../../../shared/estados/queries/260510/tramite260510.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -28,12 +30,18 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit,OnDestroy{
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
    * como catálogos o listas asociadas.
    */
   public idProcedimiento: number = 260510;
+   /**
+   * Referencia al componente `PasoUnoComponent`.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
   /** Identificador numérico para guardar la solicitud.
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
@@ -95,7 +103,13 @@ export class PlaguicidasComponent implements OnInit,OnDestroy{
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+ /**
+   * Indica si se debe mostrar un mensaje de peligro.
+   */
+  public isPeligro: boolean = false;
 
+  /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
+  public textoPeligro: string = TEXTO_DE_PELIGRO;
 
 /**   * Crea una instancia del componente PlaguicidasComponent.
    * @param datosDomicilioLegalService Servicio para gestionar los datos del domicilio legal.
@@ -122,6 +136,7 @@ constructor(
   ngOnInit(): void {
     this._query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+       this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -142,14 +157,15 @@ getValorIndice(e: AccionBoton): void {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
  
-    // if (this.indice === 1 && e.accion === 'cont') {
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = true;
-    //     return;
-    //   }
-    //   this.isPeligro = false;
-    // }
+    if (this.indice === 1 && e.accion === 'cont') {
+       this._store.setContinuarTriggered(true);
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true;
+        return;
+      }
+      this.isPeligro = false;
+    }
     if (e.valor > 0 && e.valor < this.pasos.length) {
       if (e.accion === 'cont') {
         if (this.indice === 1) {
@@ -178,7 +194,16 @@ getValorIndice(e: AccionBoton): void {
       }
     }
   }
-
+ /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
+  }
   /**
    * Verifica si se debe navegar al siguiente paso del asistente.
    * Guarda los datos actuales y muestra notificaciones según el resultado.

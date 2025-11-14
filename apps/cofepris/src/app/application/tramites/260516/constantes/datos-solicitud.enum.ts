@@ -33,3 +33,5 @@ export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
   paisProveedor: false,
   paisProcedencia: true
 };
+
+export const MENSAJE_DE_VALIDACION = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';

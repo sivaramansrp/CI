@@ -34,6 +34,7 @@
   (setValoresStoreEvent)="setValoresStore($event)"
   (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
   (partidasEliminadas)="onPartidasEliminadas($event)"
+  [isInvalidaPartidas]="isInvalidaPartidas"
   [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
 	(modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
   (partidaModificada)="onPartidaModificada($event)" 
@@ -48,6 +49,8 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
+(fechasSeleccionadas)="onFechasSeleccionadasChange($event)"
+(todosPaisesSeleccionadosEvent)="todosPaisesSeleccionados($event)"
 [idProcedimiento] = "idProcedimiento"
 ></app-pais-procendencia>
 
@@ -56,6 +59,7 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
+[idProcedimiento] = "130111"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
