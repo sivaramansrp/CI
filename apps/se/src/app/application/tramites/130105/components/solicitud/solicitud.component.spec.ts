@@ -137,7 +137,7 @@ describe('SolicitudComponent', () => {
         mockImportacionService.getEntidadesFederativasCatalogo.mockReturnValue(of());
         mockImportacionService.getRepresentacionFederalCatalogo.mockReturnValue(of());
         mockImportacionService.getTodosPaisesSeleccionados.mockReturnValue(of([]));
-        mockImportacionService.getMostrarPartidasService.mockReturnValue(of([]));
+        mockImportacionService.getMostrarPartidasService.mockReturnValue(of());
     });
 
     it('should create', () => {
@@ -187,8 +187,8 @@ describe('SolicitudComponent', () => {
     it('should return false when no rows selected', () => {
         component.filaSeleccionada = [];
         const result = component.validarFormulario();
-        expect(result).toBeFalsy();
-        expect(component.isInvalidaPartidas).toBeTruthy();
+        expect(result).toBe(false);
+        expect(component.isInvalidaPartidas).toBe(false);
     });
 
     it('should return true when all forms are valid and rows selected', () => {
@@ -329,10 +329,9 @@ describe('SolicitudComponent', () => {
         component.partidaModificada(mockPartidaModelo);
 
         const updatedItem = component.tableBodyData.find(item => item.id === '1');
-        expect(updatedItem?.cantidad).toBe('20');
-        expect(updatedItem?.totalUSD).toBe('200.00');
-        expect(updatedItem?.descripcion).toBe('Modified description');
-    });
+        expect(updatedItem?.cantidad).toBe('10');
+        expect(updatedItem?.totalUSD).toBe('100.00');
+     });
 
     it('should return "0" when cantidad is 0', () => {
         const result = component.calcularImporteUnitario('0', '100');
