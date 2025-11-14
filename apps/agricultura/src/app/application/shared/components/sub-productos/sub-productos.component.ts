@@ -293,6 +293,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       presentacion: [''],
       cantidadPresentacion: [],
       detalleProductos: this.fb.array([]),
+      clave_fraccion: [''],
+      clave_umt: [''],
       modificado: [false],
     });
 
@@ -390,13 +392,18 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         descripcionUMT: this.productosForm.get('umt')?.value || '',
         descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
         tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
-        tipoPlanta: this.catalogosDatos.tipoPlantaList.find(item => item.clave === this.productosForm.get('tipoPlanta')?.value)?.descripcion || '',
-        plantaAutorizadaOrigen: this.catalogosDatos.plantaAutorizadaOrigenList.find(item => item.clave === this.productosForm.get('plantaAutorizadaOrigen')?.value)?.descripcion || '',
-        tipoPresentacionDescripcion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+        tipoPlanta: this.productosForm.get('tipoPlanta')?.value || '',
+        plantaAutorizadaOrigen: this.productosForm.get('plantaAutorizadaOrigen')?.value || '',
+        tipoPresentacionDescripcion: this.productosForm.get('tipoPresentacion')?.value || '',
         cantidadUMC: cantidadUMCValue,
         modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
+        fraccionArancelaria: this.productosForm.get('clave_fraccion')?.value || '',
+        nico: this.productosForm.get('nico')?.value || '',
+        umt: this.productosForm.get('clave_umt')?.value || '',
+        umc: this.productosForm.get('umc')?.value || '',
         detalleProductos: this.detalleTablaDatos
       };
+      console.warn('NUEVOS_SENSIBLES', NUEVOS_SENSIBLES);
 
       // Si no hay selección, agrega normalmente
       this.agregarDatosFormulario.emit(
@@ -476,6 +483,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
         if (response && response.codigo === '00' && response.datos) {
           this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+          this.productosForm.get('clave_fraccion')?.setValue(response.datos.id_fraccion);
         } else {
           this.productosForm.get('descripcionFraccion')?.setValue('');
         }
@@ -485,6 +493,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
       (response: BaseResponse<Catalogo>) => {
         if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('clave_umt')?.setValue(response.datos.cve_unidad_medida);          
           this.productosForm.get('umt')?.setValue(response.datos.descripcion);
         } else {
           this.productosForm.get('umt')?.setValue('');

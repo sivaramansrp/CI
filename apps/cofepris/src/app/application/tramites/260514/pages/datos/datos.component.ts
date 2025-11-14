@@ -77,7 +77,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    /**
      * Indica si se debe mostrar la sección de Aviso de Licencia
      */
-    isAvisoLicenciaVisible: boolean = true;
+    isAvisoLicenciaVisible: boolean = false;
   
     /**
      * Indica si se debe mostrar la sección de Aduanas de Entrada

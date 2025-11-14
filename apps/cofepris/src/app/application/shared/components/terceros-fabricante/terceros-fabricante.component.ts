@@ -426,6 +426,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -1615,12 +1616,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   markTouched(): void {
     if (this.fabricanteRowData.length===0) {
       this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
     }
     if (this.formuladorRowData.length===0) {
       this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
     }
     if (this.proveedorRowData.length===0) {
       this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
     }
   }
 

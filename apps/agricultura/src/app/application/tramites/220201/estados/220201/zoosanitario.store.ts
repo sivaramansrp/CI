@@ -204,9 +204,18 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
       datos: datos.datos,
       datosForma: datos.datosForma,
       seletedTerceros: datos.seletedTerceros,
-      seletedExdora: datos.seletedExdora
+      seletedExdora: datos.seletedExdora,
+      idSolicitud: datos.idSolicitud
     }));
   }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
   /**
    * Restaura el estado inicial del store, limpiando toda la información almacenada.
    * @method limpiarFormulario
