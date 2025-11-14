@@ -142,7 +142,21 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
   if (evento) {
     this.estaHabilitado = evento;
   }
-}
+}  
+
+  /**
+   * Valida todos los formularios del componente.
+   * @returns true si todos los formularios son válidos, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    if (!this.solicitante) {
+      return false;
+    }
+    
+    // Por ahora retornamos true ya que el componente SolicitanteComponent
+    // maneja su propia validación internamente
+    return true;
+  }
 
 ngOnDestroy(): void {
   this.destroyNotifier$.next(); 

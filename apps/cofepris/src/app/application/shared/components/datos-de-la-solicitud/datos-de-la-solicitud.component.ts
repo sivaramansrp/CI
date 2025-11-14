@@ -2003,6 +2003,10 @@ marcarTodosLosCamposComoTocados(): void {
   
     }
   });
+  if (this.idProcedimiento === 260203 && this.datosSolicitudForm.get('rfcSanitario')) {
+    this.datosSolicitudForm.get('rfcSanitario')?.markAsTouched();
+    this.datosSolicitudForm.get('rfcSanitario')?.updateValueAndValidity();
+  }
 
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
@@ -2114,12 +2118,9 @@ verificarCamposValidosODeshabilitados(): boolean {
 onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   if (this.mercanciaSeleccionada) {
     // Busque el índice del objeto existente que coincida con TODAS las propiedades
-    const INDEX = this.tablaMercanciasConfig.datos.findIndex(item =>
-      Object.keys(item).every(
-        key => item[key as keyof TablaMercanciasDatos] ===
-               this.mercanciaSeleccionada![key as keyof TablaMercanciasDatos]
-      )
-    );
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(
+    item => item.id === this.mercanciaSeleccionada!.id
+  );
 
     if (INDEX !== -1) {
       // Reemplace ese objeto específico con los nuevos datos

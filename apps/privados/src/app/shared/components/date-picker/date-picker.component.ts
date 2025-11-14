@@ -18,6 +18,21 @@ import {
   BsDatepickerModule,
   BsLocaleService,
 } from 'ngx-bootstrap/datepicker';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { esLocale } from 'ngx-bootstrap/locale';
+
+const BS_LOCALE_ES = 'es';
+
+(() => {
+  try {
+    defineLocale(BS_LOCALE_ES, esLocale);
+  } catch (error) {
+    // eslint-disable-next-line no-empty
+    if (!(error instanceof Error) || !/already defined/i.test(error.message)) {
+      throw error;
+    }
+  }
+})();
 
 @Component({
   selector: 'date-picker',
@@ -86,7 +101,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges {
   }
 
   private initDateConfig(): Partial<BsDatepickerConfig> {
-    this.localeService.use('es');
+    this.localeService.use(BS_LOCALE_ES);
     return {
       containerClass: 'theme-default',
       dateInputFormat: 'DD/MM/YYYY',

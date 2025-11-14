@@ -1,5 +1,5 @@
 <ng-titulo titulo="Datos del establecimiento" />
-<form [formGroup]="datosDelForm">
+<form [formGroup]="datosDelForm" *ngIf="datosDelForm">
   <div class="text-end">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
       (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">Seleccionar establecimiento</button>
@@ -24,14 +24,14 @@
     </div>
     <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social<span [ngClass]="{'tiene-error': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched || mostrarErrores.denominacionRazonSocial}">*</span>:</label>
+          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social<span [ngClass]="{'tiene-error': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched || (mostrarErrores.denominacionRazonSocial &&  datosDelForm.controls['denominacionRazonSocial'].value === '')}">*</span>:</label>
           <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" [maxlength]="100" size="75"
             [ngClass]="{'tiene-invalido': datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched}"
         formControlName="denominacionRazonSocial"
         (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
         </div>
        <div class="d-grid">
-    <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched || mostrarErrores.denominacionRazonSocial">
+    <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched || (mostrarErrores.denominacionRazonSocial &&  datosDelForm.controls['denominacionRazonSocial'].value === '')">
       <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required'] || mostrarErrores.denominacionRazonSocial" class="mensaje-error">
         Este campo es obligatorio.
       </span>
@@ -57,7 +57,7 @@
       (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
       </div>
       <div class="d-grid">
-        <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched || mostrarErrores.correoElectronico">
+        <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched || ( mostrarErrores.correoElectronico &&  datosDelForm.controls['correoElectronico'].value === '')">
           <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required'] || mostrarErrores.correoElectronico" class="mensaje-error">
             Este campo es obligatorio.
           </span>

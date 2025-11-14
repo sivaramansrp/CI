@@ -170,7 +170,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            seccionState.tablaMercanciasConfigDatos
+            JSON.parse(JSON.stringify(seccionState.tablaMercanciasConfigDatos))
         })
       )
       .subscribe();

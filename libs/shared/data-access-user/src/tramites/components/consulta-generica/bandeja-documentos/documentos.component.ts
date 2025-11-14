@@ -8,6 +8,7 @@ import { DocumentosService } from '../../../../core/services/consultagenerica/ba
 
 
 import { DocumentoSolicitud } from '../../../../core/models/shared/consulta-documentos-response.model';
+import { DocumentosTabsService } from '@libs/shared/data-access-user/src/core/services/shared/documentosTabs.service';
 
 @Component({
   selector: 'lib-documentos',
@@ -59,7 +60,10 @@ export class DocumentosComponent implements OnChanges , OnDestroy {
    * Constructor de la clase DocumentosComponent.
    * @param documentosService Servicio para obtener los documentos.
    */
-  constructor(private documentosService: DocumentosService) {}
+  constructor(
+    private documentosService: DocumentosService,
+    private documentosTabsService: DocumentosTabsService
+    ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -110,6 +114,85 @@ export class DocumentosComponent implements OnChanges , OnDestroy {
       nombreArchivo: doc.documento.nombre,
       urlPdf: doc.documento_uuid
     }));
+  }
+
+   /**
+   * Abre el detalle de un acuse en una nueva pestaña.
+   * @param {string} url - La URL (UUID) del archivo PDF del acuse.
+   * @returns {void}
+   * @example
+   * // Abre el detalle de acuse
+   * verDetalleAcuse('a1b2c3d4-e5f6-7890-abcd-ef1234567890');
+   */
+  verDetalleAcuse(url: string, nombre: string): void {
+   this.base64Archivos(url, 'abrir', nombre);
+  }
+
+    /**
+   * Obtiene el contenido base64 de un archivo y realiza la acción especificada.
+   * @param {string} uuid - Identificador único del archivo a obtener.
+   * @param {'abrir' | 'descargar'} accion - Acción a realizar con el archivo.
+   * @returns {void}
+   * @example
+   * // Abre el archivo en una nueva pestaña
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'abrir');
+   * 
+   * // Descarga el archivo
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'descargar');
+   */
+  base64Archivos(uuid: string, accion: 'abrir' | 'descargar', nombre: string): void {
+  this.documentosTabsService.getDescargarDoc(uuid).subscribe({
+    next: (data) => {
+      if (data?.codigo === "UPSER00" && data?.datos?.content) {
+        DocumentosComponent.manejarPdf(
+          data.datos.content,
+          nombre, 
+          accion
+        );
+      }
+    },
+  });
+}
+
+  /**
+ * Método genérico para manejar un PDF en base64.
+ *
+ * @param base64 Contenido del PDF en base64.
+ * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+ * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+ */
+  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }
+
+    /**
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
+   */
+  descargarPdfAcuse(url: string, nombre: string): void {
+    this.base64Archivos(url, 'descargar', nombre);
   }
 
   /**

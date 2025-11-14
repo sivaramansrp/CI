@@ -11,7 +11,10 @@
  * @author Sistema VUCEM
  */
 import {
+  API_PEXIM_FRACCION_ARANCELARIA,
   AGREGAR_PRODUCTOR,
+  API_FRACCIONES_ARANCELARIAS,
+  API_UMT,
   CATALOGO_ACUERDOS,
   CATALOGO_ACUERDOS_PAIS,
   CATALOGO_ADUANAS,
@@ -50,11 +53,19 @@ import {
   CATALOGO_TRATADO_ACUERDO_PAIS,
   CATALOGO_UNIDAD_DE_MASA_BRUTA,
   CATALOGO_UNIDAD_MASA_BRUTA,
+  CLASIFICACION,
   CLASIFICACION_REGIMEN,
+  CLASSIFICACIONES_REGIMEN,
   COMUN_URL,
   FRACCION_HTS,
+  PAISES_POR_BLOQUE,
   PAIS_DESTINO,
-  UNIDADES_MEDIDA_COMERCIAL
+  TIPO_EMPRESA,
+  UNIDADES_MEDIDA_COMERCIAL,
+  API_UNIDADES_MEDIDA_TARIFARIA,
+  API_CATALOGOS_PAISES_TODOS,
+  API_MOSTRAR_PARTIDAS_SOLICITUD,
+  // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
 // import { AGREGAR_PRODUCTOR, CATALOGO_ACUERDOS, CATALOGO_ACUERDOS_PAIS, CATALOGO_ADUANAS, CATALOGO_TRATADOS, CATALOGO_BANCOS, CATALOGO_CLASIFICACION_PRODUCTO, CATALOGO_COLONIAS, CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO, CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_FORMA_FARMACEUTICA, CATALOGO_IDIOMA, CATALOGO_IMMEX, CATALOGO_LOCALIDADES, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_MUNICIPIOS_DELEGACIONES, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_PAISES_MEXICO, CATALOGO_PAIS_BLOQUE_CLAVE, CATALOGO_REGIMENES, CATALOGO_REPRESENTACION_FEDERAL, CATALOGO_SCIAN, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, CATALOGO_TIPOS_PRODUCTO, CATALOGO_TIPO_FACTURA, CATALOGO_TRATADOS_ACUERDOS, CATALOGO_TRATADO_ACUERDO, CATALOGO_TRATADO_ACUERDOS_PAIS, CATALOGO_TRATADO_ACUERDO_NEW, CATALOGO_TRATADO_ACUERDO_PAIS, CATALOGO_TRATADO_ACUERDO_PAIS_TITRAC, CATALOGO_UNIDAD_DE_MASA_BRUTA, CATALOGO_UNIDAD_MASA_BRUTA, COMUN_URL, UNIDADES_MEDIDA_COMERCIAL } from '../../servers/api-router';
@@ -67,6 +78,7 @@ import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MostrarPartidas } from '../../models/shared/mostrar-partidas';
 
 /**
  * Servicio centralizado para la gestión de catálogos del sistema VUCEM.
@@ -284,12 +296,12 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-/*
-  * Obtiene el catálogo de países de destino para el trámite especificado.
-  * @param {string} tramite - El ID del trámite.
-  * @return {Observable<BaseResponse<Catalogo[]>>}
-  * /
-  */
+  /*
+    * Obtiene el catálogo de países de destino para el trámite especificado.
+    * @param {string} tramite - El ID del trámite.
+    * @return {Observable<BaseResponse<Catalogo[]>>}
+    * /
+    */
   paisesDestinoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_PAISES_DESTINO(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
@@ -382,41 +394,100 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
- /*
- * Obtiene el catálogo de tratados y acuerdos.
- * @param {string} tramite - El ID del trámite.
- * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
- * @returns {Observable<BaseResponse<Catalogo[]>>}
- */
-tratadosAcuerdoCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, ideTipoTratadoAcuerdo)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /*
+  * Obtiene el catálogo de tratados y acuerdos.
+  * @param {string} tramite - El ID del trámite.
+  * @param {string} ideTipoTratadoAcuerdo - El ID del tipo de tratado/acuerdo.
+  * @returns {Observable<BaseResponse<Catalogo[]>>}
+  */
+  tratadosAcuerdoCatalogo(tramite: string, ideTipoTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, ideTipoTratadoAcuerdo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de países destino según el trámite y los datos proporcionados.
- *
- * @param tramite - Identificador del trámite para el cual se solicita el catálogo.
- * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
- * @returns Un observable que emite la respuesta base con el arreglo de catálogos de países destino.
- */
-paisDestinoCatalogo(tramite: string, payloadDatos: { cveTratado: string , cvePais: string,}): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${PAIS_DESTINO(tramite, payloadDatos)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de países destino según el trámite y los datos proporcionados.
+   *
+   * @param tramite - Identificador del trámite para el cual se solicita el catálogo.
+   * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
+   * @returns Un observable que emite la respuesta base con el arreglo de catálogos de países destino.
+   */
+  paisDestinoCatalogo(tramite: string, payloadDatos: { cveTratado: string, cvePais: string, }): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${PAIS_DESTINO(tramite, payloadDatos)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
 
-/**
- * Obtiene el catálogo de fracciones HTS basado en el trámite y los datos proporcionados.
- *
- * @param tramite - El identificador del trámite para el cual se solicita el catálogo.
- * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
- * @returns Un observable que emite la respuesta base con un arreglo de elementos del catálogo.
- */
-fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${FRACCION_HTS(tramite,id)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de fracciones HTS basado en el trámite y los datos proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicita el catálogo.
+   * @param payloadDatos - Objeto que contiene la clave del tratado (`cveTratado`) y la clave del país (`cvePais`).
+   * @returns Un observable que emite la respuesta base con un arreglo de elementos del catálogo.
+   */
+  fraccionHtsCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${FRACCION_HTS(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+  * Obtiene el catálogo de fracciones arancelarias según el trámite e identificador proporcionado.
+  *
+  * Este método realiza una petición HTTP GET al servicio correspondiente para recuperar 
+  * la lista de fracciones arancelarias disponibles.
+  *
+  * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+  * @param {string} id - Identificador específico utilizado para filtrar las fracciones arancelarias.
+  * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de fracciones arancelarias.
+  */
+  fraccionesArancelariasCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+    * Obtiene el catálogo de unidades de medida tarifarias según el trámite e identificador proporcionado.
+    *
+    * Este método realiza una solicitud HTTP GET para recuperar las unidades de medida tarifarias 
+    * asociadas al trámite indicado.
+    *
+    * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+    * @param {string} id - Identificador específico utilizado para filtrar las unidades de medida tarifarias.
+    * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de unidades de medida tarifarias.
+    */
+  unidadesMedidaTarifariaCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+     * Obtiene el catálogo de bloques comerciales (tratados o acuerdos) relacionados con el trámite especificado.
+     *
+     * Este método realiza una solicitud HTTP GET para recuperar la lista de tratados o acuerdos 
+     * comerciales disponibles para el trámite.
+     *
+     * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+     * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de bloques comerciales.
+     */
+  bloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDOS(tramite, 'TITRAC.TA')}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene la información de las partidas asociadas a una solicitud específica.
+   *
+   * Este método realiza una petición HTTP GET al endpoint correspondiente para recuperar 
+   * la lista de partidas registradas en la solicitud del trámite indicado.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la solicitud.
+   * @param {number} solicitudId - Identificador único de la solicitud cuyas partidas se desean consultar.
+   * @returns {Observable<BaseResponse<MostrarPartidas[]>>} Un observable que emite la respuesta base con la lista de partidas de la solicitud.
+   */
+  mostrarPartidasSolicitud(tramite: string, solicitudId: number): Observable<BaseResponse<MostrarPartidas[]>> {
+    const ENDPOINT = `${this.host}${API_MOSTRAR_PARTIDAS_SOLICITUD(tramite, solicitudId)}`;
+    return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+  }
   /**
    * Obtiene el catálogo de clasificación de régimen según el trámite y los datos proporcionados.
    *
@@ -424,14 +495,23 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
    * @param payloadDatos - Objeto que contiene información adicional, incluyendo el trámite y el id requerido.
    * @returns Un observable que emite la respuesta base con el arreglo de elementos del catálogo.
    */
-  clasificacionRegimenCatalogo(tramite: string,payloadDatos: { tramite: string , id: string}): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CLASIFICACION_REGIMEN(tramite,payloadDatos)}`;
+  clasificacionRegimenCatalogo(tramite: string, payloadDatos: { tramite: string, id: string }): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CLASIFICACION_REGIMEN(tramite, payloadDatos)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-   
+
   }
 
+  /*
+   * Obtiene el catálogo de clasificación de régimen según el trámite y la clave del régimen.
+   * @param {string} tramite - El ID del trámite.
+   * @param {string} cveRegimen - La clave del régimen.
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   */
+  getClasificacionRegimen(tramite: string, cveRegimen: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CLASSIFICACIONES_REGIMEN(tramite).replace(CLASIFICACION, cveRegimen)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-  
   /*
    * Obtiene el catálogo de países (bloques).
    * @param {string} tramite - El ID del trámite.
@@ -470,6 +550,20 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
    */
   representacionFederalCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(tramite, cveEntidad)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo completo de países disponibles para el trámite especificado.
+   *
+   * Este método realiza una solicitud HTTP GET al servicio correspondiente para recuperar 
+   * la lista completa de países asociados al trámite.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación para el cual se consultan los países.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo completo de países.
+   */
+  todosPaisesSeleccionados(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_CATALOGOS_PAISES_TODOS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
@@ -657,11 +751,11 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
-   /*
-   * Obtiene el catálogo de unidades de masa bruta correspondiente al trámite proporcionado.
-   * @param {string} tramite - El ID del trámite.
-   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor que contiene el catálogo de unidades de masa bruta.
-   */
+  /*
+  * Obtiene el catálogo de unidades de masa bruta correspondiente al trámite proporcionado.
+  * @param {string} tramite - El ID del trámite.
+  * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor que contiene el catálogo de unidades de masa bruta.
+  */
   unidadDeMasaBrutaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_UNIDAD_DE_MASA_BRUTA(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
@@ -684,15 +778,15 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
   paisCatalogo(tramite: string, clave: string): Observable<BaseResponse<Catalogo[]>> {
-      const ENDPOINT = `${this.host}${CATALOGO_PAIS_BLOQUE_CLAVE(tramite, clave)}`;
+    const ENDPOINT = `${this.host}${CATALOGO_PAIS_BLOQUE_CLAVE(tramite, clave)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
-/**
- * Obtiene los datos del catálogo de tratados o acuerdos para un trámite específico.
- * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
- * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
- */
+  /**
+   * Obtiene los datos del catálogo de tratados o acuerdos para un trámite específico.
+   * Recibe como parámetros el tipo de trámite y el ID del tipo de tratado/acuerdo.
+   * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+   */
   tratadosAcuerdosCatalogoDatosNew(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO_NEW(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
@@ -703,195 +797,195 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
  * Recibe como parámetros el tipo de trámite y el ID del tratado.
  * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
  */
-getPaisesPorTratado(tramite: string, tratadoId: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS(tramite, tratadoId)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  getPaisesPorTratado(tramite: string, tratadoId: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS(tramite, tratadoId)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene los tratados o acuerdos asociados a un país específico para un trámite determinado.
- * Recibe como parámetros el tipo de trámite y la clave del país.
- * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
- */
-getTratadosAcuerdosPorPais(tramite: string, cvePais: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS_PAIS(tramite, cvePais)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene los tratados o acuerdos asociados a un país específico para un trámite determinado.
+   * Recibe como parámetros el tipo de trámite y la clave del país.
+   * Realiza una petición HTTP GET al endpoint correspondiente y devuelve un observable con la respuesta tipada como `BaseResponse<Catalogo[]>`.
+   */
+  getTratadosAcuerdosPorPais(tramite: string, cvePais: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ACUERDOS_PAIS(tramite, cvePais)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
 
-/**
- * Obtiene el catálogo de clasificaciones SCIAN (Sistema de Clasificación Industrial de América del Norte).
- *
- * @param tramite - Identificador del trámite que determina el contexto del catálogo SCIAN
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de clasificaciones SCIAN
- * @see CATALOGO_SCIAN
- */
-scianCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_SCIAN(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de clasificaciones SCIAN (Sistema de Clasificación Industrial de América del Norte).
+   *
+   * @param tramite - Identificador del trámite que determina el contexto del catálogo SCIAN
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de clasificaciones SCIAN
+   * @see CATALOGO_SCIAN
+   */
+  scianCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_SCIAN(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de regímenes aduaneros.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de regímenes
- * @see CATALOGO_REGIMENES
- */
-regimenesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_REGIMENES(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de regímenes aduaneros.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de regímenes
+   * @see CATALOGO_REGIMENES
+   */
+  regimenesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_REGIMENES(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de aduanas.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de aduanas
- * @see CATALOGO_ADUANAS
- */
-aduanasCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ADUANAS(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de aduanas.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de aduanas
+   * @see CATALOGO_ADUANAS
+   */
+  aduanasCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ADUANAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de clasificación del producto.
- *
- * @param tramite - Identificador del trámite
- * @param procedimiento - Identificador del procedimiento
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de clasificaciones de producto
- * @see CATALOGO_CLASIFICACION_PRODUCTO
- */
-clasificacionProductoCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_PRODUCTO(tramite, procedimiento)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de clasificación del producto.
+   *
+   * @param tramite - Identificador del trámite
+   * @param procedimiento - Identificador del procedimiento
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de clasificaciones de producto
+   * @see CATALOGO_CLASIFICACION_PRODUCTO
+   */
+  clasificacionProductoCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_PRODUCTO(tramite, procedimiento)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo específico de clasificación del producto.
- *
- * @param tramite - Identificador del trámite
- * @param idClasificacion - Identificador de la clasificación específica
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado específico
- * @see CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO
- */
-especificarClasificacionProductoCatalogo(tramite: string, idClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO(tramite, idClasificacion)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo específico de clasificación del producto.
+   *
+   * @param tramite - Identificador del trámite
+   * @param idClasificacion - Identificador de la clasificación específica
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado específico
+   * @see CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO
+   */
+  especificarClasificacionProductoCatalogo(tramite: string, idClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO(tramite, idClasificacion)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de tipos de producto por trámite.
- *
- * @param tramite - Identificador del trámite
- * @param procedimientoTipo - Identificador del tipo de procedimiento
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de producto
- * @see CATALOGO_TIPOS_PRODUCTO
- */
-tiposProductoCatalogo(tramite: string, procedimientoTipo: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_TIPOS_PRODUCTO(tramite, procedimientoTipo)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de tipos de producto por trámite.
+   *
+   * @param tramite - Identificador del trámite
+   * @param procedimientoTipo - Identificador del tipo de procedimiento
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de producto
+   * @see CATALOGO_TIPOS_PRODUCTO
+   */
+  tiposProductoCatalogo(tramite: string, procedimientoTipo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TIPOS_PRODUCTO(tramite, procedimientoTipo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de formas farmacéuticas.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de formas farmacéuticas
- * @see CATALOGO_FORMA_FARMACEUTICA
- */
-formaFarmaceuticaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_FORMA_FARMACEUTICA(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de formas farmacéuticas.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de formas farmacéuticas
+   * @see CATALOGO_FORMA_FARMACEUTICA
+   */
+  formaFarmaceuticaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_FORMA_FARMACEUTICA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de estados físicos de mercancía.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de estados físicos
- * @see CATALOGO_ESTADO_FISICO_MERCANCIA
- */
-estadoFisicoMercanciaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ESTADO_FISICO_MERCANCIA(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de estados físicos de mercancía.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de estados físicos
+   * @see CATALOGO_ESTADO_FISICO_MERCANCIA
+   */
+  estadoFisicoMercanciaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ESTADO_FISICO_MERCANCIA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de municipios y delegaciones por entidad federativa.
- *
- * @param tramite - Identificador del trámite
- * @param cveEntidad - Clave de la entidad federativa
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de municipios/delegaciones
- * @see CATALOGO_MUNICIPIOS_DELEGACIONES
- */
-municipiosDelegacionesCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_MUNICIPIOS_DELEGACIONES(tramite, cveEntidad)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de municipios y delegaciones por entidad federativa.
+   *
+   * @param tramite - Identificador del trámite
+   * @param cveEntidad - Clave de la entidad federativa
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de municipios/delegaciones
+   * @see CATALOGO_MUNICIPIOS_DELEGACIONES
+   */
+  municipiosDelegacionesCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_MUNICIPIOS_DELEGACIONES(tramite, cveEntidad)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de localidades por municipio.
- *
- * @param tramite - Identificador del trámite
- * @param cveMunicipio - Clave del municipio
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de localidades
- * @see CATALOGO_LOCALIDADES
- */
-localidadesCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_LOCALIDADES(tramite, cveMunicipio)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de localidades por municipio.
+   *
+   * @param tramite - Identificador del trámite
+   * @param cveMunicipio - Clave del municipio
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de localidades
+   * @see CATALOGO_LOCALIDADES
+   */
+  localidadesCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_LOCALIDADES(tramite, cveMunicipio)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de colonias por municipio/delegación.
- *
- * @param tramite - Identificador del trámite
- * @param cveMunicipioDelegacion - Clave del municipio o delegación
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de colonias
- * @see CATALOGO_COLONIAS
- */
-coloniasCatalogo(tramite: string, cveMunicipioDelegacion: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_COLONIAS(tramite, cveMunicipioDelegacion)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de colonias por municipio/delegación.
+   *
+   * @param tramite - Identificador del trámite
+   * @param cveMunicipioDelegacion - Clave del municipio o delegación
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de colonias
+   * @see CATALOGO_COLONIAS
+   */
+  coloniasCatalogo(tramite: string, cveMunicipioDelegacion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_COLONIAS(tramite, cveMunicipioDelegacion)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de bancos.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
- * @see CATALOGO_BANCOS
- */
-bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_BANCOS(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  /**
+   * Obtiene el catálogo de bancos.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
+   * @see CATALOGO_BANCOS
+   */
+  bancosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_BANCOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
-/**
- * Obtiene el catálogo de bancos.
- *
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
- * @see CATALOGO_BANCOS
- */
-codigoCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveMunicipio)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
-/**
- * Obtiene el catálogo de años disponibles.
- *  
- * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de años
- * @see CATALOGO_ANOS
- */
+  /**
+   * Obtiene el catálogo de bancos.
+   *
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de bancos
+   * @see CATALOGO_BANCOS
+   */
+  codigoCatalogo(tramite: string, cveMunicipio: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_CODIGO(tramite, cveMunicipio)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+  /**
+   * Obtiene el catálogo de años disponibles.
+   *  
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de años
+   * @see CATALOGO_ANOS
+   */
 
-anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_ANOS(tramite)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ANOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
   /**
    * Obtiene el catálogo de países de México según el trámite especificado.
@@ -899,24 +993,73 @@ anosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
    * @param tramite - El identificador del trámite para el cual se requiere el catálogo de países.
    * @returns Un observable que emite la respuesta base con el listado de países en el catálogo.
    */
-  paisesMaxicoCatalogo(tramite: string,id:string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_PAISES_MEXICO(tramite,id)}`;
+  paisesMaxicoCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES_MEXICO(tramite, id)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-   
+
   }
 
 
 
 
+  /**
+   * Obtiene el catálogo de usos específico de mercancía.
+   * 
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de usos específicos de mercancía
+   * @see CATALOGO_USOS_ESPECIFICO_MERCANCIA
+   */
+  usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de fracciones arancelarias.
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de fracciones arancelarias
+   * @see API_FRACCIONES_ARANCELARIAS
+   */
+  getFraccionesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de Unidades de Medida de Transporte de Carga (UMT) según el trámite y régimen especificados.
+   * @param tramite - Identificador del trámite
+   * @param cveRegimen - Clave del régimen aduanero
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de UMT
+   * @see API_UMT
+   */
+
+  getUMTCatalogo(tramite: string, cveRegimen: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_UMT(tramite).replace(CLASIFICACION, cveRegimen)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de países por bloque comercial según el trámite especificado.
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de países por bloque comercial
+   * @see PAISES_POR_BLOQUE
+   */
+  getpaisesBloqueCatalogo(tramite: string, claveBloque: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${PAISES_POR_BLOQUE(tramite, claveBloque)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
 /**
- * Obtiene el catálogo de usos específico de mercancía.
+ * Obtiene el catálogo tipo de empresa.
  * 
  * @param tramite - Identificador del trámite
- * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de usos específicos de mercancía
- * @see CATALOGO_USOS_ESPECIFICO_MERCANCIA
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de tipos de empresa
+ * @see CATALOGO_TIPO_EMPRESA
  */
-usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observable<BaseResponse<Catalogo[]>> {
-  const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
-  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-}
+  obtenerTipoEmpresaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${TIPO_EMPRESA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
+
 }

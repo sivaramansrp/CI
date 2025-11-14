@@ -14,8 +14,8 @@ import { DestinatarioDeComponent } from '../../components/destinatario-de/destin
   imports: [
     CommonModule,
     SolicitanteComponent,
-    CertificadoOrigenComponent,
     DestinatarioDeComponent,
+    CertificadoOrigenComponent,
     DatosCertificadoComponent
   ],
   templateUrl: './paso-uno.component.html',
@@ -166,7 +166,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       isValid = false;
     }
     if(this.certificadoOrigenComponent){
-      if (!this.certificadoOrigenComponent.validarFormulario()) {
+      if (!this.certificadoOrigenComponent.validateAll()) {
         isValid = false
       }
     }

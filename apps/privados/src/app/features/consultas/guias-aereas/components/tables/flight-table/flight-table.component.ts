@@ -66,6 +66,12 @@ export class FlightTableComponent implements OnInit {
   errorMasterData = false;
   isLoadingMasterDataTable = signal<boolean>(true);
   flightSelected = signal<boolean>(false);
+  pagination = signal({
+    page: 1,
+    totalPage: 1,
+    totalRecords: 0,
+    totalToLoad: 10,
+  });
 
   ngOnInit(): void {
     this.getFlights();
@@ -82,8 +88,12 @@ export class FlightTableComponent implements OnInit {
       .pipe(
         tap((resp: FlightsResponse) => {
           if (resp.codigo === '00') {
-            const houses = this.airWaybillService.flights();
-            const body = houses.map((item) => [
+            const flights = this.airWaybillService.flights();
+            this.hiddenFlightsData.set(flights);
+
+            const pageSize = 10;
+            const firstPage = flights.slice(0, pageSize);
+            const body = firstPage.map((item) => [
               item.empresaTransportista,
               item.numVuelo,
               item.numManifiesto,
@@ -92,9 +102,20 @@ export class FlightTableComponent implements OnInit {
               item.fechaHora,
               item.rfc,
             ]);
-            this.hiddenFlightsData.set(houses);
-            this.tableFlightsData.set({ ...this.tableFlightsData(), body });
+
+            this.tableFlightsData.set({
+              ...this.tableFlightsData(),
+              body,
+            });
+
+            this.pagination.set({
+              page: 1,
+              totalPage: Math.ceil(flights.length / pageSize) || 1,
+              totalRecords: flights.length,
+              totalToLoad: pageSize,
+            });
           }
+
           this.isLoadingFlightsDataTable.set(false);
         }),
         catchError(() => {
@@ -106,6 +127,47 @@ export class FlightTableComponent implements OnInit {
       )
       .subscribe();
   }
+
+  onFlightsPageChange(page: number) {
+    const allFlights = this.hiddenFlightsData() as Flight[];
+    const pageSize = 10;
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+
+    const pageSlice = allFlights.slice(start, end);
+    const body = pageSlice.map((item) => [
+      item.empresaTransportista,
+      item.numVuelo,
+      item.numManifiesto,
+      item.lugarCarga,
+      item.lugarDescarga,
+      item.fechaHora,
+      item.rfc,
+    ]);
+
+    this.tableFlightsData.set({
+      ...this.tableFlightsData(),
+      body,
+    });
+
+    this.pagination.update((p) => ({ ...p, page }));
+  }
+
+  getFlightsPagination() {
+    const flights = this.hiddenFlightsData() || [];
+    const totalRecords = Array.isArray(flights) ? flights.length : 0;
+    const totalToLoad = 10;
+    const totalPage = Math.ceil(totalRecords / totalToLoad) || 1;
+
+    return {
+      page: 1,
+      totalPage,
+      totalRecords,
+      totalToLoad,
+    };
+  }
+
+  // ... other properties and methods ...
 
   getMasterByManifest(flight: Flight) {
     this.buildFlightSelectedTable(flight);

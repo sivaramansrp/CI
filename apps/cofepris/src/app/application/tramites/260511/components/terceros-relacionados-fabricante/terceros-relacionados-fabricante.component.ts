@@ -1,7 +1,8 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TABLA_ORDEN } from '../../constantes/permiso-nutrientes-exportacion.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { Tramite260511Store } from '../../../../shared/estados/stores/260511/tramite260511.store';
 
 /**
  * Componente que muestra la sección de Terceros Relacionados.
@@ -15,9 +16,46 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+    /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosComponent', { static: false }) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * Constante que define el orden de la tabla para los terceros relacionados.
    * Se utiliza para mostrar la tabla en el componente TercerosRelacionadosComponent.
    */
   tablaOrden = TABLA_ORDEN;
+  
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260511;
+   /** Constructor que inicializa el store del trámite 260504. */
+    constructor(
+      private store: Tramite260511Store,
+    ) {
+      //
+    }
+
+  /** Maneja el evento de validez de tabla y actualiza el estado correspondiente en el store. */
+  onTableValidEvent(event: string): void {
+    if (event === 'fabricante') {
+      this.store.setFormValidity('fabricanteTablaValid', true);
+    }
+    if (event === 'formulador') {
+      this.store.setFormValidity('formuladorTablaValid', true);
+    }
+    if (event === 'proveedor') {
+      this.store.setFormValidity('proveedorTablaValid', true);
+    }
+  }
+
+  /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
+  validarFormulario(): void {
+    this.tercerosRelacionadosComponent.markTouched();
+  }
+
 }

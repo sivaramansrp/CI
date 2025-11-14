@@ -287,10 +287,12 @@ export interface TablaMercanciasDatos {
   marcaComercialDenominacion?:string;
   especifique?: string;
   especifiqueForma?: string;
+  especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
     paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
+  id?: number
 }
 
 /**

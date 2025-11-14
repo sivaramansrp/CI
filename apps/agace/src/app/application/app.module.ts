@@ -11,6 +11,7 @@ import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
 import { InicioSesionService } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
+import { RfcSolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@ng-mf/data-access-user';
@@ -37,6 +38,7 @@ import { provideToastr } from 'ngx-toastr';
     NavComponent,
     TituloComponent,
     ToastrModule.forRoot(),
+    RfcSolicitanteComponent
   ],
   providers: [
     provideToastr({

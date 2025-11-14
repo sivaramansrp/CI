@@ -200,6 +200,30 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.datosSolicitud?.validarFormularioDatos() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionados?.validarFormulario() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO) ? true : false
+
+    );
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores

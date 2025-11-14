@@ -19,7 +19,6 @@ export class ManifiestoAereoDetalleInformacionPage {
 
   goBack() {
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       MANIFIESTO_AEREO_ROUTES.DETALLES_MANIFIESTO_AEREO,
       this.consultasAereosService.idHeader(),

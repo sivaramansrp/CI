@@ -13,4 +13,11 @@ import { PagoDeDerechosBancoComponent } from '../../../../shared/components/pago
   templateUrl: './pago-derechos.component.html',
   styleUrl: './pago-derechos.component.scss',
 })
-export class PagoDerechosComponent {}
+export class PagoDerechosComponent {
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260508;
+}

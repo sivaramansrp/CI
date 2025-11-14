@@ -1,6 +1,9 @@
-<app-datos-de-la
+<app-datos-de-la #DatosDeLaComponent
   [isAvisoLicenciaVisible]="isAvisoLicenciaVisible"
-  [isAduanasEntradaVisible]="isAduanasEntradaVisible"
-  [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible"
-  [configuracionVisibilidad]="configuracionVisibilidad"
+  [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
+  (establecimientoFormValidity)="datosEstabelicimientoFormValidityChange($event)"
+  (domicilioFormValidity)="domicilioFormValidityChange($event)"
+  (manifiestosFormValidity)="manifiestosFormValidityChange($event)"
+  (representanteLegalFormValidity)="representanteLegalFormValidityChange($event)"
+  [idProcedimiento]="idProcedimiento"
 ></app-datos-de-la>
