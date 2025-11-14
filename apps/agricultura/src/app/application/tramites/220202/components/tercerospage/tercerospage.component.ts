@@ -93,6 +93,16 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   public nuevaNotificacion!: Notificacion;
 
   /**
+* Indica si debe mostrar error de campo obligatorio en la tabla.
+*/
+  mensajeErrorTablaExportador: boolean = false;
+
+  /**
+* Indica si debe mostrar error de campo obligatorio en la tabla.
+*/
+  mensajeErrorTablaDestinatario: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
    * @param agriculturaApiService Servicio para actualizar terceros relacionados.
@@ -229,6 +239,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
   */
   public validarFormulario(): { valido: boolean; mensaje?: string } {
+    var valido = true;
+
 
     console.log('fitosanitarioStoreTerceros', JSON.stringify(this.fitosanitarioStore.getValue()))
     // Verificar si hay datos en la tabla
@@ -236,15 +248,20 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     const TABLE_EXPORTADOR = this.fitosanitarioStore.getValue().datosForma;
 
     if (!TABLE_EXPORTADOR || TABLE_EXPORTADOR.length === 0) {
-
-      return { valido: false, mensaje: 'Debe agregar al menos un Exportador.' };
+      this.mensajeErrorTablaExportador = true
+      valido = false;
+    }
+    else {
+      this.mensajeErrorTablaExportador = false;
     }
     if (!TABLE_DESTINATARIO || TABLE_DESTINATARIO.length === 0) {
-
-      return { valido: false, mensaje: 'Debe agregar al menos un Destinatario.' };
+      this.mensajeErrorTablaDestinatario = true
+      valido = false;
     }
-
-    return { valido: true };
+    else {
+      this.mensajeErrorTablaDestinatario = false;
+    }
+    return { valido: valido };
   }
 
 }

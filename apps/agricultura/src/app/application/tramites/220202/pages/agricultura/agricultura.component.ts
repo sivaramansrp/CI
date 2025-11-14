@@ -1,5 +1,5 @@
 import {
-  ALERT_TEXTO,
+  ALERT_TEXTO, ERROR_FORMA_ALERT,
   MENSAJE_DE_EXITO_ETAPA_UNO,
   PASOS,
 } from '../../constantes/220202/fitosanitario.enums';
@@ -110,12 +110,13 @@ export class AgriculturaComponent implements OnInit {
   public btnGuardarVisible: string = 'visible';
 
   /**
-   * Mensaje de error del formulario para mostrar en el alert.
-   *
-   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   * Mensaje de error que se muestra cuando la validación de formularios falla.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
    */
-  formErrorAlert: string =
-    '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+  public readonly FORM_ERROR_ALERT = ERROR_FORMA_ALERT;
 
   /**
    * Indica si el formulario tiene errores de validación.
@@ -236,16 +237,7 @@ export class AgriculturaComponent implements OnInit {
       if (!VALIDA_PESTANAS.valido) {
         // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
-        this.esFormaInValido = true;
-
-        if (VALIDA_PESTANAS.mensaje) {
-          this.formErrorAlert =
-            '<strong>¡Error de registro! </strong> Faltan campos por capturar <br>' +
-            VALIDA_PESTANAS.mensaje;
-        } else {
-          this.formErrorAlert =
-            '<strong>¡Error de registro! </strong> Faltan campos por capturar';
-        }
+        this.esFormaInValido = true;        
         return;
       }
     }

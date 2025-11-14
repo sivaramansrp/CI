@@ -5,8 +5,9 @@
           <h1>Captura del certificado fitosanitario para importación</h1>
         </div>
         @if (esFormaInValido) {
-        <div class="alert alert-info alert-danger text-center" [innerHTML]="formErrorAlert"></div>
-        }
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="FORM_ERROR_ALERT" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div> }
         @if (esPasoUnoCompleto) {
         <div class="alert alert-info" [innerHTML]="mensajePasos"></div>
         }

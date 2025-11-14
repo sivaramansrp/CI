@@ -215,6 +215,20 @@ export class TercerosrelacionadosComponent {
   buscarForm!: FormGroup;
 
   /**
+    * Catálogos de datos de la solicitud, como países y estados.
+    * @type {DatosDeLaSolicitud}
+    */
+  @Input() mensajeErrorTablaExportador: boolean = false;
+
+  /**
+  * Catálogos de datos de la solicitud, como países y estados.
+  * @type {DatosDeLaSolicitud}
+  */
+  @Input() mensajeErrorTablaDestinatario: boolean = false;
+
+
+
+  /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento de Angular.
    * @param route Información de la ruta activa.

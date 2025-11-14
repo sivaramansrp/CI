@@ -1483,6 +1483,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     // Verificar si hay datos en la tabla
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
     if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      this.mensajeErrorTabla = true;
       return { valido: false, mensaje: 'Debe agregar al menos una mercancía.' };
     }
 
