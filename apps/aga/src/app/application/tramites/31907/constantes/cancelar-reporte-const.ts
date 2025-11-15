@@ -1,17 +1,7 @@
 /**
  * Identificador del tramite
  */
-export const TRAMITE_ID = '231002';
-
-/**
- * Valor que indica que es la primera vez que se realiza el aviso de retorno.
- */
-export const ES_PRIMERA_VEZ = 'primera_vez';
-
-/**
- * Valor que indica que se requiere la información de la empresa de reciclaje.
- */
-export const REQUIERE_EMPRESA_RECICLAJE = 'si';
+export const TRAMITE_ID = 31907;
 
 /**
  * Lista de pasos del proceso de solicitud.

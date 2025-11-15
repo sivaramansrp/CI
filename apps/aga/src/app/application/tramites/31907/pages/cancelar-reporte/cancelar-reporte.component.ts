@@ -1,16 +1,43 @@
-import { Component } from '@angular/core';
 import {
+  AccionBoton,
+  AlertComponent,
+  BtnContinuarComponent,
+  CategoriaMensaje,
+  DatosPasos,
+  ErrorModelo,
+  ListaPasosWizard,
   Notificacion,
   NotificacionesComponent,
+  PAGO_DE_DERECHOS,
+  PasoFirmaComponent,
   WizardComponent,
-  BtnContinuarComponent,
-  ListaPasosWizard,
-  DatosPasos,
-  AccionBoton,
 } from '@libs/shared/data-access-user/src';
-import { PASOS } from '../../constantes/cancelar-reporte-const';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
 import { CommonModule } from '@angular/common';
+import { EstadoSolicitud31907 } from '../../models/estado-solicitud-31907';
+import { GuardarServiceT31907 } from '../../services/guardar.service';
+import { GuardarSolicitud31907Request } from '../../models/guardar-solicitud-request';
+import { MSG_REGISTRO_EXITOSO } from '../../../319/constantes/operaciones-de-comercio-exterior.enum';
+import { PASOS } from '../../constantes/cancelar-reporte-const';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ResultadoSolicitud } from '../../models/ResultadoSolicitud';
+import { Tramite31907Query } from '../../estados/query/tramite31907.query';
+import { Tramite31907Store } from './../../estados/store/tramite31907.store';
 
+/** Representa la forma cruda que puede venir desde el backend */
+interface ErrorModeloRaw {
+  campo?: string;
+  errores?: string | string[] | null | undefined;
+}
+/**
+ * Componente encargado de gestionar el flujo de cancelación de reporte para el trámite 31907.
+ *
+ * Provee la lógica de navegación entre pasos (wizard), suscripciones al estado del trámite,
+ * y manejo de notificaciones/alertas. No modifica la lógica existente; sólo añade documentación.
+ */
 @Component({
   selector: 'app-cancelar-reporte',
   standalone: true,
@@ -19,25 +46,143 @@ import { CommonModule } from '@angular/common';
     WizardComponent,
     BtnContinuarComponent,
     CommonModule,
+    PasoUnoComponent,
+    AlertComponent,
+    PasoFirmaComponent,
   ],
   templateUrl: './cancelar-reporte-mensual.component.html',
 })
-export class CancelarReporteComponent {
+export class CancelarReporteComponent implements OnInit, OnDestroy {
+  /**
+   * Índice actual del paso mostrado en el wizard (1-based).
+   */
   indice: number = 1;
+
+  /**
+   * Indica si la forma/validación del paso actual es válida.
+   */
   esFormaValido: boolean = false;
+
+  /**
+   * Texto que representa el error del formulario, si existe.
+   */
   formErrorAlert: string = '';
+
+  /**
+   * Alerta de notificación actualmente mostrada (estructura de Notificacion).
+   */
   alertaNotificacion!: Notificacion;
+
+  /**
+   * Lista de pasos que alimentan el componente Wizard.
+   */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Constante que representa el primer paso del wizard.
+   */
   PASO_UNO: number = 1;
 
+  /**
+   * Referencia al componente Wizard para controlar navegación programática.
+   */
   wizardComponent!: WizardComponent;
 
+  /**
+   * Datos derivados para el componente de pasos (número de pasos, índice, labels de botones).
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Estado actual de la solicitud/trámite 31907 (se inyecta desde el query de Akita).
+   */
+  estadoSolicitud!: EstadoSolicitud31907;
+
+  /**
+   * Subject usado para completar las suscripciones y evitar fugas de memoria.
+   * Es privado; no exponemos el Subject fuera del componente.
+   */
+  private destroy$ = new Subject<void>();
+  /**
+   * Textos estáticos relacionados con el pago de derechos.
+   * @type {typeof PAGO_DE_DERECHOS}
+   */
+  TEXTOS = PAGO_DE_DERECHOS;
+  /**
+   * Clase CSS para estilizar alertas informativas.
+   * @type {string}
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Folio temporal asignado a la solicitud tras el registro exitoso.
+   * @type {number}
+   */
+  folioTemporal: number = 0;
+
+  /**
+   * Notificación que se puede utilizar para mostrar mensajes emergentes (toastr).
+   * Null cuando no hay notificación nueva.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   * Folio del trámite obtenido de la ruta.
+   * se obtiene por ruta para probar funcionalidad
+   * Será reemplazado por akita una vez implementada la lógica completa.
+   * @type {string}
+   */
+  folioTramite: string = '';
+
+  /**
+   * Constructor del componente.
+   * @param tramite31907Query Inyección de dependencia para acceder al estado del trámite 31907.
+   */
+  constructor(
+    private tramite31907Query: Tramite31907Query,
+    private tramiteStore: Tramite31907Store,
+    private route: ActivatedRoute,
+    private guardarService: GuardarServiceT31907
+  ) {}
+
+  /**
+   * Inicializa el componente.
+   * Obtiene el estado de la solicitud y el folio del trámite desde la ruta.
+   */
+  ngOnInit(): void {
+    this.obtenerEstadoSolicitud();
+    this.obtenerFolioTramiteRuta();
+  }
+
+  /**
+   * Obtiene el estado de la solicitud desde el estado global.
+   * Se suscribe a los cambios y actualiza la propiedad estadoSolicitud.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.tramite31907Query
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((estado) => {
+        this.estadoSolicitud = estado;
+      });
+  }
+
+  /**
+   * Obtiene el folio del trámite desde los parámetros de la ruta y lo guarda en el store.
+   * Se suscribe a los cambios en los parámetros de la ruta.
+   * Se debe remover al implementarse la logica de akita completa.
+   */
+  obtenerFolioTramiteRuta(): void {
+    this.route.params.subscribe((params) => {
+      this.folioTramite = params['folioTramite'];
+      this.tramiteStore.setFolioTramite(this.folioTramite);
+    });
+  }
 
   /**
    * Maneja la navegación entre pasos del wizard.
@@ -51,7 +196,101 @@ export class CancelarReporteComponent {
         this.datosPasos.indice = this.indice;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       }
-      //this.ejecutarPostGuardar(e);
+      this.ejecutarPostGuardar(e);
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        this.actualizarDatosPasos();
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
+  }
+  /**
+   * Lógica que se ejecuta después de intentar guardar la solicitud.
+   * Maneja notificaciones, navegación del wizard y errores devueltos por el backend.
+   * @param e Acción del botón con la dirección y valor de índice destino.
+   */
+  ejecutarPostGuardar(e: AccionBoton): void {
+    if (this.indice === this.PASO_UNO) {
+      this.ejecutaEnviarSolicitud()
+        .pipe(
+          takeUntil(this.destroy$),
+          tap((respuesta) => {
+            if (!respuesta.exito) {
+              const ERRORESEXTRA = (respuesta.erroresModelo || [])
+                .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
+                .join('<br>');
+
+              const MENSAJEFINAL = `${
+                respuesta.mensaje || 'Error inesperado al enviar la solicitud.'
+              }${ERRORESEXTRA}`;
+
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: 'Error',
+                mensaje:
+                  MENSAJEFINAL || 'Error inesperado al enviar la solicitud.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+
+              setTimeout(
+                () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+                0
+              );
+              this.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              this.actualizarDatosPasos();
+              return;
+            }
+
+            if (e.valor > 0 && e.valor < 5) {
+              this.alertaNotificacion = {
+                tipoNotificacion: 'banner',
+                categoria: 'success',
+                modo: 'action',
+                titulo: '',
+                mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                cerrar: true,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              this.indice = e.valor;
+              this.actualizarDatosPasos();
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          }),
+          catchError((err) => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje:
+                err?.mensaje || 'Error inesperado al enviar la solicitud.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            setTimeout(
+              () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+              0
+            );
+            return of(false);
+          })
+        )
+        .subscribe();
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
@@ -66,6 +305,74 @@ export class CancelarReporteComponent {
   }
 
   /**
+   * Envía el payload construido al servicio `guardarService.postSolicitud`.
+   * Normaliza la respuesta y devuelve un Observable con ResultadoSolicitud.
+   * @returns Observable<ResultadoSolicitud> con el resultado del intento de guardado.
+   */
+  ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
+    const PAYLOAD: GuardarSolicitud31907Request = {
+      folioTramite: this.folioTramite,
+      id_solicitud: this.estadoSolicitud.idSolicitud,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        nombre: 'IGNACIO EDUARDO',
+        es_persona_moral: true,
+        certificado_serial_number: '3082054030820428a00302010',
+      },
+    };
+    return this.guardarService.postSolicitud(PAYLOAD).pipe(
+      map((response) => {
+        if (
+          response.codigo === CodigoRespuesta.EXITO &&
+          response.datos?.id_solicitud
+        ) {
+          this.tramiteStore.setIdSolicitud(response.datos.id_solicitud);
+          this.folioTemporal = response.datos.id_solicitud;
+          return { exito: true };
+        }
+
+        const MENSAJE =
+          response?.error ||
+          response?.mensaje ||
+          response?.causa ||
+          'Ocurrió un error al guardar la solicitud.';
+
+        const ERRORESMODELO: ErrorModelo[] = (
+          (response?.errores_modelo ?? []) as ErrorModeloRaw[]
+        ).map((err) => {
+          const CAMPO = typeof err?.campo === 'string' ? err.campo : 'general';
+          const RAW_ERRORES = err?.errores;
+          const ERRORES = Array.isArray(RAW_ERRORES)
+            ? RAW_ERRORES.map(String)
+            : RAW_ERRORES === null
+            ? [String(RAW_ERRORES)]
+            : [];
+          return { campo: CAMPO, errores: ERRORES };
+        });
+
+        return {
+          exito: false,
+          MENSAJE,
+          erroresModelo: ERRORESMODELO,
+        } as ResultadoSolicitud;
+      }),
+      catchError((error) => {
+        const MENSAJE =
+          error?.error?.error ||
+          error?.message ||
+          'Error inesperado al guardar la solicitud.';
+
+        return of({
+          exito: false,
+          MENSAJE,
+          erroresModelo: error?.error?.errores_modelo || [],
+        });
+      }),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  /**
    * Actualiza los datos del componente de pasos con el índice actual y el número total de pasos.
    */
   actualizarDatosPasos(): void {
@@ -75,5 +382,14 @@ export class CancelarReporteComponent {
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     };
+  }
+
+  /**
+   * Limpia los recursos al destruir el componente.
+   * Se utiliza para evitar fugas de memoria cancelando suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

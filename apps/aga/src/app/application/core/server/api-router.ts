@@ -60,3 +60,12 @@ export const API_POST_CADENA_ORIGINAL = (
   tramite: string,
   idSolicitud: string
 ): string => `sat-t${tramite}/tramite/${idSolicitud}/cadena-original`;
+
+/**
+ * API para guardar una solicitud
+ * @param tramiteId identificador del trámite
+ * @returns cadena de la ruta de la API para guardar una solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = (tramiteId: number): string =>
+  `sat-t${tramiteId}/solicitud/guardar`;
