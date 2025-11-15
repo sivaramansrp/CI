@@ -4,6 +4,11 @@ import { DesistirSolicitudInformacionHistoricaComponent } from './pages/desistir
 import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
+  /**
+   * Rutas del módulo 31910 - Desistir Solicitud de Información Histórica
+   * Se usa el parametro por url para pruebas y desarrollo.
+   * Se debe remover una vez implementado akita.
+   */
   {
     path: '',
     component: DesistirSolicitudInformacionHistoricaComponent,
@@ -11,12 +16,7 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent,
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: '',
-  },
+  }
 ];
 
 @NgModule({

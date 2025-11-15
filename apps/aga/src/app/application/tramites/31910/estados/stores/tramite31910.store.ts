@@ -32,6 +32,7 @@ export function createInitialState(): Solicitud31910State {
   return {
     idSolicitud: null,
     justificacion: '',
+    folioTramite: '',
   };
 }
 

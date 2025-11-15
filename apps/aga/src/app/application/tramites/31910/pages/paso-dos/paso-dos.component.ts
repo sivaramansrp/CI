@@ -5,7 +5,16 @@
  * - Objetivo: mejorar mantenibilidad y comprensión del componente.
  * - Alcance: documentación a nivel de archivo, propiedades, constructor y métodos principales.
  */
-import { CategoriaMensaje, FirmaElectronicaComponent, LoginQuery, Notificacion, base64ToHex, encodeToISO88591Hex, formatFecha, NotificacionesComponent } from '@ng-mf/data-access-user';
+import {
+  CategoriaMensaje,
+  FirmaElectronicaComponent,
+  LoginQuery,
+  Notificacion,
+  base64ToHex,
+  encodeToISO88591Hex,
+  formatFecha,
+  NotificacionesComponent,
+} from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
@@ -17,6 +26,7 @@ import { Router } from '@angular/router';
 import { Solicitud31910State } from '../../estados/stores/tramite31910.store';
 import { Tramite31910Query } from '../../estados/queries/tramite31910.query';
 import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
+import { Tramite319Store } from '../../../319/estados/tramite319Store.store';
 
 /**
  * @class PasoTresComponent
@@ -120,6 +130,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     private router: Router,
     private tramiteStore: TramiteFolioStore,
     private tramiteQuery: Tramite31910Query,
+    private store: Tramite319Store,
     private cadenaService: CadenaOriginal31910Service,
     private firmaService: Firma31910Service,
     private loginQuery: LoginQuery
@@ -145,9 +156,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     // Obtener la URL actual y separar los segmentos
-    const URL_ACTUAL = this.router.url;
-    const URL_SEPARADA = URL_ACTUAL.split('/');
-    this.url = URL_SEPARADA.slice(0, 3).join('/');
+    this.url = this.router.url;
 
     // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
@@ -233,6 +242,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
             this.estadoSolicitud.idSolicitud ?? 0,
             this.procedure
           );
+          this.store.reset();
           this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {

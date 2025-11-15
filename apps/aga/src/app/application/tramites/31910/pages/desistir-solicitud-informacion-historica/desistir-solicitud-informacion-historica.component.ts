@@ -164,8 +164,7 @@ export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
     private guardarService: GuardarServiceT31910,
     private store: Tramite31910Store,
     private query: Tramite31910Query,
-    private loginQuery: LoginQuery,
-    private route: ActivatedRoute
+    private loginQuery: LoginQuery
   ) {}
 
   /**
@@ -173,10 +172,6 @@ export class DesistirSolicitudInformacionHistoricaComponent implements OnInit {
    * Este método se ejecuta una vez que el componente ha sido inicializado.
    */
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.folioTramite = params['folioTramite'];
-      this.store.actualizarEstado({ folioTramite: this.folioTramite });
-    });
     this.loginQuery
       .select()
       .pipe(takeUntil(this.destroyed$))

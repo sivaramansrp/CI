@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
@@ -12,7 +13,6 @@ import {
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DesistirSolicitudInformacionHistoricaService } from '../../services/desistir-solicitud-informacion-historica.service';
 import { Tramite31910Query } from '../../estados/queries/tramite31910.query';
 
 /**
@@ -63,7 +63,6 @@ export class TabDesistirSolicitudInfoHistoricaComponent
     private fb: FormBuilder,
     private tramite31910Store: Tramite31910Store,
     private tramite31910Query: Tramite31910Query,
-    private desistirSolicitudInformacionHistoricaService: DesistirSolicitudInformacionHistoricaService,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -128,6 +127,7 @@ export class TabDesistirSolicitudInfoHistoricaComponent
    */
   crearFormulario(): void {
     this.solicitud = this.fb.group({
+      folioTramite: [''],
       justificacion: [
         this.seccionState?.justificacion,
         [Validators.required, Validators.maxLength(4000)],

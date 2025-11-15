@@ -1955,8 +1955,8 @@
   {
     "id": 281,
     "tramite": 31910,
-    "linkDashboard": "/aga/319/desistir/:folioTramite",
-    "linkDepartment": "/pago/319/desistir/:folioTramite",
+    "linkDashboard": "/aga/subsecuente/319/desistir",
+    "linkDepartment": "/pago/subsecuente/319/desistir",
     "department": "aga"
   },
   {
