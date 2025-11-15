@@ -27,6 +27,7 @@ import {
   WizardComponent,
   convertDate,
   SolicitanteQuery,
+  ConsultaioStore,
 } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -200,13 +201,6 @@ export class AgriculturaComponent implements OnInit {
 
   datosUsuario: Usuario = USUARIO_INFO;
 
-  /**
-   * Constructor del componente.
-   * Este constructor inicializa el componente y establece el estado inicial de la validación
-   * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
-   * @constructor
-   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
-   */
   private agriculturaApiService: AgriculturaApiService = inject(
     AgriculturaApiService
   );
@@ -214,7 +208,15 @@ export class AgriculturaComponent implements OnInit {
     RegistroSolicitudService
   );
   public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
+  private consultaioStore: ConsultaioStore = inject(ConsultaioStore);
 
+  /**
+   * Constructor del componente.
+   * Este constructor inicializa el componente y establece el estado inicial de la validación
+   * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
+   * @constructor
+   * @param consultaQuery
+   */
   constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
     this.obtenerDatosDelStore();
@@ -293,10 +295,11 @@ export class AgriculturaComponent implements OnInit {
             .guardarParcialSolicitud(220202, payload)
             .pipe(take(1));
         }),
-        map((data) => data.codigo),
+        map((data) => {
+          this.consultaioStore.setIdSolicitud(String(data?.datos?.id_solicitud));
+          this.esPasoUnoCompleto = true;
+        }),
         catchError((err) => {
-          console.error('Error guardando solicitud:', err);
-          // return throwError(() => err);
           return 'error';
         })
       )
