@@ -137,8 +137,8 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       ],
       totalImportaciones: [
         {
-          value: this.solicitud150101State.totalImportaciones,
-          disabled: false,
+          value: this.solicitud150101State.totalImportaciones || 0,
+          disabled: true,
         },
         [Validators.required, Validators.maxLength(16)],
       ],

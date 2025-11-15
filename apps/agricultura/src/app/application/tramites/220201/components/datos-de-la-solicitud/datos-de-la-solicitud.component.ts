@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { 
   AlertComponent, 
   Catalogo, 
@@ -14,8 +14,13 @@ import {
   TablaSeleccion, 
   TituloComponent, 
   convertDate, } from '@libs/shared/data-access-user/src';
+  import { 
+  CapturarSolicitud,
+  DatosParaMovilizacionNacional,
+  FilaSolicitud,
+  PagoDeDerechos,
+  SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-import { DatosParaMovilizacionNacional, FilaSolicitud, PagoDeDerechos, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
@@ -41,6 +46,9 @@ import { GuardaSolicitud, Mercancia } from '../../models/220201/guardar-solicitu
 import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/fitosanitario.model';
 
 import { SharedFormService } from '../../services/220201/SharedForm.service';
+
+import { EventEmitter } from '@angular/core';
+import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
 
 
 /**
@@ -355,6 +363,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   pagoDeDerechos = {} as PagoDeDerechos;
 
+  guardaSolicitud!: CapturarSolicitud;
+
+  idSolicitud: string | null = null;
+
+
+
   /**
    * Constructor del componente.
    * @constructor
@@ -375,7 +389,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     public activatedRoute: ActivatedRoute,
     private catalogoService: CatalogosService,
     private registroSolicitudService: RegistroSolicitudService,
-    private sharedService: SharedFormService
+    private sharedService: SharedFormService,
+    private solicitudService: SolicitudService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -1151,18 +1166,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_mercancia:'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
-      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
-      id_fraccion_gubernamental: 0,
+      id_fraccion_gubernamental: Number(fila.fraccionArancelaria) || 0,
       clave_nico: fila.nico || '',
       descripcion_mercancia: fila.descripcion || '',
       cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
       cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.umt || '',
+      clave_unidad_comercial: fila.clave_umt || '',
       id_especie: Number(fila.especie) || 0,
       id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',
@@ -1212,11 +1227,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       ]
     }));
 
-
     const SOLICITUDPARCIAL: GuardaSolicitud = {
       id_solicitud: null,
       datos_solicitud: {
-        clave_regimen: FORMULARIO.regimen,
+        clave_regimen: FORMULARIO.regimen.value || '',
         cve_aduana: FORMULARIO.aduanaIngreso,
         oficina_inspeccion_sanidad_agropecuaria: FORMULARIO.oficinaInspeccion,
         punto_inspeccion: FORMULARIO.puntoInspeccion,
@@ -1235,7 +1249,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       },
       terceros: {
         terceros_exportador: [{
-          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          tipo_persona_sol: 'TIPERS.EXP',
           persona_moral: true,
           nombre: this.tercerosRelacionados?.nombre || '',
           apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
@@ -1248,7 +1262,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           correo: this.tercerosRelacionados?.correo || ''
         }],
         terceros_destinatario: [{
-          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          tipo_persona_sol: 'TIPERS.DES',
           persona_moral: true,
           num_establ_tif: '',
           nom_establ_tif: '',
@@ -1291,30 +1305,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         cve_unidad_administrativa: '1016'
       }
     };
-
     this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
-
   }
   
   // eslint-disable-next-line class-methods-use-this, complexity
   guardarTotal(): void {
     // Lógica para guardar la solicitud de forma completa
     const FORMULARIO = this.datosDelaSolicitud.value;
-
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: fila.tipoDeProducto || '',
+      tipo_mercancia: 'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
-      numero_certificado: Number(fila.numeroCertificadoInternacional) || 0,
+      numero_certificado: fila.numeroCertificadoInternacional || '',
       cve_fraccion: fila.fraccionArancelaria || '',
-      id_fraccion_gubernamental: 0,
+      id_fraccion_gubernamental: Number(fila.fraccionArancelaria) || 0,
       clave_nico: fila.nico || '',
       descripcion_mercancia: fila.descripcion || '',
       cantidad_umt: Number(fila.cantidadUMT) || 0,
       clave_unidad_medida: fila.umc || '',
       cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.umt || '',
+      clave_unidad_comercial: fila.umc || '',
       id_especie: Number(fila.especie) || 0,
       id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
       presentacion: fila.tipoPresentacionDescripcion || '',
@@ -1352,10 +1363,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       }))
     }));
 
-    const SOLICITUDPARCIAL: GuardaSolicitud = {
+    const SOLICITUD: GuardaSolicitud = {
       id_solicitud: null,
       datos_solicitud: {
-        clave_regimen: FORMULARIO.clave_regimen,
+        clave_regimen: FORMULARIO.regimen || '',
         cve_aduana: FORMULARIO.aduanaIngreso,
         oficina_inspeccion_sanidad_agropecuaria: FORMULARIO.oficinaInspeccion,
         punto_inspeccion: FORMULARIO.puntoInspeccion,
@@ -1374,7 +1385,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       },
       terceros: {
         terceros_exportador: [{
-          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          tipo_persona_sol: 'TIPERS.EXP',
           persona_moral: true,
           nombre: this.tercerosRelacionados?.nombre || '',
           apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
@@ -1387,7 +1398,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           correo: this.tercerosRelacionados?.correo || ''
         }],
         terceros_destinatario: [{
-          tipo_persona_sol: this.tercerosRelacionados?.tipoMercancia || '',
+          tipo_persona_sol: 'TIPERS.DES',
           persona_moral: true,
           num_establ_tif: '',
           nom_establ_tif: '',
@@ -1431,8 +1442,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       }
     };
 
-    this.registroSolicitudService.guardarSolicitud(220201, SOLICITUDPARCIAL).subscribe();
+    this.registroSolicitudService.guardarSolicitud(220201, SOLICITUD).subscribe(
+      {
+        next: (response) => {
+          if (response && response.datos?.id_solicitud) {
+            this.idSolicitud = response.datos.id_solicitud.toString();
+            this.fitosanitarioStore.setIdSolicitud(response.datos?.id_solicitud);
+            this.solicitudService.emitirIdSolicitud(this.idSolicitud);
+          }
+        }
+      }
+      
+    );   
   }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

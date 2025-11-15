@@ -5,8 +5,11 @@ import { Injectable } from '@angular/core';
  * Interfaz que define la estructura del estado para el trámite 120601.
  */
 export interface Tramites120601State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud?: number | null;
   /** Datos generales de los socios */
   datosGeneralesSocios: {
+    pais?: string;
     /** Nacionalidad del socio */
     nacionalidad: string;
     /** Tipo de persona del socio */
@@ -41,7 +44,32 @@ export interface Tramites120601State {
     estado: string;
     /** Representación seleccionada */
     representacion: string;
-  }
+  },
+domicilioFiscal: {
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Número interior del domicilio fiscal */
+  nInt?: string;
+  /** Número exterior del domicilio fiscal */
+  nExt?: string;
+  /** Código postal del domicilio fiscal */
+  codigoPostal?: string;
+  /** Colonia del domicilio fiscal */
+  colonia?: string;
+  /** Localidad del domicilio fiscal */
+  localidad?: string;
+  /** Municipio del domicilio fiscal */
+  municipio?: string;
+  /** Estado o entidad federativa del domicilio fiscal */
+  entidadFederativa?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
+  /** LADA o clave de la zona telefónica */
+  lada?: string;
+  /** Teléfono del domicilio fiscal */
+  telefono?: string;
+};
+
 }
 
 /**
@@ -52,9 +80,10 @@ export interface Tramites120601State {
  */
 export function createInitialState(): Tramites120601State {
   return {
+    idSolicitud: 0,
     datosGeneralesSocios: {
-      nacionalidad: 'Yes',
-      persona: 'Yes',
+      nacionalidad: 'Si',
+      persona: 'Si',
       cadenaDependencia: '',
       nombre: '',
       apellidoPaterno: '',
@@ -62,7 +91,8 @@ export function createInitialState(): Tramites120601State {
       estado: '',
       correoElectronico: '',
       taxId: '',
-      denominacion: ''
+      denominacion: '',
+      pais: '',
     },
     datosDeLaSolicitud: {
       tipoDeEmpresa: '',           
@@ -71,7 +101,20 @@ export function createInitialState(): Tramites120601State {
     representacionFederal: {
       estado: '',
       representacion: '',
-    }
+    },
+    domicilioFiscal: {
+      calle: '',
+      nInt: '',
+      nExt: '',
+      codigoPostal: '',
+      colonia: '',
+      localidad: '',
+      municipio: '',
+      entidadFederativa: '',
+      pais: '',
+      lada: '',
+      telefono: ''
+  }
   };  
 }
 
@@ -199,6 +242,32 @@ export class Tramite120601Store extends Store<Tramites120601State> {
       datosGeneralesSocios:{
         ...state.datosGeneralesSocios,
         ...datos,
+      },
+    }));
+  }
+
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+ * Actualiza el estado del domicilio fiscal en el store
+ * combinando los valores existentes con los proporcionados.
+ */
+  public setDomicilioFiscal(domicilioFiscal: Partial<Tramites120601State['domicilioFiscal']>): void {
+    this.update((state) => ({
+      ...state,
+      domicilioFiscal: {
+        ...state.domicilioFiscal,
+        ...domicilioFiscal,
       },
     }));
   }

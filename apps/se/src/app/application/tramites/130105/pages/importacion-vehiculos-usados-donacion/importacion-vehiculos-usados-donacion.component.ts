@@ -236,8 +236,10 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Tramite130105State, e: AccionBoton): Promise<JSONResponse> {
+    const MERCANCIA = this.importacionVehiculosUsadosDonacionService.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
+      "tipo_solicitud_pexim":item.defaultSelect,
       "mercancia": {
         "cantidadComercial": 0,
         "cantidadTarifaria": Number(item.cantidad),
@@ -253,21 +255,7 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
         "fraccionArancelaria": {
           "cveFraccion": item.fraccion
         },
-        "partidasMercancia": [
-          {
-            "unidadesSolicitadas": Number(item.filaSeleccionada[0].cantidad),
-            "unidadesAutorizadas": Number(item.cantidadPartidasDeLaMercancia),
-            "descripcionSolicitada": item.filaSeleccionada[0].descripcion,
-            "descripcionAutorizada": item.descripcionPartidasDeLaMercancia,
-            "importeUnitarioUSD": Number(item.filaSeleccionada[0].precioUnitarioUSD),
-            "importeTotalUSD": Number(item.filaSeleccionada[0].totalUSD),
-            "autorizada": true,
-            "importeUnitarioUSDAutorizado": Number(item.filaSeleccionada[0].precioUnitarioUSD),
-            "importeTotalUSDAutorizado": Number(item.valorPartidaUSDPartidasDeLaMercancia),
-            "fraccionArancelariaClave": item.fraccion,
-            "unidadMedidaClave": item.unidadMedida
-          }
-        ]
+        "partidasMercancia": MERCANCIA,
       },
       "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
       "cve_regimen": item.regimen,

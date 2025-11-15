@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -33,6 +34,7 @@ describe('PasoUnoComponent', () => {
         { provide: DatosDomicilioLegalService, useValue: mockDatosDomicilioLegalService },
         { provide: PagoBancoService, useValue: mockPagoBancoService },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
