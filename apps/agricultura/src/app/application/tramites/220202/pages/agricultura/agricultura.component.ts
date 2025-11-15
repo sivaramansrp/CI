@@ -1,5 +1,6 @@
 import {
-  ALERT_TEXTO, ERROR_FORMA_ALERT,
+  ALERT_TEXTO,
+  ERROR_FORMA_ALERT,
   MENSAJE_DE_EXITO_ETAPA_UNO,
   PASOS,
 } from '../../constantes/220202/fitosanitario.enums';
@@ -25,6 +26,7 @@ import {
   Usuario,
   WizardComponent,
   convertDate,
+  SolicitanteQuery,
 } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -211,9 +213,12 @@ export class AgriculturaComponent implements OnInit {
   private registroSolicitudService: RegistroSolicitudService = inject(
     RegistroSolicitudService
   );
+  public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
+
   constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
     this.obtenerDatosDelStore();
+    this.obtieneDatosTabSolicitud();
   }
 
   /**
@@ -237,7 +242,7 @@ export class AgriculturaComponent implements OnInit {
       if (!VALIDA_PESTANAS.valido) {
         // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
-        this.esFormaInValido = true;        
+        this.esFormaInValido = true;
         return;
       }
     }
@@ -496,14 +501,16 @@ export class AgriculturaComponent implements OnInit {
   }
 
   /**
-   * metodo para obtener rfc e y nombre de compoennete hijo
-   * */
-  valoresPasoUno(event: {
-    rfc: string;
-    tipoPersona: string;
-    razon_social: string;
-    nombre: string;
-  }): void {
-    this.valoresComplemento = event;
+   * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+   */
+  obtieneDatosTabSolicitud(): void {
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.valoresComplemento.rfc = seccionState.rfc_original;
+        this.valoresComplemento.tipoPersona = seccionState.tipo_persona;
+        this.valoresComplemento.razon_social = seccionState.razon_social ?? '';
+        this.valoresComplemento.nombre = seccionState.nombre;
+      });
   }
 }

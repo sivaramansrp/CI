@@ -86,7 +86,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @default 1
    */
   indice: number = 1;
-  @Output() subirValores: EventEmitter<{rfc:string,tipoPersona:string,razon_social:string,nombre:string}> = new EventEmitter();
 
     /**
    * @method seleccionaTab
@@ -280,13 +279,9 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       );
   }
 
+
+
   private crearPayload(datos: ListaDeDatosFinal): GuardarSolicitud {
-    this.subirValores.emit({
-      rfc:this.solicitanteComponentRef.datosGenerales?.datos.rfc_original ?? '',
-      tipoPersona: this.solicitanteComponentRef.datosGenerales?.datos.identificacion?.tipo_persona ??'',
-      razon_social: this.solicitanteComponentRef.datosGenerales?.datos.identificacion.razon_social ?? '',
-      nombre:this.solicitanteComponentRef.datosGenerales?.datos.identificacion.nombre ?? ''
-    });
     return {
       id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
         && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
