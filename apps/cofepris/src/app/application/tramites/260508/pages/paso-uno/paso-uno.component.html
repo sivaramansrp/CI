@@ -50,10 +50,10 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      } @case (2) {
-      <app-datos-solicitud #DatosSolicitudComponent [tieneUsoEspecifico]="tieneUsoEspecifico"></app-datos-solicitud>
+      } @case (2) { 
+      <app-datos-solicitud #DatosSolicitudComponent [tieneUsoEspecifico]="tieneUsoEspecifico" [isContinuarTriggered]="isContinuarTriggered"></app-datos-solicitud>
       } @case (3) {
-      <app-terceros-relacionados-fabricante #TercerosRelacionadosFabricanteComponent></app-terceros-relacionados-fabricante>
+      <app-terceros-relacionados-fabricante #TercerosRelacionadosFabricanteComponent [isContinuarTriggered]="isContinuarTriggered"></app-terceros-relacionados-fabricante>
       } @case (4) {
       <app-pago-derechos></app-pago-derechos>
       } }

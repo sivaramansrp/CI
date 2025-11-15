@@ -157,14 +157,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       this.query.getValue().formValidity?.formuladorTablaValid &&
       this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
 
-    if (!this.isDatosDeLaSolicitudComponentValid) {
-      this.datosSolicitudComponent?.validarFormulario(); 
-    }
-
-    if (!this.isTercerosComponentValid) {
-      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
-    }
-
     return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid;
   }
 

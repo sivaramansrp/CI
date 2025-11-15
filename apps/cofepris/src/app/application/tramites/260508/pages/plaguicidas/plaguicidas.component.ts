@@ -1,15 +1,15 @@
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
-import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-nutrientes.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs/internal/Observable';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ListaPasosWizard, PASOS, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Solicitud260508State, Tramite260508Store } from '../../../../estados/tramites/260508/tramite260508.store';
 import { map, switchMap, take } from 'rxjs';
-import { Solicitud260508State, Tramite260508Store } from '../../../../shared/estados/stores/260508/tramite260508.store';
-import { Tramite260508Query } from '../../../../shared/estados/queries/260508/tramite260508.query';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { Observable } from 'rxjs/internal/Observable';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constantes/permiso-nutrientes.enum';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260508Query } from '../../../../estados/queries/260508/tramite260508.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -94,6 +94,9 @@ export class PlaguicidasComponent implements OnInit {
       * Estado local que representa la solicitud actual.
       */
       public solicitudState!: Solicitud260508State;
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
   
     /**
      * @param sharedSvc Servicio compartido para funcionalidades comunes.
@@ -117,6 +120,7 @@ export class PlaguicidasComponent implements OnInit {
     ngOnInit(): void {
       this.query.selectSolicitud$.pipe().subscribe((data) => {
         this.solicitudState = data;
+        this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
       });
     }
 
@@ -146,6 +150,7 @@ export class PlaguicidasComponent implements OnInit {
          e.valor;
   
      if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true); 
        const ES_VALIDO = this.validarFormulariosPasoActual();
        if (!ES_VALIDO) {
          this.isPeligro = true;
