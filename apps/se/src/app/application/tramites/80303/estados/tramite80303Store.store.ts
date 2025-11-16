@@ -139,6 +139,11 @@ export interface Tramite80303State {
    * @type {number}
    */
   idSolicitud: number;
+  /**
+   * RFC de inicio de sesión.
+   * @type {string}
+   */
+  loginRfc: string;
 }
 
 /**
@@ -179,7 +184,9 @@ export function createInitialState(): Tramite80303State {
       modificacionPrograma: '',
     },
      idSolicitud: 0,
+    loginRfc: 'AAL0409235E6',
   };
+  
 }
 
 /**
@@ -465,4 +472,16 @@ export class Tramite80303Store extends Store<Tramite80303State> {
   }
   
   
+  /**
+   * Establece el valor de la certificación SAT en el estado.
+   *
+   * @param certificacionSAT - El nuevo valor de la certificación SAT que se asignará al estado.
+   */
+  public setCertificacionSAT(certificacionSAT: string): void {
+    this.update((state) => ({
+      ...state,
+      certificacionSAT,
+    }));
+  }
+
 }

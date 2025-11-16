@@ -2186,8 +2186,8 @@
   {
     "id": 314,
     "tramite": 80303,
-    "linkDashboard": "/se/modificacion-programa-immex-baja-submanufacturera",
-    "linkDepartment": "/pago/modificacion-programa-immex-baja-submanufacturera",
+    "linkDashboard": "/se/registro-solicitud/registro-solicitud",
+    "linkDepartment": "/pago/registro-solicitud/registro-solicitud",
     "department": "se"
   },
   {

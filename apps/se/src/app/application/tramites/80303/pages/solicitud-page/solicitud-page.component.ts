@@ -2,9 +2,10 @@ import {
   PASOS,
   TITULOMENSAJE
 } from '../../constants/modificacion-programa-immex-baja-submanufacturera.enum';
-import { AccionBoton } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, EventEmitter, inject } from '@angular/core';
+import { AccionBoton, ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { Component, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
@@ -12,8 +13,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { buildGuardarPayload } from '../../mappers/guardar.mapper';
+
 import{ Notificacion,
-  NotificacionesComponent,} from  '@libs/shared/data-access-user/src';
+  NotificacionesComponent,} from '@libs/shared/data-access-user/src';
 
 import { JSONResponse } from '@ng-mf/data-access-user';
 
@@ -24,7 +26,7 @@ import { esValidObject } from '@libs/shared/data-access-user/src';
 import { getValidDatos } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
-import { take, switchMap, map } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import{PasoFirmaComponent} from '@libs/shared/data-access-user/src';
@@ -36,8 +38,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import{BtnContinuarComponent} from '@libs/shared/data-access-user/src';
 
 import { CommonModule } from '@angular/common';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+
 import { WizardService } from '@ng-mf/data-access-user';
 
 import{PASOS_EXPORTACION} from '../../constants/modificacion-programa-immex-baja-submanufacturera.enum';
@@ -77,12 +78,13 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
     BtnContinuarComponent,
     PasoFirmaComponent,
     PasoCargaDocumentoComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+   PasoUnoComponent
 
   ],
  
 })
-export class SolicitudPageComponent implements OnDestroy {
+export class SolicitudPageComponent implements OnInit, OnDestroy {
   /**
    * @property tituloMensaje
    * @description Título que se muestra en la parte superior del wizard.
@@ -90,6 +92,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * @type {string | null}
    */
   public tituloMensaje: string | null = TITULOMENSAJE;
+  public wizardComponent!: WizardComponent;
 
   /**
    * @property pasos
@@ -124,20 +127,7 @@ export class SolicitudPageComponent implements OnDestroy {
    * @type {WizardComponent}
    */
   @ViewChild(WizardComponent)
-  public wizardComponent!: WizardComponent;
 
-  /**
-   * @property datosPasos
-   * @description Configuración de la barra de navegación del wizard:
-   * número de pasos, índice actual y textos de los botones.
-   * @type {DatosPasos}
-   */
-  public datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
  /**
    * Estado de progreso de carga de archivos
    * @type {boolean}
@@ -185,39 +175,41 @@ export class SolicitudPageComponent implements OnDestroy {
    * Estado actual de la consulta para el componente.
    * @type {ConsultaioState}
    */
+ 
+  /**
+   * @property datosPasos
+   * @description Configuración de la barra de navegación del wizard:
+   * número de pasos, índice actual y textos de los botones.
+   * @type {DatosPasos}
+   */
+ datosPasos: DatosPasos = {
+    nroPasos: this.pasosSolicitar.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
  /**
    * Estado actual de la consulta para el componente.
    * @type {ConsultaioState}
    */
   public consultaState!: ConsultaioState;
+  
    constructor(
     private modificacionService: ModificacionProgramaImmexBajaSubmanufactureraService,
         public tramite80303Store: Tramite80303Store,
-  ) {}
-  /**
-   * @method getValorIndice
-   * @description Controla la navegación del wizard en función
-   * de la acción recibida (`cont` o `atras`). Actualiza el paso
-   * actual y el título mostrado, y llama a los métodos de
-   * navegación del `WizardComponent`.
-   * @param {AccionBoton} e - Objeto que contiene el índice del paso
-   * y la acción a realizar.
-   * @returns {void}
-   */
-  // public getValorIndice(e: AccionBoton): void {
-  //   if (e.valor > 0 && e.valor < 5) {
-  //     this.indice = e.valor;
-  //     this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
-  //       e.valor
-  //     );
+            private consultaQuery: ConsultaioQuery,
 
-  //     if (e.accion === 'cont') {
-  //       this.wizardComponent.siguiente();
-  //     } else {
-  //       this.wizardComponent.atras();
-  //     }
-  //   }
-  // }
+  ) {}
+  
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        this.consultaState = state;
+      });
+
+}
+ 
   /**
    * Folio temporal de la solicitud.
    * Se utiliza para mostrar el folio en la notificación de éxito.
@@ -244,6 +236,7 @@ export class SolicitudPageComponent implements OnDestroy {
       })
     );
   }
+  
   /**
    * Muestra una plantilla de notificación de éxito.
    * {void} No retorna ningún valor.
@@ -316,16 +309,7 @@ export class SolicitudPageComponent implements OnDestroy {
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
-  /**
-   * Navega al siguiente paso del wizard
-   * @method continuar
-   * @description Ejecuta la navegación hacia el siguiente paso del wizard
-   * incrementando el índice actual en 1
-   * @returns {void}
-   */
-  continuar(): void {
-    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
-  }
+ 
 
   /**
    * Navega al paso anterior del wizard
@@ -405,9 +389,7 @@ export class SolicitudPageComponent implements OnDestroy {
   }
   
 guardar(item: Tramite80303State): Promise<JSONResponse> {
-  console.log("guardar is triggered");
     const PAYLOAD = buildGuardarPayload(item);
-
     return new Promise((resolve, reject) => {
       this.modificacionService
         .postGuardarDatos(PAYLOAD)
@@ -429,10 +411,22 @@ guardar(item: Tramite80303State): Promise<JSONResponse> {
             resolve(response);
           },
           (error) => {
+                      console.error("Error in guardar:", error); 
+
             reject(error);
           }
         );
     });
+  }
+   /**
+   * Navega al siguiente paso del wizard
+   * @method continuar
+   * @description Ejecuta la navegación hacia el siguiente paso del wizard
+   * incrementando el índice actual en 1
+   * @returns {void}
+   */
+  continuar(): void {
+    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
 /**
    * Método que se ejecuta cuando el componente es destruido.

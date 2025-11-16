@@ -9,6 +9,7 @@ import { Component, OnDestroy } from '@angular/core';
 import {
   Federatario,
   FederatarioRealizaranLasOperaciones,
+  JSONRespuesta,
   ServiciosImmex,
 } from '../../models/complementaria.model';
 
@@ -22,6 +23,7 @@ import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { Operacions } from '../../../80302/estados/models/plantas-consulta.model';
 
 import { CONFIGURACION_OPERACIONES } from '../../../80302/constantes/modificacion.enum';
+import { Tramite80303Store } from '../../estados/tramite80303Store.store';
 
 /**
  * Decorador `@Component` utilizado para definir un componente en Angular.
@@ -160,11 +162,12 @@ export class ComplementarioComponent implements OnDestroy {
    */
   constructor(
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
-    public tramite80303Querry: Tramite80303Query
+    public tramite80303Querry: Tramite80303Query,
+    public tramite80303Store: Tramite80303Store,
   ) {
-     this.fetchAccionistasTablaDatos(); // Fetch accionistas data dynamically
-      this.fetchFederatariosTablaDatos(); // Fetch federatarios data dynamically
-     this.fetchPlantasIMMEXDatos(); // Fetch plantas IMMEX data dynamically
+     this.fetchAccionistasTablaDatos(); 
+      this.fetchFederatariosTablaDatos(); 
+     this.fetchPlantasIMMEXDatos(); 
     this.fetchDatosCertificacionSAT('AAL0409235E6');
      this.fetchEmpresasSubmanufacturerasTablaDatos('202734892'); 
 
@@ -192,8 +195,7 @@ fetchPlantasManufacturerasTablaDatos(idSolicitud: string): void {
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.plantasManufacturerasTablaDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Plantas Manufactureras Datos:', this.plantasManufacturerasTablaDatos);
+          this.plantasManufacturerasTablaDatos = response.datos; 
         } else {
           console.error('Unexpected response format:', response);
         }
@@ -214,8 +216,7 @@ fetchEmpresasSubmanufacturerasTablaDatos(idSolicitud: string): void {
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.empresasSubmanufacturerasTablaDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Empresas Submanufactureras Datos:', this.empresasSubmanufacturerasTablaDatos);
+          this.empresasSubmanufacturerasTablaDatos = response.datos; 
         } else {
           console.error('Unexpected response format:', response);
         }
@@ -226,30 +227,24 @@ fetchEmpresasSubmanufacturerasTablaDatos(idSolicitud: string): void {
     );
 }
 fetchServiciosImmexTablaDatos(): void {
-  // Construct the payload with the required structure
-  const body = {
-    idSolicitud: ["3198492", "3198493"], // Array of IDs as required by the API
+  const BODY = {
+    idSolicitud: ["3198492", "3198493"], 
   };
 
-  // Log the payload for debugging
-  console.log('Payload for consultarServiciosImmex:', body);
-
-  // Make the API call
   this.modificacionProgramaImmexBajaSubmanufactureraService
-    .consultarServiciosImmex(body)
+    .consultarServiciosImmex(BODY)
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(
-      (response) => {
+      (response: JSONRespuesta<ServiciosImmex[]>) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.serviciosImmexTablaDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Servicios IMMEX Datos:', this.serviciosImmexTablaDatos);
+          this.serviciosImmexTablaDatos = response.datos; 
         } else {
           console.error('Unexpected response format:', response);
         }
       },
       (error) => {
         console.error('Error fetching Servicios IMMEX Datos:', error);
-        console.error('Error Details:', error.error); // Log the error details from the API
+        console.error('Error Details:', error.error); 
       }
     );
 }
@@ -257,18 +252,17 @@ fetchServiciosImmexTablaDatos(): void {
  * Fetches data for `accionistasTablaDatos` using the API.
  */
 fetchAccionistasTablaDatos(): void {
-  const body = {
-    idSolicitud: [202734900, 202734904], // Updated array of IDs
+  const BODY = {
+    idSolicitud: [202734900, 202734904], 
   };
 
   this.modificacionProgramaImmexBajaSubmanufactureraService
-    .buscarSocioAccionista(body)
+    .buscarSocioAccionista(BODY)
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.accionistasTablaDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Accionistas Tabla Datos:', this.accionistasTablaDatos);
+          this.accionistasTablaDatos = response.datos; 
         } else {
           console.error('Unexpected response format:', response);
         }
@@ -282,21 +276,18 @@ fetchAccionistasTablaDatos(): void {
  * Fetches data for `federatariosTablaDatos` using the API.
  */
 fetchFederatariosTablaDatos(): void {
-  const body = {
+  const BODY = {
     idSolicitud: [202734900, 202734904], // Example payload with IDs
   };
 
   this.modificacionProgramaImmexBajaSubmanufactureraService
-    .buscarNotariosConsulta(body)
+    .buscarNotariosConsulta(BODY)
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.federatariosTablaDatos = response.datos; // Assign the `datos` array to the table data
-          console.log('Federatarios Tabla Datos:', this.federatariosTablaDatos);
-        } else {
-          console.error('Unexpected response format:', response);
-        }
+          this.federatariosTablaDatos = response.datos; 
+        } 
       },
       (error) => {
         console.error('Error fetching Federatarios Tabla Datos:', error);
@@ -307,39 +298,31 @@ fetchFederatariosTablaDatos(): void {
  * Fetches data for `plantasIMMEXDatos` using the API.
  */
 fetchPlantasIMMEXDatos(): void {
-  const body = {
-    idSolicitud: [202734892, 202734901], // Example payload with IDs
+  const BODY = {
+    idSolicitud: [202734892, 202734901], 
   };
 
   this.modificacionProgramaImmexBajaSubmanufactureraService
-    .consultarPlantas(body)
+    .consultarPlantas(BODY)
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.datosOperacions = response.datos; // Assign the `datos` array to the table data
-          console.log('Plantas IMMEX Datos:', this.datosOperacions);
-        } else {
-          console.error('Unexpected response format:', response);
-        }
+          this.datosOperacions = response.datos; 
+        } 
       },
-      (error) => {
-        console.error('Error fetching Plantas IMMEX Datos:', error);
-      }
+     
     );
 }
 fetchDatosCertificacionSAT(rfc: string): void {
-    this.modificacionProgramaImmexBajaSubmanufactureraService.buscarDatosCertificacionSAT(rfc).subscribe(
-      (response) => {
-
-        this.certificacionSAT = response; // Assign the fetched data
-        console.log('datosCertificacionSAT:', this.certificacionSAT);
-      },
-      (error) => {
-        console.error('Error fetching datosCertificacionSAT:', error);
-      }
-    );
-  }
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarDatosCertificacionSAT(rfc)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((respuesta) => {
+      this.certificacionSAT = respuesta.datos?.certificacionSAT || '';
+      this.tramite80303Store.setCertificacionSAT(this.certificacionSAT);
+    }, );
+}
 
   /**
 * Método que se ejecuta cuando el componente es destruido.

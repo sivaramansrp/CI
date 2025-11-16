@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -11,11 +12,11 @@ import { Tramite80303Store } from '../estados/tramite80303Store.store';
 import { Tramite80303Query } from '../estados/tramite80303Query.query';
 import { Tramite80303State } from '../estados/tramite80303Store.store';
 
-import { JSONRespuesta } from '../models/complementaria.model';// Add the correct import path for JSONRespuesta
+import { JSONRespuesta, ServiciosImmex } from '../models/complementaria.model';
 
-import { ProgramaLista } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; // Make sure this path is correct
+import { ProgramaLista } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; 
 
-import { ExportacionImportacionPayload, ImportacionExportacionFracciones } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; // Add the correct import path for ExportacionImportacionPayload and ImportacionExportacionFracciones
+import { ExportacionImportacionPayload, ImportacionExportacionFracciones } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; 
 
 import { JSONResponse} from '@libs/shared/data-access-user/src';
 import { PROC_80303 } from '../servers/api-route';
@@ -93,53 +94,53 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
       });
   }
  consultarMercanciasImportacion(idSolicitud: string): Observable<any> {
-    const url = PROC_80303.CONSULTA_MERCANCIAS_IMPORTACION(idSolicitud);
-    return this.httpServicios.get<any>(url);
+    const URL = PROC_80303.CONSULTA_MERCANCIAS_IMPORTACION(idSolicitud);
+    return this.httpServicios.get<any>(URL);
      }
   consultarProductosExportacion(idSolicitud: string): Observable<any> {
-    const url = PROC_80303.CONSULTA_PRODUCTOS_EXPORTACION(idSolicitud);
-    return this.httpServicios.get<any>(url);
+    const URL = PROC_80303.CONSULTA_PRODUCTOS_EXPORTACION(idSolicitud);
+    return this.httpServicios.get<any>(URL);
   }
   consultarFraccionesSensibles(idSolicitud: string): Observable<any> {
-    const url = PROC_80303.CONSULTA_FRACCIONES_SENSIBLES(idSolicitud);
-    return this.httpServicios.get<any>(url);
+    const URL = PROC_80303.CONSULTA_FRACCIONES_SENSIBLES(idSolicitud);
+    return this.httpServicios.get<any>(URL);
   }
   consultarBitacoraImmex(idPrograma: string): Observable<any> {
-  const url = PROC_80303.CONSULTAR_BITACORA_IMMEX(idPrograma);
-  return this.httpServicios.get<any>(url);
+  const URL = PROC_80303.CONSULTAR_BITACORA_IMMEX(idPrograma);
+  return this.httpServicios.get<any>(URL);
 }
   consultarPlantasSubmanufactureras(idSolicitud: string): Observable<any> {
-    const url = PROC_80303.CONSULTAR_PLANTAS_SUBMANUFACTURERAS(idSolicitud);
-    return this.httpServicios.get<any>(url);
+    const URL = PROC_80303.CONSULTAR_PLANTAS_SUBMANUFACTURERAS(idSolicitud);
+    return this.httpServicios.get<any>(URL);
   }
    buscarEmpresaSubmanufacturera(idSolicitud: string): Observable<any> {
-    const url = PROC_80303.BUSCAR_EMPRESA_SUBMANUFACTURERA(idSolicitud);
-    return this.httpServicios.get<any>(url);
+    const URL = PROC_80303.BUSCAR_EMPRESA_SUBMANUFACTURERA(idSolicitud);
+    return this.httpServicios.get<any>(URL);
   }
-   consultarServiciosImmex(body: any): Observable<any> {
-    const url = PROC_80303.CONSULTAR_SERVICIOS;
-    return this.httpServicios.post<any>(url, body);
-  }
+  consultarServiciosImmex(body: unknown): Observable<JSONRespuesta<ServiciosImmex[]>> {
+  const URL = PROC_80303.CONSULTAR_SERVICIOS;
+  return this.httpServicios.post<JSONRespuesta<ServiciosImmex[]>>(URL, body);
+}
    buscarSocioAccionista(body: any): Observable<any> {
-  const url = PROC_80303.BUSCAR_SOCIO_ACCIONISTA;
-  return this.httpServicios.post<any>(url, body);
+  const URL = PROC_80303.BUSCAR_SOCIO_ACCIONISTA;
+  return this.httpServicios.post<any>(URL, body);
 }
  buscarNotariosConsulta(body: any): Observable<any> {
-    const url = PROC_80303.BUSCAR_NOTARIOS_CONSULTA;
-    return this.httpServicios.post<any>(url, body);
+    const URL = PROC_80303.BUSCAR_NOTARIOS_CONSULTA;
+    return this.httpServicios.post<any>(URL, body);
   }
-  consultarPlantas(body: any): Observable<any> {
-    const url = PROC_80303.CONSULTA_PLANTAS;
-    return this.httpServicios.post<any>(url, body);
+  consultarPlantas(body: unknown): Observable<any> {
+    const URL = PROC_80303.CONSULTA_PLANTAS;
+    return this.httpServicios.post<any>(URL, body);
   }
 buscarEmpresas(body: any): Observable<any> {
-  const url = PROC_80303.BUSCAR_EMPRESAS;
-  return this.httpServicios.post<any>(url, body);
+  const URL = PROC_80303.BUSCAR_EMPRESAS;
+  return this.httpServicios.post<any>(URL, body);
 }
 
 buscarDatosCertificacionSAT(rfc: string): Observable<any> {
-    const url = `${PROC_80303.BUSCAR_DATOS_CERTIFICACION_SAT}?rfc=${rfc}`;
-    return this.httpServicios.get<any>(url);
+    const URL = `${PROC_80303.BUSCAR_DATOS_CERTIFICACION_SAT}?rfc=${rfc}`;
+    return this.httpServicios.get<any>(URL);
   }
 
   /**
@@ -153,10 +154,13 @@ buscarDatosCertificacionSAT(rfc: string): Observable<any> {
     rfc: string,
     tipoPrograma: string
   ): Observable<JSONRespuesta<ProgramaLista[]>> {
+
     return this.httpServicios.get<JSONRespuesta<ProgramaLista[]>>(
       PROC_80303.LISTA_PROGRAMAS + `${rfc}&tipoPrograma=${tipoPrograma}`
     );
+    
   }
+  
   /**
    * Obtiene todos los datos del estado almacenado en el store.
    * @returns {Observable<Solicitud80301State>} Observable con todos los datos del estado.

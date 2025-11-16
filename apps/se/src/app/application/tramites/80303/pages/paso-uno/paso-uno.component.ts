@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { OnDestroy } from '@angular/core';
@@ -10,6 +11,16 @@ import { Tramite80303Store } from '../../estados/tramite80303Store.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+import { MontoYFactorComponent } from '../../components/monto-y-factor/monto-y-factor.component';
+
+import { AnexoUnoPestanaComponent } from '../../components/anexo-uno-pestana/anexo-uno-pestana.component';
+import { ComplementarioComponent } from '../../components/complementaria/complementaria.component';
+
+import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
+import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
+
+import { CommonModule } from '@angular/common';
+
 /**
  * @title Paso Uno
  * @description Componente que representa el primer paso del flujo de solicitud. Contiene los datos del solicitante, datos del trámite, terceros relacionados y pago de derechos.
@@ -19,6 +30,16 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true, // Add this line
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    ModificacionComponent,
+    BitacoraComponent,
+    ComplementarioComponent,
+    AnexoUnoPestanaComponent,
+    MontoYFactorComponent,
+  ],
  
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {

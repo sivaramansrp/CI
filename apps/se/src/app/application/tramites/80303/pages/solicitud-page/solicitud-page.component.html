@@ -1,18 +1,40 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h1>{{ tituloMensaje || null }}</h1>
-    </div>
-    <ng-container *ngIf="indice === 2"> </ng-container>
-    <app-wizard [listaPasos]="pasos"></app-wizard>
-  </div>
+       @if (indice === 1){
+      <div class="col-md-12">
+        <h1>{{ tituloMensaje || null }}</h1>
+      </div>
+      }
+       @if (indice === 2){
+        <div class="col-md-12">
+          <h2>Cargar archivos</h2>
+        </div>
+      }
+      @if (indice === 3){
+        <div class="col-md-12">
+          <h2>Firmar</h2>
+        </div>
+      }
+       @if (indice !== 1){
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <lib-notificaciones
+            [notificacionInput]="alertaNotificacion"
+          ></lib-notificaciones>
+        </div>
+      </div>
+      } 
+    
+    <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
+ 
 
   <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno (continuarEvento)="continuar()"></app-paso-uno>
-      } @case (3) {
-       <paso-firma [idSolicitud]="idSolicitud" [procedure]="80303" [procedureUrl]="'modificacion-programa-immex-baja-submanufacturera/solicitud'"></paso-firma>
+      <app-paso-uno ></app-paso-uno>
       } @case (2) {
+       <paso-firma [idSolicitud]="idSolicitud" [procedure]="80303" [procedureUrl]="'registro-solicitud/modificacion-programa-immex-baja-submanufacturera'"></paso-firma>
+      } @case (3) {
       <app-paso-carga-documento 
         [idSolicitud]="idSolicitud"
         [idTipoTRamite]="'80303'"
@@ -22,7 +44,6 @@
         (cargaEnProgreso)="onCargaEnProgreso($event)"
         ></app-paso-carga-documento>
       }}
-      <!-- <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> -->
        <div class="col-md-12">
         @if (indice !== 2) {
          <btn-continuar
@@ -54,6 +75,6 @@
         }
       </div>
     
-    
+   </div>  
   </div>
 </div>

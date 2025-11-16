@@ -35,7 +35,7 @@ export function buildGuardarPayload(storeDatos: Tramite80303State): Record<strin
   return {
     tipoDeSolicitud: 'guardar',
     idSolicitud: storeDatos.idSolicitud || 0,
-    idTipoTramite: 80301,
+    idTipoTramite: 80303,
     rfc: 'AAL0409235E6',
     cveUnidadAdministrativa: '8302',
     costoTotal: 10000.5,

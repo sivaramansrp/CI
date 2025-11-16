@@ -4,7 +4,7 @@ import {
   DISCRIMINATOR_VALUE,
   TICPSE,
 } from '../../constants/modificacion-programa-immex-baja-submanufacturera.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   ConfiguracionColumna,
   LoginQuery,
@@ -36,7 +36,7 @@ import { Tramite80303Store } from '../../estados/tramite80303Store.store';
  * Clase que representa el componente de registro de solicitudes de modificación del programa IMMEX.
  * @class RegistroSolicitudComponent
  */
-export class RegistroSolicitudComponent implements OnInit, OnDestroy {
+export class RegistroSolicitudComponent implements OnDestroy {
   /**
    * Título del componente que se muestra en la interfaz de usuario.
    * @type {string}
@@ -96,22 +96,24 @@ export class RegistroSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((loginState) => {
-          this.loginRfc = loginState.rfc;
+            this.loginRfc = loginState.rfc || 'AAL0409235E6';
           this.tramite80303Store.setLoginRfc(this.loginRfc);
+                  this.obtenerListaProgramas(); 
+
         })
       )
       .subscribe();
   }
 
-  /**
-   * Método de inicialización del componente.
-   * Se llama automáticamente cuando el componente es creado.
-   * Aquí se obtienen los datos de la lista de programas.
-   * @return {void}
-   */
-  ngOnInit(): void {
-    this.obtenerListaProgramas();
-  }
+  // /**
+  //  * Método de inicialización del componente.
+  //  * Se llama automáticamente cuando el componente es creado.
+  //  * Aquí se obtienen los datos de la lista de programas.
+  //  * @return {void}
+  //  */
+  // ngOnInit(): void {
+  //   // this.obtenerListaProgramas();
+  // }
 
   /**
    * Método que obtiene la lista de programas desde el servicio.
@@ -151,7 +153,7 @@ export class RegistroSolicitudComponent implements OnInit, OnDestroy {
    */
   onFilaClic(event: ProgramaLista): void {
     this.actualizarSeleccionadaPrograma(event);
-    this.router.navigate(['../registro-modificacion-page'], {
+    this.router.navigate(['../solicitud'], {
       relativeTo: this.route
     });
   }

@@ -9,18 +9,17 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ModificacionComponent } from '../80303/components/modificacion/modificacion.component';
 import { ModificacionProgramaImmexBajaSubmanufactureraRoutingModule } from './modificacion-programa-immex-baja-submanufacturera-routing.module';
 import { MontoYFactorComponent } from './components/monto-y-factor/monto-y-factor.component';
-import { NgModule } from '@angular/core';
+
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import {SolicitudPageComponent} from './pages/solicitud-page/solicitud-page.component';
 @NgModule({
   declarations: [
-  PasoUnoComponent,
+    
     PasoDosComponent,
     PasoTresComponent,
   ],
@@ -39,12 +38,13 @@ import {SolicitudPageComponent} from './pages/solicitud-page/solicitud-page.comp
     AnexoUnoPestanaComponent,
     ComplementarioComponent,
     MontoYFactorComponent,
+    
   ],
   exports: [
-  SolicitudPageComponent,
-    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
   ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
 export class ModificacionProgramaImmexBajaSubmanufactureraModule {}

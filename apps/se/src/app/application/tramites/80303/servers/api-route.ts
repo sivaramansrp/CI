@@ -16,10 +16,7 @@ const API = ENVIRONMENT.API;
  * Solicitud de la API
  */
 const SOLICITUD = ENVIRONMENT.SOLICITUD_URL;
-/**
- * versión de la API
- */
-const API_VERSION = ENVIRONMENT.API_VERSION;
+
 /**
  * Procedimiento de la API
  */
@@ -42,12 +39,12 @@ export const PROC_80303 = {
   BUSCAR_SOCIO_ACCIONISTA: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-socio-accionista`,
   BUSCAR_NOTARIOS_CONSULTA: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-notarios-consulta`,
   CONSULTA_PLANTAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/consulta-plantas`,
-  BUSCAR_EMPRESAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-empresas`, // New route added here
+  BUSCAR_EMPRESAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-empresas`, 
 
   GUARDAR: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/guardar`,
   BUSCAR_DATOS_CERTIFICACION_SAT: `${BASE_URL}${API}/sat-t80303/solicitud/buscarDatosCertificacionSAT`,
 
-    LISTA_PROGRAMAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-programasa-modificar?rfc=`,
+    LISTA_PROGRAMAS: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar-ProgramasAModificar?rfc=`,
     
     DATOS_MODIFICACION: `${BASE_URL}${API}/idc/contribuyente/LEQI8101314S7/informacion`,
         FRACCIONES_EXPORTACION: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/buscar/fraccionesExportacion`,

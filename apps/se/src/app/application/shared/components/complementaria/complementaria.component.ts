@@ -143,8 +143,6 @@ export class ComplementariaComponent<T> implements OnChanges {
   
 
   ngOnChanges(): void{
-      console.log('Received certificacionSAT:', this.certificacionSAT);
-
     if (this.certificacionSAT) {
       this.certificionForm.patchValue({
         certificacion: this.certificacionSAT,
