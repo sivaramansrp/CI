@@ -331,12 +331,22 @@ export interface ServiciosImmex {
   /**
    * Tipo de servicio
    */
-  descripcionTipo?: string;
+  tipoDeServicio?: string;
 
   /**
-   * Testado del servicio
+   * Testadoo del servicio
+   */
+  testado?: string;
+
+  /**
+   * Descripción del testado del servicio
    */
   descripcionTestado?: string;
+
+  /**
+   * Descripción del tipo de servicio
+   */
+  descripcionTipo?: string;
 }
 
 /**
