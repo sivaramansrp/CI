@@ -79,7 +79,7 @@ export const CONFIGURACION_EMPRESAS = [
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Empresas) : string | undefined => ele.entidadFederativa,
+    clave: (ele: Empresas) : string | undefined => ele.estado,
     orden: 8,
   },
   {

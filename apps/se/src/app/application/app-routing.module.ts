@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+
 import { AcusePageComponent, AcuseResolucionComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
@@ -565,7 +566,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modificacion-programa-immex-baja-submanufacturera',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
