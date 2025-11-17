@@ -992,3 +992,8 @@ export const TICPSE = {
  * Constante que define el valor del discriminador para el trámite 80301.
  */
 export const DISCRIMINATOR_VALUE = '80301';
+
+/**
+ * Expresión regular para identificar comas al final de una cadena.
+ */
+export const REGEX_COMAS_FINALES  = /,+$/;

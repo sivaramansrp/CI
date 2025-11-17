@@ -23,6 +23,7 @@ import {
   inject,
 } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { MSG_REGISTRO_EXITOSO, REGEX_COMAS_FINALES } from '../../constantes/modificacion.enum';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import {
   Solicitud80301State,
@@ -30,7 +31,6 @@ import {
 } from '../../estados/tramite80301.store';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
-import { MSG_REGISTRO_EXITOSO } from '../../constantes/modificacion.enum';
 import { PASOS_EXPORTACION } from '../../constantes/modificacion.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -214,7 +214,7 @@ export class RegistroModificacionPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.tramite80301Store.setBuscarIdSolicitud(
-          respuesta.datos?.buscaIdSolicitud.replace(/,+$/, '').split(',') || []
+          respuesta.datos?.buscaIdSolicitud.replace(REGEX_COMAS_FINALES, '').split(',') || []
         );
       });
   }

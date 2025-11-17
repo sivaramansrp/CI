@@ -14,7 +14,7 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -40,7 +40,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './complementaria.component.html',
   styleUrl: './complementaria.component.scss',
 })
-export class ComplementariaComponent<T> {
+export class ComplementariaComponent<T> implements OnChanges{
   /**
    * Número de procedimiento del trámite.
    * @property {number} procedimiento
@@ -145,7 +145,12 @@ export class ComplementariaComponent<T> {
     });
   }
 
-  ngOnChanges() {
+  /**
+   * Método que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Actualiza el valor del formulario `certificacionForm` con la certificación SAT proporcionada.
+   * @return {void}
+   */
+  ngOnChanges(): void {
     if (this.certificacionSAT) {
       this.certificacionForm.patchValue({
         certificacion: this.certificacionSAT,

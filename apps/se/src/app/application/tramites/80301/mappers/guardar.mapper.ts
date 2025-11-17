@@ -8,16 +8,28 @@ import { Solicitud80301State } from '../estados/tramite80301.store';
  * @returns {Record<string, unknown>} Payload estructurado para la solicitud de guardado.
  */
 export function buildGuardarPayload(storeDatos: Solicitud80301State): Record<string, unknown> {
+  /**
+   * Mapea las fracciones de exportación e importación desde el estado del store
+   * y las transforma en el formato requerido para el payload.
+   */
   const FRACCION_EXPORTACION = storeDatos.datosExportacion.map((fraccion) => ({
     fraccionPadre: fraccion.fraccionPadre,
     descripcionTestado: fraccion.desEstatus,
   }));
 
+  /**
+   * Mapea las fracciones de importación desde el estado del store
+   * y las transforma en el formato requerido para el payload.
+   */
   const FRACCION_IMPORTACION = storeDatos.datosImportacion.map((fraccion) => ({
     fraccionPadre: fraccion.fraccionPadre,
     descripcionTestado: fraccion.desEstatus,
   }));
 
+  /**
+   * Mapea las fracciones adicionales de exportación e importación
+   * obtenidas de los anexos y las transforma en el formato requerido para el payload.
+   */
   const ANEXO_FRACCION_EXPORTACION = storeDatos.fraccionesExportacion.map(
     (fraccion) => ({
       tipoFraccion: fraccion.tipoFraccion,
@@ -25,6 +37,10 @@ export function buildGuardarPayload(storeDatos: Solicitud80301State): Record<str
     })
   );
 
+  /**
+   * Mapea las fracciones adicionales de importación obtenidas de los anexos
+   * y las transforma en el formato requerido para el payload.
+   */
   const ANEXO_FRACCION_IMPORTACION = storeDatos.fraccionesImportacion.map(
     (fraccion) => ({
       tipoFraccion: fraccion.tipoFraccion,
