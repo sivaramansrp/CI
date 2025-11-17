@@ -7,6 +7,7 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   ConfiguracionColumna,
   InputFechaComponent,
   TablaDinamicaComponent,
@@ -149,6 +150,8 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    /** Estado de la solicitud tipo 40302. 
  *  Contiene información y progreso de la solicitud. */
   public solicitudState!: Solicitud120702State;
+
+  tramites:string="120702"
   
   /**
    * Constructor del componente.
@@ -162,7 +165,8 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     private tramite120702Store : Tramite120702Store,
     private tramite120702Query: Tramite120702Query,
     private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoServices:CatalogoServices
   ) {}
 
   /**
@@ -190,12 +194,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     }
     */
 
-    this.expedicionCertificadosFronteraService
-      .getAnoOficioDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.anoOficioDatos = data;
-      });
+   this.getAnoOficioDatos();
 
     this.expedicionCertificadosFronteraService
       .getMontoExpedirTabla()
@@ -204,6 +203,22 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
         this.montoTablaDatos = data.columns;
       });
   }
+
+/**
+ * Obtiene los datos del catálogo de año de oficio relacionados con los trámites actuales.
+ * Realiza una solicitud al servicio de catálogo utilizando los trámites seleccionados,
+ * y asigna la respuesta al arreglo `anoOficioDatos` como una lista de objetos `Catalogo`.
+ * La suscripción se cancela automáticamente al destruir el componente.
+ */
+getAnoOficioDatos():void{
+ this.catalogoServices
+      .asignacionCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.anoOficioDatos = res.datos as Catalogo[];
+      });
+
+}
 
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.  

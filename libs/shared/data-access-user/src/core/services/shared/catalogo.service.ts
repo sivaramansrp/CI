@@ -53,6 +53,7 @@ import {
   CLASIFICACION_REGIMEN,
   COMUN_URL,
   FRACCION_HTS,
+  OFICIO_ASIGNACION,
   PAIS_DESTINO,
   UNIDADES_MEDIDA_COMERCIAL
 } from '../../servers/api-router';
@@ -429,6 +430,8 @@ fraccionHtsCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalog
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+
 
 
   
@@ -919,4 +922,19 @@ usosEspecificoMercanciaCatalogo(tramite: string, procedimiento: string): Observa
   const ENDPOINT = `${this.host}${CATALOGO_USOS_ESPECIFICO_MERCANCIA(tramite, procedimiento)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+/**
+ * Obtiene el catálogo de asignación para un trámite específico.
+ *
+ * @param tramite - Identificador del trámite para el cual se solicita el catálogo de asignación.
+ * @returns Un observable que emite la respuesta base con el arreglo de catálogos asociados al trámite.
+ */
+asignacionCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${OFICIO_ASIGNACION(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
 }
+
+
+ 
