@@ -14,8 +14,8 @@ import { Anexo } from "../models/anexos.model";
 export const CONFIGURACION_TABLA_EXPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): number | undefined =>
+      ele.claveProductoExportacion,
     orden: 1,
   },
   {
@@ -46,14 +46,14 @@ export const CONFIGURACION_TABLA_EXPORTACION = [
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): number | undefined =>
+      ele.fraccionPadre,
     orden: 1,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
     clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaImportacion,
+      ele.cveFraccion,
     orden: 1,
   },
   {

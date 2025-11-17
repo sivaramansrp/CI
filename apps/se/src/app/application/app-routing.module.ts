@@ -506,7 +506,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-modificacion',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
         (m) => m.RegistroModificacionModule
