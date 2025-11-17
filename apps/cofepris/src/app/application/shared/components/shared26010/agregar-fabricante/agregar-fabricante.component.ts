@@ -33,16 +33,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { DEFAULT_TABLA_ORDENS, PROCEDIMIENTOS_MUESTRAN_RFC } from '../../constantes/terceros-relacionados-fabricante.enum';
-import {
-  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
-  PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
-  STR_NACIONAL,
-} from '../../constantes/datos-solicitud.enum';
+
+import { DEFAULT_TABLA_ORDENS, TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../models/terceros-fabricante.enum';
+import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../constents/datos-solicitud.enum';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Fabricante } from '../../models/terceros-relacionados.model';
-import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
+import { DatosSolicitudService } from '../services/datos-solicitud.service';
+import { Fabricante } from '../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_MUESTRAN_RFC } from '../../../constantes/terceros-relacionados-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
  interface OpcionesPublicacion{
   label: string;

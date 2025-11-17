@@ -679,7 +679,7 @@ export const OCULTAR_FACTURADOR = [260102, 260101,260103];
  * @example
  * // Ejemplo de uso:
  */
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE:number[] = [
 ];
 
 /**
@@ -861,7 +861,7 @@ export const SIN_ACCION_AL_INICIAR:number[] = [];
  *              relacionados con colonias o equivalentes en el sistema.
  * @type {number[]}
  */
-export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
+export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE:number[] = [
 ];
 
 /**

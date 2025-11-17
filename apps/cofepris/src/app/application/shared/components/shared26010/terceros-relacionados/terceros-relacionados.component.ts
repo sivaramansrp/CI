@@ -2,8 +2,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, MENSAJEDEALERTA, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { CONFIRMA_ELIMINACION, DATOS_ELIMINADOS_CORRECTAMENTE, MENSAJE_SIN_FILA_SELECCIONADA, OCULTAR_FACTURADOR, OCULTAR_PROVEEDOR, PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR } from "../constents/datos-solicitud.enum";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
-import { Destinatario, Fabricante, Facturador, MENSAJE_TABLA_OBLIGATORIA, Proveedor,
-  FACTURADOR_ENCABEZADO_DE_TABLA,FABRICANTE_ENCABEZADO_DE_TABLA,DESTINATARIO_ENCABEZADO_DE_TABLA,PROVEEDOR_ENCABEZADO_DE_TABLA} from "../models/terceros-relacionados.model";
+import {DESTINATARIO_ENCABEZADO_DE_TABLA, Destinatario,FABRICANTE_ENCABEZADO_DE_TABLA,FACTURADOR_ENCABEZADO_DE_TABLA, Fabricante, Facturador, MENSAJE_TABLA_OBLIGATORIA,PROVEEDOR_ENCABEZADO_DE_TABLA, Proveedor} from "../models/terceros-relacionados.model";
 import { Subject, map, takeUntil } from "rxjs";
 import { AgregarDestinatarioFinalComponent } from "../agregar-destinatario-final/agregar-destinatario-final.component";
 import { AgregarFabricanteComponent } from "../agregar-fabricante/agregar-fabricante.component";

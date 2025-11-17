@@ -1,16 +1,12 @@
-import { Fabricante } from '../models/terceros-relacionados.model';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 
 import { Catalogo, Otros } from '@libs/shared/data-access-user/src';
+import { DestinatarioModel, FacturadorModel, ProveedorModel } from '../models/terceros-fabricante-relocionados.model';
+import { Fabricante } from '../models/terceros-relacionados.model';
+import { FacricanteModel } from '../../../models/terceros-fabricante-relocionados.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import {
-  DestinatarioModel,
-  FacricanteModel,
-  FacturadorModel,
-  ProveedorModel,
-} from '../models/terceros-fabricante-relocionados.model';
 
 @Injectable({
   providedIn: 'root',
