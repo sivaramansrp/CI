@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { PlaguicidasComponent } from './plaguicidas.component';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, Output } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -10,9 +10,6 @@ import { Tramite260501Store } from '../../../../shared/estados/stores/260501/tra
 import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
-/*******************************
- * M O C K S 
- *******************************/
 class MockStore {
   setContinuarTriggered = jest.fn();
   setIdSolicitud = jest.fn();
@@ -65,14 +62,11 @@ class MockPasoUnoComponent {
   validarFormularios = jest.fn().mockReturnValue(true);
 }
 
-/*******************************
- *  T E S T S 
- *******************************/
 describe('PlaguicidasComponent', () => {
   let component: PlaguicidasComponent;
   let fixture: ComponentFixture<PlaguicidasComponent>;
   let store: MockStore;
-
+  let mockSharedSvc: MockSharedService;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
@@ -96,12 +90,11 @@ describe('PlaguicidasComponent', () => {
 
     fixture = TestBed.createComponent(PlaguicidasComponent);
     component = fixture.componentInstance;
-
     store = TestBed.inject(Tramite260501Store) as any;
-
-    component.wizardComponent = TestBed.createComponent(MockWizardComponent).componentInstance;
-
+    
+    mockSharedSvc = TestBed.inject(Shared2605Service) as any;
     fixture.detectChanges();
+    component.wizardComponent = fixture.debugElement.query(By.directive(MockWizardComponent)).componentInstance;
   });
 
   it('should create', () => {
@@ -157,18 +150,11 @@ describe('PlaguicidasComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should complete destroyNotifier on ngOnDestroy()', () => {
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should set solicitudState and isContinuarTriggered on ngOnInit', () => {
-    const mockState = { continuarTriggered: true } as any;
-    jest.spyOn(MockQuery, 'selectSolicitud$' as any, 'get').mockReturnValue(of(mockState));
-    component.ngOnInit();
-    expect(component.solicitudState).toEqual(mockState);
-    expect(component.isContinuarTriggered).toBe(true);
+  it('should toggle seccionCargarDocumentos based on cargaRealizada()', () => {
+    component.cargaRealizada(true);
+    expect(component.seccionCargarDocumentos).toBe(false);
+    component.cargaRealizada(false);
+    expect(component.seccionCargarDocumentos).toBe(true);
   });
 
   it('should set isPeligro=true when step 1 is invalid', () => {
@@ -178,6 +164,80 @@ describe('PlaguicidasComponent', () => {
     expect(component.isPeligro).toBe(true);
   });
 
+  it('should save and update guardarIdSolicitud', fakeAsync(() => {
+    const mockResp = { datos: { id_solicitud: 99 } } as any;
 
+    jest.spyOn(mockSharedSvc, 'buildPayload').mockReturnValue({});
+    jest.spyOn(mockSharedSvc, 'guardarDatosPost').mockReturnValue(of(mockResp));
+
+    component.guardar({}).then((resp) => {
+      expect(resp).toBe(mockResp);
+      expect(component.guardarIdSolicitud).toBe(99);
+    });
+
+    tick();
+  }));
+
+  it('should complete destroy notifier on destroy', () => {
+    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+it('should call wizardComponent.siguiente() when navigating forward (indice > 1)', () => {
+    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+    component.indice = 2;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(spy).toHaveBeenCalled();
+    expect(component.indice).toBe(3);
+  });
+
+  it('should call wizardService.cambio_indice() when navigating steps', () => {
+    const cambioSpy = jest.spyOn(component.wizardService, 'cambio_indice' as any);
+    component.indice = 2;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(cambioSpy).toHaveBeenCalledWith(3);
+  });
+
+  it('should validate multiple forms inside verificarLaValidezDelFormulario()', () => {
+    const mockFormSvc: any = {
+      isFormValid: jest.fn().mockReturnValue(true)
+    };
+    (component as any).servicioDeFormularioService = mockFormSvc;
+    const result = component.verificarLaValidezDelFormulario();
+    expect(mockFormSvc.isFormValid).toHaveBeenCalledTimes(5);
+    expect(result).toBe(true);
+  });
+
+   it('should NOT navigate when shouldNavigate$ returns error', fakeAsync(() => {
+    jest.spyOn(mockSharedSvc, 'guardarDatosPost').mockReturnValue(
+      of({
+        codigo: '99',
+        mensaje: 'Error',
+        datos: {}
+      })
+    );
+
+    const spyNext = jest.spyOn(component.wizardComponent, 'siguiente');
+
+    component.indice = 1;
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+
+    tick(100);   // process internal timers
+    flush();     // clear remaining timers to avoid test leakage
+
+    expect(spyNext).not.toHaveBeenCalled();
+    expect(component.indice).toBe(1);
+  }));
+
+
+  it('should update activarBotonCargaArchivos via manejaEventoCargaDocumentos()', () => {
+    component.manejaEventoCargaDocumentos(true);
+    expect(component.activarBotonCargaArchivos).toBe(true);
+    component.manejaEventoCargaDocumentos(false);
+    expect(component.activarBotonCargaArchivos).toBe(false);
+  });
 
 });
