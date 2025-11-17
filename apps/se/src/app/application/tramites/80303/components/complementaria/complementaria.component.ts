@@ -117,7 +117,7 @@ export class ComplementarioComponent implements OnDestroy {
    * Configuración de las columnas de la tabla para las operaciones.
    * @type {ConfiguracionColumna<Operacions>[]}
    */
-  configuracionOperacion: ConfiguracionColumna<Operacions>[] =
+   configuracionOperacion: ConfiguracionColumna<Operacions>[] =
     CONFIGURACION_OPERACIONES;
 /**
    * Datos de las operaciones obtenidos desde el servicio.
