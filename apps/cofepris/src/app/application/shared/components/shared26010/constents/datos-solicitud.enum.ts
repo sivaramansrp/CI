@@ -734,8 +734,8 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE:number[] = [];
  *   // Lógica para ocultar o deshabilitar los elementos "Régimen" y "Aduana de Entradas"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
- 260103,
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS:number[] = [
+260103
 ];
 
 /**

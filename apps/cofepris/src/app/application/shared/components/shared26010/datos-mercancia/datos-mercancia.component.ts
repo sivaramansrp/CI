@@ -10,7 +10,9 @@ import { DatosSolicitudService } from '../services/datos-solicitud.service';
 import { DetalleMercancia } from '../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
 import { NUMERO_REGISTRO_SANITARIO } from '../../../constantes/terceros-relacionados-fabricante.enum';
+import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 
 /**
  * @component DatosMercanciaComponent
@@ -22,6 +24,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
@@ -415,7 +418,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location,
     private catalogoService: CatalogoServices
   ) {
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(

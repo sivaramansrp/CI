@@ -1,7 +1,7 @@
 
 import { AICM, AIFA, ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS, DESHABILITADA_EN_INIT, ENABLE_FIELDS, MENSAJE_EMERGENTE_DE_CONFIRMACION, MENSAJE_SIN_FILA_SELECCIONADA, MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA, MOSTRAR_NOTIFICACION, NUMERO_TRAMITE, PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC, PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS, PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO, PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES, PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL, REPRESENTANTE_LEGAL, REPRESENTANTE_LEGAL_EN_INIT, SIN_ACCION_AL_INICIAR, TEXTO_MANIFESTO_Y_DECLARACIONES } from '../constents/datos-solicitud.enum';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AlertComponent, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_IMPORTE_PAGO, REGEX_RFC, REGEX_SOLO_DIGITOS, REGEX_SOLO_NUMEROS, RegistroSolicitudService, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, DatosDeTablaSeleccionados, DatosSolicitudFormState, MercanciaForm, OpcionConfig, ScianConfig,TablaMercanciasConfig,TablaMercanciasDatos,TablaOpcionConfig,TablaScianConfig } from '../models/datos-solicitud.model';
@@ -21,6 +21,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
