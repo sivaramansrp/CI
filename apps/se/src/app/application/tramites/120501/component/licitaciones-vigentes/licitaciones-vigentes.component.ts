@@ -368,35 +368,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         }
       }
     }
-
   }
-  /**
-   * Obtiene y establece los detalles de la licitación en el formulario 'detalledelalicitacionForm'.
-   *
-   * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
-   */
-  // getDetallesDelalicitacion(): void {
-  //   this.service.getDetallesDelalicitacion().pipe(takeUntil(this.destroyed$)).subscribe(
-  //     (data: DetallesLicitacion) => {
-  //       this.detalledelaLicitacionForm.patchValue({
-  //         numeraDelicitacion: data.numeraDelicitacion,
-  //         fechaDelEventoDelicitacion: data.fechaDelEventoDelicitacion,
-  //         descripcionDelProducto: data.descripcionDelProducto,
-  //         unidadTarifaria: data.unidadTarifaria,
-  //         regimenAduanero: data.regimenAduanero,
-  //         fraccionArancelaria: data.fraccionArancelaria,
-  //         fechaDeiniciodeVigenciadelCupo: data.fechaDeiniciodeVigenciadelCupo,
-  //         fechaDefindeVigenciadelCupo: data.fechaDefindeVigenciadelCupo,
-  //         obserVaciones: data.obserVaciones,
-  //         bloqueComercial: data.bloqueComercial,
-  //         paises: data.paises,
-  //         montoadJudicado: data.montoadJudicado,
-  //         montoDisponible: data.montoDisponible,
-  //         montoMaximo: data.montoMaximo
-  //       })
-  //     })
-  // }
-  /**
+  
+    /**
     * Obtiene los datos de la tabla desde el servicio.
     *
     * LicitacionesVigentesComponent
@@ -417,6 +391,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.service.getLicitacionesFormData(REQUEST_DATA)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: LicitacionesResponse) => {
+        this.tramite120501Store.actualizarEstado({licitacionesDatos: data})
         this.showRepresentacionFederal = true;
         const LICITACION = data;
         this.datosParticipantes = LICITACION.participantesLicitacion;
@@ -436,29 +411,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
           montoDisponible: LICITACION.participante.montoDisponible,
           montoMaximo: LICITACION.licitacionPublica.cantidadMaxima
         });
-
-        // this.adquiriente.patchValue({
-        //   rfc: LICITACION.participante.rfc,
-        //   adquirienteMontoDisponible: LICITACION.participante.montoDisponible,
-        //   montoRecibir: LICITACION.montoTransferir
-        // });
       });
   }
-  /**
-   * Obtiene y establece los datos del adquiriente en el formulario 'adquiriente'.
-   *
-   * Utiliza el servicio `LicitacionesDisponiblesService` para obtener los datos.
-   */
-  // getAdquiriente(): void {
-  //   this.service.getAdquiriente()
-  //     .pipe(takeUntil(this.destroyed$)).subscribe(
-  //       (data: Adquiriente) => {
-  //         this.adquiriente.patchValue({
-  //           rfc: data.rfc,
-  //           adquirienteMontoDisponible: data.adquirienteMontoDisponible,
-  //         })
-  //       })
-  // }
+ 
   /**
        * Establece los valores en el store del trámite 120501.
        *

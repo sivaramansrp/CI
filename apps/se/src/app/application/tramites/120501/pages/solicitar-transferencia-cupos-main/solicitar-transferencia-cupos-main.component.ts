@@ -207,70 +207,69 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
      */
   guardar(item: Solicitud120501State, e: AccionBoton): Promise<JSONResponse> {
     const PAYLOAD = {
-      "entidadFederativa": {
-        "entidad": {
-          "clave": item.entidadFederativa
+      entidadFederativa: {
+        entidad: {
+          clave: item.entidadFederativa
         }
       },
-      "idSolicitud":0,
-      "unidadAdministrativaRepresentacionFederal": {
-        "clave": item.representacionFederal
+      idSolicitud:0,
+      unidadAdministrativaRepresentacionFederal: {
+        clave: item.representacionFederal
       },
-      "licitacion": {
-        "idLicitacion": 21,
-        "anio": 2011,
-        "cantidadMaxima": 18000,
-        "fechaLimiteCalificacion": "2011-10-27",
-        "fechaConcurso": item.fechaDelEventoDelicitacion,
-        "fechaInicioVigencia": item.fechaDeiniciodeVigenciadelCupo,
-        "fechaFinVigencia": item.fechaDefindeVigenciadelCupo,
-        "fundamento": "Convocatoria para participar en la Licitación Pública Nacional No. 005/2011 para asignar el cupo para importar juguetes publicada en el Diario Oficial de la Federación el 29 de septiembre de 2011",
-        "ideTipoConstancia": "TICONS.AN",
-        "ideTipoLicitacion": "TILIC.PO",
-        "numeroLicitacion": item.numeraDelicitacion,
-        "idMecanismoAsignacion": 143
+      licitacion: {
+        idLicitacion: item.licitacionesDatos.licitacionPublica.idLicitacion,
+        anio: item.licitacionesDatos.licitacionPublica.anio,
+        cantidadMaxima: item.licitacionesDatos.licitacionPublica.cantidadMaxima,
+        fechaLimiteCalificacion: item.licitacionesDatos.licitacionPublica.fechaLimiteCalificacion,
+        fechaConcurso: item.fechaDelEventoDelicitacion,
+        fechaInicioVigencia: item.fechaDeiniciodeVigenciadelCupo,
+        fechaFinVigencia: item.fechaDefindeVigenciadelCupo,
+        fundamento: item.licitacionesDatos.licitacionPublica.fundamento,
+        ideTipoConstancia: item.licitacionesDatos.licitacionPublica.ideTipoConstancia,
+        ideTipoLicitacion: item.licitacionesDatos.licitacionPublica.ideTipoLicitacion,
+        numeroLicitacion: item.numeraDelicitacion,
+        idMecanismoAsignacion: item.licitacionesDatos.licitacionPublica.idMecanismoAsignacion
       },
-      "fraccionArancelaria": item.fraccionArancelaria,
-      "solicitud": {
-        "participante": {
-          "rfc": item.rfc
+      fraccionArancelaria: item.licitacionesDatos.fraccionArancelaria,
+      solicitud: {
+        participante: {
+          rfc: item.rfc
         },
-        "solicitante": {
-          "rfc": "AAL0409235E6",
-          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-          "actividad_economica": "Fabricación de productos de hierro y acero",
-          "correo_electronico": "contacto@acerosalvarado.com",
-          "certificado_serial_number": "SN123456789",
-          "domicilio": {
-            "pais": "México",
-            "codigo_postal": "06700",
-            "estado": "Ciudad de México",
-            "municipio_alcaldia": "Cuauhtémoc",
-            "localidad": "Centro",
-            "colonia": "Roma Norte",
-            "calle": "Av. Insurgentes Sur",
-            "numero_exterior": "123",
-            "numero_interior": "Piso 5, Oficina A",
-            "lada": "55",
-            "telefono": "123456",
-            "entidad_federativa": {
-                    "cveEntidad": "BCS",
-                    "nombre": "Ciudad de México",
-                    "codEntidadIdc": "CDMX",
-                    "cvePais": "MEX",
-                    "fechaCaptura": "2025-06-09",
-                    "fechaInicioVigencia": "2025-06-01",
-                    "fechaFinVigencia": "2025-12-31",
-                    "activo": true,
-                    "pais": "México",
-                    "claveEnIDC": "CDMX09"
+        solicitante: {
+          rfc: "AAL0409235E6",
+          nombre: "ACEROS ALVARADO S.A. DE C.V.",
+          actividad_economica: "Fabricación de productos de hierro y acero",
+          correo_electronico: "contacto@acerosalvarado.com",
+          certificado_serial_number: "SN123456789",
+          domicilio: {
+            pais: "México",
+            codigo_postal: "06700",
+            estado: "Ciudad de México",
+            municipio_alcaldia: "Cuauhtémoc",
+            localidad: "Centro",
+            colonia: "Roma Norte",
+            calle: "Av. Insurgentes Sur",
+            numero_exterior: 123,
+            numero_interior: "Piso 5, Oficina A",
+            lada: 55,
+            telefono: 123456,
+            entidad_federativa: {
+                    cveEntidad: "BCS",
+                    nombre: "Ciudad de México",
+                    codEntidadIdc: "CDMX",
+                    cvePais: "MEX",
+                    fechaCaptura: "2025-06-09",
+                    fechaInicioVigencia: "2025-06-01",
+                    fechaFinVigencia: "2025-12-31",
+                    activo: true,
+                    pais: "México",
+                    claveEnIDC: "CDMX09"
                 }
           }
         },
-        "maximoTransferir": item.montoMaximo,
-        "montoTransferir": 1,
-        "idAsignacion":item.adquirienteMontoDisponible
-    
+        maximoTransferir: item.licitacionesDatos.maximoTransferir,
+        montoTransferir: item.licitacionesDatos.montoTransferir,
+        idAsignacion: 52777
       } 
     };
     return new Promise((resolve, reject) => {
