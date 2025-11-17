@@ -37,7 +37,6 @@ import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, PROCEDIMIENTOS_PARA_OCULTAR_EL_BO
 import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DEFAULT_TABLA_ORDENS } from '../models/terceros-fabricante.enum';
-import { DatosSolicitudService } from '../services/datos-solicitud.service';
 import { Destinatario } from '../models/terceros-relacionados.model';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
@@ -273,8 +272,7 @@ export class AgregarDestinatarioFinalComponent
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService,
-     private catalogoServices: CatalogoServices
+    private catalogoServices: CatalogoServices
   ) {
     //constructor necesario para el servicio
   }
