@@ -9,7 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-retorno-sanitario.enum';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/shared26010/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent

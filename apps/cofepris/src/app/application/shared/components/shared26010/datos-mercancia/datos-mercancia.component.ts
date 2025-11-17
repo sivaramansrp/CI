@@ -1,72 +1,19 @@
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
-} from '@angular/core';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  CrosslistComponent,
-  InputFecha,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  REGEX_DECIMAL,
-  SOLO_REGEX_NUMEROS,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  CAMPOS_CLAVE,
-  DATOS_MERCANCIA_CAMPO,
-  DATOS_MERCANCIA_CLAVE_TABLA,
-  DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
-  ES_VALIDO_REGISTRO_O_VENCIMIENTO,
-  FEACCION_AFRACCION_ARANCELARIA_CATALOG,
-  TIPO_PRODUCTO_ESPECIAL,
-  UMT_DESHABILITADO_VALOR,
-} from '../../constantes/datos-solicitud.enum';
-import {
-  Catalogo,
-  CrossListLable,
-  MercanciaForm,
-  TablaMercanciaClaveConfig,
-  TablaMercanciasDatos,
-} from '../../models/datos-solicitud.model';
-import { CommonModule, Location } from '@angular/common';
-import {
-  FECHA_DE_CADUCIDAD_MERCANICA,
-  FECHA_DE_CADUCIDAD_PAGO,
-  FECHA_DE_FABRICACIO_PAGO,
-} from '../../models/terceros-relacionados.model';
-import { Subject, Subscription, takeUntil } from 'rxjs';
-import { CatalogoServices } from '@ng-mf/data-access-user';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { DetalleMercancia } from '../../models/detalle-mercancia.model';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { AlertComponent, CatalogoSelectComponent, CatalogoServices, CrosslistComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_DECIMAL, SOLO_REGEX_NUMEROS, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CAMPOS_CLAVE, DATOS_MERCANCIA_CAMPO, DATOS_MERCANCIA_CLAVE_TABLA, ES_VALIDO_REGISTRO_O_VENCIMIENTO, TIPO_PRODUCTO_ESPECIAL } from '../constents/datos-solicitud.enum';
+import { Catalogo, CrossListLable, MercanciaForm, TablaMercanciaClaveConfig, TablaMercanciasDatos, TablaSeleccion } from '../models/datos-solicitud.model';
+import { FECHA_DE_CADUCIDAD_MERCANICA, FECHA_DE_CADUCIDAD_PAGO, FECHA_DE_FABRICACIO_PAGO } from '../../../models/terceros-relacionados.model';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosSolicitudService } from '../services/datos-solicitud.service';
+import { DetalleMercancia } from '../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
-import { NUMERO_REGISTRO_SANITARIO } from '../../constantes/terceros-relacionados-fabricante.enum';
-import { Observable } from 'rxjs';
+import { NUMERO_REGISTRO_SANITARIO } from '../../../constantes/terceros-relacionados-fabricante.enum';
+import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+
 /**
  * @component DatosMercanciaComponent
  * @description Componente encargado de capturar y emitir los datos de una mercancía.
@@ -77,6 +24,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
@@ -470,11 +418,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location,
     private catalogoService: CatalogoServices
   ) {
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
-      this.idProcedimiento
+      this.idProcedimiento 
     )
       ? true
       : false;
@@ -851,24 +798,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     this.elementosMandatorios = [];
     switch (this.idProcedimiento) {
       case 260102:
-        this.elementosNoValidos = [
-          'denominacionDistintiva',
-          'denominacionComun',
-          'formaFarmaceutica',
-          'estadoFisico',
-          'presentacion',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosAnadidos = [
-          'marca',
-          'especifique',
-          'claveDeLos',
-          'fechaDeFabricacio',
-          'fechaDeCaducidad',
-        ];
-        break;
-        case 260103:
         this.elementosNoValidos = [
           'denominacionDistintiva',
           'denominacionComun',
