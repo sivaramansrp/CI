@@ -1,14 +1,13 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, TablaScianConfig } from '../../models/datos-solicitud.model';
-import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, TablaScianConfig } from '../models/datos-solicitud.model';
+import { CatalogoSelectComponent, , TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { DatosSolicitudService } from '../services/datos-solicitud.service';
+import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../../constantes/datos-scian.enum';
 import { CatalogoServices } from '@ng-mf/data-access-user';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../constantes/datos-scian.enum';
-
 @Component({
   selector: 'app-scian-tabla',
   standalone: true,

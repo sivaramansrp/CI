@@ -693,7 +693,7 @@ export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
  *   // Lógica para ocultar o deshabilitar el elemento "Correo Electrónico"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC:number[] = [
 ];
 
 /**
@@ -721,7 +721,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
  *   // Lógica para manejar procedimientos no aplicables
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE:number[] = [];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS
@@ -771,7 +771,7 @@ export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
  * @description Arreglo que contiene los identificadores relacionados con el representante legal.
  * @type {number[]}
  */
-export const REPRESENTANTE_LEGAL = [];
+export const REPRESENTANTE_LEGAL:number[] = [];
 
 /**
  * @const BANCO
@@ -795,7 +795,7 @@ export const REQUIRED_BANCO = [];
  * @description Arreglo que contiene los identificadores de los campos relacionados con los datos de mercancía.
  * @type {number[]}
  */
-export const DATOS_MERCANCIA_CAMPO = [];
+export const DATOS_MERCANCIA_CAMPO:number[] = [];
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO
@@ -853,7 +853,7 @@ export const DESHABILITADA_EN_INIT = [ 260101];
  * @description Lista de identificadores de procedimientos que no requieren acción al iniciar.
  * @type {number[]}
  */
-export const SIN_ACCION_AL_INICIAR = [];
+export const SIN_ACCION_AL_INICIAR:number[] = [];
 
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
@@ -1006,7 +1006,7 @@ export const MOSTRAR_NOTIFICACION = [
    260103
 ];
 
-export const ENABLE_FIELDS = [];
+export const ENABLE_FIELDS:number[] = [];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
@@ -1033,7 +1033,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '137';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES:number[] = [
 
 ];
 
@@ -1059,7 +1059,7 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
 /**
  * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
  */
-export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [];
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR:number[] = [];
 
 
 /**
@@ -1068,7 +1068,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = []
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR:number[] = []
 
 /**
  * Constante que representa el código AIFA.
@@ -1130,11 +1130,11 @@ export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [];
  * @description Mapeo de procedimientos a los campos que deben ser deshabilitados al eliminar un pedimento.
  * Cada clave en el objeto representa un identificador de procedimiento, y su valor asociado es un arreglo
  */
-export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [];
+export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE:number[] = [];
 
 /**
  * @const ES_VALIDO_REGISTRO_O_VENCIMIENTO
  * @description Lista de identificadores de procedimientos para los cuales es válido el registro o vencimiento.
  * @type {number[]}
  */
-export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [];
+export const ES_VALIDO_REGISTRO_O_VENCIMIENTO:number[] = [];

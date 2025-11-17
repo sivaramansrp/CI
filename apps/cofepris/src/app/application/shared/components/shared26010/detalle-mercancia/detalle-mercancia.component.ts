@@ -13,9 +13,9 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DETALLE_MERCANCIA_TABLA } from '../../constantes/datos-solicitud.enum';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { DetalleMercancia } from '../../models/detalle-mercancia.model';
+import { DETALLE_MERCANCIA_TABLA } from '../constents/datos-solicitud.enum';
+import { DatosSolicitudService } from '../services/datos-solicitud.service';
+import { DetalleMercancia } from '../models/detalle-mercancia.model';
 import { Observable } from 'rxjs';
 
 @Component({

@@ -276,12 +276,6 @@ export class DatosDeLaSolicitudComponent
    * @type {boolean}
    */
   public MostrarRepresentanteLegal = true;
-/**
-   * @property {boolean} esProcedimiento260210
-   * @description Indica si el procedimiento actual corresponde al código 260210.
-   * 
-   */
-  public esProcedimiento260210: boolean = false;
 
   /**
    * @property {boolean} mostrarRFCSanitario
@@ -602,7 +596,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
-     this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
    
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
@@ -1577,21 +1570,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       });
     }
   }
-  /**
-   * Método que se ejecuta cuando se cambia el estado de un elemento.
-   * Actualmente no tiene implementación.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  cambioDeEstado(event: Catalogo): void {
-    if (this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260301) {
-      if (event) {
-        this.datosSolicitudForm
-          .get('municipioAlcaldia')
-          ?.setValue('DISTITO FEDERAL', { emitEvent: true });
-      }
-    }
-  }
+
 
   /**
    * Verifica si un campo es requerido según la configuración de campos requeridos.
@@ -1859,12 +1838,9 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
         CONTROL?.enable();
       }
     });
-    if(this.idProcedimiento===260209|| this.idProcedimiento===260210||this.idProcedimiento===260205){
-      this.establecimientoSeleccionado = false;
-    }
-    else{
+ 
     this.establecimientoSeleccionado = true;
-    }
+    
 
   }
 
@@ -1984,14 +1960,13 @@ verificarCamposValidosODeshabilitados(): boolean {
       if (EXCLUDED_FIELDS.includes(controlName)) {
        
       
-        return; // Continue to next field
+        // Continue to next field
       }
 
 
       // Check if field is valid or disabled
      else if (CONTROL.disabled) {
-       return ;
-      
+        // Field is disabled, validation not required
       } else if (!CONTROL.valid) {
         allFieldsValidOrDisabled = false;
 

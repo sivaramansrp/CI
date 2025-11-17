@@ -1,54 +1,20 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  AlertComponent,
-  ConfiguracionColumna,
-  ConsultaioQuery,
-  MENSAJEDEALERTA,
-  Notificacion,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  CONFIRMA_ELIMINACION,
-  DATOS_ELIMINADOS_CORRECTAMENTE,
-  MENSAJE_SIN_FILA_SELECCIONADA,
-  OCULTAR_FACTURADOR,
-  OCULTAR_PROVEEDOR,
-  PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
-  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
-  
-} from '../../constantes/datos-solicitud.enum';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import {
-  DESTINATARIO_ENCABEZADO_DE_TABLA,
-  Destinatario,
-  FABRICANTE_ENCABEZADO_DE_TABLA,
-  FACTURADOR_ENCABEZADO_DE_TABLA,
-  Fabricante,
-  Facturador,
-  MENSAJE_TABLA_OBLIGATORIA,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-import { Subject, map, takeUntil } from 'rxjs';
-import { AgregarDestinatarioFinalComponent } from '../agregar-destinatario-final/agregar-destinatario-final.component';
-import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
-import { AgregarFacturadorComponent } from '../agregar-facturador/agregar-facturador.component';
-import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
-import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
-import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from "@angular/router";
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, MENSAJEDEALERTA, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
+import { CONFIRMA_ELIMINACION, DATOS_ELIMINADOS_CORRECTAMENTE, MENSAJE_SIN_FILA_SELECCIONADA, OCULTAR_FACTURADOR, OCULTAR_PROVEEDOR, PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR } from "../constents/datos-solicitud.enum";
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
+import { Destinatario, Fabricante, Facturador, MENSAJE_TABLA_OBLIGATORIA, Proveedor,
+  FACTURADOR_ENCABEZADO_DE_TABLA,FABRICANTE_ENCABEZADO_DE_TABLA,DESTINATARIO_ENCABEZADO_DE_TABLA,PROVEEDOR_ENCABEZADO_DE_TABLA} from "../models/terceros-relacionados.model";
+import { Subject, map, takeUntil } from "rxjs";
+import { AgregarDestinatarioFinalComponent } from "../agregar-destinatario-final/agregar-destinatario-final.component";
+import { AgregarFabricanteComponent } from "../agregar-fabricante/agregar-fabricante.component";
+import { AgregarFacturadorComponent } from "../agregar-facturador/agregar-facturador.component";
+import { AgregarProveedorComponent } from "../agregar-proveedor/agregar-proveedor.component";
+import { CommonModule } from "@angular/common";
+import { TablaSeleccion } from "../models/datos-solicitud.model";
+import { TercerosRelacionadosFebService } from "../services/tereceros-relacionados-feb.service";
+import { ToastrService } from "ngx-toastr";
+
+
 
 /**
  * @component TercerosRelacionadosComponent
