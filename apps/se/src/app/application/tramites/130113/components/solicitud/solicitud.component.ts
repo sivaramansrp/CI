@@ -12,9 +12,11 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
+
 import {
   Catalogo,
   ConfiguracionColumna,
+  MostrarPartidas,
   Notificacion,
   REGEX_NUMERO_DECIMAL_ENTERO,
   REGEX_PATRON_DECIMAL_2,
@@ -22,11 +24,6 @@ import {
   REG_X,
 } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
-
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130113/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130113/unidad_da.json';
 
 import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
 
@@ -40,6 +37,7 @@ import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enu
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-equipo-anticontaminante.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
@@ -141,6 +139,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
+  isInvalidaPartidas: boolean = false;
+
   /**
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
@@ -169,7 +169,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Datos de configuración de la tabla obtenidos de un archivo JSON.
    * @type {any}
    */
-  public getEstablecimientoTableData = PartidasdelaTable;
+  public getEstablecimientoTableData = [];
 
   /**
    * filaSeleccionada
@@ -188,7 +188,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Opciones para el campo "producto".
    * @type {ProductoOpción[]}
    */
-  productoOpciones: ProductoOpción[] = [];
+  productoOpciones: ProductoOpción[] = PRODUCTO_OPCION;
 
   /**
    *  Opciones para el campo "fraccionDescription".
@@ -207,7 +207,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Catálogo con valores de fracción arancelaria.
    * @type {Catalogo[]}
    */
-  fraccionCatalogo: Catalogo[] = fractionValues;
+  fraccionCatalogo: Catalogo[] = [];
 
   /**
    *  Catálogo con opciones de unidad de medida.
@@ -216,7 +216,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Catálogo con opciones de unidad de medida.
    * @type {Catalogo[]}
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
 
   /**
    *  Campos de entrada configurables para detalles adicionales.
@@ -239,11 +239,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    *  Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [[], []];
   /**
    *  Opciones de solicitud configurables.
    */
-  opcionesSolicitud: ProductoOpción[] = [];
+  opcionesSolicitud: ProductoOpción[] = OPINIONES_SOLICITUD;
 
   /**
    *  Sujeto para gestionar la destrucción de suscripciones.
@@ -290,6 +290,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Propiedad privada.
    */
   private seccionState!: Tramite130113State;
+
+  mostrarPartidas: MostrarPartidas[] = [];
+
+   /**
+   * Formulario reactivo para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * idProcedimiento
+   * Identificador del procedimiento asociado al trámite.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *{FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -318,14 +331,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
+    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
-    this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
-    this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
-    this.listaDePaisesDisponibles();
-    this.listaDeFraccionDescripcion();
+    this.getRegimenCatalogo();
+    this.getFraccionCatalogo();
+    this.getEntidadesFederativasCatalogo();
+    this.getBloque();
+    // this.opcionesDeBusqueda();
+    // this.obtenerTablaDatos();
+    // this.fetchEntidadFederativa();
+    // this.fetchRepresentacionFederal();
+    // this.listaDePaisesDisponibles();
+    // this.listaDeFraccionDescripcion();
 
     this.tramite130113Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
@@ -439,7 +457,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
     });
-
+ this.modificarPartidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.cantidadPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.maxLength(18),
+        ],
+      ],
+      descripcionPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.descripcionPartidasDeLaMercancia,
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.valorPartidaUSDPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
     this.paisForm = this.fb.group({
       bloque: [''],
       usoEspecifico: ['', Validators.required],
@@ -531,35 +571,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    *  Solicita opciones configurables para los formularios desde archivos JSON.
    */
-  opcionesDeBusqueda(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getSolicitudeOptions()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data) => {
-          this.opcionesSolicitud = data.options;
-          this.tramite130113Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
-        },
-        error: (error) =>
-          console.error('Error loading solicitude options:', error),
-      });
+  // opcionesDeBusqueda(): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getSolicitudeOptions()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.opcionesSolicitud = data.options;
+  //         this.tramite130113Store.actualizarEstado({
+  //           solicitud: data.options[0]?.value || '',
+  //           defaultSelect: data.defaultSelect || 'Inicial',
+  //         });
+  //       },
+  //       error: (error) =>
+  //         console.error('Error loading solicitude options:', error),
+  //     });
 
-    this.importacionEquipoAnticontaminanteService
-      .getProductoOptions()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data) => {
-          this.productoOpciones = data.options;
-          this.tramite130113Store.actualizarEstado({
-            producto: data.options[0]?.value || 'Nuevo',
-            defaultProducto: data.options[0]?.value || 'Nuevo',
-          });
-        },
-      });
-  }
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getProductoOptions()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.productoOpciones = data.options;
+  //         this.tramite130113Store.actualizarEstado({
+  //           producto: data.options[0]?.value || 'Nuevo',
+  //           defaultProducto: data.options[0]?.value || 'Nuevo',
+  //         });
+  //       },
+  //     });
+  // }
   /**
    * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -603,18 +643,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return;
     }
     // Calcular el total USD para la fila
-    const CANTIDAD = Number(VALOR_FORMULARIO.cantidadPartidasDeLaMercancia);
-    const PRECIO_UNITARIO_USD = Number(VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia);
-    const TOTAL_USD = (CANTIDAD && PRECIO_UNITARIO_USD) ? (CANTIDAD * PRECIO_UNITARIO_USD).toFixed(2) : '';
+    const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
+    // const CANTIDAD = Number(VALOR_FORMULARIO.cantidadPartidasDeLaMercancia);
+    // const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+    const PRECIO_UNITARIO_USD = Number(VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia)/Number(VALOR_FORMULARIO.cantidadPartidasDeLaMercancia);
+    // const TOTAL_USD = (CANTIDAD && PRECIO_UNITARIO_USD) ? (CANTIDAD * PRECIO_UNITARIO_USD).toFixed(2) : '';
     // Crear la fila mapeada para la tabla
     const FILA_MAPEADA = {
-      id: (Date.now()).toString(), // Identificador único para cada fila
+      id: String(this.tableBodyData.length + 1), // Identificador único para cada fila
       cantidad: VALOR_FORMULARIO.cantidadPartidasDeLaMercancia,
-      unidadDeMedida: '', // Completar desde catálogo o formulario si está disponible
+      unidadDeMedida: UMT, // Completar desde catálogo o formulario si está disponible
       fraccionFrancelaria: VALOR_FORMULARIO.fraccionTigiePartidasDeLaMercancia,
       descripcion: VALOR_FORMULARIO.descripcionPartidasDeLaMercancia,
-      precioUnitarioUSD: VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia,
-      totalUSD: TOTAL_USD,
+      precioUnitarioUSD: PRECIO_UNITARIO_USD.toString(),
+      totalUSD: VALOR_FORMULARIO.valorPartidaUSDPartidasDeLaMercancia,
       fraccionTigiePartidasDeLaMercancia: VALOR_FORMULARIO.fraccionTigiePartidasDeLaMercancia,
       fraccionDescripcionPartidasDeLaMercancia: VALOR_FORMULARIO.fraccionDescripcionPartidasDeLaMercancia
     };
@@ -632,7 +674,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
     this.mostrarTabla = true;
     this.tramite130113Store.actualizarEstado({ mostrarTabla: true });
+    this.tramite130113Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     this.partidasDelaMercanciaForm.reset();
+  }
+
+  /**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas) || 0;
+    const TOTAL_USD = Number(cantidadUSD) || 0;
+
+    if (TOTAL_PARTIDAS === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 3;
+    const IMPORTE_UNITARIO_USD = TOTAL_USD / TOTAL_PARTIDAS;
+
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
   }
 
   /**
@@ -649,71 +714,72 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Método para obtener la lista de entidades federativas.
    */
-  fetchEntidadFederativa(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getEntidadFederativa()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.entidadFederativa = data;
-      });
-  }
+  // fetchEntidadFederativa(): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getEntidadFederativa()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data) => {
+  //       this.entidadFederativa = data;
+  //     });
+  // }
 
   /**
    * Método para obtener la lista de representaciones federales.
    */
-  fetchRepresentacionFederal(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getRepresentacionFederal()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.representacionFederal = data;
-      });
-  }
+  // fetchRepresentacionFederal(): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getRepresentacionFederal()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data) => {
+  //       this.representacionFederal = data;
+  //     });
+  // }
   /**
    * Método para obtener la lista de países disponibles.
    */
-  listaDePaisesDisponibles(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getListaDePaisesDisponibles()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.elementosDeBloque = data;
-      });
-  }
+  // listaDePaisesDisponibles(): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getListaDePaisesDisponibles()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data) => {
+  //       this.elementosDeBloque = data;
+  //     });
+  // }
 
   /**
    * Método para obtener la lista de fracciones de la descripción de las partidas de la mercancía.
    */
-  listaDeFraccionDescripcion(): void {
-    this.importacionEquipoAnticontaminanteService
-      .getFraccionDescripcionPartidasDeLaMercancia()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.fraccionDescription = data;
-      });
-  }
+  // listaDeFraccionDescripcion(): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getFraccionDescripcionPartidasDeLaMercancia()
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data) => {
+  //       this.fraccionDescription = data;
+  //     });
+  // }
 
   /**
    * Método para obtener la lista de países por bloque.
    *{number} _bloqueId - Identificador del bloque.
    */
-  fetchPaisesPorBloque(_bloqueId: number): void {
-    this.importacionEquipoAnticontaminanteService
-      .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
-      });
-  }
+  // fetchPaisesPorBloque(_bloqueId: number): void {
+  //   this.importacionEquipoAnticontaminanteService
+  //     .getPaisesPorBloque(_bloqueId)
+  //     .pipe(takeUntil(this.destroyed$))
+  //     .subscribe((data) => {
+  //       this.paisesPorBloque = data;
+  //       this.selectRangoDias = this.paisesPorBloque.map(
+  //         (pais: Catalogo) => pais.descripcion
+  //       );
+  //     });
+  // }
   /**
    * Maneja el cambio de bloque seleccionado.
    *{number} bloqueId - Identificador del bloque seleccionado.
    */
   enCambioDeBloque(bloqueId: number): void {
-    this.fetchPaisesPorBloque(bloqueId);
+    // this.fetchPaisesPorBloque(bloqueId);
+    this.getPaisesPorBloque(bloqueId.toString());
   }
 
   /**
@@ -723,10 +789,180 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
     this.tramite130113Store.actualizarEstado({ [$event.campo]: VALOR });
+    if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimenCatalogo(VALOR);
+    }
     if ($event.campo === 'fraccion') {
-      this.tramite130113Store.actualizarEstado({ unidadMedida: '1' });
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUnidadesMedidaTarifaria(VALOR);
+    }
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.getRepresentacionFederalCatalogo(VALOR);
     }
   }
+
+   /**
+    * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+    *
+    * @returns {void}
+    */
+    getRegimenCatalogo(): void {
+      this.importacionEquipoAnticontaminanteService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+        this.catalogosArray[0] = data as Catalogo[];
+      });
+    }
+  
+    /**
+     * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+     *
+     * @returns {void}
+     */
+    getClasificacionRegimenCatalogo(VALOR: string): void {
+      this.importacionEquipoAnticontaminanteService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+        this.catalogosArray[1] = data as Catalogo[];
+      });
+    }
+  
+    /**
+     * Obtiene el catálogo de fracciones arancelarias desde el servicio y lo asigna a la propiedad `fraccionCatalogo`.
+     *
+     * @returns {void}
+     */
+    getFraccionCatalogo(): void {
+      this.importacionEquipoAnticontaminanteService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
+        this.fraccionCatalogo = data?.map(item => ({
+          ...item,
+          descripcion: `${item.clave} - ${item.descripcion}`
+        }));
+      });
+    }
+  
+    /**
+     *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
+     * @param FRACCION_ID 
+     */
+    getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
+      this.importacionEquipoAnticontaminanteService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
+        this.unidadCatalogo = data as Catalogo[];
+        if (this.unidadCatalogo.length > 0) {
+          this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+          this.tramite130113Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+        }
+      });
+    }
+  
+    /**
+     * Obtiene los bloques desde el servicio y los asigna a la propiedad `elementosDeBloque`.
+     *
+     * @returns {void}
+     */
+    getBloque(): void {
+      this.importacionEquipoAnticontaminanteService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
+        this.elementosDeBloque = data as Catalogo[];
+      });
+    }
+  
+    /**
+     *  Obtiene los países por bloque desde el servicio y los asigna a la propiedad `paisesPorBloque`.
+     * @param ID 
+     */
+    getPaisesPorBloque(ID: string): void {
+      this.importacionEquipoAnticontaminanteService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
+        this.paisesPorBloque = data as Catalogo[];
+      });
+    }
+  
+    /**
+     * Obtiene el catálogo de entidades federativas desde el servicio y lo asigna a la propiedad `entidadFederativa`.
+     *
+     * @returns {void}
+     */
+    getEntidadesFederativasCatalogo(): void {
+      this.importacionEquipoAnticontaminanteService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+        this.entidadFederativa = data as Catalogo[];
+      })
+    }
+  
+    /**
+     *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+     * @param cveEntidad 
+     */
+    getRepresentacionFederalCatalogo(cveEntidad: string): void {
+      this.importacionEquipoAnticontaminanteService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
+        this.representacionFederal = data as Catalogo[];
+      });
+    }
+  
+    /**
+     *  Maneja la selección de todos los países.
+     * @param evento 
+     */
+    todosPaisesSeleccionados(): void {
+        this.importacionEquipoAnticontaminanteService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
+          this.paisesPorBloque = data as Catalogo[];
+        });
+    }
+  
+    /**
+     * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
+     *
+     * @returns {void}
+     */
+    getMostrarPartidas(): void {
+      this.importacionEquipoAnticontaminanteService.getMostrarPartidasService(202859165).subscribe((data) => {
+        if(data.codigo === '00'){
+            this.mostrarPartidas = data.datos as MostrarPartidas[];
+            this.tramite130113Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+        }
+      });
+    }
+
+    /**
+     *  Modifica los valores del formulario de partidas de la mercancía según el evento recibido.
+     * @param evento 
+     */
+      modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+    
+        this.modificarPartidasDelaMercanciaForm.patchValue({
+          cantidadPartidasDeLaMercancia: evento.cantidad,
+          valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
+          descripcionPartidasDeLaMercancia: evento.descripcion,
+        });
+      }
+
+     /**
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formDelTramite.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.tableBodyData.length === 0) {
+      this.isInvalidaPartidas = true;
+      isValid = false;
+    } else if (this.tableBodyData.length > 0) {
+      this.isInvalidaPartidas = false;
+    }
+    if (this.paisForm.invalid) {
+      this.paisForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.frmRepresentacionForm.invalid) {
+      this.frmRepresentacionForm.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
+  }
+  
   /**
    *  Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */

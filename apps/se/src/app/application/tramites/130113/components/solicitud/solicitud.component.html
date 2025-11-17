@@ -3,6 +3,7 @@
   [inputFields]="datosInputFields"
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
+  [mostrarErrorClasificacion]="true"
   (setValoresStoreEvent)="setValoresStore($event)"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-datos-del-tramite>
@@ -20,6 +21,7 @@
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [fraccionDescripcionPartidasDeLaMercancia]="fraccionDescription"
@@ -28,17 +30,18 @@
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
-></app-partidas-de-la-mercancia>
-
-
+  ></app-partidas-de-la-mercancia>
+  
+  
 <app-pais-procendencia
-[paisForm]="paisForm"
-[elementosDeBloque]="elementosDeBloque"
-[paisesPorBloque]="paisesPorBloque"
-[selectRangoDias]="selectRangoDias"
-(bloqueCambiar)="enCambioDeBloque($event)"
-(setValoresStoreEvent)="setValoresStore($event)"
-[esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [paisForm]="paisForm"
+  [elementosDeBloque]="elementosDeBloque"
+  [paisesPorBloque]="paisesPorBloque"
+  [selectRangoDias]="selectRangoDias"
+  (bloqueCambiar)="enCambioDeBloque($event)"
+  (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  (todosPaisesSeleccionadosEvent)="todosPaisesSeleccionados()"
 ></app-pais-procendencia>
 
 <app-representacion 
