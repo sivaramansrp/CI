@@ -15,6 +15,9 @@ import { Tramite260508Store } from '../../../../estados/tramites/260508/tramite2
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false; 
+
   /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.
    */
