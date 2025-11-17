@@ -175,7 +175,7 @@ export const CONFIGURACION_PLANTAS = [
 
   {
     encabezado: 'Estatus',
-    clave: (ele: unknown) : string | undefined => ((ele as Plantas).estatus ? 'Activada' : 'Baja'),
+    clave: (ele: unknown) : string | undefined => ((ele as Plantas).desEstatus),
     orden: 13,
   },
 ];

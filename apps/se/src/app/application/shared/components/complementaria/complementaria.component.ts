@@ -134,7 +134,7 @@ export class ComplementariaComponent<T> implements OnChanges {
   @Input() certificacionSAT: string = '';
   /**
    * Constructor de la clase.
-   * Inicializa el formulario reactivo `certificionForm` con el valor "Si" y deshabilitado.
+   * Inicializa el formulario reactivo `certificacionForm` con el valor "Si" y deshabilitado.
    * @param {FormBuilder} fb - Instancia de `FormBuilder` utilizada para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
