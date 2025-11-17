@@ -13,6 +13,9 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
+  doDeepCopy,
+  esValidArray,
+  getValidDatos,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -44,6 +47,7 @@ import { TercerosFabricanteService } from '../../services/terceros-fabricante.se
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -314,7 +318,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private _sharedSvc: Shared2605Service
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -1093,7 +1098,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm(): void {
+  submitFabricanteForm(forma: FormGroup): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1227,6 +1232,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
      */
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
+    this.limpiar(forma);
   }
 
   /**
@@ -1235,7 +1241,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitFormuladorForm(): void {
+  submitFormuladorForm(forma: FormGroup): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1367,6 +1373,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
 
     this.showTableDiv = !this.showTableDiv;
     this.showFormulador = !this.showFormulador;
+    this.limpiar(forma);
   }
 
   /**
@@ -1375,7 +1382,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm(): void {
+  submitProveedorForm(forma: FormGroup): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1510,6 +1517,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
      */
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
+    this.limpiar(forma);
   }
 
   /**
@@ -1568,9 +1576,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number): void {
+  cambiarRadio(value: string | number, formGroup: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    const TIPO_PERSONA_CONTROL = this.agregarFabricanteFormGroup.get('tipoPersona');
+    const TERCEROS_NACIONALIDAD = formGroup.get('tercerosNacionalidad')?.value;
+    this.limpiar(formGroup);
+    formGroup.patchValue({tercerosNacionalidad: TERCEROS_NACIONALIDAD});
+    const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
     if (TIPO_PERSONA_CONTROL) {
       TIPO_PERSONA_CONTROL.reset();
     }
@@ -1597,33 +1608,95 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     forma.reset();
   }
 
+  /**
+  * @method mapApiResponseToForm
+  * @description
+  * Método estático que mapea la respuesta de una API a un objeto compatible con el formulario.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @returns Objeto con los campos mapeados para el formulario.
+  */
+ static mapApiResponseToForm(apiResponse: any): Record<string, unknown> {
+   const CONTRIBUYENTE = apiResponse?.contribuyente || {};
+   const DOMICILIO = CONTRIBUYENTE?.domicilio || {};
+
+   return {
+     ...TercerosRelacionadosComponent.mapPersonFields(apiResponse, CONTRIBUYENTE),
+     ...TercerosRelacionadosComponent.mapAddressFields(DOMICILIO),
+     lada: '',
+     extranjeroCodigo: '',
+     extranjeroEstado: '',
+     extranjeroColonia: '',
+   };
+ }
+
+ /**
+  *  @method mapPersonFields
+  * @description
+  * Método estático que mapea los campos personales de la respuesta de la API y del contribuyente.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @param CONTRIBUYENTE Objeto que contiene los datos del contribuyente.
+  * @returns Objeto con los campos personales mapeados.
+  */
+  private static mapPersonFields(apiResponse: any, CONTRIBUYENTE: any): Record<string, unknown> {
+    return {
+      curp: apiResponse?.curp ?? CONTRIBUYENTE?.curp ?? '',
+      nombre: apiResponse?.nombre ?? CONTRIBUYENTE?.nombre ?? '',
+      primerApellido: apiResponse?.apellidoPaterno ?? CONTRIBUYENTE?.apellido_paterno ?? '',
+      segundoApellido: apiResponse?.apellidoMaterno ?? CONTRIBUYENTE?.apellido_materno ?? '',
+      denominacionRazonSocial: CONTRIBUYENTE?.razon_social ?? '',
+      telefono: CONTRIBUYENTE?.telefono ?? '',
+      correoElectronico: CONTRIBUYENTE?.correo_electronico ?? '',
+    };
+  }
+
+  /**
+   * @method mapAddressFields
+   * @description Método estático que mapea los campos de dirección de la respuesta de la API.
+   * @param DOMICILIO Objeto que contiene los datos de la dirección.
+   * @returns Objeto con los campos de dirección mapeados.
+   */
+  private static mapAddressFields(DOMICILIO: any): Record<string, unknown> {
+    return {
+      pais: DOMICILIO?.pais?.nombre ?? '',
+      estadoLocalidad: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      municipioAlcaldia: DOMICILIO?.delegacion_municipio?.nombre ?? '',
+      localidad: DOMICILIO?.localidad?.nombre ?? '',
+      entidadFederativa: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      codigoPostaloEquivalente: DOMICILIO?.cp ?? '',
+      colonia: DOMICILIO?.colonia?.nombre ?? '',
+      coloniaoEquivalente: '',
+      calle: DOMICILIO?.calle ?? '',
+      numeroExterior: DOMICILIO?.num_exterior ?? '',
+      numeroInterior: DOMICILIO?.num_interior ?? '',
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   buscar(form: FormGroup): void {
-    if (form.get('rfc')?.valid) {
-      form.patchValue({
-        curp: 'MAVL621207HDGRLS06',
-        nombre: 'Juan Pérez',
-        primerApellido: 'Gómez',
-        segundoApellido: 'López',
-        denominacionRazonSocial: 'Razón Social Ejemplo',
-        pais: 'México',
-        estadoLocalidad: 'Estado Ejemplo',
-        municipioAlcaldia: 'Municipio Ejemplo',
-        localidad: 'Localidad Ejemplo',
-        entidadFederativa: 'Entidad Federativa Ejemplo',
-        codigoPostaloEquivalente: 'Código Postal Ejemplo',
-        colonia: 'Colonia Ejemplo',
-        coloniaoEquivalente: 'Colonia Equivalente Ejemplo',
-        calle: 'Calle Ejemplo',
-        numeroExterior: 'Número Exterior Ejemplo',
-        numeroInterior: '',
-        lada: '',
-        telefono: '618-256-2532',
-        correoElectronico: '',
-        extranjeroCodigo: 'Código del Extranjero Ejemplo',
-        extranjeroEstado: 'Estado del Extranjero Ejemplo',
-        extranjeroColonia: 'Colonia del Extranjero Ejemplo',
-      })
+    const PROCEDIMIENTO = String(this.idProcedimiento);
+    let DATOS: Record<string, unknown> = {};
+    if (form.get('rfc')?.valid && getValidDatos(form.get('rfc')?.value)) {
+      const PAYLOAD = {
+        "rfcRepresentanteLegal": form.get('rfc')?.value
+      }
+      this._sharedSvc.getRepresentanteLegala(PAYLOAD, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidArray(API_RESPONSE.datos)) {
+          DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+          form.patchValue(DATOS);
+        }
+      });
+    } else if (form.get('curp')?.valid && getValidDatos(form.get('curp')?.value)) {
+       const CURP = form.get('curp')?.value;
+       this._sharedSvc.getCURP(CURP, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+       .subscribe((response) => {
+          const API_RESPONSE = doDeepCopy(response);
+          if(esValidArray(API_RESPONSE.datos)) {
+            DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+            form.patchValue(DATOS);
+          }
+       });
     }
   }
 

@@ -78,7 +78,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event,agregarFabricanteFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -417,7 +417,7 @@
               <button type="button" class="btn btn-default" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm(agregarFabricanteFormGroup)">
                 Guardar
               </button>
             </div>
@@ -443,7 +443,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event, agregarFormuladorFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -773,7 +773,7 @@
               <button type="button" class="btn btn-default" (click)="toggleDivFormulador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFormuladorForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFormuladorForm(agregarFormuladorFormGroup)">
                 Guardar
               </button>
             </div>
@@ -798,7 +798,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event, agregarProveedorFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -1129,7 +1129,7 @@
               <button type="button" class="btn btn-default"(click)="toggleDivProveedor()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
+              <button type="button" class="btn btn-primary" (click)="submitProveedorForm(agregarProveedorFormGroup)">
                 Guardar
               </button>
             </div>
