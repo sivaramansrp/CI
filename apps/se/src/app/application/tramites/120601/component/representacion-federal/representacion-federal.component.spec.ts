@@ -7,6 +7,7 @@ import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;
@@ -35,7 +36,7 @@ describe('RepresentacionFederalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, RepresentacionFederalComponent],
+      imports: [ReactiveFormsModule, RepresentacionFederalComponent, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite120601Query, useValue: tramiteQueryMock },

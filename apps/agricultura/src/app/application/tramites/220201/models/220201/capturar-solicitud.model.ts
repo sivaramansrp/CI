@@ -343,6 +343,11 @@ export interface FilaSolicitud {
    * Unidad de medida de trámite (UMT).
    */
   umt: string;
+
+  /**
+   * Clave de la unidad de medida de trámite (UMT).
+   */
+  clave_umt?: string;
   /**
    * Cantidad en UMT.
    */

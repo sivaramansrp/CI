@@ -152,6 +152,9 @@ export interface TablaOpcionConfig {
    
    /** Manifestos Casilla de Verificación */
    manifiestosCasillaDeVerificacion: boolean;
+
+   id_solicitud?: number,
+  fecha_creacion?: string,
  }
 
 
@@ -290,7 +293,7 @@ export interface TablaMercanciasDatos {
   especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
-    paisDeOriginDatos?: string[];
+  paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
   id?: number
 }
