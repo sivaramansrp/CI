@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DatosModificacion } from '../../../shared/models/modificacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -93,51 +92,108 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
         }));
       });
   }
- consultarMercanciasImportacion(idSolicitud: string): Observable<any> {
+  
+  /**
+   * Consulta las mercancías de importación para una solicitud específica.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
+  consultarMercanciasImportacion(idSolicitud: string): Observable<any> {
     const URL = PROC_80303.CONSULTA_MERCANCIAS_IMPORTACION(idSolicitud);
     return this.httpServicios.get<any>(URL);
      }
+
+     
+  /**
+   * Consulta los productos de exportación para una solicitud específica.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarProductosExportacion(idSolicitud: string): Observable<any> {
     const URL = PROC_80303.CONSULTA_PRODUCTOS_EXPORTACION(idSolicitud);
     return this.httpServicios.get<any>(URL);
   }
+  
+  /**
+   * Consulta las fracciones sensibles para una solicitud específica.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarFraccionesSensibles(idSolicitud: string): Observable<any> {
     const URL = PROC_80303.CONSULTA_FRACCIONES_SENSIBLES(idSolicitud);
     return this.httpServicios.get<any>(URL);
   }
+  /**   * Consulta la bitácora IMMEX para un programa específico.
+   * @param idPrograma - Identificador del programa.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarBitacoraImmex(idPrograma: string): Observable<any> {
   const URL = PROC_80303.CONSULTAR_BITACORA_IMMEX(idPrograma);
   return this.httpServicios.get<any>(URL);
 }
+  /**   * Consulta las plantas submanufactureras para una solicitud específica.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarPlantasSubmanufactureras(idSolicitud: string): Observable<any> {
     const URL = PROC_80303.CONSULTAR_PLANTAS_SUBMANUFACTURERAS(idSolicitud);
     return this.httpServicios.get<any>(URL);
   }
+  /**
+   * Busca una empresa submanufacturera para una solicitud específica.
+   * @param idSolicitud - Identificador de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
    buscarEmpresaSubmanufacturera(idSolicitud: string): Observable<any> {
     const URL = PROC_80303.BUSCAR_EMPRESA_SUBMANUFACTURERA(idSolicitud);
     return this.httpServicios.get<any>(URL);
   }
+  /**   * Consulta los servicios IMMEX.
+   * @param body - Cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarServiciosImmex(body: unknown): Observable<JSONRespuesta<ServiciosImmex[]>> {
   const URL = PROC_80303.CONSULTAR_SERVICIOS;
   return this.httpServicios.post<JSONRespuesta<ServiciosImmex[]>>(URL, body);
 }
+  /**   * Busca un socio accionista.
+   * @param body - Cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
    buscarSocioAccionista(body: any): Observable<any> {
   const URL = PROC_80303.BUSCAR_SOCIO_ACCIONISTA;
   return this.httpServicios.post<any>(URL, body);
 }
+
+  /**   * Busca notarios para consulta.
+   * @param body - Cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
  buscarNotariosConsulta(body: any): Observable<any> {
     const URL = PROC_80303.BUSCAR_NOTARIOS_CONSULTA;
     return this.httpServicios.post<any>(URL, body);
   }
+  /**   * Consulta las plantas.
+   * @param body - Cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
   consultarPlantas(body: unknown): Observable<any> {
     const URL = PROC_80303.CONSULTA_PLANTAS;
     return this.httpServicios.post<any>(URL, body);
   }
+  /**   * Busca empresas.
+   * @param body - Cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la consulta.
+   */
 buscarEmpresas(body: any): Observable<any> {
   const URL = PROC_80303.BUSCAR_EMPRESAS;
   return this.httpServicios.post<any>(URL, body);
 }
 
+  /**   * Busca datos de certificación SAT.
+   * @param rfc - RFC para la consulta.
+   * @returns Observable con la respuesta de la consulta.
+   */
 buscarDatosCertificacionSAT(rfc: string): Observable<any> {
     const URL = `${PROC_80303.BUSCAR_DATOS_CERTIFICACION_SAT}?rfc=${rfc}`;
     return this.httpServicios.get<any>(URL);

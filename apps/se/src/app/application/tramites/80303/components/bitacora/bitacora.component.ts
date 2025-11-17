@@ -62,19 +62,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * - Gestiona automáticamente la finalización de la suscripción al destruir el componente.
    */
   ngOnInit(): void {
-  // Replace the old method with the new API call
-  // this.modificacionProgramaImmexBajaSubmanufactureraService
-  // .consultarBitacoraImmex('120662')
-  //   .pipe(takeUntil(this.destroyNotifier$))
-  //   .subscribe((response) => {
-  //     this.bitacoraTablaDatos = response; // Assign the API response to the table data
-  //   });
-
-  // this.tramite80303Querry.selectTramiteState$
-  //   .pipe(takeUntil(this.destroyNotifier$))
-  //   .subscribe((state) => {
-  //     this.bitacoraTablaDatos = state.bitacoraTablaDatos;
-  //   });
+  
       this.fetchBitacoraDatos('120662'); // Pass the `idPrograma` dynamically
 
 }
@@ -89,8 +77,7 @@ fetchBitacoraDatos(idPrograma: string): void {
     .subscribe(
       (response) => {
         if (response && response.codigo === '00' && response.datos) {
-          this.bitacoraTablaDatos = response.datos; // Assign the [datos](http://_vscodecontentref_/2) array to the table data
-          console.log('Bitácora Datos:', this.bitacoraTablaDatos);
+          this.bitacoraTablaDatos = response.datos; 
         } else {
           console.error('Unexpected response format:', response);
         }

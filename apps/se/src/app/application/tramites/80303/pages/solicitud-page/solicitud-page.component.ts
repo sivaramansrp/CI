@@ -92,6 +92,12 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @type {string | null}
    */
   public tituloMensaje: string | null = TITULOMENSAJE;
+  /**
+   * @property wizardComponent
+   * @description Referencia al componente `WizardComponent`, utilizada para invocar métodos de navegación interna como `siguiente()` y `atras()`.
+   * @type {WizardComponent}
+   */
+  @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
 
   /**
@@ -193,7 +199,12 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @type {ConsultaioState}
    */
   public consultaState!: ConsultaioState;
-  
+  /**
+    * Constructor de la clase SolicitudPageComponent.
+   * @param modificacionService 
+   * @param tramite80303Store 
+   * @param consultaQuery 
+   */
    constructor(
     private modificacionService: ModificacionProgramaImmexBajaSubmanufactureraService,
         public tramite80303Store: Tramite80303Store,
@@ -201,6 +212,9 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
 
   ) {}
   
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -387,8 +401,13 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         return TITULOMENSAJE;
     }
   }
-  
-guardar(item: Tramite80303State): Promise<JSONResponse> {
+
+  /**
+   * Guarda los datos del trámite.
+   * @param item - Estado actual del trámite.
+   * @returns {Promise<JSONResponse>} Promesa que resuelve con la respuesta JSON.
+   */
+  guardar(item: Tramite80303State): Promise<JSONResponse> {
     const PAYLOAD = buildGuardarPayload(item);
     return new Promise((resolve, reject) => {
       this.modificacionService

@@ -105,16 +105,6 @@ export class RegistroSolicitudComponent implements OnDestroy {
       .subscribe();
   }
 
-  // /**
-  //  * Método de inicialización del componente.
-  //  * Se llama automáticamente cuando el componente es creado.
-  //  * Aquí se obtienen los datos de la lista de programas.
-  //  * @return {void}
-  //  */
-  // ngOnInit(): void {
-  //   // this.obtenerListaProgramas();
-  // }
-
   /**
    * Método que obtiene la lista de programas desde el servicio.
    * Asigna los datos obtenidos a la variable `programaListaDatosTabla`.

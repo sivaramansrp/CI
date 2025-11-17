@@ -437,6 +437,9 @@ export interface Sensible {
    */
   unidadMedida?: string;
 }
+/**
+ * Representa una respuesta JSON genérica con datos de tipo T.
+ */
 export interface JSONRespuesta<T> {
   /**
    * Causa del error, si aplica.

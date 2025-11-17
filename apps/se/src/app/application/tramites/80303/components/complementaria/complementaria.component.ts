@@ -145,6 +145,9 @@ export class ComplementarioComponent implements OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   
+  /**
+   * Certificación SAT proporcionada como entrada al componente.
+   */
   certificacionSAT: string = '';
 
   /**
@@ -226,6 +229,8 @@ fetchEmpresasSubmanufacturerasTablaDatos(idSolicitud: string): void {
       }
     );
 }
+/** * Fetches data for `serviciosImmexTablaDatos` using the API.
+ */
 fetchServiciosImmexTablaDatos(): void {
   const BODY = {
     idSolicitud: ["3198492", "3198493"], 
@@ -314,6 +319,9 @@ fetchPlantasIMMEXDatos(): void {
      
     );
 }
+/** * Fetches data for `certificacionSAT` using the API.
+ * @param rfc - The RFC for the API query.
+ */
 fetchDatosCertificacionSAT(rfc: string): void {
   this.modificacionProgramaImmexBajaSubmanufactureraService
     .buscarDatosCertificacionSAT(rfc)

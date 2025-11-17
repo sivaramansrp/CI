@@ -128,7 +128,9 @@ export class ComplementariaComponent<T> implements OnChanges {
    * @type {FormGroup}
    */
   certificionForm!: FormGroup;
-
+/**
+ * Certificación SAT proporcionada como entrada al componente.
+ */
   @Input() certificacionSAT: string = '';
   /**
    * Constructor de la clase.
@@ -140,8 +142,11 @@ export class ComplementariaComponent<T> implements OnChanges {
       certificacion: [{ value: '', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
     });
   }
-  
-
+  /**
+   * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * Actualiza el valor del campo `certificacion` en el formulario reactivo `certificionForm`
+   * con el valor de la propiedad de entrada `certificacionSAT`.
+   */
   ngOnChanges(): void{
     if (this.certificacionSAT) {
       this.certificionForm.patchValue({
