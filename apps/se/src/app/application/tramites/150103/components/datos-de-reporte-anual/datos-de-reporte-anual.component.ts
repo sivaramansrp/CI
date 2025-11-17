@@ -1,17 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-
 import { CommonModule } from '@angular/common';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
-
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
-
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 
 /**
  * Componente para gestionar los datos del reporte anual.
@@ -19,7 +16,7 @@ import { InformeAnualProgramaService } from '../../services/informe-anual-progra
 @Component({
   selector: 'app-datos-de-reporte-anual',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './datos-de-reporte-anual.component.html',
   styleUrl: './datos-de-reporte-anual.component.scss',
 })
@@ -45,6 +42,18 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
  */
 consultaDatos!: ConsultaioState;
 
+  /**
+   * @descripcion
+   * Mensaje de alerta que se muestra al usuario.
+   */
+  public mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+
+  /**
+   * Objeto que representa una nueva notificación a mostrar al usuario.
+   * Puede incluir información como el tipo, mensaje, duración, etc.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+  
   /**
    * @property {boolean} soloLectura
    * @description Indica si el formulario o los campos están en modo de solo lectura.
@@ -74,14 +83,14 @@ consultaDatos!: ConsultaioState;
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150103State.ventasTotales, disabled: false },
-        [Validators.maxLength(16)],
+        [Validators.required, Validators.maxLength(16)],
       ],
       totalExportaciones: [
         {
           value: this.solicitud150103State.totalExportaciones,
           disabled: false,
         },
-        [Validators.maxLength(16)],
+        [Validators.required, Validators.maxLength(16)],
       ],
       totalImportaciones: [
         {
@@ -97,8 +106,7 @@ consultaDatos!: ConsultaioState;
           disabled: true,
         },
       ],
-    });
-
+    });    
     this.solicitud150103Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -112,6 +120,11 @@ consultaDatos!: ConsultaioState;
             porcentajeExportacion:
               this.solicitud150103State.porcentajeExportacion,
           });
+          
+          // Habilitar campos específicos cuando se selecciona un programa
+          if (this.solicitud150103State.folioPrograma) {
+            this.habilitarCamposEspecificos();
+          }
         })
       )
       .subscribe();
@@ -143,11 +156,16 @@ consultaDatos!: ConsultaioState;
     const TOTAL_PORCENTAJE_VALUE = Number.isFinite(TOTAL_PORCENTAJE)
       ? TOTAL_PORCENTAJE.toString()
       : '0';
-    this.solicitud150103Store.actualizarPorcentajeExportacion(
-      TOTAL_PORCENTAJE_VALUE
-    );
+    
+    this.solicitud150103Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+    
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150103Store.actualizarSaldo(TOTAL_SALDO.toString());
+
+    this.formReporteAnnual.patchValue({
+      saldo: TOTAL_SALDO.toString(),
+      porcentajeExportacion: TOTAL_PORCENTAJE_VALUE
+    }, { emitEvent: false });
   }
 
   /**
@@ -155,9 +173,24 @@ consultaDatos!: ConsultaioState;
    * @param evento - Evento del input que contiene el valor de exportaciones.
    */
   obtenerTotalExportaciones(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud150103Store.actualizarTotalExportaciones(VALOR);
+    // Validar que sea un entero antes de procesar
+    if (!this.validarEntero(evento, 'Total exportaciones')) {
+      return;
+    }
+
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.solicitud150103Store.actualizarTotalExportaciones(VALUE);
+
+    const VENTAS_TOTALES =
+      parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES =
+      parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+    const TOTAL: number = VENTAS_TOTALES - TOTAL_EXPORTACIONES;
+
+    const TOTAL_VALUE = Number.isFinite(TOTAL) ? TOTAL : 0;
+    this.solicitud150103Store.actualizarSaldo(TOTAL_VALUE.toString());
     this.calcularReporteAnnual();
+    this.diferenciaTotal();
   }
 
   /**
@@ -165,9 +198,15 @@ consultaDatos!: ConsultaioState;
    * @param evento - Evento del input que contiene el valor de ventas.
    */
   obtenerVentasTotales(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud150103Store.actualizarVentasTotales(VALOR);
+    // Validar que sea un entero antes de procesar
+    if (!this.validarEntero(evento, 'Ventas totales')) {
+      return;
+    }
+
+    const VALUE = (evento.target as HTMLInputElement).value;
+    this.solicitud150103Store.actualizarVentasTotales(VALUE);
     this.calcularReporteAnnual();
+    this.verificarDiferenciaTotal();
   }
 
   /**
@@ -180,6 +219,15 @@ consultaDatos!: ConsultaioState;
     this.calcularReporteAnnual();
   }
 
+  /**
+   * Habilita los campos específicos de ventas totales y total exportaciones.
+   * Este método se llama cuando se selecciona un programa de la tabla.
+   */
+  habilitarCamposEspecificos(): void {
+    this.formReporteAnnual.get('ventasTotales')?.enable();
+    this.formReporteAnnual.get('totalExportaciones')?.enable();
+  }
+
 
   /**
  * @method inicializarEstadoFormulario
@@ -187,18 +235,185 @@ consultaDatos!: ConsultaioState;
  */
 inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.formReporteAnnual?.enable();
-    }
-    else {
       this.formReporteAnnual?.disable();
+    } else {
+      this.formReporteAnnual.get('totalImportaciones')?.disable();
+      this.formReporteAnnual.get('saldo')?.disable();
+      this.formReporteAnnual.get('porcentajeExportacion')?.disable();
+      
+      if (this.solicitud150103State.folioPrograma) {
+        this.habilitarCamposEspecificos();
+      } else {
+        this.formReporteAnnual.get('ventasTotales')?.disable();
+        this.formReporteAnnual.get('totalExportaciones')?.disable();
+      }
     }
 }
+
+  /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  diferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    } else {
+      this.nuevaNotificacion = null;
+    }
+  }
+
+  /**
+   * @method mostrarNotificacion
+   * @description Muestra una notificación y la limpia después del tiempo especificado
+   * @param notificacion - Objeto de notificación a mostrar
+   */
+  private mostrarNotificacion(notificacion: Notificacion): void {
+    this.nuevaNotificacion = notificacion;
+
+    if (notificacion.tiempoDeEspera) {
+      setTimeout(() => {
+        this.nuevaNotificacion = null;
+      }, notificacion.tiempoDeEspera);
+    }
+  }
+
+  /**
+   * @description Limita la longitud del valor del input a un máximo especificado.
+   * @param event - Evento del input para capturar el valor introducido.
+   * @param maxLength - Longitud máxima permitida para el valor del input.
+   * @return {void}
+   */
+  limitarLongitud(event: Event, maxLength: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.value.length > maxLength) {
+      INPUT.value = INPUT.value.slice(0, maxLength);
+    }
+
+    // Validar que sea un entero
+    if (!this.validarEntero(event, 'Total exportaciones')) {
+      return;
+    }
+
+    this.obtenerTotalExportaciones(event);
+    this.diferenciaTotal();
+  }
+
+  /**
+   * @method validarEntero
+   * @description Valida que el valor ingresado sea un número entero
+   * @param event - Evento del input para capturar el valor introducido
+   * @param fieldName - Nombre del campo que se está validando
+   * @returns {boolean} True si es válido, false si no
+   */
+  validarEntero(event: Event, fieldName: string): boolean {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value.trim();
+
+    // Si está vacío, permitir (será validado por required)
+    if (!VALUE) {
+      return true;
+    }
+
+    // Verificar si el valor es un número entero válido
+    if (isNaN(Number(VALUE)) || !Number.isInteger(Number(VALUE)) || Number(VALUE) < 0) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: `${fieldName} deben ser mayores o iguales a cero`,
+        cerrar: false,
+        tiempoDeEspera: 7000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+
+      // Establecer el valor a 0
+      INPUT.value = '0';
+      const CONTROL_NAME = this.getFormControlName(fieldName);
+      if (CONTROL_NAME) {
+        this.formReporteAnnual.get(CONTROL_NAME)?.setValue('0');
+        this.formReporteAnnual.get(CONTROL_NAME)?.markAsTouched();
+      }
+
+      // Recalcular el reporte
+      setTimeout(() => {
+        this.calcularReporteAnnual();
+      }, 100);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * @description Nueva función que verifica la diferencia total sin sobrescribir notificaciones existentes
+   * @returns {void}
+   */
+  private verificarDiferenciaTotal(): void {
+    const VENTAS_TOTALES = parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES = parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+
+    if (VENTAS_TOTALES < TOTAL_EXPORTACIONES && !this.nuevaNotificacion) {
+      this.mostrarNotificacion({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeDeAlerta,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    }
+  }
+
+  /**
+   * @method getFormControlName
+   * @description Obtiene el nombre del control del formulario basado en el nombre del campo
+   * @param fieldName - Nombre del campo
+   * @returns {string} Nombre del control del formulario
+   */
+  private getFormControlName(fieldName: string): string {
+    switch (fieldName) {
+      case 'Ventas totales':
+        return 'ventasTotales';
+      case 'Total exportaciones':
+        return 'totalExportaciones';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * @method cerrarNotificacion
+   * @description Cierra la notificación actual
+   * @returns {void}
+   */
+  cerrarNotificacion(): void {
+    this.nuevaNotificacion = null;
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(); // Notifica a las suscripciones que deben finalizar
-    this.destroyed$.complete(); // Completa el Subject para evitar fugas de memoria
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

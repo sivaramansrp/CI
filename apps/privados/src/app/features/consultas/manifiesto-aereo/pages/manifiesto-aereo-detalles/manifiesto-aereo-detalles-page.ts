@@ -70,7 +70,6 @@ export class ManifiestoAereoDetallesPage implements OnInit {
   }
   goBack() {
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       MANIFIESTO_AEREO_ROUTES.RESULTADOS_MANIFIESTO_AEREO,
     ]);

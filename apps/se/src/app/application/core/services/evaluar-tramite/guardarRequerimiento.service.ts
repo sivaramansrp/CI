@@ -73,7 +73,7 @@ export class GuardarRequerimientoService {
     idSolicitud?: string,
     esSolicitud?: boolean,
     idRequerimiento?: number,
-    PAYLOAD?: DocumentosEspecificosRequest
+    PAYLOAD?: DocumentosEspecificosRequest | null
   ): Observable<BaseResponse<DocumentosEspecificosResponse[]>> {
     const ENDPOINT = `${this.host}` + API_POST_DOCUMENTOS_ESPECIFICOS_REQ(numFolio.toString());
     let PARAMS = new HttpParams();

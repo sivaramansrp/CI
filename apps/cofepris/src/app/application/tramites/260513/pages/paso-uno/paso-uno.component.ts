@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, OnChanges } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AfterViewInit } from '@angular/core';
+
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
@@ -17,7 +18,17 @@ import { TercerosRelacionadosFabricanteComponent } from '../../components/tercer
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy, OnChanges {
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
+  }
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
@@ -125,17 +136,28 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       });
   }
   validOnButtonClick():boolean{
-    let isValid = false;
-    if(this.datosSolicitudRef?.validarClickDeBoton()){
-          isValid = true;
-        }
-        else{
-          isValid = false;
-        }
-        return isValid;
+
+      const ES_TAB_VALIDO = this.datosSolicitudRef?.validarClickDeBoton() ?? false;
+      return (
+        (ES_TAB_VALIDO )? true : false
+  
+      );
+    // let isValid = false;
+    // if(this.datosSolicitudRef?.validarClickDeBoton()){
+    //       isValid = true;
+    //     }
+    //     else{
+    //       isValid = false;
+    //     }
+    //     return isValid;
       }
   
 
+    //     ValidarPagoDerechos(): boolean {
+    //   return (
+    //     this.pagoDerechosRef.validarContenedor() ?? false 
+    // );
+    // }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.

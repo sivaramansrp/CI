@@ -95,4 +95,6 @@
       </div>
     </form>
   </div>
-  
+  @if(nuevaNotificacion){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  }

@@ -1,44 +1,62 @@
 <div class="container">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li [ngClass]="indice === 1 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
-            </li>
-            <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Datos de la
-                    solicitud</a>
-            </li>
-            <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Terceros
-                    relacionados</a>
-            </li>
-            <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Pago de
-                    derechos</a>
-            </li>
-        </ul>
-        <ng-container>
-            <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
-            <app-datos-de-la
-            [hidden]="indice !== 2 || !esDatosRespuesta"
-            [isAvisoLicenciaVisible]="isAvisoLicenciaVisible"
-            [isAduanasEntradaVisible]="isAduanasEntradaVisible"
-            [configuracionVisibilidad]="configuracionVisibilidad"
-            [idProcedimiento]="idProcedimiento"
-            [identificacion]="true"
-            [estadoValidte]="true"
-            ></app-datos-de-la>
-            <app-aviso-terceros-relacionados
-            [hidden]="indice !== 3 || !esDatosRespuesta"
-            ></app-aviso-terceros-relacionados>
-            <app-pago-de-derechos
-            [hidden]="indice !== 4 || !esDatosRespuesta"
-            #pagoDeDerechosComponent
-            [idProcedimiento]="idProcedimiento"
-            [pagoDerechoFormState]="pagoDerechos"
-            (updatePagoDerechos)="updatePagoDerechos($event)"
-            [formularioDeshabilitado]="formularioDeshabilitado"
-            ></app-pago-de-derechos>
-        </ng-container>
-    </div>
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(1)"
+          (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)"
+          role="button"
+          tabindex="0"
+          >Solicitante</a
+        >
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(2)"
+          (keydown.enter)="seleccionaTab(2)"
+          (keydown.space)="seleccionaTab(2)"
+          role="button"
+          tabindex="2"
+          >Datos de la solicitud</a
+        >
+      </li>
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(3)"
+          (keydown.enter)="seleccionaTab(3)"
+          (keydown.space)="seleccionaTab(3)"
+          role="button"
+          tabindex="3"
+          >Terceros relacionados</a
+        >
+      </li>
+      <li [ngClass]="indice === 4 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaTab(4)"
+          (keydown.enter)="seleccionaTab(4)"
+          (keydown.space)="seleccionaTab(4)"
+          role="button"
+          tabindex="4"
+          >Pago de derechos</a
+        >
+      </li>
+    </ul>
+
+    <ng-container>
+     
+      <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
+     
+      <app-datos-solicitud [hidden]="indice !== 2"></app-datos-solicitud>
+      
+      <app-terceros-relacionados-fabricante [hidden]="indice !== 3"></app-terceros-relacionados-fabricante>
+     
+      <app-pago-de-derechos-contenedora [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
+     
+    </ng-container>
+  </div>
 </div>

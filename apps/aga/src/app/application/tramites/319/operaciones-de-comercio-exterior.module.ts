@@ -2,23 +2,33 @@ import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-
 import { OperacionesDeComercioExteriorRoutingModule } from './operaciones-de-comercio-exterior-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent,SharedModule, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  CrosslistComponent,
+  FirmaElectronicaComponent,
+  InputCheckComponent,
+  InputFechaComponent,
+  InputRadioComponent,
+  SharedModule,
+  SolicitanteComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { OperacionesDeComercioExterioComponent } from './components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 
-
 @NgModule({
-  declarations: [
-    PasoDosComponent,
-    SolicitudPageComponent,
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     OperacionesDeComercioExteriorRoutingModule,
@@ -39,7 +49,9 @@ import { ToastrModule } from 'ngx-toastr';
     ToastrModule.forRoot(),
     TablaDinamicaComponent,
     OperacionesDeComercioExterioComponent,
-     PasoUnoComponent,
-  ]
+    PasoUnoComponent,
+    PasoDosComponent,
+    SolicitudPageComponent,
+  ],
 })
-export class OperacionesDeComercioExteriorModule { }
+export class OperacionesDeComercioExteriorModule {}

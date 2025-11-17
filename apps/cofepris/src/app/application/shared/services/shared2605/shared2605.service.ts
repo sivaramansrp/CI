@@ -1,7 +1,10 @@
+import { FRACCION_DESCRIPCION, GUARDAR_SOLICITUD, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 import { Observable, combineLatest, map } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 
@@ -28,7 +31,8 @@ export class Shared2605Service {
     private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private tercerosFabricanteQuery: TercerosFabricanteQuery,
     private solicitudPagoBancoQuery: TramitePagoBancoQuery,
-    private avisocalidadQuery: AvisocalidadQuery
+    private avisocalidadQuery: AvisocalidadQuery,
+    private _http: HttpClient
   ) {
     // Initialization logic
   }
@@ -274,6 +278,7 @@ export class Shared2605Service {
     if (!Array.isArray(MERCANCIA_TABLA)) {
       return [];
     }
+
     return MERCANCIA_TABLA.map(item => ({
       "idMercancia": "1",
       "idClasificacionProducto": "325",
@@ -299,8 +304,8 @@ export class Shared2605Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": item['paisOrigen'] as string || "",
-      "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] as string || "",
+      "nombreCortoPaisOrigen": Array.isArray(item['paisOrigen']) ? item['paisOrigen'].join(', ') : String(item['paisOrigen'] ?? ''),
+      "nombreCortoPaisProcedencia": Array.isArray(item['paisProcedenciaUltimoPuerto']) ? item['paisProcedenciaUltimoPuerto'].join(', ') : String(item['paisProcedenciaUltimoPuerto'] ?? ''),
       "tipoProductoDescripcionOtros": "Analgésico",
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
@@ -405,5 +410,47 @@ export class Shared2605Service {
         "fecPago": data['fechaPago'] || "",
         "impPago": data['importePago'] || ""
     }
+  }
+
+  /**
+   * Realiza una solicitud HTTP POST para obtener información del representante legal
+   * basado en el cuerpo proporcionado y el identificador del procedimiento.
+   */
+  getRepresentanteLegala(body: Record<string, unknown>, idProcedimiento: string): Observable<JSONResponse> {
+    return this._http.post<JSONResponse>(RFC_BUSCAR_REPRESENTANTE_LEGAL(idProcedimiento), body).pipe(
+      map((response) => response)
+    );
+  }
+
+  /**
+   * Realiza una solicitud HTTP GET para obtener la descripción de una fracción arancelaria
+   * basada en la clave y el identificador del tipo de trámite.
+   */
+  getFraccionDescripcion(clave: string, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.get<JSONResponse>(FRACCION_DESCRIPCION(clave, idTipoTramite)).pipe(
+      map((response) => response)
+    );
+  }
+
+  /**
+   * Realiza una solicitud HTTP GET para obtener la unidad de medida
+   * basada en la clave de fracción y el identificador del tipo de trámite.
+   */
+  getUnidad(cveFraccion: string, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.get<JSONResponse>(UNIDAD_MEDIDA(cveFraccion, idTipoTramite)).pipe(
+      map((response) => response)
+    );
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * @param payload - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @param idTipoTramite - Identificador del tipo de trámite para construir la URL de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(payload: Record<string, unknown>, idTipoTramite: string): Observable<JSONResponse> {
+    return this._http.post<JSONResponse>(GUARDAR_SOLICITUD(idTipoTramite), payload).pipe(
+      map((response) => response)
+    );
   }
 }

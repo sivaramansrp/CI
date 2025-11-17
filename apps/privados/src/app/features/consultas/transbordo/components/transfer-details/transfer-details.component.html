@@ -1,0 +1,46 @@
+<app-manifest-info (onManifestRequested)="getMaster()"/>
+
+<div class="row">
+    <div class="col-md-12 mt-3">
+      <h2>Guías Master</h2>
+      <hr class="red" />
+      <app-table
+          title="Guías Master"
+          [tableData]="tableMasterData"
+          [borderedStyle]="true"
+          [isLoading]="isLoadingMasterDataTable"
+          [hiddenData]="hiddenMasterData"
+          [error]="errorMasterData"
+          [hasRedirect]="true"
+          (onRowClicked)="onMasterSelected($event.hiddenData)"
+        />
+
+      @if(masterSelected()) {
+        <h2 class="mt-5">Detalle Master</h2>
+        <hr class="red" />
+        <app-table
+          title="Detalle Master"
+          [tableData]="tableMasterSelectedData"
+          [borderedStyle]="true"
+          [isLoading]="isLoadingMasterSelectedDataTable"
+          [hiddenData]="hiddenMasterSelectedData"
+          [hasRedirect]="true"
+          [error]="errorMasterSelectedData"
+          (onRowClicked)="onMasterDetailsSelected($event.hiddenData)"
+        />
+      }
+
+      @if(masterDetailSelected()) {
+        <h2 class="mt-5">Guías House</h2>
+        <hr class="red" />
+        <app-table
+          title="Guías House"
+          [tableData]="tableHouseData"
+          [borderedStyle]="true"
+          [isLoading]="isLoadingHouseDataTable"
+          [error]="errorHouseData"
+        />
+      }
+      </div>
+  </div>
+

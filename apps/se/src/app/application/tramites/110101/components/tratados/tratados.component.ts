@@ -7,7 +7,7 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestro
 import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State,Tramite110101Store, createSolicitanteInitialState} from '../../estados/tramites/solicitante110101.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
@@ -18,6 +18,7 @@ import { CriterioConfiguracionResponse } from '../../models/response/tratado-con
 import { DatosCriterioResumenResponse } from '../../models/response/tratado-criterio-resumen-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
+import { GenerarDictamenClasificacionService } from '../../../../shared/services/generar-dictamen-clasificacion.service';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
@@ -92,6 +93,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<void>}
    */
   @Output() habilitarPestana = new EventEmitter<void>();
+
+
+  /**
+   * @property otrasInstancias - Referencia al componente `OtrasInstanciasComponent` que maneja
+   *                             la lógica y validación de las instancias asociadas dentro del paso actual.
+   * @command El decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('otrasInstancias') otrasInstancias!: OtrasInstanciasComponent;
 
   /**
    * Evento que se emite para deshabilitar o cerrar una pestaña en el flujo del trámite.
@@ -219,8 +228,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
 
   /** Almacena las filas seleccionadas de la tabla */
   public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
-
+  /** Estado de la consulta */
   public consultaState!: ConsultaioState;
+  /** Suscripción para manejo de observables */
+  private subscription!: Subscription;
+  /** Bandera de aladi */
+  public noAceptada = false;
     /**
      * Inicializa el TratadosComponent.
      * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
@@ -240,7 +253,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private catalogosTramiteService: CatalogosTramiteService,
     private cd: ChangeDetectorRef,
     private tratadosSolicitudService: TratadosSolicitudService,
-    private evaluacionTratadosService: EvaluacionTratadosService
+    private evaluacionTratadosService: EvaluacionTratadosService,
+    private generarDictamenClasificacionService: GenerarDictamenClasificacionService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -269,6 +283,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
+     this.subscription = this.generarDictamenClasificacionService.noAceptada$.subscribe(valor => {
+      this.noAceptada = valor;
+
+      if (valor) {
+        this.modificarRegistrosAladi();
+      } 
+    });
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
 
@@ -294,6 +315,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
     }
     if(this.consultaState.create === true){
         this.getCatalogoPaisBloques();
+    }
+
+    if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false){
+      this.validarFormulario();
     }
   }
 
@@ -672,7 +697,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
     { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
     { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'APROBADA' : 'NO APROBADA', orden: 6 },
-    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
+    { encabezado: "Calificación dictaminador", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
@@ -1104,19 +1129,7 @@ configurarPaisesInstancias(config: CriterioConfiguracionResponse): void {
   };
 
 
-  /**
-   * **Ciclo de vida: OnDestroy**
-   * 
-   * Este método se ejecuta cuando el componente se destruye. 
-   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
-   * 
-   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
-   * - Completa `destroy$` para liberar los recursos asociados.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
 /**
  * 
@@ -1206,7 +1219,7 @@ eliminarTratado(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'Seleccione un pais/tratado/criterio',
+    mensaje: 'Seleccione un país/tratado/criterio',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -1292,14 +1305,16 @@ eliminarTratado(): void {
       return;
     }
     const TRATADO = this.tratadoSeleccionado[0];
-    const CRITERIO_ORIGEN = TRATADO.criterio_origen?.trim() ?? '';
+    const CRITERIO_ORIGEN = TRATADO.cve_grupo_criterio?.trim() ?? '';
     const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
     const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
     if (
-      CRITERIO_ORIGEN === 'OTROS' ||
-      CRITERIO_ORIGEN === 'B' ||
-      CRITERIO_ORIGEN === 'OTRASINST' ||
-      (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+       !(
+    CRITERIO_ORIGEN === 'OTROS' ||
+    CRITERIO_ORIGEN === 'B' ||
+    CRITERIO_ORIGEN === 'OTRASINST' ||
+    (CVE_PAIS === 'PAN' && TRATADO_ACUERDO === '505')
+  )
     ) {
       this.abrirModalGlobalAccion();
       return;
@@ -1408,7 +1423,12 @@ eliminarTratado(): void {
     if(this.tratadoSeleccionado.length === 0 || this.tratadoSeleccionado.length > 1) {
       this.abrirModalTratadosEvaluacion();
       return;
-    }          
+    }
+
+    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].cve_grupo_criterio
+    if (CRITERIO_ORIGEN === 'OTROS' || CRITERIO_ORIGEN === 'OTRASINST') {
+     
+    
     this.tratadosSolicitudService.getCriterioTratadoResumen(this.tratadoSeleccionado[0].id_criterio_tratado.toString())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1446,6 +1466,9 @@ eliminarTratado(): void {
         }
       }
     });
+    }else{
+      this.abrirModalGlobalAccion();
+    }
   }
 
   /**
@@ -1485,7 +1508,6 @@ eliminarTratado(): void {
    */
   modificarRegistros(): void {
     if (!this.tratadoSeleccionado) {
-      console.warn('No hay tratado seleccionado.');
       return;
     }
 
@@ -1511,6 +1533,25 @@ eliminarTratado(): void {
 
     this.limpiarSeleccion();
     this.cerrarDialogo();
+  }
+
+/**
+ * @method modificarRegistrosAladi
+ * @description Este método modifica los registros ALADI en la tabla de evaluación de tratados.
+ * Establece como no aprobados los tratados con IDs específicos restringidos.
+ * @returns void
+ */
+  modificarRegistrosAladi():void{
+   const IDS_RESTRINGIDOS = [102, 103, 104, 105, 106];
+
+  this.tratadosEvaluacionTablaDatos.forEach(item => {
+    if (IDS_RESTRINGIDOS.includes(item.id_tratado_acuerdo)) {
+      item.cal_aprobada_dictaminador = false;
+      item.calificacion_dictaminador = 'NO APROBADO';
+    }
+  });
+  this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
+   this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
   }
 
   /**
@@ -1555,6 +1596,35 @@ eliminarTratado(): void {
   }
 
  /**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * Verifica que existan datos en la tabla y que los formularios asociados sean válidos.
+ * @method validarFormulario
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+  validarFormulario(): boolean {
+    // Si no hay datos en la tabla → inválido
+    if (this.solicitudeState.respuestaServicioDatosTabla.length === 0) {
+      return false;
+    }
+    //  Si el componente otrasInstancias no existe → no avanzar, pero sin error
+    if (!this.otrasInstancias) {
+      return true;
+    }
+
+    // Si el formulario dentro de otrasInstancias no existe → no avanzar
+    if (!this.otrasInstancias.formularioInstancias) {
+      return true;
+    }
+
+    // Si el formulario de otras instancias no es válido → inválido
+    if (this.otrasInstancias.formularioInstancias.valid === false) {
+      this.otrasInstancias.formularioInstancias.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
+
+ /**
    * Cierra el modal de agregar o editar mercancías.
    * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
    *
@@ -1566,4 +1636,19 @@ eliminarTratado(): void {
     this.modalInstance?.hide();
   }
 
+  /**
+   * **Ciclo de vida: OnDestroy**
+   * 
+   * Este método se ejecuta cuando el componente se destruye. 
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   * 
+   * - Envía un valor a `destroy$` para notificar a los observables que deben completarse.
+   * - Completa `destroy$` para liberar los recursos asociados.
+   */
+  ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario() || null);
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.subscription.unsubscribe();
+  }
 }

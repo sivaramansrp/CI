@@ -196,7 +196,6 @@ export class TransportDocumentDetailsComponent implements OnInit {
     this.consultasAereosService.idPerson.set(idPerson);
     this.sessionStorage.set('idPerson', idPerson);
     this.routingService.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       MANIFIESTO_AEREO_ROUTES.DETALLES_MANIFIESTO_AEREO,
       this.consultasAereosService.idHeader(),

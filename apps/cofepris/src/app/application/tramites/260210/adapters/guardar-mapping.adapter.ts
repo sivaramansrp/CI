@@ -4,8 +4,8 @@
  * para el trámite de ampliación de servicios 80205.
  */
 
+import { Tramite260210State, Tramite260210Store } from '../estados/tramite260210Store.store';
 import { Injectable } from '@angular/core';
-import { Tramite260210State } from '../estados/tramite260210Store.store';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,12 @@ export class GuardarMappingAdapter {
   
   static toFormPayload(state: Tramite260210State): unknown {
     return {
-        
-      "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-        "actividadEconomica": "Fabricación de productos de hierro y acero",
-        "correoElectronico": "contacto@acerosalvarado.com",
-        "domicilio": {
+            "solicitante": {
+            "rfc": "AAL0409235E6",
+            "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+            "actividadEconomica": "Fabricación de productos de hierro y acero",
+            "correoElectronico": "contacto@acerosalvarado.com",
+            "domicilio": {
             "pais": "México",
             "codigoPostal": "06700",
             "estado": "Ciudad de México",
@@ -37,14 +36,14 @@ export class GuardarMappingAdapter {
             "numeroInterior": "Piso 5, Oficina A",
             "lada": "",
             "telefono": "123456"
+            }
         },
-      },
       "solicitud": {
-          "discriminatorValue": 260201,
+          "discriminatorValue": 260210,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -53,7 +52,7 @@ export class GuardarMappingAdapter {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado,
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -82,9 +81,11 @@ export class GuardarMappingAdapter {
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
@@ -101,7 +102,8 @@ export class GuardarMappingAdapter {
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
@@ -331,4 +333,264 @@ export class GuardarMappingAdapter {
     
     }
   }
+
+
+    private static mapScianData(arr?: any[]): any[] {
+        return (arr ?? []).map((d: any) => ({ 
+            clave: d.cveScian ?? d.clave ?? '', 
+            descripcion: d.descripcion ?? '' 
+        }));
+    }
+
+    
+
+    private static mapMercanciasData(arr?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (arr ?? []).map((m: any) => ({
+            claveClasificacionProductoObj: { 
+                clave: m.idClasificacionProducto ?? '',
+                descripcion: m.nombreClasificacionProducto ?? ''
+            },
+            especificarClasificacionObj: { 
+                clave: m.ideSubClasificacionProducto ?? '',
+                descripcion: m.nombreSubClasificacionProducto ?? ''
+            },
+            denominacionEspecificaProducto: m.descDenominacionEspecifica ?? '',
+            denominacionComun: m.descripcionMercancia ?? '',
+            denominacionDistintiva: m.descDenominacionDistintiva ?? '',
+            formaFarmaceutica: m.formaFarmaceuticaDescripcionOtros ?? '',
+            estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
+            fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
+            descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
+            cantidadUMC: m.cantidadUMCConComas ?? '',
+            cantidadUMT: m.cantidadUMTConComas ?? '',
+            presentacion: m.presentacion ?? '',
+            numeroRegistroSanitario: m.registroSanitarioConComas ?? '',
+            paisDeOriginDatos: m.nombreCortoPaisOrigen ?? '',
+            paisDeProcedenciaDatos: m.nombreCortoPaisProcedencia ?? '',
+            tipoProducto: m.tipoProductoDescripcionOtros ?? '',
+            usoEspecifico: m.nombreCortoUsoEspecifico ?? '',
+            fechaCaducidad: m.fechaCaducidadStr ?? '',
+            clasificacionProducto: m.nombreClasificacionProducto ?? '',
+            especificarClasificacionProducto: m.nombreSubClasificacionProducto ?? '',
+            unidadMedidaComercializacion: m.unidadMedidaComercial?.descripcion ?? '',
+            unidadMedidaTarifa: m.unidadMedidaTarifa?.descripcion ?? '',
+            paisOrigen: m.nombreCortoPaisOrigen ?? "",
+            paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
+            id: m.idMercancia || null,
+        }));
+    }
+
+    private static mapFabricantesData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapDestinatariosData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapProveedoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            rfc: p.rfc ?? '',
+            razonSocial: p.razonSocial ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            colonia: p.domicilio?.descripcionColonia ?? '',
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            curp: p.curp ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            actividadEconomica: '',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+        }));
+    }
+
+
+    /**
+     * Maps API facturador data to internal facturador format
+     */
+    private static mapFacturadoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.descripcionColonia ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.localidad?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapPagoDerechosData(pagoData?: any): any {
+        return {
+            claveReferencia: pagoData?.claveDeReferencia ?? '',
+            cadenaDependencia: pagoData?.cadenaPagoDependencia ?? '',
+            bancoObject: {
+                clave: pagoData?.banco?.clave ?? '',
+                descripcion: pagoData?.banco?.descripcion ?? '',
+                id: pagoData?.banco?.clave ?? '',
+            },
+            llavePago: pagoData?.llaveDePago ?? '',
+            fechaPago: pagoData?.fecPago ?? '',
+            importePago: pagoData?.impPago ?? '',
+            banco: pagoData?.banco?.clave ?? '',
+        };
+    }
+
+    /**
+     * Map an API response (form payload) back into a partial Tramite260210State.
+     * This is a best-effort reverse mapping of `toFormPayload` and will only
+     * populate commonly used fields. Unknown or complex nested fields are left
+     * untouched so callers can merge them as needed.
+     *
+     * @param response API response object matching the form payload shape
+     * @returns Partial<Tramite260210State>
+     */
+    // eslint-disable-next-line complexity
+    static fromApiResponse(response: unknown): Partial<Tramite260210State> {
+        if (!response || typeof response !== 'object') {
+            return {};
+        }
+        const resp = response as any;
+        const DATOS_SOLICITUD_FORM_STATE = {
+            denominacionRazon: resp.establecimiento?.razonSocial ?? '',
+            rfcSanitario: resp.establecimiento?.RFCResponsableSanitario ?? '',
+            correoElectronico: resp.establecimiento?.correoElectronico ?? '',
+            codigoPostal: resp.establecimiento?.domicilio?.codigoPostal ?? '',
+            municipioAlcaldia: resp.establecimiento?.domicilio?.descripcionMunicipio ?? '',
+            localidad: resp.establecimiento?.domicilio?.informacionExtra ?? '',
+            colonia: resp.establecimiento?.domicilio?.descripcionColonia ?? '',
+            calle: resp.establecimiento?.domicilio?.calle ?? '',
+            lada: resp.establecimiento?.domicilio?.lada ?? '',
+            telefono: resp.establecimiento?.domicilio?.telefono ?? '',
+            aviso: resp.establecimiento?.avisoFuncionamiento ?? '',
+            licenciaSanitaria: resp.establecimiento?.numeroLicencia ?? '',
+            adunasDeEntradas: resp.establecimiento?.aduanas ?? '',
+            regimen: resp.solicitud?.regimen ?? '',
+            publico: resp.solicitud?.informacionConfidencial === true ? 'Si' : 'No',
+            representanteRfc: resp.representanteLegal?.rfc ?? '',
+            representanteNombre: resp.representanteLegal?.nombre ?? '',
+            apellidoPaterno: resp.representanteLegal?.apellidoPaterno ?? '',
+            apellidoMaterno: resp.representanteLegal?.apellidoMaterno ?? '',
+            estado: resp.establecimiento?.domicilio.entidadFederativa?.clave ?? '',
+            aeropuerto: false,
+            manifesto: resp.solicitud?.declaracionesSeleccionadas ?? [],
+        };
+
+        const PARTIAL: Partial<Tramite260210State> = {
+            datosSolicitudFormState: DATOS_SOLICITUD_FORM_STATE as any,
+            scianConfigDatos: this.mapScianData(resp.datosSCIAN) as any,
+            tablaMercanciasConfigDatos: this.mapMercanciasData(resp.mercancias) as any,
+            fabricanteTablaDatos: this.mapFabricantesData(resp.gridTerceros_TIPERS_FAB) as any,
+            destinatarioFinalTablaDatos: this.mapDestinatariosData(resp.gridTerceros_TIPERS_DES) as any,
+            proveedorTablaDatos: this.mapProveedoresData(resp.gridTerceros_TIPERS_PVD) as any,
+            facturadorTablaDatos: this.mapFacturadoresData(resp.gridTerceros_TIPERS_FAC) as any,
+            pagoDerechos: this.mapPagoDerechosData(resp.pagoDeDerechos) as any,
+        };
+
+        return PARTIAL;
+    }
+
+    /**
+     * Convenience method: map the API response and patch it directly into the provided store.
+     * If the `store` argument is omitted, the method simply returns the mapped partial state.
+     *
+     * @param response API response
+     * @param store Optional Tramite260210Store instance to apply the patch
+     * @returns Partial<Tramite260210State> (and patches the store when provided)
+     */
+    static patchToStore(response: any, store?: Tramite260210Store): Partial<Tramite260210State> {
+        const PARTIAL = GuardarMappingAdapter.fromApiResponse(response);
+        if (store) {
+            // Akita's update accepts a partial or updater function
+            store.update((state) => ({ ...state, ...PARTIAL }));
+        }
+        return PARTIAL;
+    }
 }

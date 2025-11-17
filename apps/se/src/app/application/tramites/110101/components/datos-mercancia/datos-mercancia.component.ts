@@ -6,7 +6,9 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA } from '../constante110101.enum';
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
+import { DatosMercanciaEvaluacionComponent } from "../datos-mercancia-evaluacion/datos-mercancia-evaluacion.component";
 import { DatosMercanciaService } from '../../services/datos-mercancia.service';
+import { ElementoValido } from '../../models/response/archivo-mercancia-response.model';
 
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InsumoTratadosRequest } from '../../models/request/validar-insumo-request.model';
@@ -26,9 +28,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
 
-import { CampoEvaluar, EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
+import { EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
 import { MensajePantallaService } from '../../services/validaciones-tabs.service';
-
 
 
 /**
@@ -41,7 +42,7 @@ import { MensajePantallaService } from '../../services/validaciones-tabs.service
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   standalone: true,
-  imports: [TituloComponent, CommonModule,CatalogoSelectComponent, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent, InputRadioComponent]
+  imports: [TituloComponent, CommonModule, CatalogoSelectComponent, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent, InputRadioComponent, DatosMercanciaEvaluacionComponent]
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -221,12 +222,6 @@ get ninoFormGroup(): FormGroup {
    * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
    */
   public formMercancia!: FormGroup;
-
-  /**
-   * Una instancia de FormGroup que representa el formulario para evaluar Mercancia (bienes).
-   * Este formulario se utiliza para capturar y validar los datos relacionados con Mercancia.
-   */
-  public formEvaluarMercancia!: FormGroup;
   
   /**
    * **Subject para manejar la destrucción del componente**
@@ -256,6 +251,9 @@ get ninoFormGroup(): FormGroup {
    * Este mensaje se utiliza para indicar que un campo debe ser un número.
    */
   public NUMERO_REQUERIDO = INTRODUZCA_NUMERO;
+
+  /** Tipo de archivo actual a cargar archivos (`INSUMOS` o `EMPAQUES`). */
+  public tipoArchivoActual!: string;
 
   /**
    * Mensaje juegos y surtidos alianza.
@@ -315,38 +313,6 @@ get ninoFormGroup(): FormGroup {
 
   /** Catálogo de unidades de medida comercial */
   public unidadMedidaComercial: Catalogo[] = [];
-
-  /**
-   * Configuración de los campos a mostrar en el formulario de evaluación de mercancía.
-   */
-  camposEvaluar: CampoEvaluar[] = [
-  { section: 'Datos de la mercancía' },
-
-  { label: 'Nombre comercial de la mercancía', controlName: 'nombreComercialEvaluar', placeholder: 'Nombre comercial de la mercancía (igual que en la factura)', col: 12 },
-  { label: 'Nombre en inglés', controlName: 'nombreInglesEvaluar', placeholder: 'Nombre en inglés', col: 6 },
-  { label: 'Fracción arancelaria', controlName: 'fraccionArancelariaEvaluar', placeholder: 'Fracción arancelaria', col: 6 },
-  { label: 'Nombre técnico', controlName: 'nombreTecnicoEvaluar', placeholder: 'Nombre técnico', col: 8 },
-  { label: 'Precio franco fábrica', controlName: 'precioFrancoFabricaEvaluar', placeholder: 'Precio franco fábrica', col: 4 },
-  { label: 'Valor transacción', controlName: 'valorTransaccionEvaluar', placeholder: 'Valor transacción', col: 4 },
-  { label: 'Costo neto (en dólares)', controlName: 'costoNetoEvaluar', placeholder: 'Costo neto (en dólares)', col: 4 },
-  { label: 'Costo neto AP', controlName: 'costoNetoAPEvaluar', placeholder: 'Costo neto AP', col: 4 },
-  { label: 'Descripción juego', controlName: 'descripcionJuegoEvaluar', placeholder: 'Descripción juego', col: 4 },
-  { label: 'Tipo Exportador', controlName: 'tipoExportadorEvaluar', placeholder: 'Tipo Exportador', col: 4 },
-  { label: '¿Desea usar la opción del método de separación contable?', controlName: 'separacionContableEvaluar',
-    type: 'radio', options: [{ label: 'Sí', value: true }, { label: 'No', value: false }], col: 12 },
-
-  { section: 'Certificado Origen Titulo Mercancia A L A D I', sectionKey: 'aladi' },
-
-  { label: 'Valor Transaccional (Base FOB)', controlName: 'valorTransaccionalFOBEvaluar', placeholder: 'Valor Transaccional (Base FOB)', col: 4 },
-  { label: 'Clásificación NALADI', controlName: 'clasificacionNALADIEvaluar', placeholder: 'Clasificación NALADI', col: 4 },
-  { label: 'Descripción NALADI', controlName: 'descripcionNALADIEvaluar', placeholder: 'Descripción NALADI', col: 8 },
-  { label: 'Clasificación NALADISA 1993', controlName: 'clasificacionNALADISA1993Evaluar', placeholder: 'Clasificación NALADISA 1993', col: 4 },
-  { label: 'Descripción NALADISA 1993', controlName: 'descripcionNALADISA1993Evaluar', placeholder: 'Descripción NALADISA 1993', col: 8 },
-  { label: 'Clasificación NALADISA 1996', controlName: 'clasificacionNALADISA1996Evaluar', placeholder: 'Clasificación NALADISA 1996', col: 4},
-  { label: 'Descripción NALADISA 1996', controlName: 'descripcionNALADISA1996Evaluar', placeholder: 'Descripción NALADISA 1996', col: 8 },
-  { label: 'Clasificación NALADISA 2002', controlName: 'clasificacionNALADISA2002Evaluar', placeholder: 'Clasificación NALADISA 2002', col: 4},
-  { label: 'Descripción NALADISA 2002', controlName: 'descripcionNALADISA2002Evaluar', placeholder: 'Descripción NALADISA 2002', col: 8 }
-];
 
   /** Variable para validar el formulario */
   validarFormulario: boolean = false;
@@ -414,56 +380,20 @@ get ninoFormGroup(): FormGroup {
           });
       }
     }
-    this.inicializarFormularioEvaluar();
-    if(this.esFormularioSoloLectura === true){
-      this.mercanciaEvaluar();
-    }
-    //Validar tabla aun que este valido formulario
-    if(this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === true){
-       if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-    }
-    //validacion para cuando de tab sin el boton de continuar
-    if (this.solicitudeState?.validacion_formularios?.validacion_tab_mercancia === false) {
+     if(this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false){
       this.formMercancia.markAllAsTouched();
-      this.mensajeService.mostrarMensaje(true);
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-         if(this.solicitudeState.insumosTablaDatos.length === 0){
-         this.mensajeService.mostrarMensaje(true);
-         this.validacionInsumo = true;
-       }
-      }
-      
+      this.validarFormularioMercancia();
     }
-
-    // Inicializa la validación si aún no existe
-    if (this.solicitudeState.validacion_formularios.validacion_tab_mercancia === null) {
-      this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
-    }
+  
     this.formMercancia.statusChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((_value) => {
           this.validarFormulario = this.formMercancia.valid;
-          this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormulario);
         })
       )
       .subscribe();
 
-    this.mensajeService.tocarFormulario$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-      this.formMercancia.markAllAsTouched();
-      if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true){
-        if(this.solicitudeState.insumosTablaDatos.length === 0){
-        this.validacionInsumo = true;
-       }
-      }
-    });
   }
 
   /**
@@ -647,40 +577,6 @@ get ninoFormGroup(): FormGroup {
   // -----------------------
   Object.values(F.controls).forEach(ctrl => ctrl.updateValueAndValidity({ onlySelf: true, emitEvent: false }));
 }
-
-
-  /**
-   * @method inicializarFormularioEvaluar
-   * @description
-   * Inicializa el formulario reactivo `formEvaluarMercancia`, el cual se utiliza para
-   * capturar y evaluar la información relacionada con una mercancía.  
-   * Cada control representa un campo específico de la ficha técnica o clasificación del producto.
-   */
-  public inicializarFormularioEvaluar(): void {
-    this.formEvaluarMercancia = this.fb.group({
-      nombreComercialEvaluar: [{value: '', disabled: true}],
-      nombreInglesEvaluar: [{value: '', disabled: true}],
-      fraccionArancelariaEvaluar: [{value: '', disabled: true}],
-      nombreTecnicoEvaluar: [{value: '', disabled: true}],
-      precioFrancoFabricaEvaluar: [{value: '', disabled: true}],
-      valorTransaccionEvaluar: [{value: '', disabled: true}],
-      costoNetoEvaluar: [{value: '', disabled: true}],
-      costoNetoAPEvaluar: [{value: '', disabled: true}],
-      descripcionJuegoEvaluar: [{value: '', disabled: true}],
-      tipoExportadorEvaluar: [{value: '', disabled: true}],
-      separacionContableEvaluar: [{value: null, disabled: true}],
-      valorTransaccionalFOBEvaluar: [{value: '', disabled: true}],
-      clasificacionNALADIEvaluar: [{value: '', disabled: true}],
-      descripcionNALADIEvaluar: [{value: '', disabled: true}],
-      clasificacionNALADISA1993Evaluar: [{value: '', disabled: true}],
-      descripcionNALADISA1993Evaluar: [{value: '', disabled: true}],
-      clasificacionNALADISA1996Evaluar: [{value: '', disabled: true}],
-      descripcionNALADISAEvaluar: [{value: '', disabled: true}],
-      clasificacionNALADISA2002Evaluar: [{value: '', disabled: true}],
-      descripcionNALADISA2002Evaluar: [{value: '', disabled: true}]
-    });
-  }
-
 
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -1079,20 +975,20 @@ get ninoFormGroup(): FormGroup {
         fraccion_naladisa96: this.formMercancia.get('clasificacionNaladi1996')?.value,
         fraccion_naladisa02: this.formMercancia.get('clasificacionNaladi2002')?.value,
         //ultimo tab
-        tipo_proceso_mercancia: '',
+        tipo_proceso_mercancia:this.solicitudeState.transformacion53,
         //Mismo campo difenre nombre dependiendo del caso
         valo_transaccional_fob: this.ninoFormGroup.get('fraccionArancelariaModal')?.value,
-        costo_neto_ap: null
+        costo_neto_ap: this.solicitudeState.costoNetoDolares,
       },
       tratados_seleccionados: this.solicitudeState?.respuestaServicioDatosTabla.map(item => ({
         cve_grupo_criterio: item.cve_grupo_criterio,
-        id_bloque: item.id_bloque ?? 0,
-        cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
+        id_bloque: item.id_bloque,
+        cve_tratado_acuerdo: item.cve_tratado_acuerdo,
         id_tratado_acuerdo: item.id_tratado_acuerdo,
-        cve_pais: item.cve_pais ?? '',
-        id_desc_alterna_fraccion: 0,
+        cve_pais: item.cve_pais ,
+        id_desc_alterna_fraccion:null,
         // es lo mismo a tipo_proceso_mercancia
-        ide_tipo_proceso_mercancia: ''
+        ide_tipo_proceso_mercancia:null
       }))
     };
     this.datosMercanciaService.postFracccionArancelariaValidar(PAYLOAD)
@@ -1217,7 +1113,8 @@ get ninoFormGroup(): FormGroup {
    *
    * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
    */
-  cargaArchivo(): void {
+  cargaArchivo(tipo: 'INSUMOS' | 'EMPAQUES'): void {
+     this.tipoArchivoActual = tipo;
     if (this.modalArchivo) {
       const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
       MODAL_INSTANCE.show();
@@ -1350,71 +1247,6 @@ get ninoFormGroup(): FormGroup {
   }
 
   /**
-   * @method mercanciaEvaluar
-   * @description Consulta la mercancía asociada a la solicitud actual y maneja la respuesta del servidor.
-   * @returns {void}
-   */
-  mercanciaEvaluar(): void {
-    this.mercanciaSolcitudService.getMercanciaEvaluar(this.consultaState.id_solicitud)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.codigo === CodigoRespuesta.EXITO) {
-            this.formEvaluarMercancia.patchValue({
-              nombreComercialEvaluar: response.datos?.nombre_comercial,
-              nombreInglesEvaluar: response.datos?.nombre_en_ingles,
-              fraccionArancelariaEvaluar: response.datos?.cve_fraccion,
-              nombreTecnicoEvaluar: response.datos?.nombre_tecnico,
-              precioFrancoFabricaEvaluar: response.datos?.precio_franco_fabrica,
-              valorTransaccionEvaluar: response.datos?.valor_transaccion,
-              costoNetoEvaluar: response.datos?.costo_neto,
-              costoNetoAPEvaluar: response.datos?.costo_neto_ap,
-              descripcionJuegoEvaluar: response.datos?.descripcion_juego,
-              tipoExportadorEvaluar: response.datos?.tipo_exportador,
-              separacionContableEvaluar: response.datos?.separacion_contable,
-              valorTransaccionalFOBEvaluar: response.datos?.valor_transaccion_fob,
-              clasificaciónNALADIEvaluar: response.datos?.cve_fraccion_naladi,
-              descripcionNALADIEvaluar: response.datos?.descripcion_naladi,
-              clasificacionNALADISA1993Evaluar: response.datos?.cve_fraccion_naladisa_93,
-              descripcionNALADISA1993Evaluar: response.datos?.descripcion_naladisa_93,
-              clasificacionNALADISA1996Evaluar: response.datos?.cve_fraccion_naladisa_96,
-              descripcionNALADISAEvaluar: response.datos?.descripcion_naladisa_96,
-              clasificacionNALADISA2002Evaluar: response.datos?.cve_fraccion_naladisa_02,
-              descripcionNALADISA2002Evaluar: response.datos?.descripcion_naladisa_02
-            });
-            this.mercanciaEvaluarData = response.datos ?? {} as EvaluarMercanciaResponse;
-        }else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: response?.error || 'Error en la consultar mercancia.',
-            mensaje: response?.causa || response?.mensaje || 'Error en la consultar mercancia.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-        }
-      },
-      error: (err) => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        const MENSAJE = err?.error?.error || 'Error en la consultar mercancia.';
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'error',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        }
-      }
-    });
-  }
-
-  /**
    * Determina si se debe mostrar una sección del formulario según su key y los datos disponibles.
    * @param sectionKey - Clave de la sección a evaluar (opcional).
    * @returns `true` si la sección debe mostrarse, `false` en caso contrario.
@@ -1544,6 +1376,134 @@ get ninoFormGroup(): FormGroup {
   }
 }
 
+ /**
+ * @description Valida el formulario de mercancía antes de continuar con el proceso.
+ * Si la configuración requiere mostrar insumos, verifica que existan registros en la tabla.
+ * En caso contrario, marca los campos del formulario y detiene el avance.
+ * @method validarFormularioMercancia
+ * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
+ */
+  validarFormularioMercancia(): boolean {
+    if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_insumos === true) {
+      if (this.solicitudeState.insumosTablaDatos.length === 0) {
+         if (this.formMercancia.valid === false) {
+            this.formMercancia.markAllAsTouched();
+         }
+        this.validacionInsumo = true;
+        this.cd.detectChanges();
+         return false;
+      }
+    }
+    if (this.formMercancia.valid === false) {
+     this.formMercancia.markAllAsTouched();
+      this.cd.detectChanges();
+      return false;
+    }
+    return true
+  }
+
+  /**
+    * Carga y envía el archivo CSV según el tipo seleccionado (`INSUMOS` o `EMPAQUES`).
+    * 
+    * - Obtiene el archivo desde el input `#archivoAdjuntar`.
+    * - Envía el archivo al servicio `postArchivoMercancia`.
+    * - Limpia el formulario si la respuesta es exitosa, o muestra un mensaje de error en caso contrario.
+    */
+  agregarCsv(): void {
+    const INPUTARCHIVO = document.getElementById('archivoAdjuntar') as HTMLInputElement;
+    if (!INPUTARCHIVO.files || INPUTARCHIVO.files.length === 0) {
+      return;
+    }
+    const ARCHIVOCSV = INPUTARCHIVO.files[0];
+   
+    const TRATADOS_SELECCIONADOS = this.solicitudeState.respuestaServicioDatosTabla.map(item => ({
+      id_tratado_acuerdo: item.id_tratado_acuerdo,
+      cve_grupo_criterio: item.cve_grupo_criterio,
+      cve_pais:item.cve_pais,
+      cve_tratado_acuerdo:item.cve_tratado_acuerdo
+    }));
+
+    const TIPOARCHIVO = this.tipoArchivoActual;
+    this.datosMercanciaService.postArchivoMercancia(TRATADOS_SELECCIONADOS, TIPOARCHIVO, ARCHIVOCSV)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
+            if(response.datos.elementos_validos[0].tipo_elemento === "INSUMOS" ){
+              this.mostrarTabla = false;
+                response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.insumosTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
+              });
+              this.tramite110101Store.clearInsumos();
+              this.tramite110101Store.addInsumo(this.insumosTablaDatos);
+              this.cd.detectChanges();
+              this.mostrarTabla = true;
+            }else{
+               this.mostrarTabla = false;
+               response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+                this.envasesTablaDatos.push({
+                  nombreTecnico: elemento.nombre_tecnico,
+                  proveedor: elemento.proveedor,
+                  fabricanteOProductor: elemento.fabricante,
+                  rfc: elemento.rfc_fabricante,
+                  fraccionArancelaria: elemento.fraccion_arancelaria,
+                  valorEnDolares: elemento.valor,
+                  paisDeOrigen: elemento.pais_origen,
+                  peso: elemento.peso,
+                  volumen: null, 
+                  cvePais: elemento.pais_origen
+                });
+              });
+              this.tramite110101Store.clearEmpaques();
+              this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
+               this.cd.detectChanges();
+              this.mostrarTabla = true;
+            }
+             
+            this.formularioArchivo.reset();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response?.error || 'Error en archivo',
+              mensaje: response?.causa || response?.mensaje || 'Error en archivo',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error en archivo';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**
    * 
@@ -1552,6 +1512,7 @@ get ninoFormGroup(): FormGroup {
    * - Este método se ejecuta automáticamente cuando el componente se destruye, asegurando una gestión eficiente de las suscripciones.
    */
   ngOnDestroy(): void {
+    this.tramite110101Store.setValidacionFormulario('validacion_tab_mercancia', this.validarFormularioMercancia() ?? null);
     this.destroy$.next();
     this.destroy$.complete();
   }

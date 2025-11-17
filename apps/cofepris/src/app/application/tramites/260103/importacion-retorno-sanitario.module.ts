@@ -8,7 +8,7 @@ import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derecho
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vistas/terceros-relacionados-vista.component';
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
@@ -31,7 +31,6 @@ import { ToastrService } from 'ngx-toastr';
     AlertComponent,
     TituloComponent,
     AnexarDocumentosComponent,
-
   ],
   providers: [
     ToastrService
