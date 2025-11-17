@@ -2186,8 +2186,8 @@
   {
     "id": 314,
     "tramite": 80303,
-    "linkDashboard": "/se/registro-solicitud/registro-solicitud",
-    "linkDepartment": "/pago/registro-solicitud/registro-solicitud",
+    "linkDashboard": "/se/registro-solicitude/registro-solicitude",
+    "linkDepartment": "/pago/registro-solicitude/registro-solicitude",
     "department": "se"
   },
   {

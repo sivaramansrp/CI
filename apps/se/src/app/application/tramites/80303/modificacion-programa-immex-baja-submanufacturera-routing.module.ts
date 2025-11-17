@@ -13,7 +13,7 @@ const ROUTES: Routes = [
         procedureId: '80303',
       },
     },
-    path: 'registro-solicitud',
+    path: 'registro-solicitude',
     component: RegistroSolicitudComponent,
   },
    {
