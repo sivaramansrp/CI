@@ -2,15 +2,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeCertificadoComponent } from '../../components/destinatario-de-certificado/destinatario-de-certificado.component';
 import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',

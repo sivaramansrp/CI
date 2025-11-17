@@ -221,7 +221,7 @@ export class TercerosrelacionadosComponent implements OnInit {
       tipoPersona: ['yes'],
       razonSocial: [''],
       correoElectronico: [''],
-      pais: ['1'],
+      pais: [''],
       entidadFederativa: ['']
     });
   }

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -68,6 +68,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroy$ = new Subject<void>();
+
+  @ViewChild(TercerosRelacionadosComponent)
+  tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
   /**
    * Constructor que inyecta los servicios necesarios.
@@ -214,6 +217,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   facturadorEventoModificar(facturador: Facturador[]): void {
     this.tramiteStore.facturadorTablaModificaDatos(facturador);
+  }
+
+  validarContenedor(): boolean {
+    return this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ;
   }
 
   /**

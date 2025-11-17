@@ -22,22 +22,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {
-  CAMPOS_CLAVE,
-  DATOS_MERCANCIA_CAMPO,
-  DATOS_MERCANCIA_CLAVE_TABLA,
-  DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
-  FEACCION_AFRACCION_ARANCELARIA_CATALOG,
-  TIPO_PRODUCTO_ESPECIAL,
-  UMT_DESHABILITADO_VALOR,
-} from '../../constantes/datos-solicitud.enum';
-import {
-  Catalogo,
-  CrossListLable,
-  MercanciaForm,
-  TablaMercanciaClaveConfig,
-  TablaMercanciasDatos,
-} from '../../models/datos-solicitud.model';
-import {
+  AlertComponent,
   CatalogoSelectComponent,
   CrosslistComponent,
   InputFecha,
@@ -51,6 +36,23 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import {
+  CAMPOS_CLAVE,
+  DATOS_MERCANCIA_CAMPO,
+  DATOS_MERCANCIA_CLAVE_TABLA,
+  DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  ES_VALIDO_REGISTRO_O_VENCIMIENTO,
+  FEACCION_AFRACCION_ARANCELARIA_CATALOG,
+  TIPO_PRODUCTO_ESPECIAL,
+  UMT_DESHABILITADO_VALOR,
+} from '../../constantes/datos-solicitud.enum';
+import {
+  Catalogo,
+  CrossListLable,
+  MercanciaForm,
+  TablaMercanciaClaveConfig,
+  TablaMercanciasDatos,
+} from '../../models/datos-solicitud.model';
 import { CommonModule, Location } from '@angular/common';
 import {
   FECHA_DE_CADUCIDAD_MERCANICA,
@@ -84,6 +86,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TooltipModule,
     NotificacionesComponent,
     InputFechaComponent,
+    AlertComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -445,6 +448,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   tipoProductoObj: Catalogo[] | undefined;
 
   /**
+   * Indica si el registro o vencimiento es válido para el procedimiento actual.
+   * Se utiliza para controlar la lógica de validación de los campos relacionados con registro sanitario y fechas de vencimiento.
+   */
+  esValidoRegistroOVencimiento: boolean = false;
+
+  /**
+   * @property {string} mensajeDeError
+   * @description Mensaje de error mostrado cuando el formulario de mercancía no es válido o faltan campos por capturar.
+   */
+  mensajeDeError: string = '';
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -568,6 +583,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
     this.requiedField = NUMERO_REGISTRO_SANITARIO.includes(this.idProcedimiento);
+    this.esValidoRegistroOVencimiento = ES_VALIDO_REGISTRO_O_VENCIMIENTO.includes(this.idProcedimiento);
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
@@ -885,6 +901,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'fechaCaducidad',
         ];
         break;
+      case 260218:
+        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
       case 260219:
         this.elementosAnadidos = [
           'especifique',
@@ -1186,7 +1206,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     especifiqueForma: [
       this.obtenerValor('especifiqueForma')
     ],
-    especifiqueEstado:[this.obtenerValor('especifiqueEstado')]
+    especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
+    id: [this.obtenerValor('id')]
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1411,7 +1432,124 @@ public convertToStringArray(value: unknown): string[] {
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
-    if (
+
+    this.actualizarValidadoresClave()
+   
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      this.mensajeDeError = 'Faltan campos por capturar.';
+      return;
+    }
+     this.mensajeDeError = '';  
+     const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
+
+     /**
+     * @description
+     * Genera un identificador aleatorio compuesto únicamente por números.
+     * El resultado siempre será un número entero de 6 dígitos (entre 100000 y 999999).
+     * @returns {number} Un número aleatorio de 6 dígitos.
+     */
+     const ID = Math.floor(100000 + Math.random() * 900000);
+     VALORTABLAMERCANCIA.id = this.mercanciaForm.get('id')?.value ? this.mercanciaForm.get('id')?.value : ID
+      // Set additional values
+    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
+    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
+    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
+    const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
+    const CLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.clasificacionProductoDatos, CLASIFICACIONID);
+    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.claveClasificacionProductoObj = CLASIFICACIONOBJ?.[0] ?? undefined;
+ 
+    /**
+     * @description
+     * Obtiene y asigna los valores correspondientes al campo **"Especificar Clasificación del Producto"**
+     * desde el formulario reactivo, utilizando el catálogo `especificarClasificacionProductoDatos`.
+     * * @constant {string | number} ESPECIFICARCLASIFICACIONID - Valor seleccionado en el campo del formulario.
+     * @constant {any[]} ESPECIFICARCLASIFICACIONOBJ - Objeto obtenido del catálogo correspondiente.
+     * @property {string} especificarClasificacionProducto - Descripción del valor seleccionado.
+     * @property {object | undefined} especificarClasificacionObj - Objeto completo del catálogo.
+     */
+    const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
+    const ESPECIFICARCLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.especificarClasificacionProductoDatos, ESPECIFICARCLASIFICACIONID);
+    VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.especificarClasificacionObj = ESPECIFICARCLASIFICACIONOBJ?.[0] ?? undefined;
+ 
+    /**
+     * @description
+     * Obtiene y asigna los valores correspondientes al campo **"Tipo de Producto"**
+     * desde el formulario reactivo, utilizando el catálogo `tipoProductoDatos`.
+     *
+     * @constant {string | number} TIPOPRODUCTOID - Valor seleccionado en el formulario.
+     * @constant {any[]} TIPOPRODUCTOOBJ - Objeto obtenido del catálogo correspondiente.
+     * @property {string} tipoProducto - Descripción del tipo de producto seleccionado.
+     * @property {object | undefined} tipoProductoObj - Objeto completo asociado al tipo de producto.
+     */
+    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
+    const TIPOPRODUCTOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.tipoProductoDatos, TIPOPRODUCTOID);
+    VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.tipoProductoObj = TIPOPRODUCTOOBJ?.[0] ?? undefined;
+ 
+    /**
+     * @description
+     * Obtiene y asigna los valores correspondientes al campo **"Forma Farmacéutica"**
+     * utilizando el catálogo `formaFarmaceuticaDatos`.
+     *
+     * @constant {string | number} FORMAFARMACEUTICAID - ID del valor seleccionado.
+     * @constant {any[]} FORMAFARMACEUTICAOBJ - Objeto del catálogo con la descripción correspondiente.
+     * @property {string} formaFarmaceutica - Descripción de la forma farmacéutica seleccionada.
+     * @property {object | undefined} formaFarmaceuticaObj - Objeto completo de la forma farmacéutica.
+     */
+    const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
+    const FORMAFARMACEUTICAOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.formaFarmaceuticaDatos, FORMAFARMACEUTICAID);
+    VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.formaFarmaceuticaObj = FORMAFARMACEUTICAOBJ?.[0] ?? undefined;
+ 
+    /**
+     * @description
+     * Obtiene y asigna los valores correspondientes al campo **"Estado Físico"**
+     * utilizando el catálogo `estadoFisicoDatos`.
+     *
+     * @constant {string | number} ESTADOFISICOID - ID seleccionado del formulario.
+     * @constant {any[]} ESTADOFISICOOBJ - Objeto del catálogo con su descripción.
+     * @property {string} estadoFisico - Descripción del estado físico seleccionado.
+     * @property {object | undefined} estadoFisicoObj - Objeto completo con la información del estado físico.
+     */
+    const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
+    const ESTADOFISICOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.estadoFisicoDatos, ESTADOFISICOID);
+    VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.estadoFisicoObj = ESTADOFISICOOBJ?.[0] ?? undefined;
+ 
+    /**
+     * @description
+     * Obtiene y asigna los valores correspondientes al campo **"Unidad de Medida Comercialización (UMC)"**
+     * utilizando el catálogo `cantidadUmcDatos`.
+     *
+     * @constant {string | number} UMCID - ID del valor seleccionado.
+     * @constant {any[]} UMCOBJ - Objeto obtenido del catálogo.
+     * @property {string} cantidadUMC - Descripción de la unidad de medida comercialización.
+     * @property {object | undefined} cantidadUMCObj - Objeto completo con los datos de la UMC.
+     */
+    const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
+    const UMCOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.cantidadUmcDatos, UMCID);
+    VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.[0]?.descripcion ?? '';
+    VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
+
+    // Emit the merchandise data
+    this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
+    
+    // Reset form for next use
+    this.mercanciaForm.reset();
+    
+    // Close the modal
+    this.cerrarModal.emit();
+}
+
+actualizarValidadoresClave(): void {
+   if (
       this.elementosAnadidos.includes('claveDeLos') &&
       this.idProcedimiento === 260101 &&
       this.claveConfig.datos.length > 0
@@ -1431,54 +1569,7 @@ public convertToStringArray(value: unknown): string[] {
         this.mercanciaForm.get(controlName)?.updateValueAndValidity();
       });
     }
-    if (this.mercanciaForm.invalid) {
-      this.mercanciaForm.markAllAsTouched();
-      return;
-    }
-     const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
-      // Set additional values
-    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
-    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
-    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
-    const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
-    const CLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.clasificacionProductoDatos, CLASIFICACIONID);
-    VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.[0]?.descripcion ?? '';
-    VALORTABLAMERCANCIA.claveClasificacionProductoObj = CLASIFICACIONOBJ?.[0] ?? undefined;
-
-    const ESPECIFICARCLASIFICACIONID = this.mercanciaForm.get('especificarClasificacionProducto')?.value;
-    const ESPECIFICARCLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.especificarClasificacionProductoDatos, ESPECIFICARCLASIFICACIONID);
-    VALORTABLAMERCANCIA.especificarClasificacionObj = ESPECIFICARCLASIFICACIONOBJ?.[0] ?? undefined;
-
-    const TIPOPRODUCTOID = this.mercanciaForm.get('tipoProducto')?.value;
-    const TIPOPRODUCTOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.tipoProductoDatos, TIPOPRODUCTOID);
-    VALORTABLAMERCANCIA.tipoProductoObj = TIPOPRODUCTOOBJ?.[0] ?? undefined;
-
-    const FORMAFARMACEUTICAID = this.mercanciaForm.get('formaFarmaceutica')?.value;
-    const FORMAFARMACEUTICAOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.formaFarmaceuticaDatos, FORMAFARMACEUTICAID);
-    VALORTABLAMERCANCIA.formaFarmaceuticaObj = FORMAFARMACEUTICAOBJ?.[0] ?? undefined;
-
-    const ESTADOFISICOID = this.mercanciaForm.get('estadoFisico')?.value;
-    const ESTADOFISICOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.estadoFisicoDatos, ESTADOFISICOID);
-    VALORTABLAMERCANCIA.estadoFisicoObj = ESTADOFISICOOBJ?.[0] ?? undefined;
-
-    const UMCID = this.mercanciaForm.get('cantidadUmc')?.value;
-    const UMCOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.cantidadUmcDatos, UMCID);
-    VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
-
-    // Emit the merchandise data
-    this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
-    
-    // Reset form for next use
-    this.mercanciaForm.reset();
-    
-    // Close the modal
-    this.cerrarModal.emit();
 }
-
   /**
    * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
    *

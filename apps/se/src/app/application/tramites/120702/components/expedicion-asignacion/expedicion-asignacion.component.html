@@ -47,7 +47,12 @@
                     </div>
                 </div>
                 <div class="col-md-8 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="onBuscarClick()">Buscar</button>
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            
+                            (click)="onBuscarClick()">
+                        Buscar
+                    </button>
                 </div>
             </div>
         </div>
@@ -181,10 +186,7 @@
                         @if(asignacionForm.controls['montoAExpedir'].invalid &&
                         asignacionForm.controls['montoAExpedir'].touched) {
                         <div class="d-grid">
-                            @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
-                            <span class="mensaje-error">Este campo es obligatorio</span>
-                            }
-                            @if(asignacionForm.controls['montoAExpedir'].errors?.['pattern']) {
+                           @if(asignacionForm.controls['montoAExpedir'].errors?.['pattern']) {
                             <span class="mensaje-error">Por favor, escribe un número entero válido</span>
                             }
                             @if(asignacionForm.controls['montoAExpedir'].errors?.['maxlength']) {

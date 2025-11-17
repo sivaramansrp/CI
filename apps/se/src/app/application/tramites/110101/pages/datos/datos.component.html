@@ -13,7 +13,7 @@
 
                 <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)"
-                        [class.disabled]="desactivado">Datos de la mercancia</a>
+                        [class.disabled]="desactivado">Datos de la mercancía</a>
                 </li>
 
                  <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
@@ -25,6 +25,7 @@
                         <a data-toggle="tab" (keyup)="seleccionaTab(5)" (click)="seleccionaTab(5)">Procesos</a>
                     </li>
                 }
+                
             }
 
             @if (consultaState.create === false) {
@@ -39,11 +40,18 @@
                  <li [ngClass]="indice === 2 ? 'active' : ''">
                     <a data-toggle="tab" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Tratados</a>
                 </li>
+                
+                @if (mostrarExportadorUE || mostrarExportadorJPN) {
+                <li [ngClass]="indice === 7 ? 'active' : ''">
+                    <a data-toggle="tab" (keyup)="seleccionaTab(7)" (click)="seleccionaTab(7)">{{tituloExportador}}</a>
+                </li>
+                }
                 <li [ngClass]="indice === 6? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
                     (keydown.space)="seleccionaTab(6)" role="button" tabindex="3">Protesto de Decir Verdad</a>
                </li>
                }
+
             }
 
            
@@ -65,13 +73,13 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados [esCalificacionBandera]="esDictaminadorBandera" (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
+            <app-tratados #tratadosRef [esCalificacionBandera]="esDictaminadorBandera" (habilitarPestana)="habilitarPestana()" (cerrarPestana)="cerrarPestana()" (tratadosActualizados)="onTratadosActualizados($event)"></app-tratados>
             }
             @case (3) {
-            <app-datos-mercancia></app-datos-mercancia>
+            <app-datos-mercancia #mercanciaRef></app-datos-mercancia>
             }
             @case (4) {
-            <app-datos-adicionales></app-datos-adicionales>
+            <app-datos-adicionales #datosAdicionalesRef></app-datos-adicionales>
             }
             @case (5) {
              @if (this.solicitudeState.tab_procesos === true) {
@@ -79,7 +87,10 @@
             }
             }
             @case (6) {
-             <app-protesto-decir-verdad></app-protesto-decir-verdad>
+            <app-protesto-decir-verdad></app-protesto-decir-verdad>
+            }
+            @case (7) {
+            <app-exportador-autorizado></app-exportador-autorizado>
             }
             }
         </ng-container>

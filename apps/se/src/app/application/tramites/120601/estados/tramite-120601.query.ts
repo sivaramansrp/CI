@@ -116,6 +116,13 @@ export class Tramite120601Query extends Query<Tramites120601State> {
   })
 
   /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
+  /**
    * Constructor de la clase Tramite120601Query.
    * @param store Instancia del store de Tramite120601.
    */

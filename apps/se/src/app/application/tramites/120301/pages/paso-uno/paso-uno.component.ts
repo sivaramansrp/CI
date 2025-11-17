@@ -322,6 +322,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   informacionImportador!: ImportadorDestinoResponse;
 
+  @Output() mensajeError: EventEmitter<string> = new EventEmitter<string>();
+
   /**
    * @method seleccionaTab
    * @description
@@ -359,6 +361,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
     this.tabChanged.emit(this.indice); // Emite evento con el índice de la pestaña seleccionada
+  }
+
+  /**
+ * @method onMensajeError
+ * @description Maneja los mensajes de error emitidos por el componente hijo.
+ * @param {string} mensaje - Mensaje de error a mostrar.
+ * @returns {void} No retorna ningún valor.
+ */
+  onMensajeError(mensaje: string): void {
+    this.mensajeError.emit(mensaje);
+    // Cualquier lógica adicional para manejar el error
   }
 
   /**
@@ -836,7 +849,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @see {@link ConstanciaDelRegistroComponent} - Componente que emite el evento original
    * @see {@link EventEmitter#emit} - Método utilizado para propagar el evento
    */
-  public alErrorDeValidacion(event: boolean): void { 
+  public alErrorDeValidacion(event: boolean): void {
     this.errorValidacion.emit(event);
   }
 }

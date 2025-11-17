@@ -9,6 +9,8 @@ import {
   CatalogoPaises,
   Catalogos,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   CrossListLable,
   DatosAgregarFormulario,
   FechasService,
@@ -180,6 +182,7 @@ import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
+import { SolicitudDetalleModel } from '../../../../core/models/5701/solicitud-detalle.model';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -550,6 +553,26 @@ export class SolicitudComponent
   };
 
   tabla1 = 'tablaPagos'; 
+  /**
+   * @description Estado de los datos guardados de la solicitud.
+   */
+  guardarDatos!: ConsultaioState;
+
+  /**
+   * @description Id de la solicitud guardada.Cuando existe(en evaluar component) se usa para identificar la solicitud.
+   */
+  idSolicitudGuardada!: string;
+
+  /**
+   * Tramite guardado
+   */
+  tramiteGuardado!: string;
+
+  /**
+   * folio de la solicitud guardada.Cuando existe(en evaluar component) se usa para identificar la solicitud.
+   * 
+   */
+  folioSolicitudGuardada!: string;
 
   @Output() validForm = new EventEmitter<boolean>();
 
@@ -565,7 +588,6 @@ export class SolicitudComponent
     private readonly tipoOperacionService: TipoOperacionService,
     private readonly tipoTransporteService: TipoTransporteService,
     private readonly paisesService: PaisesService,
-    private readonly tipoPedimentoService: TipoPedimentoService,
     private readonly tipoDespachoService: TipoDespachoService,
     private readonly aduanaService: AduanaService,
     private readonly patenteService: PatenteService,
@@ -589,8 +611,34 @@ export class SolicitudComponent
     private readonly validaHorarioService: ValidaHorarioService,
     private readonly encargoConferidoService: EncargoConferidoService,
     private readonly guardarSolicitudService: GuardaSolicitudService,
-    private readonly router: Router
-  ) {}
+    private readonly router: Router,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+            this.guardarDatos = seccionState;
+            this.folioSolicitudGuardada=this.guardarDatos.folioTramite;
+            this.idSolicitudGuardada=this.guardarDatos.id_solicitud;
+            this.tramiteGuardado=this.guardarDatos.procedureId;
+            if(this.idSolicitudGuardada){
+              this.guardarSolicitudService.getSolicitud(this.tramiteGuardado, this.idSolicitudGuardada).pipe(
+                takeUntil(this.destroyNotifier$), 
+              ).subscribe((datosSolicitud) => {
+                if(datosSolicitud.datos) { 
+                  this.tipoSolicitudSeleccionada = parseInt(datosSolicitud.datos?.tipo_servicio || '') ;
+                  this.editarSolicitud = false;
+                  this.setDataFormSolicitudFromModel(datosSolicitud.datos);
+                }
+                  
+              });
+            }
+
+        })
+      )
+      .subscribe();
+  }
 
   ngOnInit(): void {
     this.radioPatentes = patentes?.patentes?.map((p: { label: string; value: string | number; hint?: string }) => ({
@@ -635,7 +683,8 @@ export class SolicitudComponent
         takeUntil(this.destroyNotifier$),
         delay(10),
         tap((_) => {
-          this.configuraSeccion();
+          if(!this.idSolicitudGuardada)
+            this.configuraSeccion();
         })
       )
       .subscribe();
@@ -648,6 +697,67 @@ export class SolicitudComponent
     this.linkGeneraLineaCapturaSeguro =
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
+
+  setDataFormSolicitudFromModel(data: SolicitudDetalleModel): void {
+  this.FormSolicitud.patchValue({
+    folioSolicitud: this.folioSolicitudGuardada, 
+    tipoSolicitud: data.tipo_servicio,
+    descripcionTipoSolicitud: '', 
+    datosImportadorExportador: {
+      RFCImpExp: data.importador_exportador?.rfc,
+      nombre: data.importador_exportador?.nombre,
+      desNumeroRegistro: data.importador_exportador?.desc_numero_registro,
+      programa: data.importador_exportador?.programa_fomento,
+      desProgramaFomento: data.importador_exportador?.desc_programa_fomento,
+      checkIMMEX: data.importador_exportador?.immex,
+      desImmex: data.importador_exportador?.desc_inmex,
+      industriaAutomotriz: data.importador_exportador?.industria_automotriz,
+      desIndustrialAutomotriz: data.importador_exportador?.desc_industrial_automotriz,
+      tipoEmpresaCertificadaA: data.importador_exportador?.certificacion_a,
+      tipoEmpresaCertificadaAA: data.importador_exportador?.certificacion_aa,
+      tipoEmpresaCertificadaAAA: data.importador_exportador?.certificacion_aaa,
+      socioComercial: data.importador_exportador?.socio_comercial,
+      certificacionOEA: data.importador_exportador?.oea,
+      revision: data.importador_exportador?.revisionOrigen,
+      idSocioComercial: data.importador_exportador?.id_socio_comercial,
+    },
+    datosServicio: {
+      fechaInicio: data.despacho?.fecha_inicio,
+      fechaFinal: data.despacho?.fecha_final,
+      horaInicio: data.despacho?.hora_inicio,
+      horaFinal: data.despacho?.hora_fin,
+       fechasSeleccionadas: [], 
+    },
+    despacho: {
+      lda: data.despacho?.bln_lda,
+      rfcDespachoLDA: data.despacho?.rfc_despacho,
+      dd: data.despacho?.bln_dd,
+      folioDDEX: data.despacho?.folio_ddex,
+      idAduanaDespacho: data.despacho?.aduana_despacho,
+      aduanaDespacho: data.despacho?.aduana_despacho,
+      idSeccionDespacho: data.despacho?.id_seccion_despacho,
+      seccionAduanera: '', 
+      idRecinto: '', 
+      nombreRecinto: data.despacho?.nombre_recinto,
+      tipoDespacho: data.despacho?.tipo_despacho,
+      descripcionTipoDespacho: '', 
+      tipoOperacion: data.despacho?.tipo_operacion,
+      patente: data.patente,
+      relacionSociedad: data.despacho?.relacion,
+      encargoConferido: data.despacho?.encargo_conferido,
+      domicilioDespacho: data.despacho?.domicilio,
+      especifique: data.despacho?.especifique,
+    },
+    mercancia: {
+      paisOrigen: data.mercancia?.pais_origen,
+      paisProcedencia: data.mercancia?.pais_procedencia,
+      descripcionGenerica: data.mercancia?.descripcion_generica,
+      justificacion: data.mercancia?.justificacion,
+    },
+    // Agrega aquí los demás grupos/arreglos si es necesario
+  });
+}
+  
 
   // Método para forzar validación
   validarFormulario(): boolean {

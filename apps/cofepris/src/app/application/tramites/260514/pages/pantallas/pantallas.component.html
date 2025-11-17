@@ -15,9 +15,16 @@
         @case (1) {
           <app-datos></app-datos>
         } @case (2) {
-          <app-paso-dos></app-paso-dos>
+<app-paso-carga-documento 
+          [idSolicitud]="solicitudState.idSolicitud"
+          [idTipoTRamite]="'260514'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
         } @case (3) {
-          <app-paso-tres></app-paso-tres>
+       <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260514" [procedureUrl]="'permiso-importacion-calidad/pantallas'"></paso-firma>
         }
        }
       </div>

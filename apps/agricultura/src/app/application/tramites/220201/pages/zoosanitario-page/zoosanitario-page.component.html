@@ -1,3 +1,4 @@
+
 <div class="page">
   <div class="container">
     <div class="row">
@@ -12,7 +13,6 @@
       }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
-
     <div class="row">
       @switch (indice) { @case (1) {
       <app-paso-uno (tabChanged)="enTabChange($event)" #pasoUnoRef></app-paso-uno>
@@ -27,13 +27,13 @@
       <app-paso-dos></app-paso-dos>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
-          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
-            [dePadre]="true" [ocultabotonAnterior]="false" [btnGuardarVisible]="btnGuardarVisible"
-            (btnGuardarClicked)="guardadoParcialSolicitud()"></btn-continuar>
+          <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="false"
+            [dePadre]="true" [ocultabotonAnterior]="false" [btnGuardarVisible]="btnGuardarVisible">
+          </btn-continuar>
         </div>
       </div>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="+this.numeroSolicitud" [procedure]="220201" [procedureUrl]="'registrozoosanitario'"></paso-firma>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
           <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true"
