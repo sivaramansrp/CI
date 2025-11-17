@@ -127,7 +127,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   * Indica si la sección de carga de documentos está activa.
   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
   */
-    seccionCargarDocumentos: boolean = true;
+  seccionCargarDocumentos: boolean = true;
 
   /**
     * Evento que se emite para cargar archivos.
@@ -151,7 +151,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   anoFormValido: boolean = false;
 
   /** Carga de progreso del archivo */
-  cargaEnProgreso: boolean = true; 
+  cargaEnProgreso: boolean = true;
 
   /**
    * @property {FormGroup} formGroup
@@ -460,6 +460,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.datosPasos.indice = this.indice;
     this.wizardComponent.atras();
     this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
+  }
+
+  onMensajeError(mensaje: string): void {
+    this.formularioAlertaError = mensaje;
+    this.esFormaValido = true;
   }
 
   guardarSolicitudCompleta(): void {

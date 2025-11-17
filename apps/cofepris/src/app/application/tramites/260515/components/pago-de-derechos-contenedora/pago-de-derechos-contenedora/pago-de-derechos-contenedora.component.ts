@@ -144,7 +144,7 @@ validarContenedor(): boolean {
     if (HASVALUE) {
       return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
     }
-    this.markFormUntouched(this.pagoDeDerechosComponent.pagoDerechosForm);
+    this.pagoDeDerechosComponent.pagoDerechosForm.markAsUntouched();
     return true;
   }
   return true;

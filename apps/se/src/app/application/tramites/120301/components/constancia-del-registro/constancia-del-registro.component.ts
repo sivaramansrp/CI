@@ -120,21 +120,20 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   enviada: boolean = false;
 
   /**
+ * @property {EventEmitter<string>} mensajeError - Emite mensajes de error al componente padre.
+ * EventEmitter que comunica al componente padre cuando ocurre un error en las operaciones.
+ * Se activa cuando hay errores en el guardado o validación para mostrar mensajes específicos.
+ */
+  @Output() mensajeError: EventEmitter<string> = new EventEmitter<string>();
+
+
+  /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
    * Formulario reactivo principal que contiene todos los controles necesarios para la captura
    * de información relacionada con la constancia del registro fitosanitario.
    * Incluye validaciones y manejo de estado para cada campo del formulario.
    */
   fitosanitarioForm!: FormGroup;
-
-  /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
-  public formularioAlertaError: string = '';
 
   /**
    * @property {boolean} esFormaValido
@@ -890,16 +889,23 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         else if (response?.codigo === 'SAT120301-018') {
-          this.formularioAlertaError = ERROR_FORMA_ALERT;
+          const MENSAJE_ERROR = response.error || response.mensaje || 'Error desconocido';
+          this.mensajeError.emit(MENSAJE_ERROR);
           this.esFormaValido = true;
           window.scrollTo(0, 0);
         }
         else {
+          const MENSAJE_ERROR = response?.mensaje || 'Error al obtener datos';
+          this.mensajeError.emit(MENSAJE_ERROR);
           console.error('Error al obtener datos:', response?.mensaje);
         }
       },
       error: (err) => {
+        const MENSAJE_ERROR = err.message || 'Error de conexión';
+        this.mensajeError.emit(MENSAJE_ERROR);
         console.error('Error en la guardado parcial:', err);
+        this.esFormaValido = true;
+        window.scrollTo(0, 0);
       }
     });
   }

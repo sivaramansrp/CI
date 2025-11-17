@@ -5,6 +5,9 @@ import { CommonModule } from '@angular/common';
 import { EliminacionModificacionComponent } from '../../../../shared/components/modificacion/modificacion.component';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
+import { Tramite80303Store } from '../../estados/tramite80303Store.store';
+
+import { Tramite80303State } from '../../estados/tramite80303Store.store';
 
 /**
  * Decorador que define un componente en Angular.
@@ -47,7 +50,11 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @description Datos relacionados con la modificación del trámite.
    */
   datosModificacion!: DatosModificacion;
-
+/**
+   * Estado de la solicitud del trámite 80301.
+   * @property {Solicitud80301State} solicitudState
+   */
+  solicitudState!: Tramite80303State;
   /**
    * Constructor del componente ModificacionComponent.
    *
@@ -59,6 +66,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   constructor(
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
     public tramite80303Querry: Tramite80303Query,
+    private tramite80303Store: Tramite80303Store,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -76,12 +84,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    *   al destruir el componente.
    */
   ngOnInit(): void {
-    this.obtenerModificacionFormDatos();
-
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'submanufacturerasTablaDatos',
-      '/80303/subManufacturerasTablaDatos.json'
-    );
+ this.loadDatosModificacion();
+     this.fetchEmpresasSubmanufacturerasTablaDatos('202734892'); 
 
     this.tramite80303Querry.selectTramiteState$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -89,23 +93,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         this.submanufacturerasTablaDatos = state.submanufacturerasTablaDatos;
       });
   }
-
-  /**
-   * Obtiene los datos del formulario de modificación.
-   *
-   * Este método utiliza el servicio `modificacionProgramaImmexBajaSubmanufactureraService`
-   * para obtener los datos del formulario desde un archivo JSON local.
-   * @returns {void}
-   */
-  obtenerModificacionFormDatos(): void {
-    this.modificacionProgramaImmexBajaSubmanufactureraService
-      .obtenerModificacionFormDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
-        this.datosModificacion = datos;
-      });
-  }
-
   /**
    * Alterna el valor de la columna "Estatus" de una empresa submanufacturera.
    *
@@ -125,6 +112,43 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         ? 'Activada'
         : 'Baja';
     this.cd.detectChanges();
+  }
+/**
+ * Fetches data for `configuracionEmpresasSubmanufacturerasTabla` using the API.
+ */
+fetchEmpresasSubmanufacturerasTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarEmpresaSubmanufacturera(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.submanufacturerasTablaDatos = response.datos; // Assign the `datos` array to the table data
+          console.log('Empresas Submanufactureras Datos:', this.submanufacturerasTablaDatos);
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+        
+      },
+      (error) => {
+        console.error('Error fetching Empresas Submanufactureras Datos:', error);
+      }
+    );
+}
+/**
+   * Método para cargar los datos de modificación desde el servicio.
+   * Asigna los datos obtenidos a la propiedad `datosModificacion`.
+   * @returns {void}
+   */
+  loadDatosModificacion(): void {
+    this.modificacionProgramaImmexBajaSubmanufactureraService
+      .getDatosModificacion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.datos) {
+          this.datosModificacion = respuesta.datos;
+        }
+      });
   }
 
   /**

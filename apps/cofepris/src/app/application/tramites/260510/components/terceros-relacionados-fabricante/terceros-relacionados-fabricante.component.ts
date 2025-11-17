@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constantes/permiso-pruebas-nutrientes.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
@@ -16,6 +16,8 @@ import { Tramite260510Store } from '../../../../shared/estados/stores/260510/tra
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+   /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
    /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.
    */
@@ -46,6 +48,7 @@ export class TercerosRelacionadosFabricanteComponent {
     if (event === 'proveedor') {
       this.store.setFormValidity('proveedorTablaValid', true);
     }
+    this.validarFormulario();
   }
 
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */

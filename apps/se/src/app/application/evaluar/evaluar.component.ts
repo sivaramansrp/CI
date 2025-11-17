@@ -1271,7 +1271,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
       fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
+      texto_dictamen: datosDictamen.antecedentesEditables ?? null,
+      criterios_dictaminacion: this.conformidadDictamen.texto_dictamen ?? null,
       ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
         id_solicitud: this.guardarDatos.id_solicitud ? Number(this.guardarDatos.id_solicitud) : undefined,
         calificacion_dictaminador_exportador: datosDictamen.clasificacionUE,
@@ -1347,8 +1348,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @param {any} datosDictamen - Datos del dictamen a guardar y mostrar.
    * @returns {void}
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  firmarMostrarDictamen(datosDictamen?: any): void {
+  firmarMostrarDictamen(datosDictamen?: DictamenForm): void {
 
     if (!datosDictamen) {
       return;
@@ -1361,7 +1361,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio ?? null,
       fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia ?? null,
-      texto_dictamen: this.conformidadDictamen.texto_dictamen ?? null,
+      texto_dictamen: datosDictamen.antecedentesEditables ?? null,
+      criterios_dictaminacion: this.conformidadDictamen.texto_dictamen ?? null,
       solicitante: {
         rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',

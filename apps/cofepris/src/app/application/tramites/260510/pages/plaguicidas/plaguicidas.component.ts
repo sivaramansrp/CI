@@ -30,6 +30,8 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent implements OnInit,OnDestroy{
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
   /**
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
@@ -134,6 +136,7 @@ constructor(
   ngOnInit(): void {
     this._query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+       this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -155,6 +158,7 @@ getValorIndice(e: AccionBoton): void {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+       this._store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

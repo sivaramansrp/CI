@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import {
   ConfiguracionVisibilidad,
   DEFAULT_CONFIGURACION_VISIBILIDAD,
@@ -20,6 +20,8 @@ import { Tramite260511Store } from '../../../../shared/estados/stores/260511/tra
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+   /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
   /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.
    */

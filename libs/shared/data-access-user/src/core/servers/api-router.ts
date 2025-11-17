@@ -1140,6 +1140,13 @@ export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: stri
  */
 export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;
 
+/**
+ * 
+ * @param TRAMITE 
+ * @param rfc 
+ * @returns 
+ */
+export const OPCIONES_PRELLENADO_SOLICITUD = (TRAMITE: number, rfc: string): string => `sat-t${TRAMITE}/solicitud/recientes/${rfc}`
 /*
   * API para obtener la tipo de empresa
  */
@@ -1150,6 +1157,10 @@ export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${
 
 /*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
 export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
+
+/** API para prellenadasDatos la solicitud del tramite generico.
+ */
+export const API_POST_PARCHE_PRELLENADAS = (TRAMITE: number, idSolicitud: number): string => `sat-t${TRAMITE}/solicitud/mostrar?idSolicitud=${idSolicitud}`;
 
 /**
  * API para obtener la solicitud por ID
@@ -1171,3 +1182,28 @@ export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): stri
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+/**
+ * API para obtener el catálogo de tipo de mecanismo de asignación por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/tipo-mecanismo-asignacion
+ */
+export const CATALOGO_TIPO_MECANISMO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-mecanismo-asignacion`;
+
+/**
+ * API para obtener el catálogo de nombres de producto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-producto
+ */
+export const CATALOGO_NOMBRE_PRODUCTO = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/nombre-producto`;
+
+/**
+ * API para obtener el catálogo de nombres de subproducto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-subproducto
+ */
+export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/nombre-subproducto`;
+
+
+/**
+ * API para obtener el catálogo de representación federal por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
+ */
+export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;

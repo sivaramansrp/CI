@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -68,6 +69,7 @@ import { ServicioDeFormularioService } from "../../services/forma-servicio/servi
 import { Shared2605Service } from "../../services/shared2605/shared2605.service";
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
+
 
 export interface RespuestaTabla {
   code: number;
@@ -294,28 +296,7 @@ nombresCampos:boolean = false;
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
-  estadoFisicoCatalogo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: "Selecciona un valor",
-    },
-    {
-      id: 2,
-      descripcion: "Sólido",
-    },
-    {
-      id: 3,
-      descripcion: "Líquido",
-    },
-    {
-      id: 4,
-      descripcion: "Gaseoso",
-    },
-    {
-      id: 5,
-      descripcion: "Otro",
-    },
-  ];
+  estadoFisicoCatalogo: Catalogo[] = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -360,6 +341,19 @@ nombresCampos:boolean = false;
       this.obtenerDataMercanciasDatos();
     }
   }
+
+  /**
+     * Método para obtener el catálogo de estado físico de mercancía.
+     */
+    obtenerEstadoFisicoCatalogo(): void {
+      if (this.idProcedimiento) {
+        this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((response) => {
+            this.estadoFisicoCatalogo = response.datos ?? [];
+          });
+      }
+    }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -471,7 +465,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       );
       this.domicilio.addControl(
         "licenciaSanitaria",
-        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+        this.fb.control(this.solicitudState?.licenciaSanitaria),
       );
     }
 
@@ -895,6 +889,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
+    this.obtenerEstadoFisicoCatalogo();
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
@@ -909,7 +904,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       nombreComercial: [""],
       nombreComun: [""],
       nombreCientifico: [""],
-      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         "",
         [
@@ -1004,6 +998,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       this.formMercancias.addControl(
         "paisDeProcedenciaDatos",
         this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+    if(this.tieneUsoEspecifico) {
+      this.formMercancias.addControl(
+        "usoEspecifico",
+        this.fb.control("", [Validators.required, Validators.maxLength(1000)]),
       );
     }
 
@@ -1648,6 +1649,14 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1662,17 +1671,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion)
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -2036,10 +2046,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
@@ -2138,9 +2148,40 @@ onConfirmacionModal(accion: boolean): void {
   'telefono',
   'aduanasEntradas'
 ] as (keyof typeof this.mostrarErrores)[];
-if (this.isAvisoLicenciaVisible) {
-  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
-}
+ if (this.isAvisoLicenciaVisible) {
+
+    const AVISOCONTROL = this.domicilio.get('avisoCheckbox');
+    const LICENCIACONTROL = this.domicilio.get('licenciaSanitaria');
+    const AVISO_CHECKED = AVISOCONTROL?.value;
+    const LICENCIA_VALOR = LICENCIACONTROL?.value;
+
+    if (AVISO_CHECKED) {
+      REQUIREDFIELDS.push('avisoCheckbox');
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      LICENCIACONTROL?.clearValidators();
+      LICENCIACONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else if(LICENCIA_VALOR){
+      REQUIREDFIELDS.push('licenciaSanitaria');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.clearValidators();
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else {
+      REQUIREDFIELDS.push('licenciaSanitaria', 'avisoCheckbox');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = true;
+      this.mostrarErrores.avisoCheckbox = true;
+      ISVALID = false;
+    }
+  }
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;

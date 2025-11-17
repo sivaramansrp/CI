@@ -14,15 +14,25 @@
     <div class="row">
         @switch (indice) {
         @case (1) {
-        <app-datos #pasoUnoRef></app-datos>
+        <app-datos #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-datos>
         } @case (2) {
-        <app-paso-dos></app-paso-dos>
+        <app-paso-carga-documento 
+          [idSolicitud]="guardarIdSolicitud"
+          [idTipoTRamite]="'260507'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
         } @case (3) {
-        <app-paso-tres></app-paso-tres>
+            <paso-firma [idSolicitud]="guardarIdSolicitud" [procedure]="260507" [procedureUrl]="'importacion-plafest/solicitud'"></paso-firma>
         }
-        }
+    }
     </div>
-    <btn-continuar [datos]="datosPasos" [dePadre]="true" (continuarEvento)="getValorIndice($event)">
+    <btn-continuar 
+        [datos]="datosPasos" 
+        [dePadre]="true"
+        (continuarEvento)="getValorIndice($event)">
     </btn-continuar>
     @if (indice === 1) {
     <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>

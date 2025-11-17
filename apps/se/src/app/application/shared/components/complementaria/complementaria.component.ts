@@ -14,7 +14,8 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input } from '@angular/core';
+
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -40,7 +41,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './complementaria.component.html',
   styleUrl: './complementaria.component.scss',
 })
-export class ComplementariaComponent<T> {
+export class ComplementariaComponent<T> implements OnChanges {
   /**
    * Número de procedimiento del trámite.
    * @property {number} procedimiento
@@ -127,15 +128,30 @@ export class ComplementariaComponent<T> {
    * @type {FormGroup}
    */
   certificionForm!: FormGroup;
-
+/**
+ * Certificación SAT proporcionada como entrada al componente.
+ */
+  @Input() certificacionSAT: string = '';
   /**
    * Constructor de la clase.
-   * Inicializa el formulario reactivo `certificionForm` con el valor "Si" y deshabilitado.
+   * Inicializa el formulario reactivo `certificacionForm` con el valor "Si" y deshabilitado.
    * @param {FormBuilder} fb - Instancia de `FormBuilder` utilizada para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
+      certificacion: [{ value: '', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
     });
   }
+  /**
+   * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * Actualiza el valor del campo `certificacion` en el formulario reactivo `certificionForm`
+   * con el valor de la propiedad de entrada `certificacionSAT`.
+   */
+  ngOnChanges(): void{
+    if (this.certificacionSAT) {
+      this.certificionForm.patchValue({
+        certificacion: this.certificacionSAT,
+      });
+    }
+}
 }
