@@ -1,4 +1,4 @@
-import { AnexoExportacion, AnexoImportacion, DatosContribuyente, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServicioImmex } from "../models/complementaria.model";
+import { AnexoExportacion, AnexoImportacion, DatosContribuyente, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServiciosImmex } from "../models/complementaria.model";
 import { Empresas, Plantas } from "../../../shared/models/complementaria.model";
 
 /**
@@ -53,42 +53,42 @@ export const CONFIGURACION_CONTRIBUYENTES_ACCIONISTAS = [
 export const CONFIGURACION_FEDERATARIOS = [
   {
     encabezado: 'Nombre',
-    clave: (ele: Federatario): string | undefined => ele.Nombre,
+    clave: (ele: Federatario): string | undefined => ele.nombreNotario,
     orden: 1,
   },
   {
     encabezado: 'Primer apellido',
-    clave: (ele: Federatario): string | undefined => ele.PrimerApellido,
+    clave: (ele: Federatario): string | undefined => ele.apellidoMaterno,
     orden: 2,
   },
   {
     encabezado: 'Segundo apellido',
-    clave: (ele: Federatario): string | undefined => ele.SegundoApellido,
+    clave: (ele: Federatario): string | undefined => ele.apellidoPaterno,
     orden: 3,
   },
   {
     encabezado: 'Número acta',
-    clave: (ele: Federatario): string | undefined => ele.NumeroActa,
+    clave: (ele: Federatario): string | undefined => ele.numeroActa,
     orden: 4,
   },
   {
     encabezado: 'Fecha acta',
-    clave: (ele: Federatario): string | undefined => ele.FechaActa,
+    clave: (ele: Federatario): string | undefined => ele.fechaActa,
     orden: 5,
   },
   {
     encabezado: 'Número notaría',
-    clave: (ele: Federatario): string | undefined => ele.NumeroNotaria,
+    clave: (ele: Federatario): string | undefined => ele.numeroNotaria,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Federatario): string | undefined => ele.MunicipioDelegacion,
+    clave: (ele: Federatario): string | undefined => ele.delegacionMunicipio,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Federatario): string | undefined => ele.EstadoDistrito,
+    clave: (ele: Federatario): string | undefined => ele.entidadFederativa,
     orden: 8,
   },
 ];
@@ -244,7 +244,7 @@ export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: Empresas): string | undefined => ele.entidadFederativa,
+    clave: (ele: Empresas): string | undefined => ele.estado,
     orden: 9,
   },
   {
@@ -356,22 +356,22 @@ export const CONFIGURACION_PLANTAS_MANUFACTURERAS = [
 export const CONFIGURACION_SERVICIOS_IMMEX = [
   {
     encabezado: 'Descripción del servicio',
-    clave: (ele: ServicioImmex): string | undefined => ele.descripcionServicio,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcion,
     orden: 1,
   },
   {
     encabezado: 'Tipo de servicio',
-    clave: (ele: ServicioImmex): string | undefined => ele.tipoServicio,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcionTipo,
     orden: 2,
   },
   {
     encabezado: 'Testado',
-    clave: (ele: ServicioImmex): string | undefined => ele.testado,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcionTestado,
     orden: 3,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: ServicioImmex): string | undefined => ele.estatus,
+    clave: (ele: ServiciosImmex): string | undefined => ele.desEstatus,
     orden: 4,
   },
 ];
@@ -472,5 +472,43 @@ export const CONFIGURACION_SENSIBLES = [
     encabezado: 'Unidad de medida tarifaria',
     clave: (ele: Sensible): string | undefined => ele.unidadMedida,
     orden: 4,
+  },
+];
+
+/**
+ * Constante que define los pasos para el proceso de exportación.
+ * Cada paso incluye un índice, título, y estados de activo y completado.
+ * @constant {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>} PASOS_EXPORTACION
+ */
+export const PASOS_EXPORTACION = [
+  {
+    /** Índice del paso. */
+    indice: 1,
+    /** Título del paso. */
+    titulo: 'Capturar solicitud',
+    /** Indica si el paso está activo. */
+    activo: true,
+    /** Indica si el paso está completado. */
+    completado: true,
+  },
+  {
+    /** Índice del paso. */
+    indice: 2,
+    /** Título del paso. */
+    titulo: 'Anexar requisitos',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
+  },
+  {
+    /** Índice del paso. */
+    indice: 3,
+    /** Título del paso. */
+    titulo: 'Firmar solicitud',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
   },
 ];

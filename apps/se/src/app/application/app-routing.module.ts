@@ -565,7 +565,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modificacion-programa-immex-baja-submanufacturera',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'

@@ -10,11 +10,11 @@ export interface Anexo {
   /**
    * Fracción arancelaria utilizada para exportación.
    */
-  fraccionArancelariaExportacion?: string;
+  claveProductoExportacion?: string;
   /**
    * Fracción arancelaria utilizada para importación.
    */
-  fraccionArancelariaImportacion?: string;
+  cveFraccion?: string;
   /**
    * Descripción adicional del anexo o la mercancía.
    */
@@ -26,7 +26,7 @@ export interface Anexo {
   /**
    * Fracción arancelaria numérica de la mercancía de importación.
    */
-  fraccionArancelariaDeLaMercanciaDeImportacion?: number;
+  fraccionPadre?: number;
   /**
    * Cantidad de mercancía asociada al anexo.
    */
@@ -38,38 +38,5 @@ export interface Anexo {
   /**
    * Unidad de medida correspondiente a la cantidad especificada.
    */
-  unidadMedida?: string;
-  /**
-   * Clave del producto de exportación asociado al anexo.
-   */
-  claveProductoExportacion?: number;
-  /**
-   * Fracción padre asociada al anexo.
-   */
-  fraccionPadre?: number;
-
-  /**
-   * Clave de fracción arancelaria asociada al anexo.
-   */
-  cveFraccion?: string;
-
-  /**
-   * Fracción arancelaria
-   */
-  fraccionArancelaria?: {
-    /**
-     * Descripción de la fracción arancelaria.
-     */
-    descripcion: string;
-  }
-
-  /**
-   * Complemento
-   */
-  complemento?: {
-    /**
-     * Descripción del complemento.
-     */
-    descripcion: string;
-  }
+unidadMedidaTarifaria?: string;
 }
