@@ -11,7 +11,8 @@
     }
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/bootstrap.ts"
   ],
   "include": [
     "src/**/*.ts"

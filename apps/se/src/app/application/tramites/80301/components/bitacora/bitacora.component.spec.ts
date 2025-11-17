@@ -4,7 +4,7 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { BitacoraComponent } from './bitacora.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 
 describe('BitacoraComponent', () => {
@@ -57,14 +57,11 @@ describe('BitacoraComponent', () => {
       valoresNuevos: 'mockValoresNuevos'
     }];
 
-    jest.spyOn(component.modificionService, 'obtenerBitacora').mockReturnValue(observableOf(mockData));
-  });
+    const mockResponse = {
+      mensaje: 'OK',
+      datos: mockData
+    };
 
-  it('should handle errors when fetching bitacora data', () => {
-    const toastrSpy = jest.spyOn(component.toastr, 'error');
-
-    jest.spyOn(component.modificionService, 'obtenerBitacora').mockReturnValue(
-      throwError(() => new Error('Simulated Error'))
-    );
+    jest.spyOn(component.solicitudService, 'obtenerBitacora').mockReturnValue(observableOf(mockResponse));
   });
 });

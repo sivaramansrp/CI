@@ -201,6 +201,9 @@ const STATE = this.solicitudState ?? {};
               apellidoPaterno: getValidDatos(DATOS.datos[0].apellidoPaterno) ? DATOS.datos[0].apellidoPaterno : '',
               apellidoMaterno: getValidDatos(DATOS.datos[0].apellidoMaterno) ? DATOS.datos[0].apellidoMaterno : '',
           });
+          this.setValoresStore(this.representante, 'nombre', 'setNombre');
+          this.setValoresStore(this.representante, 'apellidoPaterno', 'setApellidoPaterno');
+          this.setValoresStore(this.representante, 'apellidoMaterno', 'setApellidoMaterno');
         }
         else{
              this.mostrarErroresRepresentante.nombre = true;

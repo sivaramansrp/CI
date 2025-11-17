@@ -1,10 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-
-
+import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { TercerosRelacionados260507Component } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { Tramite260507Query } from '../../../../estados/queries/260507/tramite260507.query';
+import { Tramite260507Store } from '../../../../estados/tramites/260507/tramite260507.store';
 /**
  * Componente para gestionar el paso uno del trámite.
  */
@@ -14,7 +18,27 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
   styles: ``
 })
 export class DatosComponent implements OnInit, OnDestroy {
+/**
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   * @type {SolicitanteComponent}
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosSolicitudComponent', { static: false }) datosSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /** Referencia al componente 'TercerosRelacionadosFabricanteComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosFabricanteComponent', { static: false }) tercerosRelacionadosFabricanteComponent!: TercerosRelacionados260507Component;
+
+  /** Referencia al componente 'PagoDerechosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDeDerechosComponent;
+  
    /**
    * Índice de la pestaña seleccionada.
    */
@@ -60,8 +84,21 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+/**
+ * Indica si el componente de "Datos de la Solicitud" ha pasado su validación.
+ * Se utiliza para controlar el flujo del formulario o asistente (wizard) 
+ * antes de permitir avanzar al siguiente paso.
+ */
+ private isDatosDeLaSolicitudComponentValid: boolean = false;
+ /**
+ * Indica si el componente de "Terceros" es válido.
+ * Permite verificar que la información de terceros (personas, empresas, etc.)
+ * haya sido completada correctamente antes de continuar.
+ */
+  private isTercerosComponentValid: boolean = false;
 
-
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false; 
   /**
  * Constructor del componente PasoUnoComponent.
  *
@@ -77,6 +114,9 @@ export class DatosComponent implements OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
      private datosDomicilioLegalService: DatosDomicilioLegalService,
+         private pagoBancoService: PagoBancoService,
+       public store: Tramite260507Store,
+    public query: Tramite260507Query,
   ) { }
 
   /**
@@ -115,7 +155,23 @@ export class DatosComponent implements OnInit, OnDestroy {
         }
       });
   }
+/**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.query.getValue().formValidity?.datosEstablecimiento && 
+      this.query.getValue().formValidity?.domicilioEstablecimiento &&
+      this.query.getValue().formValidity?.manifiestos &&
+      this.query.getValue().formValidity?.representanteLegal ) ?? false;
+    this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
+      this.query.getValue().formValidity?.formuladorTablaValid &&
+      this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
 
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
+
+  }
   /**
    * @description
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.

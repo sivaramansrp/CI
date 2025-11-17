@@ -1,11 +1,16 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { Tramite260511Query } from '../../../../shared/estados/queries/260511/tramite260511.query';
+import { Tramite260511Store } from '../../../../shared/estados/stores/260511/tramite260511.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -15,12 +20,49 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+    /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('DatosSolicitudComponent', { static: false }) datosSolicitudComponent!: DatosSolicitudComponent;
 
+  /** Referencia al componente 'TercerosRelacionadosFabricanteComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('TercerosRelacionadosFabricanteComponent', { static: false }) tercerosRelacionadosFabricanteComponent!: TercerosRelacionadosFabricanteComponent;
+
+  /** Referencia al componente 'PagoDerechosComponent' en la plantilla.
+   * Proporciona acceso a sus métodos y propiedades.
+   */
+  @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDerechosComponent;
+  
+/**
+ * Indica si el componente de "Datos de la Solicitud" ha sido validado correctamente.
+ * Se utiliza para verificar que toda la información general de la solicitud
+ * esté completa antes de avanzar al siguiente paso del trámite.
+ */
+private isDatosDeLaSolicitudComponentValid: boolean = false;
+
+/**
+ * Indica si el componente de "Terceros" es válido.
+ * Permite confirmar que los datos correspondientes a terceros 
+ * (personas físicas, morales o representantes) estén correctos y completos.
+ */
+private isTercerosComponentValid: boolean = false;
+
+/**
+ * Indica si el componente de "Pago de Derechos" ha pasado su validación.
+ * Se utiliza para asegurar que la información relacionada con los pagos
+ * y comprobantes de derechos se haya capturado y validado correctamente.
+ */
+private isPagoDeDerechosComponentValid: boolean = false;
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
@@ -64,7 +106,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     private store: Tramite260511Store,
+    private query: Tramite260511Query,
   ) {}
 
   /**
@@ -116,7 +160,23 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
   }
+ /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.query.getValue().formValidity?.datosEstablecimiento && 
+      this.query.getValue().formValidity?.domicilioEstablecimiento &&
+      this.query.getValue().formValidity?.manifiestos &&
+      this.query.getValue().formValidity?.representanteLegal ) ?? false;
+    this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
+      this.query.getValue().formValidity?.formuladorTablaValid &&
+      this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
 
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
+
+  }
   /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.
