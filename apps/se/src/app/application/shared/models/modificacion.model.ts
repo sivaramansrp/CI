@@ -234,3 +234,36 @@ export interface EmpresaSubmanufacturera {
    */
   desEstatus: string;
 }
+
+/**
+ * Estructura que representa los datos de exportación e importación
+ * dentro del trámite de modificación del programa IMMEX.
+ * @interface ExportacionImportacionDatos
+ */
+export interface ExportacionImportacionDatos {
+  /**
+   * Clave del producto de exportación
+   */
+  claveProductoExportacion?: number;
+
+  /**
+   * Fracción arancelaria asociada al producto de exportación
+   */
+  fraccionArancelaria: {
+    /** Clave de la fracción arancelaria */
+    clave: string;
+
+    /** Descripción de la fracción arancelaria */
+    descripcion: string;
+  }
+
+  /**
+   * Fracción padre asociada al producto de exportación
+   */
+  fraccionPadre?: string;
+
+  /**
+   * Descripción del estado del producto de exportación
+   */
+  desEstatus: string;
+}
