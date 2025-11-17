@@ -5,10 +5,11 @@ import {
   ListaPasosWizard,
   Notificacion,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { PASOS, TITULOMENSAJE } from '../../constants/importacion-retorno-sanitario.enum';
 import { MENSAJE_DE_VALIDACION } from '../../../260212/constants/medicos-uso.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite260103State } from '../../estados/tramite260103Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
  * @component
@@ -34,6 +35,43 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+    public requiresPaymentData: boolean = false;
+      public confirmarSinPagoDeDerechos: number = 0;
+    /**
+   * @property {boolean} isSaltar
+   * @description
+   * Indica si se debe saltar al paso de firma. Controla la navegación
+   * directa al paso de firma en el wizard.
+   * @default false - No salta por defecto
+   */
+  isSaltar: boolean = false;
+
+    /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+    /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+    /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+    /**
+     * Evento que se emite para cargar archivos.
+     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+  
+  
+    /**
+     * @property {Tramite260201State} storeData
+     * @description Estado de la tienda para el trámite 260201.
+     */
+    storeData!: Tramite260103State;
   
     /**
    * @property {string} MENSAJE_DE_ERROR
@@ -201,6 +239,88 @@ export class ContenedorDePasosComponent {
         return this.pasos[2].titulo;
       default:
         return TITULOMENSAJE;
+    }
+  }
+    /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+    /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+  
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+    /**
+   * @method blancoObligatoria
+   * @description Método para manejar el evento de documentos obligatorios en blanco.
+   * Actualiza la bandera `isSaltar` basada en el estado recibido.
+   * @param {boolean} enBlanco - Indica si hay documentos obligatorios en blanco.
+   * @return {void}
+   */
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+    /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+    /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
+  }
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+  
+    /**
+     * Método para navegar a la siguiente sección del wizard.
+     * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+     * {void} No retorna ningún valor.
+     */
+    siguiente(): void {
+      // Aqui se hara la validacion de los documentos cargdados
+      this.wizardComponent.siguiente();
+      this.indice = this.wizardComponent.indiceActual + 1;
+      this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+    }
+ cerrarModal(value:boolean): void {
+    if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
     }
   }
 }

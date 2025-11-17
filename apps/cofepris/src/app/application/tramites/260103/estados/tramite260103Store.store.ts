@@ -15,6 +15,10 @@ import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
  * @description Estado que representa los datos de un trámite 260103, incluyendo tablas de datos, formularios y configuraciones.
  */
 export interface Tramite260103State {
+    /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
   /** Lista de destinatarios registrados */
   destinatarioTableDatos: Destinatario[];
 
@@ -63,6 +67,7 @@ export interface Tramite260103State {
  */
 export function createInitialState(): Tramite260103State {
   return {
+    idSolicitud:0,
     fabricanteTablaDatos: [],
     destinatarioTableDatos: [],
     datosSolicitudFormState: {
