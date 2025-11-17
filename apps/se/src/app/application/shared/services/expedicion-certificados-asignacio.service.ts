@@ -42,7 +42,7 @@ export class ExpedicionCertificadosAsignacionService {
 
 
   buscarAsignacion(id:string,body: Record<string, unknown>): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(`https://api-v30.cloud-ultrasist.net/api/sat-t120201/solicitud/buscar`, { body: body });
+    return this.httpService.post<JSONResponse>(`https://api-v30.cloud-ultrasist.net/api/sat-t${id}/solicitud/buscar`, { body: body });
   }
 
 
