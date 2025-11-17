@@ -26,38 +26,27 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {
-  FECHA_DE_IMPORTACION_PAGO,
-  FECHA_DE_PAGO,
-  PagoDerechosFormState
-} from '../../models/terceros-relacionados.model';
-import {
-  PagoDerechosState,
-  PagoDerechosStore
-} from '../../estados/stores/pago-de-derechos.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CommonModule } from '@angular/common';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
+
 
 export function importePagoValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
+  const VALUE = control.value;
 
   // Allow empty — required validator will handle emptiness
-  if (value === null || value === '') {
+  if (VALUE === null || VALUE === '') {
     return null;
   }
 
   // ✅ 1. Check if value is numeric
-  const numericRegex = /^[0-9.]+$/;
-  if (!numericRegex.test(value)) {
+  const NUMERIC_REGEX = /^[0-9.]+$/;
+  if (!NUMERIC_REGEX.test(VALUE)) {
     return { nonNumeric: true };
   }
 
   // ✅ 2. Check for valid format (max 15 digits and up to 2 decimals)
-  const decimalRegex = /^\d{1,15}(\.\d{1,2})?$/;
-  if (!decimalRegex.test(value)) {
+  const DECIMAL_REGEX = /^\d{1,15}(\.\d{1,2})?$/;
+  if (!DECIMAL_REGEX.test(VALUE)) {
     return { invalidDecimal: true };
   }
 
