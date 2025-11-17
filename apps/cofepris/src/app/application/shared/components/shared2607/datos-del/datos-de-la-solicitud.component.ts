@@ -1,51 +1,15 @@
-import {
-  ADUANA_DATA,
-  CLASIFICACION_PRODUCTO_DATA,
-  CLAVE_SCIAN_DATA,
-  DESCRIPCION_SCIAN_DATA,
-  ESPECIFICAR_DATA,
-  ESTADO_DATA,
-  REGIMEN_AL_QUE_DATA,
-  TIPO_PRODUCTO_DATA,
-} from '../../../constantes/catalogs.enum';
-
-import {
-  CONFIGURACION_COLUMNAS_LISTA_CLAVE,
-  CONFIGURACION_COLUMNAS_MERCANCIAS,
-  CONFIGURACION_COLUMNAS_SOLI,
-} from '../../../constantes/column-config.enum';
-import {
-  Catalogo,
-  InputFecha,
-  InputRadioComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  REGEX_CORREO_ELECTRONICO,
-  REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
-  REGEX_SOLO_DIGITOS,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
-import{ConsultaioQuery} from '@ng-mf/data-access-user';
-
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
+import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
+import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import {
-  Solicitud260702State,
-  Solicitud260702Store,
-} from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
@@ -289,7 +253,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
 
   /** Configuración de columnas para la lista de claves */
   listaClave = CONFIGURACION_COLUMNAS_LISTA_CLAVE;
-
+/**
+ * Indica si la opción de modificación está seleccionada.
+ */
+  isModificacionSelected = false;
   /** Inicialización del componente */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
@@ -306,6 +273,26 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
     }
   }
+
+  /**
+   * Maneja el cambio de selección en el botón de radio.
+   * @param event 
+   */
+  onRadioChange(event: string | number): void { 
+ /**
+  * Actualiza la propiedad `isModificacionSelected` basada en el valor seleccionado.
+  *   * - Si el valor seleccionado es 'modificacion', `isModificacionSelected` se establece en `true`.
+  *   * - Para cualquier otro valor, se establece en `false`.
+  */
+  const SELECTED_VALUE = String(event); 
+  const JUSTIFICATION_CTRL = this.datosDelTramiteRealizar.get('justification');
+
+  if (SELECTED_VALUE === 'modificacion') {
+    JUSTIFICATION_CTRL?.enable();
+  } else {
+    JUSTIFICATION_CTRL?.disable();
+  }
+}
 
   /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
@@ -428,7 +415,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
         justification: [
-          this.dataDeLaSolicitudState?.justification,
+          { value: this.dataDeLaSolicitudState?.justification ,
+            disabled: true
+          },
           [Validators.maxLength(2000)],
         ],
         denominacion: [
@@ -485,7 +474,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           this.dataDeLaSolicitudState?.regimenalque
         ],
         aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
-        rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, Validators.required],
+        rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, [Validators.required, Validators.maxLength(13)]],
         legalRazonSocial: [
           this.dataDeLaSolicitudState?.legalRazonSocial,
           Validators.required,

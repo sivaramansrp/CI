@@ -1,10 +1,3 @@
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BitacoraComponent } from './components/bitacora/bitacora.component';
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -15,16 +8,25 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BitacoraComponent } from './components/bitacora/bitacora.component';
+import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from './components/complementaria-immex/complementaria-immex.component';
 import { ModificacionComponent } from './components/modificacion/modificacion.component';
-import { ModificacionSolicitudeService } from './services/modificacion-solicitude.service';
-import { PasoDosComponent } from './pages/registro-modificacion-page/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/registro-modificacion-page/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/registro-modificacion-page/paso-uno/paso-uno.component';
+import { NgModule } from '@angular/core';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroModificacionPageComponent } from './pages/registro-modificacion-page/registro-modificacion-page.component';
 import { RegistroModificacionRoutingModule } from './registro-modificacion.routing.module';
+import { RegistroSolicitudComponent } from './components/registro-solicitud/registro-solicitud.component';
+import { RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Módulo para el registro y modificación del trámite 80301.
+ * Este módulo incluye todos los componentes, páginas y servicios necesarios
+ * para gestionar el proceso de registro y modificación del trámite.
+ * @module RegistroModificacionModule
+ */
 @NgModule({
   declarations: [],
   imports: [
@@ -35,7 +37,6 @@ import { RegistroModificacionRoutingModule } from './registro-modificacion.routi
     SolicitanteComponent,
     FirmaElectronicaComponent,
     ModificacionComponent,
-    PasoDosComponent,
     BtnContinuarComponent,
     FormsModule,
     WizardComponent,
@@ -47,10 +48,15 @@ import { RegistroModificacionRoutingModule } from './registro-modificacion.routi
     AnexarDocumentosComponent,
     RegistroModificacionPageComponent,
     PasoUnoComponent,
-    PasoTresComponent,
     BitacoraComponent,
+    RegistroSolicitudComponent
   ],
   exports: [],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [ToastrService],
 })
+
+/**
+ * Clase que representa el módulo de registro y modificación del trámite 80301.
+ * @class RegistroModificacionModule
+ */
 export class RegistroModificacionModule {}
