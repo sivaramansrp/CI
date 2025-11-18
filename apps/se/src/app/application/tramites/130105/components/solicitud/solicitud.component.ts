@@ -1,13 +1,14 @@
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { MostrarPartidas,Notificacion, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -62,6 +63,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para modificar las partidas de la mercancía.
    */
   modificarPartidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+  mostrarErroresPartidas = false;
+
+  /**
+     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+     */
+    @ViewChild(PartidasDeLaMercanciaComponent)
+    partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+
   /**
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
@@ -108,6 +122,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
   unidadCatalogo: Catalogo[] = [];
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+  mostrarErroresMercancia = false;
+
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
@@ -187,6 +207,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {MostrarPartidas[]}
    */
   mostrarPartidas: MostrarPartidas[] = [];
+
+  /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+
+   /**
+     * @descripcion Notificación para mostrar mensajes al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -585,6 +615,49 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.tramite130105Store.actualizarEstado({
           tableBodyData: this.tableBodyData
         })
+  }
+
+   /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+    ['cantidad', 'valorFacturaUSD', 'fraccion'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid || 
+      this.mercanciaForm.get('fraccion')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    if (!this.mercanciaForm.get('fraccion')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+
+    this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
   }
 
   /**
