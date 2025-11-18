@@ -205,6 +205,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if(this.esFormularioSoloLectura){
+            this.getMostrarPartidas();
+          }
         })
       )
       .subscribe();
@@ -230,7 +233,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.seccionState = data;
         this.tableBodyData = data.tableBodyData || [];
       });
-      this.getMostrarPartidas();
   }
 
   /**
