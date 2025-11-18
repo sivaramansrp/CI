@@ -403,7 +403,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       descripcionFraccionArancelaria: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
-       Validators.maxLength(200),
+        [Validators.required, Validators.maxLength(200)],
       ],
       cantidadUMT: [
         this.dataDeLaSolicitudState?.cantidadUMT,
