@@ -12,7 +12,15 @@
               formControlName="observaciones"
               id="justificacionId"
               (change)="setValoresStore(formulario,'observaciones')"
+              [ngClass]="isValid(formulario,'observaciones') ? 'required' : ''"
             ></textarea>
+            @if (formulario.get('observaciones')?.invalid && formulario.get('observaciones')?.touched) {
+              <div class="text-danger">
+                @if (formulario.get('observaciones')?.errors?.['required']) {
+                  <small>Este campo es obligatorio</small>
+                }
+              </div>
+            }
           </div>
         </div>
       </div>

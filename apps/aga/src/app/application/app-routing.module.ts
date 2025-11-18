@@ -290,6 +290,7 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'subsecuente/319/desistir',
     path: 'subsecuente/319/cancelar',
     loadChildren: () =>
       import(

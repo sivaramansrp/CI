@@ -84,7 +84,8 @@
                 Limpiar
               </button>
               <button type="button" name="buscar" id="buscar" class="btn btn-primary ms-2" (click)="agregarGrid()"
-                [disabled]="soloLectura">
+                [disabled]="!solicitudForm.get('datosGenerales.aduana')?.value || !solicitudForm.get('datosContenedor.inicialesContenedor')?.value ||
+                !solicitudForm.get('datosContenedor.numeroContenedor')?.value || soloLectura">
                 Buscar
               </button>
             </div>
@@ -95,13 +96,15 @@
         <div class="row mt-3">
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="contenedore.catalogos" formControlName="tipoContenedor" [label]="contenedore.labelNombre"
-              [required]="true" (change)="
+              [required]="true"
+              [markTouched]="solicitudForm.get('datosContenedor.tipoContenedor')?.touched??false" (change)="
                 setValoresStore(
                   datosContenedor,
                   'tipoContenedor',
                   'setTipoContenedor'
                 )
               " [isDisabled]="soloLectura"></app-catalogo-select>
+              
           </div>
           <div class="col-md-4 mt-3">
               <div class="form-group">
@@ -115,7 +118,7 @@
           <div class="col-md-8">
             <div class="form-group pull-right">
               <button type="button" name="agregar" id="agregar" class="btn btn-primary" (click)="agregarGrid()"
-                [disabled]="soloLectura">
+                [disabled]="!solicitudForm.get('datosContenedor.tipoContenedor')?.value || soloLectura">
                 Agregar
               </button>
             </div>

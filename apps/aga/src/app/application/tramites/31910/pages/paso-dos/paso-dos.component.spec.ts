@@ -1,25 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoTresComponent } from './paso-tres.component';
+import { PasoDosComponent } from './paso-dos.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoTresComponent', () => {
-  let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent,
-        ToastrModule.forRoot(),
-        HttpClientModule
-      ],
-      providers: [
-        ToastrService, 
-      ],
-      
+      imports: [PasoDosComponent, ToastrModule.forRoot(), HttpClientModule],
+      providers: [ToastrService],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoTresComponent);
+    fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

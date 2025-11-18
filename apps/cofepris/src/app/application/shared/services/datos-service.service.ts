@@ -13,6 +13,12 @@ import { DomicilioState, DomicilioStore } from '../estados/stores/domicilio.stor
 })
 export class DatosServiceService {
   /**
+   * Almacena el número o identificador del trámite (procedimiento) seleccionado o en curso.
+   * Puede ser utilizado para compartir el valor del trámite entre componentes o servicios.
+   * El tipo es 'any' para permitir flexibilidad en el tipo de dato almacenado.
+   */
+  public procedureNo: any;
+  /**
    * URL base del servidor principal.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
