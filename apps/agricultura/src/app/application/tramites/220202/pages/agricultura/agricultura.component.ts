@@ -288,6 +288,7 @@ export class AgriculturaComponent implements OnInit {
     this.agriculturaApiService
       .getAllDatosForma()
       .pipe(
+        takeUntil(this.destroyNotifier$),
         take(1), // solo la primera emisión
         map((datos) => this.crearPayload(datos)), // crear payload
         switchMap((payload) => {
