@@ -1671,12 +1671,23 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
   * @param apiResponse Respuesta de la API que contiene los datos del tercero.
   * @returns Objeto con los campos mapeados para el formulario.
   */
- static mapApiResponseToForm(apiResponse: any): Record<string, unknown> {
-   const CONTRIBUYENTE = apiResponse?.contribuyente || {};
-   const DOMICILIO = CONTRIBUYENTE?.domicilio || {};
+ static mapApiResponseToForm(apiResponse: Record<string, unknown>): Record<string, unknown> {
+   const CONTRIBUYENTE: unknown = apiResponse?.['contribuyente'] || {};
+   const DOMICILIO =
+     typeof CONTRIBUYENTE === 'object' && CONTRIBUYENTE !== null && 'domicilio' in CONTRIBUYENTE
+       ? (CONTRIBUYENTE as { domicilio?: unknown }).domicilio || {}
+       : {};
 
    return {
-     ...TercerosRelacionadosComponent.mapPersonFields(apiResponse, CONTRIBUYENTE),
+     ...TercerosRelacionadosComponent.mapPersonFields(apiResponse, CONTRIBUYENTE as {
+       curp?: string;
+       nombre?: string;
+       apellido_paterno?: string;
+       apellido_materno?: string;
+       razon_social?: string;
+       telefono?: string;
+       correo_electronico?: string;
+     }),
      ...TercerosRelacionadosComponent.mapAddressFields(DOMICILIO),
      lada: '',
      extranjeroCodigo: '',
@@ -1693,15 +1704,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
   * @param CONTRIBUYENTE Objeto que contiene los datos del contribuyente.
   * @returns Objeto con los campos personales mapeados.
   */
-  private static mapPersonFields(apiResponse: any, CONTRIBUYENTE: any): Record<string, unknown> {
+  private static mapPersonFields(
+    apiResponse: { curp?: string; nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string } = {},
+    CONTRIBUYENTE: { curp?: string; nombre?: string; apellido_paterno?: string; apellido_materno?: string; razon_social?: string; telefono?: string; correo_electronico?: string } = {}
+  ): Record<string, unknown> {
     return {
-      curp: apiResponse?.curp ?? CONTRIBUYENTE?.curp ?? '',
-      nombre: apiResponse?.nombre ?? CONTRIBUYENTE?.nombre ?? '',
-      primerApellido: apiResponse?.apellidoPaterno ?? CONTRIBUYENTE?.apellido_paterno ?? '',
-      segundoApellido: apiResponse?.apellidoMaterno ?? CONTRIBUYENTE?.apellido_materno ?? '',
-      denominacionRazonSocial: CONTRIBUYENTE?.razon_social ?? '',
-      telefono: CONTRIBUYENTE?.telefono ?? '',
-      correoElectronico: CONTRIBUYENTE?.correo_electronico ?? '',
+      curp: apiResponse.curp ?? CONTRIBUYENTE.curp ?? '',
+      nombre: apiResponse.nombre ?? CONTRIBUYENTE.nombre ?? '',
+      primerApellido: apiResponse.apellidoPaterno ?? CONTRIBUYENTE.apellido_paterno ?? '',
+      segundoApellido: apiResponse.apellidoMaterno ?? CONTRIBUYENTE.apellido_materno ?? '',
+      denominacionRazonSocial: CONTRIBUYENTE.razon_social ?? '',
+      telefono: CONTRIBUYENTE.telefono ?? '',
+      correoElectronico: CONTRIBUYENTE.correo_electronico ?? '',
     };
   }
 
@@ -1711,7 +1725,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    * @param DOMICILIO Objeto que contiene los datos de la dirección.
    * @returns Objeto con los campos de dirección mapeados.
    */
-  private static mapAddressFields(DOMICILIO: any): Record<string, unknown> {
+  private static mapAddressFields(DOMICILIO: {
+    pais?: { nombre?: string };
+    entidad_federativa?: { nombre?: string };
+    delegacion_municipio?: { nombre?: string };
+    localidad?: { nombre?: string };
+    cp?: string;
+    colonia?: { nombre?: string };
+    calle?: string;
+    num_exterior?: string;
+    num_interior?: string;
+  } = {}): Record<string, unknown> {
     return {
       pais: DOMICILIO?.pais?.nombre ?? '',
       estadoLocalidad: DOMICILIO?.entidad_federativa?.nombre ?? '',
