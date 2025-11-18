@@ -162,8 +162,53 @@ export class PasoDatosComponent implements OnInit, OnDestroy {
       const CONSTRUYE_SOLICITUD_PAYLOAD:  SolicitudActualizarRequestModel =
         this.construyeSolicitudPayload();
      this.guardarSolicitudService
-        .postActualizarSolicitud(this.guardarDatos.procedureId, this.guardarDatos.id_solicitud, CONSTRUYE_SOLICITUD_PAYLOAD)
-        .pipe(
+        .postActualizarSolicitud(this.guardarDatos.procedureId, this.guardarDatos.id_solicitud, CONSTRUYE_SOLICITUD_PAYLOAD).pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe({
+          next: (response) => {
+            if (response.codigo === '00') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.EXITO,
+                modo: 'action',
+                titulo: 'Actualización de solicitud.',      
+                mensaje:
+                response.mensaje,
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: 'Error al actualizar la solicitud.',
+                mensaje:
+                response.mensaje,
+                cerrar: false,  
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          },  
+          error: () => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr', 
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al actualizar la solicitud.',
+              mensaje:
+              'Ocurrió un error al actualizar la solicitud. Por favor, inténtelo de nuevo más tarde.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          },
+        });
+        
+       /* .pipe(
           map((response) => {
             if (response.codigo === '00') {
              window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -186,7 +231,7 @@ export class PasoDatosComponent implements OnInit, OnDestroy {
           catchError(() => of(false)),
   
           takeUntil(this.destroyNotifier$)
-        );
+        );*/
     }
 
     /**

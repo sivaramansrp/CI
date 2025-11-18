@@ -704,7 +704,7 @@ export class SolicitudComponent
     // Actualiza el formulario
     this.FormSolicitud.patchValue({
       folioSolicitud: this.folioSolicitudGuardada,
-      tipoSolicitud: data.tipo_servicio ?? null,
+      tipoSolicitud: data.tipo_servicio.cve_tipo_servicio ?? null,
       descripcionTipoSolicitud: '',
       datosImportadorExportador: {
         RFCImpExp: data.importador_exportador?.rfc ?? null,
@@ -762,6 +762,7 @@ export class SolicitudComponent
 
     // Actualiza el store con los datos consultados usando los setters correctos
     if (data.importador_exportador) {
+      this.tramite5701Store.setTipoSolicitud(this.tipoSolicitudSeleccionada);
       this.tramite5701Store.setRFCImportadorExportador(data.importador_exportador.rfc ?? '');
       this.tramite5701Store.setNombre(data.importador_exportador.nombre ?? '');
       this.tramite5701Store.setDescripcionNumeroRegistro(data.importador_exportador.desc_numero_registro ?? '');
