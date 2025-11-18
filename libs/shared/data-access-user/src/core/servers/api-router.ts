@@ -1209,8 +1209,14 @@ export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${T
  * API para obtener el catálogo de representación federal por trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
  */
-export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
 
+export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
+/*
+ * API para obtener el catálogo de enum estado físico mercancía
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t90202/catalogo/sectores
+ */
+
+export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/sectores`;
 /**
  * Genera la ruta de la API para obtener el catálogo de años de oficio de asignación,
  * utilizando el identificador del trámite proporcionado.
