@@ -1,5 +1,5 @@
-import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_CUPOS_DISPONIBLES, API_BUSCAR_DATOS_GRID, API_BUSCAR_DETALLE_DEL_PERMISO_DATOS, API_BUSCAR_TERCIARIZADAS, API_OBTENER_CERTIFICADOS_DISPONIBLES } from '../../core/server/api-router';
-import { CuposDisponiblesBuscarPayload, CuposDisponiblesBuscarResponse, ObtenerCertificadosDisponiblesPayload, ObtenerCertificadosDisponiblesResponse } from '../models/cupos-disponibles.model';
+import { API_BUSCAR_CANCELACIONES_GRID, API_BUSCAR_CUPOS_DISPONIBLES, API_BUSCAR_DATOS_GRID, API_BUSCAR_DETALLE_DEL_PERMISO_DATOS, API_BUSCAR_TERCIARIZADAS, API_OBTENER_CERTIFICADOS_DISPONIBLES, API_OBTENER_DETALLE_SOLICITUD } from '../../core/server/api-router';
+import { CuposDisponiblesBuscarPayload, CuposDisponiblesBuscarResponse, DetalleSolicitudBuscarPayload, DetalleSolicitudBuscarResponse, ObtenerCertificadosDisponiblesPayload, ObtenerCertificadosDisponiblesResponse } from '../models/cupos-disponibles.model';
 import { DetalleDelBuscarPayload, DetalleDelBuscarResponse } from '../models/detalleDelPermiso.model';
 import { EmpresasNacionalesResponse, ServicioDtosKey, ServicioItemResponse, ServiciosAutorizadosTablePayload, ServiciosEmpresasNacionalesPayload, ServiciosImmexTablePayload } from '../models/modelo-interface.model';
 import { PlantasDisponiblesPayload, PlantasDisponiblesResponse } from '../models/modelo-interface.model';
@@ -111,7 +111,7 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
   /**
    * Obtiene los certificados disponibles para el trámite especificado.
    * @param tramite Identificador del trámite.
-   * @param PAYLOAD Datos necesarios para obtener los certificados disponibles.
+   * @param PAYLOAD Datos necesarios para obtener los certificaObtenerCertificadosDisponiblesPayloaddos disponibles.
    * @returns Observable con la respuesta del servidor que contiene los certificados disponibles.
    */
   obtenerCertificadosDisponibles(
@@ -120,6 +120,25 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
   ): Observable<BaseResponse<ObtenerCertificadosDisponiblesResponse[]>> {
     const ENDPOINT = `${this.host}${API_OBTENER_CERTIFICADOS_DISPONIBLES(tramite.toString())}`;
     return this.http.post<BaseResponse<ObtenerCertificadosDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
+  }
+
+  /**
+   * @method obtenerDetalleSolicitud
+   * @description
+   * Realiza una petición HTTP POST para obtener el detalle de una solicitud específica según el trámite proporcionado.
+   * 
+   * @param {string} tramite - Identificador del trámite para el cual se requiere obtener el detalle de la solicitud.
+   * @param {DetalleSolicitudBuscarPayload} PAYLOAD - Objeto con los parámetros necesarios para buscar el detalle de la solicitud.
+   * @returns {Observable<BaseResponse<DetalleSolicitudBuscarResponse[]>>} Observable que emite la respuesta base con un arreglo de detalles de la solicitud.
+   * 
+   * @memberof ServiciosService
+   */
+  obtenerDetalleSolicitud(
+    tramite: string,
+    PAYLOAD: DetalleSolicitudBuscarPayload
+  ): Observable<BaseResponse<DetalleSolicitudBuscarResponse[]>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_DETALLE_SOLICITUD(tramite.toString())}`;
+    return this.http.post<BaseResponse<DetalleSolicitudBuscarResponse[]>>(ENDPOINT, PAYLOAD);
   }
 
   /**

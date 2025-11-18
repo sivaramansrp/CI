@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { ConfiguracionItem } from '../../models/detalle';
+import { ConfiguracionCertificados } from '../../models/detalle';
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { Injectable } from '@angular/core';
 /**
@@ -16,7 +16,7 @@ export interface Solicitud140103State {
   representacion: string;
   cantidad: string;
   cancelacion: Cupo[];
-  certificados: ConfiguracionItem[];
+  certificados: ConfiguracionCertificados[];
   idSolicitudState: number;
 }
 
@@ -131,7 +131,7 @@ export class Solicitud140103Store extends Store<Solicitud140103State> {
    * Actualiza el estado con los certificados configurados.
    * @param certificados Lista de elementos de configuración de certificados
    */
-  public setCertificados(certificados: ConfiguracionItem[]): void {
+  public setCertificados(certificados: ConfiguracionCertificados[]): void {
     this.update((state) => ({
       ...state,
       certificados,

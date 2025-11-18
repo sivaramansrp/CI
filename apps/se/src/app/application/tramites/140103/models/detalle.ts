@@ -18,14 +18,24 @@ export interface Cupos {
  * estado, fabricante, importador, unidades y montos económicos asociados.
  * Funciona como contrato de datos para validar y gestionar la información.
  */
-export interface ConfiguracionItem {
-  folioOficioCertificado: string;
-  nombreRazonSocial: string;
+export interface ConfiguracionCertificados {
+  idExpedicion: number;
+  numCertificado: number;
+  rfc: string;
+  denominacion: string;
+  numFolioOficio: string;
+  numFolioTramite: string | null;
   estado: string;
+  estadoCancelacion: number;
+  montoAsignado: number;
+  montoDisponible: number;
+  montoExpedido: number;
+  montoCancelado: number;
+  representacionFederal: string;
+  claveRepresentacionFederal: string;
+  factorConversion: number;
+  estadoTransmision: string | null;
+  montoEjercidoCBP: number;
   fabricante: string;
   importador: string;
-  unidadPrimaria: number;
-  montoExpediente: number;
-  montocancelar: number;
-  montoutilizado: number;
 }

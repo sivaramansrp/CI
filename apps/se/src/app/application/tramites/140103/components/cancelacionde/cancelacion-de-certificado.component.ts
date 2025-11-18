@@ -1,5 +1,6 @@
 import { Catalogo, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CuposDisponiblesBuscarResponse, DetalleSolicitudBuscarResponse, ObtenerCertificadosDisponiblesResponse } from '../../../../shared/models/cupos-disponibles.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud140103State, Solicitud140103Store } from '../../estados/store/solicitud140103.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -8,7 +9,6 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CatalogoServices } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { CuposDisponiblesBuscarResponse } from '../../../../shared/models/cupos-disponibles.model';
 import { NUEVO_CUPOS } from '../../constants/detalle.enum';
 import { ServiciosService } from '../../../../shared/services/servicios.service';
 import { Solicitud140103Query } from '../../estados/query/solicitud140103.query';
@@ -41,14 +41,13 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    */
   CuposDisponiblesDatos: CuposDisponiblesBuscarResponse[] = [];
 
-  CertificadosDisponiblesDatos: CuposDisponiblesBuscarResponse[] = [];
+  CertificadosDisponiblesDatos: ObtenerCertificadosDisponiblesResponse[] = [];
 
-  CertificadosCancelarDatos: CuposDisponiblesBuscarResponse[] = [];
+  CertificadosCancelarDatos: ObtenerCertificadosDisponiblesResponse[] = [];
 
   selectedCuposDisponibles: CuposDisponiblesBuscarResponse | null = null;
 
-  selectedCertificados: CuposDisponiblesBuscarResponse | null = null;
-
+  selectedCertificados: ObtenerCertificadosDisponiblesResponse | null = null;
   mostrarCertificadosCancelar :boolean = false;
 
   /**
@@ -401,6 +400,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     if (this.selectedCuposDisponibles) {
       this.mostrarCertificadosCancelar = true;
       this.obtenerCertificadosDisponiblesDatos();
+      this.obtenerDetalleSolicitud();
     }
   }
 
@@ -461,35 +461,59 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
     if (REGIMEN_CONTROL?.value && MECANISMO_CONTROL?.value) {
       const PAYLOAD = {
-        rfc_solicitante: 'AFC000526BJ2',
-        cupo_disponible: {
-          nombreProducto: this.cancelacionForm.get('producto')?.value,
-          nombreSubproducto: this.cancelacionForm.get('subproducto')?.value,
-          mecanismoAsignacion: MECANISMO_CONTROL?.value,
-          claveRegimen: REGIMEN_CONTROL.value,
-          idTratadoAcuerdo: this.cancelacionForm.get('tratado')?.value,
-          claveRepresentacionFederal:
-            this.cancelacionForm.get('representacion')?.value,
+        rfc: "AFC000526BJ2",
+        mecanismo_asignacion: {
+          idMecanismoAsignacion: MECANISMO_CONTROL?.value,
+          ideTipoMecAsignacion: this.cancelacionForm.get('mecanismo')?.value,
+          cupo: {
+        regimen: REGIMEN_CONTROL.value,
+        ideTipoCupo: this.cancelacionForm.get('producto')?.value,
+        cveUnidadMedidaOficialCupo: this.cancelacionForm.get('subproducto')?.value,
+          },
         },
       };
       this.serviciosService
-        .obtenerCuposDisponibles(this.tramiteId, PAYLOAD)
+        .obtenerCertificadosDisponibles(this.tramiteId, PAYLOAD)
         .pipe(
           map(
-            (data: BaseResponse<CuposDisponiblesBuscarResponse[]>) =>
+            (data: BaseResponse<ObtenerCertificadosDisponiblesResponse[]>) =>
               data.datos ?? []
           )
         )
         .subscribe({
-          next: (response: CuposDisponiblesBuscarResponse[]) => {
-            this.CuposDisponiblesDatos = response;
+          next: (response: ObtenerCertificadosDisponiblesResponse[]) => {
+            this.CertificadosDisponiblesDatos = response;
           },
           error: (err) => {
-            console.error('Error al obtener cupos disponibles:', err);
+            console.error('Error al obtener certificados disponibles:', err);
           },
         });
     }
   }
+
+obtenerDetalleSolicitud(): void {
+  const PAYLOAD = {
+    rfc: "AFC000526BJ2",
+    id_mecanismo_asignacion: this.cancelacionForm.get('mecanismo')?.value,
+  };
+
+  this.serviciosService
+    .obtenerDetalleSolicitud(this.tramiteId, PAYLOAD)
+    .pipe(
+      map(
+        (data: BaseResponse<DetalleSolicitudBuscarResponse[]>) =>
+          data.datos ?? []
+      )
+    )
+    .subscribe({
+      next: (response: DetalleSolicitudBuscarResponse[]) => {
+        // Procesar la respuesta del detalle de la solicitud aquí si es necesario
+      },
+      error: (err) => {
+        console.error('Error al obtener el detalle de la solicitud:', err);
+      },
+    });
+}
 
   /**
    * Verifica si el formulario es válido para proceder con la operación.

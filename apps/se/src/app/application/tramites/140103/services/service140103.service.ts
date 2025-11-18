@@ -18,13 +18,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Solicitud140103Service {
+  /** Host base para las peticiones HTTP*/
   host: string;
   /** URL base del servidor para servicios backend */
   urlServer = ENVIRONMENT.URL_SERVER;
-
   /** URL base para obtener catálogos JSON auxiliares */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
-
   /**
    * Constructor del servicio que inyecta HttpClient y Tramite140103Store.
    * @param http Cliente HTTP para realizar peticiones REST.
@@ -64,18 +63,6 @@ export class Solicitud140103Service {
     }
     this.solicitud140103Store.setCantidad(DATOS.cantidad);
   }
-
-  /**
-   * Obtiene los datos de registro para la toma de muestras de mercancías desde un archivo JSON.
-   *
-   * @returns Observable con el estado de la solicitud 140103.
-   */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud140103State> {
-    return this.http.get<Solicitud140103State>(
-      'assets/json/140103/cancelacion-de-cupo.json'
-    );
-  }
-
   /*
    * Guarda los datos de la solicitud.
    * @param {number} tramite - El ID del trámite.
