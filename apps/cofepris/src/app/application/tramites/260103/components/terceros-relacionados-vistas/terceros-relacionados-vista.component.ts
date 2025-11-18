@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -36,7 +38,9 @@ import { ViewChild } from '@angular/core';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.css',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
+export class TercerosRelacionadosVistaComponent 
+
+  {
   /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
@@ -214,8 +218,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @throws {Error} Puede lanzar errores si hay problemas con las suscripciones
    * a los observables del store.
    */
-  ngOnInit(): void {
-  }
 
   /**
    * @method addFabricantes

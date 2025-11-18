@@ -336,12 +336,6 @@ private setupEditMode(): void {
         }
         
         if (claveMunicipio) {
-          this.subscription.add(this.catalogoServices.localidadesCatalogo(this.tramiteID, claveMunicipio).pipe(
-            takeUntil(this.unsubscribe$)
-          ).subscribe((localidadesData) => {
-            const LOCALIDADES_DATOS = localidadesData.datos as Catalogo[];
-            this.localidadesDatos = LOCALIDADES_DATOS;
-          }));
 
           // Load colonias
           this.subscription.add(this.catalogoServices.coloniasCatalogo(this.tramiteID, claveMunicipio).pipe(
