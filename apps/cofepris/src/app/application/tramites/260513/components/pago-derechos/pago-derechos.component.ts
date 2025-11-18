@@ -25,5 +25,11 @@ export class PagoDerechosComponent {
       public pagoDerechos!: PagoDerechosFormState;
   
       formularioDeshabilitado: boolean = true;
+
+       validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
     
 }

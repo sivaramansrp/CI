@@ -12,7 +12,7 @@
       <app-tabla-dinamica
         [configuracionTabla]="configuracionTablaDestinatarioFinal"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
-        [datos]="destinatarioDatos"
+        [datos]="tableData"
         (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
@@ -23,28 +23,25 @@
       <div class="pull-right">
          <button
             *ngIf="selectedRows.size > 0"
-            class="btn btn-default"
-              class="btn btn-default 3"
-              type="button"
-              (click)="onEliminar()"
-
-            >
+            class="btn btn-danger"
+            type="button"
+            (click)="onEliminar()">
               Eliminar
             </button>
             <button
             *ngIf="selectedRows.size === 1"
               type="button"
-              class="btn btn-default btn-space ms-3"
-              (click)="openModificarMercancias()"  
-            >
+              class="btn btn-default mx-3"
+              (click)="openModificarMercancias()">
               Modificar
             </button>
         <button
           type="button"
           name="agregarMercancias"
-          class="btn btn-primary ms-2"
+          class="btn btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregar"
+          (click)="abrirFormulario()"
           [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
@@ -52,6 +49,14 @@
     </div>
   </div>
 
+  @if (nuevaNotificacion) {
+    <section>
+      <lib-notificaciones 
+        [notificacionInput]="nuevaNotificacion" 
+        (confirmacionModal)="eliminarDestinatario($event)">
+      </lib-notificaciones>
+    </section>
+  }
 
 <div #modalRef class="modal fade test-modal" id="modalAgregar" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-fullscreen">
@@ -59,7 +64,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="container mt-5">
-            <ng-titulo titulo="Agregar destinatario (destino final)"> </ng-titulo>
+            <ng-titulo [titulo]="modoEdicion ? 'Modificar destinatario (destino final)' : 'Agregar destinatario (destino final)'"></ng-titulo>
             <h4>Datos generales</h4>
             <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
               <div class="d-flex justify-content-center">
@@ -67,13 +72,14 @@
                   <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                   <app-input-radio 
                   [radioOptions]="tipoPersonaRadioOptions" 
-                  [selectedValue]="tipoDePublicos" 
                   (valueChange)="setTipoPersona($event)" 
+                  [showTooltip]="true"
                   formControlName="tipoPersona" >
                 </app-input-radio>
               </div>
               </div>
-              @if (selectedTipoPersona === TipoPersonaEnum.FISICA) {
+              @if (destinatarioForm.get('tipoPersona')?.value === TipoPersonaEnum.FISICA || !destinatarioForm.get('tipoPersona')?.value) {
+              <label class="form-label text-start fs-2">Datos personales</label>
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="nombre">Nombre(s)*:</label>
@@ -112,7 +118,7 @@
                   </div>
                 </div>
               </div>
-              } @if (selectedTipoPersona === TipoPersonaEnum.MORAL) {
+              } @if (destinatarioForm.get('tipoPersona')?.value === TipoPersonaEnum.MORAL || !destinatarioForm.get('tipoPersona')?.value) {
               <div class="row">
                 <div class="col-md-8 mb-3">
                   <label class="form-label" for="denominacion">Denominación/razón social*:</label>
@@ -129,7 +135,7 @@
                 </div>
               </div>
               }
-              <h4>Domicilio</h4> 
+              <h4 class="mt-5">Domicilio</h4> 
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <app-catalogo-select 
@@ -138,6 +144,7 @@
                   [catalogo]="paisData.catalogos" 
                   [label]="'Pais'"
                     [required]="true"
+                    [isDisabled]="!!destinatarioForm.get('pais')?.disabled"
                     (change)="setValoresStore(destinatarioForm, 'pais')"
                     ></app-catalogo-select>
                 </div>
@@ -147,7 +154,7 @@
                   (change)="setValoresStore(destinatarioForm, 'estado')"/>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label class="form-label" for="codigopostal">Código postal o equivalente:</label>
+                  <label class="form-label" for="codigopostal">Código postal o equivalente*:</label>
                   <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
                      (change)="setValoresStore(destinatarioForm, 'codigopostal')" />
                 </div>
@@ -180,7 +187,7 @@
               </div>    
               <div class="row">
                   <div class="col-md-4">
-                      <label class="form-label" for="numerointerior">Número interior*:</label>
+                      <label class="form-label" for="numerointerior">Número interior:</label>
                       <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior" [maxlength]="55"
                        (change)="setValoresStore(destinatarioForm, 'numeroInterior')"/>
                      
@@ -209,14 +216,12 @@
                       title="ejemplo@dominio.com"
                     ></i>
                   </label>
-                  <div class="input-group">
                   <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico" [maxlength]="320"
                   (change)="setValoresStore(destinatarioForm, 'correoElectronico')"/>
                   <div *ngIf="esInvalido('correoElectronico')" class="text-danger">
                     <small *ngIf="destinatarioForm.controls['correoElectronico'].errors?.['pattern']">
                     Por favor, escribe una dirección de correo válida
                     </small>
-                  </div>
                   </div>
                 </div>
               </div>
@@ -229,7 +234,7 @@
                   class="btn btn-primary cancel me-2"
                   data-bs-dismiss="modal">Cancelar</button>
               <button class="btn btn-danger me-2" type="button" (click)="limpiarFormulario()" >Limpiar</button>
-              <button class="btn btn-primary me-2" type="button" (click)="onGuardar()">Guardar</button>
+              <button class="btn btn-primary me-2" type="submit">Guardar</button>
             </div>
           </div>
             </form>

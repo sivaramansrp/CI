@@ -4,7 +4,7 @@ import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Firma
 import { EnmiendaPermisoSanitarioComponent } from './pages/enmienda-permiso-sanitario/enmienda-permiso-sanitario.component';
 
 import { Datos260905Component } from './pages/datos-260905/datos-260905.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
@@ -21,11 +21,13 @@ import { EnmiendaPermisoSanitarioRoutingModule } from './enmienda-permiso-sanita
 import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 
 import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
+import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
-import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
-
-import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+import {TercerosRelacionadosVistaComponent} from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+import { PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 
 
 @NgModule({
@@ -44,11 +46,13 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
     PagoDeDerechosBancoComponent,
     DatosDelSolicitudModificacionComponent,
     TramitesAsociadosSeccionComponent,
-    TercerosRelacionadosFabricanteComponent,
-    PagoDeDerechosEntradaComponent,
     FirmaElectronicaComponent,
     AnexarDocumentosComponent, 
     AlertComponent,
+    RepresentanteLegalComponent,
+    TercerosRelacionadosVistaComponent,
+    PagoDeDerechosContenedoraComponent,
+    ManifiestosComponent
   ],
   providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })

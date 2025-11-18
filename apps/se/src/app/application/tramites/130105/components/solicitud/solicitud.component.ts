@@ -1,13 +1,14 @@
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
-import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { MostrarPartidas,Notificacion, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionVehiculosUsadosDonacionService } from '../../services/importacion-vehiculos-usados-donacion.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -62,6 +63,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para modificar las partidas de la mercancía.
    */
   modificarPartidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+  mostrarErroresPartidas = false;
+
+  /**
+     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+     */
+    @ViewChild(PartidasDeLaMercanciaComponent)
+    partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+
   /**
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
@@ -108,6 +122,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
   unidadCatalogo: Catalogo[] = [];
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+  mostrarErroresMercancia = false;
+
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
@@ -188,6 +208,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   mostrarPartidas: MostrarPartidas[] = [];
 
+  /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+
+   /**
+     * @descripcion Notificación para mostrar mensajes al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
+
   /**
    * Constructor del componente.
    */
@@ -205,6 +235,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if(this.esFormularioSoloLectura){
+            this.getMostrarPartidas();
+          }
         })
       )
       .subscribe();
@@ -222,6 +255,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
+      });
+
+      this.tramite130105Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.seccionState = data;
+        this.tableBodyData = data.tableBodyData || [];
       });
   }
 
@@ -346,10 +386,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
       isValid = false;
     }
-    if (this.filaSeleccionada.length === 0) {
+    if (this.tableBodyData.length === 0) {
       this.isInvalidaPartidas = true;
       isValid = false;
-    } else if (this.filaSeleccionada.length > 0) {
+    } else if (this.tableBodyData.length > 0) {
       this.isInvalidaPartidas = false;
     }
     if (this.paisForm.invalid) {
@@ -448,6 +488,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cantidadTotal: CANTIDAD_TOTAL,
         valorTotalUSD: TOTAL_USD,
       });
+      this.tramite130105Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     }
   }
 
@@ -507,6 +550,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
@@ -523,13 +567,97 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       if (item.id === evento.id) {
         return {
           ...item,
-          cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-          totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-          descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+          cantidad: evento.cantidad,
+          totalUSD: evento.totalUSD,
+          precioUnitarioUSD: evento.precioUnitarioUSD,
+          descripcion: evento.descripcion,
         };
       }
       return item;
     });
+     const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+
+        this.tramite130105Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
+  }
+
+  /**
+ * Elimina partidas de la tabla según los IDs recibidos y recalcula los totales.
+ *
+ * @param {string[]} evento - Arreglo de IDs (como cadenas) de las partidas que deben eliminarse.
+ *
+ * @description
+ * Esta función filtra `tableBodyData` removiendo los elementos cuyo `id` coincida
+ * con alguno de los valores en `evento`.  
+ * Luego recalcula:
+ * - `cantidadTotal`: suma de todas las cantidades restantes.
+ * - `valorTotalUSD`: suma del total en USD de cada partida.
+ *
+ * Finalmente, actualiza el formulario `formForTotalCount` con los nuevos valores.
+ */
+
+  partidasEliminadas(evento: string[]): void{
+    this.tableBodyData = this.tableBodyData.filter(
+      item => !evento.includes(String(item.id))
+    );
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+          this.tramite130105Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
+  }
+
+   /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+    ['cantidad', 'valorFacturaUSD', 'fraccion'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid || 
+      this.mercanciaForm.get('fraccion')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    if (!this.mercanciaForm.get('fraccion')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+
+    this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
   }
 
   /**
@@ -642,9 +770,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMostrarPartidas(): void {
-    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(this.idProcedimiento.toString(), 0).subscribe((data) => {
-      this.mostrarPartidas = data as MostrarPartidas[];
-      this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+    let idSolicitud = 0;
+    if(this.seccionState?.idSolicitud){
+      idSolicitud = this.seccionState?.idSolicitud;
+    }
+    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(idSolicitud).subscribe((data) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          if(this.mostrarPartidas.length > 0){
+           const TABLE_BODY = this.mostrarPartidas.map((item, i) => ({
+                id: i?.toString(),
+                cantidad: item.candidatoEliminar?.toString() || '',
+                unidadDeMedida: item.unidadMedidaDescripcion?.toString() || '',
+                fraccionFrancelaria: item.fraccionClave?.toString() || '',
+                descripcion: item.descripcionOriginal?.toString() || '',
+                precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
+                totalUSD: item.importeTotalUSD?.toString() || '',
+                fraccionTigiePartidasDeLaMercancia: "",
+                fraccionDescripcionPartidasDeLaMercancia: "",
+              }));
+              this.tramite130105Store.actualizarEstado({tableBodyData: TABLE_BODY })
+          }
+          this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
     });
   }
 

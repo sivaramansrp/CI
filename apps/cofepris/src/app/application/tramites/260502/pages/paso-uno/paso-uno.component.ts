@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
@@ -20,6 +20,10 @@ import { Tramite260502Store } from '../../../../estados/tramites/260502/tramite2
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
@@ -71,14 +75,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
      this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
       this.query.getValue().formValidity?.formuladorTablaValid &&
       this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
-
-    if (!this.isDatosDeLaSolicitudComponentValid) {
-      this.datosSolicitudComponent?.validarFormulario(); 
-    }
-
-    if (!this.isTercerosComponentValid) {
-      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
-    }
 
     return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
 

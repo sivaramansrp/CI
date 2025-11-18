@@ -1052,8 +1052,8 @@
   {
     "id": 152,
     "tramite": 260512,
-    "linkDashboard": "/cofepris/Permiso-de-importacion/pantallaspage",
-    "linkDepartment": "/pago/Permiso-de-importacion/pantallaspage",
+    "linkDashboard": "/cofepris/permiso-de-importacion/pantallaspage",
+    "linkDepartment": "/pago/permiso-de-importacion/pantallaspage",
     "department": "cofepris"
   },
   {
@@ -1710,8 +1710,8 @@
   {
     "id": 246,
     "tramite": 80301,
-    "linkDashboard": "/se/registro-modificacion/registro-modificacion",
-    "linkDepartment": "/pago/registro-modificacion/registro-modificacion",
+    "linkDashboard": "/se/registro-solicitud/registro-solicitud",
+    "linkDepartment": "/pago/registro-solicitud/registro-solicitud",
     "department": "se"
   },
   {
@@ -2186,8 +2186,8 @@
   {
     "id": 314,
     "tramite": 80303,
-    "linkDashboard": "/se/modificacion-programa-immex-baja-submanufacturera",
-    "linkDepartment": "/pago/modificacion-programa-immex-baja-submanufacturera",
+    "linkDashboard": "/se/registro-solicitude/registro-solicitude",
+    "linkDepartment": "/pago/registro-solicitude/registro-solicitude",
     "department": "se"
   },
   {
