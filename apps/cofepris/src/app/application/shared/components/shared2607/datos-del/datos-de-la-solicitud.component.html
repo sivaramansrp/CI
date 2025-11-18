@@ -1,5 +1,36 @@
 <div class="container">
     <form [formGroup]="dataDeLaSolicitudForm">
+    <div *ngIf="procedureNo=='260701'" class="row mt-5">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+              <p class="panel-title">
+                Opciones de pre-llenado de Solicitud
+              </p>
+              <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <ng-alert [CONTENIDO]="TEXTO.AlDar"></ng-alert>
+
+                <div class="row">
+                  <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
+                      Copiar datos en una Nueva Solicitud
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
         <ng-container formGroupName="datosDelTramiteRealizar"> 
         <h5>seleccione el tipo operacion que desea realizer</h5>
        <app-input-radio

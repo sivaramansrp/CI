@@ -1,7 +1,8 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import pkg from '@package-json';
-import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+import { DatosServiceService } from '../shared/services/datos-service.service';
 
 
 /**
@@ -24,6 +25,7 @@ export class SeleccionTramiteComponent implements OnInit {
    * @memberof SeleccionTramiteComponent
    */
   public ruta = '';
+  constructor(private datosService: DatosServiceService) {}
   
     /**
      * Un arreglo que contiene los detalles de varios "Trámites" (procedimientos o procesos).
@@ -50,4 +52,7 @@ export class SeleccionTramiteComponent implements OnInit {
     
     this.tramiteData = tramiteDetailsData.filter((v) => v.department === "cofepris") ;
   }
+  onTramiteClick(tramite: any) {
+  this.datosService.procedureNo = tramite;
+}
 }

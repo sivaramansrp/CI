@@ -12,6 +12,7 @@ import { DomicilioState, DomicilioStore } from '../estados/stores/domicilio.stor
   providedIn: 'root',
 })
 export class DatosServiceService {
+  public procedureNo: any;
   /**
    * URL base del servidor principal.
    */
