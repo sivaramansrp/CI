@@ -1,6 +1,7 @@
+import { Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Tramite31907Store } from '../../estados/store/tramite31907.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -9,6 +10,17 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
+  /**
+   * Folio del trámite actual.
+   */
+  folioTramite = signal('');
+  constructor(private store: Tramite31907Store) {
+    effect(() => {
+      const FOLIO = this.folioTramite();
+      console.log(FOLIO)
+      this.store.update({ folioTramite: FOLIO });
+    });
+  }
   /**
    * Índice actual del tab mostrado.
    */

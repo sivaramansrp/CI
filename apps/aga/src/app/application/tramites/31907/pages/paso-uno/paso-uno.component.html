@@ -17,11 +17,9 @@
       }
       @case (2) {
       <div class="row">
-        <label for="justificacion">Folio del tramite (pruebas)<span
-            [ngClass]="
-                solicitud.get('justificacion')?.invalid && solicitud.get('justificacion')?.touched ? 'has-error' : ''">*</span>:</label>
+        <label for="justificacion">Folio del tramite (pruebas)<span>*</span>:</label>
         <div class="col-md-8">
-          <input type="text" class="col-md-8">
+          <input [value]="folioTramite()" (input)="folioTramite.set($any($event.target).value || '')" />
         </div>
       </div>
       } }
