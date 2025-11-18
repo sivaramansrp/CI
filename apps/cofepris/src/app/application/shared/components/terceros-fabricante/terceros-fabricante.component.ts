@@ -1363,10 +1363,10 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     this.tercerosFabricanteStore.setFabricante([FABRICANTE_FILA]);
   }  
   this.tableValidEvent.emit('fabricante');
-   this.selectedFabricanteRow = null;
+  this.selectedFabricanteRow = null;
   this.showFabricanteButtons = false;
-  this.showTableDiv = true;
-  this.showFabricante = false;  
+  this.showTableDiv = !this.showTableDiv;
+  this.showFabricante = !this.showFabricante;  
   this.agregarFabricanteFormGroup.reset();
 }  
 
@@ -1652,7 +1652,7 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     this.isEditingProveedor = false;   
   } else {    
      this.tercerosFabricanteStore.setProveedor([PROVEEDOR_FILA]);
-  } 
+  }     
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
