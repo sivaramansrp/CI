@@ -14,7 +14,7 @@ import { Anexo } from "../models/anexos.model";
 export const CONFIGURACION_TABLA_EXPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined =>
+    clave: (ele: Anexo): number | undefined =>
       ele.claveProductoExportacion,
     orden: 1,
   },

@@ -127,7 +127,7 @@ export class ComplementariaComponent<T> implements OnChanges {
    * Formulario reactivo para la certificación.
    * @type {FormGroup}
    */
-  certificionForm!: FormGroup;
+  certificacionForm!: FormGroup;
 /**
  * Certificación SAT proporcionada como entrada al componente.
  */
@@ -138,7 +138,7 @@ export class ComplementariaComponent<T> implements OnChanges {
    * @param {FormBuilder} fb - Instancia de `FormBuilder` utilizada para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    this.certificionForm = this.fb.group({
+    this.certificacionForm = this.fb.group({
       certificacion: [{ value: '', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
     });
   }
@@ -149,7 +149,7 @@ export class ComplementariaComponent<T> implements OnChanges {
    */
   ngOnChanges(): void{
     if (this.certificacionSAT) {
-      this.certificionForm.patchValue({
+      this.certificacionForm.patchValue({
         certificacion: this.certificacionSAT,
       });
     }

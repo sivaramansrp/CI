@@ -1,37 +1,14 @@
 
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-
-
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
-  REGEX_REEMPLAZAR,
-  REGEX_SOLO_DIGITOS,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-
+import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
+import { BANCO_DATA } from '../../../constantes/catalogs.enum';
+import { CommonModule } from '@angular/common';
 import{ConsultaioQuery} from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
-
-import {
-  Solicitud260702State,
-  Solicitud260702Store,
-} from '../../../estados/stores/shared2607/tramites260702.store';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
-
-import { BANCO_DATA } from '../../../constantes/catalogs.enum';
 
 /**
  * Componente para gestionar el pago de derechos en el trámite.

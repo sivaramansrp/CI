@@ -5,6 +5,8 @@ import { of, Subject } from 'rxjs';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { Tramite260501Store } from '../../../../shared/estados/stores/260501/tramite260509.store';
+import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -12,6 +14,8 @@ describe('PasoUnoComponent', () => {
   let mockConsultaioQuery: any;
   let mockDatosDomicilioLegalService: any;
   let mockPagoBancoService: any;
+  let mockStore: any;
+  let mockQuery: any;
 
   beforeEach(async () => {
     mockConsultaioQuery = {
@@ -26,12 +30,32 @@ describe('PasoUnoComponent', () => {
       actualizarEstadoFormulario: jest.fn(),
     };
 
+    mockStore = {
+      setFormValidity: jest.fn()
+    };
+
+    mockQuery = {
+      getValue: jest.fn().mockReturnValue({
+        formValidity: {
+          datosEstablecimiento: true,
+          domicilioEstablecimiento: true,
+          manifiestos: true,
+          representanteLegal: true,
+          fabricanteTablaValid: true,
+          formuladorTablaValid: true,
+          proveedorTablaValid: true,
+        }
+      })
+    };
+
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
       providers: [
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: DatosDomicilioLegalService, useValue: mockDatosDomicilioLegalService },
         { provide: PagoBancoService, useValue: mockPagoBancoService },
+        { provide: Tramite260501Store, useValue: mockStore },
+        { provide: Tramite260501Query, useValue: mockQuery },
       ],
     }).compileComponents();
 
@@ -54,12 +78,9 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should call guardarDatosFormulario if update is true', () => {
-    // Arrange
     mockConsultaioQuery.selectConsultaioState$ = of({ update: true });
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    // Act
     component.ngOnInit();
-    // Assert
     expect(guardarSpy).toHaveBeenCalled();
   });
 
@@ -84,5 +105,60 @@ describe('PasoUnoComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should set fabricanteTablaValid on fabricante event', () => {
+    component.tercerosRelacionadosComponent = { markTouched: jest.fn() } as any;
+    component.onTableValidEvent('fabricante');
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('fabricanteTablaValid', true);
+    expect(component.tercerosRelacionadosComponent.markTouched).toHaveBeenCalled();
+  });
+
+  it('should set formuladorTablaValid on formulador event', () => {
+    component.tercerosRelacionadosComponent = { markTouched: jest.fn() } as any;
+    component.onTableValidEvent('formulador');
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('formuladorTablaValid', true);
+  });
+
+  it('should set proveedorTablaValid on proveedor event', () => {
+    component.tercerosRelacionadosComponent = { markTouched: jest.fn() } as any;
+    component.onTableValidEvent('proveedor');
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('proveedorTablaValid', true);
+  });
+
+  it('should call store.setFormValidity for datosEstabelicimientoFormValidityChange', () => {
+    component.datosEstabelicimientoFormValidityChange(true);
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('datosEstablecimiento', true);
+  });
+
+  it('should call store.setFormValidity for domicilioFormValidityChange', () => {
+    component.domicilioFormValidityChange(true);
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('domicilioEstablecimiento', true);
+  });
+
+  it('should call store.setFormValidity for manifiestosFormValidityChange', () => {
+    component.manifiestosFormValidityChange(true);
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('manifiestos', true);
+  });
+
+  it('should call store.setFormValidity for representanteLegalFormValidityChange', () => {
+    component.representanteLegalFormValidityChange(true);
+    expect(mockStore.setFormValidity).toHaveBeenCalledWith('representanteLegal', true);
+  });
+
+  it('validarFormularios should return true when all form fields are valid', () => {
+    mockQuery.getValue = jest.fn().mockReturnValue({
+      formValidity: {
+        datosEstablecimiento: true,
+        domicilioEstablecimiento: true,
+        manifiestos: true,
+        representanteLegal: true,
+        fabricanteTablaValid: true,
+        formuladorTablaValid: true,
+        proveedorTablaValid: true,
+      }
+    });
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
   });
 });

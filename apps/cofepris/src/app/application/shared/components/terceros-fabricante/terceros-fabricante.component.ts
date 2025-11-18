@@ -15,6 +15,7 @@ import {
   Catalogo,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
+  ValidacionesFormularioService,
   doDeepCopy,
   esValidArray,
   getValidDatos,
@@ -319,7 +320,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
-    private _sharedSvc: Shared2605Service
+    private _sharedSvc: Shared2605Service,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -781,7 +783,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
     this.resetAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
-    if (TIPO_PERSONA_CONTROL?.value) {
+    if (TIPO_PERSONA_CONTROL?.value && this.nacional === true && this.extranjero === false) {
       if(this.fisica || this.moral) {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.disable();
@@ -792,6 +794,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.enable();
       }
+    } else {
+      formGroup.enable();
     }
   }
 
@@ -1100,7 +1104,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
   submitFabricanteForm(forma: FormGroup): void {
-    /**
+    if (this.agregarFabricanteFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1234,6 +1239,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
     this.limpiar(forma);
+    } else {
+      this.agregarFabricanteFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1243,7 +1252,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
   submitFormuladorForm(forma: FormGroup): void {
-    /**
+    if (this.agregarFormuladorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1375,6 +1385,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     this.showTableDiv = !this.showTableDiv;
     this.showFormulador = !this.showFormulador;
     this.limpiar(forma);
+    } else {
+      this.agregarFormuladorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1384,7 +1398,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
   submitProveedorForm(forma: FormGroup): void {
-    /**
+    if (this.agregarFormuladorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1519,6 +1534,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
     this.limpiar(forma);
+    } else {
+      this.agregarProveedorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1580,7 +1599,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
   cambiarRadio(value: string | number, formGroup: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
     this.resetAllExcept(formGroup, ['tercerosNacionalidad']);
+    this.disableAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
     this.tercerosInputChecked(VALOR_SELECCIONADO);
+  }
+
+  /**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  disableAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.disableAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.disable();
+      }
+    });
   }
 
 /**
@@ -1736,6 +1776,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     } else {
       this.isProveedorInvalida=false;
     }
+  }
+
+  /**
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
+  public esValido(campo: string, form: FormGroup): boolean | null {
+    return this.validacionesService.isValid(form, campo);
   }
 
   /**
