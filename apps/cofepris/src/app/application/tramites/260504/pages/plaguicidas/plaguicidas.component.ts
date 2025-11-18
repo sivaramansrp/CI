@@ -104,6 +104,9 @@ export class PlaguicidasComponent implements OnDestroy, OnInit {
   /** Texto de advertencia que se muestra cuando hay condiciones peligrosas. */
   public textoPeligro: string = TEXTO_DE_PELIGRO;
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**
    * Constructor que inyecta los servicios necesarios para el componente.
    * - toastrService: Servicio para mostrar notificaciones al usuario.
@@ -125,6 +128,7 @@ export class PlaguicidasComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -141,6 +145,7 @@ export class PlaguicidasComponent implements OnDestroy, OnInit {
         e.valor;
 
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true; 

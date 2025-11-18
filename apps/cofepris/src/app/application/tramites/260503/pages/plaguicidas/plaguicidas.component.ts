@@ -1,14 +1,14 @@
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
-import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ListaPasosWizard, PASOS, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Observable, map, switchMap, take } from 'rxjs';
+import { Solicitud260503State, Tramite260503Store } from '../../../../estados/tramites/260503/tramite260503.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TEXTO_DE_PELIGRO } from '../../constantes/constante260503.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constantes/constante260503.enum';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable, switchMap, take } from 'rxjs';
-import { Solicitud260503State, Tramite260503Store } from '../../../../shared/estados/stores/260503/tramite260503.store';
-import { Tramite260503Query } from '../../../../shared/estados/queries/260503/tramite260503.query';
+import { Tramite260503Query } from '../../../../estados/queries/260503/tramite260503.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -107,6 +107,9 @@ export class PlaguicidasComponent implements OnInit {
    */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**  
    * Constructor del componente.
    * @param sharedSvc Servicio compartido para operaciones comunes.
@@ -128,6 +131,7 @@ export class PlaguicidasComponent implements OnInit {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -144,6 +148,7 @@ export class PlaguicidasComponent implements OnInit {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

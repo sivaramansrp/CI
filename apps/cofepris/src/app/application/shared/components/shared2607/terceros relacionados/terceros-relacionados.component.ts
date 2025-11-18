@@ -1,57 +1,20 @@
-// Angular Core
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-// Third-party libraries
-import { map, takeUntil } from 'rxjs/operators';
-import { Modal } from 'bootstrap';
-import { ReplaySubject } from 'rxjs';
-
-// Shared/Internal Libraries - @libs
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import{ConsultaioQuery} from '@ng-mf/data-access-user';
-// Shared/Internal Libraries - @ng-mf
+import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
-
-// Components
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-
-// Constants
-import {
-  TEXTOS,
-  TIPO_PERSONA_RADIO_OPTIONS,
-} from '../../../constantes/constantes.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
+import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../../constantes/constantes.enum';
+import { map, takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { DESTINATARIO_CONFIGURACION_TABLA } from '../../../constantes/column-config.enum';
-
-// Models
 import { Destinatario } from '../../../models/destinatario.model';
-
-// Services
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
-
-// State Management
-import {
-  Solicitud260702State,
-  Solicitud260702Store,
-} from '../../../estados/stores/shared2607/tramites260702.store';
+import { ReplaySubject } from 'rxjs';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para gestionar los terceros relacionados en el trámite.

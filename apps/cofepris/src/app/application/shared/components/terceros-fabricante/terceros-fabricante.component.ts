@@ -15,6 +15,7 @@ import {
   Catalogo,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
@@ -314,7 +315,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -1624,6 +1626,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
         extranjeroEstado: 'Estado del Extranjero Ejemplo',
         extranjeroColonia: 'Colonia del Extranjero Ejemplo',
       })
+    } else {
+      form.get('rfc')?.markAsTouched();
+      form.get('curp')?.markAsTouched();
     }
   }
 
@@ -1644,6 +1649,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     } else {
       this.isProveedorInvalida=false;
     }
+  }
+
+  /**
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
+  public esValido(campo: string, form: FormGroup): boolean | null {
+    return this.validacionesService.isValid(form, campo);
   }
 
   /**

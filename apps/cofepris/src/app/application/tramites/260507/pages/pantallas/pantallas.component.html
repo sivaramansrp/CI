@@ -14,7 +14,7 @@
     <div class="row">
         @switch (indice) {
         @case (1) {
-        <app-datos #pasoUnoRef></app-datos>
+        <app-datos #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-datos>
         } @case (2) {
         <app-paso-carga-documento 
           [idSolicitud]="guardarIdSolicitud"

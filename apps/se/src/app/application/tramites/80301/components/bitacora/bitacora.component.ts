@@ -1,27 +1,29 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 import { BitacoraTablaComponent } from '../../../../shared/components/bitacora/bitacora.component';
-import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
-import { ToastrService } from 'ngx-toastr';
+import { Solicitud80301State } from '../../estados/tramite80301.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite80301Query } from '../../estados/tramite80301.query';
 
+/**
+ * Componente BitacoraComponent que maneja la visualización de la bitácora de modificaciones.
+ * Proporciona funcionalidades para cargar y mostrar los registros de la bitácora
+ * relacionados con el trámite 80301.
+ * @component BitacoraComponent
+ */
 @Component({
   selector: 'app-bitacora',
   templateUrl: './bitacora.component.html',
   standalone: true,
-  imports: [
-    ComplementariaImmexComponent, 
-    BitacoraTablaComponent
-  ],
+  imports: [BitacoraTablaComponent],
 })
-export class BitacoraComponent implements OnDestroy {
-  /**
-   * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
-   * Esto evita fugas de memoria al completar las suscripciones cuando el componente es destruido.
-   */
-  destroyNotifier$: Subject<void> = new Subject();
 
+/**
+ * Clase que representa el componente de la bitácora de modificaciones.
+ * @class BitacoraComponent
+ */
+export class BitacoraComponent implements OnDestroy {
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * Este arreglo almacena los registros de la bitácora que se mostrarán en la tabla.
@@ -29,25 +31,56 @@ export class BitacoraComponent implements OnDestroy {
   datos: Bitacora[] = [];
 
   /**
+   * Estado de la solicitud del trámite 80301.
+   * @property {Solicitud80301State} solicitudState
+   */
+  solicitudState!: Solicitud80301State;
+
+  /**
+   * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
+   * Esto evita fugas de memoria al completar las suscripciones cuando el componente es destruido.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
-   * @param modificionService Servicio utilizado para obtener los datos de la bitácora.
-   * @param toastr Servicio utilizado para mostrar notificaciones al usuario.
+   * @param solicitudService Servicio para manejar las solicitudes relacionadas con el trámite.
+   * @param tramite80301Query Consulta para obtener el estado del trámite 80301.
    */
   constructor(
-    public modificionService: ModificacionSolicitudeService,
-    public toastr: ToastrService
+    public solicitudService: SolicitudService,
+    private tramite80301Query: Tramite80301Query
   ) {
-       this.modificionService
-          .obtenerBitacora()
-          .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
-          .subscribe(
-            (data: Bitacora[]) => {
-              this.datos = [...data]; // Almacena los datos de la bitácora en la variable `datos`.
-            },
-            () => {
-              this.toastr.error('Error al cargar los estados'); // Manejo de errores.
-            }
-          );
+    this.tramite80301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((solicitudState) => {
+          this.solicitudState = solicitudState;
+        })
+      )
+      .subscribe();
+
+    this.loadBitacoraDatos(this.solicitudState.selectedIdPrograma);
+  }
+
+  /**
+   * Método para cargar los datos de la bitácora desde el servicio.
+   * @param idPrograma Identificador del programa para el cual se obtendrán los datos de la bitácora.
+   * @return {void}
+   */
+  loadBitacoraDatos(idPrograma: string): void {
+    this.solicitudService
+      .obtenerBitacora(idPrograma)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        this.datos =
+          response.datos?.map((item: Bitacora) => ({
+            tipoModificacion: item.tipoModificacion,
+            fechaModificacion: item.fechaModificacion,
+            valoresAnteriores: item.valoresAnteriores,
+            valoresNuevos: item.valoresNuevos,
+          })) || [];
+      });
   }
 
   /**

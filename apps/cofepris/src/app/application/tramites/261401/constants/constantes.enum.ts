@@ -16,8 +16,8 @@ export const TEXTOS = {
  * Opciones para el botón de radio del tipo de persona.
  */
 export const TIPO_PERSONA_RADIO_OPTIONS = [
-  { label: 'Física', value: 'fisica' },
-  { label: 'Moral', value: 'moral' },
+  { label: 'Física', value: 'Fisica', hint: 'Una persona física es entendida como toda persona con una actividad específica' },
+  { label: 'Moral', value: 'Moral', hint: 'Una persona moral es entendida como una empresa con una actividad específica' },
 ];
 
 /**
