@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { PASOS_PROSEC_90202 } from '../../constants/pasos.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
@@ -21,11 +22,16 @@ interface AccionBoton {
   templateUrl: './prosec.component.html',
 })
 export class ProsecComponent {
+
+    /**
+   * ID de la solicitud.
+   */
+  idSolicitudState: number | null = 90202;
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS_PROSEC_90202;
 
   /**
    * Indice actual del paso en el asistente.
