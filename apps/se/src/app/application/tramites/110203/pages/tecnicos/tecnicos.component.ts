@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { doDeepCopy } from '@ng-mf/data-access-user';
+import { CertificadoData } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-tecnicos',
@@ -106,6 +107,11 @@ export class TecnicosComponent {
   public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
+   * Propiedad para almacenar el payload de búsqueda de la solicitud.
+   */
+  buscarPayload: CertificadoData[] = [];
+
+  /**
    * Constructor del componente.
    *
    * Inyecta las dependencias necesarias para gestionar el estado y las consultas
@@ -129,6 +135,7 @@ export class TecnicosComponent {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
+        this.buscarPayload = solicitud.buscarPayload ?? [];
       });
   }
 
@@ -189,11 +196,12 @@ export class TecnicosComponent {
  * Devuelve una promesa con la respuesta del servidor en formato JSONResponse.
  */
   guardar(data: Solicitud110203State): Promise<JSONResponse> {
-    const TRATADOS = this.servicio110203.buildTratados(data);
-    const DESTINATARIO = this.servicio110203.buildDestinatario(data);
-    const TRANSPORTE = this.servicio110203.buildTransporte(data);
-    const CERTIFICADO = this.servicio110203.buildCertificado(data);
-    const DATOS_CERTIFICADO = this.servicio110203.buildDatosCertificado(data);
+    // const TRATADOS = this.servicio110203.buildTratados(data);
+    // const DESTINATARIO = this.servicio110203.buildDestinatario(data);
+    // const TRANSPORTE = this.servicio110203.buildTransporte(data);
+    // const CERTIFICADO = this.servicio110203.buildCertificado(data);
+    // const DATOS_CERTIFICADO = this.servicio110203.buildDatosCertificado(data);
+    const CERTIFICADO_ORIGEN = this.servicio110203.buildCertificadoOrigen(data);
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 0,
@@ -228,12 +236,15 @@ export class TecnicosComponent {
             "telefono": "123456"
         }
     },
-      "tratados": TRATADOS,
-      "transporte": TRANSPORTE,
-      "certificado": CERTIFICADO,
-     "destinatario": DESTINATARIO,
-     "datos_del_cerificado": DATOS_CERTIFICADO
-    }
+    //   "tratados": TRATADOS,
+    //   "transporte": TRANSPORTE,
+    //   "certificado": CERTIFICADO,
+    //  "destinatario": DESTINATARIO,
+    //  "datos_del_cerificado": DATOS_CERTIFICADO,
+      "certificadoOrigen" : CERTIFICADO_ORIGEN,
+      "certificadoOriginal" : this.buscarPayload[0] ?? {},
+    };
+
       return new Promise((resolve, reject) => {
         this.servicio110203.guardarDatosPost(PAYLOAD).subscribe(
           (response) => {

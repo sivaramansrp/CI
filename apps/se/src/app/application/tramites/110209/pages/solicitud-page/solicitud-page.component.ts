@@ -23,6 +23,7 @@ import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solic
 import { Solicitud110209Service } from '../../services/solicitud-110209/solicitud-110209.service';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { doDeepCopy } from '@ng-mf/data-access-user';
+import { CertificadoData } from '../../models/certificado-sgp.model';
 /**
  * Componente que representa la página de solicitud.
  */
@@ -125,6 +126,11 @@ export class SolicitudPageComponent {
   solicitudState!: Tramite110209State;
 
   /**
+   * Propiedad para almacenar el payload de búsqueda de la solicitud.
+   */
+  buscarPayload: CertificadoData[] = [];
+
+  /**
    * Constructor del componente.
    *
    * Inyecta los servicios necesarios para gestionar el estado del trámite **110209**.
@@ -147,6 +153,8 @@ export class SolicitudPageComponent {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
+        this.buscarPayload = solicitud.buscarPayload ?? [];
+        console.log("buscarPayload", this.buscarPayload)
       });
   }
 
@@ -234,51 +242,56 @@ export class SolicitudPageComponent {
  * - DATOS_CERTIFICADO: Detalles específicos del certificado.
  */
     guardar(data: Tramite110209State): Promise<JSONResponse> {
-      const TRATADOS = this.servicio110209.buildTratados(data);
-      const DESTINATARIO = this.servicio110209.buildDestinatario(data);
-      const TRANSPORTE = this.servicio110209.buildTransporte(data);
-      const CERTIFICADO = this.servicio110209.buildCertificado(data);
-      const DATOS_CERTIFICADO = this.servicio110209.buildDatosCertificado(data);
-      const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
-      "idSolicitud": 0,
-      "idTipoTramite": 110209,
-      "discriminatorValue": "110209",
-      "rfc_solicitante": "AAL0409235E6",
-      "rfc": "AAL0409235E6",
-      "cve_unidad_administrativa": "0203",
-      "costoTotal": 10000.5,
-      "certificado_serial_number": "1234567890ABCDEF",
-      "numero_folio_tramite_original": "TRM-2023-00001",
-      "nombre": "Juan",
-      "apPaterno": "Pérez",
-      "apMaterno": "López",
-      "telefono": "5551234567",
-       "solicitante": {
-          "rfc": "AAL0409235E6",
-          "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-          "actividad_economica": "Fabricación de productos de hierro y acero",
-          "correo_electronico": "contacto@acerosalvarado.com",
-          "domicilio": {
-              "pais": "México",
-              "codigo_postal": "06700",
-              "estado": "Ciudad de México",
-              "municipio_alcaldia": "Cuauhtémoc",
-              "localidad": "Centro",
-              "colonia": "Roma Norte",
-              "calle": "Av. Insurgentes Sur",
-              "numero_exterior": "123",
-              "numero_interior": "Piso 5, Oficina A",
-              "lada": "",
-              "telefono": "123456"
-          }
-      },
-        "tratados": TRATADOS,
-        "transporte": TRANSPORTE,
-        "certificado": CERTIFICADO,
-       "destinatario": DESTINATARIO,
-       "datos_del_cerificado": DATOS_CERTIFICADO
-      }
+      // const TRATADOS = this.servicio110209.buildTratados(data);
+      // const DESTINATARIO = this.servicio110209.buildDestinatario(data);
+      // const TRANSPORTE = this.servicio110209.buildTransporte(data);
+      // const CERTIFICADO = this.servicio110209.buildCertificado(data);
+      // const DATOS_CERTIFICADO = this.servicio110209.buildDatosCertificado(data);
+      const CERTIFICADO_ORIGEN = this.servicio110209.buildCertificadoOrigen(data);
+
+  const PAYLOAD = {
+   "tipoDeSolicitud": "guardar",
+    "idSolicitud": 0,
+    "idTipoTramite": 110209,
+    "discriminatorValue": "110209",
+    "rfc_solicitante": "AAL0409235E6",
+    "rfc": "AAL0409235E6",
+    "cve_unidad_administrativa": "0203",
+    "costoTotal": 10000.5,
+    "certificado_serial_number": "1234567890ABCDEF",
+    "numero_folio_tramite_original": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+     "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividad_economica": "Fabricación de productos de hierro y acero",
+        "correo_electronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+            "pais": "México",
+            "codigo_postal": "06700",
+            "estado": "Ciudad de México",
+            "municipio_alcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numero_exterior": "123",
+            "numero_interior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+        }
+    },
+      //   "tratados": TRATADOS,
+      //   "transporte": TRANSPORTE,
+      //   "certificado": CERTIFICADO,
+      //  "destinatario": DESTINATARIO,
+      //  "datos_del_cerificado": DATOS_CERTIFICADO,
+      "certificadoOrigen" : CERTIFICADO_ORIGEN,
+      "certificadoOriginal" : this.buscarPayload[0] ?? {},
+}
+
         return new Promise((resolve, reject) => {
           this.servicio110209.guardarDatosPost(PAYLOAD).subscribe(
             (response) => {

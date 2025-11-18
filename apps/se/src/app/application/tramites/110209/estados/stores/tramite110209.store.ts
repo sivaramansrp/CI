@@ -8,6 +8,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../../constantes/certificado-sgp.enum';
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import { CertificadoData } from '../../models/certificado-sgp.model';
 
 
 /**
@@ -83,6 +84,7 @@ export interface Tramite110209State {
   cantidad: string;
   /** **Fecha de emisión o registro de la factura correspondiente** */ 
   fechaFactura: string;
+  buscarPayload?: CertificadoData[];
 }
 
 /**
@@ -132,6 +134,7 @@ export function createInitialState(): Tramite110209State {
     fechaVencimiento: '',
     cantidad: '',
     fechaFactura: '',
+    buscarPayload: []
   };
 }
 
@@ -173,5 +176,9 @@ export class Tramite110209Store extends Store<Tramite110209State> {
       ...state,
       ...estado,
     }));
+  }
+
+    setBuscarPayload(payload: CertificadoData[]): void {
+    this.update({ buscarPayload: payload });
   }
 }

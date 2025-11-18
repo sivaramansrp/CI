@@ -496,6 +496,7 @@ buscarDatos(): void {
       .subscribe((response: unknown) => {
       const API_RESPONSE = response as ApiResponse;
       const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
+      this.tramite110209Store.setBuscarPayload(DATOS);
 
         if (DATOS.length > 0) {
           this.procesarDatosCertificado(DATOS[0]);

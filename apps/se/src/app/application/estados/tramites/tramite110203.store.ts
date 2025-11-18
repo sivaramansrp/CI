@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import { CertificadoData } from '../../tramites/110203/models/datos-tramite.model';
 
 /**
  * **Estado de la Solicitud 110203**
@@ -131,6 +132,8 @@ export interface Solicitud110203State {
       transporte?: boolean;
       datosCertificado?: boolean;
   };
+
+  buscarPayload?: CertificadoData[];
 }
 
 /**
@@ -260,7 +263,9 @@ export function createInitialState(): Solicitud110203State {
     /** **Paso actual o índice del flujo activo en el proceso** */
     pasoActivo: 1,
     /** Estado de validez de las diferentes secciones del formulario */
-    formValidity: {}
+    formValidity: {},
+    /** Arreglo para almacenar datos de certificados */
+    buscarPayload: []
   };
 }
 
@@ -859,4 +864,8 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
       },
     }));
   }
+
+  setBuscarPayload(payload: CertificadoData[]): void {
+  this.update({ buscarPayload: payload });
+}
 }
