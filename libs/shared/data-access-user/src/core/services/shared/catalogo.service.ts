@@ -70,6 +70,8 @@ import {
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_CATALOGOS_PAISES_TODOS,
   API_MOSTRAR_PARTIDAS_SOLICITUD,
+  API_ACTIVIDAD_PRODUCTIVA_PROSEC,
+  API_REPRESENTACION_FEDERAL_PARAM,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -1054,6 +1056,16 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  getActividadProductivaProsecCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_ACTIVIDAD_PRODUCTIVA_PROSEC(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+  
+  getRepresentacionFederalMexCatalogo(tramite: string, estado:string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_PARAM(tramite, estado)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+    
 /**
  * Obtiene el catálogo tipo de empresa.
  * 
