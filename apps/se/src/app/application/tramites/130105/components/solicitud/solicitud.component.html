@@ -32,6 +32,7 @@
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
   (partidaModificada)="partidaModificada($event)"
   [isInvalidaPartidas]="isInvalidaPartidas"
   (partidasEliminadas)="partidasEliminadas($event)"
@@ -61,3 +62,9 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>
