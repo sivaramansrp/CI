@@ -2,9 +2,11 @@ import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   WizardComponent
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { PASOS } from '../../constantes/consumo-personal.enum';
@@ -28,6 +30,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
@@ -69,6 +73,24 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
   /**
    * @method seleccionaTab
    * @description Cambia el índice actual del wizard manualmente.
@@ -98,6 +120,22 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+   onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
   /**

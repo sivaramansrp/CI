@@ -23,6 +23,10 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  */
 export interface Tramite260102State {
   /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+  /**
    * @property destinatarioFinalTablaDatos
    * @description Lista de destinatarios finales registrados en la tabla.
    * Utilizado para representar entidades que reciben el producto o mercancía.
@@ -166,6 +170,7 @@ export interface Tramite260102State {
  */
 export function createInitialState(): Tramite260102State {
   return {
+  idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -522,6 +527,13 @@ export class Tramite260102Store extends Store<Tramite260102State> {
     this.update((state) => ({
       ...state,
       seleccionadoTablaFacturadorDatos: nuevoTablaFacturadorDatos,
+    }));
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
     }));
   }
 
