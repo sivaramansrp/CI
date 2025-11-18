@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
-    path: 'cancelar/:folioTramite',
+    path: '',
     component: CancelarReporteComponent,
   },
 ];
