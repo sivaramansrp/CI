@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
   host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
+@Output() rowSelected = new EventEmitter<TableBodyData>();
 
   /**
    * Indica si el estado actual es inválido.
@@ -142,8 +143,11 @@ export class TableComponent implements OnInit, OnChanges {
  * Maneja el cambio de selección de una fila individual.
  * Emite el evento seleccionCambio cuando cambia el estado de selección.
  */
-onRowSelectionChange(): void {
+onRowSelectionChange(row?: TableBodyData): void {
   this.emitirCambioSeleccion();
+  if (row) {
+    this.rowSelected.emit({ ...row });
+  }
 }
 
 /**
