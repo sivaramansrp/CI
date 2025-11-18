@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, PasoCargaDocumentoComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent,NotificacionesComponent, PasoCargaDocumentoComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosEmpresaComponent } from './component/datos-empresa/datos-empresa.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -30,7 +30,8 @@ import { RegistroComoEmpresaRoutingModule } from './registro-como-empresa-routin
     PasoTresComponent,
     AlertComponent,
     PasoFirmaComponent,
-    PasoCargaDocumentoComponent
+    PasoCargaDocumentoComponent,
+    NotificacionesComponent,
   ],
 })
 export class RegistroComoEmpresaModule {}
