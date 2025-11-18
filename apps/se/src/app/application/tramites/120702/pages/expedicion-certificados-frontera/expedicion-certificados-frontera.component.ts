@@ -90,6 +90,10 @@ export class ExpedicionCertificadosFronteraComponent implements OnInit, OnDestro
    */
   indice = 1;
 
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso dentro del componente.
+   */
   idSolicitud: number = 0;
 
     /** Subject para notificar la destrucción del componente. */
@@ -103,13 +107,28 @@ export class ExpedicionCertificadosFronteraComponent implements OnInit, OnDestro
     public solicitudDeRegistroState!: Solicitud120702State;
 
 
+  /**
+   * Constructor de la clase ExpedicionCertificadosFronteraComponent.
+   * 
+   * @param expedicionCertificadosFronteraService Servicio para gestionar la expedición de certificados de frontera.
+   * @param tramite120702Store Almacén para el estado del trámite 120702.
+   * @param ampliacionServiciosAdapter Adaptador para la ampliación de servicios relacionados.
+   * @param toastrService Servicio para mostrar notificaciones tipo toast al usuario.
+   * @param tramite120702Query Consulta para obtener información del trámite 120702.
+   */
   constructor(private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService,
     private tramite120702Store:Tramite120702Store,
     private ampliacionServiciosAdapter: AmpliacionServiciosAdapter, 
     private toastrService: ToastrService, private tramite120702Query:Tramite120702Query){
-
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSolicitud$` para obtener el estado de la solicitud de registro,
+   * actualizando la propiedad `solicitudDeRegistroState` y extrayendo el identificador de la solicitud (`idSolicitud`)
+   * si está disponible. La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que permite limpiar recursos y evitar fugas de memoria.
+   */
   ngOnInit(): void { 
     this.tramite120702Query.selectSolicitud$
           .pipe(

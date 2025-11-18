@@ -478,8 +478,7 @@ onBuscarClick(): void {
 
   if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
     this.mostrarSecciones = true; 
-    
-  //this.cargarDatosAsignacion();
+
   } else {
    this.mostrarSecciones = false; 
   }

@@ -12,6 +12,12 @@ import { Solicitud120702State } from '../estados/tramite120702.store';
 export class AmpliacionServiciosAdapter {
 
 
+/**
+ * Genera el payload para guardar el formulario de ampliación de servicios.
+ *
+ * @param datos - Objeto que contiene la información necesaria para construir el payload, incluyendo datos de asignación, mecanismo de asignación, expediciones, folio auxiliar, y productor de cupos.
+ * @returns Un objeto con la estructura requerida para el envío del formulario, incluyendo información del solicitante, asignación, unidad administrativa, importador y productor de cupos.
+ */
  toFormGuardarPayload(datos: any): any {
      const PAYLOAD = {
   "solicitante": {
@@ -87,8 +93,5 @@ export class AmpliacionServiciosAdapter {
 }
 return PAYLOAD;
  }
-
-
-
-
+ 
 }

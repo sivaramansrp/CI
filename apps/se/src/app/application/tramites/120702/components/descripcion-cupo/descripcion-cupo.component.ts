@@ -54,8 +54,8 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
    @Input()
   /**
    * Obtiene los datos del formulario de asignación.
-   * 
-   * @returns {AsignacionResponse} Los datos actuales del formulario de asignación.
+   *
+   * @returns {AsignacionResponse} Los datos actuales del formulario.
    */
    get formDatos(): AsignacionResponse {
      return this._formDatos;
