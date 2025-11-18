@@ -236,3 +236,187 @@ export interface ModificacionDatos {
    */
   modificacionPrograma: string;
 }
+
+/**
+ * Representa un programa IMMEX en una lista o tabla.
+ * Contiene información básica del programa.
+ * @interface ProgramaLista
+ */
+export interface ProgramaLista {
+  /**
+   * Identificador único del programa autorizado.
+   */
+  idProgramaAutorizado?: string;
+
+  /**
+   * Folio único del programa IMMEX.
+   */
+  folioPrograma?: string;
+
+  /**
+   * Tipo de programa IMMEX.
+   */
+  tipoPrograma: string;
+
+  /**
+   * RFC asociado al programa IMMEX.
+   */
+  rfc?: string;
+
+  /**
+   * Identificador compuesto del programa IMMEX.
+   */
+  idProgramaCompuesto: string;
+}
+
+/**
+ * Contiene los datos generales para la modificación de una solicitud IMMEX.
+ */
+export interface DatosModificacion {
+  /**
+   * Registro Federal de Contribuyentes del solicitante
+   */
+  rfc: string;
+  
+  /**
+   * Representación federal (nombre o entidad que representa)
+   */
+  representacionFederal: string;
+
+  /** 
+   * Tipo de modalidad IMMEX a modificar 
+   */
+  tipo: string;
+
+  /** 
+   * Descripción detallada de la modalidad 
+   */
+  programa: string;
+}
+
+/**
+ * Payload para la obtención de datos de exportación e importación.
+ * @interface ExportacionImportacionPayload
+ */
+export interface ExportacionImportacionPayload {
+  /**
+   * Identificador de la solicitud.
+   * @type {string | number}
+   */
+  idSolicitud: string | number;
+
+  /**
+   * Discriminador del tipo de solicitud.
+   * @type {string}
+   */
+  discriminatorValue: string;
+
+  /** 
+   * Registro Federal de Contribuyentes (RFC).
+   * @type {string}
+   */
+  rfc: string;
+
+  /**
+   * Folio del programa IMMEX.
+   * @type {string}
+   */
+  folioPrograma: string;
+
+  /** 
+   * Tipo de programa IMMEX.
+   * @type {string}
+   */
+  tipoPrograma: string;
+
+  /** 
+   * Identificador del programa IMMEX.
+   * @type {string}
+   */
+  idPrograma: string;
+}
+
+/**
+ * Estructura que representa los datos de fracciones de importación y exportación
+ * dentro del trámite de modificación del programa IMMEX.
+ * @interface ImportacionExportacionFracciones
+ */
+export interface ImportacionExportacionFracciones {
+  /**
+   * Fracción compuesta de la importación o exportación.
+   * @property {string} fraccionCompuesta
+   */
+  fraccionCompuesta: string;
+
+  /**
+   * Clave del producto de exportación.
+   * @property {number} claveProductoExportacion
+   */
+  claveProductoExportacion: number;
+
+  /**
+   * Fracción padre de la importación o exportación.
+   * @property {string} fraccionPadre
+   */
+  fraccionPadre: string;
+
+  /**
+   * Fecha de inicio de vigencia de la fracción.
+   * @property {string} fecIniVigencia
+   */
+  fecIniVigencia: string;
+
+  /**
+   * Clave de la fracción arancelaria.
+   * @property {string} cveFraccion
+   */
+  cveFraccion: string;
+
+  /**
+   * Descripción de la fracción arancelaria.
+   * @property {string} descripcion
+   */
+  descripcion: string;
+
+  /**
+   * Descripción del estado de la fracción.
+   * @property {string} descripcionTestado
+   */
+  descripcionTestado: string;
+
+  /**
+   * Indica si el registro está visible en la tabla.
+   * @property {boolean} visible
+   */
+  visible: boolean;
+}
+
+/**
+ * Representa la respuesta de datos de modificación.
+ * @interface DatosModificacionRespuesta
+ */
+export interface DatosModificacionRespuesta {
+  /**
+   * RFC original del solicitante.
+   * @type {string}
+   */
+  rfc_original: string;
+
+  /**
+   * Información de identificación del solicitante.
+   * @type {object}
+   */
+  identificacion: {
+    /**
+     * Tipo de sociedad del solicitante.
+     * @type {string}
+     */
+    tipo_sociedad: string;
+
+    /**
+     * Correo electrónico del solicitante.
+     * @type {string}
+     */
+    email: string;
+  };
+}

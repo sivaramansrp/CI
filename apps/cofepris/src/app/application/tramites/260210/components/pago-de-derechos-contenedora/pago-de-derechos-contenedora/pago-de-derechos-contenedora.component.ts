@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
+import { Tramite260210Query } from '../../../estados/tramite260210Query.query';
 import { Tramite260210Store } from '../../../estados/tramite260210Store.store';
 import { ViewChild } from '@angular/core';
 
@@ -22,7 +23,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
-export class PagoDeDerechosContenedoraComponent implements OnDestroy {
+export class PagoDeDerechosContenedoraComponent implements OnDestroy, OnInit {
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
@@ -33,7 +34,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @type {PagoDerechosFormState}
    * @memberof PagoDeDerechosContenedoraComponent
    */
-  public pagoDerechos: PagoDerechosFormState;
+  public pagoDerechos!: PagoDerechosFormState;
 
   /**
    * @property {boolean} esFormularioSoloLectura
@@ -92,7 +93,8 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   constructor(
     public tramiteStore: Tramite260210Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private tramiteQuery: Tramite260210Query
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -102,7 +104,15 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
         })
       )
       .subscribe();
-    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+    // this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+  }
+
+  ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((data) => {
+            this.pagoDerechos = data.pagoDerechos;
+          });
   }
 
   /**

@@ -113,13 +113,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
               </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['rfc'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  } @else if (agregarFabricanteFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           @if(noContribuyente) {
@@ -136,7 +154,7 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
             </div>
             @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
               <div class="d-grid">
@@ -156,7 +174,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -194,7 +221,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
@@ -203,7 +239,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -476,13 +521,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-3">
               <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
@@ -497,7 +560,16 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
                   ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               @if(nacional && fisica) {
@@ -508,7 +580,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -520,7 +601,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
@@ -529,7 +619,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -831,13 +930,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-3">
               <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
@@ -852,7 +969,16 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                   ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               @if (nacional && fisica){
@@ -864,7 +990,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -875,7 +1010,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
@@ -884,7 +1028,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { PROTESTA } from '@ng-mf/data-access-user';
 import { REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 
+import { DescripcionAlternaResponse, Mercancia, ValidarSolicitudResponse } from '../../models/response/validar-solicitud-response.model';
 import { OPCIONES, RADIO_OPCIONS, SELECCIONAR_TRANSFORMACION} from '../constante110101.enum';
 import { MensajePantallaService } from '../../services/validaciones-tabs.service';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
@@ -174,6 +175,24 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    */
   public MENSAJE_REQUERIDO = REQUERIDO;
 
+  /** Controla la visualización de las descripciones alternas en la interfaz */
+  descripcionesMostrar: boolean = false;
+
+  /**
+ * @property descripcionesPorTipo
+ * @type {Array}
+ * @public
+ * @description
+ * Almacena las descripciones alternas de mercancía organizadas por tipo de acuerdo comercial.
+ * Cada elemento del array contiene el tipo de acuerdo y las descripciones asociadas con sus IDs.
+ * Se utiliza para mostrar las descripciones disponibles en la interfaz de usuario.
+ */
+public descripcionesPorTipo: {
+  tipo: string;
+  descripciones: { id: number; descripcion: string }[];
+}[] = [];
+
+
   /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
@@ -228,6 +247,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       this.formulario.markAllAsTouched();
       this.validarFormularioAdicionales();
     }
+
+    if(this.solicitudeState.descripcion_evaluar){
+      this.activarDescripciones(this.solicitudeState.descripcion_evaluar);
+    }
   
   }
 
@@ -251,7 +274,11 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       juegosSurtidosBooleanMexicoPeru: [this.solicitudeState?.juegosSurtidosBooleanMexicoPeru],
       juegosSurtidosBooleanMexicoPanama: [this.solicitudeState?.juegosSurtidosBooleanMexicoPanama],
       juegosSurtidosBooleanAlianzaPacifico: [this.solicitudeState?.juegosSurtidosBooleanAlianzaPacifico],
-      protesto_verdad: [this.solicitudeState?.protesto_verdad, Validators.requiredTrue]
+      protesto_verdad: [this.solicitudeState?.protesto_verdad, Validators.requiredTrue],
+      descripcionUE: [this.solicitudeState?.descripcionUE],
+      descripcionAELC: [this.solicitudeState?.descripcionAELC],
+      descripcionSGP: [this.solicitudeState?.descripcionSGP],
+      descripcionACE: [this.solicitudeState?.descripcionACE],
     });
   }
 
@@ -468,6 +495,70 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     }
     return true
   }
+
+
+/**
+ * @method activarDescripciones
+ * @description
+ * Activa y configura las descripciones alternas de mercancía para mostrar en la interfaz.
+ * Procesa los datos de respuesta de validación y organiza las descripciones por tipo
+ * (UE, AELC, SGP, ACE) cuando están disponibles.
+ * @param {ValidarSolicitudResponse} data - Datos de respuesta de la validación que contienen la información de mercancía.
+ * @returns {void}
+ */
+  public activarDescripciones(data: Mercancia): void {
+  if (!data) {
+    this.descripcionesMostrar = false;
+    return;
+  }
+  this.descripcionesPorTipo = [];
+  const TIPOS: { key: keyof Mercancia; label: string }[] = [
+    { key: 'descripciones_alternas_ue', label: 'la Unión Europea (UE)' },
+    { key: 'descripciones_alternas_aelc', label: 'la Asociación Europea de Libre Comercio (AELC)' },
+    { key: 'descripciones_alternas_sgp', label: 'el SGP' },
+    { key: 'descripciones_alternas_ace', label: 'la ACE' }
+  ];
+
+  for (const TIPO of TIPOS) {
+       const LISTA = data[TIPO.key];
+    if (Array.isArray(LISTA) && LISTA.length > 0) {
+      this.descripcionesPorTipo.push({
+        tipo: TIPO.label,
+        descripciones: LISTA.map((item: DescripcionAlternaResponse) => ({
+          id: item.id_descripcion_alterna_fraccion,
+          descripcion: item.descripcion
+        }))
+      });
+    }
+  }
+
+  this.descripcionesMostrar = this.descripcionesPorTipo.length > 0;
+      
+  }
+
+  /**
+   * @method getFormControlName
+   * @description
+   * Obtiene el nombre del control del formulario según el tipo de descripción.
+   * Asocia cada tipo de acuerdo comercial con su correspondiente control en el formulario.
+   * @param {string} tipo - Tipo de descripción (UE, AELC, SGP, ACE).
+   * @returns {string} Nombre del control del formulario correspondiente al tipo.
+   */
+  public getFormControlName(tipo: string): string {
+  switch (tipo) {
+    case 'la Unión Europea (UE)':
+      return 'descripcionUE';
+    case 'la Asociación Europea de Libre Comercio (AELC)':
+      return 'descripcionAELC';
+    case 'el SGP':
+      return 'descripcionSGP';
+    case 'la ACE':
+      return 'descripcionACE';
+    default:
+      return '';
+  }
+}
+
 
   /**
    * **Ciclo de vida: Destruye las suscripciones y limpia recursos**

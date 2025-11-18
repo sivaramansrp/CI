@@ -506,7 +506,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-modificacion',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
         (m) => m.RegistroModificacionModule
@@ -565,7 +565,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modificacion-programa-immex-baja-submanufacturera',
+    path: 'registro-solicitude',
     loadChildren: () =>
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'

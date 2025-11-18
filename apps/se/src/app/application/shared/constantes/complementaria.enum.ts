@@ -96,12 +96,12 @@ export const CONFIGURACION_SOCIOS: ConfiguracionColumna<unknown>[] = [
   },
   {
     encabezado: 'Primer apellido',
-    clave: (ele: unknown): string | undefined => (ele as Complimentaria).apellidoPrimer,
+    clave: (ele: unknown): string | undefined => (ele as Complimentaria).apellidoPaterno,
     orden: 3,
   },
   {
     encabezado: 'Segundo apellido',
-    clave: (ele: unknown): string | undefined => (ele as Complimentaria).apellidoSegundo,
+    clave: (ele: unknown): string | undefined => (ele as Complimentaria).apellidoMaterno,
     orden: 4,
   },
 ];
@@ -175,7 +175,7 @@ export const CONFIGURACION_PLANTAS = [
 
   {
     encabezado: 'Estatus',
-    clave: (ele: unknown) : string | undefined => ((ele as Plantas).estatus ? 'Activada' : 'Baja'),
+    clave: (ele: unknown) : string | undefined => ((ele as Plantas).desEstatus),
     orden: 13,
   },
 ];
@@ -193,7 +193,7 @@ export const CONFIGURACION_SERVICIOS_IMMEX = [
     },
     {
       encabezado: 'Testado',
-      clave: (ele: ServiciosImmex):string | undefined => ele.testado,
+      clave: (ele: ServiciosImmex):string | undefined => ele.descripcionTestado,
       orden: 3,
     },
     {
@@ -203,7 +203,7 @@ export const CONFIGURACION_SERVICIOS_IMMEX = [
     },
     {
       encabezado: 'Tipo de servicio',
-      clave: (ele: ServiciosImmex):string | undefined => ele.tipoDeServicio,
+      clave: (ele: ServiciosImmex):string | undefined => ele.descripcionTipo,
       orden: 2,
     }
 ];

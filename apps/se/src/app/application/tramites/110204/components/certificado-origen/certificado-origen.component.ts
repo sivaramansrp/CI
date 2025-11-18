@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent,InputFecha,InputFechaComponent,SeccionLibQuery,SeccionLibState,SeccionLibStore,TablaDinamicaComponent, TablaSeleccion, TituloComponent, formatearFechaYyyyMmDd} from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component'
@@ -10,7 +10,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { IDPROCEDIMIENTO } from '../../constantes/modificacion.enum';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../../../../shared/components/mercancia/mercancia.component';
-import { Modal } from 'bootstrap';                     
+import { Modal } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
@@ -62,12 +62,12 @@ export const FECHA_FINAL = {
     MercanciaComponent,
     CertificadoDeOrigenComponent,
     CargaPorArchivoComponent
-],
+  ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
-export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
+export class CertificadoOrigenComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * @descripcion
@@ -81,7 +81,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
    * @type {boolean}
    */
-   @Input() formularioDeshabilitado: boolean = false;
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -153,16 +153,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   private seccion!: SeccionLibState;
 
 
-    /**
-   * Datos de la bitácora obtenidos desde el servicio.
-   * @type {Mercancia[]}
-   */
+  /**
+ * Datos de la bitácora obtenidos desde el servicio.
+ * @type {Mercancia[]}
+ */
 
-    datosSeleccionados!: Mercancia;
-    /**
-   * Instancia del modal de modificación.
-   */
-    modalInstance!: Modal;
+  datosSeleccionados!: Mercancia;
+  /**
+ * Instancia del modal de modificación.
+ */
+  modalInstance!: Modal;
 
   /**
    * @property {Modal} buscarModel
@@ -170,40 +170,40 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Instancia del modal de búsqueda de mercancía.
    * Se utiliza para mostrar y controlar el modal de búsqueda de mercancías en el componente.
    */
-    buscarModel!: Modal
+  buscarModel!: Modal
 
-    /**
-     * @descripcion
-     * Indica si el campo de mercancías está activo.
-     */
-    cargoDeMercancias: boolean = true;
-
-    /**
-     * @descripcion
-     * Indica si hay mercancías disponibles.
-     */
-    mercanciasDisponibles: boolean = true;
-
-    /**
-     * @descripcion
-     * Indica si hay mercancías disponibles en la tabla.
-     */
-    mercanciasDisponiblesTabla: boolean = true;
-
-    /**
-   * @property {ElementRef} modifyModal
-   * @description
-   * Referencia al elemento del modal de modificación en la plantilla HTML.
-   * Se utiliza para inicializar y controlar la instancia del modal de modificación desde el componente.
+  /**
+   * @descripcion
+   * Indica si el campo de mercancías está activo.
    */
-    @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+  cargoDeMercancias: boolean = true;
 
-        /**
-   * @property {ElementRef} buscarMercanciaModal
-   * @description
-   * Referencia al elemento del modal de búsqueda de mercancía en la plantilla HTML.
-   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+  /**
+   * @descripcion
+   * Indica si hay mercancías disponibles.
    */
+  mercanciasDisponibles: boolean = true;
+
+  /**
+   * @descripcion
+   * Indica si hay mercancías disponibles en la tabla.
+   */
+  mercanciasDisponiblesTabla: boolean = true;
+
+  /**
+ * @property {ElementRef} modifyModal
+ * @description
+ * Referencia al elemento del modal de modificación en la plantilla HTML.
+ * Se utiliza para inicializar y controlar la instancia del modal de modificación desde el componente.
+ */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+* @property {ElementRef} buscarMercanciaModal
+* @description
+* Referencia al elemento del modal de búsqueda de mercancía en la plantilla HTML.
+* Se utiliza para controlar la apertura y cierre del modal desde el componente.
+*/
   @ViewChild('buscarMercanciaModal', { static: false }) buscarMercanciaModal!: ElementRef;
 
   /**
@@ -298,12 +298,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
       if (!this.actualizandoFormulario && estado) {
-        this.actualizandoFormulario = true;        
-        this.formCertificado=estado;
+        this.actualizandoFormulario = true;
+        this.formCertificado = estado;
         this.actualizandoFormulario = false;
       }
     });
-  
+
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -325,7 +325,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancia[]>).pipe(
       map((mercancias: Mercancia[]) => mercancias as unknown as Mercancia[])
     );
-    
+
   }
 
   /**
@@ -336,7 +336,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
@@ -373,85 +373,90 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   /**
    * Busca la mercancia y actualiza los datos en el store.
    */
-buscarrMercancia(): void {  
-  const PAYLOAD = {
-    rfcExportador: 'AAL0409235E6',
-    tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
-    pais: { cvePais: this.formCertificado['bloque'] || '' },
-  };
+  buscarrMercancia(): void {
+    const PAYLOAD = {
+      rfcExportador: 'AAL0409235E6',
+      tratadoAcuerdo: { idTratadoAcuerdo: this.formCertificado['entidadFederativa'] },
+      pais: { cvePais: this.formCertificado['bloque'] || '' },
+      fraccionArancelaria: this.formCertificado['fraccionArancelariaForm'] || '',
+      numeroRegistro: this.formCertificado['registroProductoForm'] || null,
+      nombreComercial: this.formCertificado['nombreComercialForm'] || '',
+      fechaInicio: formatearFechaYyyyMmDd(this.formCertificado['fechaInicioInput'] as string) || "",
+      fechaFin: formatearFechaYyyyMmDd(this.formCertificado['fechaFinalInput'] as string) || "",
+    };
 
- this.certificadoService
-  .buscarMercanciasCert(PAYLOAD)
-  .pipe(takeUntil(this.destroyNotifier$))
-  .subscribe({
-    next: (response) => {
-  interface TratadoAplicable {
-    nombreTratado?: string;
+    this.certificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          interface TratadoAplicable {
+            nombreTratado?: string;
+          }
+
+          interface ResponseItem {
+            idMercancia?: number | null;
+            fraccionArancelaria?: string;
+            numeroRegistro?: string;
+            fechaExpedicion?: string;
+            fechaVencimiento?: string;
+            nombreTecnico?: string;
+            nombreComercial?: string;
+            fraccionNALADIClave?: string;
+            fraccionNALADSA93Clave?: string;
+            fraccionNALADISA96Clave?: string;
+            fraccionNALADISA02Clave?: string;
+            criterioOrigen?: string;
+            porcentajeContenidoRegional?: string;
+            tratadoAplicable?: TratadoAplicable;
+            unidadMedida?: string;
+          }
+
+          interface ResponseType {
+            datos?: ResponseItem[];
+          }
+
+          const MAPPED_DATA: Mercancia[] = ((response as ResponseType)?.datos ?? []).map((item: ResponseItem): Mercancia => ({
+            id: item.idMercancia ?? undefined,
+            fraccionArancelaria: item.fraccionArancelaria || '',
+            numeroDeRegistrodeProductos: item.numeroRegistro || '',
+            fechaExpedicion: item.fechaExpedicion || '',
+            fechaVencimiento: item.fechaVencimiento || '',
+            nombreTecnico: item.nombreTecnico || '',
+            nombreComercial: item.nombreComercial || '',
+            fraccionNaladi: item.fraccionNALADIClave || '',
+            fraccionNaladiSa93: item.fraccionNALADSA93Clave || '',
+            fraccionNaladiSa96: item.fraccionNALADISA96Clave || '',
+            fraccionNaladiSa02: item.fraccionNALADISA02Clave || '',
+            criterioParaConferirOrigen: item.criterioOrigen || '',
+            valorDeContenidoRegional: item.porcentajeContenidoRegional || '',
+            normaOrigen: item.tratadoAplicable?.nombreTratado || '',
+            cantidad: '',
+            umc: '',
+            tipoFactura: '',
+            valorMercancia: '',
+            fechaFinalInput: '',
+            numeroFactura: '',
+            unidadMedidaMasaBruta: item.unidadMedida || '',
+            complementoClasificacion: '',
+            complementoDescripcion: '',
+            nalad: '',
+            fechaFactura: '',
+            marca: '',
+            nombreIngles: '',
+            otrasInstancias: '',
+            criterioParaTratoPreferencial: '',
+            numeroDeSerie: '',
+          }));
+
+
+          this.store.setbuscarMercancia(MAPPED_DATA);
+        },
+        error: () => {
+          this.toastr.error('Error al buscar Mercancia');
+        },
+      });
   }
-
-  interface ResponseItem {
-    idMercancia?: number | null;
-    fraccionArancelaria?: string;
-    numeroRegistro?: string;
-    fechaExpedicion?: string;
-    fechaVencimiento?: string;
-    nombreTecnico?: string;
-    nombreComercial?: string;
-    fraccionNALADIClave?: string;
-    fraccionNALADSA93Clave?: string;
-    fraccionNALADISA96Clave?: string;
-    fraccionNALADISA02Clave?: string;
-    criterioOrigen?: string;
-    porcentajeContenidoRegional?: string;
-    tratadoAplicable?: TratadoAplicable;
-    unidadMedida?: string;
-  }
-
-  interface ResponseType {
-    datos?: ResponseItem[];
-  }
-
-  const MAPPED_DATA: Mercancia[] = ((response as ResponseType)?.datos ?? []).map((item: ResponseItem): Mercancia => ({
-    id: item.idMercancia ?? undefined,
-    fraccionArancelaria: item.fraccionArancelaria || '',
-    numeroDeRegistrodeProductos: item.numeroRegistro || '',
-    fechaExpedicion: item.fechaExpedicion || '',
-    fechaVencimiento: item.fechaVencimiento || '',
-    nombreTecnico: item.nombreTecnico || '',
-    nombreComercial: item.nombreComercial || '',
-    fraccionNaladi: item.fraccionNALADIClave || '',
-    fraccionNaladiSa93: item.fraccionNALADSA93Clave || '',
-    fraccionNaladiSa96: item.fraccionNALADISA96Clave || '',
-    fraccionNaladiSa02: item.fraccionNALADISA02Clave || '',
-    criterioParaConferirOrigen: item.criterioOrigen || '',
-    valorDeContenidoRegional: item.porcentajeContenidoRegional || '',
-    normaOrigen: item.tratadoAplicable?.nombreTratado || '',
-    cantidad: '',
-    umc: '',
-    tipoFactura: '',
-    valorMercancia: '',
-    fechaFinalInput: '',
-    numeroFactura: '',
-    unidadMedidaMasaBruta: item.unidadMedida || '',
-    complementoClasificacion: '',
-    complementoDescripcion: '',
-    nalad: '',
-    fechaFactura: '',
-    marca: '',
-    nombreIngles: '',
-    otrasInstancias: '',
-    criterioParaTratoPreferencial: '',
-    numeroDeSerie: '',
-  }));
-
-
-      this.store.setbuscarMercancia(MAPPED_DATA);
-    },
-    error: () => {
-      this.toastr.error('Error al buscar Mercancia');
-    },
-  });
-}
 
 
 
@@ -464,23 +469,23 @@ buscarrMercancia(): void {
    * @returns {void}
    */
   abrirModalCargaPorArchivo(): void {
-    if(this.buscarModel) {
+    if (this.buscarModel) {
       this.buscarModel.show();
     }
   }
-    /**
-   * Método para abrir el modal de modificación.
-   */
-    abrirModificarModal(datos1: Mercancia, fromMercanciasDisponibles: boolean): void {
-      this.datosSeleccionados = datos1;
-       this.fromMercanciasDisponibles = fromMercanciasDisponibles;
-      this.store.setFormMercancia({ ...datos1 });
-        
-      if (this.modalInstance) {
-        this.modalInstance.show();
-      }      
+  /**
+ * Método para abrir el modal de modificación.
+ */
+  abrirModificarModal(datos1: Mercancia, fromMercanciasDisponibles: boolean): void {
+    this.datosSeleccionados = datos1;
+    this.fromMercanciasDisponibles = fromMercanciasDisponibles;
+    this.store.setFormMercancia({ ...datos1 });
+
+    if (this.modalInstance) {
+      this.modalInstance.show();
     }
-    
+  }
+
   /**
    * @method guardarClicado
    * @description
@@ -490,28 +495,28 @@ buscarrMercancia(): void {
    * @param {Mercancia[]} event - Arreglo de mercancías que se asigna al observable de la tabla.
    * @returns {void}
    */
-    guardarClicado(event: Mercancia[]): void {
+  guardarClicado(event: Mercancia[]): void {
     this.datosTabla$ = of(event);
   }
 
-    /**
-     * Cierra el modal de modificación si está abierto.
-     * 
-     * @remarks
-     * Este método verifica si hay una instancia de modal activa y, 
-     * en caso afirmativo, la oculta.
-     */
-    cerrarModificarModal():void {
-      if (this.modalInstance) {
-        this.tablaSeleccionEvent = true;
-        this.modalInstance.hide();
-      }
-    }
-
-    /**
-   * Establece el estado de validez del formulario en el store.
-   * @param valida Indica si el formulario es válido o no.
+  /**
+   * Cierra el modal de modificación si está abierto.
+   * 
+   * @remarks
+   * Este método verifica si hay una instancia de modal activa y, 
+   * en caso afirmativo, la oculta.
    */
+  cerrarModificarModal(): void {
+    if (this.modalInstance) {
+      this.tablaSeleccionEvent = true;
+      this.modalInstance.hide();
+    }
+  }
+
+  /**
+ * Establece el estado de validez del formulario en el store.
+ * @param valida Indica si el formulario es válido o no.
+ */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
   }
@@ -553,16 +558,16 @@ buscarrMercancia(): void {
    * Este método se ejecuta después de que la vista del componente ha sido inicializada.
    * Inicializa el modal de modificación si está disponible.
    */
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
     // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
-    if(this.buscarMercanciaModal) {
+    if (this.buscarMercanciaModal) {
       this.buscarModel = new Modal(this.buscarMercanciaModal.nativeElement);
     }
   }
-  
+
   /**
    * Emite los datos de una mercancía seleccionada o capturada y los almacena en el estado global.
    * 
@@ -571,8 +576,8 @@ buscarrMercancia(): void {
    *
    * @param {Mercancia} evento - Objeto que contiene la información de la mercancía seleccionada o modificada.
    */
-  emitmercaniasDatos(evento: Mercancia): void{
+  emitmercaniasDatos(evento: Mercancia): void {
     this.store.setMercanciaTabla([evento]);
   }
-    
+
 }

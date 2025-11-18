@@ -1,133 +1,193 @@
 import { TestBed } from '@angular/core/testing';
 import { SolicitudService } from './solicitud.service';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
 import { Tramite80301Store } from '../estados/tramite80301.store';
-import {
-  Solicitud80301State,
-  Solicitud80301StateObj,
-} from '../estados/tramite80301.store';
-import { DatosDelModificacion } from '../models/datos-tramite.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 import {
-  Anexo,
-  Bitacora,
   Complimentaria,
+  ExportacionImportacionPayload,
+  Bitacora,
   Federetarios,
   Operacions,
 } from '../models/plantas-consulta.model';
 
+import {
+  ImportacionExportacionFracciones,
+  DatosDelModificacion,
+  JSONRespuesta,
+} from '../models/datos-tramite.model';
+
+import {
+  Solicitud80301State,
+  Solicitud80301StateObj,
+} from '../estados/tramite80301.store';
+
+import { Tramite80301Query } from '../estados/tramite80301.query';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { PROC_80301 } from '../servers/api-route';
+
 describe('SolicitudService', () => {
   let service: SolicitudService;
-  let httpClientSpy: jest.Mocked<HttpClient>;
   let storeSpy: jest.Mocked<Tramite80301Store>;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    httpClientSpy = {
-      get: jest.fn(),
-    } as any;
-
     storeSpy = {
       setRfc: jest.fn(),
       setFederal: jest.fn(),
       setTipo: jest.fn(),
       setPrograma: jest.fn(),
+      _select: jest.fn().mockReturnValue(of({})),
+      select: jest.fn().mockReturnValue(of({})),
+      setDatosModificacion: jest.fn(),
     } as any;
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         SolicitudService,
-        { provide: HttpClient, useValue: httpClientSpy },
         { provide: Tramite80301Store, useValue: storeSpy },
+        Tramite80301Query,
       ],
     });
+
     service = TestBed.inject(SolicitudService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('getDatosDelSolicitante should return data', (done) => {
+  it('getDatosDelSolicitante should return data', () => {
     const mockData: RespuestaCatalogos[] = [{ id: 1 } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+
     service.getDatosDelSolicitante().subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'GET');
+    req.flush({ data: mockData });
   });
 
-  it('getDatosModificacion should return data', (done) => {
+  it('getDatosModificacion should return data', () => {
     const mockData: RespuestaCatalogos[] = [{ id: 2 } as any];
-    httpClientSpy.get.mockReturnValue(of(mockData));
+
     service.getDatosModificacion().subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'GET');
+    req.flush(mockData);
   });
 
-  it('getModificacion should return data', (done) => {
+  it('getModificacion should return data', () => {
     const mockData: RespuestaCatalogos[] = [{ id: 3 } as any];
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.getModificacion().subscribe((result) => {
+
+    service.getDatosModificacion().subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'GET');
+    req.flush(mockData);
   });
 
-  it('getDatosTableData should return table data', (done) => {
-    const mockData: DatosDelModificacion[] = [{ campo: 'valor' } as any];
-    httpClientSpy.get.mockReturnValue(of(mockData));
-    service.getDatosTableData().subscribe((result) => {
+  it('getDatosExportacionTableData should return table data', () => {
+    const mockData: ImportacionExportacionFracciones[] = [
+      { campo: 'valor' } as any,
+    ];
+
+    const payload: ExportacionImportacionPayload = {
+      idSolicitud: '',
+      tipoPrograma: 'TICPSE.IMMEX',
+      folioPrograma: '2',
+      discriminatorValue: '80301',
+      rfc: 'TSD931210493',
+      idPrograma: '1234',
+    };
+
+    service.getDatosExportacionTableData(payload).subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'POST');
+    req.flush(mockData);
   });
 
-  it('obtenerComplimentaria should return complimentaria data', (done) => {
+  it('obtenerComplimentaria should return complimentaria data', () => {
     const mockData: Complimentaria[] = [{ nombre: 'test' } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
-    service.obtenerComplimentaria().subscribe((result) => {
+
+    service.obtenerComplimentaria(['12345']).subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'POST');
+    req.flush({ data: mockData });
   });
 
-  it('obtenerAnexo should return anexo data', (done) => {
-    const mockData: Anexo[] = [{ archivo: 'file.pdf' } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
-    service.obtenerAnexo().subscribe((result) => {
-      expect(result).toEqual(mockData);
-      done();
-    });
-  });
-
-  it('obtenerFederetarios should return federetarios data', (done) => {
+  it('obtenerFederetarios should return federetarios data', () => {
     const mockData: Federetarios[] = [{ nombre: 'fed' } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
-    service.obtenerFederetarios().subscribe((result) => {
+
+    service.obtenerFederetarios(['12345']).subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'POST');
+    req.flush({ data: mockData });
   });
 
-  it('obtenerOperacion should return operacion data', (done) => {
-    const mockData: Operacions[] = [{ operacion: 'op' } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
-    service.obtenerOperacion().subscribe((result) => {
+  it('obtenerOperacion should return operacion data', () => {
+    const mockData: Operacions[] = [{ nombre: 'nombre' } as any];
+
+    service.obtenerOperacion(['12345']).subscribe(result => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) =>
+      r.url.includes('consulta-plantas') && r.method === 'POST'
+    );
+
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ idSolicitud: ['12345'] });
+
+    req.flush({ data: mockData });
   });
 
-  it('obtenerBitacora should return bitacora data', (done) => {
+  it('obtenerBitacora should return bitacora data', () => {
     const mockData: Bitacora[] = [{ registro: 'bit' } as any];
-    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
-    service.obtenerBitacora().subscribe((result) => {
+
+    service.obtenerBitacora('12345').subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'GET');
+    req.flush({ data: mockData });
+  });
+
+  it('should call GET and return certificacionSAT data', () => {
+    const RFC = 'ABC123456789';
+    const MOCK_RESPONSE: JSONRespuesta<{ certificacionSAT: string }> = {
+      datos: { certificacionSAT: 'CERT-OK' },
+      mensaje: ''
+    };
+
+    service.obtenerDatosCertificacionSAT(RFC).subscribe((resp) => {
+      expect(resp).toEqual(MOCK_RESPONSE);
+    });
+
+    const req = httpMock.expectOne(PROC_80301.CERTIFICACION_SAT + RFC);
+
+    expect(req.request.method).toBe('GET');
+
+    req.flush(MOCK_RESPONSE);
   });
 
   it('actualizarEstadoFormulario should call store methods', () => {
@@ -139,19 +199,22 @@ describe('SolicitudService', () => {
         programa: 'PROG',
       },
     } as any;
+
     service.actualizarEstadoFormulario(datos);
-    expect(storeSpy.setRfc).toHaveBeenCalledWith('RFC123');
-    expect(storeSpy.setFederal).toHaveBeenCalledWith('FED');
-    expect(storeSpy.setTipo).toHaveBeenCalledWith('TIPO');
-    expect(storeSpy.setPrograma).toHaveBeenCalledWith('PROG');
+
+    expect(storeSpy.setDatosModificacion).toHaveBeenCalledWith(
+      datos.datosModificacion
+    );
   });
 
-  it('obtenerTramiteDatos should return tramite datos', (done) => {
+  it('obtenerTramiteDatos should return tramite datos', () => {
     const mockData: Solicitud80301StateObj = { some: 'data' } as any;
-    httpClientSpy.get.mockReturnValue(of(mockData));
+
     service.obtenerTramiteDatos().subscribe((result) => {
       expect(result).toEqual(mockData);
-      done();
     });
+
+    const req = httpMock.expectOne((r) => r.method === 'GET');
+    req.flush(mockData);
   });
 });

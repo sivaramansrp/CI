@@ -2,9 +2,9 @@
  * Importaciones necesarias para el componente de terceros relacionados.
  * Incluye módulos y servicios para gestionar la tabla dinámica de destinatarios relacionados.
  */
-import { AlertComponent, Catalogo, CatalogosSelect, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogosSelect, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TablaDinamicaComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../enums/destinatario.enum';
 import { Destinatario } from '../../enums/destinatario.enum';
 import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
+import { Modal } from 'bootstrap';
 import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 import { Subject } from 'rxjs';
 import { TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
@@ -31,12 +32,18 @@ import { takeUntil } from 'rxjs';
   imports: [CommonModule, AlertComponent, TituloComponent, TablaDinamicaComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia al elemento modal para control programático
+   */
+  @ViewChild('modalRef') modalElement!: ElementRef;
+
   /**
    * Mensaje de alerta obligatorio para la tabla.
    */
@@ -128,10 +135,20 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * ID del elemento que se va a eliminar.
      */
   elementoParaEliminar!: number;
+  
+  /**
+   * Indica si estamos en modo edición (modificar) o agregando nuevo destinatario
+   */
+  modoEdicion = false;
+  
+  /**
+   * ID del destinatario que se está editando
+   */
+  destinatarioEditandoId: number | null = null;
 
    /**
-   * Enum expuesto al template para comparar el tipo de persona seleccionado (física o moral)
-   * sin necesidad de hardcodear los valores en la vista.
+   * Enumeración expuesta al template para comparar el tipo de persona seleccionado (física o moral)
+   * sin necesidad de codificar los valores directamente en la vista.
    */
   public TipoPersonaEnum = TipoPersona;
   /**
@@ -150,7 +167,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public solicitudDatosService: SolicitudModificacionPermisoSalidaTerritorioService,
     private tramite261401Store: Tramite261401Store,
     private tramite261401Query: Tramite261401Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -161,6 +179,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
+    this.tramite261401Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((solicitudState) => {
+          this.tableData = solicitudState.destinatarioDatos || [];
+          this.destinatarioDatos = solicitudState.destinatarioDatos || [];
+          this.agregarDestinatarioState = solicitudState;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -168,8 +198,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene la lista de destinatarios relacionados.
    */
   ngOnInit(): void {
-    
-
     this.crearFormTransporte();
     this.getPaisData();
     this.obtenerDestinatarioListo();
@@ -185,8 +213,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: Destinatario[]) => {
           this.destinatarioDatos = respuesta;
+          this.tableData = respuesta;
           this.tramite261401Store.setDestinatarioDatos(respuesta);
         },
+        error: (error) => {
+          console.error('Error en obtenerDestinatarioListo:', error);
+        }
       });
   }
 
@@ -222,14 +254,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.pattern(REGEX_NOMBRE)],
         ],
         pais: [this.agregarDestinatarioState?.pais, Validators.required],
-        domicilio: [
-          this.agregarDestinatarioState?.domicilio,
-          Validators.required,
-        ],
         estado: [this.agregarDestinatarioState?.estado, Validators.required],
         codigopostal: [
           this.agregarDestinatarioState?.codigopostal,
-          Validators.required,
         ],
         calle: [this.agregarDestinatarioState?.calle, Validators.required],
         numeroExterior: [
@@ -237,13 +264,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           Validators.required,
         ],
         numeroInterior: [
-          this.agregarDestinatarioState?.numeroInterior,
-          Validators.required,
+          this.agregarDestinatarioState?.numeroInterior
         ],
         lada: [this.agregarDestinatarioState?.lada],
-        telefono: [this.agregarDestinatarioState?.telefono, [Validators.pattern(REGEX_TELEFONO_DIGITOS)]],
-        correoElectronico: [this.agregarDestinatarioState?.correoElectronico,[Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
-      })
+        telefono: [this.agregarDestinatarioState?.telefono],
+        correoElectronico: [this.agregarDestinatarioState?.correoElectronico, [Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
+      });
+
+      this.disableAllFieldsExceptTipoPersona();
       
 
   }    
@@ -268,7 +296,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           this.agregarDestinatarioState = seccionState;
         })
       )
-     
+      .subscribe();
   }
     /**
  * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
@@ -283,16 +311,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Guarda los datos del formulario en la tabla.
    */
   onGuardar() :void{
-    const FORM_DATA = this.destinatarioForm.value;
-    if (FORM_DATA.agregarDestinatario) {
-      const DESTINARIO = {
-        ...FORM_DATA.agregarDestinatario,
-        ...FORM_DATA.datosPersonales, // Combina objetos anidados en una estructura plana
-        pais: this.getPaisName(FORM_DATA.datosPersonales.pais), // Mapea el id de `pais` a su descripción
+    if (this.isFormValidForSelectedPersonType()) {
+      const FORM_DATA = this.destinatarioForm.value;
+      const DESTINARIO: Partial<Destinatario> = {
+        id: this.modoEdicion ? (this.destinatarioEditandoId || 0) : this.tableData.length + 1,
+        tipoPersona: FORM_DATA.tipoPersona,
+        nombre: FORM_DATA.nombre,
+        primerApellido: FORM_DATA.primerApellido,
+        segundoApellido: FORM_DATA.segundoApellido || '',
+        denominacion: FORM_DATA.denominacion,
+        rfc: '',
+        curp: '',
+        pais: this.getPaisName(FORM_DATA.pais), 
+        estado: FORM_DATA.estado,
+        estado2: '',
+        codigopostal: FORM_DATA.codigopostal,
+        codigo: FORM_DATA.codigopostal, 
+        calle: FORM_DATA.calle,
+        colonia: '',
+        municipio: '',
+        localidad: '',
+        numeroExterior: FORM_DATA.numeroExterior,
+        numeroInterior: FORM_DATA.numeroInterior || '',
+        domicilio: FORM_DATA.calle + ', ' + FORM_DATA.numeroExterior, 
+        lada: FORM_DATA.lada || 0,
+        telefono: FORM_DATA.telefono || '',
+        correoElectronico: FORM_DATA.correoElectronico || ''
       };
-      this.tableData.push(DESTINARIO);
+      
+      if (this.modoEdicion && this.destinatarioEditandoId) {
+        const INDEX = this.tableData.findIndex(item => item.id === this.destinatarioEditandoId);
+        if (INDEX !== -1) {
+          this.tableData[INDEX] = DESTINARIO as Destinatario;
+          this.tableData = [...this.tableData];
+        }
+      } else {
+        this.tableData = [...this.tableData, DESTINARIO as Destinatario];
+      }
+      this.cdr.detectChanges();
+      this.limpiarFormulario(); 
+      this.closeModal();
+    } else {
+      this.markRelevantFieldsAsTouched();
     }
-    this.destinatarioForm.reset();
   }
 
   /**
@@ -321,11 +382,277 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida el formulario solo para los campos relevantes según el tipo de persona seleccionado
+   */
+  private isFormValidForSelectedPersonType(): boolean {
+    const TIPO_PERSONA = this.destinatarioForm.get('tipoPersona')?.value;
+    
+    if (!this.validateCommonFields()) {
+      return false;
+    }
+    
+    if (TIPO_PERSONA === TipoPersona.FISICA || TIPO_PERSONA === 'Fisica') {
+      return this.validateFisicaFields();
+    } else if (TIPO_PERSONA === TipoPersona.MORAL || TIPO_PERSONA === 'Moral') {
+      return this.validateMoralFields();
+    }
+    
+    return this.validateOptionalFields();
+  }
+
+  /**
+   * Valida campos comunes requeridos
+   */
+  private validateCommonFields(): boolean {
+    const COMMON_REQUIRED_FIELDS = ['tipoPersona', 'pais', 'estado', 'calle', 'numeroExterior'];
+    
+    for (const FIELD of COMMON_REQUIRED_FIELDS) {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL && (CONTROL.invalid || !CONTROL.value)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Valida campos específicos para persona física
+   */
+  private validateFisicaFields(): boolean {
+    const FISICA_REQUIRED_FIELDS = ['nombre', 'primerApellido'];
+    
+    for (const FIELD of FISICA_REQUIRED_FIELDS) {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL && (CONTROL.invalid || !CONTROL.value)) {
+        return false;
+      }
+    }
+    return this.validateOptionalFields();
+  }
+
+  /**
+   * Valida campos específicos para persona moral
+   */
+  private validateMoralFields(): boolean {
+    const MORAL_REQUIRED_FIELDS = ['denominacion'];
+    
+    for (const FIELD of MORAL_REQUIRED_FIELDS) {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL && (CONTROL.invalid || !CONTROL.value)) {
+        return false;
+      }
+    }
+    return this.validateOptionalFields();
+  }
+
+  /**
+   * Valida campos opcionales que tienen validaciones de formato
+   */
+  private validateOptionalFields(): boolean {
+    const OPTIONAL_FIELDS_WITH_VALIDATION = ['correoElectronico', 'segundoApellido'];
+    for (const FIELD of OPTIONAL_FIELDS_WITH_VALIDATION) {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL && CONTROL.value && CONTROL.invalid) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Marca como touched solo los campos relevantes según el tipo de persona seleccionado
+   */
+  private markRelevantFieldsAsTouched(): void {
+    const TIPO_PERSONA = this.destinatarioForm.get('tipoPersona')?.value;
+    const COMMON_REQUIRED_FIELDS = ['tipoPersona', 'pais', 'estado', 'calle', 'numeroExterior'];
+    COMMON_REQUIRED_FIELDS.forEach(FIELD => {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+      }
+    });
+    
+    if (TIPO_PERSONA === TipoPersona.FISICA || TIPO_PERSONA === 'Fisica') {
+      const FISICA_REQUIRED_FIELDS = ['nombre', 'primerApellido'];
+      
+      FISICA_REQUIRED_FIELDS.forEach(FIELD => {
+        const CONTROL = this.destinatarioForm.get(FIELD);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+    } else if (TIPO_PERSONA === TipoPersona.MORAL || TIPO_PERSONA === 'Moral') {
+      const MORAL_REQUIRED_FIELDS = ['denominacion'];
+      
+      MORAL_REQUIRED_FIELDS.forEach(FIELD => {
+        const CONTROL = this.destinatarioForm.get(FIELD);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+    }
+    
+    const OPTIONAL_FIELDS_WITH_VALIDATION = ['correoElectronico', 'segundoApellido'];
+    OPTIONAL_FIELDS_WITH_VALIDATION.forEach(FIELD => {
+      const CONTROL = this.destinatarioForm.get(FIELD);
+      if (CONTROL && CONTROL.value) {
+        CONTROL.markAsTouched();
+      }
+    });
+  }
+
+  /**
    * Establece el tipo de persona seleccionado.
    * Valor seleccionado (cadena o número).
    */
   setTipoPersona(value: string | number): void {
     this.tipoPersonaSeleccionada = value.toString();
+    const NORMALIZED_VALUE = value.toString();
+    if (NORMALIZED_VALUE === 'Fisica' || NORMALIZED_VALUE === 'fisica') {
+      this.enableFieldsForPersonaFisica();
+    } else if (NORMALIZED_VALUE === 'Moral' || NORMALIZED_VALUE === 'moral') {
+      this.enableFieldsForPersonaMoral();
+    } else {
+      this.disableAllFieldsExceptTipoPersona();
+    }
+  }
+
+  /**
+   * Deshabilita todos los campos excepto tipoPersona
+   */
+  private disableAllFieldsExceptTipoPersona(): void {
+    const FIELDS_TO_DISABLE = [
+      'nombre', 'primerApellido', 'segundoApellido', 'denominacion',
+      'pais', 'estado', 'codigopostal', 'calle', 'numeroExterior', 'numeroInterior', 
+      'lada', 'telefono', 'correoElectronico'
+    ];
+    
+    FIELDS_TO_DISABLE.forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.disable();
+      }
+    });
+  }
+
+  /**
+   * Habilita campos específicos para persona física y deshabilita campos de persona moral
+   */
+  private enableFieldsForPersonaFisica(): void {
+    const COMMON_FIELDS = [
+      'pais', 'estado', 'codigopostal', 'calle', 'numeroExterior', 'numeroInterior', 
+      'lada', 'telefono', 'correoElectronico'
+    ];
+    
+    const FISICA_FIELDS = ['nombre', 'primerApellido', 'segundoApellido'];
+    
+    const MORAL_FIELDS = ['denominacion'];
+    
+    [...COMMON_FIELDS, ...FISICA_FIELDS].forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.enable();
+      }
+    });
+    
+    MORAL_FIELDS.forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.disable();
+        CONTROL.setValue('');
+        CONTROL.clearValidators();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+    
+    this.applyPersonaFisicaValidators();
+  }
+
+  /**
+   * Habilita campos específicos para persona moral y deshabilita campos de persona física
+   */
+  private enableFieldsForPersonaMoral(): void {
+    const COMMON_FIELDS = [
+      'pais', 'estado', 'codigopostal', 'calle', 'numeroExterior', 'numeroInterior', 
+      'lada', 'telefono', 'correoElectronico'
+    ];
+    
+    const MORAL_FIELDS = ['denominacion'];
+    
+    const FISICA_FIELDS = ['nombre', 'primerApellido', 'segundoApellido'];
+    
+    [...COMMON_FIELDS, ...MORAL_FIELDS].forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.enable();
+      }
+    });
+    
+    FISICA_FIELDS.forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.disable();
+        CONTROL.setValue('');
+        CONTROL.clearValidators();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+    
+    this.applyPersonaMoralValidators();
+  }
+
+  /**
+   * Aplica validaciones específicas para persona física
+   */
+  private applyPersonaFisicaValidators(): void {
+    const NOMBRE_CONTROL = this.destinatarioForm.get('nombre');
+    const PRIMER_APELLIDO_CONTROL = this.destinatarioForm.get('primerApellido');
+    const SEGUNDO_APELLIDO_CONTROL = this.destinatarioForm.get('segundoApellido');
+    
+    if (NOMBRE_CONTROL) {
+      NOMBRE_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      NOMBRE_CONTROL.updateValueAndValidity();
+    }
+    
+    if (PRIMER_APELLIDO_CONTROL) {
+      PRIMER_APELLIDO_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      PRIMER_APELLIDO_CONTROL.updateValueAndValidity();
+    }
+    
+    if (SEGUNDO_APELLIDO_CONTROL) {
+      SEGUNDO_APELLIDO_CONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+      SEGUNDO_APELLIDO_CONTROL.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * Aplica validaciones específicas para persona moral
+   */
+  private applyPersonaMoralValidators(): void {
+    const DENOMINACION_CONTROL = this.destinatarioForm.get('denominacion');
+    
+    if (DENOMINACION_CONTROL) {
+      DENOMINACION_CONTROL.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      DENOMINACION_CONTROL.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * Habilita todos los campos excepto tipoPersona (método heredado - ya no usado)
+   */
+  private enableAllFields(): void {
+    const FIELDS_TO_ENABLE = [
+      'nombre', 'primerApellido', 'segundoApellido', 'denominacion',
+      'pais', 'estado', 'codigopostal', 'calle', 'numeroExterior', 'numeroInterior', 
+      'lada', 'telefono', 'correoElectronico'
+    ];
+    
+    FIELDS_TO_ENABLE.forEach(field => {
+      const CONTROL = this.destinatarioForm.get(field);
+      if (CONTROL) {
+        CONTROL.enable();
+      }
+    });
   }
 
     /**
@@ -336,10 +663,57 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Muestra el formulario para agregar un nuevo destinatario.
+   */
+  mostrarFormulario(): void {
+    this.limpiarFormulario();
+    this.esFormularioVisible = true;
+  }
+
+  /**
    * Limpia todos los campos del formulario de destinatario.
    */
   limpiarFormulario(): void {
     this.destinatarioForm.reset();
+    this.disableAllFieldsExceptTipoPersona();
+    this.modoEdicion = false;
+    this.destinatarioEditandoId = null;
+  }
+
+  /**
+   * Abre el formulario modal para agregar un nuevo destinatario
+   */
+  abrirFormulario(): void {
+    if (this.modoEdicion) {
+      this.esFormularioVisible = true;
+      return;
+    }
+    
+    this.modoEdicion = false;
+    this.destinatarioEditandoId = null;
+    this.limpiarFormulario();
+    this.esFormularioVisible = true;
+  }
+
+  /**
+   * Cierra el modal programáticamente usando data-bs-dismiss
+   */
+  closeModal(): void {
+    if (this.modalElement) {
+      const MODAL_ELEMENT = this.modalElement.nativeElement;
+      const CLOSE_BUTTON = MODAL_ELEMENT.querySelector('[data-bs-dismiss="modal"]');
+      if (CLOSE_BUTTON) {
+        (CLOSE_BUTTON as HTMLElement).click();
+      } else {
+        MODAL_ELEMENT.style.display = 'none';
+        MODAL_ELEMENT.classList.remove('show');
+        const BACKDROP = document.querySelector('.modal-backdrop');
+        if (BACKDROP) {
+          BACKDROP.remove();
+        }
+        document.body.classList.remove('modal-open');
+      }
+    }
   }
    /**
    * Getter para obtener el tipo de persona seleccionado.
@@ -373,26 +747,45 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       );
 
       if (SELECTED_ROW_DATA) {
-        this.destinatarioForm.patchValue({
-            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
-            nombre: SELECTED_ROW_DATA.nombre,
-            primerApellido: SELECTED_ROW_DATA.primerApellido,
-            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
-            denominacion: SELECTED_ROW_DATA.denominacion,
-            pais: SELECTED_ROW_DATA.pais,
-            domicilio: SELECTED_ROW_DATA.domicilio,
-            estado: SELECTED_ROW_DATA.estado,
-            codigopostal: SELECTED_ROW_DATA.codigopostal,
-            calle: SELECTED_ROW_DATA.calle,
-            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
-            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
-            lada: SELECTED_ROW_DATA.lada,
-            telefono: SELECTED_ROW_DATA.telefono,
-            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
-        
-        });
+        this.modoEdicion = true;
+        this.destinatarioEditandoId = SELECTED_ID;
+        this.enableAllFields();
+        const NORMALIZED_TIPO_PERSONA = SELECTED_ROW_DATA.tipoPersona; 
+        this.setTipoPersona(NORMALIZED_TIPO_PERSONA);
+        setTimeout(() => {
+          const PAIS_CATALOG_ITEM = this.paisData.catalogos.find(
+            (catalogo) => catalogo.descripcion === SELECTED_ROW_DATA.pais
+          );
+          const PAIS_ID = PAIS_CATALOG_ITEM ? PAIS_CATALOG_ITEM.id : null;
+          
+          const DATA_TO_PATCH = {
+              tipoPersona: NORMALIZED_TIPO_PERSONA, 
+              nombre: SELECTED_ROW_DATA.nombre,
+              primerApellido: SELECTED_ROW_DATA.primerApellido,
+              segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+              denominacion: SELECTED_ROW_DATA.denominacion,
+              pais: PAIS_ID,
+              estado: SELECTED_ROW_DATA.estado,
+              codigopostal: SELECTED_ROW_DATA.codigopostal,
+              calle: SELECTED_ROW_DATA.calle,
+              numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+              numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+              lada: SELECTED_ROW_DATA.lada,
+              telefono: SELECTED_ROW_DATA.telefono,
+              correoElectronico: SELECTED_ROW_DATA.correoElectronico,
+          };
+          
+          this.destinatarioForm.patchValue(DATA_TO_PATCH);
+
+          this.cdr.detectChanges();
+        }, 100);
 
         this.esFormularioVisible = true;
+        
+        if (this.modalElement) {
+          const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+          MODAL_INSTANCE.show();
+        }
       }
     }
   }
@@ -404,6 +797,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   onEliminar(): void {
     if (this.selectedRows.size > 0) {
       this.abrirModal();
+    }
+  }
+
+  /** Elimina los destinatarios seleccionados de la lista.*/
+  eliminarDestinatario(borrar: boolean): void {
+    if (borrar) {
+      const SELECTED_IDS = Array.from(this.selectedRows);
+      this.tableData = this.tableData.filter(item => !SELECTED_IDS.includes(item.id));
+      
+      this.selectedRows.clear();
+      this.cdr.detectChanges();
+      
+      this.abrirModal(0, true);
+    } else {
+      this.nuevaNotificacion = {} as Notificacion;
     }
   }
 
