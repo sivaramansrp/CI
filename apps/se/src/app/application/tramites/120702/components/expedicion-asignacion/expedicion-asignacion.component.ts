@@ -151,8 +151,19 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
  *  Contiene información y progreso de la solicitud. */
   public solicitudState!: Solicitud120702State;
 
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite de expedición y asignación.
+   */
   tramites:string="120702"
 
+  /**
+   * Contiene los datos de respuesta relacionados con la asignación en el formulario.
+   * 
+   * @type {AsignacionResponse}
+   */
   asignacionFormDatos!:AsignacionResponse ;
   
   /**
@@ -474,6 +485,20 @@ onBuscarClick(): void {
   }
 }
 
+/**
+ * Obtiene y busca los datos relacionados con la asignación de certificados de frontera.
+ *
+ * Marca los campos 'anoDelOficio' y 'numeroOficio' como tocados para activar la validación.
+ * Verifica que ambos campos sean válidos y no estén vacíos. Si son válidos, muestra las secciones correspondientes.
+ * Construye los parámetros necesarios y realiza una petición al servicio `expedicionCertificadosFronteraService`
+ * para obtener los datos asociados. Al recibir la respuesta, emite los datos obtenidos, los carga en el formulario
+ * y los asigna a la variable local.
+ *
+ * @remarks
+ * Este método depende de la validez de los campos del formulario y realiza una petición asíncrona.
+ *
+ * @returns {void}
+ */
 obtenerBuscarDatos(): void {
  this.asignacionForm.get('anoDelOficio')?.markAsTouched();
   this.asignacionForm.get('numeroOficio')?.markAsTouched();

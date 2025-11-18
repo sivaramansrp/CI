@@ -52,9 +52,25 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
    private _formDatos!: AsignacionResponse ;
 
    @Input()
+  /**
+   * Obtiene los datos del formulario de asignación.
+   * 
+   * @returns {AsignacionResponse} Los datos actuales del formulario de asignación.
+   */
    get formDatos(): AsignacionResponse {
      return this._formDatos;
    }
+  /**
+   * Establece el valor de `formDatos` y actualiza los campos de la constante `INFORMACION_DESCRIPCION_CUPO`
+   * con los valores correspondientes del objeto proporcionado.
+   * 
+   * Por cada campo en `INFORMACION_DESCRIPCION_CUPO`, asigna el valor predeterminado según la propiedad
+   * específica de `value`. Para los campos relacionados con el participante y licitación pública, accede
+   * a las propiedades anidadas dentro de `value.participante.licitacionPublica`.
+   * 
+   * @param value - Objeto que contiene los datos del formulario, utilizado para actualizar los valores predeterminados
+   *                de los campos en la descripción del cupo.
+   */
    set formDatos(value: any) {
     this._formDatos = value;
     if (value) {
