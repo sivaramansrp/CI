@@ -89,3 +89,23 @@ export const GUARDAR = (TRAMITE: string): string => `${BASE_URL}${API}/${TRAMITE
  */
 export const BUSCAR_INSTRUMENTOS = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscarInstrumentos`;
 
+/**
+ * Construye la URL para buscar una asignación en el sistema SAT.
+ *
+ * @param TRAMITE - Identificador del trámite a consultar.
+ * @param urlPram - Objeto que contiene los parámetros de búsqueda:
+ *   - rfcSolicitante: RFC del solicitante.
+ *   - numFolioAsignacion: Número de folio de la asignación.
+ *   - anioAutorizacion: Año de autorización de la asignación.
+ * @returns La URL completa como cadena de texto para realizar la consulta de asignación.
+ */
+export const BUSCAR_ASIGNACION = (TRAMITE: string,urlPram:any): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscar-asignacion?rfcSolicitante=${urlPram.rfcSolicitante}&numFolioAsignacion=${urlPram.numFolioAsignacion}&anioAutorizacion=${urlPram.anioAutorizacion}`;
+
+/**
+ * Construye la ruta de la API para guardar una solicitud de trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite para el cual se va a guardar la solicitud.
+ * @returns La URL completa para la operación de guardar solicitud del trámite.
+ */
+export const GUARDAR_API = (TRAMITE: string): string => `${BASE_URL}${API}/${TRAMITE}/solicitud/guardar`;
+
