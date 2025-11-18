@@ -1,3 +1,4 @@
+import { AsignacionResponse,Monto, MontoExpedirTablaDatos,TablaDatos} from '../../models/expedicion-certificados-frontera.models';
 import {
   CONFIGURATION_TABLA_MONTO,
   INPUT_FECHA_FIN,
@@ -15,28 +16,23 @@ import {
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  Monto,
-  MontoExpedirTablaDatos,
-  TablaDatos,
-} from '../../models/expedicion-certificados-frontera.models';
 import { Solicitud120702State, Tramite120702Store } from '../../estados/tramite120702.store';
 import { Subject,takeUntil } from 'rxjs';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-expedicion-asignacion',
@@ -61,6 +57,10 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Cada elemento corresponde a un registro de tipo `Monto`.
    * Initialize as empty array instead of MONTO_DATOS
    */
+
+   @Output() public formaDatos =
+    new EventEmitter<AsignacionResponse>();
+
   saldo: Monto[] = []; // Changed from MONTO_DATOS to empty array
   /**
    * Configuración de las columnas de la tabla dinámica.
@@ -152,6 +152,8 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud120702State;
 
   tramites:string="120702"
+
+  asignacionFormDatos!:AsignacionResponse ;
   
   /**
    * Constructor del componente.
@@ -166,7 +168,8 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     private tramite120702Query: Tramite120702Query,
     private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService,
     private consultaioQuery: ConsultaioQuery,
-    private catalogoServices:CatalogoServices
+    private catalogoServices:CatalogoServices,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter
   ) {}
 
   /**
@@ -183,6 +186,8 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
     });
 
+
+    
     // Remove the automatic addition of default data
     // Comment out or remove this section:
     /*
@@ -202,6 +207,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       .subscribe((data: MontoExpedirTablaDatos) => {
         this.montoTablaDatos = data.columns;
       });
+
   }
 
 /**
@@ -219,6 +225,9 @@ getAnoOficioDatos():void{
       });
 
 }
+
+
+
 
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.  
@@ -459,26 +468,64 @@ onBuscarClick(): void {
   if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
     this.mostrarSecciones = true; 
     
-  this.cargarDatosAsignacion();
+  //this.cargarDatosAsignacion();
   } else {
    this.mostrarSecciones = false; 
   }
 }
 
+obtenerBuscarDatos(): void {
+ this.asignacionForm.get('anoDelOficio')?.markAsTouched();
+  this.asignacionForm.get('numeroOficio')?.markAsTouched();
+
+  
+  const ANODELOFICIO = this.asignacionForm.get('anoDelOficio')?.value;
+  const NUMEROOFICIO = this.asignacionForm.get('numeroOficio')?.value;
+  const ISANOOFICIOVALID = ANODELOFICIO && ANODELOFICIO.trim() !== '';
+  const ISNUMEROOFICIOVALID = NUMEROOFICIO && 
+    NUMEROOFICIO.trim() !== '' && 
+    this.asignacionForm.get('numeroOficio')?.valid;
+
+  if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
+    this.mostrarSecciones = true; 
+
+  } else {
+   this.mostrarSecciones = false; 
+  }
+
+  const URL_PARAM = { 
+    rfcSolicitante: "MAVL621207C95",
+    numFolioAsignacion: NUMEROOFICIO,
+    anioAutorizacion: ANODELOFICIO
+  };
+
+  this.expedicionCertificadosFronteraService.getBuscarDatos(URL_PARAM)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((response) => {
+      this.formaDatos.emit(response.datos);
+      this.cargarDatosAsignacion(response.datos);
+      this.asignacionFormDatos=response.datos;
+    });
+}
+
+
 /**
  * Carga los datos de la asignación cuando la búsqueda es exitosa.
  * Este método puede ser expandido para cargar datos reales desde un servicio.
  */
-private cargarDatosAsignacion(): void {
-  
+private cargarDatosAsignacion(datos:AsignacionResponse): void {
   this.asignacionForm.patchValue({
-    estado: 'Estado ejemplo',
-    representacionFederal: 'Representación ejemplo',
-    montoAsignado: 1000,
-    montoExpedido: 630,
-    montoDisponible: this.defaultMontoDisponible,
+    estado: datos.participante?.licitacionPublica?.fundamento,
+    representacionFederal: datos.participante?.tipoParticipante,
+    montoAsignado: datos?.participante?.montoAdjudicado,
+    montoExpedido: datos?.montoExpedido,
+    montoADisponible: datos?.montoDisponible,
     datosNumeroOficio: this.asignacionForm.get('numeroOficio')?.value,
-    montoADisponible: this.defaultMontoDisponible
+    anoDelOficio:datos?.idAsignacion,
+    numeroOficio:datos?.añoAutorizacion,
+    montoAExpedir:datos?.participante?.montoAdjudicado,
+    fechaInicioVigencia:datos?.fechaAutorizacion,
+    fechaFinVigencia:datos?.fechaFinVigenciaAprobada
   });
 }
 

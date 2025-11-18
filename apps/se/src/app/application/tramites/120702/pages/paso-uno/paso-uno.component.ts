@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
@@ -20,6 +20,9 @@ import { ExpedicionAsignacionComponent } from '../../components/expedicion-asign
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy{
+
+   @Output() public buscarDatos =
+    new EventEmitter<any>();
 
    /**
      * Referencia ViewChild al componente de asignación de datos de empresa.
@@ -110,7 +113,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
                        (MONTOAEXPEDIR?.valid || false);
               return ISVALID;
       }
-      return false;
+      return true;
     }
     return true;
   }
@@ -160,6 +163,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
         this.expedicionService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * Maneja el evento de recepción de datos del formulario.
+   * 
+   * @param event - Datos emitidos por el formulario.
+   * @remarks
+   * Este método emite los datos recibidos a través del evento `buscarDatos`.
+   */
+  handleFormaDatos(event:any):void{
+    this.buscarDatos.emit(event);
   }
 
       /**
