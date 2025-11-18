@@ -182,7 +182,8 @@ import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
-import { SolicitudDetalleModel } from '../../../../core/models/5701/solicitud-detalle.model';
+import { SolicitudDetalleModel } from '../../models/response/solicitud-detalle.model';
+
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -627,7 +628,7 @@ export class SolicitudComponent
                 takeUntil(this.destroyNotifier$), 
               ).subscribe((datosSolicitud) => {
                 if(datosSolicitud.datos) { 
-                  this.tipoSolicitudSeleccionada = parseInt(datosSolicitud.datos?.tipo_servicio || '') ;
+                  this.tipoSolicitudSeleccionada = datosSolicitud.datos?.tipo_servicio?.cve_tipo_servicio || 0;
                   this.editarSolicitud = false;
                   this.setDataFormSolicitudFromModel(datosSolicitud.datos);
                 }
@@ -699,65 +700,119 @@ export class SolicitudComponent
   }
 
   setDataFormSolicitudFromModel(data: SolicitudDetalleModel): void {
-  this.FormSolicitud.patchValue({
-    folioSolicitud: this.folioSolicitudGuardada, 
-    tipoSolicitud: data.tipo_servicio,
-    descripcionTipoSolicitud: '', 
-    datosImportadorExportador: {
-      RFCImpExp: data.importador_exportador?.rfc,
-      nombre: data.importador_exportador?.nombre,
-      desNumeroRegistro: data.importador_exportador?.desc_numero_registro,
-      programa: data.importador_exportador?.programa_fomento,
-      desProgramaFomento: data.importador_exportador?.desc_programa_fomento,
-      checkIMMEX: data.importador_exportador?.immex,
-      desImmex: data.importador_exportador?.desc_inmex,
-      industriaAutomotriz: data.importador_exportador?.industria_automotriz,
-      desIndustrialAutomotriz: data.importador_exportador?.desc_industrial_automotriz,
-      tipoEmpresaCertificadaA: data.importador_exportador?.certificacion_a,
-      tipoEmpresaCertificadaAA: data.importador_exportador?.certificacion_aa,
-      tipoEmpresaCertificadaAAA: data.importador_exportador?.certificacion_aaa,
-      socioComercial: data.importador_exportador?.socio_comercial,
-      certificacionOEA: data.importador_exportador?.oea,
-      revision: data.importador_exportador?.revisionOrigen,
-      idSocioComercial: data.importador_exportador?.id_socio_comercial,
-    },
-    datosServicio: {
-      fechaInicio: data.despacho?.fecha_inicio,
-      fechaFinal: data.despacho?.fecha_final,
-      horaInicio: data.despacho?.hora_inicio,
-      horaFinal: data.despacho?.hora_fin,
-       fechasSeleccionadas: [], 
-    },
-    despacho: {
-      lda: data.despacho?.bln_lda,
-      rfcDespachoLDA: data.despacho?.rfc_despacho,
-      dd: data.despacho?.bln_dd,
-      folioDDEX: data.despacho?.folio_ddex,
-      idAduanaDespacho: data.despacho?.aduana_despacho,
-      aduanaDespacho: data.despacho?.aduana_despacho,
-      idSeccionDespacho: data.despacho?.id_seccion_despacho,
-      seccionAduanera: '', 
-      idRecinto: '', 
-      nombreRecinto: data.despacho?.nombre_recinto,
-      tipoDespacho: data.despacho?.tipo_despacho,
-      descripcionTipoDespacho: '', 
-      tipoOperacion: data.despacho?.tipo_operacion,
-      patente: data.patente,
-      relacionSociedad: data.despacho?.relacion,
-      encargoConferido: data.despacho?.encargo_conferido,
-      domicilioDespacho: data.despacho?.domicilio,
-      especifique: data.despacho?.especifique,
-    },
-    mercancia: {
-      paisOrigen: data.mercancia?.pais_origen,
-      paisProcedencia: data.mercancia?.pais_procedencia,
-      descripcionGenerica: data.mercancia?.descripcion_generica,
-      justificacion: data.mercancia?.justificacion,
-    },
-    // Agrega aquí los demás grupos/arreglos si es necesario
-  });
+
+    // Actualiza el formulario
+    this.FormSolicitud.patchValue({
+      folioSolicitud: this.folioSolicitudGuardada,
+      tipoSolicitud: data.tipo_servicio ?? null,
+      descripcionTipoSolicitud: '',
+      datosImportadorExportador: {
+        RFCImpExp: data.importador_exportador?.rfc ?? null,
+        nombre: data.importador_exportador?.nombre ?? null,
+        desNumeroRegistro: data.importador_exportador?.desc_numero_registro ?? null,
+        programa: data.importador_exportador?.programa_fomento ?? null,
+        desProgramaFomento: data.importador_exportador?.desc_programa_fomento ?? null,
+        checkIMMEX: data.importador_exportador?.immex ?? null,
+        desImmex: data.importador_exportador?.desc_inmex ?? null,
+        industriaAutomotriz: data.importador_exportador?.industria_automotriz ?? null,
+        desIndustrialAutomotriz: data.importador_exportador?.desc_industrial_automotriz ?? null,
+        tipoEmpresaCertificadaA: data.importador_exportador?.certificacion_a ?? null,
+        tipoEmpresaCertificadaAA: data.importador_exportador?.certificacion_aa ?? null,
+        tipoEmpresaCertificadaAAA: data.importador_exportador?.certificacion_aaa ?? null,
+        socioComercial: data.importador_exportador?.socio_comercial ?? null,
+        certificacionOEA: data.importador_exportador?.oea ?? null,
+        revision: data.importador_exportador?.revisionOrigen ?? null,
+        idSocioComercial: data.importador_exportador?.id_socio_comercial ?? null,
+      },
+      datosServicio: {
+        fechaInicio: data.despacho?.fecha_inicio ?? null,
+        fechaFinal: data.despacho?.fecha_final ?? null,
+        horaInicio: data.despacho?.hora_inicio ?? null,
+        horaFinal: data.despacho?.hora_fin ?? null,
+
+      },
+      despacho: {
+        lda: data.despacho?.bln_lda ?? null,
+        rfcDespachoLDA: data.despacho?.rfc_despacho ?? null,
+        dd: data.despacho?.bln_dd ?? null,
+        folioDDEX: data.despacho?.folio_ddex ?? null,
+        idAduanaDespacho: data.despacho?.aduana_despacho ?? null,
+        aduanaDespacho: data.despacho?.aduana_despacho ?? null,
+        idSeccionDespacho: data.despacho?.id_seccion_despacho ?? null,
+        seccionAduanera:  null,
+        idRecinto:  null,
+        nombreRecinto: data.despacho?.nombre_recinto ?? null,
+        tipoDespacho: data.despacho?.tipo_despacho ?? null,
+        descripcionTipoDespacho:  null,
+        tipoOperacion: data.despacho?.tipo_operacion ?? null,
+        patente: data.patente ?? null,
+        relacionSociedad: data.despacho?.relacion ?? null,
+        encargoConferido: data.despacho?.encargo_conferido ?? null,
+        domicilioDespacho: data.despacho?.domicilio ?? null,
+        especifique: data.despacho?.especifique ?? null,
+      },
+      mercancia: {
+        paisOrigen: data.mercancia?.pais_origen ?? null,
+        paisProcedencia: data.mercancia?.pais_procedencia ?? null,
+        descripcionGenerica: data.mercancia?.descripcion_generica ?? null,
+        justificacion: data.mercancia?.justificacion ?? null,
+      },
+      // Puedes agregar aquí el mapeo de otros grupos/arreglos según el modelo completo
+    });
+
+    // Actualiza el store con los datos consultados usando los setters correctos
+    if (data.importador_exportador) {
+      this.tramite5701Store.setRFCImportadorExportador(data.importador_exportador.rfc ?? '');
+      this.tramite5701Store.setNombre(data.importador_exportador.nombre ?? '');
+      this.tramite5701Store.setDescripcionNumeroRegistro(data.importador_exportador.desc_numero_registro ?? '');
+      this.tramite5701Store.setPrograma(data.importador_exportador.programa_fomento ?? '');
+      this.tramite5701Store.setDescripcionProgramaFomento(data.importador_exportador.desc_programa_fomento ?? '');
+      this.tramite5701Store.setCheckIMMEX(data.importador_exportador.immex ?? false);
+      this.tramite5701Store.setDescripcionImmex(data.importador_exportador.desc_inmex ?? '');
+      this.tramite5701Store.setIndustriaAutomotriz(data.importador_exportador.industria_automotriz ?? false);
+      this.tramite5701Store.setDescripcionIndustriaAutomotriz(data.importador_exportador.desc_industrial_automotriz ?? '');
+      this.tramite5701Store.setTipoEmpresaCertificada(
+        data.importador_exportador.certificacion_aaa ? 'aaa' :
+        data.importador_exportador.certificacion_aa ? 'aa' :
+        data.importador_exportador.certificacion_a ? 'a' : ''
+      );
+      this.tramite5701Store.setSocioComercial(data.importador_exportador.socio_comercial ?? '');
+      this.tramite5701Store.setCertificacionOEA(data.importador_exportador.oea ?? false);
+      this.tramite5701Store.setRevision(data.importador_exportador.revisionOrigen ?? false);
+      this.tramite5701Store.setIdSocioComercial(data.importador_exportador.id_socio_comercial ?? '');
+    }
+    if (data.despacho) {
+      this.tramite5701Store.setFechaInicio(data.despacho.fecha_inicio ?? '');
+      this.tramite5701Store.setFechaFinal(data.despacho.fecha_final ?? '');
+      this.tramite5701Store.setHoraInicio(data.despacho.hora_inicio ?? '');
+      this.tramite5701Store.setHoraFinal(data.despacho.hora_fin ?? '');
+      this.tramite5701Store.setLDA (data.despacho.bln_lda ?? false);
+      this.tramite5701Store.setAutorizacionLDA(data.despacho.rfc_despacho ?? '');
+      this.tramite5701Store.setDD(data.despacho.bln_dd ?? false);
+      this.tramite5701Store.setAutorizacionDDEX(data.despacho.folio_ddex ?? '');
+      this.tramite5701Store.setIdAduanaDespacho(data.despacho.aduana_despacho ?? '');
+      this.tramite5701Store.setAduanaDespacho(data.despacho.aduana_despacho ?? '');
+      this.tramite5701Store.setIdSeccionDespacho(data.despacho.id_seccion_despacho.toString() ?? '');
+      this.tramite5701Store.setSeccionAduanera('');
+      this.tramite5701Store.setNombreRecinto(data.despacho.nombre_recinto ?? '');
+      this.tramite5701Store.setTipoDespacho(parseInt(data.despacho.tipo_despacho || ''));
+      this.tramite5701Store.setDescripcionTipoDespacho('');
+      this.tramite5701Store.setTipoOperacion(data.despacho.tipo_operacion ?? '');
+     // this.tramite5701Store.setPatente(data.patente);
+      this.tramite5701Store.setRelacionSociedad(data.despacho.relacion ? true: false);
+      this.tramite5701Store.setEncargoConferido(data.despacho.encargo_conferido ? true: false);
+      this.tramite5701Store.setDomicilioDespacho(data.despacho.domicilio ?? '');
+      this.tramite5701Store.setEspecifique(data.despacho.especifique ?? '');
+    }
+    if (data.mercancia) {
+      this.tramite5701Store.setPaisOrigen(parseInt(data.mercancia.pais_origen || '0'));
+      this.tramite5701Store.setPaisProcedencia(parseInt(data.mercancia.pais_procedencia));
+      this.tramite5701Store.setDescripcionGenerica(data.mercancia.descripcion_generica ?? '');
+      this.tramite5701Store.setJustificacion(data.mercancia.justificacion ?? '');
+    }
+
 }
-  
+
 
   // Método para forzar validación
   validarFormulario(): boolean {
