@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaTramiteComponent } from '@libs/shared/data-access-user/src/tramites/components/consulta-tramite/consulta-tramite.component';
+import { ConsultaTramiteBusquedaFolioComponent } from '../consulta-tramite-busqueda-folio/consulta-tramite-busqueda-folio.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 
@@ -13,7 +13,7 @@ import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core
     imports: [
       CommonModule,
       ReactiveFormsModule,
-      ConsultaTramiteComponent,
+      ConsultaTramiteBusquedaFolioComponent,
     ],
   templateUrl: './menu-consulta-tramite.component.html',
 })
