@@ -1,10 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Cupos120201State,Tramite120201Store } from '../../../../estados/tramites/tramite120201.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CuposService } from '../../services/cupos/cupos.service';
 import { ExpedicionCertificadosAsignacionDirectaComponent } from '../../../../shared/components/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion-directa.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { Tramite120202Store } from '../../../../estados/tramites/tramite120202.store';
+import { StoreValues } from '../../models/cupos.model';
+import { Tramite120201Query } from '../../../../estados/queries/tramite120201.query';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -67,6 +69,10 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public esDatosRespuesta: boolean = false;
 
+   /**
+    * Estado de la sección de expedición de certificados para asignación.
+   */
+  expedicionCertificadoAsignacionState!:Cupos120201State
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -81,7 +87,8 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private tramite120201Store: Tramite120202Store,
+    private tramite120201Store: Tramite120201Store,
+    private tramite120201Query:Tramite120201Query,
     private cuposService: CuposService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -104,7 +111,73 @@ export class DatosComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+      this.tramite120201Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.expedicionCertificadoAsignacionState = seccionState;
+        })
+      )
+      .subscribe();
+
   }
+/**
+ * Mapa de métodos para actualizar el estado del store.
+ */
+public storeMethodMap: Record<string, (campo: string, value: unknown) => void> = { 
+  asignacionOficioNumeroForm: (campo, v) =>
+    this.tramite120201Store.setAsignacionOficioNumeroForm(campo, v),
+
+  representacionFederalForm: (campo, v) =>
+    this.tramite120201Store.setRepresentacionFederalForm(campo, v),
+
+  controlMontosAsignacionForm: (campo, v) =>
+    this.tramite120201Store.setControlMontosAsignacionForm(campo, v),
+
+  asignacionDatosForm: (campo, v) =>
+    this.tramite120201Store.setAsignacionDatosForm(campo, v),
+
+  cupoDescripcionForm: (campo, v) =>
+    this.tramite120201Store.setCupoDescripcionForm(campo, v),
+
+  distribucionSaldoForm: (campo, v) =>
+    this.tramite120201Store.setDistribucionSaldoForm(campo, v)
+};
+
+/** Método para establecer valores en el store basado en el evento recibido.
+ * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del store.
+ */
+setValoresStore(event: {
+  formGroupName: string;
+  campo: string;
+  valor: unknown;
+  storeStateName: string;
+}): void {
+
+const { formGroupName: FORM_GROUP_NAME, campo: CAMPO, valor: VALOR } = event;
+
+  const SELECTED_STORE = this.storeMethodMap[FORM_GROUP_NAME];
+
+  if (!SELECTED_STORE) {
+    return;
+  }
+  SELECTED_STORE(CAMPO, VALOR);
+}
+
+/** Método para actualizar múltiples valores en el store.
+ * @param data - Objeto que contiene los valores a actualizar en el store.
+ */
+updateStoreValues(data: StoreValues): void {
+  (Object.keys(data) as Array<keyof StoreValues>).forEach(key => {
+    const SETTER_NAME = `set${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    if (
+      SETTER_NAME in this.tramite120201Store &&
+      typeof (this.tramite120201Store as unknown as Record<string, unknown>)[SETTER_NAME] === 'function'
+    ) {
+      (this.tramite120201Store as unknown as Record<string, (value: StoreValues[typeof key]) => void>)[SETTER_NAME](data[key]);
+    }
+  });
+}
 
   /**
    * Método para guardar los datos del formulario.
@@ -119,7 +192,7 @@ export class DatosComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.tramite120201Store.setConsultaPersonaFisicaState(resp);
+          // this.tramite120201Store.setConsultaPersonaFisicaState();
         }
       });
   }
