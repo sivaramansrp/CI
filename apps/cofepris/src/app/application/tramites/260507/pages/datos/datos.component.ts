@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -96,6 +96,9 @@ export class DatosComponent implements OnInit, OnDestroy {
  * haya sido completada correctamente antes de continuar.
  */
   private isTercerosComponentValid: boolean = false;
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false; 
   /**
  * Constructor del componente PasoUnoComponent.
  *
@@ -165,14 +168,6 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
       this.query.getValue().formValidity?.formuladorTablaValid &&
       this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
-
-    if (!this.isDatosDeLaSolicitudComponentValid) {
-      this.datosSolicitudComponent?.validarFormulario(); 
-    }
-
-    if (!this.isTercerosComponentValid) {
-      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
-    }
 
     return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
 

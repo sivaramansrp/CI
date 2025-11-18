@@ -1,4 +1,4 @@
-import { CATALOGO_ESTADOS, CATALOGO_SCIAN, Catalogo} from '@libs/shared/data-access-user/src';
+import { CATALOGO_ESTADOS, CATALOGO_ESTADO_FISICO_MERCANCIA, CATALOGO_SCIAN, Catalogo} from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
 
@@ -58,6 +58,11 @@ export class DatosDomicilioLegalService {
    */
   obtenerEstadoList(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_ESTADOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  estadoFisicoMercanciaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ESTADO_FISICO_MERCANCIA(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

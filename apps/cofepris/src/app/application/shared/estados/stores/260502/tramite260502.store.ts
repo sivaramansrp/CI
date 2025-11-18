@@ -22,6 +22,7 @@ export interface Solicitud260502State {
     terceros?: boolean;
     pagoDeDerechos?: boolean;
   };
+  continuarTriggered?: boolean;
 }
 
 /**
@@ -105,4 +106,12 @@ export class Tramite260502Store extends Store<Solicitud260502State> {
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
+
+   /**
+   * Establece el estado del botón continuar para activar o desactivar las validaciones del formulario.
+   * @param continuarTriggered Indica si el botón continuar ha sido activado.
+   */
+    public setContinuarTriggered(continuarTriggered: boolean): void {
+      this.update((state) => ({ ...state, continuarTriggered }));
+    }
 }

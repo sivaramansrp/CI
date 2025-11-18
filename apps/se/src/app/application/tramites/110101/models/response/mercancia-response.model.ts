@@ -38,6 +38,12 @@ export interface EvaluarMercanciaResponse {
   /** Tipo de exportador (por ejemplo, directo o indirecto) */
   tipo_exportador: string | null;
 
+  /** Calificación de la fracción ALADI */
+  calificacion_fraccion_aladi: boolean | null;
+
+  /** Indica si la mercancía tiene fracción ALADI */
+  tiene_fraccion_aladi: boolean | null;
+
   /** Indica si aplica separación contable */
   separacion_contable: boolean | null;
 

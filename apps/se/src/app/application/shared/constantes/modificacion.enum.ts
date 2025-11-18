@@ -1,8 +1,8 @@
 import { ConfiguracionColumna, Mercancia } from '../models/modificacion.enum';
 import {
   DatosDelDomicilio,
-  DatosDelServicios,
   EmpresaSubmanufacturera,
+  ExportacionImportacionDatos,
 } from '../models/modificacion.model';
 
 /**
@@ -398,23 +398,23 @@ export const PROCEDIMIENTO_EXCLUDED = [110221];
 export const CONFIGURACION_EXPORTACION = [
   {
     encabezado: 'Fracción - Relación',
-    clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    clave: (ele: ExportacionImportacionDatos): number | undefined => ele.claveProductoExportacion,
     orden: 1,
   },
   {
     encabezado: 'Fracción',
-    clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.fraccionArancelaria?.clave,
     orden: 2,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.fraccionArancelaria?.descripcion,
     orden: 3,
   },
 
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.desEstatus,
     orden: 4,
   },
 ];
@@ -431,22 +431,22 @@ export const CONFIGURACION_EXPORTACION = [
 export const CONFIGURACION_IMPORTACION = [
   {
     encabezado: 'Fracción',
-    clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.fraccionArancelaria?.clave,
     orden: 1,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.fraccionArancelaria?.descripcion,
     orden: 2,
   },
   {
     encabezado: 'Fracción - Relación',
-    clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.fraccionPadre,
     orden: 3,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    clave: (ele: ExportacionImportacionDatos): string | undefined => ele.desEstatus,
     orden: 4,
   },
 ];

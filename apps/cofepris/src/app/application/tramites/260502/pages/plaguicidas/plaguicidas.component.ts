@@ -114,6 +114,9 @@ export class PlaguicidasComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
   
    /**
    * Actualiza el estado local de validez del formulario.
@@ -154,6 +157,7 @@ onFormValidityChange(isValid: boolean):void {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -170,6 +174,7 @@ onFormValidityChange(isValid: boolean):void {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

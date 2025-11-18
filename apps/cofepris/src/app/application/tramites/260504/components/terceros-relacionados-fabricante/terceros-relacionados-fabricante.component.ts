@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constantes/permiso-sujetos.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
@@ -21,6 +21,9 @@ import { Tramite260504Store } from '../../../../estados/tramites/260504/tramite2
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
 
   /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.
@@ -56,6 +59,7 @@ onTableValidEvent(event: string): void {
   if (event === 'proveedor') {
     this.store.setFormValidity('proveedorTablaValid', true);
   }
+  this.validarFormulario();
 }
 
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */
