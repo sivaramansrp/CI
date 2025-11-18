@@ -1,14 +1,21 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { AcuseComponent, AlertComponent, BtnContinuarComponent, DatosPasos, PasoFirmaComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AcuseComponent, AlertComponent, BtnContinuarComponent, ConsultaioQuery, ConsultaioState, ConsultaioStore, DatosPasos, PasoFirmaComponent, RegistroSolicitudService, SolicitanteQuery, Usuario, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
-import { Subject } from 'rxjs';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
+
+import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
 
 
 /**
@@ -30,7 +37,7 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent,BtnContinuarComponent, AlertComponent, AcuseComponent, PasoFirmaComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, BtnContinuarComponent, AlertComponent, AcuseComponent, PasoFirmaComponent],
 })
 export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) guardadoParcial!: PasoUnoComponent;
@@ -42,6 +49,11 @@ export class ZoosanitarioPageComponent implements OnInit {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
+   */
+  mensajePasos: string = '';
+
+  /**
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
@@ -49,9 +61,9 @@ export class ZoosanitarioPageComponent implements OnInit {
 
   /**
    * Componente Wizard.
-   * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.
+   * @property {WizardComponent} componenteWizard - Referencia al componente Wizard para controlar la navegación.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
 
   /**
  * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
@@ -74,6 +86,12 @@ export class ZoosanitarioPageComponent implements OnInit {
   public esDatosRespuesta: boolean = false;
 
   /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
    * Datos para la configuración de los botones del asistente.
    * @property {DatosPasos} datosPasos - Configuración para los botones "Anterior" y "Siguiente".
    */
@@ -83,6 +101,18 @@ export class ZoosanitarioPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  valoresComplemento: {
+    rfc: string;
+    tipoPersona: string;
+    razon_social: string;
+    nombre: string;
+  } = {
+      rfc: '',
+      tipoPersona: '',
+      razon_social: '',
+      nombre: '',
+    };
 
   /**
    * Mensaje de éxito para el primer paso.
@@ -151,11 +181,53 @@ export class ZoosanitarioPageComponent implements OnInit {
   isAcuseVisible: boolean = false;
 
   /**
+     * Variable para almacenar el id de la solicitud.
+     * @private
+     */
+  public idSolicitud: string = '';
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true;
+
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
+  public btnGuardar: boolean = true;
+
+  private agriculturaApiService: AgriculturaApiService = inject(
+    AgriculturaApiService
+  );
+  private registroSolicitudService: RegistroSolicitudService = inject(
+    RegistroSolicitudService
+  );
+  public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
+  private consultaioStore: ConsultaioStore = inject(ConsultaioStore);
+
+
+  /**
    * Constructor del componente. Inicializa los pasos del asistente.
    * @method constructor
    */
   constructor(
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    private consultaQuery: ConsultaioQuery
 
   ) {
     this.pasos = PASOS;
@@ -197,9 +269,9 @@ export class ZoosanitarioPageComponent implements OnInit {
       }
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.componenteWizard.siguiente();
       } else if (e.accion === 'ant') {
-        this.wizardComponent.atras();
+        this.componenteWizard.atras();
       }
     }
   }
@@ -277,7 +349,105 @@ export class ZoosanitarioPageComponent implements OnInit {
     this.guardadoTotal.guardadoTotal();
   }
 
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param cargando Valor booleano que indica si la carga está en progreso.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.componenteWizard.atras();
+    this.indice = this.componenteWizard.indiceActual + 1;
+    this.datosPasos.indice = this.componenteWizard.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.componenteWizard.siguiente();
+    this.indice = this.componenteWizard.indiceActual + 1;
+    this.datosPasos.indice = this.componenteWizard.indiceActual + 1;
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          this.idSolicitud = seccionState.id_solicitud;
+          const NUEVO = MENSAJE_DE_EXITO_ETAPA_UNO.replace(
+            '_folio_',
+            this.consultaState.id_solicitud ?? '0'
+          );
+          this.mensajePasos = NUEVO;
+        })
+      )
+      .subscribe();
+  }
+  /**
+     * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+     */
+  obtieneDatosTabSolicitud(): void {
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.valoresComplemento.rfc = seccionState.rfc_original;
+        this.valoresComplemento.tipoPersona = seccionState.tipo_persona;
+        this.valoresComplemento.razon_social = seccionState.razon_social ?? '';
+        this.valoresComplemento.nombre = seccionState.nombre;
+      });
+  }
+
+
+
   ngOnInit(): void {
+    this.obtenerDatosDelStore();
+    this.obtieneDatosTabSolicitud();
     this.solicitudService.idSolicitud$.subscribe(idSolicitud => {
       this.numeroSolicitud = idSolicitud;
     });
