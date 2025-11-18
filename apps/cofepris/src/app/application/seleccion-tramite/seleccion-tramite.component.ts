@@ -25,6 +25,11 @@ export class SeleccionTramiteComponent implements OnInit {
    * @memberof SeleccionTramiteComponent
    */
   public ruta = '';
+  /**
+   * Constructor del componente.
+   * Inyecta el servicio DatosServiceService para compartir información del trámite seleccionado entre componentes.
+   * @param datosService Servicio para gestionar y almacenar el número de trámite seleccionado.
+   */
   constructor(private datosService: DatosServiceService) {}
   
     /**
@@ -52,7 +57,13 @@ export class SeleccionTramiteComponent implements OnInit {
     
     this.tramiteData = tramiteDetailsData.filter((v) => v.department === "cofepris") ;
   }
+  /**
+   * Maneja el evento de clic en el enlace de trámite.
+   * Asigna el valor del trámite seleccionado a la propiedad 'procedureNo' del servicio DatosServiceService,
+   * permitiendo que otros componentes accedan a este valor.
+   * @param tramite Valor del trámite seleccionado.
+   */
   onTramiteClick(tramite: any) {
-  this.datosService.procedureNo = tramite;
-}
+    this.datosService.procedureNo = tramite;
+  }
 }

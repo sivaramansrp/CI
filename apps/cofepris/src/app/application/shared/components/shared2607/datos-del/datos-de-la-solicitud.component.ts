@@ -201,6 +201,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  /**
+   * Almacena el número o identificador del trámite (procedimiento) seleccionado o en curso.
+   * Se obtiene del servicio DatosServiceService y puede ser utilizado para lógica relacionada con el trámite.
+   */
   procedureNo: any;
 
   /** 
