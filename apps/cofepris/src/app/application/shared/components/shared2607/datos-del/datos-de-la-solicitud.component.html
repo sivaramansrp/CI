@@ -341,6 +341,11 @@
                   <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
                   <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" />
+                    @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('nombreProductoEspecifico')?.hasError('required') && dataDeLaSolicitudForm.get('nombreProductoEspecifico')?.touched) {
+            <div class="text-danger">
+                <small>Este campo es obligatorio</small>
+            </div>
+            }
                 </div>
               </div>
               <div class="row mt-5">
@@ -348,6 +353,12 @@
                   <label class="form-label">Marca*:</label>
                   <input class="form-control" formControlName="marca" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'marca', 'setMarca')"/>
+                      @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('marca')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('nombreProductoEspecifico')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
               </div>
               <div class="row mt-5">
@@ -368,6 +379,12 @@
                   </label>
                   <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"/>
+                   @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('fraccionArancelaria')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('fraccionArancelaria')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
               </div>
               <div class="row mt-5">
@@ -375,6 +392,12 @@
                   <label class="form-label">Descripción de la fracción arancelaria*:</label>
                   <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria', 'setDescripcionFraccionArancelaria')"/>
+                    @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('descripcionFraccionArancelaria')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('descripcionFraccionArancelaria')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
               </div>
               <div class="row mt-5">
@@ -382,12 +405,24 @@
                   <label class="form-label">Cantidad UMT*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT', 'setCantidadUMT')"/>
+                    @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('cantidadUMT')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('cantidadUMT')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umt" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'umt', 'setUMT')" />
+                    @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('umt')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('umt')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
               </div>
               <div class="row mt-5">
@@ -395,12 +430,24 @@
                   <label class="form-label">Cantidad UMC*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC', 'setCantidadUMC')"/>
+                   @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('cantidadUMC')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('cantidadUMC')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umc" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"/>
+                   @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('umc')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('umc')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
               </div>
               <!-- collapsed crosslist -->
@@ -444,6 +491,12 @@
                   (change)="setValoresStore(datosDelTramiteRealizar,'claveDeLosLotes', 'setClaveDeLosLotes')"
                   (change)="onClaveDeLosLotesChange($event)"
                   >
+                    @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('claveDeLosLotes')?.hasError('required') &&
+                      dataDeLaSolicitudForm.get('claveDeLosLotes')?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
                 </div>
                </div>
               <div class="row">
