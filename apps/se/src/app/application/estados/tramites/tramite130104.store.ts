@@ -149,6 +149,16 @@ export interface Tramite130104State {
    * Lista de partidas a mostrar.
    */
   mostrarPartidas: MostrarPartidas[];
+
+  /**   
+   * Cantidad total de las partidas de la mercancía.
+   */
+  cantidadTotal: string;
+
+  /**   
+   * Valor total en USD de las partidas de la mercancía.
+   */
+  valorTotalUSD: string;
 }
 
 /**
@@ -191,6 +201,8 @@ export function createInitialState(): Tramite130104State {
       descripcionPartidasDeLaMercancia: '',
     },
     mostrarPartidas: [],
+    cantidadTotal: '',
+    valorTotalUSD: '',
   };
 }
 

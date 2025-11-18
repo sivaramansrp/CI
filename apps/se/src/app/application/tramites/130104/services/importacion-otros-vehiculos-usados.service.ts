@@ -209,7 +209,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
    */
   getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
-    const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
+    const PAYLOAD_DATOS = { tramite: 'TITPEX.130108', id: tramitesID };
     return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
       .pipe(
         map(res => res?.datos ?? [])

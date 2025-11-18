@@ -6,7 +6,6 @@ import { Tramite130104State, Tramite130104Store } from '../../../../estados/tram
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
-import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
@@ -18,7 +17,7 @@ import Decimal from 'decimal.js';
 import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
-import { ID_PROCEDIMIENTO } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
 
 
 /**
@@ -89,11 +88,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Fila seleccionada en la tabla dinámica.
    */
   filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
- 
-  /**
+   /**
    * jest.spyOnOpciones para el campo "producto".
    */
-  productoOpciones: ProductoOpción[] = [];
+  productoOpciones: ProductoOpción[] = PRODUCTO_OPCION;
   /**
    * jest.spyOnCatálogo con valores de fracción arancelaria.
    */
@@ -125,11 +123,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
-  /**
+  catalogosArray: Catalogo[][] = solicitudeSelectVal;  /**
    * jest.spyOnOpciones de solicitud configurables.
    */
-  opcionesSolicitud: ProductoOpción[] = [];
+  opcionesSolicitud: ProductoOpción[] = OPINIONES_SOLICITUD;
  
   /**
    * jest.spyOnSujeto para gestionar la destrucción de suscripciones.
@@ -184,10 +181,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
-   * jest.spyOnArreglo que almacena las partidas a mostrar en la tabla.
-   * @type {MostrarPartidas[]}
+   * Formulario reactivo para modificar las partidas de la mercancía.
    */
-  mostrarPartidas: MostrarPartidas[] = [];
+  modificarPartidasDelaMercanciaForm!: FormGroup;
 
   /**
    * Constructor del componente.
@@ -206,9 +202,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState)=>{
           this.esFormularioSoloLectura = seccionState.readonly; 
-          if(this.esFormularioSoloLectura){
-            this.getMostrarPartidas();
-          }
         })
       )
       .subscribe()
@@ -220,14 +213,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
-    // this.opcionesDeBusqueda();
-    this.formularioTotalCount();
-    // this.obtenerTablaDatos();
     this.getEntidadesFederativasCatalogo();
     this.getBloque();
-    // this.fetchRepresentacionFederal();
-    // this.listaDePaisesDisponibles();
-
+  
     this.tramite130104Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
@@ -299,19 +287,47 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
-    });
- 
-    this.paisForm = this.fb.group({
-      bloque: [this.seccionState?.bloque],
-      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-      observaciones: [this.seccionState?.observaciones],
+    });    this.paisForm = this.fb.group({
+      bloque: [''],
+      usoEspecifico: ['', Validators.required],
+      justificacionImportacionExportacion: ['', [Validators.required]],
+      observaciones: [''],
     });
     this.frmRepresentacionForm = this.fb.group({
-      entidad: [this.seccionState?.entidad, Validators.required],
-      representacion: [this.seccionState?.representacion, Validators.required],
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
+    });
+
+    this.modificarPartidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.maxLength(18),
+        ],
+      ],
+      descripcionPartidasDeLaMercancia: [
+        '',
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
+
+    this.formForTotalCount = this.fb.group({
+      cantidadTotal: [{ value: '', disabled: true }],
+      valorTotalUSD: [{ value: '', disabled: true }],
     });
   }
+  
   /**
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
@@ -319,6 +335,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130104Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
+          this.seccionState = seccionState;
+          
           this.partidasDelaMercanciaForm.patchValue({
             cantidadPartidasDeLaMercancia:
             seccionState.cantidadPartidasDeLaMercancia,
@@ -326,15 +344,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             seccionState.valorPartidaUSDPartidasDeLaMercancia,
             descripcionPartidasDeLaMercancia:
             seccionState.descripcionPartidasDeLaMercancia,
-
           });
- 
+          
           this.formDelTramite.patchValue({
             solicitud: seccionState.solicitud,
             regimen: seccionState.regimen,
             clasificacion: seccionState.clasificacion,
           });
- 
+
           this.mercanciaForm.patchValue({
             producto: seccionState.producto,
             descripcion: seccionState.descripcion,
@@ -343,69 +360,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             valorFacturaUSD: seccionState.valorFacturaUSD,
             unidadMedida: seccionState.unidadMedida,
           });
- 
+
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
             justificacionImportacionExportacion:
-            seccionState.justificacionImportacionExportacion,
+              seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
- 
+
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
           });
         })
-      )
-
-      .subscribe();
-
+      ).subscribe();
   }
  
-  /**
-   * formularioTotalCount
-   * Crea el formulario reactivo para capturar los totales de las partidas.
-   */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
-    });
-  }
- 
-  // /**
-  //  * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
-  //  */
-  // opcionesDeBusqueda(): void {
-  //   this.importacionOtrosVehiculosUsadosService
-  //     .getSolicitudeOptions()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.opcionesSolicitud = data.options;
-  //         this.tramite130104Store.actualizarEstado({
-  //           solicitud: data.options[0]?.value || '',
-  //           defaultSelect: data.defaultSelect || 'Inicial',
-  //         });
-  //       },
-  //       error: (error) =>
-  //         console.error('Error loading solicitude options:', error),
-  //     });
- 
-  //   this.importacionOtrosVehiculosUsadosService
-  //     .getProductoOptions()
-  //     .pipe(takeUntil(this.destroyed$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.productoOpciones = data.options;
-  //         this.tramite130104Store.actualizarEstado({
-  //           producto: data.options[0]?.value || 'Nuevo',
-  //           defaultProducto: data.options[0]?.value || 'Nuevo',
-  //         });
-  //       },
-  //     });
-  // }
   /**
    * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -419,25 +390,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
-// /**
-//  * Método para obtener los datos de la tabla dinámica.
-//  * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
-//  * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
-//  * 
-//  * - Actualiza `tableBodyData` con los datos obtenidos.
-//  * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-//  * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
-//  * 
-//  */
-//   obtenerTablaDatos(): void {
-//       this.importacionOtrosVehiculosUsadosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-//         this.tableBodyData = data;
-//         this.formForTotalCount.patchValue({
-//           cantidadTotal:data[0].cantidad,
-//           valorTotalUSD:data[0].totalUSD
-//         });
-//       });
-//   }
  
   /**
    * Valida todos los formularios y la selección de filas.
@@ -625,19 +577,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   getRepresentacionFederalCatalogo(cveEntidad: string): void {
     this.importacionOtrosVehiculosUsadosService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
-    });
-  }
-  /**
-   * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
-   *
-   * @returns {void}
-   */
-  getMostrarPartidas(): void {
-    this.importacionOtrosVehiculosUsadosService.getMostrarPartidasService(202859165).subscribe((data: any) => {
-      if(data.codigo === '00'){
-          this.mostrarPartidas = data.datos as MostrarPartidas[];
-          this.tramite130104Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
-      }
     });
   }
 
