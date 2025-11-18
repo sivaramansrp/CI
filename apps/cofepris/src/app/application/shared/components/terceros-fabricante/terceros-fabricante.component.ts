@@ -13,11 +13,11 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
+  REGEX_SOLO_NUMEROS,
+  TituloComponent,
   doDeepCopy,
   esValidArray,
   getValidDatos,
-  REGEX_SOLO_NUMEROS,
-  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
@@ -40,6 +40,7 @@ import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
@@ -47,7 +48,6 @@ import { TercerosFabricanteService } from '../../services/terceros-fabricante.se
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -780,6 +780,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
   onTipoPersonaChange(formGroup: FormGroup): void {
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
     if (TIPO_PERSONA_CONTROL?.value) {
       if(this.fisica || this.moral) {
           formGroup.get('rfc')?.enable();
@@ -1578,15 +1579,30 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    */
   cambiarRadio(value: string | number, formGroup: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    const TERCEROS_NACIONALIDAD = formGroup.get('tercerosNacionalidad')?.value;
-    this.limpiar(formGroup);
-    formGroup.patchValue({tercerosNacionalidad: TERCEROS_NACIONALIDAD});
-    const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
-    if (TIPO_PERSONA_CONTROL) {
-      TIPO_PERSONA_CONTROL.reset();
-    }
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad']);
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
+
+/**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  resetAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.resetAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.reset();
+      }
+    });
+  }
+
 
   /**
    * Cambia el valor del radio button seleccionado.
@@ -1697,6 +1713,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
             form.patchValue(DATOS);
           }
        });
+    } else {
+      form.get('rfc')?.markAsTouched();
+      form.get('curp')?.markAsTouched();
     }
   }
 
