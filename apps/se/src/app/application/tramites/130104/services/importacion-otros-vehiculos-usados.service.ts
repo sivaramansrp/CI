@@ -29,70 +29,7 @@ export class ImportacionOtrosVehiculosUsadosService {
   ) {
     //
   }
-  // /**
-  //  * Obtiene la lista de países disponibles desde un archivo JSON.
-  //  * @returns {Observable<Catalogo[]>}
-  //  */
-  // getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>('/assets/json/130104/pais-procenia.json');
-  // }
-  // /**
-  //  * Obtiene la lista de países por bloque desde un archivo JSON.
-  //  * @param {number} _bloqueId - El ID del bloque.
-  //  * @returns {Observable<Catalogo[]>}
-  //  */
-  // getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130104/paises-por-bloque.json'
-  //   );
-  // }
-  // /**
-  //  * Obtiene la lista de entidades federativas desde un archivo JSON.
-  //  * @returns {Observable<Catalogo[]>}
-  //  */
-  // getEntidadFederativa(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130104/entidad-federativa.json'
-  //   );
-  // }
-  // /**
-  //  * Obtiene la lista de representaciones federales desde un archivo JSON.
-  //  * @returns {Observable<Catalogo[]>}
-  //  */
-  // getRepresentacionFederal(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130104/representacion-federal.json'
-  //   );
-  // }
-
-  // /**
-  //  * Obtiene las opciones de solicitud desde un archivo JSON.
-  //  * @returns {Observable<ProductoResponse>}
-  //  */
-  // getSolicitudeOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130104/solicitude-options.json'
-  //   );
-  // }
-
-  // /**
-  //  * Obtiene las opciones de producto desde un archivo JSON.
-  //  * @returns {Observable<ProductoResponse>}
-  //  */
-  // getProductoOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130104/producto-otions.json'
-  //   );
-  // }
-  // /**
-  //  * Obtiene los datos de la tabla de partidas de la mercancía desde un archivo JSON.
-  //  */
-  // getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-  //     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-  //           'assets/json/130104/partidas-de-la.json'
-  //         );
-  //   }
-
+  
   /**
   * Actualiza el estado del formulario en el store.
   * @param DATOS Estado actualizado del trámite.
@@ -259,10 +196,51 @@ export class ImportacionOtrosVehiculosUsadosService {
    * @param tramite Identificador del trámite
    * @param ID Identificador para obtener las mostrar partidas
    * @returns Observable con un arreglo de mostrar partidas (o vacío si no hay datos)
-   */
+   */  
   getMostrarPartidasService(solicitud_id: number): Observable<BaseResponse<MostrarPartidas[]>> {
     const ENDPOINT = PROC_130104.MOSTAR_PARTIDAS + solicitud_id;
     return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<any> {
+    return this.http.post<any>(PROC_130104.GUARDAR, body);
+  }
+
+  /**
+   * Genera el payload de datos para el trámite 130104 basado en la información proporcionada.
+   *
+   * @param {Tramite130104State} item - Objeto que contiene la información del trámite,
+   * incluyendo datos de tabla y valores autorizados.
+   *
+   * @returns {any[]} Arreglo de objetos con los datos transformados para ser enviados
+   * en el payload del trámite.
+   *
+   * @description
+   * Este método toma las filas de `tableBodyData` dentro del objeto `item` y construye un
+   * arreglo de objetos con los valores solicitados y autorizados.  
+   * Convierte valores numéricos, extrae descripciones y agrega claves arancelarias y de unidad de medida.
+   */  
+  getPayloadDatos(item: Tramite130104State): unknown {
+    const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
+    return ROWS.map((row: any) => ({
+      unidadesSolicitadas: Number(row.cantidad),
+      unidadesAutorizadas: Number(item.cantidad),
+      descripcionSolicitada: row.descripcion,
+      descripcionAutorizada: item.descripcion,
+      importeUnitarioUSD: Number(row.precioUnitarioUSD),
+      importeTotalUSD: Number(row.totalUSD),
+      autorizada: true,
+      importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
+      importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
+      fraccionArancelariaClave: item.fraccion,
+      unidadMedidaClave: item.unidadMedida
+    }));
   }
   
 }

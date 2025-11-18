@@ -422,20 +422,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-  // /**
-  //  * validarYEnviarFormulario
-  //  * Valida el formulario y muestra la tabla dinámica si es válido.
-  //  */
-  // validarYEnviarFormulario(): void {
-  //   if (this.partidasDelaMercanciaForm.invalid) {
-  //     this.partidasDelaMercanciaForm.markAllAsTouched();
-  //   } else {
-  //     this.mostrarTabla = true;
-  //     this.tramite130104Store.actualizarEstado({mostrarTabla:true});
-
-  //   }
-  // }
-
   /**
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
@@ -500,54 +486,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
-// /**
-//  * Método para obtener la lista de entidades federativas.
-//  */
-// fetchEntidadFederativa(): void {
-//   this.importacionOtrosVehiculosUsadosService
-//     .getEntidadFederativa()
-//     .pipe(takeUntil(this.destroyed$))
-//     .subscribe((data) => {
-//       this.entidadFederativa = data;
-//     });
-// }
-// /**
-// * Método para obtener la lista de representaciones federales.
-// */
-// fetchRepresentacionFederal(): void {
-//   this.importacionOtrosVehiculosUsadosService
-//     .getRepresentacionFederal()
-//     .pipe(takeUntil(this.destroyed$))
-//     .subscribe((data) => {
-//       this.representacionFederal = data;
-//     });
-// }
-// /**
-// * Método para obtener la lista de países disponibles.
-// */
-// listaDePaisesDisponibles(): void {
-//   this.importacionOtrosVehiculosUsadosService
-//     .getListaDePaisesDisponibles()
-//     .pipe(takeUntil(this.destroyed$))
-//     .subscribe((data) => {
-//       this.elementosDeBloque = data;
-//     });
-// }
-// /**
-// * Método para obtener la lista de países por bloque.
-// * Identificador del bloque.
-// */
-// fetchPaisesPorBloque(_bloqueId: number): void {
-//   this.importacionOtrosVehiculosUsadosService
-//     .getPaisesPorBloque(_bloqueId)
-//     .pipe(takeUntil(this.destroyed$))
-//     .subscribe((data) => {
-//       this.paisesPorBloque = data;
-//       this.selectRangoDias = this.paisesPorBloque.map(
-//         (pais: Catalogo) => pais.descripcion
-//       );
-//     });
-// }
 
   /**
    *  Obtiene los países por bloque desde el servicio y los asigna a la propiedad `paisesPorBloque`.

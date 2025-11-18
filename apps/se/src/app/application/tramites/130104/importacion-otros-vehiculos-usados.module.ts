@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CrosslistComponent, FirmaElectronicaComponent, InputRadioComponent, NotificacionesComponent, PasoFirmaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CrosslistComponent, FirmaElectronicaComponent, InputRadioComponent, NotificacionesComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,11 +21,9 @@ import { ImportacionOtrosVehiculosUsadosPageComponent } from './pages/importacio
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 
-
-
 @NgModule({
   declarations: [ImportacionOtrosVehiculosUsadosPageComponent, PasoUnoComponent, SolicitudComponent, PasoTresComponent,
-    PasoDosComponent,],
+    PasoDosComponent],
   imports: [
     CommonModule,
     ImportacionOtrosVehiculosUsadosRoutingModule,
@@ -46,7 +44,8 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     AnexarDocumentosComponent,
     AlertComponent,
     NotificacionesComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent
   ],
   providers: [
     ToastrService

@@ -144,7 +144,7 @@ export interface Tramite130104State {
     /** Descripción de las partidas de la mercancía */
     descripcionPartidasDeLaMercancia: string;
   };
-
+  
   /**
    * Lista de partidas a mostrar.
    */
@@ -159,6 +159,14 @@ export interface Tramite130104State {
    * Valor total en USD de las partidas de la mercancía.
    */
   valorTotalUSD: string;
+
+  /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
+
+  /** Lista de partidas de la mercancía asociadas al trámite. */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
 }
 
 /**
@@ -198,11 +206,12 @@ export function createInitialState(): Tramite130104State {
     modificarPartidasDelaMercanciaForm: {
       cantidadPartidasDeLaMercancia: '',
       valorPartidaUSDPartidasDeLaMercancia: '',
-      descripcionPartidasDeLaMercancia: '',
-    },
+      descripcionPartidasDeLaMercancia: '',    },
     mostrarPartidas: [],
     cantidadTotal: '',
     valorTotalUSD: '',
+    fechasSeleccionadas: [],
+    tableBodyData: [],
   };
 }
 

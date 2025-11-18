@@ -1,8 +1,8 @@
 /**
  * Componente que representa los pasos de datos en un proceso de múltiples pasos. 
  * */
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, Notificacion } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, Notificacion, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
 import { AccionBoton } from '../../enums/accionbotton.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -21,7 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-importacion-otros-vehiculos-usados-page',
  templateUrl: './importacion-otros-vehiculos-usados-page.component.html',
 })
-export class ImportacionOtrosVehiculosUsadosPageComponent {
+export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
   /**
    * Referencia al componente WizardComponent.
    */
@@ -100,9 +100,27 @@ export class ImportacionOtrosVehiculosUsadosPageComponent {
   /**
    * @property {Tramite130104State} solicitudState
    * @description
-   * Estado actual de la solicitud del trámite 130105.
+   * Estado actual de la solicitud del trámite 130104.
    */
   solicitudState!: Tramite130104State;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de carga de documentos.
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+  
+  /**
+   * Indica si la carga de documentos está en progreso.
+   * Se inicializa en true para indicar que la carga está en progreso al inicio.
+   */
+  cargaEnProgreso: boolean = true;
 
   /**
    * @description
@@ -171,21 +189,162 @@ export class ImportacionOtrosVehiculosUsadosPageComponent {
       this.pasoNavegarPor(e);
     }
   }
-
   /**
-    * Obtiene los datos del store y los guarda utilizando el servicio.
-    */
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
   obtenerDatosDelStore(e: AccionBoton): void {
     this.importacionOtrosVehiculosUsadosService.getAllState()
       .pipe(take(1))
       .subscribe((data) => {
-        // this.guardar(data, e);
+        this.guardar(data, e);
       });
   }
 
   /**
+   * Guarda los datos del trámite enviando el payload al backend.
+   * Este método muestra el payload construido en la consola y está diseñado para enviarlo al backend mediante `importacionOtrosVehiculosUsadosService.guardarDatosPost`.
+   * @param item Datos del estado del trámite 130104
+   * @param e Acción del botón para navegación
+   * @returns Promise con la respuesta JSON del servidor
+   */
+  guardar(item: Tramite130104State, e: AccionBoton): Promise<any> {
+    const MERCANCIA = this.importacionOtrosVehiculosUsadosService.getPayloadDatos(item);
+    const PAYLOAD = {
+      "tipoDeSolicitud": "guardar",
+      "tipo_solicitud_pexim": item.solicitud,
+      "mercancia": {
+        "cantidadComercial": 0,
+        "cantidadTarifaria": Number(item.cantidad),
+        "valorFacturaUSD": Number(item.valorFacturaUSD),
+        "condicionMercancia": item.producto,
+        "descripcion": item.descripcion,
+        "usoEspecifico": item.usoEspecifico,
+        "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
+        "observaciones": item.observaciones,
+        "unidadMedidaTarifaria": {
+          "clave": item.unidadMedida
+        },
+        "fraccionArancelaria": {
+          "cveFraccion": item.fraccion
+        },
+        "partidasMercancia": MERCANCIA,
+      },
+      "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
+      "cve_regimen": item.regimen,
+      "cve_clasificacion_regimen": item.clasificacion,
+      "productor": {
+        "tipo_persona": true,
+        "nombre": "Juan",
+        "apellido_materno": "López",
+        "apellido_paterno": "Norte",
+        "razon_social": "Aceros Norte",
+        "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
+        "rfc": "AAL0409235E6",
+        "pais": "SIN"
+      },
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "Juan Pérez",
+        "es_persona_moral": true,
+        "certificado_serial_number": "string"
+      },
+      "representacion_federal": {
+        "cve_entidad_federativa": item.entidad,
+        "cve_unidad_administrativa": item.representacion
+      },
+      "entidades_federativas": {
+        "cveEntidad": item.entidad
+      },
+      "lista_paises": item.fechasSeleccionadas
+    };
+
+    return new Promise((resolve, reject) => {
+      let shouldNavigate = false;
+      this.importacionOtrosVehiculosUsadosService.guardarDatosPost(PAYLOAD).subscribe(
+        (response) => {
+          shouldNavigate = response.codigo === '00';
+          if (shouldNavigate) {
+            const API_RESPONSE = doDeepCopy(response);
+            if (
+              esValidObject(API_RESPONSE) &&
+              esValidObject(API_RESPONSE.datos)
+            ) {
+              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+                this.tramite130104Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+              } else {
+                this.tramite130104Store.setIdSolicitud(0);
+              }
+              if (e.valor > 0 && e.valor < 5) {
+                this.indice = e.valor;
+
+                if (e.valor > 0 && e.valor < 5) {
+                  this.indice = e.valor;
+                  if (e.accion === 'cont') {
+                    this.wizardComponent.siguiente();
+                    if (e.valor > 0 && e.valor < 5) {
+                      this.alertaNotificacion = {
+                        tipoNotificacion: 'banner',
+                        categoria: 'success',
+                        modo: 'action',
+                        titulo: '',
+                        mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                        cerrar: true,
+                        txtBtnAceptar: '',
+                        txtBtnCancelar: '',
+                      };
+
+                    }
+                  } else {
+                    this.wizardComponent.atras();
+                  }
+                }
+              }
+            }
+            this.toastrService.success(response.mensaje);
+            resolve(response);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   * @param carga - Indica si la carga de documentos está activa o no.
+   * @returns {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.seccionCargarDocumentos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   * @param cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * @returns {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para manejar el evento de carga en progreso.
+   * @param carga Indica si la carga está en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia los recursos y restablece el estado del store asociado al trámite 130105.
+   * Limpia los recursos y restablece el estado del store asociado al trámite 130104.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
