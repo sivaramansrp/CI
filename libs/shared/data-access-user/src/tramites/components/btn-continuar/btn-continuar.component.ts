@@ -216,7 +216,6 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   continuar(): void {
-    console.log('entraContinuarBoton');
     const PUEDE_CONTINUAR =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     let valor = this.datos.indice;

@@ -331,10 +331,13 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   actualizarPago(): void {
-    // this.pagoChanged.emit(this.pagoForm?.value);
     this.actualizarTodoelForm();
   }
 
+  /**
+ * @desc Actualiza los datos al cambiar algun campo.
+ * @memberof PagoDeDerechoComponent
+ */
   actualizarTodoelForm() {
     const DATOS_PAGOS = {
       exentoPago: this.pagoForm.value.exentoPago,
@@ -359,7 +362,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
   onBorrar(): void {
     this.setFecha = false;
     const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
-    // this.pagoForm.reset();
     this.pagoForm.patchValue({
       exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
       fechaPago: '',

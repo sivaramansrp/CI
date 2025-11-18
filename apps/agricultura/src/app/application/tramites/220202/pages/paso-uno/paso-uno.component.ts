@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha, PersonaTerceros, SolicitanteComponent, } from '@ng-mf/data-access-user';
 import { FilaSolicitud, ListaDeDatosFinal, TercerosrelacionadosExportadorTable, TercerosrelacionadosdestinoTable, } from '../../models/220202/fitosanitario.model';
 import { Observable, catchError, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -263,7 +263,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
           this.registroSolicitudService.guardarSolicitud(220202, payload).pipe(take(1))
         ),
         tap(data => {
-          // id_solicitud: 202875826, fecha_actualización: '2025-11-10 19:02:00'
           this.consultaioStore.update(state => ({
             ...state,
             id_solicitud: data.datos?.id_solicitud?.toString() ?? ''
@@ -272,7 +271,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         map(data => data.codigo),
         catchError(err => {
           console.error('Error guardando solicitud:', err);
-          // return throwError(() => err);
           return 'error';
 
         })
@@ -369,7 +367,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         cadena_pago_dependencia: datos.pago.cadenaDependencia,
         cve_banco: datos.pago.banco,
         llave_pago: datos.pago.llavePago,
-        fec_pago: PasoUnoComponent.convertirFechaFormato(datos.pago.fechaPago) ?? '',
+        fec_pago: formatFecha(datos.pago.fechaPago) ?? '',
         imp_pago: Number(datos.pago.importePago)
       },
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
@@ -387,27 +385,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       }
     };
   }
-
-  /**
-   * Convierte una fecha en formato dd/MM/yyyy o dd-MM-yyyy
-   * a una cadena ISO válida (UTC).
-   *
-   * @param fecha - Ejemplo: "07/11/2025" o "07-11-2025"
-   * @returns string - Ejemplo: "2025-11-07 00:00:00"
-   */
-  static convertirFechaFormato(fecha: string | Date): string {
-    if (!fecha) {
-      return '';
-    }
-
-    const D = new Date(fecha);
-    const YEAR = D.getFullYear();
-    const MONTH = String(D.getMonth() + 1).padStart(2, '0');
-    const DAY = String(D.getDate()).padStart(2, '0');
-
-    return `${YEAR}-${MONTH}-${DAY} 00:00:00`;
-  }
-
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

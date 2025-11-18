@@ -19,6 +19,10 @@ export interface DatosSolicitud {
   mercancia: Mercancia[];
 }
 
+/**
+ * Mercancia agragada a una solicitud
+ * @interface Mercancia
+ */
 export interface Mercancia {
   tipo_requisito: number;
   requisito: string;
@@ -40,11 +44,18 @@ export interface Mercancia {
   lista_detalle_mercancia: DetalleMercancia[];
 }
 
+/**
+ * lista del detalle de cada registro de mercancia
+ * @interface DetalleMercancia
+ */
 export interface DetalleMercancia {
   id_vida_silvestre: string;
 }
 
-// ================= TRANSPORTE ===================
+/**
+ * tipo de transporte de una solicitud
+ * @interface Transporte
+*/
 export interface Transporte {
   ide_medio_transporte: string;
   identificacion_transporte: string;
@@ -52,12 +63,19 @@ export interface Transporte {
   razon_social: string;
 }
 
-// ================= TERCEROS ===================
+/**
+ * terceros relacionados de una solicitud
+ * @interface Terceros
+*/
 export interface Terceros {
   terceros_exportador: TerceroExportador[];
   terceros_destinatario: TerceroDestinatario[];
 }
 
+/**
+ * terceros relacionados de una solicitud
+ * @interface TerceroExportador
+*/
 export interface TerceroExportador {
   tipo_persona_sol: string;
   persona_moral: boolean;
@@ -72,6 +90,10 @@ export interface TerceroExportador {
   correo: string;
 }
 
+/**
+ * terceros relacionados de una solicitud
+ * @interface TerceroDestinatario
+*/
 export interface TerceroDestinatario {
   tipo_persona_sol: string;
   persona_moral: boolean;
@@ -94,7 +116,10 @@ export interface TerceroDestinatario {
   correo: string;
 }
 
-// ================= PAGO ===================
+/**
+ * datos del pago de una solicitud
+ * @interface Pago
+*/
 export interface Pago {
   exento_pago: boolean;
   ide_motivo_exento_pago: string | null;
@@ -106,7 +131,10 @@ export interface Pago {
   imp_pago: number;
 }
 
-// ================= SOLICITANTE ===================
+/**
+ * datos del solicitante
+ * @interface Solicitante
+*/
 export interface Solicitante {
   rfc: string;
   rol_capturista: string;
@@ -115,8 +143,10 @@ export interface Solicitante {
   certificado_serial_number: number;
 }
 
-// ================= REPRESENTACIÓN FEDERAL ===================
-export interface RepresentacionFederal {
+/**
+ * representacion federal del solicitante
+ * @interface RepresentacionFederal
+*/export interface RepresentacionFederal {
   cve_entidad_federativa: string;
   cve_unidad_administrativa: string;
 }
