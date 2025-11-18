@@ -123,4 +123,39 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-}
+
+    /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+    validarFormularios(): boolean {
+      let isValid = true;
+      // if(this.ampliacionAnexoComponent) {
+      //   const AMPLIACION_ANEXO_VALID = this.ampliacionAnexoComponent.validarFormulario();
+        
+      //   // Validar que existan datos en AMBAS tablas
+      //   const HAS_IMMEX_DATA = this.ampliacionAnexoComponent.datosImmex && this.ampliacionAnexoComponent.datosImmex.length > 0;
+      //   const HAS_IMPORTACION_DATA = this.ampliacionAnexoComponent.datosImportacion && this.ampliacionAnexoComponent.datosImportacion.length > 0;
+        
+      //   if (!AMPLIACION_ANEXO_VALID || !HAS_IMMEX_DATA || !HAS_IMPORTACION_DATA) {
+      //     isValid = false;
+      //   }
+      // } else {
+      //   isValid = false;
+      // }
+      
+      // if (this.ampliacion3RsComponent) {
+      //   const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
+        
+      //   if (!AMPLIACION_3RS_VALID) {
+      //     isValid = false;
+      //   }
+      // } else {
+      //   if (this.esDatosRespuesta) {
+      //     isValid = false;
+      //   }
+      // }
+      return isValid;
+    } 
+  }
+

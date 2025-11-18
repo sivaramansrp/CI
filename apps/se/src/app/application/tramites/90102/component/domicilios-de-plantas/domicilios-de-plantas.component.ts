@@ -1,6 +1,7 @@
 import {
   AlertComponent,
   Catalogo,
+  CatalogoServices,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -104,6 +105,11 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   private seccionState!: SeccionLibState;
 
+  /**
+   * Identificador del trámite actual.
+   */
+  tramiteId: string = '90102';
+
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 1 },
     {
@@ -165,7 +171,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     private autorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices
   ) {
       // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -205,7 +212,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         delay(10),
         tap((_value) => {
           if (this.forma.valid) {
-            this.autorizacionProsecStore.setFormaValida('1');
+            this.autorizacionProsecStore.setDomiciliosFormaValida(true);
           }
         })
       )
@@ -288,14 +295,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de estados desde el servicio.
    */
   obtenerListaEstado(): void {
-    this.prosecService.obtenerMenuDesplegable('estado.json').subscribe({
+    this.catalogoServices.estadosCatalogo(this.tramiteId).subscribe({
       next: (data) => {
-        this.estadoSeleccionar = data as Catalogo[];
+        this.estadoSeleccionar = data.datos as Catalogo[];
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
         this.estadoSeleccionar = [];
-      },
-    });
+      }
+  });
   }
 
   /**
@@ -303,14 +311,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de representación federal desde el servicio.
    */
   obtenerListaFederal(): void {
-    this.prosecService.obtenerMenuDesplegable('federal.json').subscribe({
+    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString(), this.forma.get('Estado')?.value).subscribe({
       next: (data) => {
-        this.RepresentacionFederal = data as Catalogo[];
+        this.RepresentacionFederal = data.datos as Catalogo[];
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
         this.RepresentacionFederal = [];
-      },
-    });
+      }
+  });
   }
 
   /**
@@ -318,16 +327,10 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de actividad productiva desde el servicio.
    */
   obtenerListaActividad(): void {
-    this.prosecService.obtenerMenuDesplegable(
-      'actividad_productiva.json'
-    ).subscribe({
-      next: (data) => {
-        this.ActividadProductiva = data as Catalogo[];
-      },
-      error: () => {
-        this.ActividadProductiva = [];
-      },
-    });
+    this.catalogoServices.getActividadProductivaProsecCatalogo(this.tramiteId.toString()).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.ActividadProductiva = DATOS;
+  });
   }
 
   /**

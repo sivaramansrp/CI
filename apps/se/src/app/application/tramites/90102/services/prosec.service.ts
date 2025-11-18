@@ -40,7 +40,7 @@ export class ProsecService {
     this.autorizacionProsecStore.setSector(DATOS.Sector);
     this.autorizacionProsecStore.setFraccionArancelaria(DATOS.Fraccion_arancelaria);
     this.autorizacionProsecStore.setcontribuyentes(DATOS.contribuyentes);
-    this.autorizacionProsecStore.setFormaValida(DATOS.formaValida);
+    this.autorizacionProsecStore.setDomiciliosFormaValida(DATOS.domiciliosFormaValida);
   }
 
   /**
