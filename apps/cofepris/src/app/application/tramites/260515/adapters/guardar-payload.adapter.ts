@@ -48,114 +48,114 @@ export class GuardarAdapter_260515 {
         "nombre": this.solicitudDatos.nombre ?? "",
         "actividadEconomica": "",
         "correoElectronico": this.solicitudDatos.correo ?? "",
-   "domicilio": {
-              "codigoPostal": this.solicitudDatos.codigoPostal,
-              "entidadFederativa": {
-                  "clave": "09"
-              },
-              "descripcionMunicipio": this.solicitudDatos.muncipio,
-              "informacionExtra": this.solicitudDatos.localidad,
-              "descripcionColonia": this.solicitudDatos.colonia,
-              "calle": this.solicitudDatos.calle,
-              "colonia": this.solicitudDatos.colonia,
-              "estado":this.solicitudDatos.estado,
-              "numeroExterior":"300",
-              "numeroInterior": "12",
-              "municipioAlcaldia": this.solicitudDatos.muncipio,
-              "lada": this.solicitudDatos.lada,
-              "telefono": this.solicitudDatos.telefono
+        "domicilio": {
+          "codigoPostal": this.solicitudDatos.codigoPostal,
+          "entidadFederativa": {
+            "clave": "09"
           },
+          "descripcionMunicipio": this.solicitudDatos.muncipio,
+          "informacionExtra": this.solicitudDatos.localidad,
+          "descripcionColonia": this.solicitudDatos.colonia,
+          "calle": this.solicitudDatos.calle,
+          "colonia": this.solicitudDatos.colonia,
+          "estado": this.solicitudDatos.estado,
+          "numeroExterior": "300",
+          "numeroInterior": "12",
+          "municipioAlcaldia": this.solicitudDatos.muncipio,
+          "lada": this.solicitudDatos.lada,
+          "telefono": this.solicitudDatos.telefono
+        },
       },
       "establecimiento": {
-          "rfcResponsableSanitario": this.establecimientDatos.rfcDel,
-          "razonSocial": this.establecimientDatos.denominacionRazonSocial,
-          "correoElectronico": this.establecimientDatos?.correoElectronico ? this.establecimientDatos.correoElectronico : "",
-          "domicilio": {
-              "codigoPostal": this.solicitudDatos.codigoPostal,
-              "entidadFederativa": {
-                  "clave": "09"
-              },
-              "descripcionMunicipio": this.solicitudDatos.muncipio,
-              "informacionExtra": this.solicitudDatos.localidad,
-              "descripcionColonia": this.solicitudDatos.colonia,
-              "calle": this.solicitudDatos.calle,
-              "lada": this.solicitudDatos.lada,
-              "telefono": this.solicitudDatos.telefono,
-              "localidad":this.solicitudDatos.localidad,
+        "rfcResponsableSanitario": this.establecimientDatos.rfcDel,
+        "razonSocial": this.establecimientDatos.denominacionRazonSocial,
+        "correoElectronico": this.establecimientDatos?.correoElectronico ? this.establecimientDatos.correoElectronico : "",
+        "domicilio": {
+          "codigoPostal": this.solicitudDatos.codigoPostal,
+          "entidadFederativa": {
+            "clave": "09"
           },
-          "original": "",
-          "avisoFuncionamiento": this.solicitudDatos.avisoCheckbox ?? false,
-          "numeroLicencia": this.solicitudDatos.licenciaSanitaria ?? "",
-          "aduanas": this.solicitudDatos.aduanasDeEntrada?.toString()
+          "descripcionMunicipio": this.solicitudDatos.muncipio,
+          "informacionExtra": this.solicitudDatos.localidad,
+          "descripcionColonia": this.solicitudDatos.colonia,
+          "calle": this.solicitudDatos.calle,
+          "lada": this.solicitudDatos.lada,
+          "telefono": this.solicitudDatos.telefono,
+          "localidad": this.solicitudDatos.localidad,
+        },
+        "original": "",
+        "avisoFuncionamiento": this.solicitudDatos.avisoCheckbox ?? false,
+        "numeroLicencia": this.solicitudDatos.licenciaSanitaria ?? "",
+        "aduanas": this.solicitudDatos.aduanasDeEntrada?.toString()
       },
       "pagoDeDerechos": {
-          "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
-          "cadenaPagoDependencia": this.pagoDerechosDatos.cadenaDependencia,
-          "banco": {
-              "clave": this.pagoDerechosDatos.banco,
-              "descripcion": ""
-          },
-          "llaveDePago": this.pagoDerechosDatos.llavePago,
-          "fecPago": this.pagoDerechosDatos.fechaPago,
-          "impPago": this.pagoDerechosDatos.importePago
+        "claveDeReferencia": this.pagoDerechosDatos.claveReferencia,
+        "cadenaPagoDependencia": this.pagoDerechosDatos.cadenaDependencia,
+        "banco": {
+          "clave": this.pagoDerechosDatos.banco,
+          "descripcion": ""
+        },
+        "llaveDePago": this.pagoDerechosDatos.llavePago,
+        "fecPago": this.pagoDerechosDatos.fechaPago,
+        "impPago": this.pagoDerechosDatos.importePago
       },
-      "mercancias": [ {
-          "objetoImportacionEnum": "CLAVE_DEL_CATALOGO",
-          "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
-          "descOtroObjetoImportacion": "Descripción cuando se selecciona 'Otro' (opcional)",
-          "clasificacionToxicologica": {
-            "idClasificacionToxicologicaTipoTramite": this.solicitudDatos.especificar,
-            "clasificacionToxicologica": "Descripción opcional (string)"
-          },
-          "numeroCAS": this.solicitudDatos.numeroRegistroSanitario,
-          "porcentajeConcentracion": this.solicitudDatos.denominacionEspecifica,
-          "nombreComercial": this.solicitudDatos.nombreComercial,
-          "nombreComun": this.solicitudDatos.nombreComun,
-          "nombreCientifico": this.solicitudDatos.nombreCientifico,
-          "idMercancia": "1",
-          "idClasificacionProducto": "",
-          "nombreClasificacionProducto": "",
-          "ideSubClasificacionProducto": "",
-          "nombreSubClasificacionProducto": "",
-          "descDenominacionEspecifica":"",
-          "descDenominacionDistintiva": "",
-          "descripcionMercancia": "",
-          "formaFarmaceuticaDescripcionOtros": "",
-          "estadoFisicoDescripcionOtros": this.solicitudDatos.estadoFisicoOtro,
-          "fraccionArancelaria": {
-              "clave": this.solicitudDatos.fraccionArancelaria,
-              "descripcion": this.solicitudDatos.descripcionFraccion
-          },
-          "unidadMedidaComercial": {
-              "descripcion": this.solicitudDatos.UMC
-          },
-          "cantidadUMCConComas": this.solicitudDatos.cantidadUMC,
-          "unidadMedidaTarifa": {
-              "descripcion": this.solicitudDatos.UMT
-          },
-          "cantidadUMTConComas": this.solicitudDatos.cantidadUMT,
-          "presentacion": "",
-          "registroSanitarioConComas": "",
-          "nombreCortoPaisOrigen": this.solicitudDatos.paisDeOriginDatos?.toString(),
-          "nombreCortoPaisProcedencia": this.solicitudDatos.paisDeProcedenciaDatos?.toString(),
-          "tipoProductoDescripcionOtros": "",
-          "nombreCortoUsoEspecifico": this.solicitudDatos.acondicionamiento,
-          "fechaCaducidadStr": "",
-          "idEstadoFisico": this.solicitudDatos.estadoFisico,
-      }],
+      "mercancias": this.solicitudDatos.mercanciaTabla?.map((item:any) => ({
+        "objetoImportacionEnum": item['objetoImportacion'] as string || "",
+        "objetoImportacionDesc": "Descripción (opcional, desde catálogo)",
+        "descOtroObjetoImportacion": item['objetoImportacionOtro'] as string || "",
+        "clasificacionToxicologica": {
+          "idClasificacionToxicologicaTipoTramite": item['clasificacionToxicologica'] as string || "",
+          "clasificacionToxicologica": ""
+        },
+        "numeroCAS": "34121",
+        "porcentajeConcentracion": item['porcentajeConcentracion'] as string || "",
+        "nombreComercial": item['nombreComercial'] as string || "",
+        "nombreComun": item['nombreComun'] as string || "",
+        "nombreCientifico": item['nombreCientifico'] as string || "",
+        "idEstadoFisico": item['estadoFisico'] as string || "",
+        "idMercancia": "1",
+        "idClasificacionProducto": "325",
+        "nombreClasificacionProducto": "Fab. sustancias químicas básicas",
+        "ideSubClasificacionProducto": "32541",
+        "nombreSubClasificacionProducto": "Fab. productos farmacéuticos",
+        "descDenominacionEspecifica": "Medicamentos para uso humano",
+        "descDenominacionDistintiva": "Paracetamol Tabletas 500mg",
+        "descripcionMercancia": "Acetaminophen",
+        "formaFarmaceuticaDescripcionOtros": "Tableta",
+        "estadoFisicoDescripcionOtros": item['estadoFisicoOtro'] as string || "",
+        "fraccionArancelaria": {
+          "clave": item['fraccionArancelaria'] as string || "",
+          "descripcion": item['descripcionFraccion'] as string || ""
+        },
+        "unidadMedidaComercial": {
+          "descripcion": item['UMC'] as string || ""
+        },
+        "cantidadUMCConComas": item['cantidadUmc'] as string || "",
+        "unidadMedidaTarifa": {
+          "descripcion": item['UMT'] as string || ""
+        },
+        "cantidadUMTConComas": item['cantidadUmt'] as string || "",
+        "presentacion": "Frasco x 100 tabletas",
+        "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
+        "nombreCortoPaisOrigen": item['paisOrigen']?.toString() || "",
+        "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto']?.toString() || "",
+        "tipoProductoDescripcionOtros": "Analgésico",
+        "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
+        "fechaCaducidadStr": "31/12/2026"
+      })) || [],
       "representanteLegal": {
-          "rfc": this.solicitudDatos.rfc,
-          "resultadoIDC": "",
-          "nombre": this.solicitudDatos.nombre,
-          "apellidoPaterno": this.solicitudDatos.apellidoPaterno,
-          "apellidoMaterno": this.solicitudDatos.apellidoMaterno
+        "rfc": this.solicitudDatos.rfc,
+        "resultadoIDC": "",
+        "nombre": this.solicitudDatos.nombre,
+        "apellidoPaterno": this.solicitudDatos.apellidoPaterno,
+        "apellidoMaterno": this.solicitudDatos.apellidoMaterno
       },
       "solicitud": {
-          "discriminatorValue": 260515,
-          "declaracionesSeleccionadas": this.solicitudDatos.mensaje,
-          "regimen": "",
-          "aduanaAIFA": "",
-          "informacionConfidencial": this.solicitudDatos.cumplimiento === 'Si' ? true : false
+        "discriminatorValue": 260515,
+        "declaracionesSeleccionadas": this.solicitudDatos.mensaje,
+        "regimen": "",
+        "aduanaAIFA": "",
+        "informacionConfidencial": this.solicitudDatos.cumplimiento === 'Si' ? true : false
       },
       "datosSCIAN": this.solicitudDatos.nicoTabla ?? []
     }

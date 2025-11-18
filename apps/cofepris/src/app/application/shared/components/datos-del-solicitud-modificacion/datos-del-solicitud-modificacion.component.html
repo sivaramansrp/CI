@@ -403,9 +403,7 @@
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" (listaDeFilaSeleccionada)="onScianSeleccionChange($event)" >
         </app-tabla-dinamica>
-        <div *ngIf="DatosDelSolicitudModificacionComponent.hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
-          La clave S.C.I.A.N. es obligatoria.
-        </div>
+        
       </div>
       <div *ngIf="domicilioEstablecimiento.get('scian')?.touched && 
              domicilioEstablecimiento.get('scian')?.errors?.['required']" class="text-danger">

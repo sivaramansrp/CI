@@ -1,5 +1,36 @@
 <div class="container">
     <form [formGroup]="dataDeLaSolicitudForm">
+    <div *ngIf="procedureNo=='260701'" class="row mt-5">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+              <p class="panel-title">
+                Opciones de pre-llenado de Solicitud
+              </p>
+              <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+            </div>
+            @if(colapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <ng-alert [CONTENIDO]="TEXTO.AlDar"></ng-alert>
+
+                <div class="row">
+                  <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
+                      Copiar datos en una Nueva Solicitud
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
         <ng-container formGroupName="datosDelTramiteRealizar"> 
         <h5>seleccione el tipo operacion que desea realizer</h5>
        <app-input-radio
@@ -7,6 +38,7 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="tipoOperacion"
+            (valueChange)="onRadioChange($event)" 
           ></app-input-radio> 
      <div class="row">
         <div class="col-md-8">
@@ -44,7 +76,7 @@
           }
             </div>
             <div class="col-md-4">
-                <label class="form-label" for="correoelectronico">Correo electronico*:</label>
+                <label class="form-label" for="correoelectronico">Correo electronico*:<span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span></label>
                 <input class="form-control" id="correoelectronico" type="text" formControlName="correoElectronico"
                 (change)="setValoresStore(datosDelTramiteRealizar,'correoElectronico', 'setCorreoElectronico')"
                 />
@@ -158,7 +190,7 @@
         <div class="btn-group">
           <button class="btn btn-danger"
             type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-primary me-2"
+            <button class="btn btn-primary ms-2"
             type="button" (click)="onAgregar()" [disabled]="esFormularioSoloLectura" data-bs-target="#claveScianModal"
 >Agregar</button>
         </div>
@@ -501,7 +533,7 @@
 <div class="row mt-5">
   <div class="col-md-4 mt-2">
     <label class="form-label" for="rfc">RFC*:</label>
-    <input class="form-control" type="text" formControlName="rfc"
+    <input class="form-control" type="text" formControlName="rfc" maxlength="13"
     (change)="setValoresStore(datosDelTramiteRealizar,'rfc', 'setRfc')"
     />
        @if (dataDeLaSolicitudForm.get('datosDelTramiteRealizar.rfc')?.hasError('required') &&

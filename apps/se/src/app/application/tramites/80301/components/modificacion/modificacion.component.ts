@@ -1,43 +1,38 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
-  ConsultaioQuery,
-  ConsultaioState
-} from '@ng-mf/data-access-user';
+  DatosModificacion,
+  ExportacionImportacionDatos,
+} from '../../../../shared/models/modificacion.model';
+import {
+  Solicitud80301State,
+  Tramite80301Store,
+} from '../../estados/tramite80301.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { DatosDelServicios } from '../../models/datos-tramite.model';
-import { DatosModificacion } from '../../../../shared/models/modificacion.model';
+import { DISCRIMINATOR_VALUE } from '../../constantes/modificacion.enum';
 import { EliminacionModificacionComponent } from '../../../../shared/components/modificacion/modificacion.component';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite80301Query } from '../../estados/tramite80301.query';
 
+/**
+ * Componente ModificacionComponent que maneja la lógica de modificación de trámites.
+ * Proporciona funcionalidades para cargar y gestionar datos de modificación,
+ * incluyendo datos de exportación e importación, y permite la interacción con el estado del trámite 80301.
+ * @component ModificacionComponent
+ */
 @Component({
   selector: 'app-modificacion',
   standalone: true,
-  imports: [
-    EliminacionModificacionComponent,
-    ComplementariaImmexComponent,
-  ],
+  imports: [EliminacionModificacionComponent],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.scss',
 })
+
+/**
+ * Clase que representa el componente de modificación de trámites.
+ * @class ModificacionComponent
+ */
 export class ModificacionComponent implements OnInit, OnDestroy {
-  /**
-   * Constructor del componente ModificacionComponent.
-   * @param solicitudService Servicio para manejar solicitudes relacionadas con el trámite.
-   * @param consultaioQuery Estado de la consulta.
-   */
-  constructor(
-    private solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery,
-  ) {}  
-
-
-  /**
-   * Indica si el formulario se encuentra en modo solo lectura.
-   * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
-   */
-  esFormularioSoloLectura: boolean = false
-
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -51,25 +46,61 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * Arreglo que almacena datos de importación para la tabla dinámica.
+   *
+   * Este arreglo se utiliza para gestionar y mostrar información
+   * relacionada con los servicios de importación en la tabla de datos.
+   * @property {ExportacionImportacionDatos[]} datosImportacionTabla
+   */
+  datosImportacionTabla: ExportacionImportacionDatos[] = [];
+
+  /**
+   * @property {DatosModificacion} datosModificacion
+   * @description Datos relacionados con la modificación del trámite.
+   */
+  datosModificacion: DatosModificacion | undefined;
+
+  /**
+   * Arreglo que almacena datos de exportación para la tabla dinámica.
+   *
+   * Este arreglo se utiliza para gestionar y mostrar información
+   * relacionada con los servicios de exportación en la tabla de datos.
+   * @property {ExportacionImportacionDatos[]} datosExportacionTabla
+   */
+  datosExportacionTabla: ExportacionImportacionDatos[] = [];
+
+  /**
+   * Estado de la solicitud del trámite 80301.
+   * @property {Solicitud80301State} solicitudState
+   */
+  solicitudState!: Solicitud80301State;
+
+  /**
    * Observable para notificar la destrucción del componente.
    * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
+   * Constructor del componente ModificacionComponent.
+   * @param solicitudService Servicio para manejar solicitudes relacionadas con el trámite.
+   * @param consultaioQuery Estado de la consulta.
+   * @param tramite80301Query Consulta para obtener el estado del trámite 80301.
+   * @param tramite80301Store Almacén para gestionar el estado del trámite 80301.
    */
-  datosTabla: DatosDelServicios[] = [];
-
-  /**
-   * @property {DatosModificacion} datosModificacion
-   * @description Datos relacionados con la modificación del trámite.
-   */
-  datosModificacion!: DatosModificacion;
+  constructor(
+    private solicitudService: SolicitudService,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite80301Query: Tramite80301Query,
+    private tramite80301Store: Tramite80301Store
+  ) {
+    // Constructor vacío
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario, carga los datos de modificación y los datos de la tabla.
+   * Aquí se configuran las suscripciones necesarias para obtener los datos iniciales.
+   * @return {void}
    */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
@@ -82,67 +113,134 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+    this.tramite80301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((solicitudState) => {
+          this.solicitudState = solicitudState;
+        })
+      )
+      .subscribe();
+
     this.loadDatosModificacion();
-    this.loadDatosTablaData();
+    this.loadDatosExportacionTablaData();
+    this.loadDatosImportacionTablaData();
   }
 
   /**
-   * Carga los datos de modificación desde el servicio.
-   * Actualiza el estado del trámite y los valores del formulario.
+   * Método para cargar los datos de modificación desde el servicio.
+   * Asigna los datos obtenidos a la propiedad `datosModificacion`.
+   * @returns {void}
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((datos) => {      
-      this.datosModificacion = datos;
-    });
+    this.solicitudService
+      .getDatosModificacion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        this.datosModificacion = respuesta.datos;
+      });
   }
 
   /**
-   * Cargar datos de la tabla.
-   *
-   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
-   * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
-   * cuando el componente se destruye, evitando fugas de memoria.
-   *
-   * @example
-   * // Llamar al método para cargar los datos de la tabla
-   * this.loadDatosTablaData();
+   * Método para cargar los datos de exportación para la tabla dinámica.
+   * Asigna los datos obtenidos a la propiedad `datosExportacionTabla`.
+   * @returns {void}
    */
-  loadDatosTablaData(): void {
-    this.solicitudService.getDatosTableData()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((data) => {
-      this.datosTabla = data;
-    });
+  loadDatosExportacionTablaData(): void {
+    const PAYLOAD = {
+      idSolicitud:
+        this.solicitudState.idSolicitud > 0
+          ? this.solicitudState.idSolicitud
+          : '',
+      discriminatorValue: DISCRIMINATOR_VALUE,
+      rfc: this.solicitudState.loginRfc,
+      folioPrograma: this.solicitudState.selectedFolioPrograma,
+      tipoPrograma: this.solicitudState.selectedTipoPrograma,
+      idPrograma: this.solicitudState.selectedIdPrograma,
+    };
+
+    this.solicitudService
+      .getDatosExportacionTableData(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.datosExportacionTabla =
+          datos.datos?.map((item) => ({
+            claveProductoExportacion: item.claveProductoExportacion,
+            fraccionArancelaria: {
+              clave: item.cveFraccion,
+              descripcion: item.descripcion,
+            },
+            desEstatus: item.descripcionTestado,
+          })) || [];
+      });
   }
 
   /**
-   * Alterna el estado de un registro en la tabla entre 'Baja' y 'Activada'.
-   *
-   * @param event - Contiene el registro de la tabla (`row`) y la columna (`column`) que se desea modificar.
-   *
-   * @remarks
-   * Este método busca el índice del registro en la tabla `datosTabla` utilizando el identificador (`id`) del registro proporcionado.
-   * Luego, cambia el valor de la propiedad `desEstatus` del registro encontrado:
-   * - Si el estado actual es 'Baja', se cambia a 'Activada'.
-   * - Si el estado actual es diferente de 'Baja', se cambia a 'Baja'.
-   *
-   * @example
-   * ```typescript
-   * const registro = { id: 1, desEstatus: 'Baja' };
-   * this.valorDeAlternancia({ row: registro, column: 'desEstatus' });
-   * // Ahora, registro.desEstatus será 'Activada'.
-   * ```
+   * Método para cargar los datos de importación para la tabla dinámica.
+   * Asigna los datos obtenidos a la propiedad `datosImportacionTabla`.
+   * @returns {void}
    */
-  valorDeAlternancia(event: {
-    row: unknown;
-    column: string;
-  }): void {
-    const ROW = event.row as DatosDelServicios; // Obtiene el registro de la fila.
-    const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id); // Busca el índice del registro en la tabla.
-    // Alterna el estado entre 'Baja' y 'Activada'.
-    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
+  loadDatosImportacionTablaData(): void {
+    const PAYLOAD = {
+      idSolicitud:
+        this.solicitudState.idSolicitud > 0
+          ? this.solicitudState.idSolicitud
+          : '',
+      discriminatorValue: DISCRIMINATOR_VALUE,
+      rfc: this.solicitudState.loginRfc,
+      folioPrograma: this.solicitudState.selectedFolioPrograma,
+      tipoPrograma: this.solicitudState.selectedTipoPrograma,
+      idPrograma: this.solicitudState.selectedIdPrograma,
+    };
+
+    this.solicitudService
+      .getImportacionTablaDatos(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.datosImportacionTabla =
+          datos.datos?.map((item) => ({
+            fraccionArancelaria: {
+              clave: item.cveFraccion,
+              descripcion: item.descripcion,
+            },
+            fraccionPadre: item.fraccionPadre,
+            desEstatus: item.descripcionTestado,
+          })) || [];
+      });
+  }
+
+  /**
+   * Método que maneja el evento de alternancia de valor en la tabla de exportación.
+   * @param event Objeto que contiene la fila y columna afectadas.
+   * @return {void}
+   */
+  exportacionValorDeAlternancia(event: { row: unknown; column: string }): void {
+    const ROW = event.row as ExportacionImportacionDatos;
+    const INDEX = this.datosExportacionTabla.findIndex(
+      (x) => x.fraccionArancelaria.clave === ROW.fraccionArancelaria.clave
+    );
+    this.datosExportacionTabla[INDEX].desEstatus =
+      this.datosExportacionTabla[INDEX].desEstatus === 'Baja'
+        ? 'Activada'
+        : 'Baja';
+    this.tramite80301Store.setDatosExportacion(this.datosExportacionTabla);
+  }
+
+  /**
+   * Método que maneja el evento de alternancia de valor en la tabla de importación.
+   * @param event Objeto que contiene la fila y columna afectadas.
+   * @return {void}
+   */
+  importacionValorDeAlternancia(event: { row: unknown; column: string }): void {
+    const ROW = event.row as ExportacionImportacionDatos;
+    const INDEX = this.datosImportacionTabla.findIndex(
+      (x) => x.fraccionArancelaria.clave === ROW.fraccionArancelaria.clave
+    );
+    this.datosImportacionTabla[INDEX].desEstatus =
+      this.datosImportacionTabla[INDEX].desEstatus === 'Baja'
+        ? 'Activada'
+        : 'Baja';
+    this.tramite80301Store.setDatosImportacion(this.datosImportacionTabla);
   }
 
   /**

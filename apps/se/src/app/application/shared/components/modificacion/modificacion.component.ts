@@ -21,8 +21,8 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {
   DatosDelDomicilio,
-  DatosDelServicios,
   EmpresaSubmanufacturera,
+  ExportacionImportacionDatos,
   Modificacion,
 } from '../../models/modificacion.model';
 import {
@@ -62,7 +62,7 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
    * Datos relacionados con la modificación del trámite.
    * @property {Modificacion} datosModificacion
    */
-  @Input() datosModificacion!: Modificacion;
+  @Input() datosModificacion: Modificacion | undefined;
 
   /**
    * Número de procedimiento del trámite.
@@ -78,16 +78,16 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
 
   /**
    * Configuración de la tabla para los datos de exportación.
-   * @property {ConfiguracionColumna<DatosDelServicios>[]} exportacionTablaConfiguracion
+   * @property {ConfiguracionColumna<ExportacionImportacionDatos>[]} exportacionTablaConfiguracion
    */
-  exportacionTablaConfiguracion: ConfiguracionColumna<DatosDelServicios>[] =
+  exportacionTablaConfiguracion: ConfiguracionColumna<ExportacionImportacionDatos>[] =
     CONFIGURACION_EXPORTACION;
 
   /**
    * Configuración de la tabla para los datos de importación.
-   * @property {ConfiguracionColumna<DatosDelServicios>[]} importacionTablaConfiguracion
+   * @property {ConfiguracionColumna<ExportacionImportacionDatos>[]} importacionTablaConfiguracion
    */
-  importacionTablaConfiguracion: ConfiguracionColumna<DatosDelServicios>[] =
+  importacionTablaConfiguracion: ConfiguracionColumna<ExportacionImportacionDatos>[] =
     CONFIGURACION_IMPORTACION;
 
   /**
@@ -109,18 +109,18 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
    *
    * Este arreglo se utiliza para gestionar y mostrar información
    * relacionada con los servicios de exportación en la tabla de datos.
-   * @property {DatosDelServicios[]} exportacionDatosTabla
+   * @property {ExportacionImportacionDatos[]} exportacionImportacionDatos
    */
-  @Input() exportacionDatosTabla: DatosDelServicios[] = [];
+  @Input() exportacionDatosTabla: ExportacionImportacionDatos[] = [];
 
   /**
    * Arreglo que almacena datos de importación para la tabla dinámica.
    *
    * Este arreglo se utiliza para gestionar y mostrar información
    * relacionada con los servicios de importación en la tabla de datos.
-   * @property {DatosDelServicios[]} importacionDatosTabla
+   * @property {ExportacionImportacionDatos[]} importacionDatosTabla
    */
-  @Input() importacionDatosTabla: DatosDelServicios[] = [];
+  @Input() importacionDatosTabla: ExportacionImportacionDatos[] = [];
 
   /**
    * Arreglo que almacena datos de domicilios para la tabla dinámica.
@@ -152,6 +152,26 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
    * @property {EventEmitter<{ row: unknown; column: string }>} valorDeAlternancia
    */
   @Output() valorDeAlternancia: EventEmitter<{
+    row: unknown;
+    column: string;
+  }> = new EventEmitter<{ row: unknown; column: string }>();
+
+  /**
+   * Evento que se emite cuando se alterna un valor en la tabla de exportación.
+   * @property {EventEmitter<{ row: unknown; column: string }>} exportacionValorDeAlternancia
+   * @description Emite un objeto que contiene la fila y la columna afectadas.
+   */
+  @Output() exportacionValorDeAlternancia: EventEmitter<{
+    row: unknown;
+    column: string;
+  }> = new EventEmitter<{ row: unknown; column: string }>();
+
+  /**
+   * Evento que se emite cuando se alterna un valor en la tabla de importación.
+   * @property {EventEmitter<{ row: unknown; column: string }>} importacionValorDeAlternancia
+   * @description Emite un objeto que contiene la fila y la columna afectadas.
+   */
+  @Output() importacionValorDeAlternancia: EventEmitter<{
     row: unknown;
     column: string;
   }> = new EventEmitter<{ row: unknown; column: string }>();
@@ -205,10 +225,10 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
    */
   actualizarValoresFormulario(): void {
     this.modificacionForm.patchValue({
-      rfc: this.datosModificacion.rfc || '',
-      representacionFederal: this.datosModificacion.representacionFederal || '',
-      tipo: this.datosModificacion.tipo || '',
-      programa: this.datosModificacion.programa || '',
+      rfc: this.datosModificacion?.rfc || '',
+      representacionFederal: this.datosModificacion?.representacionFederal || '',
+      tipo: this.datosModificacion?.tipo || '',
+      programa: this.datosModificacion?.programa || '',
     });
   }
 
@@ -222,4 +242,30 @@ export class EliminacionModificacionComponent<T> implements OnChanges, OnInit {
   onAlternarValor(event: { row: unknown; column: string }): void {
     this.valorDeAlternancia.emit(event);
   }
+
+  /**
+  * Maneja el evento de alternancia de valor en la tabla de exportación.
+  * Emite el evento `exportacionValorDeAlternancia` con la fila y columna afectadas.
+  *
+  * @param {Object} event - Objeto que contiene la fila y columna afectadas.
+  * @param {unknown} event.row - La fila afectada.
+  * @param {string} event.column - La columna afectada.
+  * @returns {void}
+  */
+  onAlternarExportacionValor(event: { row: unknown; column: string }): void {
+    this.exportacionValorDeAlternancia.emit(event);
+  }
+
+  /**  
+   * Maneja el evento de alternancia de valor en la tabla de importación.
+   * Emite el evento `importacionValorDeAlternancia` con la fila y columna afectadas.
+   *
+   * @param {Object} event - Objeto que contiene la fila y columna afectadas.
+   * @param {unknown} event.row - La fila afectada.
+   * @param {string} event.column - La columna afectada.
+   * @returns {void}
+   */
+  onAlternarImportacionValor(event: { row: unknown; column: string }): void {
+    this.importacionValorDeAlternancia.emit(event);
+  } 
 }

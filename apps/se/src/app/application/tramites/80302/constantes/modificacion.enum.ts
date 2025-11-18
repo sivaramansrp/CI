@@ -398,68 +398,67 @@ export const CONFIGURACION_FEDERETARIOS = [
 export const CONFIGURACION_OPERACIONES = [
   {
     encabezado: 'Calle',
-    clave: (ele: OperacionsImmex) : string | null => ele.calle ?? null,
+    clave: (ele: Operacions): string | undefined => ele.calle || undefined,
     orden: 1,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: OperacionsImmex) : string | null => ele.numeroExterior ?? null,
+    clave: (ele: Operacions): string | undefined => ele.numeroExterior || undefined,
     orden: 2,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: OperacionsImmex) : string | null => ele.numeroInterior ?? null,
+    clave: (ele: Operacions): string | undefined => ele.numeroInterior || undefined,
     orden: 3,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: OperacionsImmex) : string | null => ele.codigoPostal ?? null,
+    clave: (ele: Operacions): string | undefined => ele.codigoPostal || undefined,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: OperacionsImmex) : string | null => ele.colonia ?? null,
+    clave: (ele: Operacions): string | undefined => ele.colonia || undefined,
     orden: 5,
   },
   {
     encabezado: 'Localidad',
-    clave: (ele: OperacionsImmex) : string | null => ele.localidad ?? null,
+    clave: (ele: Operacions): string | undefined => ele.localidad || undefined,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: OperacionsImmex) : string | null => ele.delegacionMunicipio ?? null,
+    clave: (ele: Operacions): string | undefined => ele.delegacionMunicipio || undefined,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: OperacionsImmex) : number | null => ele.testadoP ?? null,
+    clave: (ele: Operacions): string | undefined => ele.estado || undefined,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (ele: OperacionsImmex) : string | null => ele.pais ?? null,
+    clave: (ele: Operacions): string | undefined => ele.pais || undefined,
     orden: 9,
   },
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
-    clave: (ele: OperacionsImmex) : string | null => ele.rfc ?? null,
+    clave: (ele: Operacions): string | undefined => ele.rfc || undefined,
     orden: 10,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: OperacionsImmex) : string | null => ele.domicilioFiscal ?? null,
+    clave: (ele: Operacions): string | undefined => ele.fiscalSolicitante || undefined,
     orden: 11,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: OperacionsImmex) : string | null => ele.razonSocial ?? null,
+    clave: (ele: Operacions): string | undefined => ele.razonSocial || undefined,
     orden: 12,
   },
-
   {
     encabezado: 'Estatus',
-    clave: (ele: OperacionsImmex) : string | null => (ele.estatus ? 'Activada' : 'Baja'),
+    clave: (ele: Operacions): string => (ele.estatus ? 'Activada' : 'Baja'),
     orden: 13,
   },
 ];

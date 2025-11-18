@@ -101,25 +101,77 @@ export class AnexoUnoPestanaComponent implements OnDestroy {
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
     public tramite80303Querry: Tramite80303Query
   ) {
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'anexoExportacionTablaDatos',
-      '/80303/anexoExportacion.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'anexoImportacionTablaDatos',
-      '/80303/anexoImportacion.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'sensiblesTablaDatos',
-      '/80303/sensible.json'
-    );
-
+    this.fetchAnexoExportacionTablaDatos('202839085,202842505');
+     this.fetchAnexoImportacionTablaDatos('202754110,202753972'); 
+      this.fetchSensiblesTablaDatos('5631177,7956018'); 
     this.tramite80303Querry.selectTramiteState$.pipe(takeUntil(this.destroyNotifier$)).subscribe(state => {
       this.anexoExportacionTablaDatos = state.anexoExportacionTablaDatos;
       this.anexoImportacionTablaDatos = state.anexoImportacionTablaDatos;
       this.sensiblesTablaDatos = state.sensiblesTablaDatos;
     });
   }
+fetchAnexoImportacionTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarMercanciasImportacion(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.anexoImportacionTablaDatos = response.datos; // Assign the `datos` array to the table data
+          console.log('Anexo Importación Datos:', this.anexoImportacionTablaDatos);
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Anexo Importación Datos:', error);
+      }
+    );
+}
+/**
+ * Fetches data for `anexoExportacionTablaDatos` using the API.
+ * @param idSolicitud - Comma-separated IDs for the API query.
+ */
+fetchAnexoExportacionTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarProductosExportacion(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.anexoExportacionTablaDatos = response.datos; // Assign the `datos` array to the table data
+          console.log('Anexo Exportación Datos:', this.anexoExportacionTablaDatos);
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Anexo Exportación Datos:', error);
+      }
+    );
+}
+/**
+ * Fetches data for `sensiblesTablaDatos` using the API.
+ * @param idSolicitud - Comma-separated IDs for the API query.
+ */
+fetchSensiblesTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarFraccionesSensibles(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.sensiblesTablaDatos = response.datos; // Assign the `datos` array to the table data
+          console.log('Sensibles Tabla Datos:', this.sensiblesTablaDatos);
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Sensibles Tabla Datos:', error);
+      }
+    );
+}
 
   /**
  * Método que se ejecuta cuando el componente es destruido.

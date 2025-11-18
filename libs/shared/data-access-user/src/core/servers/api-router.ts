@@ -1184,6 +1184,31 @@ export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${T
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
 
 /**
+ * API para obtener el catálogo de tipo de mecanismo de asignación por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/tipo-mecanismo-asignacion
+ */
+export const CATALOGO_TIPO_MECANISMO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-mecanismo-asignacion`;
+
+/**
+ * API para obtener el catálogo de nombres de producto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-producto
+ */
+export const CATALOGO_NOMBRE_PRODUCTO = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/nombre-producto`;
+
+/**
+ * API para obtener el catálogo de nombres de subproducto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-subproducto
+ */
+export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/nombre-subproducto`;
+
+
+/**
+ * API para obtener el catálogo de representación federal por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
+ */
+export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
+
+/**
  * Genera la ruta de la API para obtener el catálogo de años de oficio de asignación,
  * utilizando el identificador del trámite proporcionado.
  *
