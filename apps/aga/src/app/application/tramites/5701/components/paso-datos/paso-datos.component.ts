@@ -207,31 +207,6 @@ export class PasoDatosComponent implements OnInit, OnDestroy {
             };
           },
         });
-        
-       /* .pipe(
-          map((response) => {
-            if (response.codigo === '00') {
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'toastr',
-              categoria: CategoriaMensaje.EXITO,
-              modo: 'action',
-              titulo: 'Actualización de solicitud.',
-              mensaje:
-              response.mensaje,
-              cerrar: false,
-              txtBtnAceptar: '',
-              txtBtnCancelar: '',
-            };
-              return true;
-            }
-  
-            return false;
-          }),
-          catchError(() => of(false)),
-  
-          takeUntil(this.destroyNotifier$)
-        );*/
     }
 
     /**
