@@ -85,6 +85,28 @@ export class TramiteConfigService {
     return this.actualizarModeloConfig[tramiteId];
   }
 
+
+
+  /**   
+   * Configuración específica para la autorización de dictámenes por trámite.
+   * La clave corresponde al `tramiteId`.
+   */
+  private configsAtorizarDictamen: Record<number, TramiteConfig> = {
+    130118: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
+    130120: { habilitarFechas: true, isAntecedentes: false, anexo222se: true },
+    120301: { habilitarFechas: false, isAntecedentes: false, anexo222se: false },
+    110101: { habilitarFechas: false, isAntecedentes: false, anexo222se: false, descargaSolicitud: true },
+  };
+
+  /**   * Obtiene la configuración específica para la autorización de dictámenes de un trámite.
+   * 
+   * @param tramiteId Identificador del trámite
+   * @returns Configuración de autorización de dictámenes del trámite correspondiente
+   */
+  getConfigAutorizarDictamen(tramiteId: number): TramiteConfig {
+    return this.configsAtorizarDictamen[tramiteId];
+  }
+
   /**
    * Configuración de requerimientos por trámite.
    * 
