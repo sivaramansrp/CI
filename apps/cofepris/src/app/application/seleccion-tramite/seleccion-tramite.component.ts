@@ -1,7 +1,8 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import pkg from '@package-json';
-import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+import { DatosServiceService } from '../shared/services/datos-service.service';
 
 
 /**
@@ -24,6 +25,12 @@ export class SeleccionTramiteComponent implements OnInit {
    * @memberof SeleccionTramiteComponent
    */
   public ruta = '';
+  /**
+   * Constructor del componente.
+   * Inyecta el servicio DatosServiceService para compartir información del trámite seleccionado entre componentes.
+   * @param datosService Servicio para gestionar y almacenar el número de trámite seleccionado.
+   */
+  constructor(private datosService: DatosServiceService) {}
   
     /**
      * Un arreglo que contiene los detalles de varios "Trámites" (procedimientos o procesos).
@@ -49,5 +56,14 @@ export class SeleccionTramiteComponent implements OnInit {
     }
     
     this.tramiteData = tramiteDetailsData.filter((v) => v.department === "cofepris") ;
+  }
+  /**
+   * Maneja el evento de clic en el enlace de trámite.
+   * Asigna el valor del trámite seleccionado a la propiedad 'procedureNo' del servicio DatosServiceService,
+   * permitiendo que otros componentes accedan a este valor.
+   * @param tramite Valor del trámite seleccionado.
+   */
+  onTramiteClick(tramite: any) {
+    this.datosService.procedureNo = tramite;
   }
 }
