@@ -11,8 +11,8 @@
 
         <ng-container>
             <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
-            <app-domicilios-de-plantas #domiciliosRef [hidden]="indice !== 2"></app-domicilios-de-plantas>
-            <app-sectores-y-mercancias #sectoresRef [hidden]="indice !== 3"></app-sectores-y-mercancias>
+            <app-domicilios-de-plantas [tramiteId]="tramiteId" #domiciliosRef [hidden]="indice !== 2"></app-domicilios-de-plantas>
+            <app-sectores-y-mercancias [tramiteId]="tramiteId" #sectoresRef [hidden]="indice !== 3"></app-sectores-y-mercancias>
             <app-productor-indirecto #productorIndirectoRef [hidden]="indice !== 4"></app-productor-indirecto>
         </ng-container>
     </div>
