@@ -6,7 +6,6 @@
  */
 
 import { CommonModule } from '@angular/common';
-
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
@@ -34,6 +33,7 @@ import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-
 
 import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+declare var bootstrap: any; // Add this declaration for Bootstrap
 @Component({
   selector: 'app-manifiestos-representante-seccion',
   standalone: true,
@@ -161,29 +161,43 @@ export class ManifiestosRepresentanteSeccionComponent
   }
   /**
    * Busca los datos del representante por RFC y los actualiza en el formulario.
+   * Valida que el RFC no esté vacío antes de proceder con la búsqueda.
    */
   buscarRepresentanteRfc(): void {
     const RFC = this.manifiestosRepresentanteForm.get('representanteRfc')?.value;
-    if (RFC) {
-      this.establecimientoService
-        .getManifiestosByRfc(RFC)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((representante: Manifiestistos | null) => {
-          if (representante) {
-            this.manifiestosRepresentanteForm.patchValue({
-              representanteNombre: representante.representanteNombre,
-              apellidoPaterno: representante.apellidoPaterno,
-              apellidoMaterno: representante.apellidoMaterno,
-            });
+     if (!RFC || RFC.trim() === '') {
+      this.showRfcValidationModal();
+      return;
+    }
 
-     
-            this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
-            this.representanteStore.setRepresentanteApellidos(
-              representante.apellidoPaterno,
-              representante.apellidoMaterno
-            );
-          }
-        });
+    this.establecimientoService
+      .getManifiestosByRfc(RFC)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((representante: Manifiestistos | null) => {
+        if (representante) {
+          this.manifiestosRepresentanteForm.patchValue({
+            representanteNombre: representante.representanteNombre,
+            apellidoPaterno: representante.apellidoPaterno,
+            apellidoMaterno: representante.apellidoMaterno,
+          });
+
+          this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
+          this.representanteStore.setRepresentanteApellidos(
+            representante.apellidoPaterno,
+            representante.apellidoMaterno
+          );
+        }
+      });
+  }
+
+  /**
+   * Shows the RFC validation modal when RFC field is empty
+   */
+  private showRfcValidationModal(): void {
+    const MODALELEMENT = document.getElementById('rfcValidationModal');
+    if (MODALELEMENT) {
+      const MODAL = new bootstrap.Modal(MODALELEMENT);
+      MODAL.show();
     }
   }
 
