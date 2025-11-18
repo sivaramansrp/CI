@@ -9,6 +9,7 @@ import { CatalogosService } from '@libs/shared/data-access-user/src/core/service
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/forma-render.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { Solicitud260303State } from '../../../../estados/tramites/260303/tramite260303.store';
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -18,6 +19,12 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './todospasos.component.html',
 })
 export class TodospasosComponent implements OnDestroy {
+  solicitudState!: Solicitud260303State;
+   /**
+ * Identificador numérico de la solicitud actual.
+ * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+ */
+  idSolicitud: number = 0;
 
   /**
 * Esta variable se utiliza para almacenar la lista de pasos.

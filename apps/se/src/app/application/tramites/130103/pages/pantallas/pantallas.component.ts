@@ -4,6 +4,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
+import { ImportacionDefinitiva130103State } from '../../../../estados/tramites/tramite130103.store';
 
 /**
  * @component
@@ -16,6 +17,7 @@ import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/316
   templateUrl: './pantallas.component.html'
 })
 export class PantallasComponent implements OnInit, OnDestroy {
+  solicitudState!: ImportacionDefinitiva130103State;
    /**
   * compo doc
   * Lista de pasos del wizard.

@@ -6,6 +6,8 @@ import { ScianDatos } from '@libs/shared/data-access-user/src';
  * Interfaz que representa el estado de Solicitud260303.
  */
 export interface Solicitud260303State {
+
+    idSolicitud: number | null;
     /**
      * El valor de rfcResponsableSanitario.
      */
@@ -361,6 +363,7 @@ export interface Solicitud260303State {
  */
 export function createInitialState(): Solicitud260303State {
     return {
+        idSolicitud: 0,
         denominacionRazon: '',
         codigoPostal: '',
         estado: '',
@@ -1430,4 +1433,16 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
             manifiestos,
         }));
     }
+       /**
+* Guarda el ID de la solicitud en el estado.
+*
+* @param idSolicitud - El ID de la solicitud que se va a guardar.
+*/
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+            ...state,
+            idSolicitud,
+        }));
+    }
+
 }
