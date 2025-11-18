@@ -63,6 +63,7 @@ import {
   COMUN_URL,
   FRACCION_HTS,
   PAISES_POR_BLOQUE,
+  OFICIO_ASIGNACION,
   PAIS_DESTINO,
   REPRESENTACION_FEDERAL_CATALOGO,
   TIPO_EMPRESA,
@@ -518,6 +519,8 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CLASSIFICACIONES_REGIMEN(tramite).replace(CLASIFICACION, cveRegimen)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+
 
   /*
    * Obtiene el catálogo de países (bloques).
@@ -1130,4 +1133,19 @@ catalogoRepresentacionFederal(tramite: string): Observable<BaseResponse<Catalogo
   const ENDPOINT = `${this.host}${REPRESENTACION_FEDERAL_CATALOGO(tramite)}`;
   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
 }
+
+/**
+ * Obtiene el catálogo de asignación para un trámite específico.
+ *
+ * @param tramite - Identificador del trámite para el cual se solicita el catálogo de asignación.
+ * @returns Un observable que emite la respuesta base con el arreglo de catálogos asociados al trámite.
+ */
+asignacionCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${OFICIO_ASIGNACION(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
 }
+
+
+ 

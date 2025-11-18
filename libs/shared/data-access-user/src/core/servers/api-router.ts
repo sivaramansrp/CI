@@ -1210,3 +1210,12 @@ export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${T
  * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
  */
 export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
+
+/**
+ * Genera la ruta de la API para obtener el catálogo de años de oficio de asignación,
+ * utilizando el identificador del trámite proporcionado.
+ *
+ * @param TRAMITE - Identificador del trámite a utilizar en la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
