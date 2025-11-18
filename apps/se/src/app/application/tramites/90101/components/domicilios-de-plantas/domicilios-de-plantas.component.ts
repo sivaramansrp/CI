@@ -396,7 +396,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerListaFederal(): void {
-    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString()).subscribe({
+    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString(), this.forma.get('Estado')?.value).subscribe({
       next: (data) => {
         this.RepresentacionFederal = data.datos as Catalogo[];
       },
@@ -453,7 +453,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   obtenerLista(): void {
     this.obtenerListaEstado();
-    this.obtenerListaFederal();
     this.obtenerListaActividad();
     
   }
