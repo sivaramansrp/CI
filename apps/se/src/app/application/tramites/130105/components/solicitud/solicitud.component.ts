@@ -213,7 +213,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
@@ -228,8 +227,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130105Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
+        this.seccionState = data;
         this.tableBodyData = data.tableBodyData || [];
       });
+      this.getMostrarPartidas();
   }
 
   /**
@@ -664,9 +665,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMostrarPartidas(): void {
-    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(202859165).subscribe((data) => {
+    let idSolicitud = 0;
+    if(this.seccionState?.idSolicitud){
+      idSolicitud = this.seccionState?.idSolicitud;
+    }
+    this.importacionVehiculosUsadosDonacionService.getMostrarPartidasService(idSolicitud).subscribe((data) => {
       if(data.codigo === '00'){
           this.mostrarPartidas = data.datos as MostrarPartidas[];
+          if(this.mostrarPartidas.length > 0){
+           const TABLE_BODY = this.mostrarPartidas.map((item, i) => ({
+                id: i?.toString(),
+                cantidad: item.candidatoEliminar?.toString() || '',
+                unidadDeMedida: item.unidadMedidaDescripcion?.toString() || '',
+                fraccionFrancelaria: item.fraccionClave?.toString() || '',
+                descripcion: item.descripcionOriginal?.toString() || '',
+                precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
+                totalUSD: item.importeTotalUSD?.toString() || '',
+                fraccionTigiePartidasDeLaMercancia: "",
+                fraccionDescripcionPartidasDeLaMercancia: "",
+              }));
+              this.tramite130105Store.actualizarEstado({tableBodyData: TABLE_BODY })
+          }
           this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
       }
     });
