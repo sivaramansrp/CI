@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { PagoDeDerechosComponent } from './pago-de-derechos-contenedora';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';

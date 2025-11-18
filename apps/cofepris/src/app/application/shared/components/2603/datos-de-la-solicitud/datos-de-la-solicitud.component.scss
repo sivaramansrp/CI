@@ -1,0 +1,40 @@
+.custom-check-input {
+    margin-top: 2px !important;
+}
+
+// Estilos para el select readonly de SCIAN
+.solo-lectura-select-contenedor {
+    position: relative;
+    ::ng-deep label{
+        color: #212529!important;
+    }
+    ::ng-deep select {
+    color: light-dark(graytext, rgb(170, 170, 170))!important;
+    background-color: unset;
+    opacity: 0.8;
+}
+}
+.solo-lectura-select-capa {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background: transparent;
+    cursor: not-allowed;
+}
+::ng-deep .solo-lectura-select-texto {
+    color: light-dark(graytext, rgb(170, 170, 170))!important;
+}
+textarea.form-control {
+    height: auto;
+}
+.no-scroll {
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none; 
+}

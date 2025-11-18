@@ -1,13 +1,30 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import {Subject,map,takeUntil } from 'rxjs';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+
+import { Subject, map, takeUntil } from 'rxjs';
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: true,
+  imports: [
+    CommonModule,
+    DatosDeLaSolicitudComponent,
+    PagoDeDerechosContenedoraComponent,
+    SolicitanteComponent,
+    TercerosRelacionadosComponent
+  ],
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit {

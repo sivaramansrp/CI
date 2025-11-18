@@ -1,15 +1,15 @@
-import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
+import { Solicitud2603State, Tramite2603Store } from '../../../estados/stores/2603/tramite2603.store';
 import { Subject,map, takeUntil } from 'rxjs';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { CertificadosLicenciasPermisosService } from '../../../services/shared2603/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 
-import { FECHA_PAGO, INPUT_FECHA_CONFIG } from '../../services/certificados-licencias-permisos.enum';
+import { FECHA_PAGO, INPUT_FECHA_CONFIG } from '../../../constantes/shared2603/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
+import { Tramite2603Query } from '../../../estados/queries/2603/tramite2603.query';
 /**
  * PagoDeDerechosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -58,32 +58,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     */
    private destroyNotifier$: Subject<void> = new Subject();
   /**
-   * Representa el estado del proceso de Solicitud260303.
+   * Representa el estado del proceso de Solicitud2603.
    * Esta propiedad se utiliza para gestionar y rastrear el estado de la
    * aplicación para el componente "Pago de Derechos".
    */
-   public solicitudState!: Solicitud260303State;
+   public solicitudState!: Solicitud2603State;
 
   /**
    * Constructor del componente PagoDeDerechosComponent.
    * 
    * @param certificadosLicenciasSvc - Servicio para manejar operaciones relacionadas con certificados, licencias y permisos.
    * @param fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
-   * @param tramite260303Store - Store para gestionar el estado del proceso Tramite 260303.
-   * @param tramite260303Query - Servicio de consulta para recuperar datos relacionados con el proceso Tramite 260303.
+   * @param tramite2603Store - Store para gestionar el estado del proceso Tramite 2603.
+   * @param tramite2603Query - Servicio de consulta para recuperar datos relacionados con el proceso Tramite 2603.
    */
   constructor(  
     private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
     private fb: FormBuilder,
-    private tramite260303Store: Tramite260303Store,
-    private tramite260303Query: Tramite260303Query,
+    private tramite2603Store: Tramite2603Store,
+    private tramite2603Query: Tramite2603Query,
   ) {
    }
 
   /**
    * Gancho del ciclo de vida que se llama después de que la vista del componente ha sido inicializada.
    * 
-   * - Se suscribe al observable `selectSolicitud$` de `tramite260303Query` para actualizar la propiedad `solicitudState`
+   * - Se suscribe al observable `selectSolicitud$` de `tramite2603Query` para actualizar la propiedad `solicitudState`
    *   con el estado más reciente de la sección, asegurando que la suscripción se limpie correctamente utilizando `takeUntil` con `destroyNotifier$`.
    * - Invoca `getBancoCatalogDatos` para obtener los datos del catálogo de bancos.
    * - Llama a `cerrarPagoDerechosForm` para inicializar o restablecer el formulario de pago.
@@ -103,7 +103,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * La suscripción se limpia automáticamente cuando el componente se destruye.
    */
   inicializarFormulario(): void {
-    this.tramite260303Query.selectSolicitud$.pipe(
+    this.tramite2603Query.selectSolicitud$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         // Actualiza el estado local de la solicitud con los datos más recientes
@@ -132,12 +132,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public cerrarPagoDerechosForm(): void {
     this.pagoDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState.claveDeReferencia, [Validators.required, Validators.maxLength(9)]],
-      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia, [Validators.required, Validators.maxLength(14)]],
+      claveDeReferencia: [this.solicitudState.claveDeReferencia, [Validators.maxLength(9)]],
+      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia, [Validators.maxLength(14)]],
       banco: [this.solicitudState.banco],
-      laveDePago: [this.solicitudState.laveDePago, [Validators.required, Validators.maxLength(30)]],
+      laveDePago: [this.solicitudState.laveDePago, [Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS), Validators.maxLength(30)]],
       fechaDePago: [this.solicitudState.fechaDePago],
-      importeDePago: [this.solicitudState.importeDePago, [Validators.required, Validators.maxLength(16), Validators.pattern(/^\d{1,13}(\.\d{0,2})?$/)]],
+      importeDePago: [this.solicitudState.importeDePago, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2), Validators.maxLength(16)]],
     });
   }
 
@@ -162,28 +162,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 fechaFuturaSeleccionada = false;
   cambioFechaFinal(nuevo_valor: string): void {
     this.pagoDerechosForm.patchValue({
-      fecha: nuevo_valor,
+      fechaDePago: nuevo_valor,
     });
-   this.tramite260303Store.setFechaDePago(nuevo_valor);
-  this.pagoDerechosForm.get('fecha')?.setValue(nuevo_valor);
+    this.tramite2603Store.setFechaDePago(nuevo_valor);
+    this.pagoDerechosForm.get('fechaDePago')?.setValue(nuevo_valor);
 
-  let seleccionada: Date | null = null;
-  if (nuevo_valor && nuevo_valor.includes('/')) {
-    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
-    seleccionada = new Date(YEAR, MONTH - 1, DAY);
-  } else {
-    seleccionada = new Date(nuevo_valor); 
-  }
+    let seleccionada: Date | null = null;
+    if (nuevo_valor && nuevo_valor.includes('/')) {
+      const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+      seleccionada = new Date(YEAR, MONTH - 1, DAY);
+    } else {
+      seleccionada = new Date(nuevo_valor); 
+    }
 
-  const HOY = new Date();
-  HOY.setHours(0, 0, 0, 0);
+    const HOY = new Date();
+    HOY.setHours(0, 0, 0, 0);
 
   if (seleccionada && seleccionada > HOY) {
     this.fechaFuturaSeleccionada = true;
-    this.pagoDerechosForm.get('fecha')?.setErrors({ futureDate: true });
+    this.pagoDerechosForm.get('fechaDePago')?.setErrors({ futureDate: true });
   } else {
     this.fechaFuturaSeleccionada = false;
-    this.pagoDerechosForm.get('fecha')?.setErrors(null);
+    this.pagoDerechosForm.get('fechaDePago')?.setErrors(null);
   }
   }
 
@@ -193,9 +193,9 @@ fechaFuturaSeleccionada = false;
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite2603Store): void {
       const VALOR = form.get(campo)?.value;
-      (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
+      (this.tramite2603Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
   /**
    * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
@@ -223,11 +223,21 @@ fechaFuturaSeleccionada = false;
   public borrarDatosDelPago(): void {
     this.pagoDerechosForm.reset();
   }
-
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Utilice mayúsculas automáticas en el campo 'laveDePago' a medida que el usuario escribe.
    */
+  public onLaveDePagoInput(): void {
+    const CONTROL_LAVE_DE_PAGO = this.pagoDerechosForm.get('laveDePago');
+    if (CONTROL_LAVE_DE_PAGO) {
+      const VALUE = CONTROL_LAVE_DE_PAGO.value;
+      if (typeof VALUE === 'string') {
+        const SUPERIOR = VALUE.toUpperCase();
+        if (VALUE !== SUPERIOR) {
+          CONTROL_LAVE_DE_PAGO.setValue(SUPERIOR, { emitEvent: false });
+        }
+      }
+    }
+  }
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

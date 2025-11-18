@@ -4,7 +4,7 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="claveDe" class="form-label">Clave de referencia*:</label>
+                    <label for="claveDe" class="form-label">Clave de referencia:</label>
                     <input type="text" id="claveDe" formControlName="claveDeReferencia" class="form-control"
                         maxlength="9"
                         (change)="setValoresStore(pagoDerechosForm,'claveDeReferencia', 'setClaveDeReferencia')">
@@ -15,15 +15,12 @@
                     @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['required']) {
                     <span class="mensaje-error">Todos los campos de pago son requeridos</span>
                     }
-                    @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['maxlength']) {
-                    <span class="mensaje-error">Máximo 9 caracteres permitidos</span>
-                    }
                 </div>
                 }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="cadena" class="form-label">Cadena de la dependencia*:</label>
+                    <label for="cadena" class="form-label">Cadena de la dependencia:</label>
                     <input type="text" id="cadena" formControlName="cadenaDaLaDependencia" class="form-control"
                         maxlength="14"
                         (change)="setValoresStore(pagoDerechosForm,'cadenaDaLaDependencia', 'setCadenaDaLaDependencia')">
@@ -34,14 +31,11 @@
                     @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['required']) {
                     <span class="mensaje-error">Todos los campos de pago son requeridos</span>
                     }
-                    @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['maxlength']) {
-                    <span class="mensaje-error">Máximo 14 caracteres permitidos</span>
-                    }
                 </div>
                 }
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="bancoCatalogo" [label]="'Banco'" [required]="true"
+                <app-catalogo-select [catalogo]="bancoCatalogo" [label]="'Banco'" [required]="false"
                     formControlName="banco" name="banco"
                     (change)="setValoresStore(pagoDerechosForm,'banco', 'setBanco')"
                     [isDisabled]="consultaState.readonly">
@@ -53,7 +47,7 @@
                 <div class="form-group">
                     <label for="Llave" class="form-label">Llave de pago:</label>
                     <input type="text" id="Llave" formControlName="laveDePago" class="form-control" maxlength="30"
-                        (change)="setValoresStore(pagoDerechosForm,'laveDePago', 'setLaveDePago')">
+                        (input)="onLaveDePagoInput()" (change)="setValoresStore(pagoDerechosForm,'laveDePago', 'setLaveDePago')">
                 </div>
                 @if(pagoDerechosForm.controls['laveDePago'].invalid && pagoDerechosForm.controls['laveDePago'].touched)
                 {
@@ -61,10 +55,7 @@
                     @if(pagoDerechosForm.controls['laveDePago'].errors?.['required']) {
                     <span class="mensaje-error">Todos los campos de pago son requeridos</span>
                     }
-                    @if(pagoDerechosForm.controls['laveDePago'].errors?.['maxlength']) {
-                    <span class="mensaje-error">Máximo 30 caracteres permitidos</span>
-                    }
-                    @if(pagoDerechosForm.controls['laveDePago'].errors?.['pattern']) {
+                    @else if(pagoDerechosForm.controls['laveDePago'].errors?.['pattern']) {
                     <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
                     }
                 </div>
@@ -92,11 +83,8 @@
                     @if(pagoDerechosForm.controls['importeDePago'].errors?.['required']) {
                     <span class="mensaje-error">Todos los campos de pago son requeridos</span>
                     }
-                    @if(pagoDerechosForm.controls['importeDePago'].errors?.['maxlength']) {
-                    <span class="mensaje-error">Máximo 16 dígitos permitidos</span>
-                    }
-                    @if(pagoDerechosForm.controls['importeDePago'].errors?.['pattern']) {
-                    <span class="mensaje-error">Este campo solo permite números hasta dos decimales</span>
+                    @else if(pagoDerechosForm.controls['importeDePago'].errors?.['pattern']) {
+                    <span class="mensaje-error">Por favor, escribe un número entero válido</span>
                     }
                 </div>
                 }
