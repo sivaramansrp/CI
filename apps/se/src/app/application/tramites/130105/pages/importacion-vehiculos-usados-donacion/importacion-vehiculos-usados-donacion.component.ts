@@ -256,7 +256,7 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
         },
         "partidasMercancia": MERCANCIA,
       },
-      "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
+      "id_solcitud": this.solicitudState.idSolicitud || 0,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": {
