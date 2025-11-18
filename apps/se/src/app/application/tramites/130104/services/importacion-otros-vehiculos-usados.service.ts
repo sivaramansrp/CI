@@ -6,10 +6,12 @@ import { Catalogo, CatalogoServices, HttpCoreService, JsonResponseCatalogo } fro
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { PROC_130104 } from '../servers/api-route';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130104Query } from '../../../estados/queries/tramite130104.query';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 
 /**
  * ImportacionOtrosVehiculosUsadosService
@@ -201,17 +203,66 @@ export class ImportacionOtrosVehiculosUsadosService {
       );
   }
 
-  // /**
-  //  * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
-  //  * @param tramitesID Identificador del trámite
-  //  * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
-  //  */
-  // getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
-  //   const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
-  //   return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
-  //     .pipe(
-  //       map(res => res?.datos ?? [])
-  //     );
-  // }
+  /**
+   * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
+   * @param tramitesID Identificador del trámite
+   * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
+   */
+  getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+    const PAYLOAD_DATOS = { tramite: 'TITPEX.130104', id: tramitesID };
+    return this.catalogoServices.clasificacionRegimenCatalogo('130104', PAYLOAD_DATOS)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   *  Obtiene el catálogo de fracciones arancelarias asociado a un identificador.
+   * @param ID Identificador para obtener las fracciones arancelarias
+   * @returns Observable con un arreglo de fracciones arancelarias (o vacío si no hay datos)
+   */
+  getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130104')
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   * Obtiene la lista de bloques comerciales (tratados o acuerdos) según el trámite proporcionado.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación para la consulta del catálogo.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de elementos del catálogo de bloques.
+   */
+  getBloqueService(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.tratadosAcuerdoCatalogo(tramite, 'TITRAC.TA')
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+    * Obtiene el catálogo de tratados/acuerdos asociados a un trámite.
+    * @param tramitesID - Identificador del trámite
+    * @param tratadoAsociado - Clave del tratado asociado
+    * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
+    */
+  getRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.regimenesCatalogo(tramitesID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   *  Obtiene el catálogo de mostrar partidas asociado a un trámite e identificador.
+   * @param tramite Identificador del trámite
+   * @param ID Identificador para obtener las mostrar partidas
+   * @returns Observable con un arreglo de mostrar partidas (o vacío si no hay datos)
+   */
+  getMostrarPartidasService(solicitud_id: number): Observable<BaseResponse<MostrarPartidas[]>> {
+    const ENDPOINT = PROC_130104.MOSTAR_PARTIDAS + solicitud_id;
+    return this.http.get<BaseResponse<MostrarPartidas[]>>(ENDPOINT);
+  }
   
 }

@@ -38,15 +38,21 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
  * Rutas de la API para el procedimiento PROC_130104
  */
 export const PROC_130104 = {
+    /** Ruta para obtener los datos del formulario */
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
+    /** Ruta para buscar mercancías */
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
+    /** Ruta para guardar los datos del formulario */
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
+    /** Ruta para consultar una solicitud por ID */
     CONSULTA_SOLICITUDE: (id: string | number) : string => 
         `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    /** Ruta para obtener opiniones de un trámite */
     OPINIONES: (numFolioTramite: string | number): string => 
         `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
-    // AGREGAR_PRODUCTOR: `${BASE_URL}${API}${PROCEDURE}/solicitud/agregar-productor`,
+    /** Ruta para mostrar las partidas de la solicitud */
+    MOSTAR_PARTIDAS : `${BASE_URL}${API}${PROCEDURE}/solicitud/mostar/partidas?idSolicitud=`
 };
 
 /*

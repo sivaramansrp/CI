@@ -6,6 +6,7 @@ import { Tramite130104State, Tramite130104Store } from '../../../../estados/tram
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
@@ -183,6 +184,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
+   * jest.spyOnArreglo que almacena las partidas a mostrar en la tabla.
+   * @type {MostrarPartidas[]}
+   */
+  mostrarPartidas: MostrarPartidas[] = [];
+
+  /**
    * Constructor del componente.
    */
   constructor(
@@ -199,6 +206,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState)=>{
           this.esFormularioSoloLectura = seccionState.readonly; 
+          if(this.esFormularioSoloLectura){
+            this.getMostrarPartidas();
+          }
         })
       )
       .subscribe()
@@ -208,10 +218,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.configuracionFormularioSuscripciones();
+    this.getRegimenCatalogo();
+    this.getFraccionCatalogo();
     // this.opcionesDeBusqueda();
     this.formularioTotalCount();
     // this.obtenerTablaDatos();
-    // this.fetchEntidadFederativa();
+    this.getEntidadesFederativasCatalogo();
+    this.getBloque();
     // this.fetchRepresentacionFederal();
     // this.listaDePaisesDisponibles();
 
@@ -614,14 +627,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.representacionFederal = data as Catalogo[];
     });
   }
+  /**
+   * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
+   *
+   * @returns {void}
+   */
+  getMostrarPartidas(): void {
+    this.importacionOtrosVehiculosUsadosService.getMostrarPartidasService(202859165).subscribe((data: any) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          this.tramite130104Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
+    });
+  }
 
-/**
-* Maneja el cambio de bloque seleccionado.
-* Identificador del bloque seleccionado.
-*/
-enCambioDeBloque(bloqueId: number): void {
-  this.getPaisesPorBloque(bloqueId.toString());
-}
+  /**
+  * Maneja el cambio de bloque seleccionado.
+  * Identificador del bloque seleccionado.
+  */
+  enCambioDeBloque(bloqueId: number): void {
+    this.getPaisesPorBloque(bloqueId.toString());
+  }
   
   // /**
   //  * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
@@ -635,6 +661,17 @@ enCambioDeBloque(bloqueId: number): void {
   // }
 
   /**
+  * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+  *
+  * @returns {void}
+  */
+  getRegimenCatalogo(): void {
+    this.importacionOtrosVehiculosUsadosService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+      this.catalogosArray[0] = data as Catalogo[];
+    });
+  }
+
+  /**
    *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
    * @param FRACCION_ID 
    */
@@ -645,6 +682,31 @@ enCambioDeBloque(bloqueId: number): void {
         this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
         this.tramite130104Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
       }
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de fracciones arancelarias desde el servicio y lo asigna a la propiedad `fraccionCatalogo`.
+   *
+   * @returns {void}
+   */
+  getFraccionCatalogo(): void {
+    this.importacionOtrosVehiculosUsadosService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
+      this.fraccionCatalogo = data?.map(item => ({
+        ...item,
+        descripcion: `${item.clave} - ${item.descripcion}`
+      }));
+    });
+  }
+
+  /**
+   * Obtiene los bloques desde el servicio y los asigna a la propiedad `elementosDeBloque`.
+   *
+   * @returns {void}
+   */
+  getBloque(): void {
+    this.importacionOtrosVehiculosUsadosService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
+      this.elementosDeBloque = data as Catalogo[];
     });
   }
 

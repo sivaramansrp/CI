@@ -8,6 +8,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 
 
 export interface Tramite130104State {
@@ -143,6 +144,11 @@ export interface Tramite130104State {
     /** Descripción de las partidas de la mercancía */
     descripcionPartidasDeLaMercancia: string;
   };
+
+  /**
+   * Lista de partidas a mostrar.
+   */
+  mostrarPartidas: MostrarPartidas[];
 }
 
 /**
@@ -184,6 +190,7 @@ export function createInitialState(): Tramite130104State {
       valorPartidaUSDPartidasDeLaMercancia: '',
       descripcionPartidasDeLaMercancia: '',
     },
+    mostrarPartidas: [],
   };
 }
 
