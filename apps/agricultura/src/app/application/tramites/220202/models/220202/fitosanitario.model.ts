@@ -1035,7 +1035,6 @@ export interface Documentos {
   documento_fraccion_esquema?: [],
   documento_fraccion?: [],
   documento_programa?: [],
-  // documento_tramite?: DocumentoTramite[]
   documento_tramite?: [
     {
       tipo_documento: {

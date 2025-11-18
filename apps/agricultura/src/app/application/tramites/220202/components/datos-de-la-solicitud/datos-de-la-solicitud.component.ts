@@ -597,8 +597,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDatosTablaSolicitud(): void {
-    // TODO: recibir el parametro de rfc de la sesion
     this.registroSolicitudService
+      // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
       // .obtieneDatosDeLaSolicitud(220202, this.rfcOriginal)
       .obtieneDatosDeLaSolicitud(220202, 'AAL0409235E6')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -920,7 +920,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
-      // TODO: sustituir metodos con flujo normal y borrar con datos en duro
+      // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
       // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
       // this.obtenerPrellenadoTercerosRelacionados(event.id_solicitud);
       // this.obtenerPrellenadoPagoDerechos(event.id_solicitud);
@@ -941,7 +941,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                 datos.datos.oficina_inspeccion_sanidad_agropecuaria || ''
               );
               //Regimen
-              // this.getRegimenLista();
               this.obtenerRegimenList(datos.datos?.clave_regimen || '');
               this.datos.patchValue({
                 aduanaDeIngreso: datos.datos.cve_aduana || '',
@@ -952,9 +951,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                 oficinaDeInspeccion:
                   datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 puntoDeInspeccion: datos.datos.punto_inspeccion || '',
-                // claveUCON: datos.datos.clave_UCON || '',
-                // establecimientoTIF: datos.datos.establecimiento_TIF || '',
-                // nombreVeterinario: datos.datos.nombre_veterinario || '',
                 regimen: datos.datos.clave_regimen || '',
                 numeroDeGuia: datos.datos.numero_autorizacion || '',
                 numeroDeCarro: datos.datos.numero_carro_ferrocarril || '',
@@ -1010,23 +1006,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                   descripcionUMT: mercancia.descripcion_umt || '',
                   descripcionUMC: mercancia.descripcion_umc || '',
                   cantidadUMC: mercancia.cantidad_umc || 0,
-                  // especie: mercancia.descripcion_especie || '',
                   uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
                   paisDeOrigen: mercancia.clave_paises_origen || '',
-                  // paisDeDestino: mercancia.nombre_pais_procedencia || '',
                   paisDeProcedencia: mercancia.clave_paises_procedencia || '',
                   descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
                   descripcionPaisDeProcedencia:
                     mercancia.nombre_pais_procedencia || '',
-                  // tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
-                  // tipoPlanta: mercancia.descripcion_tipo_planta || '',
-                  // plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
                   certificadoInternacionalElectronico:
                     String(mercancia.numero_certificado) || '',
                   tipoDeProducto: '',
                   numeroDeLote: mercancia.numero_lote || '',
-                  // sensibles: LISTADETALLESENSIBLES,
-                  // detalleProductos: LISTADETALLEPRODUCTOS,
                   detalleVidaSilvestre: LISTADETALLEVIDASILVESTRE,
                   descripcion: mercancia.descripcion_mercancia || '',
                 };
@@ -1064,6 +1053,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoMovilizacionNacional(idSolicitud: string) :void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -1088,7 +1078,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoTercerosRelacionados(idSolicitud: string) :void {
-    // TODO: sustituir metodos con flujo normal y borrar con datos en duro
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
@@ -1153,7 +1143,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param idSolicitud
    */
   obtenerPrellenadoPagoDerechos(idSolicitud: string) :void {
-    // TODO: sustituir metodos con flujo normal y borrar con datos en duro
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, idSolicitud ?? '')
     this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
