@@ -64,6 +64,8 @@ import {
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_CATALOGOS_PAISES_TODOS,
   API_MOSTRAR_PARTIDAS_SOLICITUD,
+  API_ACTIVIDAD_PRODUCTIVA_PROSEC,
+  API_REPRESENTACION_FEDERAL_MEX,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -1048,4 +1050,14 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  getActividadProductivaProsecCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_ACTIVIDAD_PRODUCTIVA_PROSEC(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+  
+  getRepresentacionFederalMexCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_MEX(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+    
 }

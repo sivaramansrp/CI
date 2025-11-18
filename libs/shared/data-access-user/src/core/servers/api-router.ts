@@ -1161,3 +1161,7 @@ export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): stri
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
+
+export const API_REPRESENTACION_FEDERAL_MEX = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/MEX`;

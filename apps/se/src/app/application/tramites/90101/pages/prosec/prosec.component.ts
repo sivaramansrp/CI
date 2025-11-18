@@ -82,7 +82,7 @@ export class ProsecComponent implements OnInit {
    * Identificador del tipo de trámite.
    * @type {string}
    */
-  idTipoTramite: string = '260218';
+  idTipoTramite: string = '90101';
 
 
     /**
@@ -194,7 +194,6 @@ constructor(
      * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción ('cont' o 'atras').
      */
     getValorIndice(e: AccionBoton): void {
-  
         if (e.accion === 'cont') {
           let isValid = true;
   
@@ -210,8 +209,7 @@ constructor(
           return;
         }
   
-        // const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
-        const PAYLOAD = {}
+        const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
         let shouldNavigate = false;
         this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe(response => {
           shouldNavigate = response.codigo === '00';
