@@ -24,10 +24,11 @@ import { DatosDelSolicitudModificacionComponent } from '../../shared/components/
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import {TercerosRelacionadosVistaComponent} from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 
-import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+import { PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 
 
@@ -48,9 +49,10 @@ import { RepresentanteLegalComponent } from '../../shared/components/representan
     DatosDelSolicitudModificacionComponent,
     TramitesAsociadosSeccionComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDeDerechosEntradaComponent,
+    PagoDeDerechosContenedoraComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    TercerosRelacionadosVistaComponent,
   ],
   providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })

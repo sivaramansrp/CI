@@ -4,36 +4,45 @@ import {
   DomicilioInfo,
   Federetarios,
   Operacions,
+  ProgramaLista,
 } from '../models/plantas-consulta.model';
 import { Bitacora } from '../../../shared/models/bitacora.model';
 import { DatosDelServicios } from '../models/datos-tramite.model';
 
 /**
- * Representa los pasos de un proceso en una solicitud.
- *
- * Cada paso contiene la siguiente información:
- * - `indice`: Número que indica el orden del paso.
- * - `titulo`: Descripción del paso.
- * - `activo`: Indica si el paso está activo actualmente.
- * - `completado`: Indica si el paso ha sido completado.
+ * Constante que define los pasos para el proceso de exportación.
+ * Cada paso incluye un índice, título, y estados de activo y completado.
+ * @constant {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>} PASOS_EXPORTACION
  */
-export const PASOS = [
+export const PASOS_EXPORTACION = [
   {
+    /** Índice del paso. */
     indice: 1,
+    /** Título del paso. */
     titulo: 'Capturar solicitud',
+    /** Indica si el paso está activo. */
     activo: true,
+    /** Indica si el paso está completado. */
     completado: true,
   },
   {
+    /** Índice del paso. */
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    /** Título del paso. */
+    titulo: 'Anexar requisitos',
+    /** Indica si el paso está activo. */
     activo: false,
+    /** Indica si el paso está completado. */
     completado: false,
   },
   {
+    /** Índice del paso. */
     indice: 3,
+    /** Título del paso. */
     titulo: 'Firmar solicitud',
+    /** Indica si el paso está activo. */
     activo: false,
+    /** Indica si el paso está completado. */
     completado: false,
   },
 ];
@@ -56,24 +65,36 @@ export const PASOS = [
  */
 export const CONFIGURACION_MODIFICACION = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Fracción - Relación',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Fracción',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Descripción',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    /** Orden de la columna. */
     orden: 3,
   },
 
   {
+    /** Encabezado de la columna. */
     encabezado: 'Estatus',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    /** Orden de la columna. */
     orden: 4,
   },
 ];
@@ -95,23 +116,35 @@ export const CONFIGURACION_MODIFICACION = [
  */
 export const CONFIGURACION_IMPORTACION = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Fracción',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Descripción',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Fracción - Relación',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    /** Orden de la columna. */
     orden: 3,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Estatus',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios. */
     clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    /** Orden de la columna. */
     orden: 4,
   },
 ];
@@ -142,61 +175,94 @@ export const CONFIGURACION_IMPORTACION = [
  */
 export const CONFIGURACION_DOMICILIOS = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Calle',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.calle,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número Exterior',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.numeroExterior,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número Interior',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.numeroInterior,
+    /** Orden de la columna. */
     orden: 3,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Código Postal',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.codigoPostal,
+    /** Orden de la columna. */
     orden: 4,
   },
 
   {
+    /** Encabezado de la columna. */
     encabezado: 'Colonia',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.colonia,
+    /** Orden de la columna. */
     orden: 5,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Localidad',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.localidad,
+    /** Orden de la columna. */
     orden: 6,
   },
 
   {
+    /** Encabezado de la columna. */
     encabezado: 'Municipio o alcaldía',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.delegacionMunicipio,
+    /** Orden de la columna. */
     orden: 7,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Entidad Federativa',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.entidadFederativa,
+    /** Orden de la columna. */
     orden: 8,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'País',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.pais,
+    /** Orden de la columna. */
     orden: 9,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'RFC',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.rfc,
+    /** Orden de la columna. */
     orden: 10,
   },
 
   {
+    /** Encabezado de la columna. */
     encabezado: 'Razón Social',
+    /** Función para obtener el valor de la columna desde un objeto DomicilioInfo. */
     clave: (ele: DomicilioInfo): string | undefined => ele.razonSocial,
+    /** Orden de la columna. */
     orden: 13,
   },
 ];
@@ -213,23 +279,35 @@ export const CONFIGURACION_DOMICILIOS = [
  */
 export const CONFIGURACION_ACCIONISTAS = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Registro Federal de Contribuyente(RFC)',
+    /** Función para obtener el valor de la columna desde un objeto Complimentaria. */
     clave: (ele: Complimentaria): string | undefined => ele.rfc,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Nombre(s)',
+    /** Función para obtener el valor de la columna desde un objeto Complimentaria. */
     clave: (ele: Complimentaria): string | undefined => ele.nombre,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Primer apellido',
-    clave: (ele: Complimentaria): string | undefined => ele.apellidoPrimer,
+    /** Función para obtener el valor de la columna desde un objeto Complimentaria. */
+    clave: (ele: Complimentaria): string | undefined => ele.apellidoPaterno,
+    /** Orden de la columna. */
     orden: 3,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Segundo apellido',
-    clave: (ele: Complimentaria): string | undefined => ele.apellidoSegundo,
+    /** Función para obtener el valor de la columna desde un objeto Complimentaria. */
+    clave: (ele: Complimentaria): string | undefined => ele.apellidoMaterno,
+    /** Orden de la columna. */
     orden: 4,
   },
 ];
@@ -252,43 +330,67 @@ export const CONFIGURACION_ACCIONISTAS = [
  */
 export const CONFIGURACION_FEDERETARIOS = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Nombre',
-    clave: (ele: Federetarios): string | undefined => ele.nombre,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.nombreNotario,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Apellido Paterno',
-    clave: (ele: Federetarios): string | undefined => ele.apellidoPrimer,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.apellidoPaterno,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Apellido Materno',
-    clave: (ele: Federetarios): string | undefined => ele.apellidoSegundo,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.apellidoMaterno,
+    /** Orden de la columna. */
     orden: 3,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número Acta',
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
     clave: (ele: Federetarios): string | undefined => ele.numeroActa,
+    /** Orden de la columna. */
     orden: 4,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Fecha Acta',
-    clave: (ele: Federetarios): string | undefined => ele.fetchActa,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.fechaActa,
+    /** Orden de la columna. */
     orden: 5,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número notaría',
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
     clave: (ele: Federetarios): string | undefined => ele.numeroNotaria,
+    /** Orden de la columna. */
     orden: 6,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Delegación Municipio',
-    clave: (ele: Federetarios): string | undefined => ele.municipioDelegacion,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.delegacionMunicipio,
+    /** Orden de la columna. */
     orden: 7,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Entidad Federativa',
-    clave: (ele: Federetarios): string | undefined => ele.estado,
+    /** Función para obtener el valor de la columna desde un objeto Federetarios. */
+    clave: (ele: Federetarios): string | undefined => ele.entidadFederativa,
+    /** Orden de la columna. */
     orden: 8,
   },
 ];
@@ -323,70 +425,107 @@ export const CONFIGURACION_FEDERETARIOS = [
  */
 export const CONFIGURACION_OPERACIONES = [
   {
+    /** Encabezado de la columna. */
     encabezado: 'Calle',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.calle,
+    /** Orden de la columna. */
     orden: 1,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número Exterior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.numeroExterior,
+    /** Orden de la columna. */
     orden: 2,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Número Interior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.numeroInterior,
+    /** Orden de la columna. */
     orden: 3,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Código Postal',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.codigoPostal,
+    /** Orden de la columna. */
     orden: 4,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Colonia',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.colonia,
+    /** Orden de la columna. */
     orden: 5,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Localidad',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.localidad,
+    /** Orden de la columna. */
     orden: 6,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Municipio o delegación',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
+    /** Orden de la columna. */
     orden: 7,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Entidad Federativa',
-    clave: (ele: Operacions): string | undefined => ele.estado,
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
+    clave: (ele: Operacions): string | undefined => ele.entidadFederativa,
+    /** Orden de la columna. */
     orden: 8,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'País',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.pais,
+    /** Orden de la columna. */
     orden: 9,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Registro Federal de Contribuyente',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.rfc,
+    /** Orden de la columna. */
     orden: 10,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: Operacions): string | undefined => ele.fiscalSolicitante,
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
+    clave: (ele: Operacions): string | undefined => ele.domicilioFiscal,
+    /** Orden de la columna. */
     orden: 11,
   },
   {
+    /** Encabezado de la columna. */
     encabezado: 'Razón Social',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
     clave: (ele: Operacions): string | undefined => ele.razonSocial,
+    /** Orden de la columna. */
     orden: 12,
   },
-
   {
+    /** Encabezado de la columna. */
     encabezado: 'Estatus',
-    clave: (ele: Operacions): string | undefined =>
-      ele.estatus ? 'Activada' : 'Baja',
+    /** Función para obtener el valor de la columna desde un objeto Operacions. */
+    clave: (ele: Operacions): string | undefined => ele.desEstatus,
+    /** Orden de la columna. */
     orden: 13,
   },
 ];
@@ -410,23 +549,35 @@ export const CONFIGURACION_OPERACIONES = [
  */
 export const CONFIGURACION_SERVICIOS = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Estatus',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios */
     clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    /** Orden de la columna */
     orden: 4,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Testado',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios */
     clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    /** Orden de la columna */
     orden: 3,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Descripción del servicio',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios */
     clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Tipo de servicio',
+    /** Función para obtener el valor de la columna desde un objeto DatosDelServicios */
     clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    /** Orden de la columna */
     orden: 2,
   },
 ];
@@ -444,70 +595,109 @@ export const CONFIGURACION_SERVICIOS = [
  */
 export const CONFIGURACION_PLANTA = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Calle',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.calle,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Número Exterior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.numeroExterior,
+    /** Orden de la columna */
     orden: 2,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Número Interior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.numeroInterior,
+    /** Orden de la columna */
     orden: 3,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Código Postal',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.codigoPostal,
+    /** Orden de la columna */
     orden: 4,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Colonia',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.colonia,
+    /** Orden de la columna */
     orden: 5,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Localidad',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.localidad,
+    /** Orden de la columna */
     orden: 6,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Municipio o Delegación',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
+    /** Orden de la columna */
     orden: 7,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Operacions): string | undefined => ele.estado,
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
+    clave: (ele: Operacions): string | undefined => ele.estado,    
+    /** Orden de la columna */
     orden: 8,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'País',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.pais,
+    /** Orden de la columna */
     orden: 9,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Registro Federal de Contribuyente(RFC)',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.rfc,
+    /** Orden de la columna */
     orden: 10,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: Operacions): string | undefined => ele.fiscalSolicitante,
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
+    clave: (ele: Operacions): string | undefined => ele.domicilioFiscal,
+    /** Orden de la columna */
     orden: 11,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Denominación o razón social',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.razonSocial,
+    /** Orden de la columna */
     orden: 12,
   },
 
   {
+    /** Encabezado de la columna */
     encabezado: 'Estatus',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined =>
       ele.estatus ? 'Activada' : 'Baja',
+    /** Orden de la columna */
     orden: 13,
   },
 ];
@@ -526,54 +716,84 @@ export const CONFIGURACION_PLANTA = [
  */
 export const CONFIGURACION_EMPRESAS = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Registro Federal de Contribuyente',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.rfc,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Razón social',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.razonSocial,
+    /** Orden de la columna */
     orden: 2,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Calle',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.calle,
+    /** Orden de la columna */
     orden: 3,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Número Interior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.numeroInterior,
+    /** Orden de la columna */
     orden: 4,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Número Exterior',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.numeroExterior,
+    /** Orden de la columna */
     orden: 5,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Código Postal',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.codigoPostal,
+    /** Orden de la columna */
     orden: 6,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Municipio o Delegación',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
+    /** Orden de la columna */
     orden: 7,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Estado o Distrito Federal',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.estado,
+    /** Orden de la columna */
     orden: 8,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'País',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined => ele.pais,
+    /** Orden de la columna */
     orden: 9,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Estatus',
+    /** Función para obtener el valor de la columna desde un objeto Operacions */
     clave: (ele: Operacions): string | undefined =>
       ele.estatus ? 'Activada' : 'Baja',
+    /** Orden de la columna */
     orden: 13,
   },
 ];
@@ -600,23 +820,35 @@ export const CONFIGURACION_EMPRESAS = [
  */
 export const CONFIGURACION_BITACORA_TABLA = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Tipo modificación',
+    /** Función para obtener el valor de la columna desde un objeto Bitacora */
     clave: (ele: Bitacora): string | undefined => ele.tipoModificacion,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Fecha modificación',
+    /** Función para obtener el valor de la columna desde un objeto Bitacora */
     clave: (ele: Bitacora): string | undefined => ele.fechaModificacion,
+    /** Orden de la columna */
     orden: 2,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Valores anteriores',
+    /** Función para obtener el valor de the columna desde un objeto Bitacora */
     clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
+    /** Orden de la columna */
     orden: 3,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Valores nuevos',
+    /** Función para obtener el valor de la columna desde un objeto Bitacora */
     clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
+    /** Orden de la columna */
     orden: 4,
   },
 ];
@@ -634,19 +866,28 @@ export const CONFIGURACION_BITACORA_TABLA = [
  */
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Fracción arancelaria del producto de exportación',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined =>
       ele.fraccionArancelariaExportacion,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Descripción',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined => ele.descripcion,
+    /** Orden de la columna */
     orden: 2,
   },
   {
+    /** Encabezado de la columna */ 
     encabezado: 'Tipo Fracción',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
+    /** Orden de la columna */
     orden: 3,
   },
 ];
@@ -666,43 +907,93 @@ export const CONFIGURACION_ANEXOS_TABLA = [
  */
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
+    /** Encabezado de la columna */
     encabezado: 'Fracción arancelaria del producto de exportación',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined =>
       ele.fraccionArancelariaExportacion,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Fracción arancelaria de la mercancía de importación',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined =>
       ele.fraccionArancelariaImportacion,
+    /** Orden de la columna */
     orden: 1,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Descripción',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined => ele.descripcion,
+    /** Orden de la columna */
     orden: 2,
   },
   {
+    /** Encabezado de la columna */
     encabezado: 'Tipo Fracción',
+    /** Función para obtener el valor de la columna desde un objeto Anexo */
     clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
+    /** Orden de la columna */
     orden: 3,
   },
 ];
 
 /**
- * Constante que define el título del mensaje para el registro de una solicitud
- * de modificación del programa IMMEX. Específicamente, se refiere a la
- * modificación para dar de alta un domicilio de una planta, bodega o almacén.
+ * Genera un mensaje HTML que indica el registro exitoso de una solicitud.
+ * @param numeroSolicitud Número de solicitud a incluir en el mensaje
+ * @returns Mensaje HTML formateado para registro exitoso
  */
-export const TITULOMENSAJE =
-  'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string): string =>
+  `<p>La solicitud ha quedado registrada con el número temporal ${numeroSolicitud ?? ''}. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.</p>`;
 
 /**
- * Texto constante que describe el mensaje mostrado al registrar una solicitud.
- *
- * Este mensaje informa al usuario que la solicitud ha sido registrada con un número temporal,
- * el cual no tiene validez legal y sirve únicamente para identificar la solicitud.
- * También indica que un folio oficial será asignado cuando la solicitud sea firmada.
+ * Configuración de la lista de programas utilizada para definir las columnas
+ * y el orden de visualización en una tabla o lista.
  */
-export const TEXTOS_REQUISITOS =
-  'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
+export const CONFIGURACION_LISTA_PROGRAMA = [
+    {
+      /** Encabezado de la columna */
+      encabezado: 'Folio de programa',
+      /** Función para obtener el valor de la columna desde un objeto ProgramaLista */
+      clave: (ele: ProgramaLista): string | undefined => ele.idProgramaCompuesto,
+      /** Orden de la columna */
+      orden: 1,
+    },
+    {
+      /** Encabezado de la columna */
+      encabezado: 'Tipo de programa',
+      /** Función para obtener el valor de la columna desde un objeto ProgramaLista */
+      clave: (ele: ProgramaLista): string | undefined => ele.tipoPrograma,
+      /** Orden de la columna */
+      orden: 2,
+    }
+];
+
+/**
+ * Constante que define los tipos de TICPSE disponibles.
+ */
+export const TICPSE = {
+  /**
+   * Tipo TICPSE para IMMEX.
+   */
+  TICPSE_IMMEX: 'TICPSE.IMMEX',
+
+  /**
+   * Tipo TICPSE para PROSEC.
+   */
+  TICPSE_PROSEC: 'TICPSE.PROSEC'
+}
+
+/**
+ * Constante que define el valor del discriminador para el trámite 80301.
+ */
+export const DISCRIMINATOR_VALUE = '80301';
+
+/**
+ * Expresión regular para identificar comas al final de una cadena.
+ */
+export const REGEX_COMAS_FINALES  = /,+$/;

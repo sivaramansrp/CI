@@ -1,53 +1,97 @@
-// Mock the JSON dependencies used in TercerosRelacionadosComponent
-jest.mock('@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json', () => ({
-  __esModule: true,
-  default: {
-    paisSelectData: [],
-    localidadSelectData: [],
-    municipioSelectData: [],
-    codigoPostalSelectData: [],
-    coloniaSelectData: [],
-  }
-}));
-jest.mock('@libs/shared/theme/assets/json/260501/nacionalidad-options.json', () => ({
-  __esModule: true,
-  default: []
-}));
-jest.mock('@libs/shared/theme/assets/json/260501/tipo-persona-options.json', () => ({
-  __esModule: true,
-  default: []
-}));
-jest.mock('@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json', () => ({
-  __esModule: true,
-  default: []
-}));
-
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TercerosRelacionadosFabricanteComponent } from './terceros-relacionados-fabricante.component';
-import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('TercerosRelacionadosFabricanteComponent', () => {
+import { Tramite260504Store } from '../../../../estados/tramites/260504/tramite260504.store';
+import { TercerosRelacionadosFabricanteComponent } from './terceros-relacionados-fabricante.component';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
+@Component({
+  template: `
+    <app-terceros-relacionados-fabricante
+      [isContinuarTriggered]="trigger"
+    ></app-terceros-relacionados-fabricante>
+  `
+})
+class HostWrapperComponent {
+  trigger = false;
+}
+
+class MockTramite260504Store {
+  setFormValidity = jest.fn();
+}
+
+describe('TercerosRelacionadosFabricanteComponent (REAL children)', () => {
+  let fixture: ComponentFixture<HostWrapperComponent>;
+  let host: HostWrapperComponent;
   let component: TercerosRelacionadosFabricanteComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosFabricanteComponent>;
+  let store: MockTramite260504Store;
 
   beforeEach(async () => {
+    (SELECT_OPTIONS_DATA as any) = {
+      localidadSelectData: [],
+      codigoPostalSelectData: [],
+      coloniaSelectData: [],
+      municipioSelectData: [],
+      paisSelectData: [],
+    };
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
-        TercerosRelacionadosComponent,
+        HttpClientTestingModule,
         TercerosRelacionadosFabricanteComponent,
-        HttpClientTestingModule
+        TercerosRelacionadosComponent
       ],
+      declarations: [HostWrapperComponent],
+      providers: [
+        { provide: Tramite260504Store, useClass: MockTramite260504Store }
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TercerosRelacionadosFabricanteComponent);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(HostWrapperComponent);
+    host = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
+    const element = fixture.debugElement.children[0];
+    component = element.componentInstance;
+    store = TestBed.inject(Tramite260504Store) as any;
+    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have default idProcedimiento', () => {
+    expect(component.idProcedimiento).toBe(260504);
+  });
+
+  it('should call setFormValidity for fabricante', () => {
+    component.onTableValidEvent('fabricante');
+    expect(store.setFormValidity).toHaveBeenCalledWith('fabricanteTablaValid', true);
+  });
+
+  it('should call setFormValidity for formulador', () => {
+    component.onTableValidEvent('formulador');
+    expect(store.setFormValidity).toHaveBeenCalledWith('formuladorTablaValid', true);
+  });
+
+  it('should call setFormValidity for proveedor', () => {
+    component.onTableValidEvent('proveedor');
+    expect(store.setFormValidity).toHaveBeenCalledWith('proveedorTablaValid', true);
+  });
+
+  it('should call child.markTouched() when validarFormulario() is triggered', () => {
+    const child = component.tercerosRelacionadosComponent;
+    jest.spyOn(child, 'markTouched');
+    component.validarFormulario();
+    expect(child.markTouched).toHaveBeenCalled();
+  });
+
+  it('should call markTouched() when table valid event fires', () => {
+    const child = component.tercerosRelacionadosComponent;
+    jest.spyOn(child, 'markTouched');
+    component.onTableValidEvent('fabricante');
+    expect(child.markTouched).toHaveBeenCalled();
   });
 });

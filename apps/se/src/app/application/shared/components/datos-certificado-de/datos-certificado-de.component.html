@@ -8,24 +8,26 @@
         <textarea id="justificacionDictamen" formControlName="observacionesDates"
           (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"
           class="form-control mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
+        <span class="mensaje-error"
+          *ngIf="formDatosCertificado.get('observacionesDates')?.errors?.['maxlength']">Observaciones NO debe tener más
+          de 500 caracteres de longitud</span>
       </div>
       @if(presenta){
-        <div class="col-md-8">
-          <label for="presenta" class="form-label">Presenta:</label>
-          <textarea id="presenta" formControlName="presenta"
-            (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')" class="form-control mb-4 h-20 w-100"
-            placeholder="" rows="6"></textarea>
-        </div>
+      <div class="col-md-8">
+        <label for="presenta" class="form-label">Presenta:</label>
+        <textarea id="presenta" formControlName="presenta"
+          (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')"
+          class="form-control mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
+      </div>
       }
       @if(idioma ){
       <div class="row mb-3">
         <div class="col-md-6">
           <app-catalogo-select [label]="'Idioma'" [catalogo]="idiomaDatos || []" [required]="true" name="estado"
-            formControlName="idiomaDates"
-             [markTouched]="formDatosCertificado.get('idiomaDates')?.touched??false"
+            formControlName="idiomaDates" [markTouched]="formDatosCertificado.get('idiomaDates')?.touched??false"
             (change)="setValoresStore('formDatosCertificado','idiomaDates','setFormDatosCertificado')"
             (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
-        
+
         </div>
       </div>
       }
@@ -50,15 +52,15 @@
         <div class="col-md-6">
           <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Entidad federativa'"
             [catalogo]="entidadFederativaDatos || []" [required]="true" name="estado"
-              [markTouched]="formDatosCertificado.get('EntidadFederativaDates')?.touched??false"
+            [markTouched]="formDatosCertificado.get('EntidadFederativaDates')?.touched??false"
             formControlName="EntidadFederativaDates" (selectionChange)="onChangeEntidad($event)"
             (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
-     
+
         </div>
         <div class="col-md-6">
           <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"
             [catalogo]="representacionFederal$ || []" [required]="true" name="estado"
-              [markTouched]="formDatosCertificado.get('representacionFederalDates')?.touched??false"
+            [markTouched]="formDatosCertificado.get('representacionFederalDates')?.touched??false"
             formControlName="representacionFederalDates" (selectionChange)="representacionFederalSeleccion($event)"
             (change)="setValoresStore('formDatosCertificado','representacionFederalDates','setFormDatosCertificado')"></app-catalogo-select>
         </div>

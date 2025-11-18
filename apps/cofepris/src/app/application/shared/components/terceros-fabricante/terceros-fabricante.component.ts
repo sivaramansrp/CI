@@ -15,8 +15,9 @@ import {
   Catalogo,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
   TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
@@ -71,7 +72,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
+  /** Evento emitido cuando la tabla es válida. */
+  @Output() tableValidEvent = new EventEmitter<string>();
 
   /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
    * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
@@ -308,7 +315,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -358,6 +366,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
@@ -380,6 +431,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -407,6 +459,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.tercerosForm.markAllAsTouched();
       }
     })
+  }
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.markTouched();
+      });
+    }
   }
 
   /**
@@ -1155,15 +1219,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del fabricante.
-     */
-    this.fabricanteRowData.push(FABRICANTE_FILA);
-
-    /**
      * Actualiza el estado del store con los nuevos datos del fabricante.
      */
-    this.tercerosFabricanteStore.setFabricante(this.fabricanteRowData);
+    this.tercerosFabricanteStore.setFabricante([FABRICANTE_FILA]);
 
+    this.tableValidEvent.emit('fabricante');
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
@@ -1301,18 +1361,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del formulador.
+     * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.formuladorRowData.push(FORMULADOR_FILA);
+    this.tercerosFabricanteStore.setFormulador([FORMULADOR_FILA]);
 
-    /**
-     * Actualiza el estado del store con los nuevos datos del formulador.
-     */
-    this.tercerosFabricanteStore.setFormulador(this.formuladorRowData);
+    this.tableValidEvent.emit('formulador');
 
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
     this.showTableDiv = !this.showTableDiv;
     this.showFormulador = !this.showFormulador;
   }
@@ -1447,14 +1501,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del proveedor.
-     */
-    this.proveedorRowData.push(PROVEEDOR_FILA);
-
-    /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setProveedor(this.proveedorRowData);
+    this.tercerosFabricanteStore.setProveedor([PROVEEDOR_FILA]);
+
+    this.tableValidEvent.emit('proveedor');
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1575,6 +1626,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         extranjeroEstado: 'Estado del Extranjero Ejemplo',
         extranjeroColonia: 'Colonia del Extranjero Ejemplo',
       })
+    } else {
+      form.get('rfc')?.markAsTouched();
+      form.get('curp')?.markAsTouched();
     }
   }
 
@@ -1582,13 +1636,31 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   markTouched(): void {
     if (this.fabricanteRowData.length===0) {
       this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
     }
     if (this.formuladorRowData.length===0) {
-      this.isFormuladorInvalida=true;
+      this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
     }
     if (this.proveedorRowData.length===0) {
       this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
     }
+  }
+
+  /**
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
+  public esValido(campo: string, form: FormGroup): boolean | null {
+    return this.validacionesService.isValid(form, campo);
   }
 
   /**

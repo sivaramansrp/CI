@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -69,6 +70,7 @@ import { Shared2605Service } from "../../services/shared2605/shared2605.service"
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -111,9 +113,7 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
-  deOrigen: false,
-  deProcedencia: false,
-  aduanas:false ,
+  aduanasEntradas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
 };
@@ -296,28 +296,7 @@ nombresCampos:boolean = false;
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
-  estadoFisicoCatalogo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: "Selecciona un valor",
-    },
-    {
-      id: 2,
-      descripcion: "Sólido",
-    },
-    {
-      id: 3,
-      descripcion: "Líquido",
-    },
-    {
-      id: 4,
-      descripcion: "Gaseoso",
-    },
-    {
-      id: 5,
-      descripcion: "Otro",
-    },
-  ];
+  estadoFisicoCatalogo: Catalogo[] = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -362,6 +341,19 @@ nombresCampos:boolean = false;
       this.obtenerDataMercanciasDatos();
     }
   }
+
+  /**
+     * Método para obtener el catálogo de estado físico de mercancía.
+     */
+    obtenerEstadoFisicoCatalogo(): void {
+      if (this.idProcedimiento) {
+        this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((response) => {
+            this.estadoFisicoCatalogo = response.datos ?? [];
+          });
+      }
+    }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -455,10 +447,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
-
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
     if (this.isGarantiasOfrecidasVisible) {
       this.domicilio.addControl(
         "garantiasOfrecidas",
@@ -473,7 +465,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       );
       this.domicilio.addControl(
         "licenciaSanitaria",
-        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+        this.fb.control(this.solicitudState?.licenciaSanitaria),
       );
     }
 
@@ -526,7 +518,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
    */
   public seleccionarAduanasEntrada: string[] = [];
 
-  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  /** Lista del catálogo de aduanasEntradas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**
@@ -569,20 +561,20 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
   /**
-   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Maneja el evento de cambio para las entradas de aduanasEntradas seleccionadas.
    * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanasEntradas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
-    this.mostrarErrores.aduanas =false;
+    this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
-      paisDeOriginDatos: events,
+      aduanasEntradas: events,
     });
     this.setValoresStore(
       this.domicilio,
-      "paisDeOriginDatos",
+      "aduanasEntradas",
       "setAduanasDeEntrada",
     );
   }
@@ -662,12 +654,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaDatos: string[] = [];
 
@@ -897,6 +889,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
+    this.obtenerEstadoFisicoCatalogo();
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
@@ -911,7 +904,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       nombreComercial: [""],
       nombreComun: [""],
       nombreCientifico: [""],
-      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         "",
         [
@@ -1006,6 +998,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       this.formMercancias.addControl(
         "paisDeProcedenciaDatos",
         this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+    if(this.tieneUsoEspecifico) {
+      this.formMercancias.addControl(
+        "usoEspecifico",
+        this.fb.control("", [Validators.required, Validators.maxLength(1000)]),
       );
     }
 
@@ -1577,6 +1576,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
           const DATOS = doDeepCopy(fraccionResponse);
           if(esValidObject(DATOS.datos)) {
               this.formMercancias.get("descripcionFraccion")?.setValue(DATOS?.datos?.descripcionAlternativa);
+              this.setValoresStore(this.formMercancias, 'descripcionFraccion', 'setDescripcionFraccion'); 
               return this.sharedSvc.getUnidad(CLAVE_OBJ.clave, CLAVE_OBJ.idProcedimiento);
           }
         }
@@ -1587,6 +1587,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         const UNIDAD_DATOS = doDeepCopy(unidadResponse);
         if(esValidObject(UNIDAD_DATOS.datos)) {
           this.formMercancias.get("UMT")?.setValue(UNIDAD_DATOS?.datos?.descripcion);
+          this.setValoresStore(this.formMercancias, 'UMT', 'setUMT'); 
         }
       },
       error: (error) => {
@@ -1609,8 +1610,16 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         this.formMercancias.get("estadoFisicoOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
         this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
       }
+      else{
+        this.formMercancias.get("estadoFisicoOtro")?.setValidators([]);
+        this.formMercancias.get("estadoFisicoOtro")?.updateValueAndValidity();
+      }
       if(this.formMercancias.getRawValue()?.objetoImportacion === 'OBIM.OTR' && this.estadoValidte){
         this.formMercancias.get("objetoImportacionOtro")?.setValidators([Validators.required, Validators.maxLength(100)]);
+        this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
+      }
+      else{
+           this.formMercancias.get("objetoImportacionOtro")?.setValidators([]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
     const VALOR = form.get(campo)?.value;
@@ -1640,6 +1649,14 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1654,17 +1671,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
-
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
         paisOrigen:RAW.paisDeOriginDatos,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion)
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1807,11 +1825,11 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeProcedenciaDatos",
       "setPaisDeProcedenciaDatos",
     );
@@ -1831,7 +1849,7 @@ openModal():void {
       paisProveedor: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisProveedor",
       "setPaisProveedor",
     );
@@ -1851,7 +1869,7 @@ openModal():void {
       paisElaboracion: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisElaboracion",
       "setPaisElaboracion",
     );
@@ -1871,7 +1889,7 @@ openModal():void {
       paisFabrica: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisFabrica",
       "setPaisFabrica",
     );
@@ -1887,14 +1905,15 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeOriginDatos",
       "setPaisDeOriginDatos",
     );
+
   }
 
   /**
@@ -1991,6 +2010,21 @@ onConfirmacionModal(accion: boolean): void {
       this.listaMercancias = [...this.mercanciasTablaDatos];
       this.seleccionarlistaMercancias = [];
     }
+       else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
+    
   }
 
   /**
@@ -2012,10 +2046,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
@@ -2038,6 +2072,20 @@ onConfirmacionModal(accion: boolean): void {
       : SELECTED.paisProcedenciaUltimoPuerto
         ? [SELECTED.paisProcedenciaUltimoPuerto]
         : []; }
+        else{
+           this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm'
+      };
+      this.mostrarNotificacion=true;
+        }
   }
   ngAfterViewInit(): void {
     if (this.identificacion) {
@@ -2092,18 +2140,48 @@ onConfirmacionModal(accion: boolean): void {
   validatorButtonClick(): boolean {
    let ISVALID = true;
   // Check all required fields in 'domicilio' and set mostrarErrores accordingly
-  const REQUIREDFIELDS: (keyof typeof this.mostrarErrores)[] = [
+  const REQUIREDFIELDS = [
   'codigoPostal',
   'estado',
   'muncipio',
   'calle',
   'telefono',
-  'deOrigen',
-  'deProcedencia',
-  'aduanas',
-  'avisoCheckbox',
-  'licenciaSanitaria',
-];
+  'aduanasEntradas'
+] as (keyof typeof this.mostrarErrores)[];
+ if (this.isAvisoLicenciaVisible) {
+
+    const AVISOCONTROL = this.domicilio.get('avisoCheckbox');
+    const LICENCIACONTROL = this.domicilio.get('licenciaSanitaria');
+    const AVISO_CHECKED = AVISOCONTROL?.value;
+    const LICENCIA_VALOR = LICENCIACONTROL?.value;
+
+    if (AVISO_CHECKED) {
+      REQUIREDFIELDS.push('avisoCheckbox');
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      LICENCIACONTROL?.clearValidators();
+      LICENCIACONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else if(LICENCIA_VALOR){
+      REQUIREDFIELDS.push('licenciaSanitaria');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.clearValidators();
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else {
+      REQUIREDFIELDS.push('licenciaSanitaria', 'avisoCheckbox');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = true;
+      this.mostrarErrores.avisoCheckbox = true;
+      ISVALID = false;
+    }
+  }
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;
@@ -2131,7 +2209,7 @@ REQUIREDFIELDS.forEach((field) => {
     this.mercanciasTablaCheck=false;
    }
    if(this.seleccionadasAduanasEntradaDatos.length === 0){
-    this.mostrarErrores.aduanas =true;
+    this.mostrarErrores.aduanasEntradas =true;
      ISVALID = false;
    }
    return ISVALID;

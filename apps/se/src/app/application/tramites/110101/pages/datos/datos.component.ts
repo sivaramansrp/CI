@@ -13,7 +13,7 @@ import { Solicitante110101State } from '../../estados/tramites/solicitante110101
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { TratadosComponent } from '../../components/tratados/tratados.component';
 
-import { ValidarSolicitudResponse } from '../../models/response/validar-solicitud-response.model';
+import { Mercancia, ValidarSolicitudResponse } from '../../models/response/validar-solicitud-response.model';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 110101
@@ -504,11 +504,11 @@ public validarFormularios(): boolean | undefined{
     }
 
     const ULTIMO_TAB = this.getTotalTabs();
-
     if (ULTIMO_TAB === 4) {
-      const VALIDACION_TODOS_TABS = this.validacionFormularios();
+      const VALIDACION_TODOS_TABS = this.validacionFormularios(true);
      return VALIDACION_TODOS_TABS;
     }
+    this.seleccionaTab(5);
     return true;
   }
 
@@ -521,8 +521,7 @@ public validarFormularios(): boolean | undefined{
  */
   private validarTabProcesos(): boolean {
    const ULTIMO_TAB = this.getTotalTabs();
-
-    if (ULTIMO_TAB === 4) {
+    if (ULTIMO_TAB === 5) {
      return this.validacionFormularios();
     }
     return true;
@@ -548,16 +547,27 @@ public validarFormularios(): boolean | undefined{
    * Si todas las validaciones son exitosas y el control de peticiones está activo, guarda la solicitud completa.
    * @returns {boolean} Retorna `true` si todas las validaciones son exitosas, `false` en caso contrario.
    */
-  private validacionFormularios(): boolean {
+  private validacionFormularios(ignorarProcesos: boolean = false): boolean {
     if(this.solicitudeState.validacion_formularios.validacion_tab_tratados_otras_inmstancias === false ||
        this.solicitudeState.validacion_formularios.validacion_tab_mercancia === false ||
-        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false){
+        this.solicitudeState.validacion_formularios.validacion_tab_datos_adicionales === false ||
+         (!ignorarProcesos && this.solicitudeState.proceso_seleccionado.length === 0)){
           return false;
     }
     
     return true;
   }
 
+  /**
+   * @method descripcionesAdicionales
+   * @description
+   * Activa las descripciones adicionales utilizando los datos de validación de solicitud.
+   * @param {Mercancia} data - Datos de validación de la solicitud.
+   * @returns {void}
+   */
+  public descripcionesAdicionales(data: Mercancia): void {
+    this.datosAdicionales.activarDescripciones(data);
+  }
 
  
   

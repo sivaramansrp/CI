@@ -5,6 +5,7 @@
  * 
  * @module ParmisoImportacionCalidadRoutingModule
  */
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 import { NgModule } from '@angular/core';
 
@@ -17,11 +18,18 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
  * 
  * - `pantallas`: Ruta que carga el componente `PantallasComponent`.
  */
-const ROUTES: Routes = [
-  {
-    path: 'pantallas',
-    component: PantallasComponent,
-  },
+const ROUTES: Routes = [  
+   {
+      path: 'pantallas',
+      component: PantallasComponent,
+      canActivate: [IniciarTramiteResolver],
+      resolve: { iniciarResolverData: IniciarTramiteResolver },
+      data: {
+      iniciarConfig: {
+        procedureId: '260514'
+      }
+    }
+    },
 ];
 
 /**

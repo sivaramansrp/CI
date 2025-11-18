@@ -51,10 +51,16 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       }  @case (2) {
-        <app-datos-de-la [isAduanasEntradaVisible]="true" [idProcedimiento]="idProcedimiento"></app-datos-de-la>
+        <app-datos-de-la #DatosDeLaComponent [isAduanasEntradaVisible]="true" [idProcedimiento]="idProcedimiento"
+        (establecimientoFormValidity)="datosEstabelicimientoFormValidityChange($event)"
+        (domicilioFormValidity)="domicilioFormValidityChange($event)"
+        (manifiestosFormValidity)="manifiestosFormValidityChange($event)"
+        (representanteLegalFormValidity)="representanteLegalFormValidityChange($event)"
+        [isContinuarTriggered]="isContinuarTriggered"></app-datos-de-la>
         }
       @case (3) {
-        <app-terceros-fabricante [idProcedimiento]="idProcedimiento"></app-terceros-fabricante>
+        <app-terceros-fabricante #TercerosRelacionadosComponent [idProcedimiento]="idProcedimiento" (tableValidEvent)="onTableValidEvent($event)"
+        [isContinuarTriggered]="isContinuarTriggered"></app-terceros-fabricante>
         }
       @case (4) {
       <app-pago-de-derechos-banco [idProcedimiento]="idProcedimiento"></app-pago-de-derechos-banco>

@@ -23,7 +23,7 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/shared26010/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import {TablaMercanciasImportacion} from '../../models/importicon-retorno.model';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
