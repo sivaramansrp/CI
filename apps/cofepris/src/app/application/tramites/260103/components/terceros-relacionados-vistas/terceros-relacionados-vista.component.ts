@@ -11,6 +11,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-retorno-sanitario.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/shared26010/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
+import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -172,7 +173,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   constructor(
 
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private tramiteStore: Tramite260103Store,
   ) {
     // Suscripción para actualizar el estado de solo lectura del formulario
     this.consultaQuery.selectConsultaioState$
@@ -248,8 +250,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    *
    * @throws {Error} Puede lanzar errores si el store no puede procesar la actualización.
    */
+
+  /**
+   * @method addFabricantes
+   * @description Agrega nuevos fabricantes a la tabla de datos del trámite.
+   *
+   * @param newFabricantes - Lista de objetos `Fabricante` a agregar.
+   */
   addFabricantes(newFabricantes: Fabricante[]): void {
-  
+    this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
   }
 
   /**
@@ -286,92 +295,21 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    *
    * @see {@link Destinatario} Para más información sobre la estructura del modelo.
    */
+  /**
+   * @method addDestinatarios
+   * @description Agrega nuevos destinatarios a la tabla de datos del destinatario final.
+   *
+   * @param newDestinatarios - Lista de objetos `Destinatario` a agregar.
+   */
   addDestinatarios(newDestinatarios: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
-  /**
-   * @method addProveedores
-   * @description Método público responsable de incorporar nuevos proveedores
-   * a la tabla de datos del trámite. Coordina la actualización del estado
-   * a través del store para asegurar la propagación correcta de los cambios
-   * a todos los componentes interesados.
-   *
-   * Los proveedores son entidades comerciales que suministran productos,
-   * materias primas o servicios necesarios para el cumplimiento del trámite.
-   * La información de estos proveedores es crucial para el seguimiento
-   * y la trazabilidad del proceso.
-   *
-   * @public
-   * @param {Proveedor[]} newProveedores - Array de objetos tipo `Proveedor`
-   * que encapsulan los datos de los nuevos proveedores a registrar. Cada
-   * elemento debe cumplir con la especificación del modelo `Proveedor`.
-   *
-   * @returns {void} Este método no genera ningún valor de retorno.
-   *
-   * @since 1.0.0
-   *
-   * @example
-   * ```typescript
-   * const nuevosProveedores: Proveedor[] = [
-   *   {
-   *     id: 1,
-   *     razonSocial: 'Proveedor Internacional S.A.',
-   *     rfc: 'PRO123456789',
-   *     pais: 'México'
-   *   }
-   * ];
-   * this.addProveedores(nuevosProveedores);
-   * ```
-   *
-   * @see {@link Proveedor} Para detalles sobre la estructura del modelo de proveedor.
-   */
-  addProveedores(newProveedores: Proveedor[]): void {
-  }
 
   validarContenedor(): boolean {
     return (
       this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ??
       false
     );
-  }
-
-  /**
-   * @method addFacturadores
-   * @description Método público que permite incorporar nuevos facturadores
-   * al conjunto de datos del trámite. Gestiona la actualización del estado
-   * global mediante el store, asegurando que todos los componentes suscritos
-   * reciban las notificaciones correspondientes sobre los cambios.
-   *
-   * Los facturadores son entidades autorizadas para emitir comprobantes
-   * fiscales relacionados con las transacciones del trámite. Su registro
-   * es fundamental para el cumplimiento de las obligaciones fiscales
-   * y la documentación adecuada del proceso.
-   *
-   * @public
-   * @param {Facturador[]} newFacturadores - Conjunto de objetos tipo `Facturador`
-   * que contienen la información completa de los nuevos facturadores a registrar.
-   * Cada objeto debe seguir la estructura definida en el modelo `Facturador`.
-   *
-   * @returns {void} No retorna ningún valor.
-   *
-   * @since 1.0.0
-   *
-   * @example
-   * ```typescript
-   * const nuevosFacturadores: Facturador[] = [
-   *   {
-   *     id: 1,
-   *     razonSocial: 'Facturadora Nacional S.A. de C.V.',
-   *     rfc: 'FAC123456789',
-   *     certificadoDigital: 'ABC123DEF456'
-   *   }
-   * ];
-   * this.addFacturadores(nuevosFacturadores);
-   * ```
-   *
-   * @see {@link Facturador} Para información detallada sobre el modelo de facturador.
-   * @throws {Error} Puede generar errores si el store no puede procesar la actualización.
-   */
-  addFacturadores(newFacturadores: Facturador[]): void {
   }
 }

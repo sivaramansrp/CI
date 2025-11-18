@@ -240,6 +240,23 @@ export class Tramite260103Store extends Store<Tramite260103State> {
     }));
   }
 
+
+   /**
+     * @method updateDestinatarioFinalTablaDatos
+     * @description Agrega nuevos destinatarios finales a la lista existente.
+     * @param {Destinatario[]} newDestinatarios - Lista de nuevos destinatarios.
+     */
+    public updateDestinatarioFinalTablaDatos(
+      newDestinatarios: Destinatario[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        destinatarioFinalTablaDatos: [
+          ...newDestinatarios,
+        ],
+      }));
+    }
+
   /**
    * @method updatePagoDerechos
    * @description Actualiza el estado del formulario de pago de derechos.
