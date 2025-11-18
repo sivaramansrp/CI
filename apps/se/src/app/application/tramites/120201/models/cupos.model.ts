@@ -121,3 +121,26 @@ export interface RespuestaCuposTabla {
      */
     message: string;
 }
+
+/**
+ * Modelo para la respuesta de la API de expedir monto
+ * @interface ExpedirMonto
+ */
+export interface ExpedirMonto {
+    /**
+     * Monto a expedir
+     * @type {number}
+     */
+    montoExpedir: number;
+}
+
+ export interface StoreValues {
+  totalExpedir?: number;
+  montoExpedir?: number;
+  montoDisponibleAsignacion?: number;
+  cveAniosAutorizacion?: string;
+  numFolioAsignacionAux?: string;
+  cuerpoTabla?: unknown[];
+  mostrarDetalle?: boolean;
+  fechaFinVigencia?: Date;
+}
