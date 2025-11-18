@@ -558,6 +558,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Elimina partidas de la tabla según los IDs recibidos y recalcula los totales.
+ *
+ * @param {string[]} evento - Arreglo de IDs (como cadenas) de las partidas que deben eliminarse.
+ *
+ * @description
+ * Esta función filtra `tableBodyData` removiendo los elementos cuyo `id` coincida
+ * con alguno de los valores en `evento`.  
+ * Luego recalcula:
+ * - `cantidadTotal`: suma de todas las cantidades restantes.
+ * - `valorTotalUSD`: suma del total en USD de cada partida.
+ *
+ * Finalmente, actualiza el formulario `formForTotalCount` con los nuevos valores.
+ */
+
+  partidasEliminadas(evento: string[]): void{
+    this.tableBodyData = this.tableBodyData.filter(
+      item => !evento.includes(String(item.id))
+    );
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+          this.tramite130105Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
+  }
+
+  /**
   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
   *
   * @returns {void}
