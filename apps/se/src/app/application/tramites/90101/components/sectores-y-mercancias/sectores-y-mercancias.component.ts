@@ -12,9 +12,9 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoServices, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, forwardRef, input } from '@angular/core';
 import { FilaProducir, FilaSectors } from '../../models/prosec.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
@@ -202,6 +202,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  @Input() tramiteId!: string;
+
   /**
    * @constructor
    * @description
@@ -221,7 +223,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices
   ) {}
 
   /**
@@ -366,15 +369,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @compodoc
    */
   obtenserListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe({
+    this.catalogoServices.sectoresCatalogo(this.tramiteId).subscribe({
       next: (data) => {
-        this.sector = data as Catalogo[];
+        this.sector = data.datos as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.sector = [];
       }
-    });
+  });
+    // this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe({
+    //   next: (data) => {
+    //     this.sector = data as Catalogo[];
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.error('Error al obtener los datos:', error);
+    //     this.sector = [];
+    //   }
+    // });
   }
 
   /**

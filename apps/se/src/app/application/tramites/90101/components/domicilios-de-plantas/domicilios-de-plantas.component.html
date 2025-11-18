@@ -59,6 +59,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                <h6>Datos de las plantas donde se realizarán las operaciones PROSEC seleccionadas<span>*</span>:</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
         </div>
