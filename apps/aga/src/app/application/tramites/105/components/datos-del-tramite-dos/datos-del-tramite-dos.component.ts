@@ -68,6 +68,67 @@ interface TableBodyData {
 })
 export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
   /**
+   * Índice de la mercancía seleccionada en la tabla
+   */
+  public selectedMercanciaIndex: number|null = null;
+  public selectedMercanciaRows: AgentestableDatos[] = [];
+  public canDelete: boolean = false;
+  public canEdit: boolean = false;
+  /**
+   * Maneja la selección de una fila de la tabla de mercancías
+   */
+  /**
+   * Índice de la mercancía seleccionada en la tabla
+   */
+
+onMercanciaRowsSelected(rows: AgentestableDatos[]) {
+  this.selectedMercanciaRows = rows;
+  this.canDelete = rows.length > 0;
+  this.canEdit = rows.length === 1;
+  if (rows.length === 1) {
+    this.selectedMercanciaIndex = this.mercanciTablaDatos.findIndex(item => item === rows[0]);
+  } else {
+    this.selectedMercanciaIndex = null;
+  }
+}
+
+  /**
+   * Elimina la mercancía seleccionada de la tabla
+   */
+  eliminarMercancia() {
+    if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
+      this.selectedMercanciaRows.forEach(row => {
+        const idx = this.mercanciTablaDatos.findIndex(item => item === row);
+        if (idx > -1) {
+          this.mercanciTablaDatos.splice(idx, 1);
+        }
+      });
+      this.mercanciTablaDatos = [...this.mercanciTablaDatos];
+      // Clear selection and disable buttons
+    
+      this.canDelete = false;
+      this.canEdit = false;
+    }
+  }
+
+  /**
+   * Modifica la mercancía seleccionada (carga los datos en el formulario)
+   */
+  modificarMercancia() {
+    // Solo permitir modificar si canEdit es true (una sola fila seleccionada)
+    if (this.canEdit && this.selectedMercanciaIndex !== null) {
+      const mercancia = this.mercanciTablaDatos[this.selectedMercanciaIndex];
+      this.agenteForm.patchValue(mercancia);
+      // Abrir modal si es necesario
+      const modal = document.getElementById('modalAgregar');
+      if (modal && (window as any).bootstrap?.Modal) {
+        (window as any).bootstrap.Modal.getOrCreateInstance(modal).show();
+      }
+      this.canDelete = false;
+      this.canEdit = false;
+    }
+  }
+  /**
    * Formulario principal para los datos del trámite dos.
    * 
    * @type {FormGroup}
@@ -413,7 +474,15 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       return;
     }
     const MERCANCIA = this.agenteForm.value;
-   this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
+    if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex > -1) {
+      // Update existing
+      this.mercanciTablaDatos[this.selectedMercanciaIndex] = MERCANCIA as AgentestableDatos;
+      this.selectedMercanciaIndex = null;
+    } else {
+      // Add new
+      this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
+    }
+    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
     this.agenteForm.reset();
     this.cerrarModal();
   }

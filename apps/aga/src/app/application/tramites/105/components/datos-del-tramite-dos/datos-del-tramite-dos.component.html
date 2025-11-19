@@ -80,17 +80,18 @@
             (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button type="button" class="btn btn-danger ms-3 me-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3 me-3" [disabled]="esFormularioSoloLectura || !canDelete" (click)="eliminarMercancia()">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !canEdit" (click)="modificarMercancia()">Modificar</button>
         </div>
 
         <div class="table-container">
           <app-tabla-dinamica 
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-           [tipoSeleccionTabla]="checkbox"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [tipoSeleccionTabla]="checkbox"
             [configuracionTabla]="configuracionTabla" 
-            [datos]="mercanciTablaDatos">
-        </app-tabla-dinamica>
+            [datos]="mercanciTablaDatos"
+            (listaDeFilaSeleccionada)="onMercanciaRowsSelected($event)">
+          </app-tabla-dinamica>
         </div>
       </div>
     </form>
