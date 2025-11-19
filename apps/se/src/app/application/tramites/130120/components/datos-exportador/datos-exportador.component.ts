@@ -44,7 +44,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
   templateUrl: './datos-exportador.component.html',
-  styleUrl: './datos-exportador.component.css',
+  styleUrl: './datos-exportador.component.scss',
 })
 export class DatosExportadorComponent implements OnInit, OnDestroy {
 
@@ -110,11 +110,13 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((state) => {
         this.datosState = state as DatosGrupos;
+        if(state.datosExportador.persona_tipo) {
+          this.onTipoPersonaExportadorChange(state.datosExportador.persona_tipo);
+        }
       })
     )
     .subscribe();
     await this.initActionFormBuild();
-
     this.consultaquery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
