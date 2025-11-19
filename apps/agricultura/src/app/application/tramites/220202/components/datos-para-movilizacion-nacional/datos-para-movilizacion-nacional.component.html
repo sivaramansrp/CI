@@ -7,6 +7,7 @@
         <div class="col-md-6">
           <app-catalogo-select
             placeholder=" Selecciona un valor"
+            [markTouched]='markTouched'
             [catalogo]="transporteList"
             formControlName="transporte"
             [label]="'Medio de transporte'"
@@ -17,6 +18,7 @@
           setValoresStore(
             forma,
             'transporte'
+            
           )
         "
           ></app-catalogo-select>
@@ -24,19 +26,19 @@
         <div class="col-md-6 mt-2">
           <label class="control-label" for="transporte"
             >Identificación del transporte:</label
-          >
+        >
           <input
             class="form-control mt-1"
-            id="medioTransporte"
+            id="identificacion"
             placeholder=""
             type="text"
-            name="medioTransporte"
-            formControlName="medioTransporte"
+            name="identificacion"
+            formControlName="identificacion"
             maxlength="30"
             (change)="
             setValoresStore(
               forma,
-              'medioTransporte'
+              'identificacion'
             )
           "
           />
@@ -45,17 +47,17 @@
           <app-catalogo-select
             placeholder=" Selecciona un valor"
             [catalogo]="puntoList"
-            formControlName="guiaIdentificacion"
+            formControlName="puntoVerificacion"
             [label]="'Punto de verificación federal'"
             [required]="false"
             [isDisabled]="esFormularioSoloLectura"
-            name="guiaIdentificacion"
+            name="puntoVerificacion"
             [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'"
             (change)="
             setValoresStore(
               forma,
-              'guiaIdentificacion'
+              'puntoVerificacion'
             )
           "
           ></app-catalogo-select>
@@ -78,8 +80,14 @@
               'empresaTransportista'
             )
           "
-            
+           [class.is-invalid]="forma.get('empresaTransportista')?.invalid && forma.get('empresaTransportista')?.touched"
           />
+          @if (forma.get('empresaTransportista')?.hasError('required') &&
+          forma.get('empresaTransportista')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </form>
