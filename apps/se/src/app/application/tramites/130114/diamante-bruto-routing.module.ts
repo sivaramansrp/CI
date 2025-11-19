@@ -1,12 +1,19 @@
 import { DiamanteBrutoComponent } from './pages/diamante-bruto/diamante-bruto.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
+
 const ROUTES: Routes = [
   {
     path: 'diamante',
     component: DiamanteBrutoComponent,
-
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '130114',
+      },
+    }
   },
   {
     path: '',

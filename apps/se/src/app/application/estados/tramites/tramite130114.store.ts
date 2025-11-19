@@ -1,16 +1,18 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * Estado inicial y configuración del store para el trámite 130202.
  */
 export interface Tramite130114State {
+  idSolicitud?: number;
   producto: string;
   descripcion: string;
   fraccion: string;
   cantidad: string;
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
   unidadMedida: string;
   solicitud: string;
   defaultSelect: string;
@@ -41,23 +43,43 @@ export interface Tramite130114State {
   Valor total en USD de las partidas de la mercancía.
   */
   valorTotalUSD: string;
+
+  fechasSeleccionadas: string[];
+
+   /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
+
+  /**
+   * Lista de partidas a mostrar.
+   */
+  mostrarPartidas: MostrarPartidas[];
 }
 /**
  * Crea el estado inicial del store.
  */
 export function createInitialState(): Tramite130114State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
-    producto: '',
+    defaultSelect: 'TISOL.I',
+    producto: 'CONDMER.N',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
-    defaultProducto: '',
+    defaultProducto: 'CONDMER.N',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
@@ -72,7 +94,14 @@ export function createInitialState(): Tramite130114State {
     representacion: '',
     tableBodyData: [],
     cantidadTotal: '',
-    valorTotalUSD: ''
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
+    mostrarPartidas: [],
   };
 }
 /**
@@ -96,4 +125,7 @@ export class Tramite130114Store extends Store<Tramite130114State> {
     }));
   }
 
+  resetStore(): void {
+    this.reset();
+  }
 }
