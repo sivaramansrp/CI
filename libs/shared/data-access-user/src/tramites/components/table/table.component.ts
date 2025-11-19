@@ -26,6 +26,11 @@ import { FormsModule } from '@angular/forms';
   host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
+  /** 
+ * Emite la fila seleccionada cuando el usuario marca una fila en la tabla.
+ * Permite al componente padre conocer exactamente qué registro fue elegido.
+ * No afecta otros componentes que ya usan este <ng-table>, ya que es un evento adicional.
+ */
 @Output() rowSelected = new EventEmitter<TableBodyData>();
 
   /**
