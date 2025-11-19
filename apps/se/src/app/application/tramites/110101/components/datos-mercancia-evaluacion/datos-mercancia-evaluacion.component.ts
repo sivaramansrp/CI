@@ -144,7 +144,7 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
               descripcionJuegoEvaluar: response.datos?.descripcion_juego,
               tipoExportadorEvaluar: response.datos?.tipo_exportador,
               separacionContableEvaluar: response.datos?.separacion_contable,
-              valorTransaccionalFOBEvaluar: response.datos?.valor_transaccion_fob,
+              valorTransaccionalFOBEvaluar: response.datos?.valor_transaccion,
               calificacion_fraccion_aladi: response.datos?.calificacion_fraccion_aladi,
               tiene_fraccion_aladi: response.datos?.tiene_fraccion_aladi,
               clasificacionNALADIEvaluar: response.datos?.cve_fraccion_naladi,

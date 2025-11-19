@@ -225,6 +225,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   */
   @ViewChild('modalResumenValores', { static: false }) modalElementResumenValores!: ElementRef;
 
+   /**
+   * Referencia al elemento modal para mostrar el Requisito de proceso.
+  */
+  @ViewChild('modalRequisitoProceso', { static: false }) modalRequisitoProceso!: ElementRef;
+
 
   /** Almacena las filas seleccionadas de la tabla */
   public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
@@ -1485,7 +1490,7 @@ eliminarTratado(): void {
       this.abrirModalGlobalAccion();
     }else{
       this.textoRequisitoProceso = this.tratadoSeleccionado[0].descripcion_proceso;
-      this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+      this.modalInstance = new Modal(this.modalRequisitoProceso.nativeElement);
       this.modalInstance?.show();        
     }
   }
