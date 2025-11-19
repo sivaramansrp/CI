@@ -38,6 +38,7 @@ import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DEFAULT_TABLA_ORDENS } from '../models/terceros-fabricante.enum';
 import { Destinatario } from '../models/terceros-relacionados.model';
+import { DestinatarioFinalKey } from '../models/datos-solicitud.model';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
@@ -69,6 +70,28 @@ export class AgregarDestinatarioFinalComponent
   @Output() guardarYSalir = new EventEmitter<void>();
   @Input() destinatarioFinalTablaDatos: Destinatario[] = [];
   @Input() tramiteState: unknown;
+ requiredFieldList:DestinatarioFinalKey[] =[];
+  errorMessageValidator={
+  tipoPersona: false,
+  rfc: false,
+  curp: false,
+  nombres: false,
+  denominacionRazon: false,
+  primerApellido: false,
+  segundoApellido: false,
+  pais: false,
+  estado: false,
+  municipio: false,
+  localidad: false,
+  codigoPostal: false,
+  colonia: false,
+  calle: false,
+  numeroExterior: false,
+  numeroInterior: false,
+  lada: false,
+  telefono: false,
+  correoElectronico: false,
+  }
   /**
    * Identificador del trámite asociado a la ampliación de 3Rs.
    */
@@ -560,11 +583,103 @@ private setupNonModalMode(): void {
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    switch(this.idProcedimiento){
+      case 260103:
+        if(this.agregarDestinatarioFinal.get('tipoPersona')?.getRawValue()===this.tipoPersona.FISICA){
+        this.requiredFieldList=[
+          "rfc",
+  "nombres",
+  "primerApellido",
+  "pais",
+  "estado",
+  "municipio",
+  "localidad",
+  "codigoPostal",
+  "colonia",
+  "calle",
+  "numeroExterior",
+  "correoElectronico"
+        ]
+      }
+      else if(this.agregarDestinatarioFinal.get('tipoPersona')?.value===this.tipoPersona.MORAL){
+        this.requiredFieldList=[
+  "rfc",
+  "denominacionRazon",
+  "pais",
+  "estado",
+  "municipio",
+  "localidad",
+  "codigoPostal",
+  "colonia",
+  "calle",
+  "numeroExterior",
+  "correoElectronico"
+]
+
+      }
+      else{
+        this.requiredFieldList=[
+  "tipoPersona",
+  "rfc",
+  "curp",
+  "nombres",
+  "primerApellido",
+  "pais",
+  "estado",
+  "municipio",
+  "localidad",
+  "codigoPostal",
+  "colonia",
+  "calle",
+  "numeroExterior",
+  "correoElectronico"
+]
+      }
+        break;
+        default:
+          this.requiredFieldList=[]
+    }
     // if (this.chequeoValidacionAlGuardar) {
     //   return this.guardarDestinatarioModal();
     // }
-    return this.guardarDestinatarioNormal();
+    // return this.guardarDestinatarioNormal();
+    this.resetAllErrorFlags();
+    this.validateRequiredFields();
+     if (this.areAllFieldsValid()) {
+      this.guardarDestinatarioNormal();
+     }
   }
+resetAllErrorFlags(): void {
+  Object.keys(this.errorMessageValidator).forEach((key) => {
+     this.errorMessageValidator[key as keyof typeof this.errorMessageValidator] = false;
+  });
+}
+
+validateRequiredFields(): void {
+  const FORM = this.agregarDestinatarioFinal;
+  this.requiredFieldList.forEach((key) => {
+    const CONTROL = FORM.get(key);
+    if (!CONTROL) { return; }
+       if (!this.requiredFieldList.includes(key as DestinatarioFinalKey)) {
+      this.errorMessageValidator[key] = false;
+      return;
+    }
+    if (!CONTROL.getRawValue() || CONTROL.getRawValue() === '' || CONTROL.getRawValue() === null) {
+      this.errorMessageValidator[key] = true;
+    } else {
+      this.errorMessageValidator[key] = false;
+    }
+  });
+}
+
+areAllFieldsValid(): boolean {
+  return Object.values(this.errorMessageValidator).every(v => v === false);
+}
+
+
+
+
+  
 
 /**
  * Handles modal form save logic for chequeoValidacionAlGuardar === true
@@ -659,15 +774,6 @@ private guardarDestinatarioModal(): void {
  * Handles normal form save logic for chequeoValidacionAlGuardar === false
  */
 private guardarDestinatarioNormal(): void {
-    if (this.chequeoValidacionAlGuardar && this.agregarDestinatarioFinal.invalid) {
-      Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
-        control.markAsTouched();
-        control.updateValueAndValidity();
-      });
-      this.mensajeDeError = 'Faltan campos por capturar.';
-      return;
-    }
-    this.mensajeDeError = '';
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     
   let nombreRazonSocial: string;
@@ -1083,36 +1189,12 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
    */
   validarElementos(): void {
     switch (this.idProcedimiento) {
-      case 260207:
-      case 260209:
-      case 260208:
-        case 260210:
-      case 260218:
-        this.elementosDeshabilitados = ['pais'];
-        this.elementosNoRequeridos = ['colonia'];
-        break;
-      case 260201:
-        this.elementosDeshabilitados = ['pais'];
-        this.elementosNoRequeridos = ['localidad', 'colonia'];
-        this.elementosRequeridos = [];
-        break;
-      case 260219:
-        this.elementosRequeridos = ['calle', 'numeroExterior'];
-        this.elementosDeshabilitados = ['pais'];
-        this.elementosNoRequeridos = ['colonia'];
-        break;
-      case 260213:
-        this.elementosRequeridos = ['calle', 'numeroExterior'];
-        this.elementosDeshabilitados = ['pais'];
-        break;
-      case 260214:
-        this.elementosRequeridos = ['calle', 'numeroExterior'];
-        this.elementosDeshabilitados = ['pais'];
-        this.elementosNoRequeridos = ['colonia'];
-        break;
-         case 260911:
-        this.elementosNoRequeridos = [];
-        break;
+   case 260103:
+      this.elementosDeshabilitados = ['pais'];
+      break;
+     case 260102:
+       this.elementosDeshabilitados = ['pais'];
+       break;
       default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
@@ -1168,6 +1250,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
    * @returns {void} No retorna ningún valor.
    */
  changeNacionalidad(): void {
+  this.resetAllErrorFlags();
     if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
       Object.keys(this.agregarDestinatarioFinal.controls).forEach((controlName) => {
         this.agregarDestinatarioFinal.get(controlName)?.disable();

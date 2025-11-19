@@ -490,3 +490,25 @@ export interface MercanciaFormEstupefacientes {
   paisOrigen:string
 }
 
+export type DestinatarioFinalKey =
+  | 'tipoPersona'
+  | 'rfc'
+  | 'curp'
+  | 'nombres'
+  | 'denominacionRazon'
+  | 'primerApellido'
+  | 'segundoApellido'
+  | 'pais'
+  | 'estado'
+  | 'municipio'
+  | 'localidad'
+  | 'codigoPostal'
+  | 'colonia'
+  | 'calle'
+  | 'numeroExterior'
+  | 'numeroInterior'
+  | 'lada'
+  | 'telefono'
+  | 'correoElectronico';
+
+
