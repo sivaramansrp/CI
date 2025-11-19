@@ -109,7 +109,6 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
-      // this.getBandejaDeTablaDatos(); Ya no se usará para no obtener datos de JSON local
       this.getNombreDelDepartamento();
       this.obtieneTipoSolicitudes();
       this.obtieneTareas();
