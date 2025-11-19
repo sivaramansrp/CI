@@ -783,7 +783,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
     this.resetAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
-    if (TIPO_PERSONA_CONTROL?.value && this.nacional === true && this.extranjero === false) {
+    if (TIPO_PERSONA_CONTROL?.value && this.nacional && !this.extranjero) {
       if(this.fisica || this.moral) {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.disable();
@@ -796,7 +796,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
       }
     } else {
       formGroup.enable();
-    }
+    }  
   }
 
   /**
@@ -1013,7 +1013,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string): void {
+  public inputChecked(checkBoxName: string, formGroup?: FormGroup): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -1048,6 +1048,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
       this.noContribuyente = true;
       this.fisica = false;
       this.moral = false;
+    }
+
+    // Condition for updating the validitity on tipo persona change
+    if (this.extranjero && (this.fisica || this.moral) && formGroup) {
+      if (this.fisica) {
+        ['rfc', 'curp', 'denominacionRazonSocial', 'codigoPostaloEquivalente', 'entidadFederativa','municipioAlcaldia', 'extranjeroCodigo', 'extranjeroColonia', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['nombre', 'primerApellido', 'segundoApellido'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      } else if (this.moral) {
+        ['rfc', 'curp', 'entidadFederativa', 'codigoPostaloEquivalente', 'municipioAlcaldia','extranjeroCodigo', 'extranjeroColonia', 'nombre', 'primerApellido', 'segundoApellido', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['denominacionRazonSocial'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      }
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && (this.fisica || this.moral) && formGroup) {
+      ['rfc'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(15), TercerosRelacionadosComponent.rfcValidator,]));
+      ['curp'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && this.noContribuyente && formGroup) {
+      ['curp'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(18), TercerosRelacionadosComponent.curpValidator,]));
+      ['rfc'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
     }
   }
 
@@ -1398,7 +1420,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
   submitProveedorForm(forma: FormGroup): void {
-    if (this.agregarFormuladorFormGroup.valid) {
+    if (this.agregarProveedorFormGroup.valid) {
       /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1649,9 +1671,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChang
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number): void {
+  cambiarRadioFisica(value: string | number, formGroup?: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    this.inputChecked(VALOR_SELECCIONADO);
+    this.inputChecked(VALOR_SELECCIONADO, formGroup);
   }
 
   /**

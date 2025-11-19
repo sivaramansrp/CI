@@ -89,11 +89,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFabricanteFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFabricanteFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"></app-input-radio>
 
               }
@@ -458,7 +458,7 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [markTouched]="agregarFabricanteFormGroup.controls?.['pais']?.touched ?? false"
                   id="pais" formControlName="pais"></app-catalogo-select>
               </div>
             </div>
@@ -611,11 +611,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFormuladorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFormuladorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"></app-input-radio>
 
               }
@@ -988,8 +988,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [isDisabled]="!fisica || !moral || !noContribuyente"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
+                  id="pais" formControlName="pais" [markTouched]="agregarFormuladorFormGroup?.controls?.['pais']?.touched ?? false"></app-catalogo-select>
               </div>
             </div>
 
@@ -1139,11 +1139,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarProveedorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarProveedorFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarProveedorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarProveedorFormGroup)"></app-input-radio>
 
               }
@@ -1510,7 +1510,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                  id="pais" formControlName="pais" [markTouched]="agregarProveedorFormGroup?.controls?.['pais']?.touched ?? false"></app-catalogo-select>
               </div>
             </div>
 
