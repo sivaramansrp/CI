@@ -96,7 +96,7 @@ export const TEXTOS_REQUISITOS =
  * @readonly
  * @since 1.0.0
  */
-export const ID_PROCEDIMIENTO = 260217;
+export const ID_PROCEDIMIENTO = 260303;
 
 /**
  * @const ELEMENTOS_REQUERIDOS

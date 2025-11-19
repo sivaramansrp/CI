@@ -72,15 +72,16 @@ export class PasoUnoComponent implements OnInit {
         map((seccionState) => {
         // Actualiza el estado local con el valor obtenido del store
         this.consultaState = seccionState;
+        
+        // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
+        if (this.consultaState && this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
         })
       )
       .subscribe();
-      // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
-      if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-      } else {
-      this.esDatosRespuesta = true;
-      }
     }
 
 

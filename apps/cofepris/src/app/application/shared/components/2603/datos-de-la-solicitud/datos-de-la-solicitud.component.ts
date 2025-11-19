@@ -254,6 +254,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 * @description
 * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
 */
+  /**
+   * Indica si el formulario debe estar en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * Valor por defecto: `false`.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * Identificador del procedimiento actual.
+   * Este valor se utiliza para mostrar o configurar secciones específicas del formulario según el trámite.
+   */
+  @Input() idProcedimiento!: number;
+
+  /**
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
   @Input() consultaState!: ConsultaioState;
 
 /**
