@@ -1,8 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   {
