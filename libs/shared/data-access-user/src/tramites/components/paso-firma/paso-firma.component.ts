@@ -1,5 +1,5 @@
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { DocumentoRequeridoFirmar, FirmarRequest } from '../../../core/models/shared/firma-electronica/request/firmar-request.model';
 import { base64ToHex, encodeToISO88591Hex, formatFecha, renameKey } from '../../../core/utils/utilerias';
 import { catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
@@ -22,7 +22,7 @@ import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.sto
   templateUrl: './paso-firma.component.html',
   styleUrl: './paso-firma.component.scss',
 })
-export class PasoFirmaComponent implements OnInit, OnDestroy {
+export class PasoFirmaComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
  * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
@@ -148,8 +148,29 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
     });
       
     // Obtener la cadena original del trámite
-    this.obtenerCadenaOriginal();
+    // this.obtenerCadenaOriginal();
   }
+
+  /**
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta cuando 
+ * alguna propiedad de entrada (@Input) del componente cambia.
+ *
+ * Este método verifica si la propiedad `idSolicitud` ha recibido 
+ * un nuevo valor y, siempre que dicho valor sea diferente de cero, 
+ * ejecuta el método `obtenerCadenaOriginal()`.
+ *
+ * @param {SimpleChanges} changes - Objeto que contiene los cambios 
+ * detectados en las propiedades de entrada del componente. 
+ * Cada clave corresponde al nombre de la propiedad cambiada.
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idSolicitud'] && this.idSolicitud !== 0) {
+      this.obtenerCadenaOriginal();
+    }
+  }
+
+
 
   /**
    * Método para obtener la cadena original del trámite.

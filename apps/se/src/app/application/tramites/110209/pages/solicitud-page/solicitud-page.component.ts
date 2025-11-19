@@ -20,10 +20,10 @@ import {
 } from '../../estados/stores/tramite110209.store';
 import { esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solicitud.component';
+import { CertificadoData } from '../../models/certificado-sgp.model';
 import { Solicitud110209Service } from '../../services/solicitud-110209/solicitud-110209.service';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { doDeepCopy } from '@ng-mf/data-access-user';
-import { CertificadoData } from '../../models/certificado-sgp.model';
 /**
  * Componente que representa la página de solicitud.
  */
@@ -128,7 +128,7 @@ export class SolicitudPageComponent {
   /**
    * Propiedad para almacenar el payload de búsqueda de la solicitud.
    */
-  buscarPayload: CertificadoData[] = [];
+  buscarDatos: CertificadoData[] = [];
 
   /**
    * Constructor del componente.
@@ -153,8 +153,7 @@ export class SolicitudPageComponent {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
-        this.buscarPayload = solicitud.buscarPayload ?? [];
-        console.log("buscarPayload", this.buscarPayload)
+        this.buscarDatos = solicitud.buscarPayload ?? [];
       });
   }
 
@@ -177,6 +176,7 @@ export class SolicitudPageComponent {
     this.esFormaValido = false;
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
       const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
         this.esFormaValido = true;
@@ -241,13 +241,8 @@ export class SolicitudPageComponent {
  * - CERTIFICADO: Datos generales del certificado.
  * - DATOS_CERTIFICADO: Detalles específicos del certificado.
  */
-    guardar(data: Tramite110209State): Promise<JSONResponse> {
-      // const TRATADOS = this.servicio110209.buildTratados(data);
-      // const DESTINATARIO = this.servicio110209.buildDestinatario(data);
-      // const TRANSPORTE = this.servicio110209.buildTransporte(data);
-      // const CERTIFICADO = this.servicio110209.buildCertificado(data);
-      // const DATOS_CERTIFICADO = this.servicio110209.buildDatosCertificado(data);
-      const CERTIFICADO_ORIGEN = this.servicio110209.buildCertificadoOrigen(data);
+  guardar(data: Tramite110209State): Promise<JSONResponse> {
+  const CERTIFICADO_ORIGEN = this.servicio110209.buildCertificadoOrigen(data);
 
   const PAYLOAD = {
    "tipoDeSolicitud": "guardar",
@@ -283,15 +278,9 @@ export class SolicitudPageComponent {
             "telefono": "123456"
         }
     },
-      //   "tratados": TRATADOS,
-      //   "transporte": TRANSPORTE,
-      //   "certificado": CERTIFICADO,
-      //  "destinatario": DESTINATARIO,
-      //  "datos_del_cerificado": DATOS_CERTIFICADO,
       "certificadoOrigen" : CERTIFICADO_ORIGEN,
-      "certificadoOriginal" : this.buscarPayload[0] ?? {},
+      "certificadoOriginal" : this.buscarDatos[0] ?? {},
 }
-
         return new Promise((resolve, reject) => {
           this.servicio110209.guardarDatosPost(PAYLOAD).subscribe(
             (response) => {
@@ -301,12 +290,12 @@ export class SolicitudPageComponent {
                 esValidObject(API_RESPONSE.datos)
               ) {
                 if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-                  this.tramiteStore.setIdSolicitud(
-                    API_RESPONSE.datos.id_solicitud
-                  );
+                  this.tramiteStore.setTramite110209(
+                    { idSolicitud: API_RESPONSE.datos.id_solicitud });
                   this.pasoNavegarPor({ accion: 'cont', valor: 2 });
                 } else {
-                  this.tramiteStore.setIdSolicitud(0);
+                  this.tramiteStore.setTramite110209(
+                    { idSolicitud: 0 });
                 }
               }
               resolve({

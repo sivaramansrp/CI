@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
 import { DatosPasos, JSONResponse, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import {ERROR_FORMA_ALERT, ERROR_PRECISA_REQUIRED} from '../../constant/destinatario.enum';
 import {
@@ -7,6 +7,7 @@ import {
 } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, take, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import { CertificadoData } from '../../models/datos-tramite.model';
 import { DatosComponent } from '../datos/datos.component';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
@@ -15,13 +16,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { doDeepCopy } from '@ng-mf/data-access-user';
-import { CertificadoData } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-tecnicos',
   templateUrl: './tecnicos.component.html',
 })
-export class TecnicosComponent {
+export class TecnicosComponent implements OnDestroy {
   /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
@@ -109,7 +109,7 @@ export class TecnicosComponent {
   /**
    * Propiedad para almacenar el payload de búsqueda de la solicitud.
    */
-  buscarPayload: CertificadoData[] = [];
+  buscarDatos: CertificadoData[] = [];
 
   /**
    * Constructor del componente.
@@ -135,7 +135,7 @@ export class TecnicosComponent {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
-        this.buscarPayload = solicitud.buscarPayload ?? [];
+        this.buscarDatos = solicitud.buscarPayload ?? [];
       });
   }
 
@@ -148,19 +148,38 @@ export class TecnicosComponent {
    * @returns {void}
    */
     getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = false;
-    // Validar formularios antes de continuar desde el paso uno
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-      if (!ISVALID) {
-        this.esFormaValido = true;
-        return; // Detener ejecución si los formularios son inválidos
+      this.esFormaValido = false;
+      // Validar formularios antes de continuar desde el paso uno
+      if (this.indice === 1 && e.accion === 'cont') {
+        this.datosPasos.indice = 1;
+        const ISVALID = this.validarTodosFormulariosPasoUno();
+        if (!ISVALID) {
+          this.esFormaValido = true;
+          return; // Detener ejecución si los formularios son inválidos
+        }
+        this.obtenerDatosDelStore();
+      } 
+  
+      let indiceActualizado = e.valor;
+      if (e.accion === 'cont') {
+        indiceActualizado = e.valor + 1;
+      } else if (e.accion === 'ant') {
+        indiceActualizado = e.valor - 1;
       }
-      this.obtenerDatosDelStore();
-    } else if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      this.pasoNavegarPor(e);
+  
+      // Validar que el nuevo índice esté dentro de los límites permitidos
+      if (indiceActualizado > 0 && indiceActualizado <= this.pantallasPasos.length) {
+        // Actualizar el índice y datosPasos
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = indiceActualizado;
+  
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant') {
+          this.wizardComponent.atras();
+        }
+      }
     }
-  }
 
 /**
  * Valida todos los formularios del primer paso si el componente de datos está disponible.
@@ -196,15 +215,10 @@ export class TecnicosComponent {
  * Devuelve una promesa con la respuesta del servidor en formato JSONResponse.
  */
   guardar(data: Solicitud110203State): Promise<JSONResponse> {
-    // const TRATADOS = this.servicio110203.buildTratados(data);
-    // const DESTINATARIO = this.servicio110203.buildDestinatario(data);
-    // const TRANSPORTE = this.servicio110203.buildTransporte(data);
-    // const CERTIFICADO = this.servicio110203.buildCertificado(data);
-    // const DATOS_CERTIFICADO = this.servicio110203.buildDatosCertificado(data);
     const CERTIFICADO_ORIGEN = this.servicio110203.buildCertificadoOrigen(data);
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
-    "idSolicitud": 0,
+    "idSolicitud": this.solicitudState.idSolicitud ?? 0,
     "idTipoTramite": 110203,
     "discriminatorValue": "110203",
     "rfc_solicitante": "AAL0409235E6",
@@ -236,13 +250,8 @@ export class TecnicosComponent {
             "telefono": "123456"
         }
     },
-    //   "tratados": TRATADOS,
-    //   "transporte": TRANSPORTE,
-    //   "certificado": CERTIFICADO,
-    //  "destinatario": DESTINATARIO,
-    //  "datos_del_cerificado": DATOS_CERTIFICADO,
       "certificadoOrigen" : CERTIFICADO_ORIGEN,
-      "certificadoOriginal" : this.buscarPayload[0] ?? {},
+      "certificadoOriginal" : this.buscarDatos[0] ?? {},
     };
 
       return new Promise((resolve, reject) => {
@@ -295,7 +304,7 @@ export class TecnicosComponent {
    * @param e Acción del botón.
    */
   pasoNavegarPor(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 3) {
+    if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -303,5 +312,14 @@ export class TecnicosComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

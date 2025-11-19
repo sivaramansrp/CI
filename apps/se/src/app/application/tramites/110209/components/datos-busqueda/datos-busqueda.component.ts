@@ -1,4 +1,4 @@
-import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices, ENVIRONMENT, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
@@ -27,6 +27,14 @@ import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
   templateUrl: './datos-busqueda.component.html',
 })
 export class DatosBusquedaComponent implements OnInit, OnDestroy {
+  /**
+ * Constante que define los tipos de búsqueda disponibles, 
+ * incluyendo la búsqueda por número de certificado y por tratado o país/bloque.
+ */
+  private readonly SEARCH_TYPE_ID = {
+    CERTIFICADO: 0, // "Por número de certificado"
+    PAIS_DEL_TRATADO: 1 // "Por Tratado/Acuerdo País/Bloque"
+  } as const;
 
   /**
   * Almacena el valor seleccionado, que puede ser un string o un número.
@@ -311,22 +319,33 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * - Clears validators if no condition matches.
    */
   private validadoresActualización(): void {
+    const SELECCIONADO_INDICE = this.getSelectedOptionIndex();
+
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.setValidators(
-      this.valorSeleccionado === 'Por número de certificado' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.CERTIFICADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('paisBloque')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.updateValueAndValidity();
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.updateValueAndValidity();
     this.datosBusquedaFormulario.get('paisBloque')?.updateValueAndValidity();
   }
+
+/**
+ * Obtiene el índice de la opción seleccionada en el grupo de radios,
+ * comparando el valor actual seleccionado con las opciones disponibles.
+ */
+  private getSelectedOptionIndex(): number {
+    return this.radioOptions.findIndex(option => option.value === this.valorSeleccionado);
+  }
+
  /**
    * Notificación para mostrar alertas al usuario.
    */
@@ -336,35 +355,48 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
 public buscar(): void {
   if (!this.datosBusquedaFormulario.valid) {
-    if (this.valorSeleccionado === 'Por número de certificado') {
+    const INDICE = this.getSelectedOptionIndex();
+      let mensaje = 'Datos requeridos';
+      if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+        mensaje = 'El número de certificado es requerido';
+      } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+        mensaje = 'La selección de un país/bloque es requerida';
+      }
+
       this.alertaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'El número de certificado es requerido',
+        mensaje,
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    } else if (this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque') {
-      this.alertaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'La selección de un país/bloque es requerida',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    }
+
   } else {
     this.verTabla = true;
     this.buscarDatos();
   }
+}
+
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por número de certificado.
+ * @returns `true` si la opción seleccionada es "Por número de certificado", de lo contrario `false`.
+ */
+busquedaDeCertificado(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.CERTIFICADO;
+}
+
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por tratado, país o bloque.
+ * @returns `true` si la opción seleccionada es "Por Tratado/País/Bloque", de lo contrario `false`.
+ */
+busquedaDeTratadoPais(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO;
 }
 
 
@@ -483,13 +515,28 @@ obtenerPaisesPorTratado(tratadoId: string): void {
  * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
  */
 buscarDatos(): void {
-    const PAYLOAD = {
-      numeroCertificado: "25402500071307", 
-      // numeroCertificado: this.certificadoState?.numeroDeCertificado || this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || "25402500186802",
-      rfcSolicitante: "AAL0409235E6",
-      cvePaisSeleccionado: "P-JPN",
-      cveTratadoAcuerdoSeleccionado: "107"
-    };
+
+    type CertificadoPayload =
+      | { numeroCertificado: string; rfcSolicitante: string }
+      | { cvePaisSeleccionado: string; cveTratadoAcuerdoSeleccionado: string; rfcSolicitante: string };
+
+    let PAYLOAD: CertificadoPayload;
+    const INDICE = this.getSelectedOptionIndex();
+
+        if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+          PAYLOAD = {
+            numeroCertificado: this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || '',
+            rfcSolicitante: ENVIRONMENT.RFC
+          };
+        } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+          PAYLOAD = {
+            cvePaisSeleccionado: `P-${this.datosBusquedaFormulario.get('paisBloque')?.value || ''}`,
+            cveTratadoAcuerdoSeleccionado: this.datosBusquedaFormulario.get('tratadoAcuerdo')?.value || '',
+            rfcSolicitante: ENVIRONMENT.RFC
+          };
+        } else {
+          return;
+        }
 
     this.Solicitud110209Service.buscarCertificado(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
