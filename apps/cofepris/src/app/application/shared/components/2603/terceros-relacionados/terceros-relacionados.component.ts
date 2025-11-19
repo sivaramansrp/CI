@@ -29,29 +29,39 @@ type AllowedValue = string | number | boolean | undefined;
 })
 export class TercerosRelacionadosComponent implements OnDestroy {
 
-/**
- * Referencias a todos los componentes de tabla dinámica para poder limpiar sus selecciones
- */
-@ViewChildren(TablaDinamicaComponent) tablaComponents!: QueryList<TablaDinamicaComponent<unknown>>;
+  /**
+   * Referencias a todos los componentes de tabla dinámica para poder limpiar sus selecciones
+   */
+  @ViewChildren(TablaDinamicaComponent) tablaComponents!: QueryList<TablaDinamicaComponent<unknown>>;
 
-/**
- * FormGroup que gestiona los controles y las validaciones
- * para la sección de la tabla "Terceros Relacionados".
- * 
- * Este FormGroup contiene la información relacionada con
- * terceros (por ejemplo, fabricante, facturador, proveedor)
- * y se utiliza para enlazar los campos del formulario en
- * la plantilla, permitiendo crear, editar y validar los
- * registros de la tabla "Terceros Relacionados".
- */
-public tercerosRelacionadosTabla!: FormGroup;
+  /**
+   * FormGroup que gestiona los controles y las validaciones
+   * para la sección de la tabla "Terceros Relacionados".
+   * 
+   * Este FormGroup contiene la información relacionada con
+   * terceros (por ejemplo, fabricante, facturador, proveedor)
+   * y se utiliza para enlazar los campos del formulario en
+   * la plantilla, permitiendo crear, editar y validar los
+   * registros de la tabla "Terceros Relacionados".
+   */
+  public tercerosRelacionadosTabla!: FormGroup;
 
-/**
-* @property consultaState
-* @description
-* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-*/
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
   @Input() consultaState!: ConsultaioState;
+
+  /**
+   * Indica si el formulario debe estar deshabilitado (solo lectura).
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * Identificador del procedimiento actual.
+   */
+  @Input() idProcedimiento?: number;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -127,9 +137,15 @@ public tercerosRelacionadosTabla!: FormGroup;
 
   /**
    * Constructor del componente TercerosRelacionadosComponent.
-   * 
-   * @param certificadosLicenciasSvc - Servicio para manejar operaciones relacionadas con certificados, licencias y permisos.
-   * @param modalService - Servicio para gestionar cuadros de diálogo modales.
+   *
+   * Inicializa el formulario reactivo para la sección de terceros relacionados.
+   * Los valores de los inputs `consultaState`, `formularioDeshabilitado` y `idProcedimiento` pueden ser utilizados para controlar el estado y comportamiento del formulario.
+   *
+   * @param certificadosLicenciasSvc Servicio para manejar operaciones relacionadas con certificados, licencias y permisos.
+   * @param modalService Servicio para gestionar cuadros de diálogo modales.
+   * @param fb FormBuilder para crear y gestionar formularios reactivos.
+   *
+   * El formulario se inicializa vacío y se puede configurar dinámicamente según los datos recibidos.
    */
   constructor(
     private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,

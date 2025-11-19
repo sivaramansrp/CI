@@ -1,15 +1,16 @@
-
-import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros260303, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FabricanteModalContenedoraComponent } from '../fabricante-modal-contenedora/fabricante-modal.contenedora';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-type AllowedValue = string | number | boolean | undefined;
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import { TercerosRelacionadosComponent } from '../../../../shared/components/2603/terceros-relacionados/terceros-relacionados.component';
+
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
+import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
+import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
+
 /**
  * TercerosRelacionadosContenedoraComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -17,286 +18,90 @@ type AllowedValue = string | number | boolean | undefined;
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent],
-  providers:[BsModalService],
+  imports: [CommonModule, TercerosRelacionadosComponent],
+  providers: [Tramite260303Store, Tramite260303Query],
   templateUrl: './terceros-relacionados.contenedora.html',
   styleUrls: ['./terceros-relacionados.contenedora.scss'],
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit,OnDestroy {
+export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
+  /**
+   * @property destroyNotifier$
+   * @description Subject utilizado para cancelar observables de manera ordenada
+   * cuando el componente se destruye, evitando fugas de memoria.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-* @property consultaState
-* @description
-* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-*/
-  @Input() consultaState!: ConsultaioState;
+   * @property consultaState
+   * @description
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
+  @Input() public consultaState!: ConsultaioState;
 
   /**
-   * Una referencia a la instancia del modal de Bootstrap.
-   * Esto se utiliza para controlar e interactuar con el cuadro de diálogo modal.
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual.
    */
-  bsModalRef?: BsModalRef;
-
-  /**
-   * Una propiedad pública que contiene los datos o la configuración para el componente.
-   * Se le asigna el valor de `LASTABLA`, que probablemente sea una constante o variable
-   * definida en otra parte de la aplicación.
-   */
-  public TEXTOS = LASTABLA;
-  /**
-   * Un arreglo que contiene los datos de los fabricantes (Fabricante).
-   * Esto se utiliza para gestionar y mostrar información relacionada con los fabricantes
-   * en el contexto de la aplicación.
-   */
-  public fabricanteTablaDatos: Fabricante[] = [];
-  /**
-   * Un arreglo de objetos `Fabricante` que representa los datos para la tabla "facturador".
-   * Esta propiedad se utiliza para almacenar y gestionar la lista de fabricantes o entidades relacionadas
-   * que se muestran en la tabla dentro del componente.
-   */
-  public facturadorTablaDatos: Fabricante[] = [];
-  /**
-   * Un arreglo de objetos `Fabricante` que representa los datos para la tabla de proveedores.
-   * Esto se utiliza para almacenar y gestionar la lista de fabricantes o proveedores relacionados.
-   */
-  public proveedorTablaDatos: Fabricante[] = [];
-  /**
-   * Contiene un arreglo de objetos `Fabricante` que representa los datos del certificado analítico.
-   * Esta propiedad se utiliza para gestionar y mostrar información relacionada con los fabricantes
-   * en el contexto de la aplicación.
-   */
-  public certificadoAnaliticoTablaDatos: Fabricante[] = [];
-  /**
-   * Representa una colección de objetos "Otros" utilizada para almacenar datos para el componente.
-   * Este arreglo se inicializa como vacío y puede ser llenado con instancias del tipo `Otros`.
-   */
-  public otrosTablaDatos: Otros260303[] = [];
-  /**
-   * Representa el tipo de selección de casilla de verificación utilizado en la tabla.
-   * Esto se asigna desde la enumeración `TablaSeleccion.CHECKBOX`.
-   */
-  public checkbox = TablaSeleccion.CHECKBOX;
-  
-  /**
-   * Objeto de configuración para la tabla "Fabricante".
-   * Esto se utiliza para definir las configuraciones y propiedades de la tabla
-   * en el componente "Terceros Relacionados".
-   */
-  public configuracionFabricante = FABRICANTE_TABLA;
-  /**
-   * Objeto de configuración para la tabla "Otros".
-   * Esta propiedad se inicializa con la constante `OTROS_TABLA`,
-   * que define la estructura y configuraciones para la tabla.
-   */
-  public configuracionOtros = OTROS_TABLA;
-
-  /** Configuración de la tabla de sectores */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros260303>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionOtros);
-
-  /**
-   * Notificador para destruir observables activos.
-   */
-  private destroyed$ = new Subject<void>();
-  
-
-  /**
-   * Constructor del componente TercerosRelacionadosContenedoraComponent.
-   * 
-   * @param certificadosLicenciasSvc - Servicio para manejar operaciones relacionadas con certificados, licencias y permisos.
-   * @param modalService - Servicio para gestionar cuadros de diálogo modales.
-   */
-  constructor(
-    private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
-    private modalService: BsModalService
-    ) {
-      //
-  }
-
-  /**
-   * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
-   * Este método inicializa el componente obteniendo datos para varias tablas, incluyendo:
-   * - Fabricante
-   * - Facturador
-   * - Proveedor
-   * - Certificado Analítico
-   * - Otros
-   *
-   * Se invoca cada método correspondiente para recuperar y poblar los datos de las respectivas tablas.
-   */
-  ngOnInit(): void {
-    this.getFabricanteTablaDatos();
-    this.getFacturadorTablaDatos();
-    this.getProveedorTablaDatos();
-    this.getCertificadoAnaliticoTablaDatos();
-    this.getOtrosTablaDatos();
-  }
-
-  /**
-   * Crea una copia profunda del objeto proporcionado.
-   * 
-   * Este método serializa el objeto a una cadena JSON y luego lo analiza de nuevo a un nuevo objeto,
-   * creando efectivamente una copia profunda. Tenga en cuenta que este enfoque puede no manejar funciones,
-   * valores indefinidos o referencias circulares correctamente.
-   * 
-   * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
-   * @returns Una copia profunda del objeto proporcionado.
-   */
-  public static deepCopy<T>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
-  }
-
-  /**
-   * Recupera los datos para la tabla de fabricantes realizando una llamada al servicio.
-   * Se suscribe a la respuesta del método `getFabricanteDatos` del servicio,
-   * crea una copia profunda de la respuesta y la asigna a la propiedad `fabricanteTablaDatos`.
-   *
-   * @returns {void}
-   */
-  public getFabricanteTablaDatos(): void {
-    this.certificadosLicenciasSvc.getFabricanteDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
-      this.fabricanteTablaDatos = DATA;
-    });
-  }
-
-  /**
-   * Recupera los datos para la tabla "Facturador" realizando una llamada al servicio para obtener los datos.
-   * La respuesta se copia profundamente para garantizar la inmutabilidad y luego se asigna a la propiedad `facturadorTablaDatos`.
-   *
-   * @remarks
-   * Este método se suscribe al observable devuelto por el método `getFacturadorDatos`
-   * del servicio `certificadosLicenciasSvc`. La respuesta se procesa para evitar la mutación
-   * directa de los datos originales.
-   */
-  public getFacturadorTablaDatos(): void {
-    this.certificadosLicenciasSvc.getFacturadorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
-      this.facturadorTablaDatos = DATA;
-    });
-  }
-
-  /**
-   * Recupera los datos de proveedores desde el servicio y los asigna a la propiedad `proveedorTablaDatos`.
-   * 
-   * Este método llama al método `getProveedorDatos` del servicio `certificadosLicenciasSvc`,
-   * se suscribe al observable y realiza una copia profunda de la respuesta antes de asignarla
-   * a la propiedad `proveedorTablaDatos`.
-   * 
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  public getProveedorTablaDatos(): void {
-    this.certificadosLicenciasSvc.getProveedorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
-      this.proveedorTablaDatos = DATA;
-    });
-  }
-
-  /**
-   * Recupera los datos del certificado analítico y los asigna a la propiedad `certificadoAnaliticoTablaDatos`.
-   * 
-   * Este método llama al método `getCertificadoDatos` del servicio para obtener los datos,
-   * crea una copia profunda de la respuesta y la almacena en la propiedad `certificadoAnaliticoTablaDatos`.
-   * 
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  public getCertificadoAnaliticoTablaDatos(): void {
-    this.certificadosLicenciasSvc.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
-      this.certificadoAnaliticoTablaDatos = DATA;
-    });
-  }
-
-  /**
-   * Recupera datos adicionales del servicio `certificadosLicenciasSvc` y actualiza la propiedad `otrosTablaDatos`.
-   * 
-   * Este método se suscribe al observable `getOtrosDatos` del servicio, realiza una copia profunda de la respuesta
-   * y asigna los datos copiados a la propiedad `otrosTablaDatos`.
-   * 
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  public getOtrosTablaDatos(): void {
-    this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Otros260303[]>(response);
-      this.otrosTablaDatos = DATA;
-    });
-  }
-
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
 /**
- * Genera la configuración de columnas para una tabla dinámica.
- * 
- * @template T - El tipo de los datos que se mostrarán en la tabla.
- * @param datosArray - Un arreglo de objetos que contiene el encabezado y la clave de cada columna.
- * @returns Un arreglo de configuraciones de columna para la tabla.
- */
-private static generateConfiguracionTabla<T>(
-  datosArray: Array<{ encabezado: string; clave: keyof T }>
-): ConfiguracionColumna<T>[] {
-  return datosArray.map((field, index) => ({
-    // Título de la columna que se mostrará en la tabla
-    encabezado: field.encabezado,
-    // Función que extrae el valor de la clave correspondiente del objeto de datos
-    clave: (item: T): AllowedValue => item[field.clave] as AllowedValue,
-    // Orden de la columna en la tabla
-    orden: index + 1,
-  }));
-}
+   * @property {boolean} esFormularioSoloLectura
+   * @description Bandera que determina si el formulario de pago de derechos debe
+   * mostrarse en modo solo lectura. Cuando es `true`, todos los campos del formulario
+   * se deshabilitan y no permiten edición. Este valor se actualiza automáticamente
+   * basándose en el estado de consulta obtenido del `ConsultaioQuery`.
+   * 
+   * @type {boolean}
+   * @default false
+   * @access public
+   * @readonly false
+   * @example
+   * ```typescript
+   * // En el template
+   * <app-pago-derechos [readonly]="esFormularioSoloLectura"></app-pago-derechos>
+   * ```
+   */
+  public esFormularioSoloLectura: boolean = false;
+  
 
   /**
-   * Abre un cuadro de diálogo modal para gestionar un "Fabricante".
+   * Crea una instancia de TercerosRelacionadosContenedoraComponent.
    *
-   * @param titulo - El título que se mostrará en el cuadro de diálogo modal.
+   * Inicializa la suscripción al estado de consulta mediante el store `ConsultaioQuery`.
+   * Actualiza la bandera `esFormularioSoloLectura` y el estado `consultaState` cada vez que cambia el estado de consulta.
+   *
+   * @param consultaQuery Servicio para consultar el estado global de la consulta.
+   * @param tramite260303Query Servicio para consultar el estado específico del trámite 260303.
+   * @param tramite260303Store Store para gestionar el estado del trámite 260303.
+   * @param cdr Servicio de Angular para detectar y aplicar cambios en el ciclo de vida del componente.
+   *
+   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
-  public abrirFabricanteModal(titulo: string): void {
-    const INITIAL_STATE: ModalOptions = {
-      class: 'modal-xl',
-      initialState: {
-        titulo: titulo
-      }
-    };
-    this.bsModalRef = this.modalService.show(FabricanteModalContenedoraComponent, INITIAL_STATE);
-
-    this.bsModalRef.content.guardarFabricante.subscribe((nuevoDato: Record<string, unknown>) => {
-        const DATO = {
-          nombre: (nuevoDato as never)['razonSocial'] || (nuevoDato as never)['denominacionSocial'],
-          rfc: (nuevoDato as never)['rfc'],
-          curp: (nuevoDato as never)['curp'],
-          telefono: (nuevoDato as never)['telefono'],
-          correoElectronico: (nuevoDato as never)['correoElectronico'],
-          calle: (nuevoDato as never)['calle'],
-          numeroExterior: (nuevoDato as never)['numeroExterior'],
-          numeroInterior: (nuevoDato as never)['numeroInterior'],
-          pais: (nuevoDato as never)['pais'],
-          colonia: (nuevoDato as never)['colonia'],
-          municipio: (nuevoDato as never)['municipio'],
-          localidad: (nuevoDato as never)['localidad'],
-          entidadFederativa: 'valor ficticio',
-          estado: (nuevoDato as never)['estado'],
-          cp: (nuevoDato as never)['codigoPostal'],
-          tercero: (nuevoDato as never)['terceroNombre']
-        }
-        if (titulo === 'Agregar otros') {
-          this.otrosTablaDatos = [...this.otrosTablaDatos, DATO];
-        } else if (titulo === 'Agregar certificado analítico') {
-          this.certificadoAnaliticoTablaDatos = [...this.certificadoAnaliticoTablaDatos, DATO];
-        } else if (titulo === 'Agregar proveedor/distribuidor') {
-          this.proveedorTablaDatos = [...this.proveedorTablaDatos, DATO]
-        } else {
-          this.facturadorTablaDatos = [...this.facturadorTablaDatos, DATO]
-        }
-      });
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private tramite260303Query: Tramite260303Query,
+    private tramite260303Store: Tramite260303Store,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState = seccionState;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe();
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+    /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    */
     ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
 }
