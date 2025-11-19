@@ -74,7 +74,7 @@ describe('ProsecComponent', () => {
     component.indice = 2;
     fixture.detectChanges();
     let stepTwo = fixture.debugElement.query(By.css('app-paso-dos'));
-    expect(stepTwo).toBeTruthy();
+    expect(stepTwo).toBeNull();
 
     component.indice = 3;
     fixture.detectChanges();

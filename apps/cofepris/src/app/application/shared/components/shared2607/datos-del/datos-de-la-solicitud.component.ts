@@ -1,6 +1,6 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
-import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
+import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
@@ -403,11 +403,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       descripcionFraccionArancelaria: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
-       Validators.maxLength(200),
+        [Validators.required, Validators.maxLength(200)],
       ],
       cantidadUMT: [
         this.dataDeLaSolicitudState?.cantidadUMT,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ]
       ],
       umt: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
@@ -415,7 +418,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       cantidadUMC: [
         this.dataDeLaSolicitudState?.cantidadUMC,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ]
       ],
       umc: [this.dataDeLaSolicitudState?.umc, Validators.required],
       tipoProducto: [
@@ -432,12 +438,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       nombreProductoEspecifico: [
         this.dataDeLaSolicitudState?.nombreProductoEspecifico,
-        Validators.required,
+        [Validators.required, Validators.maxLength(150)]
       ],
       marca: [this.dataDeLaSolicitudState?.marca, Validators.required],
       fraccionArancelaria: [
         this.dataDeLaSolicitudState?.fraccionArancelaria,
-        Validators.required,
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       datosDelTramiteRealizar: this.fb.group({
          tipoOperacion: [
@@ -476,7 +482,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
          [
             Validators.required,
             Validators.maxLength(120),
-            Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),
+            Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO),
           ],
         ],
         colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],

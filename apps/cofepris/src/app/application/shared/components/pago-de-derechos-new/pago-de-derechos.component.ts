@@ -1,3 +1,4 @@
+import { AbstractControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {
   Catalogo,
   InputFecha,
@@ -5,7 +6,6 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/pago-de-derechos.enum';
@@ -42,6 +42,15 @@ export class PagoDeDerechosComponent implements OnChanges {
    * Fecha de pago seleccionada o ingresada.
    */
   @Input() fecPago!: Date | string;
+
+  /**
+   * Configuración para el campo de fecha de pago.
+   */
+  fechaPago: InputFecha = {
+    labelNombre: 'Fecha de pago:',
+    required: false,
+    habilitado: true,
+  };
   
   /**
    * Indica si el formulario está deshabilitado.
@@ -132,6 +141,47 @@ export class PagoDeDerechosComponent implements OnChanges {
    */
   public validarFechaFutura(fecPago:string): void {
     this.formularioPagoDerechos.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  /**
+   * Maneja el cambio de fecha desde el componente input-fecha.
+   * Actualiza el valor del form control y ejecuta la validación.
+   * @param fecha - Nueva fecha seleccionada en formato DD/MM/YYYY
+   */
+  public onFechaCambiada(fecha: string): void {
+    if (fecha) {
+      const [DD, MM, YYYY] = fecha.split('/');
+      const FECHA_FORMATTED = `${YYYY}-${MM}-${DD}`;
+      
+      this.formularioPagoDerechos.patchValue({ fecPago: FECHA_FORMATTED });
+      this.formularioPagoDerechos.get('fecPago')?.markAsTouched();
+      
+      this.validarFechaFutura('fecPago');
+      
+      this.setValoresStore(this.formularioPagoDerechos, 'fecPago');
+    } else {
+      this.formularioPagoDerechos.patchValue({ fecPago: null });
+    }
+  }
+
+  /**
+   * Validador personalizado para fechas límite.
+   * Valida que la fecha ingresada no sea posterior a la fecha actual.
+   * @returns Función validadora que retorna error si la fecha es futura
+   */
+  public static fechaLimValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VAL = control.value;
+      if (VAL) {
+        const [YEAR, MONTH, DAY] = VAL.split('-').map((str: string) => Number(str));
+        const FECHA = new Date(YEAR, MONTH - 1, DAY);
+        const TODAY = new Date();
+        if (FECHA.getTime() > TODAY.getTime()) {
+          return { fechaLim: true };
+        }
+      }
+      return null;
+    };
   }
 
 }
