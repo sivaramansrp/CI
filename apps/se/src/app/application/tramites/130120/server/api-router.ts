@@ -115,8 +115,6 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t
  */
 export const API_POST_FIRMAR = (IDSOLICITUD: string) : string => `sat-t130120/solicitud/${IDSOLICITUD}/firmar`;
 
-//https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Consulta-Solicitudes/solicitud-detalle
-//sat-t130120/tramite/{numFolioTramite}/solicitud/detalle
 /**
  * Api para consultar el detalle de una solicitud por su folio del tramite 120301.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Consulta-Solicitudes/solicitud-detalle
