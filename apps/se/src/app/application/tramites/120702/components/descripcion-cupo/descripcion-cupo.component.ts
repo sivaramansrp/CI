@@ -5,6 +5,7 @@ import {
   Tramite120702Store,
 } from '../../estados/tramite120702.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AsignacionResponse } from '../../models/expedicion-certificados-frontera.models';
 import { CommonModule } from '@angular/common';
 import {ConsultaioState} from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -32,6 +33,78 @@ export class DescripcionCupoComponent implements OnInit, OnDestroy {
   * Estado de la consulta recibido como entrada desde el componente padre.
   */
   @Input({required:true}) consultaState!: ConsultaioState;
+
+  /**
+   * Establece los valores predeterminados de los campos definidos en `INFORMACION_DESCRIPCION_CUPO`
+   * utilizando los datos proporcionados en el objeto `formDatos`.
+   * 
+   * @param value - Objeto que contiene la información relevante para asignar los valores predeterminados
+   *                de los campos del formulario de descripción de cupo. Debe incluir propiedades como
+   *                `añoAutorizacion`, `cantidadAprobada`, `idAsignacion`, `impTotalAprobado`, y un objeto
+   *                `participante.licitacionPublica` con las propiedades `cantidadMaxima`, `idMecanismoAsignacion`,
+   *                `ideTipoConstancia` e `ideTipoLicitacion`.
+   * 
+   * @remarks
+   * Este método recorre la constante `INFORMACION_DESCRIPCION_CUPO` y asigna el valor correspondiente
+   * a cada campo según la información recibida en `formDatos`. Es importante que la estructura de
+   * `formDatos` cumpla con los requisitos esperados para evitar errores de acceso a propiedades.
+   */
+   private _formDatos!: AsignacionResponse ;
+
+   @Input()
+  /**
+   * Obtiene los datos del formulario de asignación.
+   *
+   * @returns {AsignacionResponse} Los datos actuales del formulario.
+   */
+   get formDatos(): AsignacionResponse {
+     return this._formDatos;
+   }
+  /**
+   * Establece el valor de `formDatos` y actualiza los campos de la constante `INFORMACION_DESCRIPCION_CUPO`
+   * con los valores correspondientes del objeto proporcionado.
+   * 
+   * Por cada campo en `INFORMACION_DESCRIPCION_CUPO`, asigna el valor predeterminado según la propiedad
+   * específica de `value`. Para los campos relacionados con el participante y licitación pública, accede
+   * a las propiedades anidadas dentro de `value.participante.licitacionPublica`.
+   * 
+   * @param value - Objeto que contiene los datos del formulario, utilizado para actualizar los valores predeterminados
+   *                de los campos en la descripción del cupo.
+   */
+   set formDatos(value: any) {
+    this._formDatos = value;
+    if (value) {
+      INFORMACION_DESCRIPCION_CUPO.forEach(field => {
+
+    if (field.campo ==='regimenAduanero') {
+      field.valorPredeterminado = value.añoAutorizacion;
+    }
+    if (field.campo ==='descripcionProducto') {
+      field.valorPredeterminado = value.cantidadAprobada;
+    }
+    if (field.campo ==='clasificacionSubProducto') {
+      field.valorPredeterminado = value.idAsignacion;
+    }
+    if (field.campo ==='unidadMedida') {
+      field.valorPredeterminado = value.impTotalAprobado;}
+
+      if (field.campo ==='cantidadTotalCupo') {
+        field.valorPredeterminado = value.participante.licitacionPublica.cantidadMaxima;
+      }
+      if (field.campo ==='cantidadUtilizadaCupo') {
+        field.valorPredeterminado = value.participante.licitacionPublica.idMecanismoAsignacion;
+      }
+      if (field.campo ==='cantidadDisponibleCupo') {
+        field.valorPredeterminado = value.participante.licitacionPublica.ideTipoConstancia;
+      }
+      if (field.campo === 'valorUnitarioCupo') {
+        field.valorPredeterminado = value.participante.licitacionPublica.ideTipoLicitacion;
+  }
+  
+      }
+);
+    }
+   }
     
   /**
    * Formulario principal del componente.

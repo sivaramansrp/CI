@@ -197,9 +197,9 @@ export class ManifiestosRepresentanteSeccionComponent
       representanteRfc: ['', Validators.required],
       manifests: [true, Validators.required],
       informacionConfidencialRadio: ['', Validators.required],
-      representanteNombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      representanteNombre: [{ value: '', disabled: false }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: false }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: false }],
     });
 
     // Carga el estado inicial en el formulario desde el store

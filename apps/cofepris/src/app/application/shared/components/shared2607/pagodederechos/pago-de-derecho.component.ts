@@ -1,37 +1,15 @@
 
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_CURP, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-
-
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
-  REGEX_REEMPLAZAR,
-  REGEX_SOLO_DIGITOS,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-
+import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
+import { BANCO_DATA } from '../../../constantes/catalogs.enum';
+import { CommonModule } from '@angular/common';
 import{ConsultaioQuery} from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
-
-import {
-  Solicitud260702State,
-  Solicitud260702Store,
-} from '../../../estados/stores/shared2607/tramites260702.store';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
-
-import { BANCO_DATA } from '../../../constantes/catalogs.enum';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Componente para gestionar el pago de derechos en el trámite.
@@ -130,6 +108,28 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     }
   }
 
+   /**
+   * Validador estático que verifica si la fecha ingresada es futura.
+   * @returns ValidatorFn
+   */
+  static validadorDeFechaFutura(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) { return null; }
+      // Parse DD/MM/YYYY format
+      const parts = control.value.split('/');
+      if (parts.length !== 3) return null;
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // JS months are 0-based
+      const year = parseInt(parts[2], 10);
+      const SELECTED_DATE = new Date(year, month, day);
+      if (isNaN(SELECTED_DATE.getTime())) return null;
+      const TODAY = new Date();
+      SELECTED_DATE.setHours(0, 0, 0, 0);
+      TODAY.setHours(0, 0, 0, 0);
+      return SELECTED_DATE > TODAY ? { futureDate: true } : null;
+    };
+  }
+
   /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
    * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
@@ -198,23 +198,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         ],
         llavedepago: [
           { value: this.pagoDeDerechosState?.llavedepago, disabled: this.esFormularioSoloLectura },
-          [Validators.pattern(REGEX_REEMPLAZAR)],
+          [Validators.required, Validators.maxLength(18), Validators.pattern(REGEX_CURP)],
         ],
         fechadepago: [
           { value: this.pagoDeDerechosState?.fechadepago, disabled: this.esFormularioSoloLectura },
-          [Validators.required],
+          [Validators.required, PagoDeDerechoComponent.validadorDeFechaFutura()],
         ],
         importedepago: [
           { value: this.pagoDeDerechosState?.importedepago, disabled: this.esFormularioSoloLectura },
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.pattern(REGEX_SOLO_DIGITOS)
+          ],
         ],
       }),
     });
   }
   cambioFechaPago(nuevo_fechadepago: string): void {
-    this.pagoDeDerechosForm.patchValue({
-      fechadepago: nuevo_fechadepago,
-    });
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(nuevo_fechadepago);
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsTouched();
     this.setValoresStore(this.pagoDeDerechosForm, 'fechadepago', 'setFechadePago');
   }
 

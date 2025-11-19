@@ -11,7 +11,7 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoServices, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -115,6 +115,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   public seccionState!: SeccionLibState;
 
+  @Input() tramiteId!: string;
+
   /**
    * @descripcion
    * Indica si el formulario se encuentra en modo solo lectura.
@@ -216,7 +218,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -320,6 +323,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     }
     else {
       this.forma.enable();
+      this.forma.get('modalidad')?.disable();
     } 
   }
 
@@ -361,15 +365,25 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
+    this.catalogoServices.estadosCatalogo(this.tramiteId).subscribe({
       next: (data) => {
-        this.estadoSeleccionar = data as Catalogo[];
+        this.estadoSeleccionar = data.datos as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.estadoSeleccionar = [];
       }
-    });
+  });
+
+    // this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
+    //   next: (data) => {
+    //     this.estadoSeleccionar = data as Catalogo[];
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.error('Error al obtener los datos:', error);
+    //     this.estadoSeleccionar = [];
+    //   }
+    // });
   }
 
   /**
@@ -382,15 +396,25 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerListaFederal(): void {
-    this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
+    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString(), this.forma.get('Estado')?.value).subscribe({
       next: (data) => {
-        this.RepresentacionFederal = data as Catalogo[];
+        this.RepresentacionFederal = data.datos as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.RepresentacionFederal = [];
       }
-    });
+  });
+
+    // this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
+    //   next: (data) => {
+    //     this.RepresentacionFederal = data as Catalogo[];
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.error('Error al obtener los datos:', error);
+    //     this.RepresentacionFederal = [];
+    //   }
+    // });
   }
 
     /**
@@ -403,15 +427,19 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerListaActividad(): void {
-    this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
-      next: (data) => {
-        this.ActividadProductiva = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.ActividadProductiva = [];
-      }
+    this.catalogoServices.getActividadProductivaProsecCatalogo(this.tramiteId.toString()).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.ActividadProductiva = DATOS;
     });
+    // this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
+    //   next: (data) => {
+    //     this.ActividadProductiva = data as Catalogo[];
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.error('Error al obtener los datos:', error);
+    //     this.ActividadProductiva = [];
+    //   }
+    // });
   }
 
   /**
@@ -425,7 +453,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   obtenerLista(): void {
     this.obtenerListaEstado();
-    this.obtenerListaFederal();
     this.obtenerListaActividad();
     
   }

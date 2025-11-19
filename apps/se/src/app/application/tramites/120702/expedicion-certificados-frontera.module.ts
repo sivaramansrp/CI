@@ -1,6 +1,7 @@
 import {
   BtnContinuarComponent,
   InicioSesionService,
+  PasoFirmaComponent,
   SolicitanteComponent,
   SubirDocumentoService,
   TituloComponent,
@@ -34,6 +35,7 @@ import { provideHttpClient } from '@angular/common/http';
     ExpedicionAsignacionComponent,
     FirmaElectronicaComponent,
     ExpedicionCertificadosFronteraRoutingModule,
+    PasoFirmaComponent
   ],
   providers: [
     provideHttpClient(),

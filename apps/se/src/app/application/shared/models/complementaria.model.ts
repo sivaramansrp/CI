@@ -221,12 +221,12 @@ export interface Complimentaria {
   /**
    * Primer apellido
    */
-  apellidoPrimer?: string;
+  apellidoPaterno?: string;
 
   /**
    * Segundo apellido
    */
-  apellidoSegundo?: string;
+  apellidoMaterno?: string;
 }
 
 /**
@@ -337,6 +337,16 @@ export interface ServiciosImmex {
    * Testadoo del servicio
    */
   testado?: string;
+
+  /**
+   * Descripción del testado del servicio
+   */
+  descripcionTestado?: string;
+
+  /**
+   * Descripción del tipo de servicio
+   */
+  descripcionTipo?: string;
 }
 
 /**
@@ -396,7 +406,7 @@ export interface Empresas {
    * Entidad federativa donde se encuentra ubicada la empresa.
    * Este campo es opcional y puede contener el nombre del estado o entidad federativa.
    */
-  entidadFederativa?: string;
+  estado?: string;
 
   /**
    * País donde se encuentra ubicada la empresa.
