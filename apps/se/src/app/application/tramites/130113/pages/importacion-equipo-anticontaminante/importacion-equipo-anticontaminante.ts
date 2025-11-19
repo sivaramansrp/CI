@@ -1,13 +1,14 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
-import { MSG_REGISTRO_EXITOSO, PASOS_IMPORTACION } from '../../constants/importacion-equipo-anticontaminante.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { ID_PROCEDIMIENTO, MSG_REGISTRO_EXITOSO, PASOS_IMPORTACION } from '../../constants/importacion-equipo-anticontaminante.enum';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite130113State, Tramite130113Store } from '../../estados/tramites/tramites130113.store';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
 
 /**
  * Componente para gestionar el asistente de importación de equipo anticontaminante.
@@ -52,6 +53,11 @@ export class ImportacionEquipoAnticontaminanteComponent {
    * @type {number}
    */
   indice: number = 1;
+  /**
+   * jest.spyOnIdentificador del procedimiento actual.
+   * @type {number}
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   // Índice de la pestaña activa.
   /**
@@ -143,7 +149,11 @@ export class ImportacionEquipoAnticontaminanteComponent {
   @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
 
   folioTemporal: string = '';
-  constructor(public importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService, public tramite130113Store: Tramite130113Store, public toastrService: ToastrService) { }
+  constructor(public importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService, public tramite130113Store: Tramite130113Store, public tramite130113Query: Tramite130113Query, public toastrService: ToastrService) { 
+      this.tramite130113Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((solicitudState) => {
+        this.solicitudState = solicitudState;
+    });
+  }
 
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
@@ -242,7 +252,7 @@ export class ImportacionEquipoAnticontaminanteComponent {
     */
   obtenerDatosDelStore(e: AccionBoton): void {
     this.importacionEquipoAnticontaminanteService.getAllState()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(take(1))
       .subscribe((data) => {
         this.guardar(data, e);
       });
@@ -260,12 +270,13 @@ export class ImportacionEquipoAnticontaminanteComponent {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Tramite130113State, e: AccionBoton): Promise<JSONResponse> {
+    console.log(item)
     const MERCANCIA = this.importacionEquipoAnticontaminanteService.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "tipo_solicitud_pexim": item.defaultSelect,
       "mercancia": {
-        "cantidadComercial": 0,
+        "cantidadComercial": Number(item.cantidad),
         "cantidadTarifaria": Number(item.cantidad),
         "valorFacturaUSD": Number(item.valorFacturaUSD),
         "condicionMercancia": item.producto,
@@ -279,9 +290,11 @@ export class ImportacionEquipoAnticontaminanteComponent {
         "fraccionArancelaria": {
           "cveFraccion": item.fraccion
         },
+        "fraccionTigiePartidasDeLaMercancia": item.fraccionDescripcionPartidasDeLaMercancia,
         "partidasMercancia": MERCANCIA,
       },
-      "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
+      "id_solcitud": item.idSolicitud || 0,
+      "idTipoTramite":this.idProcedimiento,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": {
@@ -295,10 +308,21 @@ export class ImportacionEquipoAnticontaminanteComponent {
         "pais": "SIN"
       },
       "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "Juan Pérez",
-        "es_persona_moral": true,
-        "certificado_serial_number": "string"
+          "actividad": "",
+          "calle": "",
+          "codigoPostal": "83600",
+          "colonia": "OTRA NO ESPECIFICADA EN EL CATALOGO",
+          "correo": "brpomskyldi@etllpqhpyrpks.zgi",
+          "estado": "26",
+          "lada": "Fijo",
+          "localidad": "REGION ARROYO SECO",
+          "municipio": "CABORCA",
+          "numeroExterior": "1353",
+          "numeroInterior": "",
+          "pais": "ESTADOS UNIDOS MEXICANOS",
+          "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM",
+          "rfc": "MAVL621207C95",
+          "telefono": ""
       },
       "representacion_federal": {
         "cve_entidad_federativa": item.entidad,

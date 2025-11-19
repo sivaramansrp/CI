@@ -98,6 +98,10 @@ export interface Tramite130113State {
     valorPartidaUSDPartidasDeLaMercancia: string;
     /** Descripción de las partidas de la mercancía */
     descripcionPartidasDeLaMercancia: string;
+
+    fraccionTigiePartidasDeLaMercancia: string;
+
+    fraccionDescripcionPartidasDeLaMercancia: string;
   };
   /**   
    * Cantidad total de las partidas de la mercancía.
@@ -129,7 +133,7 @@ export function createInitialState(): Tramite130113State {
     solicitud: '',
     fraccion: '',
     defaultSelect: 'TISOL.I',
-    producto: '',
+    producto: 'CONDMER.N',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: '',
@@ -154,6 +158,8 @@ export function createInitialState(): Tramite130113State {
       cantidadPartidasDeLaMercancia: '',
       valorPartidaUSDPartidasDeLaMercancia: '',
       descripcionPartidasDeLaMercancia: '',
+      fraccionTigiePartidasDeLaMercancia: '',
+      fraccionDescripcionPartidasDeLaMercancia: '',
     },
     cantidadTotal: '',
     valorTotalUSD: '',

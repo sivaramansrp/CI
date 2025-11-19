@@ -1318,3 +1318,5 @@ export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
  * Ejemplo: "123.45" => ".45"
  */
 export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
+
+export const REGEX_REMOVE_COMA = /,/g;

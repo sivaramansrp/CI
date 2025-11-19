@@ -149,7 +149,8 @@ export class ImportacionEquipoAnticontaminanteService {
           importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
           importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
           fraccionArancelariaClave: item.fraccion,
-          unidadMedidaClave: item.unidadMedida
+          unidadMedidaClave: item.unidadMedida,
+          unidadMedidaDescripcion: row.unidadDeMedida
         }));
       }
 

@@ -30,7 +30,7 @@
       @switch(indice){ @case(1){
       <app-paso-uno></app-paso-uno>
       }@case(2){
-      <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'130113'"
+      <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud || 0" [idTipoTRamite]="'130113'"
         [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
         (reenviarCargaRealizada)="cargaRealizada($event)"
         (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>

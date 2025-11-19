@@ -225,6 +225,8 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
      */
     @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
+    @Input() fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
+
     @Input() isFraccionTIGIE: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -238,11 +240,23 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
       // Add only if they do NOT exist
       this.addControlIfMissing('fraccionTigiePartidasDeLaMercancia');
       this.addControlIfMissing('fraccionDescripcionPartidasDeLaMercancia');
+
+      this.addControlModificationMissing('fraccionTigiePartidasDeLaMercancia');
+      this.addControlModificationMissing('fraccionDescripcionPartidasDeLaMercancia');
   }
 
   private addControlIfMissing(controlName: string): void {
   if (!this.partidasDelaMercanciaForm.contains(controlName)) {
     this.partidasDelaMercanciaForm.addControl(
+      controlName,
+      new FormControl('', [])
+    );
+  }
+}
+
+private addControlModificationMissing(controlName: string): void {
+  if (!this.modificarPartidasDelaMercanciaForm.contains(controlName)) {
+    this.modificarPartidasDelaMercanciaForm.addControl(
       controlName,
       new FormControl('', [])
     );

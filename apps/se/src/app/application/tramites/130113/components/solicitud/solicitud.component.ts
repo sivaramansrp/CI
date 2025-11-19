@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_REMOVE_COMA, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-equipo-anticontaminante.enum';
@@ -122,6 +122,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
   unidadCatalogo: Catalogo[] = [];
+
+  fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
    * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
@@ -370,6 +372,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
+      fraccionTigiePartidasDeLaMercancia:[
+          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionTigiePartidasDeLaMercancia,
+          [Validators.required]
+        ],
+        fraccionDescripcionPartidasDeLaMercancia:[
+          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionDescripcionPartidasDeLaMercancia,
+          []
+        ]
     });
 
     this.formForTotalCount = this.fb.group({
@@ -477,13 +487,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
-          "id": String(this.tableBodyData.length + 1),
-          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
-          "unidadDeMedida": UMT || "",
-          "fraccionFrancelaria": this.seccionState?.fraccion || "",
-          "descripcion": this.seccionState?.descripcion || "",
-          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
-          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+          id: String(this.tableBodyData.length + 1),
+          cantidad: this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          unidadDeMedida: UMT.replace(REGEX_REMOVE_COMA, '') || "",
+          fraccionFrancelaria: this.seccionState?.fraccionDescripcionPartidasDeLaMercancia || "",
+          descripcion: this.seccionState?.descripcionPartidasDeLaMercancia || "",
+          precioUnitarioUSD: PRECIO_UNITARIO_USD || "",
+          totalUSD: this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
@@ -560,11 +570,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
-
+    if(evento.fraccionFrancelaria){
+      this.getFraccionAllDatos(evento.fraccionFrancelaria?.toString() || '0');
+    }
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
       descripcionPartidasDeLaMercancia: evento.descripcion,
+      fraccionModificationPartidasDeLaMercancia: evento.fraccionFrancelaria,
     });
   }
 
@@ -781,6 +794,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         });
     }
 
+    getFraccionAllDatos(id: string): void {
+    this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), id).subscribe((data) => {
+      this.fraccionModificationPartidasDeLaMercancia = data as Catalogo[];
+      });
+    }
+
+    
+
   /**
    * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
    *
@@ -803,8 +824,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
                 descripcion: item.descripcionOriginal?.toString() || '',
                 precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
                 totalUSD: item.importeTotalUSD?.toString() || '',
-                fraccionTigiePartidasDeLaMercancia: "",
-                fraccionDescripcionPartidasDeLaMercancia: "",
+                fraccionTigiePartidasDeLaMercancia: item.fraccionClave,
+                fraccionDescripcionPartidasDeLaMercancia: item.fraccionDescripcion,
               }));
               this.tramite130105Store.actualizarEstado({tableBodyData: TABLE_BODY })
           }
