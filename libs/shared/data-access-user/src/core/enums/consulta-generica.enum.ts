@@ -100,20 +100,16 @@ export const CONSULTA_ACUSES = {
   export const CONSULTA_TAREASTRAMITE = {
     encabezadoTablaTareasTramite: [
       {
-        key: 'id' as keyof BodyTablaTareasTramite,
-        valor: 'No.',
-      },
-      {
         key: 'nombreTarea' as keyof BodyTablaTareasTramite,
         valor: 'Nombre de la tarea',
       },
       {
         key: 'nombreUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Usuario asignado',
+        valor: 'Nombre del usuario al que se le asignó la tarea',
       },
       {
         key: 'claveUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Clave asignada',
+        valor: 'Clave de usuario al que se le asignó la tarea',
       },
       {
         key: 'fechaAsignacion' as keyof BodyTablaTareasTramite,
