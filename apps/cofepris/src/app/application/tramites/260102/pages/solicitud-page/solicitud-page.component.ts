@@ -4,15 +4,19 @@ import {
   ListaPasosWizard,
   PasoCargaDocumentoComponent,
   PasoFirmaComponent,
+  RegistroSolicitudService,
   WizardComponent
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Tramite260102State, Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { PASOS } from '../../constantes/consumo-personal.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
 
 /**
  * @component SolicitudPageComponent
@@ -36,7 +40,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
   /**
    * @property {string | null} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
@@ -90,6 +94,18 @@ export class SolicitudPageComponent {
    * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
    */
   seccionCargarDocumentos: boolean = true;
+
+  storeData!: Tramite260102State;
+
+  constructor(private Tramite260102Query: Tramite260102Query,private registroSolicitudService: RegistroSolicitudService, private tramite260102Store:Tramite260102Store, private toastrService: ToastrService,
+  ) {
+
+  }
+  ngOnInit(): void {
+    this.Tramite260102Query.selectTramiteState$.subscribe((data) => {
+      this.storeData = data;
+    });
+  }
 
   /**
    * @method seleccionaTab

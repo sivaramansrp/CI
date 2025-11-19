@@ -1,10 +1,10 @@
 
-import { AICM, AIFA, ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS, DESHABILITADA_EN_INIT, ENABLE_FIELDS, MENSAJE_EMERGENTE_DE_CONFIRMACION, MENSAJE_SIN_FILA_SELECCIONADA, MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA, MOSTRAR_NOTIFICACION, NUMERO_TRAMITE, PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC, PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS, PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO, PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES, PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL, REPRESENTANTE_LEGAL, REPRESENTANTE_LEGAL_EN_INIT, SIN_ACCION_AL_INICIAR, TEXTO_MANIFESTO_Y_DECLARACIONES } from '../constents/datos-solicitud.enum';
+import { AICM, AIFA, ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS, CLAVE_TABLA, DATOS_MERCANCIA_CLAVE_TABLA, DESHABILITADA_EN_INIT, ENABLE_FIELDS, MENSAJE_EMERGENTE_DE_CONFIRMACION, MENSAJE_SIN_FILA_SELECCIONADA, MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA, MOSTRAR_NOTIFICACION, NUMERO_TRAMITE, PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE, PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC, PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS, PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO, PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES, PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO, PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL, REPRESENTANTE_LEGAL, REPRESENTANTE_LEGAL_EN_INIT, SIN_ACCION_AL_INICIAR, TEXTO_MANIFESTO_Y_DECLARACIONES } from '../constents/datos-solicitud.enum';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { AlertComponent, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_IMPORTE_PAGO, REGEX_RFC, REGEX_SOLO_DIGITOS, REGEX_SOLO_NUMEROS, RegistroSolicitudService, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo, DatosDeTablaSeleccionados, DatosSolicitudFormState, MercanciaForm, OpcionConfig, ScianConfig,TablaMercanciasConfig,TablaMercanciasDatos,TablaOpcionConfig,TablaScianConfig } from '../models/datos-solicitud.model';
+import { AlertComponent, CatalogoSelectComponent, CatalogoServices, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_IMPORTE_PAGO, REGEX_RFC, REGEX_SOLO_DIGITOS, REGEX_SOLO_NUMEROS, RegistroSolicitudService, TablaAcciones, TablaDinamicaComponent, TablaDinamicaExpandidaComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, DatosDeTablaSeleccionados, DatosSolicitudFormState, MercanciaForm, OpcionConfig, ScianConfig,TablaMercanciaClaveConfig,TablaMercanciasConfig,TablaMercanciasDatos,TablaOpcionConfig,TablaScianConfig } from '../models/datos-solicitud.model';
 import { DatosSolicitudService, RepresentanteData, RfcSearchPayload } from '../services/datos-solicitud.service';
 import { Subject, Subscription,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     InputRadioComponent,
     TablePaginationComponent,
     ScianTablaComponent,
-    DatosMercanciaComponent
+    DatosMercanciaComponent,
+    TablaDinamicaExpandidaComponent
   ],
   providers: [RegistroSolicitudService],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -69,6 +70,8 @@ export class DatosDeLaSolicitudComponent
    */
   @Input()
   public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
+
+  @Input() public tablaMercanciaClaveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
 
   /**
    * @property {OpcionConfig<TablaOpcionConfig>} opcionConfig
@@ -138,6 +141,8 @@ export class DatosDeLaSolicitudComponent
    */
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> =
     new EventEmitter<TablaMercanciasDatos[]>();
+  
+  @Output() claveSeleccionada: EventEmitter<TablaMercanciaClaveConfig[]> = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event datosDeTablaSeleccionados
@@ -513,6 +518,10 @@ export class DatosDeLaSolicitudComponent
 public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
  @Output() idSolicitudPrellenado: EventEmitter<number> = new EventEmitter<number>();
+
+ nestedColumn= CLAVE_TABLA
+
+ public tablaMercanciaClaveConfigDatos: { [key: string]: unknown }[] = [];
   /**
    * Constructor del componente.
    *
@@ -600,6 +609,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
+    this.tablaMercanciaClaveConfigDatos = this.tablaMercanciaClaveConfig.datos.map(item => ({ ...item }));
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
         this.idProcedimiento
@@ -2061,6 +2071,16 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   this.cdr.markForCheck();
 }
 
+
+
+/**
+ * Maneja la selección de claves de mercancía desde el modal.
+ * @param claveData Array de objetos TablaMercanciaClaveConfig seleccionados.
+ * @emits claveSeleccionada - Emite el array de claves seleccionadas al componente padre.
+ */
+onClaveSeleccionado(claveData: TablaMercanciaClaveConfig[]): void {
+  this.claveSeleccionada.emit(claveData);
+}
   /**
  * Updates the table after merchandise changes
  */

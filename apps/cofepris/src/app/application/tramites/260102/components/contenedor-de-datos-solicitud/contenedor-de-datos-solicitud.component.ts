@@ -24,9 +24,11 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DATOS_MERCANCIA_CLAVE_TABLA } from '../../../../shared/components/shared26010/constents/datos-solicitud.enum';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/shared26010/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/consumo-personal.enum';
 import { Subject } from 'rxjs';
+import { TablaMercanciaClaveConfig } from '../../../../shared/components/shared26010/models/datos-solicitud.model';
 import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
 
 /**
@@ -100,6 +102,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaMercanciasDatos[],
   };
 
+  public tablaMercanciaClaveConfig = {
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
+    configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
+    datos: [] as TablaMercanciaClaveConfig[],
+  };
+
   /**
    * @property scianConfigDatos
    * @description Lista de datos SCIAN utilizados para la configuración y selección.
@@ -114,6 +122,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {TablaMercanciasDatos[]}
    */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
+
+  public tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[] = [];
 
   /**
    * @property seleccionadoopcionDatos
@@ -192,6 +202,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
             this.tramiteState.tablaMercanciasConfigDatos;
+          this.tablaMercanciaClaveConfig.datos = this.tramiteState.tablaMercanciaClaveConfigDatos;
         })
       )
       .subscribe();
@@ -248,6 +259,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
     this.tramite260102Store.updateTablaMercanciasConfigDatos(event);
+  }
+
+  claveSeleccionada(event: TablaMercanciaClaveConfig[]): void {
+    this.tramite260102Store.updateTablaMercanciaClaveConfigDatos(event);
   }
 
   /**

@@ -1,5 +1,5 @@
+import { DatosSolicitudFormState, TablaMercanciaClaveConfig } from '../../../../shared/models/datos-solicitud.model';
 import { PRODUCTO_TABLA_DATA, TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
-import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
@@ -92,6 +92,8 @@ export interface Tramite260102State {
    * Utilizado para listar productos o bienes relacionados con el trámite.
    */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
 
   /**
    * @property seleccionadoopcionDatos
@@ -227,7 +229,8 @@ export function createInitialState(): Tramite260102State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
+    tablaMercanciaClaveConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -457,6 +460,15 @@ export class Tramite260102Store extends Store<Tramite260102State> {
       ...state,
       tablaMercanciasConfigDatos,
       seleccionadoTablaMercanciasDatos: []
+    }));
+  }
+
+  public updateTablaMercanciaClaveConfigDatos(
+    tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tablaMercanciaClaveConfigDatos,
     }));
   }
 
