@@ -217,6 +217,10 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
         clave: item.representacionFederal
       },
       licitacion: {
+        producto: "Filetes de pescado frescos o refrigerados y congelados",
+        unidadMedidaTarifaria: "Kilogramo",
+        bloqueComercial: "Bloque Unilateral",
+        paises: "Estados Unidos Mexicanos",
         idLicitacion: item.licitacionesDatos.licitacionPublica.idLicitacion,
         anio: item.licitacionesDatos.licitacionPublica.anio,
         cantidadMaxima: item.licitacionesDatos.licitacionPublica.cantidadMaxima,

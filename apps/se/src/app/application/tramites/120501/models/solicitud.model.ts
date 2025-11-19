@@ -112,6 +112,10 @@ export interface LicitacionesResponse {
     fraccionArancelaria: string[];
     tipoTramite: TipoTramite;
     entidadFederativa: string;
+    producto: string;
+    unidadMedidaTarifaria: string;
+    bloqueComercial: string;
+    paises: string;
 }
 
 export interface LicitacionPublica {
@@ -173,7 +177,7 @@ export interface TipoTramite {
     asignado: string;
     suplencia: string;
     nivelRol: string;
-    listTipoTramite: any[];
+    listTipoTramite: [];
     descripcionCorta: string;
     context: string;
     actionSSO: string;
@@ -192,4 +196,28 @@ export interface LicitacionResponse {
 export interface ParticipantesData {
     rfc: string;
     montoAdjudicado: number;
+}
+
+export interface JSONResponse {
+  codigo: string;
+  mensaje: string;
+  datos: {
+    licitaciones: Licitacion[];
+  };
+}
+
+export interface Licitacion {
+  idAsignacion: number;
+  numeroLicitacion: string;
+  montoAdjudicado: number;
+  fechaInicioVigencia: string;
+  fechaFinVigenciaAprobada: string;
+  nombreProducto: string;
+  fechaConcurso: string;
+}
+
+export interface JSONLicitacionesResponse {
+  codigo: string;
+  mensaje: string;
+  datos: LicitacionesResponse;
 }

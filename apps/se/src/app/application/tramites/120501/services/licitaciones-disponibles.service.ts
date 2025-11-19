@@ -113,23 +113,28 @@ export class LicitacionesDisponiblesService {
   /**
    * Obtiene los datos para poblar la tabla dinámica.
    */
-  getLicitacionesDisponiblesData(RFC: string): Observable<LicitacionResponse[]> {
-    const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
+  // getLicitacionesDisponiblesData(RFC: string): Observable<LicitacionResponse[]> {
+  //   const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
 
-    return this.http.get<BaseResponse<LicitacionResponse[]>>(ENDPOINT).pipe(map((response) => {
-      if (!response.datos) {
-          throw new Error('No se encontraron datos en la respuesta');
-        }
-      return response.datos;
-    }),
-      catchError(() => {
-        const ERROR = new Error(
-          `Ocurrió un error al devolver la información ${ENDPOINT} `
-        );
-        return throwError(() => ERROR);
-      })
-    );
-  }
+  //   return this.http.get<BaseResponse<LicitacionResponse[]>>(ENDPOINT).pipe(map((response) => {
+  //     if (!response.datos) {
+  //         throw new Error('No se encontraron datos en la respuesta');
+  //       }
+  //     return response.datos['licitaciones'] as LicitacionResponse[];
+  //   }),
+  //     catchError(() => {
+  //       const ERROR = new Error(
+  //         `Ocurrió un error al devolver la información ${ENDPOINT} `
+  //       );
+  //       return throwError(() => ERROR);
+  //     })
+  //   );
+  // }
+
+  getLicitacionesDisponiblesData(RFC: string): Observable<JSONResponse> {
+      const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
+      return this.http.get<JSONResponse>(ENDPOINT);
+    }
 
   fetchRFCData(RFC: string, idLicitacion: number): Observable<ParticipantesData> {
     const ENDPOINT = `${PROC_120501.FETCH_RFC}/` + RFC + '/' + idLicitacion;
@@ -149,20 +154,21 @@ export class LicitacionesDisponiblesService {
     );
   }
 
-  getLicitacionesFormData(REQUEST: { rfc: string; idAsignacion: number }): Observable<LicitacionesResponse> {
+  getLicitacionesFormData(body: Record<string, unknown>): Observable<JSONResponse> {
     const ENDPOINT = `${PROC_120501.BUSCAR}`;
-    return this.http.post<BaseResponse<LicitacionesResponse>>(ENDPOINT, REQUEST).pipe(
-      map((response) => {
-        if (!response.datos) {
-          throw new Error('No se encontraron datos en la respuesta');
-        }
-        return response.datos;
-      }),
-      catchError(() => {
-        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT}`);
-        return throwError(() => ERROR);
-      })
-    );
+    return this.http.post<JSONResponse>(ENDPOINT, body);
+    // return this.http.post<BaseResponse<LicitacionesResponse>>(ENDPOINT, REQUEST).pipe(
+    //   map((response) => {
+    //     if (!response.datos) {
+    //       throw new Error('No se encontraron datos en la respuesta');
+    //     }
+    //     return response.datos;
+    //   }),
+    //   catchError(() => {
+    //     const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT}`);
+    //     return throwError(() => ERROR);
+    //   })
+    // );
 }
 
  /**

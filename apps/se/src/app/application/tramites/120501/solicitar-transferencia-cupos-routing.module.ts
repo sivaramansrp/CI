@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
-import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-transferencia-cupos-main/solicitar-transferencia-cupos-main.component';
 import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
+import { NgModule } from '@angular/core';
+import { SolicitarTransferenciaCuposMainComponent } from './pages/solicitar-transferencia-cupos-main/solicitar-transferencia-cupos-main.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -23,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class SolicitarTransferenciaCuposRoutingModule { }

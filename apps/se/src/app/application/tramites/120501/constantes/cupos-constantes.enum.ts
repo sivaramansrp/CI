@@ -4,11 +4,6 @@ export const ID_PROCEDIMIENTO = 120501;
 
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
   {
-    encabezado: '',
-    clave: (ele: LicitacionResponse): number => ele.idAsignacion,
-    orden: 1
-  },
-  {
     encabezado: 'Número de licitación',
     clave: (ele: LicitacionResponse): string => ele.numeroLicitacion,
     orden: 1

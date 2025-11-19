@@ -54,6 +54,10 @@ export function createInitialState(): Solicitud120501State {
       montoRecibir:'',
       rfc1:'',
       licitacionesDatos:{
+        producto: '',
+        unidadMedidaTarifaria: '',
+        bloqueComercial: '',
+        paises: '',
         idSolicitud: 0,
         fechaCreacion: "",
         fechaInicioTramite: "",

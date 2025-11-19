@@ -1,10 +1,10 @@
-import { AccionBoton, Adquiriente, AlertComponent, ConsultaioQuery, LoginQuery } from '@ng-mf/data-access-user';
+import { AccionBoton, AlertComponent, ConsultaioQuery, LoginQuery } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_ACCIONISTAS_TABLA, ID_PROCEDIMIENTO } from '../../constantes/cupos-constantes.enum';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LicitacionResponse, LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../../models/solicitud.model';
+import { JSONLicitacionesResponse, JSONResponse, LicitacionResponse, LicitacionesResponse, ParticipanteLicitacion, ParticipantesData } from '../../models/solicitud.model';
 import { Solicitud120501State, Tramite120501Store } from '../../estados/tramites/tramite120501.store';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
@@ -191,7 +191,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * Servicio para obtener datos de licitaciones disponibles.
    */
-  constructor(private service: LicitacionesDisponiblesService, 
+  constructor(private service: LicitacionesDisponiblesService,
     private fb: FormBuilder,
     private tramite120501Store: Tramite120501Store,
     private tramite120501Query: Tramite120501Query,
@@ -207,7 +207,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-        this.loginQuery.selectLoginState$
+    this.loginQuery.selectLoginState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -226,7 +226,6 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     // this.getDetallesDelalicitacion();
     // this.getAdquiriente();
     this.obtenerDatosDeTabla();
-    this.fillFormLicitacionesFormData();
   }
   /**
  * Inicializa los formularios principales del componente con los valores actuales del estado.
@@ -369,51 +368,64 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
-    /**
-    * Obtiene los datos de la tabla desde el servicio.
-    *
-    * LicitacionesVigentesComponent
-    * 
-    */
+
+  /**
+  * Obtiene los datos de la tabla desde el servicio.
+  *
+  * LicitacionesVigentesComponent
+  * 
+  */
   obtenerDatosDeTabla(): void {
-    this.service.getLicitacionesDisponiblesData(this.loginRfc).pipe(takeUntil(this.destroyed$)).subscribe((data: LicitacionResponse[]) => {
-      this.licitacionTablaDatos = data || [];
-    }
-    );
+    this.service.getLicitacionesDisponiblesData(this.loginRfc).pipe(
+      takeUntil(this.destroyed$)).subscribe((response) => {
+        if (response.codigo === '01') {
+          this.licitacionTablaDatos = (response as unknown as JSONResponse).datos?.licitaciones || [{
+            "idAsignacion": 52777,
+            "numeroLicitacion": "007/2016",
+            "montoAdjudicado": 1234567,
+            "fechaInicioVigencia": "2016-06-01",
+            "fechaFinVigenciaAprobada": "2016-12-31",
+            "nombreProducto": "Filetes de pescado frescos o refrigerados y congelados",
+            "fechaConcurso": "2016-06-01"
+          }];
+        }
+      }
+      );
   }
 
-  fillFormLicitacionesFormData(): void {
+  fillFormLicitacionesFormData(idAsignacion: number): void {
     const REQUEST_DATA = {
       rfc: this.loginRfc,
-      idAsignacion: 52777
+      idAsignacion: idAsignacion
     }
-    this.service.getLicitacionesFormData(REQUEST_DATA)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: LicitacionesResponse) => {
-        this.tramite120501Store.actualizarEstado({licitacionesDatos: data})
-        this.showRepresentacionFederal = true;
-        const LICITACION = data;
-        this.datosParticipantes = LICITACION.participantesLicitacion;
-        this.detalledelaLicitacionForm.patchValue({
-          numeraDelicitacion: LICITACION.licitacionPublica.numeroLicitacion,
-          fechaDelEventoDelicitacion: LICITACION.licitacionPublica.fechaConcurso,
-          // descripcionDelProducto: LICITACION,
-          // unidadTarifaria: LICITACION.unidadTarifaria,
-          regimenAduanero: LICITACION.regimen,
-          fraccionArancelaria: LICITACION.fraccionArancelaria,
-          fechaDeiniciodeVigenciadelCupo: LICITACION.licitacionPublica.fechaInicioVigencia,
-          fechaDefindeVigenciadelCupo: LICITACION.licitacionPublica.fechaFinVigencia,
-          obserVaciones: LICITACION.observaciones,
-          // bloqueComercial: LICITACION.bloqueComercial,
-          // paises: LICITACION.paises,
-          montoadJudicado: LICITACION.participante.montoAdjudicado,
-          montoDisponible: LICITACION.participante.montoDisponible,
-          montoMaximo: LICITACION.licitacionPublica.cantidadMaxima
-        });
+    this.service.getLicitacionesFormData(REQUEST_DATA).pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        if( response.codigo === '3'){
+          this.showRepresentacionFederal = true;
+          this.tramite120501Store.actualizarEstado({ licitacionesDatos: (response as unknown as JSONLicitacionesResponse).datos as LicitacionesResponse });
+          this.showRepresentacionFederal = true;
+          const LICITACION = (response as unknown as JSONLicitacionesResponse).datos;
+          this.datosParticipantes = LICITACION?.participantesLicitacion;
+          this.detalledelaLicitacionForm.patchValue({
+            numeraDelicitacion: LICITACION?.licitacionPublica.numeroLicitacion,
+            fechaDelEventoDelicitacion: LICITACION?.licitacionPublica.fechaConcurso,
+            descripcionDelProducto: LICITACION?.producto,
+            unidadTarifaria: LICITACION?.unidadMedidaTarifaria,
+            regimenAduanero: LICITACION?.regimen,
+            fraccionArancelaria: LICITACION?.fraccionArancelaria,
+            fechaDeiniciodeVigenciadelCupo: LICITACION?.licitacionPublica.fechaInicioVigencia,
+            fechaDefindeVigenciadelCupo: LICITACION?.licitacionPublica.fechaFinVigencia,
+            obserVaciones: LICITACION?.observaciones,
+            bloqueComercial: LICITACION?.bloqueComercial,
+            paises: LICITACION?.paises,
+            montoadJudicado: LICITACION?.participante.montoAdjudicado,
+            montoDisponible: LICITACION?.participante.montoDisponible,
+            montoMaximo: LICITACION?.licitacionPublica.cantidadMaxima
+          });
+        }
       });
   }
- 
+
   /**
        * Establece los valores en el store del trámite 120501.
        *
@@ -438,12 +450,13 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
    * LicitacionesVigentesComponent
    * 
    */
-  abrirModificarModal(_event: LicitacionResponse): void {
+  abrirModificarModal(evento: LicitacionResponse): void {
     if (this.esFormularioSoloLectura) {
       return
     }
-    this.showRepresentacionFederal = true;
-
+    if(evento.idAsignacion){
+      this.fillFormLicitacionesFormData(evento.idAsignacion);
+    }
   }
 
   /**
