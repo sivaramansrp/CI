@@ -1,17 +1,20 @@
 import {
   AccionBoton,
+  AlertComponent,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
+  NotificacionesComponent,
   PasoCargaDocumentoComponent,
   PasoFirmaComponent,
   RegistroSolicitudService,
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_VALIDACION, PASOS } from '../../constantes/consumo-personal.enum';
 import { Tramite260102State, Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { PASOS } from '../../constantes/consumo-personal.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -35,7 +38,9 @@ import { Tramite260102Query } from '../../estados/queries/tramite260102Query.que
     PasoTresComponent,
     BtnContinuarComponent,
     PasoCargaDocumentoComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    NotificacionesComponent,
+    AlertComponent
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
@@ -97,6 +102,22 @@ export class SolicitudPageComponent implements OnInit {
 
   storeData!: Tramite260102State;
 
+  isSaltar: boolean = false;
+
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  public mostrarAlerta: boolean = false;
+
+  public seleccionarFilaNotificacion!: Notificacion;
+
+  esFormaValido: boolean = false;
+
+  public requiresPaymentData: boolean = false;
+  
+  public confirmarSinPagoDeDerechos: number = 0;
+
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   constructor(private Tramite260102Query: Tramite260102Query,private registroSolicitudService: RegistroSolicitudService, private tramite260102Store:Tramite260102Store, private toastrService: ToastrService,
   ) {
 
@@ -124,18 +145,77 @@ export class SolicitudPageComponent implements OnInit {
    * @param {AccionBoton} e - Objeto que contiene el valor y la acción del botón presionado.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
+    if (e.accion === 'cont') {
+          let isValid = true;
+    
+            if (this.indice === 1 && this.pasoUnoComponent) {
+            isValid = this.pasoUnoComponent.validarPasoUno();
+          }
+          if(!this.pasoUnoComponent.pagoDerechosComponent.validarContenedor()){
+            this.mostrarAlerta=true;
+            this.seleccionarFilaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Debe capturar los datos de pago de derechos para continuar.',
+              cerrar: true,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'SI',
+              txtBtnCancelar: 'NO',
+            }
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          }
+          if (!isValid) {
+            this.esFormaValido = true;
+            this.datosPasos.indice = this.indice;
+            return;
+          }
+          this.esFormaValido = false;
+          this.postGuardarDatos(e);
+        }else{
+          this.indice = e.valor;
+          this.datosPasos.indice = this.indice;
+          this.wizardComponent.atras();
+        }
+  }
+  postGuardarDatos(e: AccionBoton): void {
+            // Calcular el nuevo índice basado en la acción
+            let indiceActualizado = e.valor;
+            if (e.accion === 'cont') {
+              indiceActualizado = e.valor;
+            }
+            if (indiceActualizado > 0 && indiceActualizado < 5) {
+              this.indice = indiceActualizado;
+              this.datosPasos.indice = indiceActualizado;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          }
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+  onBlancoObligatoria(enBlanco: boolean): void {
+    this.isSaltar = enBlanco;
+  }
+
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+    /**
+   * @method saltar
+   * @description
+   * Método para saltar directamente al paso de firma en el wizard.
+   * Actualiza los índices correspondientes y ejecuta la transición
+   * forward en el componente wizard.
+   */
+  saltar(): void {
+    this.indice = 3;
+    this.datosPasos.indice = 3;
+    this.wizardComponent.siguiente();
   }
 
    onClickCargaArchivos(): void {
@@ -152,6 +232,22 @@ export class SolicitudPageComponent implements OnInit {
 
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  siguiente(): void {
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  cerrarModal(value:boolean): void {
+    if(value){
+      this.mostrarAlerta = false;
+      this.requiresPaymentData = true;
+    } else {
+      this.mostrarAlerta = false;
+      this.confirmarSinPagoDeDerechos = 4;
+    }
   }
 
   /**

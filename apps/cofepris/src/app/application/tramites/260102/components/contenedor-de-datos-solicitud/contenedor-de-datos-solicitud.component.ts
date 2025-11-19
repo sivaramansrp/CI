@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -164,6 +164,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
   public esFormularioSoloLectura: boolean = false;
+
+  @ViewChild(DatosDeLaSolicitudComponent)
+  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
   /**
    * @constructor
    * @description Inyecta servicios para obtener y actualizar el estado del trámite
@@ -307,6 +310,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

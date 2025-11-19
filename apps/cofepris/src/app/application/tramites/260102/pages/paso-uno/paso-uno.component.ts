@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -48,6 +48,14 @@ export class PasoUnoComponent implements OnDestroy {
 */
   public readonly idProcedimiento: number = 260102;
 
+  @ViewChild(SolicitanteComponent) solicitanteComponent!: SolicitanteComponent;
+  
+  @ViewChild(ContenedorDeDatosSolicitudComponent) contenedorDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosComponent!: TercerosRelacionadosVistaComponent;
+
+  @ViewChild(PagoDeDerechosContenedoraComponent) pagoDerechosComponent!: PagoDeDerechosContenedoraComponent;
+
   /**
    * Constructor del componente que inicializa el estado de la consulta
    * y determina si se deben guardar los datos del formulario o mostrar solo los datos de respuesta.
@@ -89,6 +97,16 @@ export class PasoUnoComponent implements OnDestroy {
           this.ConsumoPersonalService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosComponent.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDerechosComponent.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+
+    );
   }
 
   /**
