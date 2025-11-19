@@ -1,3 +1,7 @@
+/**
+ * Modelo que representa los datos de un importador o exportador.
+ * 
+ */
 export interface ImportadorExportador {
   rfc: string;
   nombre: string;
@@ -18,6 +22,9 @@ export interface ImportadorExportador {
   revisionOrigen: boolean;
 }
 
+/**
+ * Modelo que representa los datos de despacho.
+ */
 export interface Despacho {
   aduana_despacho: string;
   id_seccion_despacho: number;
@@ -39,6 +46,9 @@ export interface Despacho {
   bln_despacho: boolean;
 }
 
+/**
+ * Modelo que representa los datos de transporte de despacho.
+ */
 export interface TransporteDespacho {
   id_transporte: number | null;
   id_solicitud: number;
@@ -62,6 +72,9 @@ export interface TransporteDespacho {
   datos_transporte: string;
 }
 
+/**
+ * Modelo que representa los datos de unidad de arribo.
+ */
 export interface UnidadArribo {
   tipo_transporte: string;
   emp_transportista: string | null;
@@ -93,6 +106,9 @@ export interface UnidadArribo {
   mismosDatosTransporte: boolean | null;
 }
 
+/**
+ * Modelo que representa los datos de mercancía.
+ */
 export interface Mercancia {
   pais_origen: string;
   descripcion_generica: string;
@@ -100,6 +116,10 @@ export interface Mercancia {
   pais_procedencia: string;
 }
 
+
+/**
+ * Modelo que representa los datos de pedimento.
+ */
 export interface Pedimento {
   id_pedimento: number;
   numero_pedimento: string;
@@ -112,6 +132,9 @@ export interface Pedimento {
   sub_estado_pedimento: string;
 }
 
+/**
+ * Modelo que representa los datos de transporte de despacho.
+ */
 export interface ListTransporteDespacho {
   tipo_transporte: string | null;
   emp_transportista: string | null;
@@ -134,6 +157,10 @@ export interface ListTransporteDespacho {
   descripcion_equipo: string | null;
 }
 
+
+/**
+ * Modelo que representa los datos de unidad de arribo.
+ */
 export interface ListUnidadArribo {
   tipo_transporte: string | null;
   emp_transportista: string | null;
@@ -165,6 +192,9 @@ export interface ListUnidadArribo {
   mismosDatosTransporte: boolean | null;
 }
 
+/**
+ * Modelo que representa los datos de persona responsable.
+ */
 export interface PersonaResponsable {
   id_persona: number | null;
   id_solicitud: number | null;
@@ -175,6 +205,9 @@ export interface PersonaResponsable {
   apellido_materno: string;
 }
 
+/**
+ * Modelo que representa los datos de fechas Sevex.
+ */
 export interface ListFechasSevex {
   id_fecha: number | null;
   id_solicitud: number;
@@ -188,6 +221,9 @@ export interface ListFechasSevex {
   mismo_horario: boolean;
 }
 
+/**
+ * Modelo que representa los datos de tipo de servicio.
+ */
 export interface TipoServicio {
   id_tipo_servicio: number;
   id_solicitud: number;
@@ -204,6 +240,9 @@ export interface TipoServicio {
   id_patentes_aduanales: number;
 }
 
+/**
+ * Modelo que representa los datos de persona de notificación.
+ */
 export interface ListPersonaNoti {
   id_persona: number | null;
   id_solicitud: number | null;
@@ -214,6 +253,9 @@ export interface ListPersonaNoti {
   apellido_materno: string | null;
 }
 
+/**
+ * Modelo que representa los detalles de una solicitud.
+ */
 export interface SolicitudDetalleModel {
   patente: string | null;
   id_patentes_aduanales: number | null;

@@ -383,6 +383,10 @@ export interface SolicitudActualizarResponseModel {
   /** Lista de pagos */
   lista_pagos: Pago[];
 }
+
+/** Modelo de solicitud para actualizar.
+ */
+
 export interface ImportadorExportador {
   rfc: string;
   nombre: string;
@@ -403,6 +407,9 @@ export interface ImportadorExportador {
   revision_origen: boolean;
 }
 
+/**
+ * Modelo de tipo de servicio.
+ */
 export interface TipoServicio {
   id_tipo_servicio: number;
   id_solicitud: number;
@@ -419,6 +426,9 @@ export interface TipoServicio {
   id_patentes_aduanales: number;
 }
 
+/**
+ * Modelo de despacho aduanal.
+ */
 export interface Despacho {
   aduana_despacho: string;
   id_seccion_despacho: number;
@@ -440,6 +450,10 @@ export interface Despacho {
   bln_despacho: boolean;
 }
 
+/**
+ * Modelo de pedimento aduanal.
+ * 
+ */
 export interface Pedimento {
   id_pedimento: number;
   id_solicitud: number;
@@ -457,6 +471,9 @@ export interface Pedimento {
   bln_valido_pedimento: boolean;
 }
 
+/**
+ * Modelo de mercancías.
+ */
 export interface Mercancias {
   pais_origen: string;
   descripcion_generica: string;
@@ -464,6 +481,10 @@ export interface Mercancias {
   pais_procedencia: string;
 }
 
+
+/**
+ * Modelo de transporte de despacho.
+ */
 export interface TransporteDespacho {
   tipo_transporte: string;
   emp_transportista: string;
@@ -486,6 +507,10 @@ export interface TransporteDespacho {
   descripcion_equipo: string;
 }
 
+
+/**
+ * Modelo de unidad de arribo.
+ */
 export interface UnidadArribo {
   tipo_transporte: string;
   emp_transportista: string;
@@ -517,6 +542,10 @@ export interface UnidadArribo {
   mismosDatosTransporte: boolean;
 }
 
+
+/**
+ * Modelo de persona responsable.
+ */
 export interface PersonaResponsable {
   id_persona: number;
   id_solicitud: number;
@@ -527,6 +556,10 @@ export interface PersonaResponsable {
   apellido_materno: string;
 }
 
+
+/**
+ * Modelo de fecha SEVEX.
+ */
 export interface FechaSevex {
   id_fecha: number;
   id_solicitud: number;
@@ -540,6 +573,9 @@ export interface FechaSevex {
   mismo_horario: boolean;
 }
 
+/**
+ * Modelo de persona para notificación.
+ */
 export interface PersonaNoti {
   id_persona: number;
   id_solicitud: number;
@@ -550,6 +586,9 @@ export interface PersonaNoti {
   apellido_materno: string;
 }
 
+/***
+ * Modelo de pago.
+ */
 export interface Pago {
   linea_captura: string;
   monto: number;
@@ -558,6 +597,9 @@ export interface Pago {
   cve_modulo: string;
 }
 
+/**
+ * Modelo de solicitud para actualizar.
+ */
 export interface SolicitudActualizarRequestModel {
   importador_exportador: ImportadorExportador;
   tipo_servicio: TipoServicio;
