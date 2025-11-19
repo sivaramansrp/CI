@@ -346,7 +346,7 @@ nombresCampos:boolean = false;
      * Método para obtener el catálogo de estado físico de mercancía.
      */
     obtenerEstadoFisicoCatalogo(): void {
-      if (this.idProcedimiento) {
+      if (this.idProcedimiento && this.estadoValidte) {
         this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((response) => {
