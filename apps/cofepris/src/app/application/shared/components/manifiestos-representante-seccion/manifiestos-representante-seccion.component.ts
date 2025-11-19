@@ -6,6 +6,7 @@
  */
 
 import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
@@ -27,13 +28,14 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-declare var bootstrap: any; // Add this declaration for Bootstrap
+
 @Component({
   selector: 'app-manifiestos-representante-seccion',
   standalone: true,
@@ -43,6 +45,7 @@ declare var bootstrap: any; // Add this declaration for Bootstrap
     ReactiveFormsModule,
     InputRadioComponent,
     FormsModule,
+    NotificacionesComponent, 
   ],
   templateUrl: './manifiestos-representante-seccion.component.html',
   styleUrl: './manifiestos-representante-seccion.component.scss',
@@ -81,6 +84,27 @@ export class ManifiestosRepresentanteSeccionComponent
   * Estado de la solicitud de la sección .
   */
       public solicitudState!: DatosDelSolicituteSeccionState;
+
+  /**
+   * Controla la visibilidad del modal de alerta para RFC.
+   */
+  public mostrarAlertaRfc: boolean = false;
+
+  /**
+   * Notificación para mostrar cuando el RFC está vacío.
+   */
+  public notificacionRfc: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Debe ingresar el RFC',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -166,7 +190,7 @@ export class ManifiestosRepresentanteSeccionComponent
   buscarRepresentanteRfc(): void {
     const RFC = this.manifiestosRepresentanteForm.get('representanteRfc')?.value;
      if (!RFC || RFC.trim() === '') {
-      this.showRfcValidationModal();
+      this.mostrarAlertaRfc = true;
       return;
     }
 
@@ -191,14 +215,10 @@ export class ManifiestosRepresentanteSeccionComponent
   }
 
   /**
-   * Shows the RFC validation modal when RFC field is empty
+   * Cierra el modal de alerta de RFC.
    */
-  private showRfcValidationModal(): void {
-    const MODALELEMENT = document.getElementById('rfcValidationModal');
-    if (MODALELEMENT) {
-      const MODAL = new bootstrap.Modal(MODALELEMENT);
-      MODAL.show();
-    }
+  cerrarAlertaRfc(): void {
+    this.mostrarAlertaRfc = false;
   }
 
   /**
