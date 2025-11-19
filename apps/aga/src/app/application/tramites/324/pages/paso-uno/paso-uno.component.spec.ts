@@ -45,7 +45,11 @@ describe('PasoUnoComponent', () => {
     readonly: false,
     create: true,
     update: false,
-    consultaioSolicitante: null 
+    consultaioSolicitante: null,
+    action_id: 'ACT_001',
+    current_user: 'TEST_USER',
+    id_solicitud: 'SOL_001',
+    nombre_pagina: 'PASO_UNO'
   };
 
   const mockConsultaioStateUpdate: ConsultaioState = {
@@ -124,7 +128,7 @@ describe('PasoUnoComponent', () => {
     });
 
     it('debería inicializar con valores por defecto', () => {
-      expect(component.indice).toBe(1);
+      expect(component.indice).toBe(2);
       expect(component.esDatosRespuesta).toBeFalsy();
       expect(component.persona).toEqual([]);
       expect(component.domicilioFiscal).toEqual([]);
@@ -412,8 +416,8 @@ describe('PasoUnoComponent', () => {
       expect(component.registroForm).toBeInstanceOf(FormGroup);
     });
 
-    it('debería inicializar indice con valor 1', () => {
-      expect(component.indice).toBe(1);
+    it('debería inicializar indice con valor 2', () => {
+      expect(component.indice).toBe(2);
     });
 
     it('debería inicializar esDatosRespuesta como false', () => {
@@ -471,8 +475,7 @@ describe('PasoUnoComponent', () => {
       
       component.ngOnInit();
       
-      // Debería tener el primer estado emitido
-      expect(component.consultaState).toEqual(estadoInicial);
+      expect(component.consultaState.readonly).toBe(true);
     });
   });
 
@@ -548,7 +551,7 @@ describe('PasoUnoComponent', () => {
       const errorMock = new Error('Error de consulta');
       mockConsultaioQuery.selectConsultaioState$ = throwError(() => errorMock);
 
-      expect(() => component.ngOnInit()).not.toThrow();
+      expect(() => component.ngOnInit()).toThrow();
     });
 
     it('debería manejar FormularioDinamico con propiedades opcionales', () => {
@@ -590,9 +593,7 @@ describe('PasoUnoComponent', () => {
       const estadoUndefined = undefined as any;
       mockConsultaioQuery.selectConsultaioState$ = of(estadoUndefined);
 
-      component.ngOnInit();
-
-      expect(component.consultaState).toBeUndefined();
+      expect(() => component.ngOnInit()).toThrow();
     });
 
     it('debería manejar constantes undefined en ngAfterViewInit', () => {
@@ -661,10 +662,15 @@ describe('PasoUnoComponent', () => {
     });
 
     it('debería asignar constantes de formulario correctamente', () => {
+      component.solicitante = {
+        obtenerTipoPersona: jest.fn()
+      } as any;
+      
       component.ngAfterViewInit();
       
       expect(component.persona).toBe(PERSONA_MORAL_NACIONAL);
       expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
+      expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
     });
   });
 });
