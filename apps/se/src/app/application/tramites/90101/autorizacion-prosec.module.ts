@@ -4,6 +4,8 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TablaDinamicaComponent,
@@ -51,6 +53,8 @@ import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias
     DomiciliosDePlantasComponent,
     SectoresYMercanciasComponent,
     ProductorIndirectoComponent,
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
     ToastrModule.forRoot()
   ],
   providers: [

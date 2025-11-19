@@ -19,8 +19,11 @@
                 <td> {{$index + 1}}</td>
                 <td> {{item?.department}}</td>
                 <td> {{item?.tramite}}</td>
-                <td> <a [routerLink]=item.linkDepartment>{{ ruta }}{{item.linkDepartment}}</a>
-                </td>
+               <td>
+              <a [routerLink]="item.linkDepartment" (click)="onTramiteClick(item?.tramite)">
+              {{ ruta }}{{item?.linkDepartment}}
+             </a>
+             </td>
               </tr>
             }
           }

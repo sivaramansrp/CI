@@ -1,5 +1,5 @@
 import { Catalogo, HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
-import { BUSCAR_CONSULTAR, BUSCAR_INSTRUMENTOS, GUARDAR } from '../../../shared/servers/api-route';
+import { BUSCAR_CONSULTAR, BUSCAR_INSTRUMENTOS, GUARDAR, GUARDAR_API } from '../../../shared/servers/api-route';
 import { BuscarApiResponse, InsumosTabla, SolicitudTPLCANR } from '../models/insumos.model';
 import { Observable, map } from 'rxjs';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
@@ -289,7 +289,7 @@ export class SolicitudDeRegistroTplService {
    * @returns Observable con la respuesta de la solicitud POST.
    */
   guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(GUARDAR('sat-t120101'), { body: body });
+    return this.httpService.post<JSONResponse>(GUARDAR_API('sat-t120702'), { body: body });
   }
 
   /**

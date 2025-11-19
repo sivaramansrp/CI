@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -49,6 +49,13 @@ import fraccionTabla from '@libs/shared/theme/assets/json/90201/fraccion-tabla.j
   styleUrl: './sectores-y-mercancias.component.scss',
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
+
+  /**
+     * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+     * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+     * como catálogos o listas asociadas.
+     */
+    @Input() idProcedimiento!: number;
   /**
    * Una instancia de FormGroup que representa el formulario para sectores.
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
@@ -279,15 +286,18 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    *
    * @private
    */
-  private inicializaCatalogos(): void {
-    const CATALOGO$ = this.servicio.getSectorCatalog().pipe(
-      map((resp) => {
-        this.sectorCatalogo = resp.data;
-      })
-    );
-
-    merge(CATALOGO$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+ private inicializaCatalogos(): void {
+  if (this.idProcedimiento) {
+    this.servicio.getSectorCatalog(this.idProcedimiento.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        this.sectorCatalogo = (response.datos ?? []).map(item => ({
+          ...item,
+          descripcion: `${item.clave}-${item.descripcion}`
+        }));
+      });
   }
+}
   /**
    * Agrega un nuevo sector a la lista de sectores si el campo de sector no está vacío.
    * Este método obtiene el valor del campo 'sector' del formulario y, si no está vacío o solo contiene espacios en blanco,

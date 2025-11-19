@@ -1,17 +1,17 @@
-/* eslint-disable complexity */
+import {
+  AnimalesEventos,
+  DetalleVidaSilvestre,
+} from '../../../../shared/models/datos-de-la-solicitue.model';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { DatosMercancia, FilaSolicitud } from '../../models/220202/fitosanitario.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { AnimalesEventos } from '../../../../shared/models/datos-de-la-solicitue.model';
-
-import { DatosMercancia, FilaSolicitud } from '../../models/220202/fitosanitario.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
-import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
-import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
@@ -121,11 +121,14 @@ export class AgregarMercanciaComponent implements OnDestroy{
               numeroCertificadoInternacional: VALOR.numeroCertificadoInternacional || '',
               fraccionArancelaria: VALOR.fraccionArancelaria || '',
               descripcionFraccion: VALOR.descripcionFraccion || '',
+              idDescripcionFraccion: VALOR.idDescripcionFraccion || 0,      
+
               nico: VALOR.nico || '',
               descripcionNico: VALOR.descripcionNico || '',
               descripcion: VALOR.descripcion || '',
               cantidadUMT: String(VALOR.cantidadUMT || ''),
               umt: VALOR.umt || '',
+              descripcionUMT: VALOR.descripcionUMT || '',
               cantidadUMC: String(VALOR.cantidadUMC || ''),
               umc: VALOR.umc || '',
               uso: VALOR.uso || '',
@@ -147,6 +150,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
    * @param valor Datos del formulario de solicitud de animales vivos.
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
+    const NOMBRES_CIENTIFICOS:Catalogo[] = valor?.formulario['nombresCientificos'] as Catalogo[];
     const DATOS: FilaSolicitud = {
       id: valor.formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: '',
@@ -155,10 +159,12 @@ export class AgregarMercanciaComponent implements OnDestroy{
       numeroCertificadoInternacional: valor.formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: valor.formulario.fraccionArancelaria || '',
       descripcionFraccion: valor.formulario.descripcionFraccion || '',
+      idDescripcionFraccion: valor.formulario.idDescripcionFraccion || 0,      
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',
       umt: valor.formulario.umt || '',
+      descripcionUMT: valor.formulario.descripcionUMT || '',
       cantidadUMT: valor.formulario.cantidadUMT || '',
       umc: valor.formulario.umc || '',
       cantidadUMC: valor.formulario.cantidadUMC || '',
@@ -167,7 +173,14 @@ export class AgregarMercanciaComponent implements OnDestroy{
       numeroDeLote: valor.formulario.numeroDeLote || '',
       paisDeOrigen: valor.formulario.paisDeOrigen || '',
       paisDeProcedencia: valor.formulario.paisDeProcedencia || '',
-      certificadoInternacionalElectronico: valor.formulario.certificadoInternacionalElectronico || ''
+      certificadoInternacionalElectronico: valor.formulario.certificadoInternacionalElectronico || '',
+      detalleVidaSilvestre: NOMBRES_CIENTIFICOS.map((nombre:Catalogo):DetalleVidaSilvestre => ({
+          idDetalleMercancia: 0,
+          idMercanciaGob: 0,
+          idVidaSilvestre: parseInt(nombre.clave ?? '0', 10),
+          nombreCientifico: nombre.descripcion,
+        }
+      ))
     }
     this.fitosanitarioStore.update(state => {
       const INDEX = state.tablaDatos.findIndex(item => item.id === DATOS.id);
