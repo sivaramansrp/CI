@@ -4,7 +4,9 @@
   <div class="table-container mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers"
       [datos]="accesosTablaDatos" (listaDeFilaSeleccionada)="obtenerRegistroSeleccionado($event)"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      [styleCenter]="true"
+      ></app-tabla-dinamica>
   </div>
   <nav aria-label="Page navigation example">
     <ul class="pagination d-flex justify-content-center">
@@ -37,7 +39,7 @@
                 }"
                 >*</span
               >:</label>
-              <input type="text" class="form-control" formControlName="rfc"  [ngStyle]="{
+              <input type="text" class="form-control" formControlName="rfc" maxlength="15"  [ngStyle]="{
                 borderColor:
                 accesosForm.controls['rfc'].invalid &&
                 accesosForm.controls['rfc'].touched
@@ -52,21 +54,29 @@
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="aduanaCatalogo.catalogos" [label]="'Aduana'" formControlName="aduana"
-                [required]="true"></app-catalogo-select>
+                [required]="true"
+                [markTouched]="accesosForm.get('aduana')?.touched ?? false"
+                ></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="sistemaCatalogo.catalogos" [label]="'Sistema'" formControlName="sistema"
-                [required]="true"></app-catalogo-select>
+                [required]="true"
+                [markTouched]="accesosForm.get('sistema')?.touched ?? false"
+                ></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="rolCatalogo.catalogos" [label]="'Rol'" formControlName="rol"
-                [required]="true"></app-catalogo-select>
+                [required]="true"
+                [markTouched]="accesosForm.get('rol')?.touched ?? false"
+                ></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="movimientoCatalogo.catalogos" [label]="'Tipo Movimiento'"
-                formControlName="tipoMovimiento" [required]="true"></app-catalogo-select>
+                formControlName="tipoMovimiento" [required]="true"
+                [markTouched]="accesosForm.get('tipoMovimiento')?.touched ?? false"
+                ></app-catalogo-select>
             </div>
           </div>
         </div>

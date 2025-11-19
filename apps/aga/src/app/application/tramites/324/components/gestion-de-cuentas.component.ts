@@ -249,16 +249,24 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
     }
     if (this.accesosForm.valid) {
       const NUEVO_ACCESO = this.accesosForm.value;
-      this.accesosTablaDatos = [...this.accesosTablaDatos, NUEVO_ACCESO];
+      
+      this.store.addAccesosDatos(NUEVO_ACCESO);
+      
       this.accesosForm.reset();
       this.cerrarModal();
-  setTimeout(() => {
-  
-    this.abrirModal();
-  }, 300);
-    
+      
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.EXITO,
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El acceso se agregó correctamente.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
-  
   }
   /**
  * Cierra el modal de accesos.
@@ -314,8 +322,6 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
  * Verifica que haya al menos una fila seleccionada antes de eliminar
  */
 eliminarAccesos(): void {
-  const DATOS_SELECCIONADOS = this.accesosTablaDatosSeleccionados?.length || 0;
-
   if (!this.accesosTablaDatos || this.accesosTablaDatos.length === 0) {
      this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
