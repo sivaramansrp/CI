@@ -27,6 +27,8 @@ import { Tramite324Query } from '../state/Tramite324.query';
 export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
+  // Notificación para confirmación de eliminación
+  public nuevaNotificacionEliminar!: Notificacion;
   /**
    * ReplaySubject utilizado para gestionar la destrucción de observables.
    * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
@@ -351,6 +353,29 @@ eliminarAccesos(): void {
     };
     return;
   }
+  
+  // Mostrar confirmación antes de eliminar
+  this.nuevaNotificacionEliminar = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: CategoriaMensaje.ALERTA,
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Desea eliminar el acceso seleccionado?.',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnCancelar: 'Cancelar',
+    txtBtnAceptar: 'Aceptar',
+  };
+}
+
+/**
+ * Confirma y ejecuta la eliminación de registros seleccionados
+ */
+confirmarEliminacion(confirmar: boolean): void {
+  if (!confirmar) {
+    return;
+  }
+  
   const DATOS_ACTUALIZADOS = this.accesosTablaDatos.filter(
     item => !this.accesosTablaDatosSeleccionados.includes(item)
   );
@@ -358,6 +383,18 @@ eliminarAccesos(): void {
   this.accesosTablaDatos = DATOS_ACTUALIZADOS;
  
   this.accesosTablaDatosSeleccionados = [];
+  
+  this.nuevaNotificacion = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: CategoriaMensaje.EXITO,
+    modo: 'action',
+    titulo: '',
+    mensaje: 'El acceso se eliminó correctamente.',
+    cerrar: true,
+    tiempoDeEspera: 3000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
 }
 
   /**

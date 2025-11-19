@@ -94,4 +94,13 @@
   @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
   </section> }
+  @if (nuevaNotificacionEliminar) { 
+  <section>
+    <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacionEliminar" 
+    [invertirBotones]="true"
+    (confirmacionModal)="confirmarEliminacion($event)"
+    ></lib-notificaciones>
+  </section> 
+  }
 </form>
