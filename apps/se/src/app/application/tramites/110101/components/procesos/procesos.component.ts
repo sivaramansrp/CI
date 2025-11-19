@@ -90,6 +90,7 @@ export class ProcesosComponent implements OnInit {
       this.tramite110101Store.clearProcesoSolicitado(); 
       this.tramite110101Store.addProcesoSolicitado(this.procesosTablaDatos);
     }
+     this.tramite110101Store.setValor('descripcion_alterna_modificada', this.solicitudeState.descripcion_alterna_modificada_response);
   }
 
   /**
