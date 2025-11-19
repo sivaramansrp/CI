@@ -37,7 +37,7 @@
       <div class="col-12 mt-5">
         <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
           <label for="description-del-producto">Descripción del producto:</label>
-          <textarea class="form-control" id="description-del-producto" formControlName="FraccionDescExportacion"
+          <textarea appUppercase class="form-control" id="description-del-producto" formControlName="FraccionDescExportacion"
             rows="5" placeholder="" maxlength="1000"></textarea>
         </div>
       </div>
@@ -58,10 +58,6 @@
     </div>
   </form>
 
-  @if(eliminarPlantasAlerta) {
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="eliminarPermisoImmex()"></lib-notificaciones>
-  }
 
   <!-- Add notifications for modal forms -->
   @if(espectaculoAlerta) {
@@ -82,6 +78,9 @@
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="mercanciaImportacionForm">
+          @if(!isFormValid) {
+            <ng-alert [CONTENIDO]="errorAlerta" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          }
           <div class="row" id="commodity-importacion">
             <ng-titulo titulo="Detalle de la mercancía de importación"></ng-titulo>
             <div class="col-12">
@@ -89,16 +88,25 @@
                 <label for="candiad-anual">Cantidad anual*:</label>
                 <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual" (change)="setValoresStore(mercanciaImportacionForm, 'candiadAnual')"
                   placeholder="" [required]="true" />
+                <div *ngIf="mercanciaImportacionForm.get('candiadAnual')?.invalid && mercanciaImportacionForm.get('candiadAnual')?.touched">
+                  <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
               </div>
               <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                 <label for="capacidad-periodo">Capacidad instalada por periodo*:</label>
                 <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo" (change)="setValoresStore(mercanciaImportacionForm, 'capacidadPeriodo')"
                   placeholder="" [required]="true" />
+                <div *ngIf="mercanciaImportacionForm.get('capacidadPeriodo')?.invalid && mercanciaImportacionForm.get('capacidadPeriodo')?.touched">
+                  <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
               </div>
               <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                 <label for="candidad-por-periodo">Cantidad por periodo*:</label>
                 <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo" (change)="setValoresStore(mercanciaImportacionForm, 'candidadPorPeriodo')"
                   placeholder="" [required]="true" />
+                <div *ngIf="mercanciaImportacionForm.get('candidadPorPeriodo')?.invalid && mercanciaImportacionForm.get('candidadPorPeriodo')?.touched">
+                  <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
               </div>
             </div>
             <div class="col-12 mt-5">
@@ -138,11 +146,11 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button type="button" class="btn btn-danger" (click)="modalCancelar('Importacion')">
+            Regresar
+          </button>
           <button type="button" class="btn btn-primary" (click)="guardarMercanciaImportacion()">
             Guardar
-          </button>
-          <button type="button" class="btn btn-danger" (click)="modalCancelar('Importacion')">
-            Cancelar
           </button>
         </footer>
         @if(eliminarNICOAlerta){
@@ -161,6 +169,9 @@
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="mercanciaExportacionForm">
+          @if(!isFormValid) {
+            <ng-alert [CONTENIDO]="errorAlerta" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          }
           <div class="row" id="product-exportacion">
             <ng-titulo titulo="Detalle del producto de exportación"></ng-titulo>
             <div class="col-12">

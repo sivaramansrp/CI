@@ -42,6 +42,7 @@ import {
   CATALOGO_PAISES_MEXICO,
   CATALOGO_PAIS_BLOQUE_CLAVE,
   CATALOGO_REGIMENES,
+  CATALOGO_REGIMEN_ENUM,
   CATALOGO_REPRESENTACION_FEDERAL,
   CATALOGO_SCIAN,
   CATALOGO_SECTORES,
@@ -73,6 +74,8 @@ import {
   API_MOSTRAR_PARTIDAS_SOLICITUD,
   API_ACTIVIDAD_PRODUCTIVA_PROSEC,
   API_REPRESENTACION_FEDERAL_PARAM,
+  API_UNIDADES_MEDIDAS_TARIFARIAS,
+  API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -468,6 +471,22 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   *  Obtiene el catálogo de unidades de medidas tarifarias según el trámite e identificador proporcionado.
+   *
+   * Este método realiza una solicitud HTTP GET para recuperar las unidades de medidas tarifarias 
+   * asociadas al trámite indicado.
+   * @param tramite 
+   * @param id 
+   * @returns 
+   */
+  unidadesMedidasTarifariasCatalogo(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDAS_TARIFARIAS(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+
+  
   /**
      * Obtiene el catálogo de bloques comerciales (tratados o acuerdos) relacionados con el trámite especificado.
      *
@@ -1068,6 +1087,14 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_PARAM(tramite, estado)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+   getFraccionesArancelariasAutoCompleteCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+
+  
     
 /**
  * Obtiene el catálogo tipo de empresa.
@@ -1081,6 +1108,17 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+/**
+ * Obtiene el catálogo de regímenes aduaneros enumerados según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de regímenes enumerados
+ * @see CATALOGO_REGIMEN_ENUM
+*/
+regimenEnumCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_REGIMEN_ENUM(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 
 /**
  * Obtiene el catálogo de tipos de mecanismo de asignación según el trámite especificado.

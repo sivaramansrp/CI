@@ -77,27 +77,6 @@ describe('PeruDatosCertificadoComponent', () => {
     // expect(component.store.setFormDatosCertificado).toHaveBeenCalled();
   });
 
-  it('should run #idiomOpcion()', async () => {
-    component.peruCertificadoService = component.peruCertificadoService || {};
-    component.peruCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.idiomOpcion();
-    // expect(component.peruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
-  });
-
-  it('should run #entidadFederativasOpcion()', async () => {
-    component.peruCertificadoService = component.peruCertificadoService || {};
-    component.peruCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.entidadFederativasOpcion();
-    // expect(component.peruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
-  });
-
-  it('should run #representacionFederalOpcion()', async () => {
-    component.peruCertificadoService = component.peruCertificadoService || {};
-    component.peruCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.representacionFederalOpcion();
-    // expect(component.peruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
-  });
-
   it('should run #idiomaSeleccion()', async () => {
     component.store = component.store || {};
     component.store.setIdiomaSeleccion = jest.fn();

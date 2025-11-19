@@ -109,8 +109,8 @@
           <label class="form-label" for="configuracion[1].menu[6].props.campo">
             Numero de factura*:
           </label>
-          <input class="form-control" type="number" id="factura_numero" placeholder="" formControlName="factura_numero"
-            required="true" maxlength="50" pattern="^[0-9]*$" libUppercase [disabled]="esFormularioSoloLectura"
+          <input class="form-control" type="text" id="factura_numero" placeholder="" formControlName="factura_numero"
+            required="true" maxlength="50" libUppercase [disabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosMercanica, 'factura_numero', 'setFacturaNumero')" />
           <div class="contenedor-error">
             <span

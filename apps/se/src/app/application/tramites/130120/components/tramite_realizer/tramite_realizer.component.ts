@@ -138,6 +138,9 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     if (CVEREGIMEN) {
       this.onRegimenSeleccionado();
     }
+    if (this.esFormularioSoloLectura) {
+      this.datosRealizer.disable();
+    }
   }
 
   /**

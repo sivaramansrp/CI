@@ -5,12 +5,12 @@
  * Cobertura compodoc 100%: cada clase, método, propiedad y evento está documentada.
  * @module AgregardestinatarioComponent
  */
-import { 
-  AbstractControl, 
-  FormBuilder, 
-  FormGroup, 
-  ReactiveFormsModule, 
-  Validators 
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -106,7 +106,18 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   destinatarioForm!: FormGroup;
 
+  /**
+   * Formulario reactivo para capturar los datos de la planta TIF.
+   * @type {FormGroup}
+   */
   plantaTifForm!: FormGroup;
+
+  /**
+   * Identificador del trámite actual.
+   * @type {number}
+   * @default 220201
+   */
+  tramite: number = 220201;
 
   /**
    * Validador personalizado para el campo tipoMercancia.
@@ -137,9 +148,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private catalogoService: CatalogosService
-  ) 
-  { 
-      
+  ) {
+
   }
 
   /**
@@ -221,7 +231,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoConsultaPaises(this.tramite).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.pairsCatalog = data.datos ?? [];
     });
   }
@@ -231,7 +241,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoEntidadesFederativas(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadesFederativas(this.tramite, 'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.estadoCatalog = data.datos ?? [];
     });
   }
@@ -241,7 +251,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method municipioCatalogChange
    */
   municipioCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(this.tramite, 'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.municipioCatalog = data.datos ?? [];
     });
   }
@@ -251,7 +261,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method coloniaCatalogChange
    */
   coloniaCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoColonias(220201,'15058').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoColonias(this.tramite, '15058').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.coloniaCatalog = data.datos ?? [];
     });
   }
@@ -336,7 +346,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   }
 
   onBuscar(): void {
-    if (this.plantaTifForm.valid) {      
+    if (this.plantaTifForm.valid) {
       // Implementar lógica de búsqueda
     }
   }
