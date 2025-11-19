@@ -30,6 +30,38 @@
                      </div>
                </div>
             </div>
+
+            @if(isFraccionTIGIE){
+              <div class="col-md-4">
+               <div class="form-group">
+                  <label class="form-label" for="fraccionTigiePartidasDeLaMercancia">Fracción arancelaria TIGIE*:</label>
+                  <input class="form-control" type="text" id="fraccionTigie"
+                  formControlName="fraccionTigiePartidasDeLaMercancia" appUppercase aria-labelledby="fraccionTigie"
+                  (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionTigiePartidasDeLaMercancia')" />
+                  @if (partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.invalid && partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.touched) {
+                  <div class="text-danger">
+                     @if (partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.errors?.['required']) {
+                        <small>Este campo es obligatorio.</small>
+                     } @else if (partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.errors?.['pattern']) {
+                        <small>Solo se permiten números.</small>
+                     } @else if (partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.errors?.['maxlength']) {
+                        <small>Máximo 18 caracteres.</small>
+                     }
+                  </div>
+                  }
+               </div>
+            </div>
+            <div class="col-md-4">
+               <div class="form-group">
+                  
+                  <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
+                  formControlName="fraccionDescripcionPartidasDeLaMercancia"
+                  (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+               </div>
+            </div>
+            }
+            @if(!isFraccionTIGIE){
             <div class="col-md-4">
                <div class="form-group">
                   <label class="form-label me-2" for="valorPartidaUSD">Valor partida USD<span 
@@ -65,6 +97,7 @@
                   </div>
                </div>
             </div>
+            }
          </div>
          <div class="row">
             <div class="col-md-8">
@@ -86,6 +119,43 @@
                   </div>
                </div>
             </div>
+            @if(isFraccionTIGIE){
+            <div class="col-md-4">
+               <div class="form-group">
+                  <label class="form-label me-2" for="valorPartidaUSD">Valor partida USD<span 
+                     [ngClass]="{'text-danger': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
+                     >*</span>:</label>
+                  <span class="bi bi-question-circle-fill"
+                     tooltip="En caso de no contar con valor factura proporciona el valor estimado"
+                     data-bs-toggle="tooltip"></span>
+                  <input class="form-control" type="text" id="valorPartidaUSD"
+                  formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" 
+                  [ngClass]="{'input-error': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
+                  (change)="
+                  setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')" 
+                  maxlength="20"
+                  />
+                  <div *ngIf="(mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))" class="text-danger">
+                     <small *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">
+                        Debe agregar el valor en dolares de la partida
+                     </small>
+                     <small
+                     *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimalesUSD')">
+                     El Valor USD no cumple el formato especificado. Formato es máximo 16 dígitos enteros y máximo 3 decimales.
+                     </small>
+                     <small
+                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('noEsNumero')">
+                     Por favor, escribe un número entero válido</small>
+                     <small
+                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                     valor debe ser mayor o igual a 0</small>
+                     <small
+                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                     20 caracteres permitidos</small>
+                  </div>
+               </div>
+            </div>
+         }
          </div>
          <div class="row mt-5">
             <div class="col-md-4"></div>

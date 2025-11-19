@@ -1,8 +1,9 @@
 
 import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -27,12 +28,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TablaDinamicaComponent,
     TooltipModule,
     AlertComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges {
+export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
   /**
    * Textos utilizados en el componente.
    * @type {typeof TEXTOS}
@@ -216,6 +218,14 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * @Input()
    */
   @Input() isInvalidaPartidas: boolean = false;
+  
+   /**
+     * Lista de elementos del catálogo de fracciones arancelarias.
+     * @type {Catalogo[]}
+     */
+    @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
+
+    @Input() isFraccionTIGIE: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -223,6 +233,22 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
   constructor(private fb: FormBuilder) {
     //  Constructor del componente
   }
+
+  ngOnInit(): void{
+      // Add only if they do NOT exist
+      this.addControlIfMissing('fraccionTigiePartidasDeLaMercancia');
+      this.addControlIfMissing('fraccionDescripcionPartidasDeLaMercancia');
+  }
+
+  private addControlIfMissing(controlName: string): void {
+  if (!this.partidasDelaMercanciaForm.contains(controlName)) {
+    this.partidasDelaMercanciaForm.addControl(
+      controlName,
+      new FormControl('', [])
+    );
+  }
+}
+
 
   /**
      * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.

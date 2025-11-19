@@ -1236,3 +1236,8 @@ export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/cat
  * @returns La ruta de la API como cadena de texto.
  */
 export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
+
+export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;
