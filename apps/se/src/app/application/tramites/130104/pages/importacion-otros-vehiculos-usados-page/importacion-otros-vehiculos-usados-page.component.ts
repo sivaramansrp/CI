@@ -169,11 +169,10 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
    * Objeto de tipo `AccionBoton` que contiene:
    *  - `valor`: El nuevo índice del paso.
    *  - `accion`: La acción a realizar ('cont' para continuar o 'ant' para retroceder).
-   */    
+   */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
     
-    // Handle step 1 navigation (save and continue)
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
       const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
@@ -184,11 +183,10 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
       }
       this.obtenerDatosDelStore(e);
     } 
-    // Handle direct navigation between steps
     else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
       this.pasoNavegarPor(e);
     } 
-  }  
+  }
   
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -212,12 +210,12 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
    * @param item Datos del estado del trámite 130104
    * @param e Acción del botón para navegación
    * @returns Promise con la respuesta JSON del servidor
-   */  
+   */
   guardar(item: Tramite130104State, e: AccionBoton): Promise<any> {
     const MERCANCIA = this.importacionOtrosVehiculosUsadosService.getPayloadDatos(item);
+    
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
-      "tipo_solicitud_pexim": item.defaultSelect,
       "mercancia": {
         "cantidadComercial": 0,
         "cantidadTarifaria": Number(item.cantidad),
@@ -261,13 +259,14 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
       "entidadFederativa": {
         "cveEntidad": item.entidad
       },
-      "listaPaises": item.fechasSeleccionadas
-    };      
+      "listaPaises": item.fechasSeleccionadas,
+      "tipo_solicitud_pexim": item.defaultSelect
+    };
+    
     return new Promise((resolve, reject) => {
       this.importacionOtrosVehiculosUsadosService.guardarDatosPost(PAYLOAD).subscribe({
         next: (response) => {
           const API_RESPONSE = doDeepCopy(response);
-          
           if (
             esValidObject(API_RESPONSE) &&
             esValidObject(API_RESPONSE.datos)

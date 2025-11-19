@@ -224,7 +224,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    * Este método toma las filas de `tableBodyData` dentro del objeto `item` y construye un
    * arreglo de objetos con los valores solicitados y autorizados.  
    * Convierte valores numéricos, extrae descripciones y agrega claves arancelarias y de unidad de medida.
-   */  
+   */    
   getPayloadDatos(item: Tramite130104State): unknown {
     const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
     return ROWS.map((row: any) => ({
@@ -238,7 +238,8 @@ export class ImportacionOtrosVehiculosUsadosService {
       importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
       importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
       fraccionArancelariaClave: item.fraccion,
-      unidadMedidaClave: item.unidadMedida
+      unidadMedidaClave: item.unidadMedida,
+      unidadMedidaDescripcion: "Pieza"
     }));
   }
   
