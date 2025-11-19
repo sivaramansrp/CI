@@ -8,13 +8,10 @@ import {
   ListaPasosWizard,
   Notificacion,
   NotificacionesComponent,
-  PAGO_DE_DERECHOS,
-  PasoFirmaComponent,
-  WizardComponent,
+  PAGO_DE_DERECHOS, WizardComponent
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { CodigoRespuesta } from '../../../../core/enums/aga-core-enum';
 import { CommonModule } from '@angular/common';
 import { EstadoSolicitud31907 } from '../../models/estado-solicitud-31907';
@@ -22,11 +19,11 @@ import { GuardarServiceT31907 } from '../../services/guardar.service';
 import { GuardarSolicitud31907Request } from '../../models/guardar-solicitud-request';
 import { MSG_REGISTRO_EXITOSO } from '../../../319/constantes/operaciones-de-comercio-exterior.enum';
 import { PASOS } from '../../constantes/cancelar-reporte-const';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ResultadoSolicitud } from '../../models/ResultadoSolicitud';
 import { Tramite31907Query } from '../../estados/query/tramite31907.query';
 import { Tramite31907Store } from './../../estados/store/tramite31907.store';
-
 /** Representa la forma cruda que puede venir desde el backend */
 interface ErrorModeloRaw {
   campo?: string;
@@ -48,7 +45,7 @@ interface ErrorModeloRaw {
     CommonModule,
     PasoUnoComponent,
     AlertComponent,
-    PasoFirmaComponent,
+    PasoDosComponent,
   ],
   templateUrl: './cancelar-reporte-mensual.component.html',
 })
@@ -86,6 +83,7 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente Wizard para controlar navegación programática.
    */
+  @ViewChild('wizard', { static: false })
   wizardComponent!: WizardComponent;
 
   /**
@@ -145,8 +143,7 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite31907Query: Tramite31907Query,
-    private tramiteStore: Tramite31907Store,
-    private route: ActivatedRoute,
+    private store: Tramite31907Store,
     private guardarService: GuardarServiceT31907
   ) {}
 
@@ -156,7 +153,6 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerEstadoSolicitud();
-    this.obtenerFolioTramiteRuta();
   }
 
   /**
@@ -170,18 +166,6 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
       .subscribe((estado) => {
         this.estadoSolicitud = estado;
       });
-  }
-
-  /**
-   * Obtiene el folio del trámite desde los parámetros de la ruta y lo guarda en el store.
-   * Se suscribe a los cambios en los parámetros de la ruta.
-   * Se debe remover al implementarse la logica de akita completa.
-   */
-  obtenerFolioTramiteRuta(): void {
-    this.route.params.subscribe((params) => {
-      this.folioTramite = params['folioTramite'];
-      this.tramiteStore.setFolioTramite(this.folioTramite);
-    });
   }
 
   /**
@@ -311,7 +295,7 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
    */
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
     const PAYLOAD: GuardarSolicitud31907Request = {
-      folioTramite: this.folioTramite,
+      numero_folio_tramite_original: this.estadoSolicitud.folioTramite,
       id_solicitud: this.estadoSolicitud.idSolicitud,
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -326,7 +310,7 @@ export class CancelarReporteComponent implements OnInit, OnDestroy {
           response.codigo === CodigoRespuesta.EXITO &&
           response.datos?.id_solicitud
         ) {
-          this.tramiteStore.setIdSolicitud(response.datos.id_solicitud);
+          this.store.setIdSolicitud(response.datos.id_solicitud);
           this.folioTemporal = response.datos.id_solicitud;
           return { exito: true };
         }

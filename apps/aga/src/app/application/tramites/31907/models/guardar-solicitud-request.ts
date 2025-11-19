@@ -11,7 +11,7 @@ export interface GuardarSolicitud31907Request {
   id_solicitud: number | null;
 
   /** foltio del tramite original */
-  folioTramite: string;
+  numero_folio_tramite_original: string;
 
     /** Datos del solicitante que realiza la solicitud. */
   solicitante: Solicitante;

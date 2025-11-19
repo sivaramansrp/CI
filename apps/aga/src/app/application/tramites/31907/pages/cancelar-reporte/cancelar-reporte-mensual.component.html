@@ -26,8 +26,7 @@
       @switch (indice) { @case (1) {
       <app-paso-uno></app-paso-uno>
       } @case (2) {
-      <paso-firma [idSolicitud]="this.estadoSolicitud.idSolicitud" [procedure]="31907"
-        [procedureUrl]="'solicitud'"></paso-firma>} }
+      <app-paso-dos [procedure]="31907" [procedureUrl]="''" />} }
 
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
 

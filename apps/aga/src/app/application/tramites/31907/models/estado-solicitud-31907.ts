@@ -10,5 +10,5 @@ export interface EstadoSolicitud31907 {
    * Folio del trámite.
    * @type {string}
    */
-  folioTramite?: string;
+  folioTramite: string;
 }
