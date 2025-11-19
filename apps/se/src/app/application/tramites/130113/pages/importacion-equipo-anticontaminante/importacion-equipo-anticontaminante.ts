@@ -148,13 +148,54 @@ export class ImportacionEquipoAnticontaminanteComponent {
      */
   @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
 
+  /**
+ * Folio temporal generado durante el proceso de captura de la solicitud.
+ *
+ * Se utiliza como referencia provisional antes de que se asigne un
+ * folio definitivo por parte del sistema.
+ *
+ * @type {string}
+ */
   folioTemporal: string = '';
+  /**
+   * Constructor del componente.
+   *
+   * Inicializa los servicios y stores necesarios para la gestión del trámite
+   * 130113. Además, se suscribe al estado de la solicitud mediante el query
+   * `tramite130113Query` para mantener sincronizada la información del componente.
+   *
+   * @param {ImportacionEquipoAnticontaminanteService} importacionEquipoAnticontaminanteService
+   *        Servicio encargado de consultar información relacionada con fracciones,
+   *        catálogos y operaciones del trámite.
+   *
+   * @param {Tramite130113Store} tramite130113Store
+   *        Store encargado de manejar el estado global del trámite 130113.
+   *
+   * @param {Tramite130113Query} tramite130113Query
+   *        Query utilizado para obtener observables del estado del trámite,
+   *        incluyendo la información de la solicitud.
+   *
+   * @param {ToastrService} toastrService
+   *        Servicio utilizado para mostrar notificaciones tipo *toast*
+   *        (éxito, error, advertencia, etc.).
+   */
   constructor(public importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService, public tramite130113Store: Tramite130113Store, public tramite130113Query: Tramite130113Query, public toastrService: ToastrService) { 
       this.tramite130113Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((solicitudState) => {
         this.solicitudState = solicitudState;
     });
   }
 
+  /**
+   * Avanza al siguiente paso del wizard.
+   *
+   * Este método ejecuta la lógica para continuar con el flujo del formulario,
+   * actualizando el índice del wizard y el objeto `datosPasos`.  
+   * 
+   * Nota: En este punto se realizará posteriormente la validación de los
+   * documentos cargados antes de permitir avanzar.
+   *
+   * @returns {void}
+   */
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
     this.wizardComponent.siguiente();
@@ -198,31 +239,20 @@ export class ImportacionEquipoAnticontaminanteComponent {
     this.cargaEnProgreso = carga;
   }
 
+  /**
+   * Retrocede al paso anterior del wizard.
+   *
+   * Ejecuta la acción de regresar un paso en el flujo del formulario mediante
+   * el componente `wizardComponent`. También actualiza el índice local y el
+   * índice almacenado en `datosPasos` para mantener la navegación sincronizada.
+   *
+   * @returns {void}
+   */
   anterior(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
-
-  /**
-   * Método para manejar el cambio de paso en el asistente.
-   * Recibe un evento con el valor del paso y la acción a realizar (continuar o retroceder).
-   */
-  /**
-   * Método para manejar el cambio de paso en el asistente.
-   * Recibe un evento con el valor del paso y la acción a realizar (continuar o retroceder).
-   * @param {AccionBoton} e - Evento con el valor y la acción del botón.
-   */
-  // getValorIndice(e: AccionBoton): void {
-  //   if (e.valor > 0 && e.valor < 4) {
-  //     this.indice = e.valor;
-  //     if (e.accion === 'cont') {
-  //       this.wizardComponent.siguiente();
-  //     } else {
-  //       this.wizardComponent.atras();
-  //     }
-  //   }
-  // }
 
   /**
      * Método para actualizar el índice del paso actual en el asistente.
@@ -270,7 +300,6 @@ export class ImportacionEquipoAnticontaminanteComponent {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Tramite130113State, e: AccionBoton): Promise<JSONResponse> {
-    console.log(item)
     const MERCANCIA = this.importacionEquipoAnticontaminanteService.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",

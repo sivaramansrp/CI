@@ -10,6 +10,9 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  * Este estado almacena toda la información relacionada con el trámite 130113.
  */
 export interface Tramite130113State {
+  /**
+   * Identificador numérico de la solicitud actual.
+   */
   idSolicitud: number;
   /** Producto seleccionado en el trámite. */
   producto: string;
@@ -98,9 +101,17 @@ export interface Tramite130113State {
     valorPartidaUSDPartidasDeLaMercancia: string;
     /** Descripción de las partidas de la mercancía */
     descripcionPartidasDeLaMercancia: string;
-
+    /**
+     * Clave de la fracción arancelaria TIGIE correspondiente a la partida
+     * de la mercancía. Este valor representa la fracción seleccionada dentro
+     * del catálogo TIGIE.
+     */
     fraccionTigiePartidasDeLaMercancia: string;
-
+    /**
+     * Descripción asociada a la fracción arancelaria TIGIE dentro de
+     * *Partidas de la mercancía*. Se utiliza para mostrar el detalle
+     * descriptivo de la fracción seleccionada.
+     */
     fraccionDescripcionPartidasDeLaMercancia: string;
   };
   /**   

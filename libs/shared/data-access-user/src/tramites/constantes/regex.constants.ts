@@ -1319,4 +1319,16 @@ export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
  */
 export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
 
+/**
+ * Expresión regular utilizada para eliminar todas las comas presentes en una cadena.
+ *
+ * @constant
+ * @type {RegExp}
+ * @example
+ * // Ejemplo de uso:
+ * const texto = "1,234,567";
+ * const resultado = texto.replace(REGEX_REMOVE_COMA, "");
+ * // resultado: "1234567"
+ */
+
 export const REGEX_REMOVE_COMA = /,/g;

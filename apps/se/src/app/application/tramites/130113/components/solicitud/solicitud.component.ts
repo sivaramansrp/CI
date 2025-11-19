@@ -123,6 +123,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   unidadCatalogo: Catalogo[] = [];
 
+  /**
+   * Lista de opciones del catálogo utilizadas para la modificación de la fracción
+   * arancelaria en la sección *Partidas de la mercancía*.
+   *
+   * Esta propiedad almacena los elementos del catálogo que se mostrarán en el
+   * componente (por ejemplo, en un dropdown o autocompletado) para que el usuario
+   * seleccione la fracción correspondiente.
+   */
   fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
@@ -133,7 +141,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
-
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -148,6 +155,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       controlName: 'clasificacion',
     },
   ];
+
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
@@ -220,7 +228,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      */
     public nuevaNotificacion!: Notificacion;
 
-    fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = []
+  /**
+   * Lista de elementos del catálogo que contienen las descripciones asociadas
+   * a las fracciones arancelarias dentro de *Partidas de la mercancía*.
+   *
+   * Esta propiedad se utiliza para poblar los controles (por ejemplo, un
+   * dropdown o autocompletado) donde el usuario puede seleccionar la descripción
+   * correspondiente a la fracción arancelaria.
+   */
+  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
    * Constructor del componente.
@@ -787,6 +803,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtiene la descripción de la fracción arancelaria correspondiente a las
+   * *Partidas de la mercancía* y actualiza la lista de descripciones del catálogo.
+   *
+   * Este método consume el servicio `getFraccionDescripcionPartidasDeLaMercanciaService`
+   * enviando el ID del procedimiento y el ID seleccionado por el usuario.
+   *
+   * @param {string} ID - Identificador de la fracción seleccionada.
+   * @returns {void}
+   */
   getFraccionDescripcionPartidasDeLaMercancia(ID: string): void {
       this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), ID)
         .subscribe((data)=>{
@@ -794,6 +820,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         });
     }
 
+  /**
+   * Obtiene todos los datos relacionados con una fracción arancelaria específica
+   * dentro de *Partidas de la mercancía*, actualizando la lista utilizada para la
+   * modificación de la fracción seleccionada.
+   *
+   * Este método consulta el mismo servicio que obtiene la descripción de la fracción,
+   * pero almacena el resultado en `fraccionModificationPartidasDeLaMercancia` para
+   * fines de edición o actualización.
+   *
+   * @param {string} id - Identificador de la fracción cuyos datos deben consultarse.
+   * @returns {void}
+   */
     getFraccionAllDatos(id: string): void {
     this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), id).subscribe((data) => {
       this.fraccionModificationPartidasDeLaMercancia = data as Catalogo[];
