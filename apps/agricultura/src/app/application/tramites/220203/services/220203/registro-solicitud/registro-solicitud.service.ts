@@ -1,13 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { API_POST_SOLICITUD_GUARDAR, Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import {
   FraccionArancelariaDecripcionModel
 } from '../../../../220201/models/220201/capturar-solicitud.model';
 import { API_GET_CATALOGO_FRACCION_ARANCELARIA, API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION, API_GET_SOLICITUDES_NICO_DESCRIPCION, API_GET_SOLICITUDES_UNIDAD_MEDIDA, API_GET_SOLICITUDES_RECENTES } from 'apps/agricultura/src/app/application/core/server/api-router';
 import { SolicitudData } from '../../../models/220203/importacion-de-acuicultura.module';
+import { GuardarSolicitud } from '../../../models/220203/guardar-solicitud.model';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +82,37 @@ export class RegistroSolicitudService {
         return response;
     }))
   }
+
+  /**
+ * Guarda los datos de todas las pestañas de la solicitud.
+ *
+ * @param tramite - El identificador numérico del trámite.
+ * * @param solicitud - El identificador de la solicitud.
+ * @returns Un observable que emite la respuesta de solicitudes recientes.
+ */
+  guardarSolicitud(tramite: number, solicitud: GuardarSolicitud): Observable<BaseResponse<any>> {
+    const ENDPOINT = `${this.host}` + API_POST_SOLICITUD_GUARDAR(tramite.toString());
+    return this.http
+      .post<BaseResponse<any>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
+  }
+
   }
 /**
 
@@ -96,3 +128,4 @@ function formatFechaCreacion(fecha_creacion: string): string {
   let fecha = `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
   return fecha;
 }
+

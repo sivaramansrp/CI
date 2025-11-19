@@ -403,6 +403,11 @@ export interface FilaSolicitud {
   descripcionPaisDeProcedencia?:string;
   certificadoInternacionalElectronico?:string;
   tipoDeProducto?:string;
+  idDescripcionFraccion: number;
+  /**
+ * Detalle de mercancia para fitosanitario.
+ */
+  lista_detalle_mercancia?: Detalles[];
 }
 
 /**

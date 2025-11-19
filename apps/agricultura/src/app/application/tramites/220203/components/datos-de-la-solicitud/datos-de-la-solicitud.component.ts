@@ -945,6 +945,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
                     mercancia.fraccion_arancelaria_corto || '',
                   descripcionFraccion:
                     mercancia.descripcion_fracción_arancelaria || '',
+                  idDescripcionFraccion: mercancia.idDescripcionFraccion || 0, 
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',

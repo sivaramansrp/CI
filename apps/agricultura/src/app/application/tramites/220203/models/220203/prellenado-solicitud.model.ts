@@ -56,6 +56,7 @@ export interface PrellenadoSolicitud {
       clave_paises_origen: string,
       clave_paises_procedencia: string,
       numero_lote: string,
+      idDescripcionFraccion: number,
       lista_detalle_mercancia: [
         {
           id_detalle_mercancia: number,

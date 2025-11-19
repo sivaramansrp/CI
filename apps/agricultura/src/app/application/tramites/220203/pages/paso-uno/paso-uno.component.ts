@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import {Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, firstValueFrom, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
@@ -9,6 +9,10 @@ import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-
 import { ReactiveFormsModule } from '@angular/forms';
 import{SolicitanteComponent} from '@libs/shared/data-access-user/src'
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
+import { Acuicultura, DestinatarioForm, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
+import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 
 
@@ -50,6 +54,12 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   indice: number = 1;
+
+  /**
+ * Estado de la consulta actual, contiene la información relevante del solicitante.
+ * @type {ConsultaioState}
+ */
+  public consultaState!: ConsultaioState;
 
   /**
    * Lista de secciones del formulario con sus respectivos índices, títulos y componentes asociados.
@@ -125,10 +135,15 @@ export class PasoUnoComponent implements OnDestroy {
    * @param {ConsultaioQuery} consultaQuery - Query para manejar el estado de las consultas
    * @memberof PasoUnoComponent
    */
-  constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
+  constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaioStore: ConsultaioStore,
+    private registroSolicitudService: RegistroSolicitudService
+  ) {
     this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe((seccionState) => {
+      this.consultaState = seccionState;
       if(seccionState.update){
               this.guardarDatosFormulario();
       }
@@ -204,7 +219,140 @@ async guardarDatosFormulario(): Promise<void> {
   }
 }
 
+  /**
+   * Guarda la solicitud.
+   * @method guardarSolicitud
+   */
+  guardarSolicitud(): Observable<string> {
 
+    return this.importacionDeAcuiculturaService.getAllDatosForma()
+      .pipe(
+        take(1), // solo la primera emisión
+        map(datos => this.crearPayload(datos)), // crear payload
+        switchMap(payload =>
+          this.registroSolicitudService.guardarSolicitud(220203, payload).pipe(take(1))
+        ),
+        tap(data => {
+          this.consultaioStore.update(state => ({
+            ...state,
+            id_solicitud: data.datos?.id_solicitud?.toString() ?? ''
+          }));
+        }),
+        map(data => data.codigo),
+        catchError(err => {
+          console.error('Error guardando solicitud:', err);
+          return 'error';
+
+        })
+      );
+  }
+
+  private crearPayload(datos: Acuicultura): GuardarSolicitud {
+    return {
+      id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
+        && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
+      datos_solicitud: {
+        cve_aduana: datos.realizarGroup.aduanaIngreso!,
+        oficina_inspeccion_sanidad_agropecuaria: datos.realizarGroup.oficinaInspeccion,
+        punto_inspeccion: datos.realizarGroup.puntoInspeccion,
+        numero_autorizacion: datos.realizarGroup.numeroGuia!,
+        clave_regimen: datos.realizarGroup.regimen,
+        numero_carro_ferrocarril: '', // no se encuentra en el formulario
+        mercancia: (datos.mercanciaGroup ?? []).map((t: FilaSolicitud) => ({
+          tipo_requisito: Number(t.tipoRequisito) ?? 0,
+          requisito: t.requisito ?? '',
+          numero_certificado: t.numeroCertificadoInternacional ?? '',
+          cve_fraccion: t.fraccionArancelaria ?? '',
+          id_fraccion_gubernamental: t.idDescripcionFraccion,
+          clave_nico: t.nico ?? '',
+          descripcion_mercancia: t.descripcion ?? '',
+          cantidad_umt: Number(t.cantidadUMT) ?? 0,
+          clave_unidad_medida: t.umt ?? '',
+          cantidad_umc: Number(t.cantidadUMC) ?? 0,
+          clave_unidad_comercial: t.umc ?? '',
+          id_uso_mercancia_tipo_tramite: Number(t.uso) ?? 0,
+          id_tipo_producto_tipo_tramite: Number(t.tipoDeProducto) ?? 0,
+          numero_lote: t.numeroDeLote ?? 0,
+          clave_paises_origen: t.paisDeOrigen ?? '',
+          clave_paises_procedencia: t.paisDeProcedencia ?? '',
+          idNombreCientifico: '',
+          lista_detalle_mercancia: (t.lista_detalle_mercancia ?? []).map(x => ({
+            id_vida_silvestre: String(x.nombreCientifico)
+          }))
+        }))
+      },
+
+      transporte: {
+        ide_medio_transporte: datos.formularioMovilizacion.medioDeTransporte,
+        identificacion_transporte: datos.formularioMovilizacion.identificacionTransporte,
+        ide_punto_verificacion: Number(datos.formularioMovilizacion.puntoVerificacion),
+        razon_social: datos.formularioMovilizacion.nombreEmpresaTransportista
+      },
+
+      terceros: {
+        terceros_exportador: (datos.datosForma ?? []).map((t: DestinatarioForm) => ({
+          tipo_persona_sol: "TIPERS.EXP",
+          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+          nombre: t.nombre,
+          apellido_paterno: t.primerApellido,
+          apellido_materno: t.segundoApellido ?? '',
+          razon_social: t.razonSocial,
+          pais: t.pais,
+          descripcion_ubicacion: t.domicilio ?? '',
+          lada: t.lada ?? '',
+          telefonos: t.telefono ?? '',
+          correo: t.correo ?? ''
+
+        })),
+        // hay que ver que TercerosrelacionadosdestinoTable se quede asi o lo agreuemos al tramite
+        terceros_destinatario: (datos.tercerosRelacionados ?? []).map((t: TercerosrelacionadosdestinoTable) => ({
+          tipo_persona_sol: "TIPERS.DES",
+          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+          num_establ_tif: "",
+          nom_establ_tif: "",
+          nombre: t.nombre,
+          apellido_paterno: t.primerApellido,
+          apellido_materno: t.segundoApellido ?? '',
+          razon_social: t.razonSocial,
+          pais: t.pais,
+          codigo_postal: t.codigoPostal,
+          cve_entidad: t.estado,
+          cve_deleg_mun: t.municipio ?? '',
+          cve_colonia: t.colonia ?? '',
+          calle: t.calle,
+          num_exterior: t.numeroExterior,
+          num_interior: t.numeroInterior ?? '',
+          lada: t.lada ?? '',
+          telefonos: t.telefono ?? '',
+          correo: t.correo ?? ''
+        })),
+      },
+
+      pago: {
+        exento_pago: datos.pagoDeDerechos.exentoPago?.toLowerCase() === 'si',
+        ide_motivo_exento_pago: datos.pagoDeDerechos.justificacion,
+        cve_referencia_bancaria: datos.pagoDeDerechos.claveReferencia,
+        cadena_pago_dependencia: datos.pagoDeDerechos.cadenaDependencia,
+        cve_banco: datos.pagoDeDerechos.banco,
+        llave_pago: datos.pagoDeDerechos.llavePago,
+        fec_pago: formatFecha(datos.pagoDeDerechos.fechaPago) ?? '',
+        imp_pago: Number(datos.pagoDeDerechos.importePago)
+      },
+      // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
+      solicitante: {
+        rfc: this.solicitante.datosGenerales?.datos.rfc_original ?? '',
+        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login
+        nombre: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitante.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitante.datosGenerales?.datos.identificacion.nombre ?? ''),
+        es_persona_moral: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
+        certificado_serial_number: 0 // no sabemos de donde se obtiene
+      },
+
+      representacion_federal: {
+        cve_entidad_federativa: "DGO", // aun no estan los datos login
+        cve_unidad_administrativa: "1016" // aun no hay datos login
+      }
+    };
+  }
 /**
  * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
  * Limpia los recursos suscritos y detiene las emisiones de datos para prevenir memory leaks.
