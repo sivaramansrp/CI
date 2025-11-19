@@ -1,11 +1,16 @@
+
 import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import {
   Catalogo,
+  CategoriaMensaje,
   ConsultaioQuery,
+  Notificacion,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
-  TituloComponent
+  TipoNotificacionEnum,
+  TituloComponent,
+  NotificacionesComponent
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -62,7 +67,15 @@ interface TableBodyData {
 @Component({
   selector: 'app-datos-del-tramite-dos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule,TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TableComponent,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    NotificacionesComponent
+  ],
   templateUrl: './datos-del-tramite-dos.component.html',
   styleUrl: './datos-del-tramite-dos.component.scss',
 })
@@ -80,6 +93,10 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
   /**
    * Índice de la mercancía seleccionada en la tabla
    */
+    /**
+     * Notificación que se muestra al usuario.
+     */
+  public nuevaNotificacion: Notificacion | undefined;
 
 onMercanciaRowsSelected(rows: AgentestableDatos[]) {
   this.selectedMercanciaRows = rows;
@@ -93,9 +110,37 @@ onMercanciaRowsSelected(rows: AgentestableDatos[]) {
 }
 
   /**
-   * Elimina la mercancía seleccionada de la tabla
+   * Maneja la respuesta del modal de confirmación de eliminación
    */
-  eliminarMercancia() {
+  onEliminarConfirmacion(confirmado: boolean) {
+    if (confirmado) {
+      this.confirmarEliminarMercancia();
+    } else {
+      this.nuevaNotificacion = undefined;
+    }
+  }
+  /**
+   * @method abrirElimninarConfirmationopup
+   * Abre un popup de confirmación para eliminar los registros seleccionados.
+   * Si no hay registros seleccionados, no realiza ninguna acción.
+   */
+  abrirElimninarConfirmationopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+
+  /**
+   * Confirma la eliminación después de aceptar en el popup
+   */
+  confirmarEliminarMercancia() {
     if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
       this.selectedMercanciaRows.forEach(row => {
         const idx = this.mercanciTablaDatos.findIndex(item => item === row);
@@ -108,6 +153,16 @@ onMercanciaRowsSelected(rows: AgentestableDatos[]) {
     
       this.canDelete = false;
       this.canEdit = false;
+      this.nuevaNotificacion = undefined;
+    }
+  }
+
+  /**
+   * Elimina la mercancía seleccionada de la tabla
+   */
+  eliminarMercancia() {
+    if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
+      this.abrirElimninarConfirmationopup();
     }
   }
 

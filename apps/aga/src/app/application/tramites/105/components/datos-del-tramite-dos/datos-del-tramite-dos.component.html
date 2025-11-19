@@ -181,5 +181,12 @@
       </div>
     </div>
   </div>
+<!-- Notificación de confirmación de eliminación -->
+<lib-notificaciones
+  *ngIf="nuevaNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="onEliminarConfirmacion($event)">
+</lib-notificaciones>
+
 
  
