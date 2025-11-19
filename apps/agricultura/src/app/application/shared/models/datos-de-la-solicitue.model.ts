@@ -560,3 +560,10 @@ export interface DetallasDatos {
   fechaFinCaducidadProducto?: string;
 
 }
+
+export interface DetalleVidaSilvestre {
+  idDetalleMercancia: number;
+  idMercanciaGob: number;
+  idVidaSilvestre: number;
+  nombreCientifico: string;
+}

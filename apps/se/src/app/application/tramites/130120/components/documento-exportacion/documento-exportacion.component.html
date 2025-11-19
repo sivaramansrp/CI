@@ -32,6 +32,7 @@
                 <input-fecha
                 [datos]="fechaDocumentoDatos"
                 required="true"
+                [isDisabled]="esFormularioSoloLectura"
                 [setFecha]="datosExporta.get('fecha_documento')?.value"
                 (valorCambiado)="fechaDocumento($event)">
                 </input-fecha>

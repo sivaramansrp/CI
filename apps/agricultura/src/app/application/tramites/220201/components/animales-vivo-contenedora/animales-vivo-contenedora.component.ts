@@ -295,13 +295,12 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
         map((estado) => {
           this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
-          console.warn('VALOR', VALOR);
           const DATA = estado?.selectedDatos.find(v => v.id === VALOR?.id);
-          
+
           if (DATA) {
             DATA.modificado = true; // Establece modificado a true si hay datos seleccionados
             this.formularioSolicitud = AnimalesVivoContenedoraComponent.createFormularioFromValor(DATA);
-          }         
+          }
         })
       )
       .subscribe();
@@ -462,14 +461,14 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
     // Elimina el valor anterior si existe
     const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
     const FILTERED_VALOR = VALOR.filter(
-        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
-      );
-      this.fitosanitarioStore.update(
-        (state) => ({
-          ...state,
-          tablaDatos: FILTERED_VALOR
-        })
-      );
+      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+    );
+    this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        tablaDatos: FILTERED_VALOR
+      })
+    );
 
     this.updateStoreWithDatos(DATOS);
   }

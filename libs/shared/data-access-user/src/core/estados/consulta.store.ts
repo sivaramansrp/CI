@@ -84,6 +84,17 @@ export class ConsultaioStore extends Store<ConsultaioState> {
       idSolicitudSeleccionada
     }));
   }
+
+  /**
+  * Actualiza el ID de la solicitud en el estado de Consultaio.
+  * @param idSolicitud - El nuevo ID de la solicitud.
+  */
+  public setIdSolicitud(idSolicitud:string): void {
+    this.update(state => ({
+      ...state,
+      id_solicitud:idSolicitud
+    }));
+  }
   /**
  * Actualiza la información del solicitante en el estado de Consultaio.
  * 

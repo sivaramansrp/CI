@@ -47,14 +47,15 @@ export interface DatosDelContenedor {
  */
 export interface GridContenedores {
   id?: number;
-  inicialesContenedor: string;
-  numeroContenedor: number;
-  digitoVerificador?: string;
+  iniciales_contenedor: string;
+  numero_contenedor: number;
+  digito_verificador?: string;
   digito: number;
-  tipoContenedor: string;
-  estadoConstancia?: string;
+  tipo_contenedor: string;
+  estado_constancia?: string;
   aduana: number;
-  existeEnVUCEM?: string;
+  existe_en_vucem?: string;
+  puede_registrar?: string;
 }
 
 /**
@@ -169,12 +170,13 @@ export interface ConsultaDatos {
  */
 export interface DatosDelCsvArchivo {
   id?: number;
-  inicialesContenedor: string;
-  numeroContenedor: number;
-  digitoVerificador?: string;
+  iniciales_contenedor: string;
+  numero_contenedor: number;
+  digito_verificador?: string;
   digito: number;
-  tipoContenedor: string;
-  estadoConstancia?: string;
+  tipo_contenedor: string;
+  estado_constancia?: string;
   aduana: number;
-  existeEnVUCEM?: string;
+  existe_en_vucem?: string;
+  puede_registrar?: string;
 }
