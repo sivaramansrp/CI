@@ -466,8 +466,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
           "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
-      ];
+      ];      
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      
+      this.tramite130104Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+      
       this.partidasDelaMercanciaForm.reset();
       const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
       const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);

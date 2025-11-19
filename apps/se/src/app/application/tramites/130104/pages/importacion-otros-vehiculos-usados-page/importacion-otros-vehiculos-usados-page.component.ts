@@ -136,31 +136,26 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
       takeUntil(this.destroyed$)).subscribe((solicitudState) => {
       this.solicitudState = solicitudState;
     });
-  }
-
-  /**
+  }  
+      /**
    * Navega a través de los pasos del asistente según la acción del botón.
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
   pasoNavegarPor(e: AccionBoton): void {
-    this.indice = e.valor;
-    this.datosPasos.indice = e.valor;
     if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-        if (e.valor > 0 && e.valor < 5) {
-          this.alertaNotificacion = {
-            tipoNotificacion: 'banner',
-            categoria: 'success',
-            modo: 'action',
-            titulo: '',
-            mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
-            cerrar: true,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-
-        }
+        this.alertaNotificacion = {
+          tipoNotificacion: 'banner',
+          categoria: 'success',
+          modo: 'action',
+          titulo: '',
+          mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+          cerrar: true,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
       } else {
         this.wizardComponent.atras();
       }
@@ -174,29 +169,40 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
    * Objeto de tipo `AccionBoton` que contiene:
    *  - `valor`: El nuevo índice del paso.
    *  - `accion`: La acción a realizar ('cont' para continuar o 'ant' para retroceder).
-   */
+   */    
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
+    
+    // Handle step 1 navigation (save and continue)
     if (this.indice === 1 && e.accion === 'cont') {
       this.datosPasos.indice = 1;
       const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
+      
       if (!ISVALID) {
         this.esFormaValido = true;
         return;
       }
       this.obtenerDatosDelStore(e);
-    } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
+    } 
+    // Handle direct navigation between steps
+    else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
       this.pasoNavegarPor(e);
-    }
-  }
+    } 
+  }  
+  
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(e: AccionBoton): void {
     this.importacionOtrosVehiculosUsadosService.getAllState()
       .pipe(take(1))
-      .subscribe((data) => {
-        this.guardar(data, e);
+      .subscribe({
+        next: (data) => {
+          this.guardar(data, e);
+        },
+        error: (error) => {
+          console.error('Error getting state data:', error);
+        }
       });
   }
 
@@ -206,12 +212,12 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
    * @param item Datos del estado del trámite 130104
    * @param e Acción del botón para navegación
    * @returns Promise con la respuesta JSON del servidor
-   */
+   */  
   guardar(item: Tramite130104State, e: AccionBoton): Promise<any> {
     const MERCANCIA = this.importacionOtrosVehiculosUsadosService.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
-      "tipo_solicitud_pexim": item.solicitud,
+      "tipo_solicitud_pexim": item.defaultSelect,
       "mercancia": {
         "cantidadComercial": 0,
         "cantidadTarifaria": Number(item.cantidad),
@@ -256,61 +262,55 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
         "cveEntidad": item.entidad
       },
       "listaPaises": item.fechasSeleccionadas
-    };
-
+    };      
     return new Promise((resolve, reject) => {
-      let shouldNavigate = false;
-      this.importacionOtrosVehiculosUsadosService.guardarDatosPost(PAYLOAD).subscribe(
-        (response) => {
-          shouldNavigate = response.codigo === '00';
-          if (shouldNavigate) {
-            const API_RESPONSE = doDeepCopy(response);
-            if (
-              esValidObject(API_RESPONSE) &&
-              esValidObject(API_RESPONSE.datos)
-            ) {
-              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-                this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
-                this.tramite130104Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+      this.importacionOtrosVehiculosUsadosService.guardarDatosPost(PAYLOAD).subscribe({
+        next: (response) => {
+          const API_RESPONSE = doDeepCopy(response);
+          
+          if (
+            esValidObject(API_RESPONSE) &&
+            esValidObject(API_RESPONSE.datos)
+          ) {
+            if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+              this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+              this.tramite130104Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+            } else {
+              this.tramite130104Store.setIdSolicitud(0);
+            }
+            
+            if (e.valor > 0 && e.valor < 5) {
+              this.indice = e.valor;
+              
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+                this.indice = 2;
+                this.datosPasos.indice = 2;
+                
+                this.alertaNotificacion = {
+                  tipoNotificacion: 'banner',
+                  categoria: 'success',
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                  cerrar: true,
+                  txtBtnAceptar: '',
+                  txtBtnCancelar: '',
+                };
               } else {
-                this.tramite130104Store.setIdSolicitud(0);
-              }
-              if (e.valor > 0 && e.valor < 5) {
-                this.indice = e.valor;
-
-                if (e.valor > 0 && e.valor < 5) {
-                  this.indice = e.valor;
-                  if (e.accion === 'cont') {
-                    this.wizardComponent.siguiente();
-                    if (e.valor > 0 && e.valor < 5) {
-                      this.alertaNotificacion = {
-                        tipoNotificacion: 'banner',
-                        categoria: 'success',
-                        modo: 'action',
-                        titulo: '',
-                        mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
-                        cerrar: true,
-                        txtBtnAceptar: '',
-                        txtBtnCancelar: '',
-                      };
-
-                    }
-                  } else {
-                    this.wizardComponent.atras();
-                  }
-                }
+                this.wizardComponent.atras();
               }
             }
-            this.toastrService.success(response.mensaje);
-            resolve(response);
-          } else {
-            this.toastrService.error(response.mensaje);
           }
+          
+          this.toastrService.success(response.mensaje);
+          resolve(response);
         },
-        (error) => {
+        error: (error) => {
+          console.error('Error saving data:', error);
           reject(error);
         }
-      );
+      });
     });
   }
 
