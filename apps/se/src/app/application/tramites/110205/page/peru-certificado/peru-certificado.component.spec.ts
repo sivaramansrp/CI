@@ -225,12 +225,6 @@ describe('PeruCertificadoComponent', () => {
         'productorMismoExportador': {}
       }
     });
-    // expect(component.peruCertificadoService.buildProductoresPorExportador).toHaveBeenCalled();
-    // expect(component.peruCertificadoService.buildMercanciasProductor).toHaveBeenCalled();
-    // expect(component.peruCertificadoService.guardarDatosPost).toHaveBeenCalled();
-    // expect(component.tramite110205Store.setIdSolicitud).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
-    // expect(component.toastr.error).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -238,8 +232,6 @@ describe('PeruCertificadoComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

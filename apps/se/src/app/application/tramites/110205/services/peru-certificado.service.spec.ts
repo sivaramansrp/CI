@@ -31,35 +31,30 @@ describe('PeruCertificadoService', () => {
     service.http = service.http || {};
     service.http.get = jest.fn().mockReturnValue(observableOf({}));
     service.obtenerMenuDesplegable({});
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerTablaDatos()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerTablaDatos({});
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerProductorPorExportador()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.get = jest.fn();
     service.obtenerProductorPorExportador({});
-    // expect(service.httpService.get).toHaveBeenCalled();
   });
 
   it('should run #obtenerProductoruNevo()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.obtenerProductoruNevo({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #obtenerMercancia()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.obtenerMercancia();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #actualizarEstadoFormulario()', async () => {
@@ -68,21 +63,18 @@ describe('PeruCertificadoService', () => {
       null
     ]);
     service.actualizarEstadoFormulario({});
-    // expect(service.tramite110205Store.update).toHaveBeenCalled();
   });
 
   it('should run #getRegistroTomaMuestrasMercanciasData()', async () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.getRegistroTomaMuestrasMercanciasData();
-    // expect(service.http.get).toHaveBeenCalled();
   });
 
   it('should run #getTipoFactura()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.get = jest.fn();
     service.getTipoFactura();
-    // expect(service.httpService.get).toHaveBeenCalled();
   });
 
   it('should run #getAllState()', async () => {
@@ -96,21 +88,18 @@ describe('PeruCertificadoService', () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.guardarDatosPost({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #postSolicitud()', async () => {
     service.http = service.http || {};
     service.http.post = jest.fn().mockReturnValue(observableOf('post'));
     service.postSolicitud({});
-    // expect(service.http.post).toHaveBeenCalled();
   });
 
   it('should run #buscarMercanciasCert()', async () => {
     service.httpService = service.httpService || {};
     service.httpService.post = jest.fn().mockReturnValue(observableOf('post'));
     service.buscarMercanciasCert({});
-    // expect(service.httpService.post).toHaveBeenCalled();
   });
 
   it('should run #buildProductoresPorExportador()', async () => {
