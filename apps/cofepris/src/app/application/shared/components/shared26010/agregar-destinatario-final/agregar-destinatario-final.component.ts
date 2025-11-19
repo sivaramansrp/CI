@@ -597,8 +597,7 @@ private setupNonModalMode(): void {
   "codigoPostal",
   "colonia",
   "calle",
-  "numeroExterior",
-  "correoElectronico"
+  "numeroExterior"
         ]
       }
       else if(this.agregarDestinatarioFinal.get('tipoPersona')?.value===this.tipoPersona.MORAL){

@@ -15,6 +15,7 @@ import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
  * @description Estado que representa los datos de un trámite 260103, incluyendo tablas de datos, formularios y configuraciones.
  */
 export interface Tramite260103State {
+  destinatarioFinalTablaDatos: Destinatario[];
     /**
    * Identificador de la solicitud (opcional).
   */
@@ -67,6 +68,7 @@ export interface Tramite260103State {
  */
 export function createInitialState(): Tramite260103State {
   return {
+    destinatarioFinalTablaDatos:[],
     idSolicitud:0,
     fabricanteTablaDatos: [],
     destinatarioTableDatos: [],
@@ -278,6 +280,17 @@ export class Tramite260103Store extends Store<Tramite260103State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+    /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
     }));
   }
 }

@@ -181,68 +181,58 @@ export class GuardarAdapter_260103 {
         idSolicitud: "",
       })),
 
-      gridTerceros_TIPERS_DES: state.destinatarioTableDatos.map(d => ({
-        idPersonaSolicitud: 1,
-        ideTipoTercero: "TIPERS.FAB",
-        personaMoral: d.tipoPersona === "Moral" ? "1" : "0",
-        booleanExtranjero: "0",
-        booleanFisicaNoContribuyente: "0",
-
-        denominacion: d.razonSocial,
-        razonSocial: d.razonSocial,
-
-        rfc: d.rfc,
-        curp: d.curp,
-
-        nombre: d.nombres,
-        apellidoPaterno: d.primerApellido,
-        apellidoMaterno: d.segundoApellido,
-
-        telefono: d.telefono,
-        correoElectronico: d.correoElectronico,
-
-        actividadProductiva:"",
-        actividadProductivaDesc: "",
-        descripcionGiro: "",
-        numeroRegistro:"",
-
-        domicilio: {
-          calle: d.calle,
-          numeroExterior: d.numeroExterior,
-          numeroInterior: d.numeroInterior,
-
-          pais: {
-            clave: d.paisObj?.clave,
-            nombre: d.paisObj?.descripcion
-          },
-
-          colonia: {
-            clave: d.coloniaObj?.clave,
-            nombre: d.coloniaObj?.descripcion
-          },
-
-          delegacionMunicipio: {
-            clave: d.municipioObj?.clave,
-            nombre: d.municipioObj?.descripcion
-          },
-
-          localidad: {
-            clave: d.localidadObj?.clave,
-            nombre: d.localidadObj?.descripcion
-          },
-
-          entidadFederativa: {
-            clave:"",
-            nombre: ""
-          },
-
-          informacionExtra:"",
-          codigoPostal: d.codigoPostal,
-          descripcionColonia: d.colonia
+      gridTerceros_TIPERS_DES:[
+    {
+        "idPersonaSolicitud": 1,
+        "ideTipoTercero": "TIPERS.FAB",
+        "personaMoral": "0",
+        "booleanExtranjero": "0",
+        "booleanFisicaNoContribuyente": "0",
+        "denominacion": "",
+        "razonSocial": "",
+        "rfc": "test",
+        "curp": "",
+        "nombre": "test",
+        "apellidoPaterno": "tesst",
+        "apellidoMaterno": "test",
+        "telefono": "",
+        "correoElectronico": "",
+        "actividadProductiva": "",
+        "actividadProductivaDesc": "",
+        "descripcionGiro": "",
+        "numeroRegistro": "",
+        "domicilio": {
+            "calle": "test",
+            "numeroExterior": "test",
+            "numeroInterior": "",
+            "pais": {
+                "clave": "DEU",
+                "nombre": "ALEMANIA (REPUBLICA FEDERAL DE)"
+            },
+            "colonia": {
+                "clave": "02261311999",
+                "nombre": "OTRA NO ESPECIFICADA EN EL CATALOGO"
+            },
+            "delegacionMunicipio": {
+                "clave": "16022",
+                "nombre": "CHARO"
+            },
+            "localidad": {
+                "clave": "02261312001",
+                "nombre": "JARIPEO - CP 61312"
+            },
+            "entidadFederativa": {
+                "clave": "",
+                "nombre": ""
+            },
+            "informacionExtra": "",
+            "codigoPostal": "",
+            "descripcionColonia": "OTRA NO ESPECIFICADA EN EL CATALOGO"
         },
-
-        idSolicitud: ""
-      })),
+        "idSolicitud": ""
+    }
+],
+      
 
       pagoDeDerechos: {
         claveDeReferencia: state.pagoDerechos.claveReferencia,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import {
   Destinatario,
@@ -14,6 +14,7 @@ import { ID_PROCEDIMIENTO } from '../../constants/importacion-retorno-sanitario.
 import { TercerosRelacionadosComponent } from '../../../../shared/components/shared26010/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
+import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -39,7 +40,7 @@ import { Tramite260103Store } from '../../estados/tramite260103Store.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.css',
 })
-export class TercerosRelacionadosVistaComponent 
+export class TercerosRelacionadosVistaComponent implements OnInit
 
   {
   /**
@@ -179,6 +180,7 @@ export class TercerosRelacionadosVistaComponent
 
     private consultaQuery: ConsultaioQuery,
     private tramiteStore: Tramite260103Store,
+    private tramiteQuery:Tramite260103Query
   ) {
     // Suscripción para actualizar el estado de solo lectura del formulario
     this.consultaQuery.selectConsultaioState$
@@ -189,6 +191,19 @@ export class TercerosRelacionadosVistaComponent
         })
       )
       .subscribe();
+  }
+  ngOnInit(): void {
+    this.tramiteQuery.getFabricanteTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.fabricanteTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getDestinatarioFinalTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.destinatarioFinalTablaDatos = data;
+         });
   }
 
   /**
