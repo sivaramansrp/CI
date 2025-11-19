@@ -1,20 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
-import { DetalleResponse, Mercancia, Productor, RepresentacionFederal, Solicitante } from "../../models/detalle-response.model";
+import { of, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosExportadorComponent } from "../../components/datos-exportador/datos-exportador.component";
 import { DatosMercanciaComponent } from "../../components/datos-mercancia/datos-mercancia.component";
 import { DatosProductorComponent } from "../../components/datos-productor/datos-productor.component";
 import { DetalleEvaluaconSolicitudService } from "../../services/detalleEvaluaconSolicitud.service";
 import { DocumentoExportacionComponent } from "../../components/documento-exportacion/documento-exportacion.component";
-import { Exportador } from '../../models/guardar-solicitud-request.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PermisoImportacionService } from "../../services/permiso-importacion.service";
 import { RepresentacionFederalComponent } from "../../components/representacion-federal/representacion-federal.component";
 import { Subject } from 'rxjs';
 import { TramiteRealizerComponent } from "../../components/tramite_realizer/tramite_realizer.component";
-import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -74,6 +72,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   numeroFolio: string = '';
 
   /**
+   * Flag para controlar si ya se ejecutó el servicio de detalle.
+   */
+  private yaEjecutoServicio: boolean = false;
+
+  /**
    * Constructor del componente.
    * Suscribe al estado de consulta y actualiza la propiedad consultaState.
    * @param consultaQuery Servicio para consultar el estado de la consulta.
@@ -94,33 +97,27 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
+      switchMap((seccionState) => {
         this.consultaState = seccionState;
         this.numeroFolio = this.consultaState.folioTramite;
-      })
-    ).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
-
-  /**
-   * Guarda los datos del formulario obtenidos del servicio.
-   * Actualiza el estado del formulario con la respuesta del servidor.
-   */
-  guardarDatosFormulario(): void {
-    this.servicioDetalle
-      .getDetalleEvaluacionSolicitud(this.numeroFolio).pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if (resp && resp.datos) {
-          this.esDatosRespuesta = true;
-          this.permisoImportacionService.actualizarEstadoFormulario(resp.datos);
+        
+        // Solo ejecutar el servicio si es necesario y no se ha ejecutado antes
+        if (this.consultaState.update && !this.yaEjecutoServicio && this.numeroFolio) {
+          this.yaEjecutoServicio = true;
+          return this.servicioDetalle.getDetalleEvaluacionSolicitud(this.numeroFolio);
         }
-      });
+        
+        if (!this.consultaState.update && !this.esDatosRespuesta) {
+          this.esDatosRespuesta = true;
+        }
+        return of(null);
+      })
+    ).subscribe((resp) => {
+      if (resp && resp.datos) {
+        this.esDatosRespuesta = true;
+        this.permisoImportacionService.actualizarEstadoFormulario(resp.datos);
+      }
+    });
   }
 
   /**
