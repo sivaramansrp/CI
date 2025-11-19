@@ -22,7 +22,7 @@ import {
   TipoPersona,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -294,8 +294,8 @@ export class AgregarDestinatarioFinalComponent
    */
   constructor(
     private fb: FormBuilder,
-    private ubicaccion: Location,
-    private catalogoServices: CatalogoServices
+    private catalogoServices: CatalogoServices,
+    
   ) {
     //constructor necesario para el servicio
   }
@@ -612,7 +612,6 @@ private setupNonModalMode(): void {
   "colonia",
   "calle",
   "numeroExterior",
-  "correoElectronico"
 ]
 
       }
@@ -1547,4 +1546,6 @@ private actualizarEstadoHabilitacionDesplegables(): void {
     this.estaDeshabilitadoDesplegable = true;
   }
 }
+ 
+
 }

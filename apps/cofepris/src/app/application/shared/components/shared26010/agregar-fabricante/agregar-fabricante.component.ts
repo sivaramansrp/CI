@@ -9,6 +9,9 @@ import {
 import {
   AlertComponent,
   Catalogo,
+  doDeepCopy,
+  esValidArray,
+  getValidDatos,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -42,6 +45,7 @@ import { Fabricante } from '../models/terceros-relacionados.model';
 import { FabricanteRequiredField } from '../models/datos-solicitud.model';
 import { PROCEDIMIENTOS_MUESTRAN_RFC } from '../../../constantes/terceros-relacionados-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Shared2605Service } from '../../../services/shared2605/shared2605.service';
  interface OpcionesPublicacion{
   label: string;
   value: string;
@@ -371,9 +375,9 @@ label: 'Moral',
    */
   constructor(
     private fb: FormBuilder,
-    private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
-    private catalogoService: CatalogoServices
+    private catalogoService: CatalogoServices,
+      private _sharedSvc: Shared2605Service,
   ) {
     //constructor necesario para inyectar el servicio
   }
@@ -806,31 +810,13 @@ switch(this.idProcedimiento) {
       this.requiredFieldVlidator =[
           "tipoPersona",
          "rfc",
-          "curp",
-           "nombres",
-   "primerApellido",
-  "pais",
-  "estado",
-  "municipio",
-  "localidad",
-  "codigoPostal",
-  "colonia",
-  "calle",
-  "numeroExterior"
+         
       ]
        }
     else if(this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.MORAL){
   this.requiredFieldVlidator =[
      "tipoPersona",
-         "rfc",
-          "curp",
-          "razonSocial",
-  "pais",
-  "estado",
-  "municipio",
-  "codigoPostal",
-  "calle",
-  "numeroExterior",
+         "rfc"
 
   ]
     }
@@ -1332,6 +1318,44 @@ changeTipoPersona(): void {
     return (
       PROCEDIMIENTOS_MUESTRAN_RFC.includes(this.idProcedimiento)
     );
+  }
+   buscar(form: FormGroup): void {
+    const PROCEDIMIENTO = String(this.idProcedimiento);
+
+    if (form.get('rfc')?.valid && getValidDatos(form.get('rfc')?.value)) {
+      const PAYLOAD = {
+        "rfcRepresentanteLegal": form.get('rfc')?.value
+      }
+      this._sharedSvc.getRepresentanteLegala(PAYLOAD, PROCEDIMIENTO).pipe(takeUntil(this.unsubscribe$))
+      .subscribe((response) => {
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidArray(API_RESPONSE.datos)) {
+        this.agregarFabricanteForm.patchValue({
+          rfc: API_RESPONSE.datos[0].rfc,
+          curp: API_RESPONSE.datos[0].curp,
+          nombres: API_RESPONSE.datos[0].nombre,
+          primerApellido: API_RESPONSE.datos[0].primerApellido,
+          segundoApellido: API_RESPONSE.datos[0].segundoApellido,
+          razonSocial: API_RESPONSE.datos[0].razonSocial,
+          pais: API_RESPONSE.datos[0].paisObj?.clave || '',
+          estado: API_RESPONSE.datos[0].entidadFederativaObj?.clave || '',
+          municipio: API_RESPONSE.datos[0].municipioAlcaldiaObj?.clave || '',
+          localidad: API_RESPONSE.datos[0].localidadObj?.clave || '',
+          codigoPostal: API_RESPONSE.datos[0].codigoPostalObj?.clave || '',
+          colonia: API_RESPONSE.datos[0].coloniaObj?.clave || '',
+          calle: API_RESPONSE.datos[0].calle,
+          numeroExterior: API_RESPONSE.datos[0].numeroExterior,
+          numeroInterior: API_RESPONSE.datos[0].numeroInterior,
+          lada: API_RESPONSE.datos[0].lada,
+          telefono: API_RESPONSE.datos[0].telefono,
+          correoElectronico: API_RESPONSE.datos[0].correoElectronico,
+        })
+          // form.patchValue(DATOS);
+        }
+      });
+    } else {
+      form.get('rfc')?.markAsTouched();
+    }
   }
   /**
    * Hook que se ejecuta al destruir el componente.
