@@ -345,6 +345,12 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
  * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consul…
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20solicitud/consulta-solicitudes-pendientes
+ */
+export const API_GET_BANDEJA_SOLICITUDES = 'bandeja-tarea/solicitudes-pendientes';
  
 /**
  * API para recuperar el catálogo de regímenes aduaneros.
@@ -1184,6 +1190,21 @@ export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${T
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
 
 /**
+ * API para guardar la solicitud
+ */
+export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
+
+export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
+
+export const API_REPRESENTACION_FEDERAL_PARAM = (TRAMITE: string, ESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/${ESTADO}`;
+
+/**
+ * API para obtener el catálogo de régimen enum por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/regimen-enum
+ */
+export const CATALOGO_REGIMEN_ENUM = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/regimen-enum`;
+
+/**
  * API para obtener el catálogo de tipo de mecanismo de asignación por trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/tipo-mecanismo-asignacion
  */
@@ -1201,9 +1222,28 @@ export const CATALOGO_NOMBRE_PRODUCTO = (TRAMITE: string): string => `sat-t${TRA
  */
 export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/nombre-subproducto`;
 
-
 /**
  * API para obtener el catálogo de representación federal por trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
  */
+
 export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
+/*
+ * API para obtener el catálogo de enum estado físico mercancía
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t90202/catalogo/sectores
+ */
+
+export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/sectores`;
+/**
+ * Genera la ruta de la API para obtener el catálogo de años de oficio de asignación,
+ * utilizando el identificador del trámite proporcionado.
+ *
+ * @param TRAMITE - Identificador del trámite a utilizar en la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
+
+export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;
