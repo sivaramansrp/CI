@@ -481,17 +481,15 @@ const ROUTES: Routes = [
     path: 'datos-generales-tramite',
     loadComponent: () =>
       import(
-        
         './datos-generales-tramite/datos-generales-tramite.component'
-      
       ).then((m) => m.DatosGeneralesTramiteComponent),
   },
   {
     path: 'subsecuente/319/cancelar',
     loadChildren: () =>
-      import(
-        './tramites/31907/cancelar-solicitud-reporte-mensual.module'
-      ).then((m) => m.CancelarSolicitudReporteMensualModule),
+      import('./tramites/31907/cancelar-solicitud-reporte-mensual.module').then(
+        (m) => m.CancelarSolicitudReporteMensualModule
+      ),
   },
   {
     path: 'subsecuente/319/reactivar',
