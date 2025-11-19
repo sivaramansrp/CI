@@ -5,14 +5,9 @@ import {
 
 import { AlertComponent, CargaDocumentoComponent, Catalogo, TableData, TipoDocumentos, TituloComponent, Usuario } from '@libs/shared/data-access-user/src';
 import { Component, DestroyRef, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
-
 import { Subject, map, takeUntil } from 'rxjs';
-
 import { CatalogoDocumentosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogo-documentos.service';
-
-
-
+import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
 
 /**
  * @fileoverview Componente para mostrar el subtítulo y los requisitos del asistente en el paso dos del trámite.
@@ -65,8 +60,18 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   catalogoDocumentos: Catalogo[] = [];
 
+  /**
+   * Array para almacenar los documentos opcionales del catálogo.
+   * Cada documento es de tipo `TipoDocumentos`, representando un documento opcional en el catálogo.
+   */
   catalogoDocumentosOpcionales: TipoDocumentos[] = [];
 
+  /**
+   * Referencia inyectada para manejar la destrucción del componente.
+   * Utiliza el servicio `DestroyRef` para ejecutar lógica de limpieza cuando el componente se destruye.
+   * 
+   * @private
+   */
   private destroyRef$ = inject(DestroyRef);
 
 /**
@@ -107,11 +112,27 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Este evento se utiliza para habilitar o deshabilitar el botón de carga de archivos en <solicitud-page>.
    */
   @Output() reenviarEventoCarga = new EventEmitter<boolean>();
-  /** Carga del progreso del archivo */
+
+  /**
+   * Indica si la carga de documentos está en progreso.
+   * Se utiliza para mostrar el estado de carga en la interfaz.
+   */
   cargaEnProgreso: boolean = true;
-  /** Emite un boleano sobre la carga del archivo */
+
+  /**
+   * Evento que se emite cuando el estado de carga en progreso cambia.
+   * 
+   * @remarks
+   * Utilice este evento para notificar a componentes padres sobre el inicio o fin de una operación de carga.
+   * 
+   * @param {boolean} cargaEnProgreso - Indica si la carga está en progreso (`true`) o ha finalizado (`false`).
+   */
   @Output() cargaEnProgresoChange = new EventEmitter<boolean>();
 
+  /**
+   * Evento que se emite cuando se requiere reenviar o regresar a la sección correspondiente.
+   * No emite ningún valor, solo indica la acción.
+   */
   @Output() reenviarRegresarSeccion = new EventEmitter<void>();
 
 
@@ -138,6 +159,16 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
 
   // eslint-disable-next-line class-methods-use-this, no-empty-function
+  /**
+   * Obtiene la lista de documentos opcionales.
+   *
+   * Suscribe al observable `cargaArchivosEvento` hasta que se emite `destroyNotifier$`.
+   * Cuando se dispara el evento, emite el evento `reenviarEvento`.
+   *
+   * @remarks
+   * Este método se utiliza para manejar la lógica relacionada con la carga de archivos opcionales
+   * y reenviar el evento correspondiente en el flujo del componente.
+   */
   getListaDocumentoOpcionales(): void {
     this.cargaArchivosEvento
       .pipe(
@@ -149,11 +180,23 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Maneja el evento cuando los documentos han sido cargados.
+   * Actualiza el estado de cargaRealizada y emite el evento correspondiente para notificar a otros componentes.
+   * @param cargaRealizada Indica si la carga de documentos se realizó correctamente.
+   */
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
     this.reenviarCargaRealizada.emit(this.cargaRealizada);
   }
 
+  /**
+   * Maneja el evento de carga de documentos.
+   * 
+   * Emite el evento `reenviarEventoCarga` indicando si existen documentos para cargar.
+   *
+   * @param existenDocumentosParaCargar - Indica si hay documentos disponibles para cargar.
+   */
   manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {
     this.reenviarEventoCarga.emit(existenDocumentosParaCargar);
   }

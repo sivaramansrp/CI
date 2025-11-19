@@ -2,21 +2,14 @@ import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-
 import { AcuseComponent, AlertComponent, BtnContinuarComponent, ConsultaioQuery, ConsultaioState, ConsultaioStore, DatosPasos, PasoFirmaComponent, RegistroSolicitudService, SolicitanteQuery, Usuario, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
 import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
-
-import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
-
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente principal para el formulario de certificado zoosanitario.
@@ -66,10 +59,10 @@ export class ZoosanitarioPageComponent implements OnInit {
   @ViewChild(WizardComponent) componenteWizard!: WizardComponent;
 
   /**
- * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
- * const isValid = this.pasoUnoComponent.validateForms();
- * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
- */
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   * const isValid = this.pasoUnoComponent.validateForms();
+   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+   */
   // Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos.
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
@@ -78,11 +71,15 @@ export class ZoosanitarioPageComponent implements OnInit {
    * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
    */
   indice: number = 1;
+
   /**
- * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
- */
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
   public formErrorAlert = ERROR_FORMA_ALERT;
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+
+  /** 
+   * Datos de respuesta del servidor utilizados para actualizar el formulario. 
+   */
   public esDatosRespuesta: boolean = false;
 
   /**
@@ -125,10 +122,6 @@ export class ZoosanitarioPageComponent implements OnInit {
    * @property esFormaValido
    * @type {boolean}
    * @default false
-   * @example
-   * if (this.esFormaValido) {
-   *   // Continuar con el envío
-   * }
    */
   esFormaValido: boolean = false;
   /**
@@ -203,22 +196,30 @@ export class ZoosanitarioPageComponent implements OnInit {
    */
   seccionCargarDocumentos: boolean = true;
 
-  /** Carga de progreso del archivo */
+  /**
+   * Indica si un proceso de carga está actualmente en progreso.
+   * Se establece en `true` cuando se están cargando datos o recursos, y en `false` cuando la carga ha finalizado.
+   */
   cargaEnProgreso: boolean = true;
 
+  /**
+   * Stores the current user's information for use within the Zoosanitario page.
+   * 
+   * @type {Usuario}
+   * @see USUARIO_INFO for the default user data.
+   */
   datosUsuario: Usuario = USUARIO_INFO;
 
   /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
   public btnGuardar: boolean = true;
 
-  private agriculturaApiService: AgriculturaApiService = inject(
-    AgriculturaApiService
-  );
-  private registroSolicitudService: RegistroSolicitudService = inject(
-    RegistroSolicitudService
-  );
+
+  /**
+   * Instance of {@link SolicitanteQuery} injected into the component.
+   * Provides access to the state and methods related to the "Solicitante" entity,
+   * enabling querying and manipulation of applicant data within the zoosanitario page.
+   */
   public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
-  private consultaioStore: ConsultaioStore = inject(ConsultaioStore);
 
 
   /**
