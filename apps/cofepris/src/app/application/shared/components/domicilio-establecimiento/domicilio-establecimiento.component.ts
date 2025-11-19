@@ -152,7 +152,7 @@ nombresCampos:boolean = false;
  * Bandera que indica si se debe validar el estado dentro del formulario.
  * Se recibe como entrada desde el componente padre y su valor por defecto es verdadero.
  */
-  @Input() estadoValidte: boolean = true;
+  @Input() estadoValidte: boolean = false;
 
    /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -346,7 +346,7 @@ nombresCampos:boolean = false;
      * Método para obtener el catálogo de estado físico de mercancía.
      */
     obtenerEstadoFisicoCatalogo(): void {
-      if (this.idProcedimiento) {
+      if (this.idProcedimiento && this.estadoValidte) {
         this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((response) => {
@@ -465,7 +465,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       );
       this.domicilio.addControl(
         "licenciaSanitaria",
-        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+        this.fb.control(this.solicitudState?.licenciaSanitaria),
       );
     }
 
@@ -2148,9 +2148,40 @@ onConfirmacionModal(accion: boolean): void {
   'telefono',
   'aduanasEntradas'
 ] as (keyof typeof this.mostrarErrores)[];
-if (this.isAvisoLicenciaVisible) {
-  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
-}
+ if (this.isAvisoLicenciaVisible) {
+
+    const AVISOCONTROL = this.domicilio.get('avisoCheckbox');
+    const LICENCIACONTROL = this.domicilio.get('licenciaSanitaria');
+    const AVISO_CHECKED = AVISOCONTROL?.value;
+    const LICENCIA_VALOR = LICENCIACONTROL?.value;
+
+    if (AVISO_CHECKED) {
+      REQUIREDFIELDS.push('avisoCheckbox');
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      LICENCIACONTROL?.clearValidators();
+      LICENCIACONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else if(LICENCIA_VALOR){
+      REQUIREDFIELDS.push('licenciaSanitaria');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.clearValidators();
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else {
+      REQUIREDFIELDS.push('licenciaSanitaria', 'avisoCheckbox');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = true;
+      this.mostrarErrores.avisoCheckbox = true;
+      ISVALID = false;
+    }
+  }
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 
 import { TABLA_ORDEN } from '../../constantes/importacion-plafest.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
@@ -18,6 +18,9 @@ import { Tramite260507Store } from '../../../../estados/tramites/260507/tramite2
   styleUrl: './terceros-relacionados.component.scss'
 })
 export class TercerosRelacionados260507Component {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+    @Input() isContinuarTriggered: boolean = false; 
  
   /** Referencia al componente 'TercerosRelacionadosComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.

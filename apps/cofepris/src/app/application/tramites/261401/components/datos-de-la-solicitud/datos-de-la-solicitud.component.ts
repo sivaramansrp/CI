@@ -16,6 +16,7 @@ import { Solicitud261401State } from '../../../../estados/tramites/tramite261401
 import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -67,7 +68,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite261401Store: Tramite261401Store,
     private tramite261401Query: Tramite261401Query,
     private service: SolicitudModificacionPermisoSalidaTerritorioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -138,6 +140,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.crearFormulario();
     }
+  }
+
+  /**
+   * Valida si un campo específico del formulario es válido.
+   * Utiliza el servicio de validaciones para determinar el estado de validez del campo.
+   */
+  isValid(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.isValid(form, field);
   }
 
     /**

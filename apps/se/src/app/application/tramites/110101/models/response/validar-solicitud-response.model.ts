@@ -42,16 +42,16 @@ export interface Mercancia {
   fraccion_naladi_02: FraccionNaladi;
 
   /** Descripciones alternas para la Unión Europea */
-  descripciones_alternas_ue: string | null;
+  descripciones_alternas_ue: DescripcionAlternaResponse[] | null;
 
   /** Descripciones alternas para la Asociación Europea de Libre Comercio (AELC) */
-  descripciones_alternas_aelc: string | null;
+  descripciones_alternas_aelc: DescripcionAlternaResponse[] | null;
 
   /** Descripciones alternas para el Sistema Generalizado de Preferencias (SGP) */
-  descripciones_alternas_sgp: string | null;
+  descripciones_alternas_sgp: DescripcionAlternaResponse[] | null;
 
   /** Descripciones alternas para Acuerdos de Complementación Económica (ACE) */
-  descripciones_alternas_ace: string | null;
+  descripciones_alternas_ace: DescripcionAlternaResponse[] | null;
 }
 
 /**
@@ -98,4 +98,15 @@ export interface TratadoAgregado {
   
   /** Clave tratado acuerdo */
     cve_tratado_acuerdo: string | null;
+}
+
+/**
+ * Modelo para descripción alterna de fracción
+ */
+export interface DescripcionAlternaResponse {
+    /** ID de la descripción alterna de fracción */
+    id_descripcion_alterna_fraccion: number;
+    
+    /** Descripción detallada de la fracción */
+    descripcion: string;
 }

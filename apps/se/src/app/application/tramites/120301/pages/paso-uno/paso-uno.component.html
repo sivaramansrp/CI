@@ -31,8 +31,8 @@
       } @case (2) {
       @if(esDatosRespuesta){
       <app-constancia-del-registro #constanciaDelRegistroRef (mostrarTabs)="onMostrarTabs($event)"
-        (errorValidacion)="alErrorDeValidacion($event)" [formularioDeshabilitado]="formularioDeshabilitado"
-        [numeroFolio]="numeroFolio"></app-constancia-del-registro>
+        (errorValidacion)="alErrorDeValidacion($event)" (mensajeError)="onMensajeError($event)"
+        [formularioDeshabilitado]="formularioDeshabilitado" [numeroFolio]="numeroFolio"></app-constancia-del-registro>
       }
       } @case (3) {
       @if(esDatosRespuesta){

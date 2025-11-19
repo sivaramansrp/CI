@@ -79,6 +79,8 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 
 import {TablaDinamicaComponent} from '@ng-mf/data-access-user';
+
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 /*
  ** component
  */
@@ -123,7 +125,14 @@ export class DatosDelSolicitudModificacionComponent
  */
   @Input() mostrarScianBotones: boolean = true;
 
-  
+
+
+noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
+  if (typeof control.value === 'string' && control.value.trim() === '') {
+    return { required: true };
+  }
+  return null;
+}
   /**
  * @input mostrarNumeroYFecha
  * @description
@@ -795,8 +804,8 @@ modificarMercancias(): void {
       establishomentoColonias: [''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30),  this.noOnlySpacesValidator]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS), this.noOnlySpacesValidator]],
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],

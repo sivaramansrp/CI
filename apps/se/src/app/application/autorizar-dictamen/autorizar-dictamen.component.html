@@ -12,13 +12,21 @@
             <div class="row margin-top">
 
                 <ng-container>
-
+                     @if (!vistasModificacion110101.actualizarVista) {
                     <app-generar-dictamen [isAntecedentes]="config.isAntecedentes" [mostrarTitulo]="true"
                     [dataIniciarDictamenAutorizar]="dataAutorizarDictamen"
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles" [soloLectura]="true"
                     [habilitarFechasPorAceptacion]="true" [habilitarFechasPorAceptacion]="config.habilitarFechas"
                     [isAntecedentes]="config.isAntecedentes" [anexo222se]="config.anexo222se" [habilitarFechasPorAceptacion]="config.habilitarFechas" >
                     </app-generar-dictamen>
+                     }@else{
+                        <app-generar-dictamen-clasificacion [isAntecedentes]="config.isAntecedentes" [mostrarTitulo]="true"
+                        [dataIniciarDictamenAutorizar]="dataAutorizarDictamen"
+                        [opcionesSentidosDisponibles]="opcionesSentidosDispobles" [soloLectura]="true"
+                        [habilitarFechasPorAceptacion]="true" [habilitarFechasPorAceptacion]="config.habilitarFechas"
+                        [isAntecedentes]="config.isAntecedentes" [anexo222se]="config.anexo222se" [habilitarFechasPorAceptacion]="config.habilitarFechas">
+                        </app-generar-dictamen-clasificacion>
+                     }
                       @if (config.descargaSolicitud) {
                     <ng-container>
                         <div class="row">

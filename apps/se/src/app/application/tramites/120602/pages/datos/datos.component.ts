@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/definiciones.enum';
+import { Notificacion, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { Subject, firstValueFrom, map, take, takeUntil } from 'rxjs';
 import { Tramite120602Store, Tramites120602State } from '../../estados/tramite-120602.store';
-import {doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT } from '../../constantes/definiciones.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -96,6 +96,10 @@ export class DatosComponent implements OnInit{
  * Almacena el estado actual de la solicitud del trámite 120602.
  * Contiene la información y los datos necesarios para el flujo del trámite.
  */
+  /**
+   * Almacena el estado actual de la solicitud del trámite 120602.
+   * Contiene la información y los datos necesarios para el flujo del trámite.
+   */
   public solicitudState!: Tramites120602State;
 
 /**
@@ -108,6 +112,31 @@ export class DatosComponent implements OnInit{
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   idSolicitud: number = 0;
+
+   /**
+   * Emite evento para iniciar carga de archivos
+   * @method onClickCargaArchivos
+   * @description Dispara el evento cargarArchivosEvento para notificar a componentes
+   * hijo que deben iniciar el proceso de carga de archivos
+   * @returns {void}
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+    /**
+   * Navega al siguiente paso con validación de documentos
+   * @method siguiente
+   * @description Ejecuta la navegación al siguiente paso del wizard después de validar
+   * que todos los documentos requeridos hayan sido cargados correctamente
+   * @returns {void}
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
 
   /** Mensaje de confirmación al guardar la solicitud.
    * Se inicializa como una cadena vacía y se actualiza cuando se guarda la solicitud.
@@ -145,11 +174,27 @@ export class DatosComponent implements OnInit{
   cargarArchivosEvento = new EventEmitter<void>();
 
   /**
+   * Almacena la notificación que se mostrará al usuario.
+   */
+  public alertaNotificacion!: Notificacion;
+ 
+  /**
+   * Folio temporal asignado a la solicitud antes de ser guardada definitivamente.
+   */
+  public folioTemporal: number = 0;
+
+  /**
  * Inyecta los servicios y la store necesarios para gestionar el trámite 120602.
  * - servicio120602: Maneja los datos relacionados con la empresa.  
  * - tramite120602Store: Administra el estado del trámite.  
  * - tramite120602Query: Permite consultar el estado actual del trámite.
  */
+  /**
+   * Constructor del componente. Inyecta los servicios y la store necesarios para gestionar el trámite 120602.
+   * @param servicio120602 Servicio para manejar los datos de la empresa.
+   * @param tramite120602Store Store para administrar el estado del trámite.
+   * @param tramite120602Query Query para consultar el estado actual del trámite.
+   */
   constructor( 
     private servicio120602: DatosEmpresaService,
     private tramite120602Store: Tramite120602Store,
@@ -174,6 +219,10 @@ export class DatosComponent implements OnInit{
   /**
    * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
    */
+  /**
+   * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
+   * @returns {boolean} true si el formulario es válido, false en caso contrario.
+   */
   public validarFormularios(): boolean {
     let isValid = true;
 
@@ -187,6 +236,10 @@ export class DatosComponent implements OnInit{
     return isValid;
   }
 
+  /**
+   * Actualiza el valor del índice según el evento del botón de acción.
+   * @param e El evento del botón de acción que contiene la acción y el valor.
+   */
   /**
    * Actualiza el valor del índice según el evento del botón de acción.
    * @param e El evento del botón de acción que contiene la acción y el valor.
@@ -224,9 +277,20 @@ export class DatosComponent implements OnInit{
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
+     
 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
+            this.alertaNotificacion = {
+                    tipoNotificacion: 'banner',
+                    categoria: 'success',
+                    modo: 'action',
+                    titulo: '',
+                    mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                    cerrar: true,
+                    txtBtnAceptar: '',
+                    txtBtnCancelar: '',
+                  };
       } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
@@ -237,6 +301,10 @@ export class DatosComponent implements OnInit{
  * Maneja el evento que indica si se debe activar el botón de carga de archivos.
  * Actualiza la variable `activarBotonCargaArchivos` según el valor recibido.
  */
+  /**
+   * Maneja el evento que indica si se debe activar el botón de carga de archivos.
+   * @param carga Valor booleano que indica si se activa el botón de carga de archivos.
+   */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
@@ -245,6 +313,10 @@ export class DatosComponent implements OnInit{
  * Actualiza la visibilidad de la sección de carga de documentos.
  * Si la carga se ha realizado, oculta la sección; de lo contrario, la mantiene visible.
  */
+  /**
+   * Actualiza la visibilidad de la sección de carga de documentos.
+   * @param cargaRealizada Indica si la carga se ha realizado.
+   */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
@@ -253,6 +325,10 @@ export class DatosComponent implements OnInit{
  * Actualiza el estado de carga en progreso.
  * Permite habilitar o deshabilitar indicadores de carga según el valor recibido.
  */
+  /**
+   * Actualiza el estado de carga en progreso.
+   * @param carga Indica si hay una carga en progreso.
+   */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
@@ -261,6 +337,10 @@ export class DatosComponent implements OnInit{
  * Maneja el estado de si un campo obligatorio está en blanco.
  * Actualiza `isSaltar` para determinar si se debe omitir o saltar un paso en el flujo.
  */
+  /**
+   * Maneja el estado de si un campo obligatorio está en blanco.
+   * @param enBlanco Indica si el campo obligatorio está en blanco.
+   */
   onBlancoObligatoria(enBlanco: boolean): void {
     this.isSaltar = enBlanco;
   }
@@ -323,5 +403,17 @@ export class DatosComponent implements OnInit{
             reject(error);
           });
           });
+  }
+
+    /**
+   * Navega al paso anterior del wizard
+   * @method anterior
+   * @description Retrocede un paso en el wizard y actualiza los índices correspondientes
+   * @returns {void}
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 }

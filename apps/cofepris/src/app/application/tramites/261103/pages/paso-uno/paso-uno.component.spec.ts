@@ -24,7 +24,8 @@ describe('PasoUnoComponent', () => {
       obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
       getRegistroPasoUnoData: jest.fn().mockReturnValue(of({})),
       actualizarEstadoFormulario: jest.fn(),
-      inicializaPagoDeDerechosDatosCatalogos: jest.fn()
+      inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
+      getRegistrarDatos: jest.fn().mockReturnValue(of({}))
     } as any;
 
     mockQuery = {

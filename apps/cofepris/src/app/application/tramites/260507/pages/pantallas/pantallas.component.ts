@@ -1,13 +1,13 @@
-import { AccionBoton, DatosPasos, doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardComponent, WizardService } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
+import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { Observable, map, switchMap, take } from 'rxjs';
+import { Solicitud260507State, Tramite260507Store } from '../../../../estados/tramites/260507/tramite260507.store';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
-import { ToastrService } from 'ngx-toastr';
-import { map, Observable, switchMap, take } from 'rxjs';
-import { Solicitud260507State, Tramite260507Store } from '../../../../shared/estados/stores/260507/tramite260507.store';
-import { Tramite260507Query } from '../../../../shared/estados/queries/260507/tramite260507.query';
 import { DatosComponent } from '../datos/datos.component';
+import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
 import { TEXTO_DE_PELIGRO } from '../../constantes/importacion-plafest.enum';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite260507Query } from '../../../../estados/queries/260507/tramite260507.query';
 
 
 /**
@@ -114,6 +114,9 @@ export class PantallasComponent implements OnInit {
     */
     public solicitudState!: Solicitud260507State;
 
+    /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**
    * @param sharedSvc Servicio compartido para funcionalidades comunes.
    * @param toastrService Servicio para mostrar notificaciones tipo toast.
@@ -136,6 +139,7 @@ export class PantallasComponent implements OnInit {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
 
@@ -152,6 +156,7 @@ export class PantallasComponent implements OnInit {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true); 
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

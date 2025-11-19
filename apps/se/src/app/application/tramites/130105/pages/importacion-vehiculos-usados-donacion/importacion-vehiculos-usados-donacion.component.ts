@@ -1,6 +1,6 @@
 import { AVISO,DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { CALCULATE_ALERT_ERROR, FORM_ERROR_ALERT, MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
-import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-vehiculos-usados-donacion-pasos.enum';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite130105State, Tramite130105Store } from '../../../../estados/tramites/tramites130105.store';
 import { AccionBoton } from '../../enums/accionbotton.enum';
@@ -84,14 +84,13 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
-  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
-  <div>
-    <div class="col-md-12">
-     <b>¡Error de registro!</b> Faltan campos por capturar.
-    </div>
-  </div>
-</div>
-`
+  public formErrorAlert = FORM_ERROR_ALERT;
+
+/**
+ * Referencia a la función generadora de mensajes de error relacionados
+ * con el proceso de cálculo.
+ */
+  public CALCULATE_ALERT_ERROR = CALCULATE_ALERT_ERROR;
 
   /**
      * Folio temporal de la solicitud.
@@ -257,7 +256,7 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
         },
         "partidasMercancia": MERCANCIA,
       },
-      "id_solcitud": item.mostrarPartidas.length > 0 ? Number(item.mostrarPartidas?.[0].idSolicitud) : 0,
+      "id_solcitud": this.solicitudState.idSolicitud || 0,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": {
@@ -290,6 +289,11 @@ export class ImportacionVehiculosUsadosDonacionComponent implements OnDestroy {
       let shouldNavigate = false;
       this.importacionVehiculosUsadosDonacionService.guardarDatosPost(PAYLOAD).subscribe(
         (response) => {
+          this.esFormaValido = false;
+          if(response.codigo === '3'){
+            this.esFormaValido = true;
+            this.formErrorAlert = this.CALCULATE_ALERT_ERROR((response as unknown as { error: string })['error'] || '');
+          }
           shouldNavigate = response.codigo === '00';
           if (shouldNavigate) {
             const API_RESPONSE = doDeepCopy(response);

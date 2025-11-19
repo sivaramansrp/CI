@@ -1,14 +1,14 @@
-import { Component, EventEmitter, inject, OnInit, ViewChild } from '@angular/core';
-import { doDeepCopy, esValidObject, getValidDatos, ListaPasosWizard, PASOS, WizardService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ListaPasosWizard, PASOS, WizardService, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Observable, map, switchMap, take } from 'rxjs';
+import { Solicitud260505State, Tramite260505Store } from '../../../../estados/tramites/260505/tramite260505.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TEXTO_DE_PELIGRO } from '../../constantes/260505constante.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { Shared2605Service } from '../../../../shared/services/shared2605/shared2605.service';
+import { TEXTO_DE_PELIGRO } from '../../constantes/260505constante.enum';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable, switchMap, take } from 'rxjs';
-import { Solicitud260505State, Tramite260505Store } from '../../../../shared/estados/stores/260505/tramite260505.store';
-import { Tramite260505Query } from '../../../../shared/estados/queries/260505/tramite260505.query';
+import { Tramite260505Query } from '../../../../estados/queries/260505/tramite260505.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -94,6 +94,9 @@ export class PlaguicidasComponent implements OnInit {
     */
     public solicitudState!: Solicitud260505State;
 
+    /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
   /**
    * @param sharedSvc Servicio compartido para funcionalidades comunes.
    * @param toastrService Servicio para mostrar notificaciones tipo toast.
@@ -116,6 +119,7 @@ export class PlaguicidasComponent implements OnInit {
   ngOnInit(): void {
     this.query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
     });
   }
   /**
@@ -144,6 +148,7 @@ export class PlaguicidasComponent implements OnInit {
         e.valor;
  
     if (this.indice === 1 && e.accion === 'cont') {
+      this.store.setContinuarTriggered(true); 
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;

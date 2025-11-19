@@ -1,25 +1,10 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DatosSolicitante } from '../../80301/models/datos-tramite.model';
+import { Complimentaria, Federetarios, Operacions, ProgramaLista } from '../models/plantas-consulta.model';
+import { DatosModificacion, ExportacionImportacionDatos } from '../../../shared/models/modificacion.model';
+import { Anexo } from '../../../shared/models/anexos.model';
 import { Injectable } from '@angular/core';
-import { Store, } from '@datorama/akita';
+import { ServiciosImmex } from '../../../shared/models/complementaria.model';
+import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-
-/**
- * Interface que representa los datos generales de una modificación del programa IMMEX.
- */
-export interface DatosModificacion {
-  /** Registro Federal de Contribuyentes del solicitante */
-  rfc: string;
-
-  /** Representación federal del solicitante (por ejemplo, nombre de la delegación o dependencia) */
-  federal: string;
-
-  /** Tipo de trámite o modificación (por ejemplo: alta, baja, cambio) */
-  tipo: string;
-
-  /** Programa IMMEX relacionado con la solicitud */
-  programa: string;
-}
 
 /**
  * Interface que encapsula el estado completo de la solicitud 80301.
@@ -29,478 +14,355 @@ export interface Solicitud80301StateObj {
   datosModificacion: Solicitud80301State;
 }
 
-  
 /**
  * Representa el estado de la solicitud 80301.
  */
 export interface Solicitud80301State {
+  /**
+   * RFC de inicio de sesión.
+   * @type {string}
+   */
+  loginRfc: string;
 
   /**
-   * Menú desplegable seleccionado.
+   * Lista de socios accionistas.
    */
-  menuDesplegable:string;
+  sociosAccionistas: Complimentaria[];
 
   /**
-   * Datos del solicitante.
+   * Datos de los notarios.
    */
-  datosSolicitante: DatosSolicitante;
+  notarios: Federetarios[];
+
+  /**
+   * Datos de las plantas.
+   */
+  planta: Operacions[];
+
+  /**
+   * Datos de los servicios IMMEX.
+   */
+  servicios: ServiciosImmex[];
+
+  /**
+   * Fracciones de exportación.
+   */
+  fraccionesExportacion: Anexo[];
+
+  /**
+   * Fracciones de importación.
+   */
+  fraccionesImportacion: Anexo[];
 
   /**
    * Información relacionada con la modificación.
    */
-  datosModificacion: DatosModificacion ;
+  datosModificacion: DatosModificacion | undefined;
 
   /**
-   * Lista de datos del contenedor.
+   * Datos de exportación.
    */
-  datosDelContenedor: [];
+  datosExportacion: ExportacionImportacionDatos[];
 
   /**
-   * Tipo de búsqueda seleccionada.
+   * Datos de importación.
    */
-  tipoBusqueda: string;
+  datosImportacion: ExportacionImportacionDatos[];
 
   /**
-   * Aduana seleccionada.
+   * Lista de datos del programa.
    */
-  aduana: string;
+  programaListaDatos: ProgramaLista[];
 
   /**
-   * Fecha de ingreso.
+   * Folio del programa seleccionado.
    */
-  fechaIngreso: string;
+  selectedFolioPrograma: string;
 
   /**
-   * Iniciales del contenedor.
+   * Tipo de programa seleccionado.
    */
-  inicialesContenedor: string;
+  selectedTipoPrograma: string;
 
   /**
-   * Número del contenedor.
+   * ID del programa seleccionado.
    */
-  numeroContenedor: string;
+  selectedIdPrograma: string;
 
   /**
-   * Dígito de control del contenedor.
+   * Certificación SAT
+   * @type {string}
    */
-  digitoDeControl: string;
+  certificacionSAT: string;
 
   /**
-   * Contenedores asociados.
+   * ID de la solicitud.
+   * @type {number}
    */
-  contenedores: string;
+  idSolicitud: number;
 
   /**
-   * Menú desplegable de aduanas.
+   * ID de la solicitud buscada.
+   * @type {string[]}
    */
-  aduanaMenuDesplegable: string;
-
-  /**
-   * Estado de las casillas de verificación individuales.
-   */
-  casillaDeVerificacionindividual: boolean[];
-
-  /**
-   * Número del manifiesto.
-   */
-  numeroManifiesta: number;
-
-  /**
-   * Fecha de ingreso del manifiesto.
-   */
-  fechaDeIngreso: string;
-
-  /**
-   * Archivo seleccionado.
-   */
-  archivoSeleccionado: string;
-
- /** linea
- * @type {string}
- */
-  linea: string;
-
-  /**
-* linea checkbox
-* @type {string}
-*/
-  lineaCheckbox: string;
-
-  monto: string;
+  buscarIdSolicitud?: string[];
 }
 
 /**
- * Crea y retorna el objeto de estado inicial para la funcionalidad Solicitud80301.
- *
- * @returns {Solicitud80301State} El estado inicial por defecto, incluyendo valores predeterminados para
- *   selecciones de menú, datos del solicitante, datos de modificación, datos del contenedor, tipos de búsqueda,
- *   información de aduana, detalles del contenedor, casillas de verificación, número de manifiesto,
- *   fechas de ingreso, archivos seleccionados, información de línea y monto.
+ * Crea el estado inicial para la solicitud 80301.
+ * @returns {Solicitud80301State} Estado inicial de la solicitud 80301.
  */
 export function createInitialState(): Solicitud80301State {
   return {
-    menuDesplegable: '',
-    datosSolicitante: {
-      rfc: "",
-      denominacion: "",
-      actividadEconomica: "",
-      correoElectronico: ""
-    },
+    loginRfc: '',
+    sociosAccionistas: [],
+    notarios: [],
+    planta: [],
+    servicios: [],
+    fraccionesExportacion: [],
+    fraccionesImportacion: [],
     datosModificacion: {
-      rfc: "",
-      federal: "",
-      tipo: "",
-      programa: ""
-    },   
-    datosDelContenedor: [],
-    tipoBusqueda: '',
-    aduana: '',
-    inicialesContenedor: '',
-    numeroContenedor: '',
-    digitoDeControl: '',
-    contenedores: '',
-    fechaIngreso: '',
-    aduanaMenuDesplegable: '',
-    casillaDeVerificacionindividual: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-    numeroManifiesta: 0,
-    fechaDeIngreso: '',
-    archivoSeleccionado: '',
-    linea: '',
-    lineaCheckbox: '',
-    monto: '',
-
+      rfc: '',
+      representacionFederal: '',
+      tipo: '',
+      programa: ''
+    },
+    datosExportacion: [],
+    datosImportacion: [],
+    programaListaDatos: [],
+    selectedFolioPrograma: '',
+    selectedTipoPrograma: '',
+    selectedIdPrograma: '',
+    certificacionSAT: '',
+    idSolicitud: 0,
+    buscarIdSolicitud: []
   };
 }
 
+/**
+ * Clase almacén inyectable para gestionar el estado del trámite 80301.
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite80301', resettable: true })
+/**
+ * Almacén para gestionar el estado del trámite 80301.
+ * @class Tramite80301Store
+ */
 export class Tramite80301Store extends Store<Solicitud80301State> {
+  /**
+   * Constructor de la clase Tramite80301Store.
+   * @constructor
+   */
   constructor() {
+    /**
+     * Inicializa el almacén con el estado inicial.
+     */
     super(createInitialState());
   }
-    /**
-   * Actualiza el tipo de documento seleccionado.
+  
+  /**
+   * Establece el RFC de inicio de sesión en el estado.
+   *
+   * @param loginRfc - RFC del usuario que ha iniciado sesión.
+   */
+  public setLoginRfc(loginRfc: string): void {
+    this.update((state) => ({
+      ...state,
+      loginRfc,
+    }));
+  }
+
+  /**
+   * Establece los socios accionistas en el estado.
+   *
+   * @param sociosAccionistas - Arreglo de objetos Complimentaria que representan los socios accionistas.
+   */
+  public setSociosAccionistas(sociosAccionistas: Complimentaria[]): void {
+    this.update((state) => ({
+      ...state,
+      sociosAccionistas,
+    }));
+  }
+
+  /**
+   * Establece los notarios en el estado.
+   *
+   * @param notarios - Arreglo de objetos Federetarios que representan los notarios.
+   */
+  public setNotarios(notarios: Federetarios[]): void {
+    this.update((state) => ({
+      ...state,
+      notarios,
+    }));
+  }
+
+  /**
+   * Establece las plantas en el estado.
+   *
+   * @param planta - Arreglo de objetos Operacions que representan las plantas.
+   */
+  public setPlanta(planta: Operacions[]): void {
+    this.update((state) => ({
+      ...state,
+      planta,
+    }));
+  }
+
+  /**
+   * Establece los servicios IMMEX en el estado.
+   *
+   * @param servicios - Arreglo de objetos ServiciosImmex que representan los servicios IMMEX.
+   */
+  public setServiciosImmex(servicios: ServiciosImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      servicios,
+    }));
+  }
+
+  /**
+   * Establece las fracciones de exportación en el estado.
    * 
-   * @param {string} tipoDocumento - El tipo de documento seleccionado.
+   * @param fraccionesExportacion - Arreglo de objetos Anexo que representan las fracciones de exportación.
    */
-  public setTipoDocumento(tipoDocumento: Catalogo[]): void {
+  public setFraccionesExportacion(fraccionesExportacion: Anexo[]): void {
     this.update((state) => ({
       ...state,
-      tipoDocumento,
-    }));
-  }
-  
-  /**
-   * Guarda el rango de fechas en el estado.
-   *
-   * @param rangoFechas - El valor booleano que indica si es un rango de fechas o no.
-   */
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      fechasSeleccionadas,
-    }));
-  }
-  /**
-   * Actualiza el país en el estado.
-   * @param {string} pais - País del domicilio.
-   */
-  public setPais(pais: Catalogo[]): void {
-    this.update((state) => ({ ...state, pais }));
-  }
-
-    /**
-     * Actualiza el estado de la tienda con el arreglo proporcionado de `Catalogo` como la nueva `condicion`.
-     *
-     * @param condicion - Un arreglo de objetos `Catalogo` para establecer como la condición actual en el estado.
-     */
-    public setCondicion(condicion: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      condicion,
-    }));
-  }
-
-  
-  /**
-   * Actualiza el año en el estado.
-   * @param {string} ano - Año relacionado.
-   */
-  public setAno(ano: string): void {
-    this.update((state) => ({ ...state, ano }));
-  }
-  /**
-   * Establece el RFC en el estado de la tienda.
-   *
-   * @param rfc - El RFC que se desea asignar.
-   */
-  public setRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc
+      fraccionesExportacion,
     }));
   }
 
   /**
-   * Establece el valor federal en el estado de la tienda.
-   *
-   * @param federal - El valor federal que se desea asignar.
+   * Establece las fracciones de importación en el estado.
+   * 
+   * @param fraccionesImportacion - Arreglo de objetos Anexo que representan las fracciones de importación.
    */
-  public setFederal(federal: string): void {
+  public setFraccionesImportacion(fraccionesImportacion: Anexo[]): void {
     this.update((state) => ({
       ...state,
-      federal
+      fraccionesImportacion,
     }));
   }
 
   /**
-   * Establece el tipo en el estado de la tienda.
-   *
-   * @param tipo - El tipo que se desea asignar.
-   */
-  public setTipo(tipo: string): void {
-    this.update((state) => ({
-      ...state,
-      tipo
-    }));
-  }
-
-  /**
-   * Establece el programa en el estado de la tienda.
-   *
-   * @param programa - El programa que se desea asignar.
-   */
-  public setPrograma(programa: string): void {
-    this.update((state) => ({
-      ...state,
-      programa
-    }));
-  }
-
-
-  /**
-   * Guarda el tipo de solicitud en el estado.
-   *
-   * @param casillaDeVerificacionindividual - El tipo de solicitud que se va a guardar.
-   */
-  public setCasillaDeVerificacionindividual(casillaDeVerificacionindividual: []): void {
-    this.update((state) => ({
-      ...state,
-      casillaDeVerificacionindividual,
-    }));
-  }
-
-  /**
-   * Establece el número de manifiesta en el estado de la tienda.
-   *
-   * @param numeroManifiesta - El número de manifiesta que se desea asignar.
-   */
-  public setNumeroManifiesta(numeroManifiesta: number): void {
-    this.update((state) => ({
-      ...state,
-      numeroManifiesta,
-    }));
-  }
-
-
-  /**
-   * Establece la fecha de ingreso en el estado de la tienda.
-   *
-   * @param fechaDeIngreso - La nueva fecha de ingreso que se debe establecer en el estado.
-   *                          Debe ser una cadena en formato válido.
-   */
-  public setFechaDeIngreso(fechaDeIngreso: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaDeIngreso,
-    }));
-  }
-
-
-  /**
-   * Establece los datos del solicitante en el estado de la tienda.
-   *
-   * @param datosSolicitante - Objeto que contiene la información del solicitante.
-   */
-  public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
-    this.update((state) => ({
-      ...state,
-      datosSolicitante
-    }));
-  }
-
-  /**
-   * Establece los datos de modificación en el estado de la tienda.
-   *
-   * @param datosModificacion - Objeto que contiene los datos de modificación que se deben actualizar en el estado.
+   * Establece la información relacionada con la modificación en el estado.
+   * 
+   * @param datosModificacion - Objeto DatosModificacion que contiene la información de modificación.
    */
   public setDatosModificacion(datosModificacion: DatosModificacion): void {
     this.update((state) => ({
       ...state,
-      datosModificacion
+      datosModificacion,
     }));
   }
-  
+
   /**
-   * Establece los datos del contenedor en el estado de la tienda.
-   *
-   * @param datosDelContenedor - Un arreglo que contiene los datos del contenedor a establecer.
+   * Establece los datos de exportación en el estado.
    * 
-   * @remarks
-   * Este método actualiza el estado de la tienda con los datos proporcionados para el contenedor.
+   * @param datosExportacion - Arreglo de objetos ExportacionImportacionDatos que representan los datos de exportación.
    */
-  public setDelContenedor(datosDelContenedor: []): void {
+  public setDatosExportacion(datosExportacion: ExportacionImportacionDatos[]): void {
     this.update((state) => ({
       ...state,
-      datosDelContenedor
-    }));
-  }
-
-  /**
-   * Establece el tipo de búsqueda en el estado de la tienda.
-   *
-   * @param tipoBusqueda - El tipo de búsqueda que se desea establecer.
-   */
-  public setTipoBusqueda(tipoBusqueda: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoBusqueda
-    }));
-  }
-
-  /**
-   * Establece el valor de la propiedad "aduana" en el estado.
-   *
-   * @param aduana - El nuevo valor para la propiedad "aduana".
-   */
-  public setAduana(aduana: string): void {
-    this.update((state) => ({
-      ...state,
-      aduana
-    }));
-  }
-
-    /**
-     * Actualiza el estado de la tienda con una nueva lista de documentos.
-     *
-     * @param documentos - Un arreglo de objetos `Catalogo` para establecer como los documentos actuales en el estado.
-     */
-    public setDocumentos(documentos: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      documentos,
+      datosExportacion,
     }));
   }
   
-  public setFechaIngreso(fechaIngreso: string): void {
+  /**
+   * Establece los datos de importación en el estado.
+   * 
+   * @param datosImportacion - Arreglo de objetos ExportacionImportacionDatos que representan los datos de importación.
+   */
+  public setDatosImportacion(datosImportacion: ExportacionImportacionDatos[]): void {
     this.update((state) => ({
       ...state,
-      fechaIngreso
+      datosImportacion,
     }));
   }
 
+  /**
+   * Establece la lista de datos del programa en el estado.
+   * 
+   * @param programaListaDatos - Arreglo de objetos ProgramaLista que representan la lista de datos del programa.
+   */
+  public setProgramaListaDatos(programaListaDatos: ProgramaLista[]): void {
+    this.update((state) => ({
+      ...state,
+      programaListaDatos,
+    }));
+  }
+
+  /**
+   * Establece el folio del programa seleccionado en el estado.
+   *
+   * @param selectedFolioPrograma - El folio del programa seleccionado.
+   */
+  public setSelectedFolioPrograma(selectedFolioPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedFolioPrograma,
+    }));
+  }
   
   /**
-   * Establece las iniciales del contenedor en el estado de la tienda.
-   *
-   * @param inicialesContenedor - Las iniciales del contenedor que se deben establecer.
+   * Establece el tipo de programa seleccionado en el estado.
+   * 
+   * @param selectedTipoPrograma - El tipo de programa seleccionado.
    */
-  public setInicialesContenedor(inicialesContenedor: string): void {
+  public setSelectedTipoPrograma(selectedTipoPrograma: string): void {
     this.update((state) => ({
       ...state,
-      inicialesContenedor
-    }));
-  }
-
-
-  /**
-   * Establece el número de contenedor en el estado de la tienda.
-   *
-   * @param numeroContenedor - El número de contenedor que se va a asignar.
-   * @returns void
-   */
-  public setNumeroContenedor(numeroContenedor: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroContenedor
-    }));
-  }
-
-  
-  /**
-   * Establece el valor del dígito de control en el estado de la tienda.
-   *
-   * @param digitoDeControl - El nuevo valor del dígito de control que se debe establecer.
-   */
-  public setDigitoDeControl(digitoDeControl: string): void {
-    this.update((state) => ({
-      ...state,
-      digitoDeControl
-    }));
-  }
-
-
-  /**
-   * Establece el valor de los contenedores en el estado de la tienda.
-   *
-   * @param contenedores - Una cadena que representa los contenedores a establecer en el estado.
-   */
-  public setContenedores(contenedores: string): void {
-    this.update((state) => ({
-      ...state,
-      contenedores
-    }));
-  }
-
-
-  /**
-   * Establece el archivo seleccionado en el estado de la tienda.
-   *
-   * @param archivoSeleccionado - El nombre o identificador del archivo que se seleccionará.
-   */
-  public setArchivoSeleccionado(archivoSeleccionado: string): void {
-    this.update((state) => ({
-      ...state,
-      archivoSeleccionado
+      selectedTipoPrograma,
     }));
   }
 
   /**
-   * Establece el valor de la propiedad `linea` en el estado actual.
+   * Establece el ID del programa seleccionado en el estado.
    *
-   * @param linea - El nuevo valor para la propiedad `linea`.
+   * @param selectedIdPrograma - El ID del programa seleccionado.
    */
-  public setLinea(linea: string): void {
+  public setSelectedIdPrograma(selectedIdPrograma: string): void {
     this.update((state) => ({
       ...state,
-      linea,
-    }));
-  }
-
-
-  /**
-   * Establece el valor de la propiedad `lineaCheckbox` en el estado.
-   *
-   * @param lineaCheckbox - El nuevo valor para la propiedad `lineaCheckbox`.
-   */
-  public setLineaCheckbox(lineaCheckbox: string): void {
-    this.update((state) => ({
-      ...state,
-      lineaCheckbox,
+      selectedIdPrograma,
     }));
   }
 
   /**
-   * Establece el valor de "monto" en el estado.
+   * Establece el valor de la certificación SAT en el estado.
    *
-   * @param monto - El nuevo valor de "monto" que se asignará al estado.
+   * @param certificacionSAT - El nuevo valor de la certificación SAT que se asignará al estado.
    */
-  public setMonto(monto: string): void {
+  public setCertificacionSAT(certificacionSAT: string): void {
     this.update((state) => ({
       ...state,
-      monto,
+      certificacionSAT,
+    }));
+  }
+
+  /**
+   * Establece el ID de la solicitud a establecer en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud a establecer en el estado.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+   * Establece el ID de la solicitud buscada en el estado.
+   *
+   * @param buscarIdSolicitud - El ID de la solicitud buscada a establecer en el estado.
+   */
+  public setBuscarIdSolicitud(buscarIdSolicitud: string[]): void {
+    this.update((state) => ({
+      ...state,
+      buscarIdSolicitud,
     }));
   }
 

@@ -41,6 +41,7 @@ import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/en
 import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { Firma } from '../core/models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
+import { GenerarDictamenClasificacionComponent } from "../shared/components/generar-dictamen-calificacion/generar-dictamen-clasificacion.component";
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
 import { ObservacionRequest } from '../core/models/autorizar-requerimiento/request/observacion-guardar-request.model';
@@ -58,7 +59,7 @@ import { IniciarAutorizarDictamen } from '../core/models/autorizar-dictamen/requ
     FormsModule, ReactiveFormsModule,
     GenerarDictamenComponent,
     FirmaElectronicaComponent,
-    NotificacionesComponent],
+    NotificacionesComponent, GenerarDictamenClasificacionComponent],
   templateUrl: './autorizar-dictamen.component.html',
   styleUrl: './autorizar-dictamen.component.scss',
 })
@@ -284,6 +285,12 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   firmaOficioCadena!: string;
 
+   /**
+  * @property {ModeloConfig} vistasModificacion110101
+  * @description Configuración específica del trámite, obtenida del servicio TramiteConfigService.
+ */
+  vistasModificacion110101!: ModeloConfig;
+
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
@@ -336,6 +343,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.config = this.tramiteConfigService.getConfigAutorizarDictamen(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
     this.serviceConfigModelo = this.tramiteConfigService.getModeloConfig(this.tramite);
+    this.vistasModificacion110101 = this.tramiteConfigService.getModeloConfig(this.tramite);
   }
 
   /**
