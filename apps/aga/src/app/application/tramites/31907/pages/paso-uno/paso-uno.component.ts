@@ -12,12 +12,17 @@ import { Tramite31907Store } from '../../estados/store/tramite31907.store';
 export class PasoUnoComponent {
   /**
    * Folio del trámite actual.
+   * se usa solo para pruebas, se debe eliminar cuando se integre con el flujo real.
    */
   folioTramite = signal('');
+
+  /**
+   * constructor de la clase PasoUnoComponent 
+   * @param store Store de estado para el trámite 31907. 
+   */
   constructor(private store: Tramite31907Store) {
     effect(() => {
       const FOLIO = this.folioTramite();
-      console.log(FOLIO)
       this.store.update({ folioTramite: FOLIO });
     });
   }
