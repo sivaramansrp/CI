@@ -7,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { PROC_130104 } from '../servers/api-route';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130104Query } from '../../../estados/queries/tramite130104.query';

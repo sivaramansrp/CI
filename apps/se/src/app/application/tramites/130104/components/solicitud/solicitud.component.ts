@@ -6,12 +6,12 @@ import { Tramite130104State, Tramite130104Store } from '../../../../estados/tram
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 import Decimal from 'decimal.js';
 import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
@@ -186,6 +186,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   modificarPartidasDelaMercanciaForm!: FormGroup;
 
   /**
+   * jest.spyOnArreglo que almacena las partidas a mostrar en la tabla.
+   * @type {MostrarPartidas[]}
+   */
+  mostrarPartidas: MostrarPartidas[] = [];
+
+  /**
    * Constructor del componente.
    */
   constructor(
@@ -206,10 +212,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe()
   }
+
   /**
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
+    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
@@ -420,6 +428,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       isValid = false;
     }
     return isValid;
+  }
+
+  /**
+   * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
+   *
+   * @returns {void}
+   */
+  getMostrarPartidas(): void {
+    this.importacionOtrosVehiculosUsadosService.getMostrarPartidasService(202859165).subscribe((data) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          this.tramite130104Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
+    });
   }
 
   /**
