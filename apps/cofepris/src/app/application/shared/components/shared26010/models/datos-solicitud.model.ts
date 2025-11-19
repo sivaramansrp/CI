@@ -511,4 +511,22 @@ export type DestinatarioFinalKey =
   | 'telefono'
   | 'correoElectronico';
 
+  export type FabricanteRequiredField =
+  | "tipoPersona"
+  | "rfc"
+  | "curp"
+  | "nombres"
+  | "primerApellido"
+  | "razonSocial"
+  | "pais"
+  | "estado"
+  | "municipio"
+  | "localidad"
+  | "codigoPostal"
+  | "colonia"
+  | "calle"
+  | "numeroExterior"
+  | "correoElectronico";
+
+
 

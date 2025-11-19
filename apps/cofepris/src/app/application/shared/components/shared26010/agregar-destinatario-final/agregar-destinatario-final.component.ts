@@ -1209,6 +1209,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.resetAllErrorFlags();
     this.agregarDestinatarioFinal.reset();
     this.agregarDestinatarioFinal.markAsUntouched();
     this.agregarDestinatarioFinal.markAsPristine();
