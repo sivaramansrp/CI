@@ -2179,8 +2179,8 @@
   {
     "id": 600,
     "tramite": 31907,
-    "linkDashboard": "/aga/cancelar-reporte-mensual/cancelar",
-    "linkDepartment": "/pago/cancelar-reporte-mensual/cancelar",
+    "linkDashboard": "/aga/subsecuente/319/cancelar",
+    "linkDepartment": "/pago/subsecuente/319/cancelar",
     "department": "aga"
   },
   {
