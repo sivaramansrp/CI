@@ -9,6 +9,7 @@ import {
 import {
   ConsultaioQuery,
   ConsultaioState,
+  REGEX_RFC,
   REG_X,
 } from '@ng-mf/data-access-user';
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
@@ -202,7 +203,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   rfcChange($event: Event): void {
     const INPUT = ($event.target as HTMLInputElement).value;
-    if (INPUT.length === 13 && REG_X.RFC_13_ALFANUM.test(INPUT)) {
+    if (INPUT.length <=13 && REGEX_RFC.test(INPUT)) {
       this.BUSCAR_EMPRESA_ERROR = '';
       this.datosEmpresaBuscar.emit(false);
     } else {
@@ -222,17 +223,19 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
       GRUPO_EMPRESA_CONTROL instanceof FormGroup
         ? GRUPO_EMPRESA_CONTROL.get('rfc')
         : null;
-    const RFC: string = RFC_CONTROL ? RFC_CONTROL.value : null;
-    if (RFC?.length === 13 && REG_X.RFC_13_ALFANUM.test(RFC)) {
-      this.fetchGetDatos();
-      this.mostrarDatosGenerales = true;
-      this.BUSCAR_EMPRESA_ERROR = '';
-      this.datosEmpresaBuscar.emit(true);
-    } else {
-      this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
-      this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
-      this.datosEmpresaBuscar.emit(true);
-    }
+        if(!RFC_CONTROL?.valid || (RFC_CONTROL.value as string).length > 13||!REGEX_RFC.test(RFC_CONTROL.value as string)){
+          this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
+          this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
+          this.datosEmpresaBuscar.emit(true);
+        }
+        else{
+          this.fetchGetDatos();
+          this.mostrarDatosGenerales = true;
+          this.BUSCAR_EMPRESA_ERROR = '';
+          this.datosEmpresaBuscar.emit(false);
+        }
+
+   
   }
 
   /**
@@ -286,7 +289,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
       grupoEmpresa: this.fb.group({
         rfc: [
           this.solicitudState?.grupoEmpresa?.rfc,
-          [Validators.required, Validators.minLength(13)],
+          [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)],
         ],
         nombre: [
           { value: this.solicitudState?.grupoEmpresa?.nombre, disabled: true },

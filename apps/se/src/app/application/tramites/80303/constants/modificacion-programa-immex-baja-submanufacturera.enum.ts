@@ -1,3 +1,4 @@
+import {ProgramaLista } from '../models/modificacion-programa-immex-baja-submanufacturera.model'; // Make sure this path is correct
 /**
  * Representa los pasos necesarios para completar un trámite específico.
  * 
@@ -79,3 +80,92 @@ export const TEXTOS_REQUISITOS =
  * relacionado con la modificación del programa IMMEX.
  */
 export const ID_PROCEDIMIENTO = 240102;
+/**
+ * Configuración de la lista de programas utilizada para definir las columnas
+ * y el orden de visualización en una tabla o lista.
+ */
+export const CONFIGURACION_LISTA_PROGRAMA = [
+    {
+      /** Encabezado de la columna */
+      encabezado: 'Folio de programa',
+      /** Función para obtener el valor de la columna desde un objeto ProgramaLista */
+      clave: (ele: ProgramaLista): string | undefined => ele.idProgramaCompuesto,
+      /** Orden de la columna */
+      orden: 1,
+    },
+    {
+      /** Encabezado de la columna */
+      encabezado: 'Tipo de programa',
+      /** Función para obtener el valor de la columna desde un objeto ProgramaLista */
+      clave: (ele: ProgramaLista): string | undefined => ele.tipoPrograma,
+      /** Orden de la columna */
+      orden: 2,
+    }
+];
+
+/**
+ * Constante que define los tipos de TICPSE disponibles.
+ */
+export const TICPSE = {
+  /**
+   * Tipo TICPSE para IMMEX.
+   */
+  TICPSE_IMMEX: 'TICPSE.IMMEX',
+
+  /**
+   * Tipo TICPSE para PROSEC.
+   */
+  TICPSE_PROSEC: 'TICPSE.PROSEC'
+}
+
+/**
+ * Constante que define el valor del discriminador para el trámite 80301.
+ */
+export const DISCRIMINATOR_VALUE = '80303';
+
+
+/**
+ * Genera un mensaje HTML que indica el registro exitoso de una solicitud.
+ * @param numeroSolicitud Número de solicitud a incluir en el mensaje
+ * @returns Mensaje HTML formateado para registro exitoso
+ */
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string): string =>
+  `<p>La solicitud ha quedado registrada con el número temporal ${numeroSolicitud ?? ''}. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.</p>`;
+
+/**
+ * Constante que define los pasos para el proceso de exportación.
+ * Cada paso incluye un índice, título, y estados de activo y completado.
+ * @constant {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>} PASOS_EXPORTACION
+ */
+export const PASOS_EXPORTACION = [
+  {
+    /** Índice del paso. */
+    indice: 1,
+    /** Título del paso. */
+    titulo: 'Capturar solicitud',
+    /** Indica si el paso está activo. */
+    activo: true,
+    /** Indica si el paso está completado. */
+    completado: true,
+  },
+  {
+    /** Índice del paso. */
+    indice: 2,
+    /** Título del paso. */
+    titulo: 'Anexar requisitos',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
+  },
+  {
+    /** Índice del paso. */
+    indice: 3,
+    /** Título del paso. */
+    titulo: 'Firmar solicitud',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
+  },
+];

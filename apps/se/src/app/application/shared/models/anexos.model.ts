@@ -39,4 +39,42 @@ export interface Anexo {
    * Unidad de medida correspondiente a la cantidad especificada.
    */
   unidadMedida?: string;
+  /**
+   * Clave del producto de exportación asociado al anexo.
+   */
+  claveProductoExportacion?: number;
+  /**
+   * Fracción padre asociada al anexo.
+   */
+  fraccionPadre?: number;
+
+  /**
+   * Clave de fracción arancelaria asociada al anexo.
+   */
+  cveFraccion?: string;
+
+  /**
+   * Fracción arancelaria
+   */
+  fraccionArancelaria?: {
+    /**
+     * Descripción de la fracción arancelaria.
+     */
+    descripcion: string;
+  }
+
+  /**
+   * Complemento
+   */
+  complemento?: {
+    /**
+     * Descripción del complemento.
+     */
+    descripcion: string;
+  }
+
+  /**
+   * Unidad de medida correspondiente a la cantidad especificada.
+   */
+  unidadMedidaTarifaria?: string;
 }

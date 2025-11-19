@@ -38,6 +38,7 @@ describe('ModificarMercanciasComponent - additional tests', () => {
       setDescripcionFraccionArancelaria: jest.fn(),
       setUmt: jest.fn(),
       setCadenaDeDependencia: jest.fn(),
+      setClasificacionProductos: jest.fn(),
       setEspecificarProducto: jest.fn(),
       setTipoProducto: jest.fn(),
       setFarmaceutica: jest.fn(),
@@ -191,9 +192,9 @@ describe('ModificarMercanciasComponent - additional tests', () => {
     expect(component.usoEspecifico).toBe(false);
   });
 
-  it('seleccionaProductos should call setCadenaDeDependencia', () => {
-    component.seleccionaProductos({ descripcion: 'desc' } as any);
-    expect(solicitud260910Store.setCadenaDeDependencia).toHaveBeenCalledWith('desc');
+  it('seleccionaProductos should call setClasificacionProductos', () => {
+    component.seleccionaProductos({ id: 'test-id', descripcion: 'desc' } as any);
+    expect(solicitud260910Store.setClasificacionProductos).toHaveBeenCalledWith('test-id');
   });
 
   it('seleccionaEspecificar should call setEspecificarProducto', () => {

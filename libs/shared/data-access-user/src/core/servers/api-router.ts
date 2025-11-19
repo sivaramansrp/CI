@@ -345,6 +345,12 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
  * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consul…
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20solicitud/consulta-solicitudes-pendientes
+ */
+export const API_GET_BANDEJA_SOLICITUDES = 'bandeja-tarea/solicitudes-pendientes';
  
 /**
  * API para recuperar el catálogo de regímenes aduaneros.
@@ -609,6 +615,12 @@ export const DOCUMENTOMINIO= '{documentoMinio}';
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consu…
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * API para Consultar url de descarga de documentos.
+ * @see  https://api-v30.cloud-ultrasist.net/api/digitalizacion/swagger-ui/index.html#/Carga-Documento/DownloadDocument
+ */
+export const API_GET_DESCARGAR_DOCUMENTOS= `digitalizacion/descargar/${DOCUMENTOMINIO}`
  
 /**
  * IDREQUERIMIENTO para detalle de requerimiento.
@@ -1134,14 +1146,104 @@ export const API_OBTENER_FRACCIONES_ARANCELARIAS = (TRAMITE: number, CLAVE: stri
  */
 export const API_OBTENER_UMT = (TRAMITE: number, cveFraccion: string): string => `sat-t${TRAMITE}/solicitud/unidad-medida?cveFraccion=${cveFraccion}`;
 
+/**
+ * 
+ * @param TRAMITE 
+ * @param rfc 
+ * @returns 
+ */
+export const OPCIONES_PRELLENADO_SOLICITUD = (TRAMITE: number, rfc: string): string => `sat-t${TRAMITE}/solicitud/recientes/${rfc}`
+/*
+  * API para obtener la tipo de empresa
+ */
+export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-empresa`;
+
 /*API para obtener el catálogo de fracciones arancelarias*/
 export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
 
 /*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
 export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
 
-/*API para obtener el catálogo de países por bloque*/
+/** API para prellenadasDatos la solicitud del tramite generico.
+ */
+export const API_POST_PARCHE_PRELLENADAS = (TRAMITE: number, idSolicitud: number): string => `sat-t${TRAMITE}/solicitud/mostrar?idSolicitud=${idSolicitud}`;
+
+/**
+ * API para obtener la solicitud por ID
+ */
+export const API_GET_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud-servicio/${IDSOLICITUD}`;
+ 
 export const PAISES_POR_BLOQUE = (TRAMITE: string, CLAVEBLOQUE: string) : string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${CLAVEBLOQUE}`;
 
 /*API para obtener el catálogo de clasificaciones de régimen*/
 export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/clasificaciones-regimen/${CLASIFICACION}`;
+
+
+export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
+
+export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+// export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
+
+export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
+
+export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+/**
+ * API para guardar la solicitud
+ */
+export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
+
+export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
+
+export const API_REPRESENTACION_FEDERAL_PARAM = (TRAMITE: string, ESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/${ESTADO}`;
+
+/**
+ * API para obtener el catálogo de régimen enum por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/regimen-enum
+ */
+export const CATALOGO_REGIMEN_ENUM = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/regimen-enum`;
+
+/**
+ * API para obtener el catálogo de tipo de mecanismo de asignación por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/tipo-mecanismo-asignacion
+ */
+export const CATALOGO_TIPO_MECANISMO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tipo-mecanismo-asignacion`;
+
+/**
+ * API para obtener el catálogo de nombres de producto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-producto
+ */
+export const CATALOGO_NOMBRE_PRODUCTO = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/nombre-producto`;
+
+/**
+ * API para obtener el catálogo de nombres de subproducto por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-subproducto
+ */
+export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/nombre-subproducto`;
+
+/**
+ * API para obtener el catálogo de representación federal por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/140103/catalogo/representacion-federal
+ */
+
+export const REPRESENTACION_FEDERAL_CATALOGO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/representacion-federal`;
+/*
+ * API para obtener el catálogo de enum estado físico mercancía
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t90202/catalogo/sectores
+ */
+
+export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/sectores`;
+/**
+ * Genera la ruta de la API para obtener el catálogo de años de oficio de asignación,
+ * utilizando el identificador del trámite proporcionado.
+ *
+ * @param TRAMITE - Identificador del trámite a utilizar en la ruta.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
+
+export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;

@@ -21,10 +21,12 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_RFC_FISICA,
+  REGEX_RFC,
   REGEX_SOLO_DIGITOS,
-  TablaDinamicaComponent,
+  SOLO_REGEX_NUMEROS,
+  
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -75,6 +77,10 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
 import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
+
+import {TablaDinamicaComponent} from '@ng-mf/data-access-user';
+
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 /*
  ** component
  */
@@ -118,7 +124,15 @@ export class DatosDelSolicitudModificacionComponent
  * @default true
  */
   @Input() mostrarScianBotones: boolean = true;
-  
+
+
+
+noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
+  if (typeof control.value === 'string' && control.value.trim() === '') {
+    return { required: true };
+  }
+  return null;
+}
   /**
  * @input mostrarNumeroYFecha
  * @description
@@ -213,6 +227,10 @@ export class DatosDelSolicitudModificacionComponent
    * Indica si se debe mostrar el checkbox de AIFA.
    */
   @Input() showAifaCheckbox: boolean = true; 
+
+  seleccionadasPaisDeProcedenciaDatos: string[] = [];
+
+  seleccionadasEspecificoDatos: string[] = [];
 
 /**
  * Indica si se debe mostrar el botón para copiar datos en la interfaz.
@@ -458,6 +476,11 @@ export class DatosDelSolicitudModificacionComponent
    * Datos cargados dinámicamente para la tabla SCIAN.
    */
   datosData: ScianModel[] = [];
+     /**
+   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
+   * Lista de países seleccionados como origen.
+   */
+     seleccionadasPaisDeOriginDatos: string[] = [];
   /**
    * Enum para la selección de tablas.
    */
@@ -527,6 +550,8 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla mercancías.
    */
   public seleccionados: MercanciasInfo[] = [];
+
+  public scianSeleccionados: ScianModel[] = [];
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
@@ -621,8 +646,12 @@ export class DatosDelSolicitudModificacionComponent
    * y los asigna al formulario `scianForm`.
    */
 
-onSeleccionChange(event: MercanciasInfo[]): void {
+onSeleccionChange(event:any): void {
   this.seleccionados = event;
+}
+
+onScianSeleccionChange(event:any): void {
+  this.scianSeleccionados = event;
 }
 /**
  * @method loadScian
@@ -632,14 +661,51 @@ onSeleccionChange(event: MercanciasInfo[]): void {
  */
 eliminarSeleccionados(): void {
   this.seleccionados.forEach(row => {
-    const INDEX = this.mercanciasTablaDatos.indexOf(row);
+    const INDEX = this.mercanciasTablaDatos.findIndex(
+      item => item.cantidadUMC === row.cantidadUMC
+    );
     if (INDEX > -1) {
       this.mercanciasTablaDatos.splice(INDEX, 1);
     }
   });
+  this.mercanciasTablaDatos = [...this.mercanciasTablaDatos];
   this.seleccionados = [];
 }
 
+modificarMercancias(): void {
+  if(this.seleccionados.length > 0){
+    this.modalAddAgentMercanciasInstance.show();
+    const DATOS = this.seleccionados[0];
+    this.formMercancias.patchValue({
+      clasificacion: DATOS.clasificacion,
+      especificarClasificacionProducto: DATOS.especificar,
+      denominacionEspecifica: DATOS.denominacionEspecifica,
+      denominacionComun: DATOS.denominacionComun,
+      tipoDeProducto: DATOS.tipoProducto,
+      estadoFisico: DATOS.estadoFisico,
+      estadoFormaFarmaceutica: DATOS.estadoFormaFarmaceutica,
+      fraccionArancelaria: DATOS.fraccionArancelaria,
+      descripcionFraccion: DATOS.descripcionFraccion,
+      cantidadUMT: DATOS.cantidadUMT,
+      UMT: DATOS.unidadUMT,
+      cantidadUMC: DATOS.cantidadUMC,
+      UMC: DATOS.unidad,
+      presentacion: DATOS.presentacion,
+      seleccionadasPaisDeOriginDatos: DATOS.paisDeOrigen,
+      seleccionadasPaisDeProcedenciaDatos: DATOS.paisDeProcedencia,
+      seleccionadasEspecificoDatos: DATOS.usoEspecifico,
+      denominacionDistintiva: DATOS.denominacionDistintiva,
+    });
+    this.seleccionadasPaisDeOriginDatos = Array.isArray(DATOS.paisDeOrigen)
+    ?DATOS.paisDeOrigen
+    :DATOS.paisDeOrigen
+      ? [DATOS.paisDeOrigen]
+      : [];
+    this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(DATOS.paisDeProcedencia)
+    ?DATOS.paisDeProcedencia:DATOS.paisDeProcedencia? [DATOS.paisDeProcedencia]: [];
+    this.seleccionadasEspecificoDatos = Array.isArray(DATOS.usoEspecifico)?[DATOS.usoEspecifico]:DATOS.usoEspecifico? [DATOS.usoEspecifico]: [];
+  }
+}
 
   /**
   * @method obtenerScianTablaDatos
@@ -652,10 +718,27 @@ eliminarSeleccionados(): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         response?.forEach((resp: ScianModel) => {
-          this.personaparas = [...this.personaparas, resp];
+          this.datosData = [...this.personaparas, resp];
         })
       });
   }
+
+  eliminarScianSeleccionados(): void {
+    this.scianSeleccionados.forEach(row => {
+      const INDEX = this.datosData.findIndex(
+        item => item.claveScian=== row.claveScian
+      );
+      if (INDEX > -1) {
+        this.datosData.splice(INDEX, 1);
+      }
+    });
+    this.datosData = [...this.datosData];
+    this.scianSeleccionados = [];
+  }
+
+ 
+
+ 
 
   /**
    * Método que agrega los controles 'numeroRegistro' y 'fechaCaducidad' al formulario
@@ -712,7 +795,7 @@ eliminarSeleccionados(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC), Validators.maxLength(13)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
@@ -721,8 +804,8 @@ eliminarSeleccionados(): void {
       establishomentoColonias: [''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30),  this.noOnlySpacesValidator]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS), this.noOnlySpacesValidator]],
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -745,13 +828,17 @@ eliminarSeleccionados(): void {
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       estadoFormaFarmaceutica: ['', Validators.required],
-      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(8)]],
+      fraccionArancelaria: ['', [Validators.required, Validators.minLength(8),Validators.pattern(SOLO_REGEX_NUMEROS),]],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
       UMT: [{ value: '', disabled: true }, Validators.required],
       cantidadUMC: ['', Validators.required],
       UMC: ['', Validators.required],
       presentacion: ['', Validators.required],
+      seleccionadasPaisDeOriginDatos: ['', Validators.required],
+      seleccionadasPaisDeProcedenciaDatos: ['', Validators.required],
+      seleccionadasEspecificoDatos: ['', Validators.required],
+      denominacionDistintiva:['', Validators.required],
     });
 
   }
@@ -769,6 +856,23 @@ eliminarSeleccionados(): void {
         }
       });
   }
+
+   /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+   paisDeProcedenciaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisDeProcedenciaDatos = events;
+    this.formMercancias.patchValue({
+      seleccionadasPaisDeProcedenciaDatos: events,
+    });
+  }
+
+  
   /**
    * Alterna el estado colapsable de la sección "Uno".
    *
@@ -824,6 +928,7 @@ eliminarSeleccionados(): void {
       this.modalInstance.hide();
     }
   }
+  
   /**
    * @method abrirModal
    * @description
@@ -897,17 +1002,35 @@ eliminarSeleccionados(): void {
         claveScian: this.scianForm.get('scian')?.value,
         descripcionScian: this.scianForm.get('descripcionScian')?.value,
       };
+     
+      this.datosData.push(SCIAN_DATA);
+      this.datosData = [...this.datosData];
 
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
-      this.datosData = [...this.personaparas];
-
-      // Limpiar el formulario
       this.scianForm.reset();
 
-      // Cerrar el modal
       this.closeScianModal();
     }
+  }
+  /**
+   * Maneja el evento de cambio para las selecciones de país de procedencia.
+   *
+   * @param events - Un arreglo de cadenas que representa los países seleccionados.
+   *
+   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+   */
+  paisDeOriginSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisDeOriginDatos = events;
+    this.formMercancias.patchValue({
+      seleccionadasPaisDeOriginDatos: events,
+    });
+  }
+
+  especificoSeleccionadasChange(events: string[]): void {
+    this.seleccionadasEspecificoDatos = events;
+    this.formMercancias.patchValue({
+      seleccionadasEspecificoDatos: events,
+    });
   }
   /**
    * compo docs
@@ -945,13 +1068,34 @@ eliminarSeleccionados(): void {
         cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
         presentacion: this.formMercancias.get('presentacion')?.value,
         numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
-        paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
-        paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+      
         tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
-        usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+        //usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+        paisDeOrigen: this.formMercancias.get('seleccionadasPaisDeOriginDatos')?.value,
+
+        paisDeProcedencia:this.formMercancias.get('seleccionadasPaisDeProcedenciaDatos')?.value,
+       
+        usoEspecifico:this.formMercancias.get('seleccionadasEspecificoDatos')?.value,
+        
+
       };
-      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA];
+      const INDEX = this.mercanciasTablaDatos.findIndex(
+        item => item.cantidadUMC === MERCANCIA.cantidadUMC
+      );
+  
+      if (INDEX > -1) {
+       
+        this.mercanciasTablaDatos[INDEX] = MERCANCIA;
+        this.mercanciasTablaDatos = [...this.mercanciasTablaDatos];
+      } else {
+       
+        this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA];
+      }
+     // this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA];
       this.formMercancias.reset();
+      this.seleccionadasPaisDeOriginDatos= [];
+  this.seleccionadasPaisDeProcedenciaDatos= [];
+  this.seleccionadasEspecificoDatos= [];
       this.cerrarModalMercancía();
     }
   }
@@ -959,6 +1103,9 @@ eliminarSeleccionados(): void {
   limpiarMercancia(): void { 
   this.abrirModalMercancia();
   this.formMercancias.reset();
+  this.seleccionadasPaisDeOriginDatos= [];
+  this.seleccionadasPaisDeProcedenciaDatos= [];
+  this.seleccionadasEspecificoDatos= [];
 }
   /* *
    * Método para eliminar un elemento de la tabla de mercancías.

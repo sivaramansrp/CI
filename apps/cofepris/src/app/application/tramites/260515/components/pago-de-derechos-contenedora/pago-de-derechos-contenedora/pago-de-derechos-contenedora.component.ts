@@ -5,6 +5,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 
 
@@ -69,6 +70,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @memberof PagoDeDerechosContenedoraComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
 
   /**
    * @constructor
@@ -131,15 +133,33 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    *
    * @memberof PagoDeDerechosContenedoraComponent
    */
-  updatePagoDerechos(event: PagoDerechosFormState): void {
-    //this.tramiteStore.updatePagoDerechos(event);
-  }
 
-  validarContenedor(): boolean {
-    return (
-      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+validarContenedor(): boolean {
+  if (this.pagoDeDerechosComponent) {
+    const FORMDATA = this.pagoDeDerechosComponent.pagoDerechosForm.getRawValue();
+
+    const HASVALUE = Object.values(FORMDATA).some(
+      value => value !== null && value !== undefined && value !== ''
     );
+    if (HASVALUE) {
+      return this.pagoDeDerechosComponent.formularioSolicitudValidacion();
+    }
+    this.pagoDeDerechosComponent.pagoDerechosForm.markAsUntouched();
+    return true;
   }
+  return true;
+}
+markFormUntouched(form: AbstractControl):void {
+  form.markAsUntouched();
+  if (form instanceof FormGroup) {
+    Object.values(form.controls).forEach(control => this.markFormUntouched(control));
+  }
+  if (form instanceof FormArray) {
+    form.controls.forEach(control => this.markFormUntouched(control));
+  }
+}
+
+
 
   /**
    * @method ngOnDestroy

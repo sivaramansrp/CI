@@ -1,13 +1,17 @@
-import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_GET_UNIDAD_MEDIDA_COMERCIAL, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
+import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_GET_UNIDAD_MEDIDA_COMERCIAL, API_POST_EMPAQUES_ARCHIVOS, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_INSUMO_ARCHIVOS, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
 import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { DatosFraccionArancelariaResponse } from "../models/response/datos-fraccion-arancelaria-response.model";
 import { FraccionValidarRequest } from "../models/request/validar-fraccion-request.model";
 import { FraccionValidarResponse } from "../models/response/validar-fraccion-response.model";
-import { HttpClient } from "@angular/common/http";
+
+import { ArchivoMercanciaResponse } from "../models/response/archivo-mercancia-response.model";
+
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { InsumoTratadosRequest } from "../models/request/validar-insumo-request.model";
 import { Observable } from "rxjs";
+import { TratadoArchivo } from "../models/request/tratado-criterio-request.model";
 @Injectable({
     providedIn: 'root'
 })
@@ -75,5 +79,35 @@ export class DatosMercanciaService {
     getUnidadMedidaComercial(): Observable<BaseResponse<Catalogo[]>> {
         const ENDPOINT = `${this.host}${API_GET_UNIDAD_MEDIDA_COMERCIAL}`;
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+/**
+  * Envía un archivo CSV al servidor para registrar información de insumos o empaques.
+  *
+  * - Determina dinámicamente el endpoint según el tipo de archivo (`INSUMOS` o `EMPAQUES`).
+  * - Agrega los parámetros `tratadosSeleccionados` y `tipoArchivo` a la solicitud.
+  * - Envía el archivo dentro de un objeto `FormData` bajo la clave `archivoCsv`.
+  *
+  * @param tratadosSeleccionados Identificador del tratado seleccionado.
+  * @param tipoArchivo Tipo de archivo a cargar (`INSUMOS` o `EMPAQUES`).
+  * @param archivo Archivo CSV que se enviará al servidor.
+  * @returns Observable con la respuesta del servidor tras procesar la carga.
+  */
+    postArchivoMercancia(tratadosSeleccionados: TratadoArchivo[], tipoArchivo: string, archivo: File): Observable<BaseResponse<ArchivoMercanciaResponse>> {
+        let ENDPOINT!: string;
+        if (tipoArchivo === 'INSUMOS') {
+            ENDPOINT = `${this.host}${API_POST_INSUMO_ARCHIVOS}`;
+
+        } else if (tipoArchivo === 'EMPAQUES') {
+            ENDPOINT = `${this.host}${API_POST_EMPAQUES_ARCHIVOS}`;
+        }
+        const FORMDATA = new FormData();
+        FORMDATA.append('archivo_csv', archivo, archivo.name);
+        FORMDATA.append('tipo_archivo', tipoArchivo);
+        FORMDATA.append('tratados_seleccionados', new Blob(
+        [JSON.stringify(tratadosSeleccionados)], 
+        { type: 'application/json' }
+        ));
+        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA);
     }
 }

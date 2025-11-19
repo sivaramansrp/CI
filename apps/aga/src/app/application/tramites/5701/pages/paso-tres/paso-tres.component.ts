@@ -201,7 +201,11 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             ID_SOLICITUD ?? 0
           );
 
-          this.router.navigate([this.router.url.replace('/autorizar-dictamen', '/acuse')]);
+          if (this.router.url.includes('autorizar')) {
+            this.router.navigate([this.router.url.replace('/autorizar-dictamen', '/acuse')]);
+          } else {
+            this.router.navigate([`${this.url}/acuse`]);
+          }
           this.tramite5701Store.limpiarSolicitud();
         }),
         catchError((error) => {

@@ -29,6 +29,7 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
 
 
 import { PagoDeDerechosEntradaService } from './shared/services/pago-de-derechos-entrada.service';
+import { RfcSolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { PagoDeDerechosEntradaService } from './shared/services/pago-de-derechos
     ToastrModule.forRoot(),
     WizardComponent,
     SolicitanteComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    RfcSolicitanteComponent
 ],
   providers: [
     EstablecimientoService,

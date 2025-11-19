@@ -72,10 +72,13 @@ describe('PasoUnoComponent', () => {
     const tramiteAsociadosMock = [
       { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
     ];
+    
     solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
-
-    component.ngOnInit();
-    expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
+    
+    const newFixture = TestBed.createComponent(PasoUnoComponent);
+    const newComponent = newFixture.componentInstance;
+    
+    expect(newComponent.tramiteAsociados).toEqual(tramiteAsociadosMock);
   });
 
   it('should initialize form on crearformularioPagoDerechos', () => {

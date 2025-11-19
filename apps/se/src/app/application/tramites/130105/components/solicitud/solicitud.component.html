@@ -3,6 +3,7 @@
   [inputFields]="datosInputFields"
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
+  [mostrarErrorClasificacion]="true"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
@@ -20,17 +21,24 @@
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
+  [mostrarErrores]="true"
+  (modificarPartidaSeleccionada)="modificarPartidaSeleccionada($event)"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidaModificada)="partidaModificada($event)"
+  [isInvalidaPartidas]="isInvalidaPartidas"
+  (partidasEliminadas)="partidasEliminadas($event)"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-partidas-de-la-mercancia>
-
+ 
 
 <app-pais-procendencia
 [paisForm]="paisForm"
@@ -38,7 +46,10 @@
 [paisesPorBloque]="paisesPorBloque"
 [selectRangoDias]="selectRangoDias"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
+(todosPaisesSeleccionadosEvent)="todosPaisesSeleccionados($event)"
+(fechasSeleccionadas)="fechasSeleccionadas($event)"
 (bloqueCambiar)="enCambioDeBloque($event)"
+[idProcedimiento]="idProcedimiento"
 (setValoresStoreEvent)="setValoresStore($event)"
 ></app-pais-procendencia>
 
@@ -47,6 +58,13 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
+[idProcedimiento]="idProcedimiento"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

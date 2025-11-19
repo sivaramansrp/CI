@@ -1,4 +1,5 @@
 import {
+  AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
   CatalogoServices,
@@ -24,6 +25,7 @@ import {
   ViewChild,
   forwardRef
 } from '@angular/core';
+import { ERROR_CANDIDAD_POR_PERIODO, ERROR_CANTIDAD, ERROR_CAPACIDAD, ERROR_NICO, ERROR_REQ_MERCANCIA } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import {
   FRACCION_EXPORTACION,
   FraccionInfo,
@@ -116,6 +118,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    AlertComponent,
     forwardRef(() => SoloNumerosDirective),
   ],
 })
@@ -226,6 +229,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Almacena la información necesaria para mostrar los permisos disponibles en la tabla.
    */
   permisoImmexDatos: PermisoImmexGridDatos[] = [];
+
+  isFormValid = true;
+
+  errorAlerta: string = "";
 
   /**
    * @property {FraccionInfo[]} fraccionDatos
@@ -627,7 +634,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
   // Update the nico selection method for importacion modal
   cambioSeleccionNicoImportacion(params: Catalogo): void {
     this.mercanciaImportacionForm.patchValue({
-      commodityNicoDescImportacion: params.nicoDescription
+      commodityNicoDescImportacion: params.nicoDescription,
+      nico: params.clave
     });
     const NICO_ENCONTRADO = this.nico.find(
       (item) => item.clave === params.clave
@@ -647,6 +655,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
   cambioSeleccionNicoExportacion(event: Catalogo | null): void {
     if (event?.nicoDescription) {
       this.mercanciaExportacionForm.get('exportacionDescExportacion')?.setValue(event.nicoDescription);
+      this.mercanciaExportacionForm.get('nico')?.setValue(event.clave);
     } else {
       this.mercanciaExportacionForm.get('exportacionDescExportacion')?.setValue('');
     }
@@ -815,7 +824,7 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   mostrarDetalleMercanciaExportacion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Fracción.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar una fracción de importación');
     } else {
       this.obtenerIngresoSelectList('exportacion');
        this.mercanciaExportacionForm?.patchValue({
@@ -852,22 +861,33 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    */
   showTableFractionExport(): void {
     this.showTableFractionExp = true;
+    this.espectaculoAlerta = false;
     const FRACCION_VALUE = this.immexRegistroform.get('fraccionArancelariaExportacion')?.value;
     const FRACCION_DESC = this.immexRegistroform.get('FraccionDescExportacion')?.value;
 
     if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe introducir el número de fracción arancelaria.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Tiene que introducir la Fracción arancelaria y su descripción');
       return;
     }
 
     if (!this.listaFilaSeleccionada) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Permiso.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
       return;
     }
 
-    this.espectaculoAlerta = false;
+    const EL = this.fraccionTablaDatos.find(item => item.fraccionArancelaria.cveFraccion === FRACCION_VALUE && item.fraccionArancelaria.descripcionUsuario === FRACCION_DESC);
+    if(EL){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('La fracción que intenta ingresar ya se encuentra registrada.');
+      return;
+    }
+
+    this.immexRegistroform?.patchValue({
+      fraccionArancelariaExportacion: '',
+      FraccionDescExportacion: ''
+    });
 
     this.obtenerFraccionDatos(FRACCION_VALUE, FRACCION_DESC); 
   }
@@ -1079,10 +1099,10 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   eliminarPermisoImmex(): void {
     
     if (!this.listaFilaSeleccionada) {
-      this.eliminarPlantasAlerta = true;
+      this.espectaculoAlerta = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
     } else if (this.listaFilaSeleccionada) {
-      this.eliminarPlantasConfirmacion = true;
+      this.eliminarPermisoImmexConfirmacion = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Al eliminar el permiso también se eliminaran las fracciones relacionadas. ¿Desea eliminar el registro?', '', 'danger', 'Cancelar');
     }
   }
@@ -1090,12 +1110,12 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   eliminarPermisoImmexDatos(event: boolean): void {
     if (event === true) {
       if (this.listaFilaSeleccionada) {
-        const SELECTED_IDS = new Set(
-          [this.listaFilaSeleccionada].map((item) => item.consecutivo)
-        );
         this.immexTableDatos = this.immexTableDatos.filter(
-          (item) => !SELECTED_IDS.has(item.consecutivo)
-        );
+          (item) => item.consecutivo !== this.listaFilaSeleccionada?.consecutivo
+        ).map((item, index)=>{
+          item.consecutivo = index + 1
+          return item;
+        });
         this.listaFilaSeleccionada = null;
         this.immexRegistroStore.establecerDatos({
           immexTableDatos: this.immexTableDatos,
@@ -1114,24 +1134,22 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   eliminarFraccion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
-      this.eliminarPlantasAlerta = true;
+      this.espectaculoAlerta = true;
     } else if (this.listaFilaSeleccionadaFraccion) {
       this.eliminarPlantasConfirmacion = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
       if (this.listaFilaSeleccionadaFraccion) {
-      const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionadaFraccion].map(
-          (item) => item.fraccionArancelaria.cveFraccion
-        )
-      );
-      this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
-        (item) => !SELECTED_IDS.has(item.fraccionArancelaria.cveFraccion)
-      );
-      this.listaFilaSeleccionadaFraccion = null;
-      this.immexRegistroStore.establecerDatos({
-        fraccionTablaDatos: this.fraccionTablaDatos,
-      });
-    }
+        this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
+          (item) => item.fraccionArancelaria.consecutivo !== this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.consecutivo
+        ).map((item, index)=>{
+          item.fraccionArancelaria.consecutivo = index + 1
+          return item;
+        });
+        this.listaFilaSeleccionadaFraccion = null;
+        this.immexRegistroStore.establecerDatos({
+          fraccionTablaDatos: this.fraccionTablaDatos,
+        });
+      }
     }
   }
 
@@ -1164,13 +1182,48 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Add method to save mercancia importacion data
    */ 
   guardarMercanciaImportacion(): void {
+    this.errorAlerta = '';
+    this.isFormValid = true;
+    if(this.nicoTablaDatosImportacion.length === 0) {
+      this.isFormValid = false;
+      this.errorAlerta = ERROR_NICO;
+      document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     if (this.mercanciaImportacionForm.valid) {
-      const VALOR = this.nicoTablaDatosImportacion;
-      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
-      this.modalCancelar('Importacion');
+      setTimeout(()=>{
+        const CANDIDAD_ANNUAL = Number(this.mercanciaImportacionForm.get('candiadAnual')?.value);
+        const CAPACIDAD_PERIODO = Number(this.mercanciaImportacionForm.get('capacidadPeriodo')?.value);
+        const CANDIDAD_POR_PERIODO = Number(this.mercanciaImportacionForm.get('candidadPorPeriodo')?.value);
+        if( CANDIDAD_ANNUAL <= 0 || CAPACIDAD_PERIODO <= 0 || CANDIDAD_POR_PERIODO <= 0){
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CANTIDAD;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return
+        }
+        if(CANDIDAD_ANNUAL < CAPACIDAD_PERIODO){
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CAPACIDAD;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        if(CANDIDAD_POR_PERIODO > CANDIDAD_ANNUAL / 3) {
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CANDIDAD_POR_PERIODO;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        const VALOR = this.nicoTablaDatosImportacion;
+        this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
+        this.modalCancelar('Importacion');
+      },500);
     } else {
-      this.mercanciaImportacionForm.markAllAsTouched();
-      
+      setTimeout(()=>{
+        this.mercanciaImportacionForm.markAllAsTouched();
+        this.isFormValid = false;
+        this.errorAlerta = ERROR_REQ_MERCANCIA;
+        document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+      },500);
     }
   }
 
@@ -1185,6 +1238,13 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Add method to save mercancia exportacion data
    */
   guardarMercanciaExportacion(): void {
+    this.isFormValid = true;
+    if(this.nicoTablaDatosExportacion.length === 0) {
+      this.isFormValid = false;
+      this.errorAlerta = ERROR_NICO;
+      document.getElementById("mercanciaExportacionModal")?.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     if (this.mercanciaExportacionForm.valid) {
       const VALOR = this.nicoTablaDatosExportacion;
 
@@ -1235,15 +1295,15 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   validarFormulario(): boolean {
       let VALID = true;
       if (this.immexTableDatos.length > 0 && this.fraccionTablaDatos.length > 0) {
-        if(this.mercanciaImportacionForm.valid){
+        // if(this.mercanciaImportacionForm.valid){
           VALID = true;
-        }
-        else{  
-          VALID = false;
-          this.immexRegistroStore.establecerDatos({
-            mercanciaImportacionFormError: true
-          })
-        }
+        // }
+        // else{  
+        //   VALID = false;
+        //   this.immexRegistroStore.establecerDatos({
+        //     mercanciaImportacionFormError: true
+        //   })
+        // }
       } else {
         this.immexRegistroform.markAllAsTouched();
         VALID = false;

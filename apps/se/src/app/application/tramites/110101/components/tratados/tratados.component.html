@@ -181,6 +181,7 @@
 
 @for (pais of paisesInstancias; track pais) {
   <app-otras-instancias
+    #otrasInstancias
     [pais]="pais"
     [titulo]="instanciasConfig[pais].titulo"
     [mensajeAlerta]="instanciasConfig[pais].alerta"

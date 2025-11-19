@@ -1,4 +1,3 @@
-
 <ng-titulo titulo="Manifiestos y declaraciones" />
 
 <form [formGroup]="manifiestosRepresentanteForm">
@@ -122,4 +121,13 @@
 </div>
      
 </form>
+
+@if(mostrarAlertaRfc) {
+  <section>
+    <lib-notificaciones
+      [notificacionInput]="notificacionRfc"
+      (confirmacionModal)="cerrarAlertaRfc()"
+    ></lib-notificaciones>
+  </section>
+}
 

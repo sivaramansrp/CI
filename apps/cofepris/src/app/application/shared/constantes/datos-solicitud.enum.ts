@@ -23,7 +23,7 @@ import {
 export const OPCION_TABLA = [
   {
     encabezado: 'Fecha creación',
-    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion,
+    clave: (ele: TablaOpcionConfig): string | number | undefined => ele.fecha_creacion,
     orden: 1,
   },
   {
@@ -33,7 +33,7 @@ export const OPCION_TABLA = [
   },
   {
     encabezado: 'Cantidad',
-    clave: (ele: TablaOpcionConfig): string => ele.cantidad,
+    clave: (ele: TablaOpcionConfig): number | string => ele.cantidad,
     orden: 3,
   },
   {
@@ -670,7 +670,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
  *              para elementos de tabla en la aplicación.
  * @type {number[]}
  */
-export const OCULTAR_PROVEEDOR = [260102, 260101];
+export const OCULTAR_PROVEEDOR = [260102, 260101,260103];
 
 /**
  * @const OCULTAR_FACTURADOR
@@ -678,7 +678,7 @@ export const OCULTAR_PROVEEDOR = [260102, 260101];
  *
  * @type {number[]}
  */
-export const OCULTAR_FACTURADOR = [260102, 260101];
+export const OCULTAR_FACTURADOR = [260102, 260101,260103];
 
 /**
  * @const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE
@@ -796,7 +796,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260205, 260216,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206,260514,260515
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206,260514,260515,260903
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -1085,7 +1085,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260203,260204, 260205, 260206,260213, 260216, 260208, 260210, 260218]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260203,260204, 260205, 260206,260213, 260216, 260208, 260201, 260202, 260218, 260210,260904]
 
 /**
  * Constante que representa el código AIFA.
@@ -1131,7 +1131,7 @@ export const CAMPOS_CLAVE = [
  *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
  * }
  */
-export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218];
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101,260209,260210,260202,260203,260204,260213, 260218, 260216];
 
 
 
@@ -1147,7 +1147,7 @@ export const FEACCION_AFRACCION_ARANCELARIA_CATALOG = [260213];
  * @description Mapeo de procedimientos a los campos que deben ser deshabilitados al eliminar un pedimento.
  * Cada clave en el objeto representa un identificador de procedimiento, y su valor asociado es un arreglo
  */
-export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205];
+export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260203, 260204, 260205, 260206];
 
 /**
  * @const ES_VALIDO_REGISTRO_O_VENCIMIENTO

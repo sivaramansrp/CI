@@ -345,6 +345,13 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas y los siguientes caracteres especiales: ( ) - . / # & ,
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z), dígitos (0-9), espacios y los caracteres especiales permitidos.
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO_FACTURADO = /^[a-zA-Z0-9 ()\-\.\/#&,]*$/;
+
+/**
  * Expresión regular para validar una llave de pago.
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
@@ -408,6 +415,8 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
 export const REGEX_TEXTO_CON_SIMBOLOS = /^[a-zA-Z0-9\s\-.,()&]*$/;
 
 export const REGEX_TEXTO_ALFANUMERICO_EXTENDIDO = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.,()\-]+$/;
+
+export const REGEX_TEXTO_CON_SYMBOLOS = /^[a-zA-Z0-9\s&()\-\/.,]*$/;
 
 
 

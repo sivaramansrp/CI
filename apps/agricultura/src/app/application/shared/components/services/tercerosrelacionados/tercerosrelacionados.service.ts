@@ -20,6 +20,7 @@ import { URL } from '../../../../tramites/220102/constantes/fitosanitario.enum';
 import {
   API_GET_CATALOGO_COLONIAS,
   API_GET_CATALOGO_CONSULTA_PAISES,
+  API_GET_CATALOGO_ENTIDADES_FEDERATIVAS,
   API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL,
   API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS,
 } from '../../../../core/server/api-router';
@@ -83,11 +84,24 @@ export class TercerosrelacionadosService {
    * @returns Un observable que emite la respuesta base con el arreglo de entidades federativas (`Catalogo[]`).
    */
   obtieneCatalogoEntidadesFederativasGeneral(
-    tramite: number
+    tramite: number,
+    cvePais: string = 'MEX'
   ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${
       this.host
-    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString())}`;
+    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS(tramite.toString(), cvePais)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de entidades federativas basado en el trámite y clave de país proporcionados.
+   *
+   * @param tramite - Identificador numérico del trámite.
+   * @param cvePais - Clave del país en formato de cadena.
+   * @returns Un observable que emite una respuesta base con un arreglo de catálogos.
+   */
+  obtieneCatalogoEntidadesFederativas(tramite: number, cvePais: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS(tramite.toString(), cvePais)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

@@ -22,6 +22,12 @@ import { Injectable } from '@angular/core';
  */
 export interface ProsecState {
   /**
+   * @property {number | null} idSolicitud
+   * @description
+   * Identificador único de la solicitud de autorización PROSEC.
+   */
+  idSolicitud: null | number;
+  /**
    * @property {string} modalidad
    * @description
    * Modalidad seleccionada en el trámite.
@@ -112,6 +118,7 @@ export interface ProsecState {
  */
 export function createInitialState(): ProsecState {
   return {
+    idSolicitud: null,
     modalidad: 'Productor directo',
     Estado: [],
     RepresentacionFederal: [],
@@ -322,5 +329,17 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    */
   public setProductorDatos(productorDatos: FilaProductos[]): void {
     this.update((state) => ({ ...state, productorDatos }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 }

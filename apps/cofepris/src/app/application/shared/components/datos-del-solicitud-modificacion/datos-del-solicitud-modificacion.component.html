@@ -138,44 +138,79 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
-              sanitario*:</label>
+              sanitario<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
+            }"
+              >*</span
+            >:</label>
             <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text" maxlength="13"
               formControlName="establecimientoRFCResponsableSanitario" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRFCResponsableSanitario'
                 )
-              " />
+              "
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
+              }"
+
+               />
+          </div>
+          <div
+            *ngIf="domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required']"
+            class="mensaje-error">
+            Este campo es obligatorio
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern']"
-            class="text-danger">
+            class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
+            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched
+            }"
+              >*</span
+            >:</label>
             <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
               formControlName="establecimientoRazonSocial" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRazonSocial'
                 )
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoRazonSocial')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched
+              }"/>
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched && domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required']"
-            class="text-danger">
-            La razón social es obligatoria.
+            class="mensaje-error">
+            Este campo es obligatorio
+          
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:
-              <span class="bi bi-question-circle-fill" title="Correo electrónico"
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email'] || domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.touched
+            }"
+              >*</span
+            >:<span class="bi bi-question-circle-fill" title="Correo electrónico"
                 data-bs-toggle="tooltip"></span></label>
             <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
               formControlName="establecimientoCorreoElectronico" (change)="
@@ -183,19 +218,24 @@
                   'domicilioEstablecimiento',
                   'establecimientoCorreoElectronico'
                 )
-              " />
+              "
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.touched
+              }" />
           </div>
           <div *ngIf="
               domicilioEstablecimiento.get('establecimientoCorreoElectronico')
                 ?.touched
             ">
             <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
-              class="text-danger">
-              El correo electrónico es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
             <div
               *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
-              class="text-danger"
+              class="mensaje-error"
             >
               El valor Ingresado no es una dirección válida de correo
               electrónico.
@@ -209,8 +249,13 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establecimientoDomicilioCodigoPostal"
-              >Código postal*:</label
-            >
+              >Código postal<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']||domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['pattern'])&& domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched
+            }"
+              >*</span
+            >:</label>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
             <input
               class="form-control"
               type="text"
@@ -223,17 +268,19 @@
                   'domicilioEstablecimiento',
                   'establecimientoDomicilioCodigoPostal'
                 )
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched
+              }"/>
             <div *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched && 
                    domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']"
-              class="text-danger">
-              El código postal es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
-            <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['maxlength']"
-              class="text-danger"
-            >
-              El código postal no debe exceder los 12 caracteres.
+            <div *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['pattern'] && !domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']" class="mensaje-error">
+            Por favor, escribe un número entero válido
             </div>
           </div>
         </div>
@@ -264,18 +311,29 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía*:</label>
-            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase
+            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('descripcionMunicipio')?.errors?.['required'])&& domicilioEstablecimiento.get('descripcionMunicipio')?.touched
+            }"
+              >*</span
+            >:</label>
+            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase max="120"
               formControlName="descripcionMunicipio" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'descripcionMunicipio'
                 )
-              " />
+              "
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('descripcionMunicipio')?.invalid &&
+                domicilioEstablecimiento.get('descripcionMunicipio')?.touched
+              }" />
             <div
               *ngIf="domicilioEstablecimiento.get('descripcionMunicipio')?.touched && domicilioEstablecimiento.get('descripcionMunicipio')?.errors?.['required']"
-              class="text-danger">
-              El municipio es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
           </div>
         </div>
@@ -329,15 +387,26 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle">Calle*:
+            <label class="form-label" for="calle">Calle<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('calle')?.errors?.['required'])&& domicilioEstablecimiento.get('calle')?.touched
+            }"
+              >*</span
+            >:
               <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
             <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
-              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')" />
+              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')"
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('calle')?.invalid &&
+                domicilioEstablecimiento.get('calle')?.touched
+              }" />
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('calle')?.touched && domicilioEstablecimiento.get('calle')?.errors?.['required']"
-            class="text-danger">
-            La calle es obligatoria.
+            class="mensaje-error">
+            Este campo es obligatorio
           </div>
         </div>
       </div>
@@ -360,7 +429,13 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label class="form-label" for="telefono">Teléfono*:</label>
+            <label class="form-label" for="telefono">Teléfono<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('telefono')?.errors?.['required']||domicilioEstablecimiento.get('telefono')?.errors?.['pattern'])&& domicilioEstablecimiento.get('telefono')?.touched
+            }"
+              >*</span
+            >:</label>
             <input
               class="form-control"
               type="text"
@@ -370,14 +445,19 @@
               formControlName="telefono"
               (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'telefono')
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('telefono')?.invalid &&
+                domicilioEstablecimiento.get('telefono')?.touched
+              }"/>
           </div>
           <div *ngIf="domicilioEstablecimiento.get('telefono')?.touched">
-            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="text-danger">
-              El número de teléfono es obligatorio.
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="mensaje-error">
+              Este campo es obligatorio
             </div>
-            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern']" class="text-danger">
-              El teléfono debe contener solo números.
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern'] && !domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="mensaje-error">
+              Por favor, escribe un número entero válido
             </div>
           </div>
         </div>
@@ -387,12 +467,10 @@
     <div class="row" class="mt-5">
       <div class="form-group">
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" >
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" (listaDeFilaSeleccionada)="onScianSeleccionChange($event)" >
         </app-tabla-dinamica>
-        <div *ngIf="DatosDelSolicitudModificacionComponent.hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
-          La clave S.C.I.A.N. es obligatoria.
-        </div>
+        
       </div>
       <div *ngIf="domicilioEstablecimiento.get('scian')?.touched && 
              domicilioEstablecimiento.get('scian')?.errors?.['required']" class="text-danger">
@@ -402,7 +480,7 @@
 
     @if (mostrarScianBotones) {
       <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false">
+      <button type="button" class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarScianSeleccionados()">
         Eliminar
       </button>
       <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
@@ -506,7 +584,7 @@
       
         <div class="container text-end mt-5">
         <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="modificarMercancias()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
         <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">
           Agregar
         </button>
@@ -607,6 +685,37 @@
               {{ getErrorMessage('denominacionEspecifica') }}
             </div>
           </div>
+         
+              <div class="form-group">
+                <label class="form-label" for="denominacionDistintiva"
+                  >Denominación distintiva<span
+                  [ngClass]="
+                {
+                  'text-danger': formMercancias.get('denominacionDistintiva')?.errors?.['required'] && formMercancias.get('denominacionDistintiva')?.touched
+                }"
+                  >*</span
+                >:</label
+                >
+                <input
+                  class="form-control"
+                  id="denominacionDistintiva"
+                  type="text"
+                  formControlName="denominacionDistintiva"
+                  maxlength="1000"
+                  [ngClass]="{
+                    'is-invalid':
+                    formMercancias.get('denominacionDistintiva')?.invalid &&
+                    formMercancias.get('denominacionDistintiva')?.touched
+                  }"
+                />
+                <div
+                  class="mensaje-error"
+                  *ngIf="formMercancias.get('denominacionDistintiva')?.errors?.['required'] && formMercancias.get('denominacionDistintiva')?.touched"
+                >
+                  Este campo es obligatorio.
+                </div>
+              </div>
+           
           <div class="form-group">
             <label for="denominacionComun">
               Denominación o nombre científico*:
@@ -663,7 +772,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:
+            <label for="fraccionArancelaria">Fracción arancelaria<span
+              [ngClass]="
+            {
+              'text-danger': formMercancias.get('fraccionArancelaria')?.errors?.['required'] && formMercancias.get('fraccionArancelaria')?.touched
+            }"
+              >*</span
+            >:
               <span
               class="bi bi-question-circle-fill"
               title="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
@@ -677,11 +792,18 @@
               class="form-control"
               maxlength="8"
             />
-            <div
-              class="text-danger"
-              *ngIf="getErrorMessage('fraccionArancelaria')"
-            >
-              {{ getErrorMessage('fraccionArancelaria') }}
+            <div class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
+              <ng-container *ngIf="formMercancias.get('fraccionArancelaria')?.errors as errors">
+                <div *ngIf="errors['required']">
+                  Este campo es obligatorio.
+                </div>
+                <div *ngIf="!errors['required'] && errors['pattern']">
+                  Por favor, sólo escribe dígitos
+                </div>
+                <div *ngIf="!errors['required'] && !errors['pattern'] && errors['minlength']">
+                  Por favor, no escribas menos de 8 caracteres.
+                </div>
+              </ng-container>
             </div>
           </div>
           <div class="form-group">
@@ -799,7 +921,11 @@
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigenLabel"
-                      [botones]="paisDeProcedenciaBotons"></crosslist>
+                      [botones]="paisDeProcedenciaBotons"
+                      [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
+                      (fechasSeleccionadasChange)="
+                        paisDeOriginSeleccionadasChange($event)
+                      "></crosslist>
                   </div>
                 </div>
                 }
@@ -818,7 +944,9 @@
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPaisDos" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonsDos"></crosslist>
+                      [botones]="paisDeProcedenciaBotonsDos"
+                      [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
+                      (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"></crosslist>
                   </div>
                 </div>
                 }
@@ -837,6 +965,10 @@
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="usoEspecificoLabel"
+                    [fechasSeleccionadas]="seleccionadasEspecificoDatos"
+                    (fechasSeleccionadasChange)="
+                    especificoSeleccionadasChange($event)
+                    "
                       [botones]="paisDeProcedenciaBotonsTres"></crosslist>
                   </div>
                 </div>

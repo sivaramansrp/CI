@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, doDeepCopy, esValidArray, getValidDatos, Notificacion, NotificacionesComponent, REGEX_RFC, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_RFC, ValidacionesFormularioService, doDeepCopy, esValidArray, getValidDatos } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -20,6 +20,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './representante-legal-rfc.component.css',
 })
 export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
+  @Output() formValidityChange = new EventEmitter<boolean>();
   public mostrarErroresRepresentante = {
     rfc:false,
   nombre: false,
@@ -200,6 +201,9 @@ const STATE = this.solicitudState ?? {};
               apellidoPaterno: getValidDatos(DATOS.datos[0].apellidoPaterno) ? DATOS.datos[0].apellidoPaterno : '',
               apellidoMaterno: getValidDatos(DATOS.datos[0].apellidoMaterno) ? DATOS.datos[0].apellidoMaterno : '',
           });
+          this.setValoresStore(this.representante, 'nombre', 'setNombre');
+          this.setValoresStore(this.representante, 'apellidoPaterno', 'setApellidoPaterno');
+          this.setValoresStore(this.representante, 'apellidoMaterno', 'setApellidoMaterno');
         }
         else{
              this.mostrarErroresRepresentante.nombre = true;
@@ -248,6 +252,7 @@ const STATE = this.solicitudState ?? {};
     this.servicioDeFormularioService.setFormValue('representanteForm', {
         [campo]: VALOR,
       });
+    this.formValidityChange.emit(this.representante.valid);
   }
 
   /**
@@ -285,9 +290,10 @@ validarClickDeBoton(): boolean {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  
   eliminarPedimento(event: boolean): void {
     if (event) {
-    
+      //
     }
   }
 }

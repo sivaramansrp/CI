@@ -18,7 +18,14 @@
       }
     </div>
     <ng-titulo titulo="Materias primas relacionadas" />
-
+    <div class="col-12">
+      @if (!esFormaValido && alertaErrorFormulario) {
+      <div
+        class="alert alert-info alert-danger text-center"
+        [innerHTML]="alertaErrorFormulario"
+      ></div>
+      }
+    </div>
 
     <div class="row mb-3">
       <div class="col-md-4">
@@ -67,7 +74,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="materiasPrimasCatalogo"
-          [label]="'Nombre de la materia prima'"
+          [label]="'Nombre de la materia prima*'"
           formControlName="nombreMateriaPrima"
           (change)="
             actualizarCampoFormularioDatos('nombreMateriaPrima');
@@ -126,7 +133,7 @@
       <div class="col-md-4">
         <div class="form-group mb-3">
           <label for="fraccionArancelaria" class="form-label"
-            >Fracción arancelaria</label
+            >Fracción arancelaria:</label
           >
           <input
             type="text"
@@ -164,6 +171,7 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <app-tabla-dinamica
+          [styleCenter]="true"
           [isInvalida]="submitted && materiasPrimasTabla.length === 0"
           [configuracionTabla]="configuracionTablaMaterias"
           [datos]="materiasPrimasTabla"
@@ -189,7 +197,7 @@
       </button>
     </div>
   </div>
-  <ng-titulo titulo="Datos de los residuos peligrosos a retornar" />
+  <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
 
   <form [formGroup]="formularioResiduo">
     <div class="row mb-3">
@@ -222,7 +230,7 @@
 
     <div class="row mb-3">
       <div class="col-md-8">
-        <label class="form-label">Acotación:</label>
+        <label class="form-label">Acotación*:</label>
         <textarea
           class="form-control textarea-auto-height"
           cols="50"
@@ -288,6 +296,7 @@
             actualizarCampoFormularioResiduo('cantidad'); onCantidadChange()
           "
           (blur)="onCantidadChange()"
+          (focus)="esCantidadFijada = true"
           [ngClass]="
             formularioResiduo.get('cantidad')?.invalid &&
             formularioResiduo.get('cantidad')?.touched
@@ -318,6 +327,13 @@
             o a la derecha después del punto decimal (999999.999999)</small
           >
         </div>
+        }
+      </div>
+      <div class="col-md-4">
+        @if (esCantidadFijada) {
+        <p style="margin-top: 40px" class="text-muted">
+          No está permitido capturar "," (COMA)
+        </p>
         }
       </div>
     </div>

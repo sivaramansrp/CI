@@ -26,6 +26,7 @@
         (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
         (reenviarCargaRealizada)="cargaRealizada($event)"
         (cargaEnProgreso)="onCargaEnProgreso($event)"
+        (enBlancoObligatoria)="onBlancoObligatoria($event)"
       ></app-paso-carga-documento>
     </ng-container>
     <ng-container *ngIf="indice === 3">
@@ -54,7 +55,7 @@
             </button>
             <button
               class="btn btn-primary ms-3"
-              (click)="seccionCargarDocumentos ? onClickCargaArchivos() : getValorIndice({accion: 'cont', valor: indice})"
+              (click)="seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()"
               [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
             >
               {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}

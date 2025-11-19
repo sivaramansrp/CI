@@ -290,7 +290,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   createForm(): void {
     this.formDatosCertificado = this.fb.group({
-      observacionesDates: [''],
+      observacionesDates: ['', [Validators.maxLength(500)]],
       presenta: [''],
       idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],

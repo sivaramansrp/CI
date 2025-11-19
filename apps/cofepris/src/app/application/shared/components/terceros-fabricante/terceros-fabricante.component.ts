@@ -13,10 +13,11 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  REGEX_SOLO_NUMEROS,
+  REGEX_SOLO_NUMEROS,  
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
   TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
@@ -71,7 +72,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
+  /** Evento emitido cuando la tabla es válida. */
+  @Output() tableValidEvent = new EventEmitter<string>();
 
   /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
    * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
@@ -95,6 +102,41 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .filter((tabla) => tabla.esVisible) // Only include visible tables
       .sort((a, b) => a.orden - b.orden);
   }
+/**
+ * Indica si se está editando un fabricante.
+ * Se utiliza para controlar la lógica de modificación en el formulario.
+ */
+isEditingFabricante = false;
+
+/**
+ * Indica si se está editando un formulador.
+ * Permite diferenciar entre agregar un nuevo registro o actualizar uno existente.
+ */
+isEditingFormulador = false;
+
+/**
+ * Indica si se está editando un proveedor.
+ * Se usa para gestionar la actualización de datos existentes en la tabla.
+ */
+isEditingProveedor = false;
+
+/**
+ * Índice de la fila de fabricante que se está editando.
+ * Se utiliza para actualizar el elemento correcto en el arreglo de datos.
+ */
+editFabricanteIndex: number = -1;
+
+/**
+ * Índice de la fila de formulador que se está editando.
+ * Permite reemplazar correctamente los datos en la tabla al guardar cambios.
+ */
+editFormuladorIndex: number = -1;
+
+/**
+ * Índice de la fila de proveedor que se está editando.
+ * Se emplea para identificar y actualizar la fila correspondiente en la tabla.
+ */
+editProveedorIndex: number = -1;
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -135,7 +177,87 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de fabricante.
    */
   showFabricanteButtons = false;
-  
+  /**
+ * Fila actualmente seleccionada en la tabla de formuladores.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedFormuladorRow: TablaDatos | null = null;
+  /**
+ * Fila actualmente seleccionada en la tabla de proveedores.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedProveedorRow: TablaDatos | null = null;
+  /**
+ * Fila actualmente seleccionada en la tabla de fabricantes.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedFabricanteRow: TablaDatos | null = null;
+/**
+ * Maneja la selección de una fila en la tabla de fabricantes.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onFabricanteRowSelected(row: TablaDatos): void {
+  this.selectedFabricanteRow = row;
+}
+
+/**
+ * Maneja la selección de una fila en la tabla de formuladores.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onFormuladorRowSelected(row: TablaDatos): void {
+  this.selectedFormuladorRow = row;
+}
+
+/**
+ * Maneja la selección de una fila en la tabla de proveedores.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onProveedorRowSelected(row: TablaDatos): void {
+  this.selectedProveedorRow = row;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de fabricantes
+ * y actualiza el store correspondiente.
+ */
+ eliminarFabricante(): void {
+  if (!this.selectedFabricanteRow) {return;}
+
+  this.fabricanteRowData = this.fabricanteRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedFabricanteRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setFabricante([...this.fabricanteRowData]);
+  this.selectedFabricanteRow = null;
+  this.showFabricanteButtons = false;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de formuladores
+ * y actualiza el store correspondiente.
+ */
+eliminarFormulador(): void {
+  if (!this.selectedFormuladorRow) {return}
+  this.formuladorRowData = this.formuladorRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedFormuladorRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setFormulador([...this.formuladorRowData]);
+  this.selectedFormuladorRow = null;
+  this.showFormuladorButtons = false;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de proveedores
+ * y actualiza el store correspondiente.
+ */
+eliminarProveedor(): void {
+  if (!this.selectedProveedorRow) {return}
+  this.proveedorRowData = this.proveedorRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedProveedorRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setProveedor([...this.proveedorRowData]);
+  this.selectedProveedorRow = null;
+  this.showProveedorButtons = false;
+}
   onFabricanteSeleccionCambio(isChecked: boolean): void {
     this.showFabricanteButtons = isChecked;
   }
@@ -282,6 +404,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public tercerosForm: FormGroup = new FormGroup({});
 
+    /** Indica si el campo de fabricante es inválido. */
+    public isfabricanteInvalida: boolean = false;
+
+    /** Indica si el campo de Proveedor es inválido. */
+    public isProveedorInvalida: boolean = false;
+
+    /** Indica si el campo de Formulador es inválido. */
+    public isFormuladorInvalida: boolean = false;
+
+
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -297,7 +430,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -347,6 +481,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
@@ -369,6 +546,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -396,6 +574,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.tercerosForm.markAllAsTouched();
       }
     })
+  }
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.markTouched();
+      });
+    }
   }
 
   /**
@@ -1013,154 +1203,174 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
   }
+/**
+ * Permite modificar un Formulador existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+  modificarFormulador(): void {
+  if (!this.selectedFormuladorRow) { return; }
 
+  // Find the index of the selected row
+  this.editFormuladorIndex = this.formuladorRowData.findIndex(
+    row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedFormuladorRow?.tbodyData)
+  );
+
+  if (this.editFormuladorIndex === -1) { return; }
+
+  const SELECTED_ROW = this.selectedFormuladorRow.tbodyData;
+
+  this.agregarFormuladorFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
+
+  this.showFormulador = true;
+  this.showTableDiv = false;
+  this.isEditingFormulador = true;
+}
+/**
+ * Permite modificar un Proveedor existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+  modificarProveedor(): void {
+  if (!this.selectedProveedorRow) { return; }  
+  this.editProveedorIndex = this.proveedorRowData.findIndex(
+    row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedProveedorRow?.tbodyData)
+  );
+  if (this.editProveedorIndex === -1) { return; }
+  const SELECTED_ROW = this.selectedProveedorRow.tbodyData;
+  this.agregarProveedorFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
+  this.showProveedor = true;
+  this.showTableDiv = false;
+  this.isEditingProveedor = true;
+}
+/**
+ * Permite modificar un Fabricante existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+modificarFabricante(): void {
+  if (!this.selectedFabricanteRow) {return}    
+this.editFabricanteIndex = this.fabricanteRowData.findIndex(
+  row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedFabricanteRow?.tbodyData)
+);
+  if (this.editFabricanteIndex === -1) {return}
+  const SELECTED_ROW = this.selectedFabricanteRow.tbodyData; 
+  this.agregarFabricanteFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
+  this.showFabricante = true;
+  this.showTableDiv = false;
+  this.isEditingFabricante = true;
+}
   /**
-   * Envía el formulario de Fabricante y actualiza los datos en el store.
+   * Envía el formulario de Formulador y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
-   * @description Este método es llamado al enviar el formulario de agregar un fabricante.
+   * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
   submitFabricanteForm(): void {
-    /**
+ /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
-    const LOCALIDAD_VALOR = this.localidadDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.localidad
-    )?.descripcion || this.agregarFabricanteFormGroup.get('localidad')?.value;
+  const LOCALIDAD_VALOR = this.localidadDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.localidad
+  )?.descripcion || this.agregarFabricanteFormGroup.get('localidad')?.value;
 
-    /**
-     * Obtiene el valor del municipio seleccionado en el formulario.
-     */
-    const MUNICIPIO_VALOR = this.municipioDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
-    )?.descripcion || this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value;
+  const MUNICIPIO_VALOR = this.municipioDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
+  )?.descripcion || this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value;
 
-    /**
-     * Obtiene el valor del código postal seleccionado en el formulario.
-     */
-    const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
-      (item: Catalogo) =>
-        item.id ===
-        this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
-    )?.descripcion || this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value;
+  const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
+  )?.descripcion || this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value;
 
-    /**
-     * Obtiene el valor de la colonia seleccionada en el formulario.
-     */
-    const COLONIA_VALOR = this.coloniaDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.colonia
-    )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
+  const COLONIA_VALOR = this.coloniaDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.colonia
+  )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
 
-    /**
-     * Crea una nueva fila para la tabla de fabricantes.
-     * Esta fila contiene los datos del formulario de agregar un fabricante.
-     *
-     * @description Esta fila se agrega a la lista de filas del fabricante.
-     */
-    const FABRICANTE_FILA = {
-      /**
-       * Datos de la fila que se mostrarán en la tabla.
-       * Cada elemento del arreglo corresponde a una columna de la tabla.
-       */
-      tbodyData: [
-        /**
-         * Denominación o razón social del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
+ 
+  const FABRICANTE_FILA = {
+    tbodyData: [
+      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
+      this.agregarFabricanteFormGroup.get('rfc')?.value,
+      this.agregarFabricanteFormGroup.get('curp')?.value,
+      this.agregarFabricanteFormGroup.get('telefono')?.value,
+      this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
+      this.agregarFabricanteFormGroup.get('calle')?.value,
+      this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
+      this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
+      this.agregarFabricanteFormGroup.get('pais')?.value,
+      COLONIA_VALOR,
+      MUNICIPIO_VALOR,
+      LOCALIDAD_VALOR,
+      this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
+      this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
+      CODIGO_POSTAL_VALOR,
+    ],
+  };
 
-        /**
-         * RFC del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('rfc')?.value,
+   if (this.isEditingFabricante && this.editFabricanteIndex > -1) {    
+    this.fabricanteRowData[this.editFabricanteIndex] = FABRICANTE_FILA;
+     this.tercerosFabricanteStore.setFabricante([...this.fabricanteRowData]);
+    this.isEditingFabricante = false;   
+  } else {    
+    this.tercerosFabricanteStore.setFabricante([FABRICANTE_FILA]);
+  }  
+  this.tableValidEvent.emit('fabricante');
+  this.selectedFabricanteRow = null;
+  this.showFabricanteButtons = false;
+  this.showTableDiv = !this.showTableDiv;
+  this.showFabricante = !this.showFabricante;  
+  this.agregarFabricanteFormGroup.reset();
+}  
 
-        /**
-         * CURP del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('curp')?.value,
-
-        /**
-         * Teléfono del fabricante, incluyendo lada.
-         */
-        this.agregarFabricanteFormGroup.get('telefono')?.value,
-
-        /**
-         * Correo electrónico del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
-
-        /**
-         * Calle del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('calle')?.value,
-
-        /**
-         * Número exterior del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
-
-        /**
-         * Número interior del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
-
-        /**
-         * País del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('pais')?.value,
-
-        /**
-         * Colonia del fabricante.
-         */
-        COLONIA_VALOR,
-
-        /**
-         * Municipio del fabricante.
-         */
-        MUNICIPIO_VALOR,
-
-        /**
-         * Localidad del fabricante.
-         */
-        LOCALIDAD_VALOR,
-
-        /**
-         * Entidad federativa del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
-
-        /**
-         * Estado o localidad del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
-
-        /**
-         * Código postal del fabricante.
-         */
-        CODIGO_POSTAL_VALOR,
-      ],
-    };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del fabricante.
-     */
-    this.fabricanteRowData.push(FABRICANTE_FILA);
-
-    /**
-     * Actualiza el estado del store con los nuevos datos del fabricante.
-     */
-    this.tercerosFabricanteStore.setFabricante(this.fabricanteRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
-    this.showTableDiv = !this.showTableDiv;
-    this.showFabricante = !this.showFabricante;
-  }
-
-  /**
+/**
    * Envía el formulario de Formulador y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
@@ -1289,21 +1499,23 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       ],
     };
 
-    /**
-     * Agrega la nueva fila a la lista de filas del formulador.
-     */
-    this.formuladorRowData.push(FORMULADOR_FILA);
 
+     if (this.isEditingFormulador && this.editFormuladorIndex > -1) {    
+    this.formuladorRowData[this.editFormuladorIndex] = FORMULADOR_FILA;
+     this.tercerosFabricanteStore.setFormulador([...this.formuladorRowData]);
+    this.isEditingFormulador = false;   
+  } else {    
+    this.tercerosFabricanteStore.setFormulador([FORMULADOR_FILA]);
+  } 
     /**
-     * Actualiza el estado del store con los nuevos datos del formulador.
+     * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setFormulador(this.formuladorRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
+    this.selectedFormuladorRow = null;
+   this.showFormuladorButtons = false;   
+    this.tableValidEvent.emit('formulador');
     this.showTableDiv = !this.showTableDiv;
-    this.showFormulador = !this.showFormulador;
+    this.showFormulador = !this.showFormulador; 
+   this.agregarFormuladorFormGroup.reset();
   }
 
   /**
@@ -1434,22 +1646,26 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         CODIGO_POSTAL_VALOR,
       ],
     };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del proveedor.
-     */
-    this.proveedorRowData.push(PROVEEDOR_FILA);
-
+    if (this.isEditingProveedor && this.editProveedorIndex > -1) {    
+    this.proveedorRowData[this.editProveedorIndex] = PROVEEDOR_FILA;
+     this.tercerosFabricanteStore.setProveedor([...this.proveedorRowData]);
+    this.isEditingProveedor = false;   
+  } else {    
+     this.tercerosFabricanteStore.setProveedor([PROVEEDOR_FILA]);
+  }     
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setProveedor(this.proveedorRowData);
-
+  
+    this.tableValidEvent.emit('proveedor');
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
+    this.selectedProveedorRow = null;
+    this.showProveedorButtons = false; 
+    this.agregarProveedorFormGroup.reset();
   }
 
   /**
@@ -1564,7 +1780,41 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         extranjeroEstado: 'Estado del Extranjero Ejemplo',
         extranjeroColonia: 'Colonia del Extranjero Ejemplo',
       })
+    } else {
+      form.get('rfc')?.markAsTouched();
+      form.get('curp')?.markAsTouched();
     }
+  }
+
+  /** Marca como inválidos los campos si no contienen datos. */
+  markTouched(): void {
+    if (this.fabricanteRowData.length===0) {
+      this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
+    }
+    if (this.formuladorRowData.length===0) {
+      this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
+    }
+    if (this.proveedorRowData.length===0) {
+      this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
+    }
+  }
+
+  /**
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
+  public esValido(campo: string, form: FormGroup): boolean | null {
+    return this.validacionesService.isValid(form, campo);
   }
 
   /**

@@ -151,7 +151,7 @@ export interface DatosDelModificacion {
   /** Estatus descriptivo (ej. 'Activo', 'Inactivo') */
   desEstatus?: string;
   /** Descripción del domicilio o del trámite */
-   descripcion?: string;
+  descripcion?: string;
   /** Tipo de servicio relacionado con el trámite */
   tipoDeServicio?: string;
 }
@@ -171,4 +171,86 @@ export interface DatosDelServicios {
   tipoDeServicio?: string;
   /** Estado del servicio */
   testado?: string;
+}
+
+/**
+ * Respuesta genérica de una API que puede contener datos de cualquier tipo.
+ * @template T Tipo de datos que se espera en la respuesta.
+ * @interface JSONRespuesta
+ */
+export interface JSONRespuesta<T> {
+  /**
+   * Causa del error, si aplica.
+   */
+  causa?: string;
+
+  /**
+   * Código de estado HTTP o personalizado.
+   */
+  codigo?: string;
+
+  /**
+   * Mensaje descriptivo de la respuesta.
+   */
+  mensaje: string;
+
+  /**
+   * Datos retornados por la API, de tipo genérico T.
+   */
+  datos?: T;
+}
+
+/**
+ * Estructura que representa los datos de fracciones de importación y exportación
+ * dentro del trámite de modificación del programa IMMEX.
+ * @interface ImportacionExportacionFracciones
+ */
+export interface ImportacionExportacionFracciones {
+  /**
+   * Fracción compuesta de la importación o exportación.
+   * @property {string} fraccionCompuesta
+   */
+  fraccionCompuesta: string;
+
+  /**
+   * Clave del producto de exportación.
+   * @property {number} claveProductoExportacion
+   */
+  claveProductoExportacion: number;
+
+  /**
+   * Fracción padre de la importación o exportación.
+   * @property {string} fraccionPadre
+   */
+  fraccionPadre: string;
+
+  /**
+   * Fecha de inicio de vigencia de la fracción.
+   * @property {string} fecIniVigencia
+   */
+  fecIniVigencia: string;
+
+  /**
+   * Clave de la fracción arancelaria.
+   * @property {string} cveFraccion
+   */
+  cveFraccion: string;
+
+  /**
+   * Descripción de la fracción arancelaria.
+   * @property {string} descripcion
+   */
+  descripcion: string;
+
+  /**
+   * Descripción del estado de la fracción.
+   * @property {string} descripcionTestado
+   */
+  descripcionTestado: string;
+
+  /**
+   * Indica si el registro está visible en la tabla.
+   * @property {boolean} visible
+   */
+  visible: boolean;
 }

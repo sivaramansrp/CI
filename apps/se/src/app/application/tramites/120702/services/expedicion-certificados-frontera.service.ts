@@ -1,10 +1,11 @@
+import { Observable, map } from 'rxjs';
 import {Solicitud120702State, Tramite120702Store} from '../estados/tramite120702.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { BUSCAR_ASIGNACION, GUARDAR } from '../../../shared/servers/api-route';
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MontoExpedirTablaDatos } from '../models/expedicion-certificados-frontera.models';
-import { Observable } from 'rxjs';
 import {Tramite120702Query} from '../estados/tramite120702.query';
 /**
  * Servicio encargado de obtener los datos relacionados con la expedición de certificados en frontera,
@@ -73,4 +74,33 @@ actualizarEstadoFormulario(DATOS: Solicitud120702State): void {
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud120702State> {
     return this.http.get<Solicitud120702State>('assets/json/120702/expedicion-certificados-consulta.json');
   }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<SolicitudDeRegistroTpl120101State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Solicitud120702State> {
+    return this.tramite120702Query.selectSolicitud$;
+  }
+
+/**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   *
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(GUARDAR('sat-t120702'), body);
+  }
+  /**
+     * Realiza una solicitud POST para buscar datos relacionados con instrumentos del trámite "120101".
+     *
+     * @param body - Objeto que contiene los parámetros de búsqueda requeridos por la API.
+     * @returns Un observable que emite la respuesta de la API con los datos encontrados.
+     */
+     getBuscarDatos(urlPram:any): Observable<any> {
+      return this.http.get<any>(BUSCAR_ASIGNACION("120702",urlPram)).pipe(
+        map((response) => response)
+      );
+    }
 }

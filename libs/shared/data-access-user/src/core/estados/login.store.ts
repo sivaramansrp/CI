@@ -15,7 +15,7 @@ export interface LoginState {
  */
 export function createLoginInitialState(): LoginState {
   return {
-    rfc: '',
+    rfc: 'AAL0409235E6',
     tieneLogin: false
   };
 }

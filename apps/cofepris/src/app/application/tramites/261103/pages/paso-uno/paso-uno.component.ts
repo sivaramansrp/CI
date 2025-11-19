@@ -16,6 +16,8 @@ import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
+
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
 import { map } from 'rxjs';
@@ -168,7 +170,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       ),
       fecPago: new FormControl(
         this.estadoSolicitudPermiso.fecPago,
-        Validators.required
+        [PagoDeDerechosComponent.fechaLimValidator()]
       ),
       impPago: new FormControl(
         this.estadoSolicitudPermiso.impPago,
