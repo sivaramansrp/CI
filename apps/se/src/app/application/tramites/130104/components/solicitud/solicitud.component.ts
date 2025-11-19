@@ -1,23 +1,22 @@
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
+import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130104State, Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import Decimal from 'decimal.js';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
-import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
-import Decimal from 'decimal.js';
 import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
-import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
 
 
 /**
@@ -119,11 +118,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       required: true,
       controlName: 'clasificacion',
     },
-  ];
+  ]; 
+  
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;  /**
+  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
+  /**
    * jest.spyOnOpciones de solicitud configurables.
    */
   opcionesSolicitud: ProductoOpción[] = OPINIONES_SOLICITUD;
@@ -295,7 +297,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
-    });    this.paisForm = this.fb.group({
+    });
+    this.paisForm = this.fb.group({
       bloque: [''],
       usoEspecifico: ['', Validators.required],
       justificacionImportacionExportacion: ['', [Validators.required]],
@@ -466,7 +469,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
           "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
-      ];      
+      ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
       
       this.tramite130104Store.actualizarEstado({ tableBodyData: this.tableBodyData });

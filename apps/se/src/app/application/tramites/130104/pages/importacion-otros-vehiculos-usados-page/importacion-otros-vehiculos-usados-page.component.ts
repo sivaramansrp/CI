@@ -2,17 +2,15 @@
  * Componente que representa los pasos de datos en un proceso de múltiples pasos. 
  * */
 import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
-import { DatosPasos, JSONResponse, Notificacion, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
-import { AccionBoton } from '../../enums/accionbotton.enum';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite130104State, Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
-import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
+import { AccionBoton } from '../../enums/accionbotton.enum';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
+import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 
 /**
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
@@ -134,10 +132,11 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
     private toastrService: ToastrService) {
     this.tramite130104Query.selectSolicitud$.pipe(
       takeUntil(this.destroyed$)).subscribe((solicitudState) => {
-      this.solicitudState = solicitudState;
+        this.solicitudState = solicitudState;
     });
-  }  
-      /**
+  }
+
+  /**
    * Navega a través de los pasos del asistente según la acción del botón.
    * @param e Objeto que contiene la acción y el valor del índice al que se desea navegar.
    */
@@ -211,7 +210,7 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
    * @param e Acción del botón para navegación
    * @returns Promise con la respuesta JSON del servidor
    */
-  guardar(item: Tramite130104State, e: AccionBoton): Promise<any> {
+  guardar(item: Tramite130104State, e: AccionBoton): Promise<Record<string, unknown>> {
     const MERCANCIA = this.importacionOtrosVehiculosUsadosService.getPayloadDatos(item);
     
     const PAYLOAD = {
@@ -302,7 +301,7 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
             }
           }
           
-          this.toastrService.success(response.mensaje);
+          this.toastrService.success(typeof response['mensaje'] === 'string' ? response['mensaje'] : '');
           resolve(response);
         },
         error: (error) => {

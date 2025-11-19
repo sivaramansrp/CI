@@ -1,16 +1,15 @@
 /**
  * ImportacionOtrosVehiculosUsadosService
  */
-import { Tramite130104State, Tramite130104Store } from '../../../estados/tramites/tramite130104.store';
 import { Catalogo, CatalogoServices, HttpCoreService, JsonResponseCatalogo } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
+import { Tramite130104State, Tramite130104Store } from '../../../estados/tramites/tramite130104.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PROC_130104 } from '../servers/api-route';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130104Query } from '../../../estados/queries/tramite130104.query';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 
 /**
  * ImportacionOtrosVehiculosUsadosService
@@ -97,7 +96,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    * Obtiene la lista de representaciones federales desde un archivo JSON.
    * @returns {Observable<Catalogo[]>}
    */
-  getRepresentacionFederal(tramite: string, cveEntidad: string): Observable<Catalogo[]> {
+  getRepresentacionFederal(tramite: string, _cveEntidad: string): Observable<Catalogo[]> {
     return this.catalogoServices.representacionFederalCatalogo(tramite, "MEX").pipe(
       map(res => res?.datos ?? [])
     );
@@ -207,8 +206,8 @@ export class ImportacionOtrosVehiculosUsadosService {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: Record<string, unknown>): Observable<any> {
-    return this.http.post<any>(PROC_130104.GUARDAR, body);
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.http.post<Record<string, unknown>>(PROC_130104.GUARDAR, body);
   }
 
   /**
