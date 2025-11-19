@@ -152,7 +152,7 @@ nombresCampos:boolean = false;
  * Bandera que indica si se debe validar el estado dentro del formulario.
  * Se recibe como entrada desde el componente padre y su valor por defecto es verdadero.
  */
-  @Input() estadoValidte: boolean = true;
+  @Input() estadoValidte: boolean = false;
 
    /**
    * @descripcion Notificación para mostrar mensajes al usuario.
