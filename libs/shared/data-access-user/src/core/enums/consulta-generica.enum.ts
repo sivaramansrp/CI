@@ -18,7 +18,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaAcuses,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaAcuses: [
@@ -45,7 +45,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaResolucion,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaResolucion: [
@@ -100,20 +100,16 @@ export const CONSULTA_ACUSES = {
   export const CONSULTA_TAREASTRAMITE = {
     encabezadoTablaTareasTramite: [
       {
-        key: 'id' as keyof BodyTablaTareasTramite,
-        valor: 'No.',
-      },
-      {
         key: 'nombreTarea' as keyof BodyTablaTareasTramite,
         valor: 'Nombre de la tarea',
       },
       {
         key: 'nombreUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Usuario asignado',
+        valor: 'Nombre del usuario al que se le asignó la tarea',
       },
       {
         key: 'claveUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Clave asignada',
+        valor: 'Clave de usuario al que se le asignó la tarea',
       },
       {
         key: 'fechaAsignacion' as keyof BodyTablaTareasTramite,
@@ -253,7 +249,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaOpinion,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaOpinion: [
