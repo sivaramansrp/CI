@@ -122,23 +122,24 @@ postPlantasDisponiblesTabla(tramite: string, PAYLOAD: PlantasDisponiblesPayload)
     return this.http.post<BaseResponse<ObtenerCertificadosDisponiblesResponse[]>>(ENDPOINT, PAYLOAD);
   }
 
-  /**
+ /**
    * @method obtenerDetalleSolicitud
    * @description
    * Realiza una petición HTTP POST para obtener el detalle de una solicitud específica según el trámite proporcionado.
-   * 
-   * @param {string} tramite - Identificador del trámite para el cual se requiere obtener el detalle de la solicitud.
-   * @param {DetalleSolicitudBuscarPayload} PAYLOAD - Objeto con los parámetros necesarios para buscar el detalle de la solicitud.
-   * @returns {Observable<BaseResponse<DetalleSolicitudBuscarResponse[]>>} Observable que emite la respuesta base con un arreglo de detalles de la solicitud.
-   * 
    * @memberof ServiciosService
    */
   obtenerDetalleSolicitud(
     tramite: string,
     PAYLOAD: DetalleSolicitudBuscarPayload
-  ): Observable<BaseResponse<DetalleSolicitudBuscarResponse[]>> {
-    const ENDPOINT = `${this.host}${API_OBTENER_DETALLE_SOLICITUD(tramite.toString())}`;
-    return this.http.post<BaseResponse<DetalleSolicitudBuscarResponse[]>>(ENDPOINT, PAYLOAD);
+  ): Observable<BaseResponse<DetalleSolicitudBuscarResponse>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_DETALLE_SOLICITUD(
+      tramite.toString()
+    )}`;
+
+    return this.http.post<BaseResponse<DetalleSolicitudBuscarResponse>>(
+      ENDPOINT,
+      PAYLOAD
+    );
   }
 
   /**

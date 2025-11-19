@@ -42,6 +42,7 @@ import {
   CATALOGO_PAISES_MEXICO,
   CATALOGO_PAIS_BLOQUE_CLAVE,
   CATALOGO_REGIMENES,
+  CATALOGO_REGIMEN_ENUM,
   CATALOGO_REPRESENTACION_FEDERAL,
   CATALOGO_SCIAN,
   CATALOGO_SECTORES,
@@ -1107,6 +1108,17 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+/**
+ * Obtiene el catálogo de regímenes aduaneros enumerados según el trámite especificado.
+ * @param tramite - Identificador del trámite
+ * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de regímenes enumerados
+ * @see CATALOGO_REGIMEN_ENUM
+*/
+regimenEnumCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_REGIMEN_ENUM(tramite)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 
 /**
  * Obtiene el catálogo de tipos de mecanismo de asignación según el trámite especificado.

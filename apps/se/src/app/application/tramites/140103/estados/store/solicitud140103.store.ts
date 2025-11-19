@@ -1,5 +1,5 @@
+import { ConfiguracionCertificados, CupoDetalle, ProductoDetalle } from '../../models/detalle';
 import { Store, StoreConfig } from '@datorama/akita';
-import { ConfiguracionCertificados } from '../../models/detalle';
 import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { Injectable } from '@angular/core';
 /**
@@ -17,6 +17,8 @@ export interface Solicitud140103State {
   cantidad: string;
   cancelacion: Cupo[];
   certificados: ConfiguracionCertificados[];
+  cupo : CupoDetalle[];
+  productoDetalle : ProductoDetalle[];
   idSolicitudState: number;
 }
 
@@ -33,6 +35,8 @@ export function createInitialState(): Solicitud140103State {
     cantidad: '',
     cancelacion: [],
     certificados: [],
+    cupo: [],
+    productoDetalle: [],
     idSolicitudState: 0,
   };
 }

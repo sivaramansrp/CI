@@ -39,3 +39,39 @@ export interface ConfiguracionCertificados {
   fabricante: string;
   importador: string;
 }
+
+/**
+ * Representa la estructura de un cupo con detalles adicionales como vigencia,
+ * fundamentos, régimen, unidad de medida, producto asociado, entre otros.
+ */
+export interface CupoDetalle {
+  idCupo: number;
+  fechaInicioVigencia: string;
+  fechaFinVigencia: string;
+  fundamentos: string;
+  regimen: string;
+  unidadMedidaComercializacion: boolean;
+  ideClasifSubproducto: string | null;
+  descSubProductoOtro: string | null;
+  ideTipoCupo: string;
+  cveUsuario: string;
+  cveProducto: string;
+  idTratadoAcuerdo: number;
+  cveUnidadMedidaOficialCupo: string;
+  idCupoR: number | null;
+  producto: ProductoDetalle;
+}
+
+/**
+ * Representa los detalles de un producto asociado a un cupo.
+ */
+export interface ProductoDetalle {
+  clave: string;
+  sigla: string;
+  nombre: string;
+  descripcion: string;
+  fechaCaptura: string;
+  fechaInicioVigencia: string;
+  fechaFinVigencia: string | null;
+  blnActivo: boolean;
+}

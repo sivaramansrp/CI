@@ -134,7 +134,7 @@ export class GuardarMappingAdapter {
     return {
       tipoDeSolicitud: "guardar",
       id_solcitud: state.idSolicitud,
-      cve_regimen: "01",
+      cve_regimen: state.regimen,
       cve_clasificacion_regimen: "01",
       productor: {
       tipo_persona: true,
@@ -153,32 +153,32 @@ export class GuardarMappingAdapter {
       certificado_serial_number: "20001000000100001815"
       },
       representacion_federal: {
-      cve_entidad_federativa: "DGO",
+      cve_entidad_federativa: state.representacion,
       cve_unidad_administrativa: "0815"
       },
       certificados: (state.certificados || []).map(cert => ({
-      idExpedicion: cert.idExpedicion,
-      numCertificado: cert.numCertificado,
-      rfc: cert.rfc,
-      denominacion: cert.denominacion,
-      numFolioOficio: cert.numFolioOficio,
-      numFolioTramite: cert.numFolioTramite ?? null,
-      estado: cert.estado,
-      estadoCancelacion: cert.estadoCancelacion,
-      montoAsignado: cert.montoAsignado,
-      montoDisponible: cert.montoDisponible,
-      montoExpedido: cert.montoExpedido,
-      montoCancelado: cert.montoCancelado,
-      representacionFederal: cert.representacionFederal,
-      claveRepresentacionFederal: cert.claveRepresentacionFederal,
-      factorConversion: cert.factorConversion,
-      estadoTransmision: cert.estadoTransmision ?? null,
-      montoEjercidoCBP: cert.montoEjercidoCBP,
-      fabricante: cert.fabricante,
-      importador: cert.importador
+      idExpedicion: cert.idExpedicion ?? "",
+      numCertificado: cert.numCertificado ?? "",
+      rfc: cert.rfc ?? "",
+      denominacion: cert.denominacion ?? "",
+      numFolioOficio: cert.numFolioOficio ?? "",
+      numFolioTramite: cert.numFolioTramite ?? "",
+      estado: cert.estado ?? "",
+      estadoCancelacion: cert.estadoCancelacion ?? "",
+      montoAsignado: cert.montoAsignado ?? "",
+      montoDisponible: cert.montoDisponible ?? "",
+      montoExpedido: cert.montoExpedido ?? "",
+      montoCancelado: cert.montoCancelado ?? "",
+      representacionFederal: cert.representacionFederal ?? "",
+      claveRepresentacionFederal: cert.claveRepresentacionFederal ?? "",
+      factorConversion: cert.factorConversion ?? "",
+      estadoTransmision: cert.estadoTransmision ?? "",
+      montoEjercidoCBP: cert.montoEjercidoCBP ?? "",
+      fabricante: cert.fabricante ?? "",
+      importador: cert.importador ?? ""
       })),
       mecanismo_asignacion: {
-      nombreMecanismoAsignacion: "Asignaci�n directa",
+      nombreMecanismoAsignacion: state.mecanismo,
       documentosMecanismo: "",
       idMecanismoAsignacion: 10226,
       observaciones: "observaciones",
@@ -212,33 +212,33 @@ export class GuardarMappingAdapter {
       observacionesEmision: null,
       inactivoAutomatico: null,
       cupo: {
-        idCupo: 11007,
-        fechaInicioVigencia: "2025-01-18",
-        fechaFinVigencia: "2025-12-31",
-        fundamentos: "fundamento de la vigencia del cupo",
-        regimen: "REG.01",
+        idCupo: state.cupo[0]?.idCupo ?? 0,
+        fechaInicioVigencia: state.cupo[0]?.fechaInicioVigencia ?? "2025-01-18",
+        fechaFinVigencia: state.cupo[0]?.fechaFinVigencia ?? "2025-12-31",
+        fundamentos: state.cupo[0]?.fundamentos ?? "fundamento de la vigencia del cupo",
+        regimen: state.cupo[0]?.regimen ?? "",
         unidadMedidaComercializacion: true,
-        ideClasifSubproducto: null,
-        descSubProductoOtro: null,
-        ideTipoCupo: "TICU.TPL",
+        ideClasifSubproducto: state.cupo[0]?.ideClasifSubproducto ?? "",
+        descSubProductoOtro: state.cupo[0]?.descSubProductoOtro ?? "" ,
+        ideTipoCupo: state.cupo[0]?.ideTipoCupo ?? "TICU.TPL",
         cveUsuario: "MAVL621207C95",
-        cveProducto: "1352",
-        idTratadoAcuerdo: 118,
+        cveProducto: state.producto,
+        idTratadoAcuerdo: state.tratado ? Number(state.tratado) : 0,
         cveUnidadMedidaOficialCupo: "1",
-        idCupoR: null,
+        idCupoR: state.cupo[0]?.idCupoR ?? 123,
         producto: {
-        clave: "1352",
-        sigla: "TEL",
-        nombre: "TELAS Y BIENES TEXTILES SIMPLES",
-        descripcion: "TPL 3-CAN TELAS Y BIENES TEXTILES SIMPLES",
-        fechaCaptura: "2011-01-01",
-        fechaInicioVigencia: "2011-11-01",
-        fechaFinVigencia: null,
-        blnActivo: true
+        clave: state.productoDetalle[0]?.clave ?? "1352",
+        sigla: state.productoDetalle[0]?.sigla ?? "TEL",
+        nombre: state.productoDetalle[0]?.nombre ?? "TELAS Y BIENES TEXTILES SIMPLES",
+        descripcion: state.productoDetalle[0]?.descripcion ?? "TPL 3-CAN TELAS Y BIENES TEXTILES SIMPLES",
+        fechaCaptura: state.productoDetalle[0]?.fechaCaptura ?? "2011-01-01",
+        fechaInicioVigencia: state.productoDetalle[0]?.fechaInicioVigencia ?? "2011-11-01",
+        fechaFinVigencia: state.productoDetalle[0]?.fechaFinVigencia ?? null,
+        blnActivo: state.productoDetalle[0]?.blnActivo ?? true
         }
       }
       }
-    }
+    };
   }
 
 }

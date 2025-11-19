@@ -1,4 +1,4 @@
-import { Catalogo, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CuposDisponiblesBuscarResponse, DetalleSolicitudBuscarResponse, ObtenerCertificadosDisponiblesResponse } from '../../../../shared/models/cupos-disponibles.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -32,28 +32,53 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 })
 export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   /**
-   * Array de índices de las filas seleccionadas en la tabla de mercancías (checkboxes).
+   * Indica si el diálogo de notificación está habilitado.
    */
-  filasSeleccionadas: number[] = [];
+  public esHabilitarElDialogo: boolean = false;
 
   /**
-   * Lista de cupos disponibles obtenidos de la búsqueda.
+   * Lista de cupos disponibles obtenidos a partir de la búsqueda realizada.
    */
   CuposDisponiblesDatos: CuposDisponiblesBuscarResponse[] = [];
 
+  /**
+   * Lista de certificados disponibles obtenidos desde el servicio correspondiente.
+   */
   CertificadosDisponiblesDatos: ObtenerCertificadosDisponiblesResponse[] = [];
 
+  /**
+   * Lista de certificados que pueden ser cancelados según la selección del usuario.
+   */
   CertificadosCancelarDatos: ObtenerCertificadosDisponiblesResponse[] = [];
 
-  selectedCuposDisponibles: CuposDisponiblesBuscarResponse | null = null;
+  //Seleccionados
+  /**
+   * Cupo disponible seleccionado actualmente por el usuario en la lista de cupos.
+   */
+  cuposDisponiblesSeleccionado: CuposDisponiblesBuscarResponse | null = null;
 
-  selectedCertificados: ObtenerCertificadosDisponiblesResponse | null = null;
-  mostrarCertificadosCancelar :boolean = false;
+  /**
+   * Certificado disponible seleccionado actualmente por el usuario en la lista de certificados.
+   */
+  CertificadosDisponiblesSeleccionado: ObtenerCertificadosDisponiblesResponse | null =
+    null;
+
+  /**
+   * Certificado seleccionado por el usuario para cancelar.
+   */
+  certificadosCancelarSeleccionado: ObtenerCertificadosDisponiblesResponse | null =
+    null;
+
+  /**
+   * Indica si se debe mostrar la sección de certificados para cancelar.
+   */
+  mostrarCertificadosCancelar: boolean = false;
 
   /**
    * Configuración del tipo de selección en la tabla (en este caso, se usa un checkbox).
    */
   TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
    * Formulario reactivo para la cancelación de certificados.
    */
@@ -68,6 +93,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * Formulario reactivo para los datos del oficio relacionados con la cancelación.
    */
   oficioForm!: FormGroup;
+
   /**
    * Catálogo de regímenes disponibles.
    */
@@ -143,11 +169,11 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   tramiteId = '140103';
 
   /**
-   * Configuración de las columnas para la tabla dinámica de cupos.
+   * Configuración de las columnas para la tabla de cupos disponibles.
    * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
    *
    * - `encabezado`: Título de la columna que se muestra en la tabla.
-   * - `clave`: Función que recibe un elemento de tipo `Cupos` y retorna el valor a mostrar en la columna.
+   * - `clave`: Función que recibe un elemento de tipo `CuposDisponiblesBuscarResponse` y retorna el valor a mostrar en la columna.
    * - `orden`: Posición de la columna en la tabla.
    */
   configuracionTabla: ConfiguracionColumna<CuposDisponiblesBuscarResponse>[] = [
@@ -178,6 +204,59 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
       orden: 5,
     },
   ];
+
+  /**
+   * Configuración de las columnas para la tabla de certificados disponibles.
+   * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
+   *
+   * - `encabezado`: Título de la columna que se muestra en la tabla.
+   * - `clave`: Función que recibe un elemento de tipo `ObtenerCertificadosDisponiblesResponse` y retorna el valor a mostrar en la columna.
+   * - `orden`: Posición de la columna en la tabla.
+   */
+  configuracionTablaCertificados: ConfiguracionColumna<ObtenerCertificadosDisponiblesResponse>[] =
+    [
+      {
+        encabezado: 'Folio del oficio de certificado',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.numCertificado,
+        orden: 1,
+      },
+      {
+        encabezado: 'Nombre',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.numFolioOficio,
+        orden: 2,
+      },
+      {
+        encabezado: 'Denominación o Razón Social',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.denominacion,
+        orden: 3,
+      },
+      {
+        encabezado: 'Estado',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) => item.estado,
+        orden: 4,
+      },
+      {
+        encabezado: 'Monto expedido',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.montoExpedido,
+        orden: 5,
+      },
+      {
+        encabezado: 'Monto a cancelar',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.montoCancelado,
+        orden: 6,
+      },
+      {
+        encabezado: 'Monto utilizado',
+        clave: (item: ObtenerCertificadosDisponiblesResponse) =>
+          item.montoEjercidoCBP,
+        orden: 7,
+      },
+    ];
 
   /**
    * Constructor del componente.
@@ -248,7 +327,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   inicializarCatalogo(tramite: string): void {
     this.subscription.add(
       this.catalogoService
-        .regimenesCatalogo(tramite)
+        .regimenEnumCatalogo(tramite)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           const DATOS = response.datos as Catalogo[];
@@ -341,30 +420,30 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
       regimen: ['', Validators.required],
       mecanismo: ['', Validators.required],
-      tratado: [''],
+      tratado: [-1],
       producto: [''],
       subproducto: [''],
       representacion: [''],
     });
     this.detalleForm = this.fb.group({
-      regimen: [''],
-      descripcion: [''],
-      clasificacion: [''],
-      unidad: [''],
-      mecanismo: [''],
-      tratado: [''],
-      fracciones: [''],
-      paises: [''],
-      observaciones: [''],
-      fundamentos: [''],
-      inicio: [''],
-      fecha: [''],
+      regimen: [{ value: '', disabled: true }],
+      descripcion: [{ value: '', disabled: true }],
+      clasificacion: [{ value: '', disabled: true }],
+      unidad: [{ value: '', disabled: true }],
+      mecanismo: [{ value: '', disabled: true }],
+      tratado: [{ value: '', disabled: true }],
+      fracciones: [{ value: '', disabled: true }],
+      paises: [{ value: '', disabled: true }],
+      observaciones: [{ value: '', disabled: true }],
+      fundamentos: [{ value: '', disabled: true }],
+      inicio: [{ value: '', disabled: true }],
+      fecha: [{ value: '', disabled: true }],
     });
     this.oficioForm = this.fb.group({
-      sumaAprobada: [''],
-      montoDisponible: [''],
-      sumaExpedida: [''],
-      denominacionExposicion: [''],
+      sumaAprobada: [{ value: '', disabled: true }],
+      montoDisponible: [{ value: '', disabled: true }],
+      sumaExpedida: [{ value: '', disabled: true }],
+      denominacionExposicion: [{ value: '', disabled: true }],
     });
     this.suscribirseAlEstadoDeSolicitud();
   }
@@ -396,8 +475,8 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * si existe una selección válida, se oculta la sección de certificados a cancelar.
    */
   filaClicCuposDisponibles(event: CuposDisponiblesBuscarResponse): void {
-    this.selectedCuposDisponibles = event;
-    if (this.selectedCuposDisponibles) {
+    this.cuposDisponiblesSeleccionado = event;
+    if (this.cuposDisponiblesSeleccionado) {
       this.mostrarCertificadosCancelar = true;
       this.obtenerCertificadosDisponiblesDatos();
       this.obtenerDetalleSolicitud();
@@ -423,15 +502,40 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
     if (REGIMEN_CONTROL?.value && MECANISMO_CONTROL?.value) {
       const PAYLOAD = {
-        rfc_solicitante: 'AFC000526BJ2',
+        rfc_solicitante: 'AAL0409235E6',
         cupo_disponible: {
-          nombreProducto: this.cancelacionForm.get('producto')?.value,
-          nombreSubproducto: this.cancelacionForm.get('subproducto')?.value,
-          mecanismoAsignacion: MECANISMO_CONTROL?.value,
-          claveRegimen: REGIMEN_CONTROL.value,
-          idTratadoAcuerdo: this.cancelacionForm.get('tratado')?.value,
+          nombreProducto:
+            this.cancelacionForm.get('producto')?.value?.toString().trim() ===
+            ''
+              ? '-1'
+              : this.cancelacionForm.get('producto')?.value,
+          nombreSubproducto:
+            this.cancelacionForm
+              .get('subproducto')
+              ?.value?.toString()
+              .trim() === ''
+              ? '-1'
+              : this.cancelacionForm.get('subproducto')?.value,
+          mecanismoAsignacion:
+            MECANISMO_CONTROL?.value?.toString().trim() === ''
+              ? '-1'
+              : MECANISMO_CONTROL?.value,
+          claveRegimen:
+            REGIMEN_CONTROL.value?.toString().trim() === ''
+              ? '-1'
+              : REGIMEN_CONTROL.value,
+          idTratadoAcuerdo:
+            this.cancelacionForm.get('tratado')?.value?.toString().trim() ===
+              '' || isNaN(Number(this.cancelacionForm.get('tratado')?.value))
+              ? -1
+              : Number(this.cancelacionForm.get('tratado')?.value),
           claveRepresentacionFederal:
-            this.cancelacionForm.get('representacion')?.value,
+            this.cancelacionForm
+              .get('representacion')
+              ?.value?.toString()
+              .trim() === ''
+              ? '-1'
+              : this.cancelacionForm.get('representacion')?.value,
         },
       };
       this.serviciosService
@@ -453,6 +557,11 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtiene la lista de certificados disponibles según el régimen y el mecanismo
+   * seleccionados en el formulario de cancelación.
+   * @returns {void} No devuelve ningún valor directamente.
+   */
   obtenerCertificadosDisponiblesDatos(): void {
     const REGIMEN_CONTROL = this.cancelacionForm.get('regimen');
     const MECANISMO_CONTROL = this.cancelacionForm.get('mecanismo');
@@ -461,14 +570,14 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
     if (REGIMEN_CONTROL?.value && MECANISMO_CONTROL?.value) {
       const PAYLOAD = {
-        rfc: "AFC000526BJ2",
+        rfc: 'AFC000526BJ2',
         mecanismo_asignacion: {
-          idMecanismoAsignacion: MECANISMO_CONTROL?.value,
-          ideTipoMecAsignacion: this.cancelacionForm.get('mecanismo')?.value,
+          idMecanismoAsignacion: 10226,
+          ideTipoMecAsignacion: MECANISMO_CONTROL.value,
           cupo: {
-        regimen: REGIMEN_CONTROL.value,
-        ideTipoCupo: this.cancelacionForm.get('producto')?.value,
-        cveUnidadMedidaOficialCupo: this.cancelacionForm.get('subproducto')?.value,
+            regimen: REGIMEN_CONTROL.value,
+            ideTipoCupo: MECANISMO_CONTROL.value,
+            cveUnidadMedidaOficialCupo: '',
           },
         },
       };
@@ -491,29 +600,55 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     }
   }
 
-obtenerDetalleSolicitud(): void {
-  const PAYLOAD = {
-    rfc: "AFC000526BJ2",
-    id_mecanismo_asignacion: this.cancelacionForm.get('mecanismo')?.value,
-  };
+  obtenerDetalleSolicitud(): void {
+    const PAYLOAD = {
+      rfc: 'AAL0409235E6',
+      id_mecanismo_asignacion: 10226,
+    };
 
-  this.serviciosService
-    .obtenerDetalleSolicitud(this.tramiteId, PAYLOAD)
-    .pipe(
-      map(
-        (data: BaseResponse<DetalleSolicitudBuscarResponse[]>) =>
-          data.datos ?? []
+    this.serviciosService
+      .obtenerDetalleSolicitud(this.tramiteId, PAYLOAD)
+      .pipe(
+        map((data: BaseResponse<DetalleSolicitudBuscarResponse>) => data.datos)
       )
-    )
-    .subscribe({
-      next: (response: DetalleSolicitudBuscarResponse[]) => {
-        // Procesar la respuesta del detalle de la solicitud aquí si es necesario
-      },
-      error: (err) => {
-        console.error('Error al obtener el detalle de la solicitud:', err);
-      },
-    });
-}
+      .subscribe(
+        (DETALLE: DetalleSolicitudBuscarResponse | undefined) => {
+          if (!DETALLE) {
+            return;
+          }
+          this.detalleForm.patchValue({
+            regimen: DETALLE.mecanismo_asignacion?.cupo?.regimen ?? '',
+            descripcion:
+              DETALLE.mecanismo_asignacion?.cupo?.producto?.descripcion ?? '',
+            clasificacion:
+              DETALLE.mecanismo_asignacion?.cupo?.clasificacionProducto ?? '',
+            unidad:
+              DETALLE.mecanismo_asignacion?.cupo?.cveUnidadMedidaOficialCupo ??
+              '',
+            mecanismo:
+              DETALLE.mecanismo_asignacion?.nombreMecanismoAsignacion ?? '',
+            tratado: DETALLE.mecanismo_asignacion?.cupo?.idTratadoAcuerdo ?? '',
+            fracciones: DETALLE.cadena_fracciones_cupo_tpl ?? '',
+            paises: (DETALLE.mecanismo_asignacion?.cupo?.paisesCupo ?? []).join(
+              ', '
+            ),
+            observaciones: DETALLE.mecanismo_asignacion?.observaciones ?? '',
+            fundamentos: DETALLE.mecanismo_asignacion?.cupo?.fundamentos ?? '',
+            inicio: DETALLE.mecanismo_asignacion?.fechaInicioVigencia ?? '',
+            fecha: DETALLE.mecanismo_asignacion?.fechaFinVigencia ?? '',
+          });
+
+          this.oficioForm.patchValue({
+            sumaAprobada: '',
+            montoDisponible: '',
+            sumaExpedida: '',
+            denominacionExposicion: DETALLE.denominacion_exposicion ?? '',
+          });
+        },
+        (err) =>
+          console.error('Error al obtener el detalle de la solicitud:', err)
+      );
+  }
 
   /**
    * Verifica si el formulario es válido para proceder con la operación.
@@ -527,6 +662,98 @@ obtenerDetalleSolicitud(): void {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Actualiza la fila seleccionada del listado de certificados disponibles.
+   *
+   * @param filasSeleccionadas Lista de filas seleccionadas por el usuario.
+   * Si hay al menos una fila seleccionada, se asigna la primera a
+   * `selectedCertificadosDisponiblesFila`. Si no hay selección, se asigna `null`.
+   */
+  filaSeleccionadaCertificadosDisponibles(
+    filasSeleccionadas: ObtenerCertificadosDisponiblesResponse[]
+  ): void {
+    this.CertificadosDisponiblesSeleccionado =
+      filasSeleccionadas.length > 0 ? filasSeleccionadas[0] : null;
+  }
+
+  /**
+   * Actualiza la fila seleccionada del listado de certificados que se pueden cancelar.
+   *
+   * @param filasSeleccionadas Lista de filas seleccionadas por el usuario.
+   * Si hay al menos una fila seleccionada, se asigna la primera a
+   * `selectedCertificadosCancelarFila`. Si no hay selección, se asigna `null`.
+   */
+  filaSeleccionadaCertificadosCancelar(
+    filasSeleccionadas: ObtenerCertificadosDisponiblesResponse[]
+  ): void {
+    this.certificadosCancelarSeleccionado =
+      filasSeleccionadas.length > 0 ? filasSeleccionadas[0] : null;
+  }
+
+  /**
+   * Maneja la acción de seleccionar un certificado disponible.
+   *
+   * - Si no hay certificado seleccionado (`selectedCertificados` es null), se
+   *   envían los datos necesarios al diálogo mediante `enviarDialogData`.
+   * - Habilita el diálogo estableciendo `esHabilitarElDialogo` en `true`.
+   */
+  onSeleccionarCertificadosDisponibles(): void {
+    if (!this.CertificadosDisponiblesSeleccionado) {
+      this.enviarDialogData();
+      this.esHabilitarElDialogo = true;
+    } else {
+      this.esHabilitarElDialogo = true;
+    }
+  }
+
+  /**
+   * Maneja la acción de seleccionar un certificado para eliminar/cancelar.
+   *
+   * - Si no hay certificado seleccionado (`selectedCertificados` es null), se
+   *   envían los datos necesarios al diálogo mediante `enviarDialogData`.
+   * - Habilita el diálogo estableciendo `esHabilitarElDialogo` en `true`.
+   * - Si hay un certificado seleccionado, se elimina del arreglo
+   *   `CertificadosCancelarDatos` y se limpia `selectedCertificados`.
+   */
+  onSeleccionarCertificadoEliminar(): void {
+    if (!this.certificadosCancelarSeleccionado) {
+      this.enviarDialogData();
+      this.esHabilitarElDialogo = true;
+    } else {
+      this.esHabilitarElDialogo = true;
+      this.CertificadosCancelarDatos = this.CertificadosCancelarDatos.filter(
+        (item) => item !== this.certificadosCancelarSeleccionado
+      );
+      this.certificadosCancelarSeleccionado = null;
+    }
+  }
+
+  /**
+   * Envía los datos del formulario y muestra el modal de confirmación.
+   * Si el formulario es inválido, marca todos los campos como tocados.
+   */
+  enviarDialogData(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione un registro.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.esHabilitarElDialogo = false;
   }
 
   /**
@@ -549,73 +776,6 @@ obtenerDetalleSolicitud(): void {
     (this.solicitud140103Store[metodoNombre] as (value: unknown) => void)(
       VALOR
     );
-  }
-
-  /**
-   * Maneja la selección de filas en la tabla de cupos disponibles.
-   *
-   * Este método se invoca cuando el usuario selecciona filas en la tabla.
-   * Si hay exactamente una fila seleccionada, se puede utilizar la información
-   * de esa fila para mostrar detalles adicionales o realizar acciones específicas.
-   *
-   * @param {CuposDisponiblesBuscarResponse[]} filasSeleccionadas - Arreglo con las filas seleccionadas.
-   */
-  filaSeleccionadaCuposDisponibles(e: Event): void {
-    // if (this.filasSeleccionadas.length === 1) {
-    //   const FILA = this.filasSeleccionadas[0];
-    // }
-  }
-
-  filaSeleccionadaCertificadosDisponibles(e: Event): void {
-    // Solo establecer filaSeleccionada si hay exactamente una fila seleccionada
-    // if (this.filasSeleccionadas.length === 1) {
-    //   const FILA = filasSeleccionadas[0];
-    // }
-  }
-
-  filaSeleccionadaCertificadosCancelar(
-    filasSeleccionadas: CuposDisponiblesBuscarResponse[]
-  ): void {
-    // if (this.filasSeleccionadas.length === 1) {
-    //   const FILA = filasSeleccionadas[0];
-    // }
-  }
-
-  onSeleccionarCertificadosDisponibles(): void {
-    if (!this.selectedCertificados) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    }
-  }
-
-  onSeleccionarCertificadoEliminar(): void {
-    if (!this.selectedCertificados) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    } else {
-      this.CertificadosCancelarDatos = this.CertificadosCancelarDatos.filter(
-        (item) => item !== this.selectedCertificados
-      );
-      this.selectedCertificados = null;
-    }
   }
 
   /**
