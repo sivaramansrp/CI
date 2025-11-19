@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados.contenedora';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { of} from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { Fabricante, Otros } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-describe('TercerosRelacionadosComponent', () => {
-  let component: TercerosRelacionadosComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
+describe('TercerosRelacionadosContenedoraComponent', () => {
+  let component: TercerosRelacionadosContenedoraComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
   let certificadosSvcMock: jest.Mocked<CertificadosLicenciasPermisosService>;
   let modalServiceMock: jest.Mocked<BsModalService>;
 
@@ -47,7 +47,7 @@ describe('TercerosRelacionadosComponent', () => {
     } as unknown as jest.Mocked<BsModalService>;
 
     await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosComponent],
+      imports: [TercerosRelacionadosContenedoraComponent],
       providers: [
         { provide: CertificadosLicenciasPermisosService, useValue: certificadosSvcMock },
         { provide: BsModalService, useValue: modalServiceMock },
@@ -55,7 +55,7 @@ describe('TercerosRelacionadosComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
+    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
     component = fixture.componentInstance;
     (component as any).consultaState = { readonly: false };
     fixture.detectChanges();

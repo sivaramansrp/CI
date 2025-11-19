@@ -7,22 +7,22 @@ import { Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
+import { FabricanteModalContenedoraComponent } from '../fabricante-modal-contenedora/fabricante-modal.contenedora';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 type AllowedValue = string | number | boolean | undefined;
 /**
- * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
+ * TercerosRelacionadosContenedoraComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
 @Component({
-  selector: 'app-terceros-relacionados',
+  selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
   imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent],
   providers:[BsModalService],
-  templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.scss',
+  templateUrl: './terceros-relacionados.contenedora.html',
+  styleUrls: ['./terceros-relacionados.contenedora.scss'],
 })
-export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
+export class TercerosRelacionadosContenedoraComponent implements OnInit,OnDestroy {
 
   /**
 * @property consultaState
@@ -91,11 +91,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public configuracionOtros = OTROS_TABLA;
 
   /** Configuración de la tabla de sectores */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros260303>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
+  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros260303>[] = TercerosRelacionadosContenedoraComponent.generateConfiguracionTabla(this.configuracionOtros);
 
   /**
    * Notificador para destruir observables activos.
@@ -104,7 +104,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   
 
   /**
-   * Constructor del componente TercerosRelacionadosComponent.
+   * Constructor del componente TercerosRelacionadosContenedoraComponent.
    * 
    * @param certificadosLicenciasSvc - Servicio para manejar operaciones relacionadas con certificados, licencias y permisos.
    * @param modalService - Servicio para gestionar cuadros de diálogo modales.
@@ -158,7 +158,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFabricanteTablaDatos(): void {
     this.certificadosLicenciasSvc.getFabricanteDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
+      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
       this.fabricanteTablaDatos = DATA;
     });
   }
@@ -174,7 +174,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFacturadorTablaDatos(): void {
     this.certificadosLicenciasSvc.getFacturadorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
+      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
       this.facturadorTablaDatos = DATA;
     });
   }
@@ -190,7 +190,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getProveedorTablaDatos(): void {
     this.certificadosLicenciasSvc.getProveedorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
+      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
       this.proveedorTablaDatos = DATA;
     });
   }
@@ -205,7 +205,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getCertificadoAnaliticoTablaDatos(): void {
     this.certificadosLicenciasSvc.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
+      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Fabricante[]>(response);
       this.certificadoAnaliticoTablaDatos = DATA;
     });
   }
@@ -220,7 +220,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getOtrosTablaDatos(): void {
     this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Otros260303[]>(response);
+      const DATA = TercerosRelacionadosContenedoraComponent.deepCopy<Otros260303[]>(response);
       this.otrosTablaDatos = DATA;
     });
   }
@@ -258,7 +258,7 @@ private static generateConfiguracionTabla<T>(
         titulo: titulo
       }
     };
-    this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
+    this.bsModalRef = this.modalService.show(FabricanteModalContenedoraComponent, INITIAL_STATE);
 
     this.bsModalRef.content.guardarFabricante.subscribe((nuevoDato: Record<string, unknown>) => {
         const DATO = {

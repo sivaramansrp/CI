@@ -19,11 +19,11 @@ import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/d
 
 import { NicoInfo } from '../../../260911/models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 /**
- * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
+ * DatosDeLaSolicitudContenedoraComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
 @Component({
-  selector: 'app-datos-de-la-solicitud',
+  selector: 'app-datos-de-la-solicitud-contenedora',
   standalone: true,
   imports: [CommonModule,
     TituloComponent,
@@ -36,10 +36,10 @@ import { NicoInfo } from '../../../260911/models/modificación-del-permiso-sanit
     InputRadioComponent
   ],
   providers: [BsModalService],
-  templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss',
+  templateUrl: './datos-de-la-solicitud.contenedora.html',
+  styleUrls: ['./datos-de-la-solicitud.contenedora.scss'],
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudContenedoraComponent implements OnInit, OnDestroy {
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -167,17 +167,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
  * Lista de países para la selección de origen.
  */
-  public crosListaDePaises = DatosDeLaSolicitudComponent.deepCopy(CROSLISTA_DE_PAISES);
+  public crosListaDePaises = DatosDeLaSolicitudContenedoraComponent.deepCopy(CROSLISTA_DE_PAISES);
   /**
    * Una propiedad pública que contiene la lista de países de origen.
    * Se inicializa con la constante `PAISES_DE_ORIGEN`.
    */
-  public seleccionarPais = DatosDeLaSolicitudComponent.deepCopy(PAISES_DE_ORIGEN);
+  public seleccionarPais = DatosDeLaSolicitudContenedoraComponent.deepCopy(PAISES_DE_ORIGEN);
   /**
    * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
    * Se inicializa con la constante `USO_ESPECIFICO`.
    */
-  public seleccionarUsoEspecifico = DatosDeLaSolicitudComponent.deepCopy(USO_ESPECIFICO);
+  public seleccionarUsoEspecifico = DatosDeLaSolicitudContenedoraComponent.deepCopy(USO_ESPECIFICO);
 
   /**
    * Lista de países para seleccionar el origen de la primera sección.
@@ -261,7 +261,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Modelo para la opción de tipo sí/no representado como radio button */
   public sinoOpciones = RADIO_OPCIONES;
   /**
-   * Constructor para el componente DatosDeLaSolicitudComponent.
+   * Constructor para el componente DatosDeLaSolicitudContenedoraComponent.
    */
   constructor(
     private modalService: BsModalService,
@@ -409,7 +409,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          DatosDeLaSolicitudComponent.noWhitespaceValidator,
+          DatosDeLaSolicitudContenedoraComponent.noWhitespaceValidator,
           Validators.pattern(/^\d+$/),
           Validators.maxLength(12)
         ],
@@ -462,7 +462,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.representanteLegalForm = this.fb.group({
       manifiestos: [this.solicitudState.manifiestos],
       losDatosNo: [this.solicitudState.losDatosNo],
-      rfc: [this.solicitudState.rfc, [Validators.required, Validators.maxLength(13), DatosDeLaSolicitudComponent.validadorRFC]],
+      rfc: [this.solicitudState.rfc, [Validators.required, Validators.maxLength(13), DatosDeLaSolicitudContenedoraComponent.validadorRFC]],
       nombreORazon: [{ value: this.solicitudState.nombreORazon, disabled: true }],
       apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }],
       apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
@@ -613,7 +613,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getEstadoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy<EstadoCatalogResponse>(response);
       this.estadoCatalogo = DATOS.data;
     });
   }
@@ -628,7 +628,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getscianTabla(): void {
     this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy<ScianDatos[]>(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy<ScianDatos[]>(response);
       this.scianTablaDatos = DATOS;
       (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
     });
@@ -645,7 +645,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getClaveCatalogDatos(): void {
     this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy<EstadoCatalogResponse>(response);
       this.claveCatalogo = DATOS.data;
     });
   }
@@ -661,7 +661,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getRegimenCatalogDatos(): void {
     this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
     });
   }
@@ -698,7 +698,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getMercanciasTabla(): void {
     this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy(response);
       this.mercanciasTablaDatos = DATOS;
     });
   }
@@ -711,7 +711,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getTipoDeProductoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy(response);
       this.tipoDeProductoCatalogo = DATOS.data;
     });
   }
@@ -770,7 +770,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public getPaisDeProcedenciaCatalogoDatos(): void {
     this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudContenedoraComponent.deepCopy(response);
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
   }

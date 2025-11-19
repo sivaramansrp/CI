@@ -13,17 +13,17 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
 import terecerosNacionalidos from '@libs/shared/theme/assets/json/260303/terceros-nacionalidad.json';
 import tipoPersona from '@libs/shared/theme/assets/json/260303/tipo-persona.json';
 /**
- * FabricanteModalComponent es responsable de manejar el primer paso del proceso.
+ * FabricanteModalContenedoraComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
 @Component({
-  selector: 'app-fabricante-modal',
+  selector: 'app-fabricante-modal-contenedora',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputRadioComponent, TooltipModule, CatalogoSelectComponent],
-  templateUrl: './fabricante-modal.component.html',
-  styleUrl: './fabricante-modal.component.scss',
+  templateUrl: './fabricante-modal.contenedora.html',
+  styleUrls: ['./fabricante-modal.contenedora.scss'],
 })
-export class FabricanteModalComponent implements OnInit, OnDestroy {
+export class FabricanteModalContenedoraComponent implements OnInit, OnDestroy {
 
   @Output() guardarFabricante = new EventEmitter<Record<string, unknown>>();
 
@@ -65,7 +65,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
   public tipoPersonaOpciones: RadioOpcion[] = Array.isArray(tipoPersona) ? tipoPersona as RadioOpcion[] : [];
 
   /**
-   * Constructor del componente FabricanteModalComponent.
+   * Constructor del componente FabricanteModalContenedoraComponent.
    * 
    * @param bsModalRef - Referencia a la instancia del modal de Bootstrap.
    * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
@@ -157,7 +157,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       terceroNombre: [this.solicitudState.tercerosRelacionadosTerceroNombre, Validators.required],
       tercerosNacionalidad: [this.solicitudState.tercerosNacionalidad],
       tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
-      rfc: [{ value: this.solicitudState.tercerosRelacionadosRfc, disabled: true }, [Validators.required, Validators.maxLength(13), FabricanteModalComponent.validadorRFC]],
+      rfc: [{ value: this.solicitudState.tercerosRelacionadosRfc, disabled: true }, [Validators.required, Validators.maxLength(13), FabricanteModalContenedoraComponent.validadorRFC]],
       curp: [{ value: this.solicitudState.tercerosRelacionadosCurp, disabled: true }],
       razonSocial: [{ value: this.solicitudState.tercerosRelacionadosRazonSocial, disabled: true }],
       datosPersonalesNombre: [{ value: this.solicitudState.datosPersonalesNombre, disabled: true }],

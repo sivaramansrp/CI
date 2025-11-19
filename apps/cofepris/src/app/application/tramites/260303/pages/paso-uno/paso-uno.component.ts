@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosDeLaSolicitudContenedoraComponent } from '../../components/datos-de-la-solicitud-contenedora/datos-de-la-solicitud.contenedora';
 
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados.contenedora';
 
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 
@@ -20,10 +20,10 @@ import { Subject, map, takeUntil } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    DatosDeLaSolicitudComponent,
-    PagoDeDerechosContenedoraComponent,
     SolicitanteComponent,
-    TercerosRelacionadosComponent
+    DatosDeLaSolicitudContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosContenedoraComponent
   ],
   templateUrl: './paso-uno.component.html',
 })

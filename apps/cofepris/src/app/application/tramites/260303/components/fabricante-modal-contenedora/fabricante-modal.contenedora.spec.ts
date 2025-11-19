@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FabricanteModalComponent } from './fabricante-modal.component';
+import { FabricanteModalContenedoraComponent } from './fabricante-modal.contenedora';
 import { AbstractControl, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Tramite260303Store, createInitialState as createTramiteInitialState } from '../../../../estados/tramites/260303/tramite260303.store';
@@ -9,9 +9,9 @@ import { ConsultaioQuery, createConsultaInitialState } from '@ng-mf/data-access-
 import { of} from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('FabricanteModalComponent', () => {
-  let componente: FabricanteModalComponent;
-  let fixture: ComponentFixture<FabricanteModalComponent>;
+describe('FabricanteModalContenedoraComponent', () => {
+  let componente: FabricanteModalContenedoraComponent;
+  let fixture: ComponentFixture<FabricanteModalContenedoraComponent>;
   let tramiteStore: jest.Mocked<Tramite260303Store>;
   let tramiteQuery: jest.Mocked<Tramite260303Query>;
   let consultaioQuery: jest.Mocked<ConsultaioQuery>;
@@ -34,7 +34,7 @@ describe('FabricanteModalComponent', () => {
       imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
-        FabricanteModalComponent,
+        FabricanteModalContenedoraComponent,
         BsModalRef,
         { provide: Tramite260303Store, useValue: tramiteStoreMock },
         { provide: Tramite260303Query, useValue: tramiteQueryMock },
@@ -43,7 +43,7 @@ describe('FabricanteModalComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FabricanteModalComponent);
+    fixture = TestBed.createComponent(FabricanteModalContenedoraComponent);
     componente = fixture.componentInstance;
 
     tramiteStore = TestBed.inject(Tramite260303Store) as jest.Mocked<Tramite260303Store>;
@@ -162,7 +162,7 @@ describe('FabricanteModalComponent', () => {
 
   it('debería retornar error si el RFC es inválido en validadorRFC()', () => {
     const control = { value: 'INVALIDO' } as AbstractControl;
-    const resultado = FabricanteModalComponent.validadorRFC(control);
+    const resultado = FabricanteModalContenedoraComponent.validadorRFC(control);
     expect(resultado).toEqual({ rfcInvalido: true });
   });
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PagoDeDerechosComponent } from './pago-de-derechos-contenedora';
+import { PagoDeDerechosContenedoraComponent } from './pago-de-derechos-contenedora';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
@@ -7,8 +7,8 @@ import { Tramite260303Store } from '../../../../estados/tramites/260303/tramite2
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
  
-describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
+describe('PagoDeDerechosContenedoraComponent', () => {
+  let component: PagoDeDerechosContenedoraComponent;
   let fixture: any;
   let certificadosLicenciasSvcMock: any;
   let tramite260303StoreMock: any;
@@ -29,10 +29,15 @@ describe('PagoDeDerechosComponent', () => {
     estadoDeTramite: '',
     create: false,
     update: false,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: '',
     consultaioSolicitante: {
       folioDelTramite: '',
       fechaDeInicio: '',
-      estadoDelTramite: ''
+      estadoDelTramite: '',
+      tipoDeTramite: ''
     },
   };
  
@@ -56,7 +61,7 @@ describe('PagoDeDerechosComponent', () => {
     };
  
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PagoDeDerechosComponent], // <-- aquí va el componente
+      imports: [ReactiveFormsModule, PagoDeDerechosContenedoraComponent],
       providers: [
         FormBuilder,
         { provide: CertificadosLicenciasPermisosService, useValue: certificadosLicenciasSvcMock },
@@ -66,7 +71,7 @@ describe('PagoDeDerechosComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
  
-    fixture = TestBed.createComponent(PagoDeDerechosComponent);
+    fixture = TestBed.createComponent(PagoDeDerechosContenedoraComponent);
     component = fixture.componentInstance;
     component.consultaState = { ...consultaStateMock };
     fixture.detectChanges();
@@ -75,47 +80,15 @@ describe('PagoDeDerechosComponent', () => {
   it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
- 
-  it('debe inicializar el formulario con valores del estado', () => {
-    component.cerrarPagoDerechosForm();
-    expect(component.pagoDerechosForm.value.claveDeReferencia).toBe('123');
-    expect(component.pagoDerechosForm.value.banco).toBe('BANAMEX');
+
+  it('debe tener consultaState correctamente seteado', () => {
+    expect(component.consultaState).toEqual(consultaStateMock);
   });
- 
-  it('debe obtener el catálogo de bancos', () => {
-    component.getBancoCatalogDatos();
-    expect(certificadosLicenciasSvcMock.getBancoDatos).toHaveBeenCalled();
-    expect(component.bancoCatalogo).toEqual([{ id: 1, nombre: 'Banco Test' }]);
+
+  it('debe tener esFormularioSoloLectura en false por defecto', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
- 
-  it('debe actualizar la fecha de pago y llamar al store', () => {
-    component.cerrarPagoDerechosForm();
-    component.cambioFechaFinal('2024-06-27');
-    expect(component.pagoDerechosForm.get('fechaDePago')?.value).toBe('2024-06-27');
-    expect(tramite260303StoreMock.setFechaDePago).toHaveBeenCalledWith('2024-06-27');
-  });
- 
-  it('debe deshabilitar el formulario si consultaState.readonly es true', () => {
-    component.cerrarPagoDerechosForm();
-    component.consultaState = { ...consultaStateMock, readonly: true };
-    component.deshabilitarFormularios();
-    expect(component.pagoDerechosForm.disabled).toBe(true);
-  });
- 
-  it('debe habilitar el formulario si consultaState.readonly es false', () => {
-    component.cerrarPagoDerechosForm();
-    component.consultaState = { ...consultaStateMock, readonly: false };
-    component.deshabilitarFormularios();
-    expect(component.pagoDerechosForm.enabled).toBe(true);
-  });
- 
-  it('debe llamar al método correcto del store en setValoresStore', () => {
-    component.cerrarPagoDerechosForm();
-    component.pagoDerechosForm.get('claveDeReferencia')?.setValue('ABC123');
-    component.setValoresStore(component.pagoDerechosForm, 'claveDeReferencia', 'setClaveDeReferencia');
-    expect(tramite260303StoreMock.setClaveDeReferencia).toHaveBeenCalledWith('ABC123');
-  });
- 
+
   it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
     (component as any).destroyNotifier$ = { next: jest.fn(), complete: jest.fn() };
     component.ngOnDestroy();

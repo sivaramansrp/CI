@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+import { DatosDeLaSolicitudContenedoraComponent } from './datos-de-la-solicitud.component';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
@@ -12,9 +12,9 @@ import { ScianDatos, MercanciasDatos, ConfiguracionColumna } from '@libs/shared/
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { TemplateRef } from '@angular/core';
 
-describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
-  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+describe('DatosDeLaSolicitudContenedoraComponent', () => {
+  let component: DatosDeLaSolicitudContenedoraComponent;
+  let fixture: ComponentFixture<DatosDeLaSolicitudContenedoraComponent>;
   let mockModalService: jest.Mocked<BsModalService>;
   let mockCertificadosService: jest.Mocked<CertificadosLicenciasPermisosService>;
   let mockStore: jest.Mocked<Tramite260303Store>;
@@ -191,7 +191,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     } as unknown as jest.Mocked<Tramite260303Query>;
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule,DatosDeLaSolicitudComponent],
+      imports: [CommonModule, ReactiveFormsModule,DatosDeLaSolicitudContenedoraComponent],
       declarations: [],
       providers: [
         { provide: BsModalService, useValue: mockModalService },
@@ -202,7 +202,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
+    fixture = TestBed.createComponent(DatosDeLaSolicitudContenedoraComponent);
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
     component.consultaState = mockConsultaState;
@@ -331,7 +331,7 @@ describe('DatosDeLaSolicitudComponent', () => {
  describe('Cobertura de utilidades y ramas', () => {
   it('deepCopy debe clonar objetos correctamente', () => {
     const obj = { a: 1, b: { c: 2 } };
-    const copia = DatosDeLaSolicitudComponent.deepCopy(obj);
+    const copia = DatosDeLaSolicitudContenedoraComponent.deepCopy(obj);
     expect(copia).toEqual(obj);
     expect(copia).not.toBe(obj);
     expect(copia.b).not.toBe(obj.b);

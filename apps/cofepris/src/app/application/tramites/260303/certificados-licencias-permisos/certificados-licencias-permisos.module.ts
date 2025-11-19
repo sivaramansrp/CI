@@ -5,7 +5,7 @@ import { CertificadosLicenciasPermisosRoutingModule } from './certificados-licen
 import { CertificadosLicenciasPermisosService } from '../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 
-import { FabricanteModalComponent } from '../components/fabricante-modal/fabricante-modal.component';
+import { FabricanteModalContenedoraComponent } from '../components/fabricante-modal-contenedora/fabricante-modal.contenedora';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { NgModule } from '@angular/core';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
@@ -21,7 +21,7 @@ import { provideHttpClient } from '@angular/common/http';
     WizardComponent,
     BtnContinuarComponent,
     AlertComponent,
-    FabricanteModalComponent,
+    FabricanteModalContenedoraComponent,
     AnexarDocumentosComponent,
     ToastrModule.forRoot(),
     FirmaElectronicaComponent
