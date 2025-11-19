@@ -1,7 +1,9 @@
-import { BANDEJA_SOLICITUDES_FORMAS, BandejaDeSolicitudes, ConfiguracionColumna, LibBandejaComponent } from '@libs/shared/data-access-user/src';
+import { BANDEJA_SOLICITUDES_FORMAS, BandejaDeSolicitudes, ConfiguracionColumna, JSONResponse, LibBandejaComponent } from '@libs/shared/data-access-user/src';
+import { BandejaDeSolicitudesResponse, SolicitudesPendientesRequest } from '@libs/shared/data-access-user/src/core/models/shared/lib-bandeja.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
+import { BandejaSolicitudTransformer } from './bandeja-solicitud.transformer';
 import { CommonModule } from '@angular/common';
 import { LoginQuery } from '@ng-mf/data-access-user';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
@@ -127,15 +129,35 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
-    this.getSolicitudeTablaDatos();
+    const BODYRQ: SolicitudesPendientesRequest = { // Datos de ejemplo para la solicitud
+      rfc: this.rfcValor,
+      rol_actual: 'PersonaMoral',
+      rfc_Solicitante: this.rfcValor,
+      id_solicitud: '',
+      fecha_inicio: '',
+      fecha_fin: '',
+      certificado: {
+        cert_serial_number: '',
+        tipo_certificado: ''
+      }
+    };
+    this.getSolicitudeTablaDatos(BODYRQ);
   }
  /*
    * Método para obtener los datos de la tabla de solicitudes desde el servicio.
    * Se suscribe al observable y asigna los datos obtenidos a la propiedad correspondiente.
    */
-  public getSolicitudeTablaDatos(): void {
-    this.bandejaSvc.getSolicitudeTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      this.bandejaTablaDatos = JSON.parse(JSON.stringify(response));
+  public getSolicitudeTablaDatos(bodyRequest: SolicitudesPendientesRequest): void {
+    
+    this.bandejaSvc.getSolicitudeTablaDatos(bodyRequest).pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      const RESPONSE_DATA: JSONResponse = {
+        id: response.id,
+        descripcion: response.descripcion,
+        codigo: response.codigo,
+        datos: response.datos,
+        data: response.data,
+      }
+      this.bandejaTablaDatos = RESPONSE_DATA.datos?.map((item) => new BandejaSolicitudTransformer(item as BandejaDeSolicitudesResponse)) as unknown as BandejaDeSolicitudes[];
       this.copiarBandejaTablaDatos = this.bandejaTablaDatos;
     });
   }

@@ -1,6 +1,6 @@
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BandejaDeTareasPendientes, SeleccionadoDepartamento, SeleccionadoTramite } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BandejaDeSolicitudeService } from '../../../core/services/consultagenerica/bandeja-tareas-pendientes.service';
@@ -17,7 +17,12 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
+import { BandejaDeSolicitudes, SolicitudesPendientesRequest } from '../../../core/models/shared/lib-bandeja.model';
 import { TABLADECONFIGUACIONFUNCIONARIO, TABLADECONFIGUACIONSOLICITANTE } from '../../../core/enums/bandeja-de-solicitudes-funcionario-solicitante.enum';
+import moment from 'moment';
+
+const INPUT_FORMAT = 'DD/MM/YYYY';
+const FORMAT_DATE = 'YYYY-MM-DD';
 
 /**
  * Interfaz base para los elementos de la bandeja.
@@ -28,6 +33,12 @@ interface BandejaRegistroBase {
   numeroDeProcedimiento: string;
   /** Nombre del departamento relacionado al trámite */
   departamento: string;
+  /** ID del trámite */
+  id_solicitud?: string;
+  /** Fecha inicial */
+  fecha?: string;
+  /** Fecha de actualización */
+  fechaActualizacion?: string;
 }
 /*
  * Componente LibBandejaComponent
@@ -58,7 +69,7 @@ interface BandejaRegistroBase {
  */
 
 
-export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnInit {
+export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnInit, OnChanges {
   /**
    *  Título mostrado en el encabezado de la bandeja 
    */
@@ -99,12 +110,18 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     numeroDeProcedimiento: '',
     nombreDelDepartamento: '',
   };
-
+  /** 
+  * Indica si la bandeja es de solicitudes
+  */
+  @Input() public isBandejaSolicitudes: boolean = false;
   /**
    * Nombre del RFC asociado al trámite
    */
   @Input() public rfcNombre: string = '';
-  
+  /**
+   * EventEmitter que emite un evento para obtener los datos de la bandeja de solicitudes.
+   */ 
+  @Output() getDatosBandejaSolicitudes = new EventEmitter<SolicitudesPendientesRequest>();
   /**
    * URL a la que se navega al seleccionar un trámite 
    */
@@ -154,7 +171,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
   /**
    * Indica si la configuración de datos de la tabla está disponible.
    */
-  public tieneConfiguracionTablaDatos: boolean = false;
+  public tieneConfiguracionTablaDatos: boolean = true;
 
   /**
    * Indica si se debe mostrar un mensaje de observación exitosa.
@@ -169,8 +186,17 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     public router: Router,
     private route: ActivatedRoute,
     private consultaioStore: ConsultaioStore,
-    private bandejaDeSolicitudeService: BandejaDeSolicitudeService
+    private bandejaDeSolicitudeService: BandejaDeSolicitudeService,
+    private loginQuery: LoginQuery, 
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['configuracionTablaDatos']) {
+      this.configuracionTablaDatos = changes['configuracionTablaDatos'].currentValue;
+      this.duplicarDatos = changes['configuracionTablaDatos'].currentValue;
+    }
+  }
+
   /*
    * Método del ciclo de vida OnInit
    * Valida si la bandeja contiene formulario y aplica filtro a columnas
@@ -207,6 +233,24 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     ) as FormGroup;
   }
   /*
+    * Valida la dependencia entre las fechas inicial y final en el formulario.
+  */
+  public validarDependenciaFechas(control: AbstractControl): ValidationErrors | null {
+    const FORM = control as FormGroup;
+    const INICIO = FORM.get('fechaInicial')?.value;
+    const FIN = FORM.get('fechaFinal')?.value;
+
+    // si fechaFinal tiene valor pero fechaInicial NO
+    if (FIN && !INICIO) {
+      FORM.get('fechaInicial')?.setErrors({ initialDateRequired: true });
+      return { initialDateRequired: true };
+    }
+
+    // limpiar el error si el usuario corrige
+    FORM.get('fechaInicial')?.setErrors(null);
+    return null;
+  }
+  /*
    * Filtra la configuración de columnas para ocultar ciertas columnas no necesarias
    */
   public filterConfiguracionTabla(): void {
@@ -236,26 +280,75 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
   /*
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
-  public enviarDatos(): void {
+  public filterDatos(): void {
     const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
     const SOLICITUD_ID_CONTROL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('solicitudId');
-    if (BANDEJA_SOLICITUDE_FORM_GROUP && SOLICITUD_ID_CONTROL && SOLICITUD_ID_CONTROL.valid) {
-      this.configuracionTablaDatos = this.duplicarDatos;
-      const SELECTED_PROCEDURE = this.configuracionTablaDatos.filter((item) => Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento));
-      this.configuracionTablaDatos = SELECTED_PROCEDURE;
-      this.hasValidForm = true;
-      this.tieneConfiguracionTablaDatos = SELECTED_PROCEDURE.length > 0 ? true : false;
-    } else {
-      this.configuracionTablaDatos = this.duplicarDatos;
-      this.hasValidForm = false;
-      this.tieneConfiguracionTablaDatos = false;
+    const FECHA_INICIAL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('fechaInicial');
+    const FECHA_FINAL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('fechaFinal');
+    const BODYRQ: SolicitudesPendientesRequest = {
+      rfc: this.rfcNombre,
+      rol_actual: 'PersonaMoral',
+      rfc_Solicitante: this.rfcNombre,
+      id_solicitud: SOLICITUD_ID_CONTROL?.value ?? '',
+      fecha_inicio: FECHA_INICIAL?.value ?? '',
+      fecha_fin: FECHA_FINAL?.value ?? '',
+      certificado: {
+        cert_serial_number: '',
+        tipo_certificado: ''
+      }
+    };
+    // Si no hay datos en los 3 campos, resetea la tabla con los datos originales
+    if (!SOLICITUD_ID_CONTROL?.value && !FECHA_INICIAL?.value && !FECHA_FINAL?.value) {
+      this.getDatosBandejaSolicitudes.emit(BODYRQ);
+      return;
     }
+    if (SOLICITUD_ID_CONTROL?.value) {
+      this.getDatosBandejaSolicitudes.emit(BODYRQ);
+      this.hasValidForm = true;
+      this.tieneConfiguracionTablaDatos = true;
+      return;
+    }
+    if (!FECHA_INICIAL?.value) {
+      FECHA_INICIAL?.addValidators(Validators.required);
+      FECHA_INICIAL?.setErrors({ required: true, initialDateRequired: true });
+      FECHA_INICIAL?.markAsTouched();
+      FECHA_INICIAL?.updateValueAndValidity();
+      return;
+    }
+    if (!FECHA_FINAL?.value) {
+      FECHA_FINAL?.addValidators(Validators.required);
+      FECHA_FINAL?.setErrors({ required: true, initialDateRequired: true });
+      FECHA_FINAL?.markAsTouched();
+      FECHA_FINAL?.updateValueAndValidity();
+      return;
+    }
+    const BODY_FECHA: SolicitudesPendientesRequest = {
+      ...BODYRQ,
+      fecha_inicio: moment(FECHA_INICIAL?.value, INPUT_FORMAT).format(FORMAT_DATE),
+      fecha_fin: moment(FECHA_FINAL.value, INPUT_FORMAT).format(FORMAT_DATE),
+    };
+    this.getDatosBandejaSolicitudes.emit(BODY_FECHA);
+    this.hasValidForm = true;
+    this.tieneConfiguracionTablaDatos = this.configuracionTablaDatos.length > 0;
   }
+
+  /*
+  * Maneja el clic sobre una fila de solicitud en la tabla.
+  */
+  public onFilaSolicitudClick(event: T): void {
+    const ROW_OBJETO = event as unknown as BandejaDeSolicitudes;
+    this.tramiteData = tramiteDetailsData.filter(
+      (v) => v.tramite === Number(ROW_OBJETO.numeroDeProcedimiento) && v.department === ROW_OBJETO.departamento.toLowerCase()
+    );
+    this.router.navigate([`/${this.tramiteData[0].linkDashboard}`]);
+    // Falta hacer la petición para obtener los datos de la solicitud
+  }
+
   /*
    * Maneja el clic sobre una fila de la tabla.
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
-  public onFilaClic(event: T): void {
+  public onFilaClickTareas(event: T): void {
     const ROW_OBJETO = event as unknown as SeleccionadoTramite;
     const PROCEDURE: number = Number(
       ROW_OBJETO.numeroDeProcedimiento
@@ -308,6 +401,16 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     } else if ((ORIGIN === 'AUTORIZAR_DICTAMEN' || ORIGIN === 'AutorizarDictamen')) {
       this.router.navigate([`/${this.tramiteData[0].department}/autorizar-dictamen`]);
     }
+  }
+  /*
+  * Maneja el clic sobre una fila en la tabla y delega la acción al método correspondiente.
+  */
+  public onFilaClick(event: T): void {
+    if (this.isBandejaSolicitudes) {
+      this.onFilaSolicitudClick(event);
+      return;
+    }
+    this.onFilaClickTareas(event);
   }
   /*
    * Alterna la visibilidad del contenido colapsable basado en el orden
@@ -389,8 +492,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
    *
    * Actualiza los estados internos como la validez del formulario y la existencia de datos en la tabla de configuración.
    */
-  public filterDatos(): void {
-    
+  public enviarDatos(): void {
     const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
     const TIPO_SOLICITUD = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['tipoSolicitud']?.value;
     const RFC = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['rfc']?.value;
@@ -447,10 +549,10 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     if (TIPO_SOLICITUD === TipoSolicitud.ADMIN) {
       this.configuracionTablaDatos = this.duplicarDatos;
       this.configuracionTablaDatos = this.configuracionTablaDatos.filter((item) => {
-      return (
-        Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento) &&
-        item.departamento.toLowerCase() === this.seleccionadoDepartamento.nombreDelDepartamento.toLowerCase()
-      );
+        return (
+          Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento) &&
+          item.departamento.toLowerCase() === this.seleccionadoDepartamento.nombreDelDepartamento.toLowerCase()
+        );
       });
       this.hasValidForm = this.bandejaSolicitudeFormGroup.valid;
       if (this.configuracionTablaDatos.length > 0) {

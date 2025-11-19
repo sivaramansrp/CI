@@ -345,6 +345,12 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
  * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consul…
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20solicitud/consulta-solicitudes-pendientes
+ */
+export const API_GET_BANDEJA_SOLICITUDES = 'bandeja-tarea/solicitudes-pendientes';
  
 /**
  * API para recuperar el catálogo de regímenes aduaneros.
