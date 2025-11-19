@@ -1,6 +1,6 @@
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BandejaDeTareasPendientes, SeleccionadoDepartamento, SeleccionadoTramite } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BandejaDeSolicitudeService } from '../../../core/services/consultagenerica/bandeja-tareas-pendientes.service';
@@ -187,7 +187,6 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     private route: ActivatedRoute,
     private consultaioStore: ConsultaioStore,
     private bandejaDeSolicitudeService: BandejaDeSolicitudeService,
-    private loginQuery: LoginQuery, 
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -231,24 +230,6 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     return this.dinamicasBandejaForma.get(
       'bandejaSolicitudeFormGroup'
     ) as FormGroup;
-  }
-  /*
-    * Valida la dependencia entre las fechas inicial y final en el formulario.
-  */
-  public validarDependenciaFechas(control: AbstractControl): ValidationErrors | null {
-    const FORM = control as FormGroup;
-    const INICIO = FORM.get('fechaInicial')?.value;
-    const FIN = FORM.get('fechaFinal')?.value;
-
-    // si fechaFinal tiene valor pero fechaInicial NO
-    if (FIN && !INICIO) {
-      FORM.get('fechaInicial')?.setErrors({ initialDateRequired: true });
-      return { initialDateRequired: true };
-    }
-
-    // limpiar el error si el usuario corrige
-    FORM.get('fechaInicial')?.setErrors(null);
-    return null;
   }
   /*
    * Filtra la configuración de columnas para ocultar ciertas columnas no necesarias
