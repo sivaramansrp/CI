@@ -248,14 +248,14 @@ export class ImportacionOtrosVehiculosUsadosPageComponent implements OnDestroy {
         "es_persona_moral": true,
         "certificado_serial_number": "string"
       },
-      "representacion_federal": {
+      "representacionFederal": {
         "cve_entidad_federativa": item.entidad,
         "cve_unidad_administrativa": item.representacion
       },
-      "entidades_federativas": {
+      "entidadFederativa": {
         "cveEntidad": item.entidad
       },
-      "lista_paises": item.fechasSeleccionadas
+      "listaPaises": item.fechasSeleccionadas
     };
 
     return new Promise((resolve, reject) => {

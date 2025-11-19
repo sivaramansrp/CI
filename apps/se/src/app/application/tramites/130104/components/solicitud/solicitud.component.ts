@@ -526,16 +526,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.getPaisesPorBloque(bloqueId.toString());
   }
   
-  // /**
-  //  * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
-  //  *
-  //  * @returns {void}
-  //  */
-  // getClasificacionRegimenCatalogo(VALOR: string): void {
-  //   this.importacionOtrosVehiculosUsadosService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
-  //     this.catalogosArray[1] = data as Catalogo[];
-  //   });
-  // }
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   *
+   * @returns {void}
+   */
+  getClasificacionRegimenCatalogo(VALOR: string): void {
+    this.importacionOtrosVehiculosUsadosService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+      this.catalogosArray[1] = data as Catalogo[];
+    });
+  }
 
   /**
   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
@@ -596,7 +596,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130104Store.actualizarEstado({ [$event.campo]: VALOR });
     if ($event.campo === 'regimen') {
       const VALOR = this.formDelTramite.get('regimen')?.value;
-      // this.getClasificacionRegimenCatalogo(VALOR);
+      this.getClasificacionRegimenCatalogo(VALOR);
     }
     if ($event.campo === 'fraccion') {
       const VALOR = this.mercanciaForm.get('fraccion')?.value;
