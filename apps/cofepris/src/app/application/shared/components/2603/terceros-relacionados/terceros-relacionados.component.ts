@@ -1,20 +1,35 @@
-import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros260303, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Component, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { FABRICANTE_TABLA, OTROS_TABLA } from '../../../constantes/shared2603/certificados-licencias-permisos.enum';
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadosLicenciasPermisosService } from '../../../services/shared2603/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
+
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subject, takeUntil } from 'rxjs';
+
+import {
+  AlertComponent,
+  ConfiguracionColumna,
+  Fabricante,
+  LASTABLA,
+  Otros260303,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
+import { ConsultaioState } from '@ng-mf/data-access-user';
+
+import { FABRICANTE_TABLA, OTROS_TABLA } from '../../../constantes/shared2603/certificados-licencias-permisos.enum';
+import { CertificadosLicenciasPermisosService } from '../../../services/shared2603/certificados-licencias-permisos.service';
+import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
+
 
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../constantes/shared2603/medicos-sin-registrar.enum';
 type AllowedValue = string | number | boolean | undefined;
+
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -28,6 +43,10 @@ type AllowedValue = string | number | boolean | undefined;
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnDestroy {
+  /**
+   * Indica si el título del programa debe mostrarse.
+   */
+  @Input() public programTitle: boolean = false;
 
   /**
    * Referencias a todos los componentes de tabla dinámica para poder limpiar sus selecciones
@@ -58,10 +77,21 @@ export class TercerosRelacionadosComponent implements OnDestroy {
    */
   @Input() formularioDeshabilitado: boolean = false;
 
-  /**
-   * Identificador del procedimiento actual.
+    /**
+   * @property
+   * @name permisoDefinitivoTitulo
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
    */
-  @Input() idProcedimiento?: number;
+  @Input() permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+
+    /**
+   * @property
+   * @name idProcedimiento
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
+  @Input() idProcedimiento : number[] = ID_PROCEDIMIENTO;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -622,6 +652,32 @@ private static generateConfiguracionTabla<T>(
       this.selectedProveedorRows = [];
     }
   }
+
+  /**
+   * Indica si el modal está en modo modificación.
+  */
+  public esModificacion: boolean = false;
+
+  /**
+   * Título dinámico del modal, calculado según el idProcedimiento y el modo.
+  */ 
+  get tituloModal(): string {
+    return TercerosRelacionadosComponent.obtenerNombreDelTitulo(this.idProcedimiento, this.esModificacion);
+  }
+
+  /**
+   * Obtiene el título adecuado según el idProcedimiento y si es modificación.
+   * @param idProcedimiento - El identificador del procedimiento
+   * @param esModificacion - Si el modal está en modo modificación
+   */
+  static obtenerNombreDelTitulo(idProcedimiento: number[] | number, esModificacion?: boolean): string {
+    const ID = Array.isArray(idProcedimiento) ? idProcedimiento[0] : idProcedimiento;
+    if (ID === 260302 || ID === 260304) {
+      return esModificacion ? 'Modificar destinatario (destino final)' : 'Agregar destinatario (destino final)';
+    }
+    return esModificacion ? 'Modificar fabricante' : 'Agregar fabricante';
+  }
+
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.

@@ -9,11 +9,14 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Otros2603, RadioOpcion } from '@libs/shared/data-access-user/src/core/models/shared2603/certificados-licencias-permisos.model';
+
+import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../constantes/shared2603/medicos-sin-registrar.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite2603Query } from '../../../estados/queries/2603/tramite2603.query';
 import terecerosNacionalidos from '@libs/shared/theme/assets/json/2603/terceros-nacionalidad.json';
 import tipoPersona from '@libs/shared/theme/assets/json/2603/tipo-persona.json';
+
 /**
  * FabricanteModalComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -33,6 +36,26 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    * Título del componente modal.
    */
   titulo: string;
+
+      /**
+     * @property
+     * @name permisoDefinitivoTitulo
+     * @type {number}
+     * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+     */
+  permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+  
+  /**
+   * Identificador numérico del procedimiento actual.
+   *
+   * @type {string}
+   * @default ID_PROCEDIMIENTO
+   *
+   * ### Descripción:
+   * - Almacena el valor del procedimiento que se está ejecutando.
+   * - Se inicializa con la constante `ID_PROCEDIMIENTO`.
+   */
+  idProcedimiento: number[] = ID_PROCEDIMIENTO;
 
   /**
    * Datos existentes para prellenar el formulario en modo modificación.
@@ -87,6 +110,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       ? (this.opcionesTipoPersona ?? []).filter((option: RadioOpcion) => option.value !== 'noContribuyente')
       : (this.opcionesTipoPersona ?? []);
   }
+
   /**
    * Constructor del componente FabricanteModalComponent.
    *
@@ -530,7 +554,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    */
   inicializarFormularioTercerosRelacionados(): void {
     this.tercerosRelacionadosForm = this.fb.group({
-      denominacionSocial: [this.solicitudState.tercerosRelacionadosDenominacionSocial || '', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
+  denominacionSocial: [this.solicitudState.tercerosRelacionadosDenominacionSocial || '', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       tercerosNacionalidad: [''],
       tipoPersona: [''],
       rfc: [''],
@@ -696,6 +720,25 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
   public esValido(formulario: FormGroup, campo: string): boolean | null {
   return this.validacionesService.isValid(formulario, campo);
   }
+    /**
+   * Título dinámico del modal, calculado según el idProcedimiento y el modo.
+   */
+  get tituloModal(): string {
+    return FabricanteModalComponent.obtenerNombreDelTitulo(this.idProcedimiento, this.esModificacion);
+  }
+
+  /**
+   * Obtiene el título adecuado según el idProcedimiento y si es modificación.
+   * @param idProcedimiento - El identificador del procedimiento
+   * @param esModificacion - Si el modal está en modo modificación
+   */
+  static obtenerNombreDelTitulo(idProcedimiento: number[] | number, esModificacion?: boolean): string {
+    const ID = Array.isArray(idProcedimiento) ? idProcedimiento[0] : idProcedimiento;
+    if (ID === 260302 || ID === 260304) {
+      return esModificacion ? 'Modificar destinatario (destino final)' : 'Agregar destinatario (destino final)';
+    }
+    return esModificacion ? 'Modificar fabricante' : 'Agregar fabricante';
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
@@ -705,5 +748,4 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
   this.notificadorDestruir$.next();
   this.notificadorDestruir$.complete();
   }
-
 }

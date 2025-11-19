@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 
 import { PagoDerechosFormState } from '../../../../shared/models/2603/terceros-relacionados.model';
@@ -44,13 +43,6 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
    */
   @Input() consultaState!: ConsultaioState;
-
-  /**
-   * @property {number} idProcedimiento
-   * @description
-   * Identificador del procedimiento actual.
-   */
-    idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property {PagoDerechosFormState} pagoDerechos

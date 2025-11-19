@@ -7,7 +7,6 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/2603/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
 import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
 
@@ -42,13 +41,6 @@ export class DatosDeLaSolicitudContenedoraComponent implements OnDestroy {
    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
    */
   @Input() public consultaState!: ConsultaioState;
-
-  /**
-   * @property {number} idProcedimiento
-   * @description
-   * Identificador del procedimiento actual.
-   */
-  idProcedimiento: number = ID_PROCEDIMIENTO;
 
 /**
    * @property {boolean} esFormularioSoloLectura

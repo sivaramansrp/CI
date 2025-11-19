@@ -5,9 +5,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
+import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../../shared/constantes/shared2603/medicos-sin-registrar.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/2603/terceros-relacionados/terceros-relacionados.component';
-
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
 import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
 
@@ -24,6 +23,22 @@ import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
   styleUrls: ['./terceros-relacionados.contenedora.scss'],
 })
 export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
+      /**
+   * @property
+   * @name permisoDefinitivoTitulo
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
+  permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+
+    /**
+   * @property
+   * @name idProcedimiento
+   * @type {number}
+   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+   */
+  idProcedimiento : number[] = ID_PROCEDIMIENTO;
+  
   /**
    * @property destroyNotifier$
    * @description Subject utilizado para cancelar observables de manera ordenada
@@ -38,13 +53,6 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
    */
   @Input() public consultaState!: ConsultaioState;
-
-  /**
-   * @property {number} idProcedimiento
-   * @description
-   * Identificador del procedimiento actual.
-   */
-  idProcedimiento: number = ID_PROCEDIMIENTO;
 
 /**
    * @property {boolean} esFormularioSoloLectura

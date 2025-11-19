@@ -1,5 +1,9 @@
 <div class="modal-body">
-    <ng-titulo titulo="{{titulo}}"></ng-titulo>
+        @if (permisoDefinitivoTitulo[0] === 260302 || permisoDefinitivoTitulo[0] === 260304) {
+            <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
+        } @else {
+            <ng-titulo titulo="{{titulo}}"></ng-titulo>
+        }
     <form [formGroup]="tercerosRelacionadosForm">
         @if(titulo !== 'Agregar otros') {
         <h5>Datos generales</h5>

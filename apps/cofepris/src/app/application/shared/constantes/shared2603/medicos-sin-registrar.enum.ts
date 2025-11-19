@@ -1,4 +1,38 @@
 /**
+ * Identificadores numéricos relacionados con permisos definitivos.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
+ */
+export const PERMISO_DEFINITIVO_TITULO = [
+  260301, 260302, 260303, 260304
+];
+
+/**
+ * Identificador numérico único del procedimiento administrativo.
+ * 
+ * @description Código oficial asignado por COFEPRIS para identificar el trámite de
+ * "Permiso sanitario de importación de dispositivos médicos sin registro, usados".
+ * Este identificador se utiliza para referenciar el procedimiento en sistemas
+ * internos, bases de datos y documentación oficial.
+ * 
+ * @example
+ * // Uso típico para validaciones o consultas:
+ * if (procedimiento === ID_PROCEDIMIENTO) {
+ *   // Lógica específica para este trámite
+ * }
+ * 
+ * @type {number}
+ * @constant
+ * @readonly
+ * @since 1.0.0
+ */
+export const ID_PROCEDIMIENTO = [
+  260301, 260302, 260303, 260304
+];
+
+/**
  * Configuración de los pasos del proceso de solicitud para dispositivos médicos sin registro.
  * Define la secuencia de pasos que debe seguir el usuario para completar el trámite.
  * 
@@ -76,27 +110,6 @@ export const TITULOMENSAJE =
  */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
-
-/**
- * Identificador numérico único del procedimiento administrativo.
- * 
- * @description Código oficial asignado por COFEPRIS para identificar el trámite de
- * "Permiso sanitario de importación de dispositivos médicos sin registro, usados".
- * Este identificador se utiliza para referenciar el procedimiento en sistemas
- * internos, bases de datos y documentación oficial.
- * 
- * @example
- * // Uso típico para validaciones o consultas:
- * if (procedimiento === ID_PROCEDIMIENTO) {
- *   // Lógica específica para este trámite
- * }
- * 
- * @type {number}
- * @constant
- * @readonly
- * @since 1.0.0
- */
-export const ID_PROCEDIMIENTO = 260303;
 
 /**
  * @const ELEMENTOS_REQUERIDOS
