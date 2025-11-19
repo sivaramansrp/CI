@@ -74,6 +74,7 @@ import {
   API_ACTIVIDAD_PRODUCTIVA_PROSEC,
   API_REPRESENTACION_FEDERAL_PARAM,
   API_UNIDADES_MEDIDAS_TARIFARIAS,
+  API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -1085,6 +1086,14 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_PARAM(tramite, estado)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+   getFraccionesArancelariasAutoCompleteCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE(tramite, id)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+
+  
     
 /**
  * Obtiene el catálogo tipo de empresa.

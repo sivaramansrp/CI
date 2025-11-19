@@ -284,6 +284,13 @@ export class ImportacionEquipoAnticontaminanteService {
       );
   }
 
+   getFraccionDescripcionPartidasDeLaMercanciaService(tramite: string, ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.getFraccionesArancelariasAutoCompleteCatalogo(tramite, ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
     /**
        * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
        *

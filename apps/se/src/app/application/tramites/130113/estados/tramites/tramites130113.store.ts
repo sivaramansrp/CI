@@ -57,7 +57,7 @@ export interface Tramite130113State {
   fraccionDescripcionPartidasDeLaMercancia: string;
 
   /** Valor de la partida en USD para las partidas de la mercancía. */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /** Descripción de las partidas de la mercancía. */
   descripcionPartidasDeLaMercancia: string;
@@ -140,7 +140,7 @@ export function createInitialState(): Tramite130113State {
     cantidadPartidasDeLaMercancia: '',
     fraccionTigiePartidasDeLaMercancia: '',
     fraccionDescripcionPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
