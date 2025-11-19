@@ -11,10 +11,6 @@ import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
 import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
 
-
-
-
-
 /**
  * @component DatosDeLaSolicitudContenedoraComponent
  * @description Componente contenedor para el trámite 260303, encargado
@@ -74,8 +70,17 @@ export class DatosDeLaSolicitudContenedoraComponent implements OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
-   * @constructor
-   * @description Inyecta servicios para obtener el estado de consulta.
+   * Crea una instancia de DatosDeLaSolicitudContenedoraComponent.
+   *
+   * Inicializa la suscripción al estado de consulta mediante el store `ConsultaioQuery`.
+   * Actualiza la bandera `esFormularioSoloLectura` y el estado `consultaState` cada vez que cambia el estado de consulta.
+   *
+   * @param consultaQuery Servicio para consultar el estado global de la consulta.
+   * @param tramite260303Query Servicio para consultar el estado específico del trámite 260303.
+   * @param tramite260303Store Store para gestionar el estado del trámite 260303.
+   * @param cdr Servicio de Angular para detectar y aplicar cambios en el ciclo de vida del componente.
+   *
+   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
