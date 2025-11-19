@@ -40,7 +40,6 @@
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                           (keypress)="filtrarCaracteres($event, item.inputFilter)"
                         />
-                        
                         <validadores-de-formularios 
                           [forma]="forma" 
                           [controlDeFormulario]="item.campo" 
@@ -231,7 +230,16 @@
                             [isDisabled]="soloLectura"
                             (valorCambiado)="eventoDeCambioDeValor($event, item.campo, 'date')"
                           ></input-fecha>
-
+                          @if (item.campo === 'fechaInicial' && fechaInicial.touched && fechaInicial.errors?.['initialDateRequired']) {
+                            <div class="mensaje-error">
+                              Este campo es obligatorio.
+                            </div>
+                          }
+                          @if (item.campo === 'fechaFinal' && fechaFinal.touched && fechaFinal.errors?.['initialDateRequired']) {
+                            <div class="mensaje-error">
+                              Este campo es obligatorio.
+                            </div>
+                          }
                           <validadores-de-formularios 
                             [forma]="forma" 
                             [controlDeFormulario]="item.campo" 

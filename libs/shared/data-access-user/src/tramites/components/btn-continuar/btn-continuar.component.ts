@@ -98,6 +98,14 @@ export class BtnContinuarComponent implements OnInit {
   @Input() notificacion!: Notificacion;
 
   /**
+ * @property btnHabilitarContinuar
+ * @description Indica si el botón de Continuar debe estar habilitado.
+ * @type {boolean}
+ * @default false
+ */
+  @Input() btnHabilitarContinuar: boolean = false;
+
+  /**
    * @property continuarEvento
    * @description Evento emitido al hacer clic en el botón Continuar.
    * @type {EventEmitter<AccionBoton>}
@@ -164,6 +172,12 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+
+    if (this.btnHabilitarContinuar) {
+      this.habilitarBoton = true;
+    }
+    else {
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -175,6 +189,7 @@ export class BtnContinuarComponent implements OnInit {
         })
       )
       .subscribe();
+  }
   }
 
   /**
@@ -204,6 +219,7 @@ export class BtnContinuarComponent implements OnInit {
     const PUEDE_CONTINUAR =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     let valor = this.datos.indice;
+
     if (!PUEDE_CONTINUAR) {
       return;
     }

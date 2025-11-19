@@ -1,3 +1,4 @@
+import { CATALOGO_SECTOR, COMUN_URL } from '@libs/shared/data-access-user/src';
 import {
   SolicitudSectoresYMercanciasState,
   TramiteSectoresYMercanciasStore,
@@ -5,16 +6,40 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SectoresMercanciasService {
+
+  /**
+     * URL base del host para todas las consultas de catálogos.
+     *
+     * Esta propiedad almacena la URL base configurada desde las variables de entorno
+     * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+     *
+     * @type {string}
+     * @readonly
+     * @since 1.0.0
+     */
+    host!: string;
+
+
+     /**
+   * Servicio para obtener datos de terceros relacionados y permisos.
+   *
+   * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
+   */
   constructor(
     private readonly http: HttpClient,
     private tramiteSectoresYMercanciasStore: TramiteSectoresYMercanciasStore
   ) {
+
+      this.host = `${COMUN_URL.BASE_URL}`;
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -43,7 +68,12 @@ export class SectoresMercanciasService {
    *
    * @returns Un observable que emite la respuesta del catálogo de sectores.
    */
-  getSectorCatalog(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/90202/sector.json');
+  // getSectorCatalog(): Observable<RespuestaCatalogos> {
+  //   return this.http.get<RespuestaCatalogos>('assets/json/90202/sector.json');
+  // }
+
+    getSectorCatalog(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_SECTOR(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }

@@ -21,6 +21,7 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="tratadoDatos" [label]="'Tratado o bloqueo comercial'" [required]="false"
         name="tratado" formControlName="tratado" [isDisabled]="esFormularioSoloLectura ? true : false"
+        placeholder="Seleccione una opción"
         (change)="setValoresStore(cancelacionForm,'tratado', 'setTratado')">
       </app-catalogo-select>
     </div>
@@ -191,9 +192,8 @@
         </div>
       </div>
       <h6>Certificados disponibles</h6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="CertificadosDisponiblesDatos"
-        [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-      </app-tabla-dinamica>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTablaCertificados"
+        [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="filaSeleccionadaCertificadosDisponibles($event)"></app-tabla-dinamica>
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -206,8 +206,8 @@
         </div>
       </div>
       <h6>Certificados a cancelar</h6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="CertificadosCancelarDatos"
-        [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+        <app-tabla-dinamica [configuracionTabla]="configuracionTablaCertificados" [datos]="CertificadosCancelarDatos"
+        [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="filaSeleccionadaCertificadosCancelar($event)">
       </app-tabla-dinamica>
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -233,9 +233,8 @@
 </div>
 </div>
 
-@if (nuevaNotificacion) {
-<!-- <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="onSeleccionarCertificadosDisponibles($event)">
-  </lib-notificaciones>
-</section> -->
-}
+<lib-notificaciones 
+  *ngIf="esHabilitarElDialogo"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="cerrarModal()">
+</lib-notificaciones>

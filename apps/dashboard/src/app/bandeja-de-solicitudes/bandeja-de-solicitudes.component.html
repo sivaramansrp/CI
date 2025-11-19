@@ -11,7 +11,9 @@
           [seleccionadoDepartamento]="selectedDepartamentoObj"
           [duplicarDatos]="copiarBandejaTablaDatos"
           [rfcNombre]="rfcValor"
+          [isBandejaSolicitudes]="true"
           (obtenerNombreDelDepartamento)="procedureNumero($event)"
+          (getDatosBandejaSolicitudes)="getSolicitudeTablaDatos($event)"
         >
         </lib-bandeja>
       </ng-container>
