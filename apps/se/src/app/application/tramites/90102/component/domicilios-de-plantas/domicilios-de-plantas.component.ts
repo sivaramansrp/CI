@@ -2,8 +2,12 @@ import {
   AlertComponent,
   Catalogo,
   CatalogoServices,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TituloComponent,
+  doDeepCopy,
+  esValidObject,
 } from '@ng-mf/data-access-user';
 import {
   AutorizacionProsecStore,
@@ -43,6 +47,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     CommonModule,
+    NotificacionesComponent
   ],
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
@@ -79,7 +84,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   /**
    * @property {Catalogo[]} RepresentacionFederal - Array de catálogos de representación federal.
    */
-  RepresentacionFederal: Catalogo[] = [];
+  RepresentacionFederalLista: Catalogo[] = [];
 
     /**
      * Una propiedad pública que representa el estado de la solicitud de sectores y mercancías.
@@ -91,11 +96,11 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   /**
    * @property {Catalogo[]} ActividadProductiva - Array de catálogos de actividad productiva.
    */
-  ActividadProductiva: Catalogo[] = [];
+  ActividadProductivaLista: Catalogo[] = [];
 
   plantasDatos: FilaPlantas[] = [];
   /** Datos de las plantas obtenidos del servicio */
-  plantasDatosPROSEC: FilaPlantas[] = [];
+  prosecDatos: FilaPlantas[] = [];
   
   TablaSeleccion = TablaSeleccion;
 
@@ -109,6 +114,42 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Identificador del trámite actual.
    */
   tramiteId: string = '90102';
+  
+    /**
+     * @property {boolean} eliminarPlantasConfirmacion
+     * @description
+     * Indica si se debe mostrar el modal de confirmación para eliminar plantas seleccionadas.
+     */
+    eliminarPlantasConfirmacion: boolean = false;
+  
+    /**
+     * @property {boolean} eliminarPlantasAlerta
+     * @description
+     * Indica si se debe mostrar una alerta cuando no se ha seleccionado ninguna planta para eliminar.
+     */
+    eliminarPlantasAlerta: boolean = false;
+  
+    /**
+     * @property {Notificacion} nuevaNotificacion
+     * @description
+     * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+     */
+    public nuevaNotificacion!: Notificacion;
+  
+    /**
+     * @property {boolean} espectaculoAlerta
+     * @description
+     * Indica si se debe mostrar una alerta relacionada con la selección de entidad federativa o plantas.
+     */
+    espectaculoAlerta: boolean = false;
+  
+    /**
+     * @property {boolean} espectaculoAlertaAgregar
+     * @description
+     * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+     * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+     */
+    espectaculoAlertaAgregar: boolean = false;
 
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 1 },
@@ -175,15 +216,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     private catalogoServices: CatalogoServices
   ) {
       // Inicializa el formulario.
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioActualizacion = seccionState.update;
-        })
-      )
-      .subscribe();
+   
   }
 
   ngOnInit(): void {
@@ -200,6 +233,13 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.domiciliosState = state as ProsecState;
+          this.plantasDatos = state.plantasDatos;
+          this.prosecDatos = state.prosecDatos;
+          if(state.RepresentacionFederalLista && state.RepresentacionFederalLista.length > 0){
+          this.RepresentacionFederalLista = state.RepresentacionFederalLista;
+          }
+         
+          this.initActionFormBuild();
         })
       )
       .subscribe();
@@ -218,8 +258,19 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.initActionFormBuild();
-    this.inicializarEstadoFormulario();
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioActualizacion = seccionState.update;
+        })
+      )
+      .subscribe();
+      this.nuevaNotificacion = {} as Notificacion;
+
+     
+
   }
 
   /**
@@ -311,13 +362,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de representación federal desde el servicio.
    */
   obtenerListaFederal(): void {
-    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString(), this.forma.get('Estado')?.value).subscribe({
+    const ESTADO_VALOR = this.domiciliosState.Estado;
+    this.catalogoServices.getRepresentacionFederalMexCatalogo(this.tramiteId.toString(), ESTADO_VALOR).subscribe({
       next: (data) => {
-        this.RepresentacionFederal = data.datos as Catalogo[];
+        this.RepresentacionFederalLista = data.datos as Catalogo[];
+        this.autorizacionProsecStore.setRepresentacionFederalLista(this.RepresentacionFederalLista);
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
-        this.RepresentacionFederal = [];
+        this.RepresentacionFederalLista = [];
       }
   });
   }
@@ -329,7 +382,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   obtenerListaActividad(): void {
     this.catalogoServices.getActividadProductivaProsecCatalogo(this.tramiteId.toString()).subscribe((data) => {
       const DATOS = data.datos as Catalogo[];
-      this.ActividadProductiva = DATOS;
+      this.ActividadProductivaLista = DATOS;
   });
   }
 
@@ -339,23 +392,23 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   obtenerLista(): void {
     this.obtenerListaEstado();
-    this.obtenerListaFederal();
     this.obtenerListaActividad();
     if (this.esFormularioSoloLectura) {
       this.recuperarDatos();
     }
-      if (this.esFormularioActualizacion) {        
-      this.plantasDatos = PLANTAS_DATOS;
-      this.plantasDatosPROSEC = PLANTAS_DATOS;
-    }
+   
   }
 
-  
-    /** Guarda la selección de número de empleados hecha por el usuario.*/
-  seleccionarProsecDisponibles(evento: FilaPlantas[]): void {
-    this.seleccionarProsecDisponiblesLista = evento;
-  }
+ 
 
+  onEstadoChange(): void {
+  const ESTADO_VALOR = this.forma.get('Estado')?.value;
+  if (ESTADO_VALOR) {
+    this.setValoresStore(this.forma, 'Estado', 'setEstado');
+    this.obtenerListaFederal(); 
+    this.forma.get('RepresentacionFederal')?.markAsUntouched();
+  }
+}
   /**
  * Recupera los datos de las plantas desde el servicio.
  *
@@ -367,44 +420,136 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
 recuperarDatos(): void { 
-    this.prosecService.obtenerTablaDatos('plantasDatos.json').subscribe({
+  const PAYLOAD = {
+    "rfc_solicitante": "AAL0409235E6",
+    "enitdad_federativa": this.forma.get('Estado')?.value,
+    "planta_idc": "1"
+  };
+
+  this.prosecService.obtenerEstadoTablaDatos(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
       next: (response) => {
-        if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
-          this.plantasDatos = response.plantasDatos;
-          if (this.esFormularioSoloLectura) {
-            this.plantasDatosPROSEC = [...this.plantasDatos];
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if (API_DATOS.codigo !== "00") {
+            this.plantasDatos = [];
+            return;
           }
-        } else {
-          this.plantasDatos = [];
+          if (esValidObject(API_DATOS.datos) && Array.isArray(API_DATOS.datos.plantas)) {
+              const PLANTAS_ARRAY = API_DATOS.datos.plantas;
+              const PLANTAS_DATOS_ARRAY: FilaPlantas[] = PLANTAS_ARRAY.map((planta: any) => ({
+                calle: planta.domicilioDto?.calle,
+                numeroExterior: planta.domicilioDto?.numExterior,
+                numeroInterior: planta.domicilioDto?.numInterior,
+                codigoPostal: planta.domicilioDto?.codigoPostal,
+                colonia: planta.domicilioDto?.coloniaEntity?.nombre,
+                municipioOAlcaldia: planta.domicilioDto?.delegacionMunicipio?.nombre,
+                pais: planta.domicilioDto?.pais?.nombre,
+                registro: planta.domicilioDto?.entidadFederativa?.nombre,
+                registroFederalDeContribuyentes: planta.empresaDto?.rfc,
+                razonSocial: planta.empresaDto?.razonSocial,
+                domicilioFiscalDelSolicitante: planta.empresaDto?.domicilioCompleto
+              }));
+              this.plantasDatos = PLANTAS_DATOS_ARRAY as FilaPlantas[];
+              this.autorizacionProsecStore.setPlantasDatos(this.plantasDatos);
+          } else {
+            this.plantasDatos = [];
+          }
         }
-      },
-      error: (_error: HttpErrorResponse) => {
-        this.plantasDatos = [];
-      },
+      }
     });
+}
+ /**
+   * @method agregarPlantasconfirmar
+   * @description
+   * Oculta la alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para cerrar el mensaje de advertencia cuando el usuario confirma la acción.
+   */
+  agregarPlantasconfirmar(): void {
+    this.espectaculoAlertaAgregar = false
   }
 /**   * Método para mostrar los domicilios de las plantas.
    * Este método llama a la función `recuperarDatos` para obtener y mostrar los domicilios de las plantas.
    * @returns {void}
    */
   public mostrarDomicilios(): void {
-    const VALOR_ESTADO = this.forma.get('Estado')?.value;
-    if (VALOR_ESTADO) {
+    if( this.forma.get('Estado')?.value.length === 0){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la Entidad Federativa.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+      this.espectaculoAlerta = false;
       this.recuperarDatos();
     }
   }
 
   /**
    * Método para agregar las plantas seleccionadas a la lista de plantas PROSEC.
-   * Este método copia las plantas seleccionadas desde la lista `plantasDatos` a la lista `plantasDatosPROSEC`
+   * Este método copia las plantas seleccionadas desde la lista `plantasDatos` a la lista `prosecDatos`
    * y luego limpia la lista `plantasDatos`.
    * @returns {void}
    */
-  public agregarPlantas(): void {
-    this.plantasDatosPROSEC = [...this.plantasDatos];
-    this.plantasDatos = [];
-  }
+ public agregarPlantas(): void {
+  if (this.seleccionarProsecDisponiblesLista.length > 0) {
+    const STORE_VALOR = this.autorizacionProsecStore.getValue();
+    const CURRENT_PROSEC_DATOS = STORE_VALOR.prosecDatos || [];
+    const SELECTED_DATOS = STORE_VALOR.selectedDatos || [];
 
+    const MERGED_PROSEC_DATOS = [...CURRENT_PROSEC_DATOS, ...SELECTED_DATOS];
+
+    const FILTERED_PLANTAS_DATOS = STORE_VALOR.plantasDatos.filter(
+      (item) => !SELECTED_DATOS.includes(item)
+    );
+
+    this.autorizacionProsecStore.update((state) => ({
+      ...state,
+      plantasDatos: FILTERED_PLANTAS_DATOS,
+      prosecDatos: MERGED_PROSEC_DATOS,
+      selectedDatos: [],
+    }));
+
+    this.seleccionarProsecDisponiblesLista = [];
+    this.espectaculoAlertaAgregar = false;
+  } else {
+    this.espectaculoAlertaAgregar = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones PROSEC.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+/**
+   * @method seleccionTabla
+   * @description
+   * Actualiza la lista de plantas seleccionadas en la tabla dinámica y sincroniza el estado en el store.
+   * @param {FilaPlantas[]} event - Arreglo de plantas seleccionadas.
+   */
+  seleccionTabla(event: FilaPlantas[]): void {
+    this.seleccionarProsecDisponiblesLista = event;
+    this.autorizacionProsecStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: event
+      })
+    )
+  }
   /**
    * Método para eliminar las plantas seleccionadas de la lista de plantas PROSEC.
    * Este método elimina las plantas que están en la lista `seleccionarProsecDisponiblesLista`
@@ -412,11 +557,35 @@ recuperarDatos(): void {
    * @returns {void}
    */
   public eliminarPlantas(): void {
-    if(this.seleccionarProsecDisponiblesLista.length > 0) {
-      const PLANTASELIMINAR = this.seleccionarProsecDisponiblesLista.map(planta => planta.registro);
-      this.plantasDatos = this.plantasDatos.filter(planta => !PLANTASELIMINAR.includes(planta.registro));
-      this.seleccionarProsecDisponiblesLista = [];
-    } 
+   
+    if (this.seleccionarProsecDisponiblesLista.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.eliminarPlantasAlerta = true;
+    }
+    else if (this.seleccionarProsecDisponiblesLista.length > 0) {
+      this.eliminarPlantasConfirmacion = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
   }
 
   /**
@@ -431,4 +600,60 @@ recuperarDatos(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+    /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de domicilios de plantas. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+    validarFormulario(): boolean {
+      if (this.forma.valid) {
+        return true;
+      }
+      this.forma.markAllAsTouched();
+      return false
+    }
+     /**
+       * @method eliminarPedimento
+       * @description
+       * Oculta la alerta de eliminación si el evento es verdadero.
+       * @param {boolean} event - Indica si se debe ocultar la alerta.
+       */
+      eliminarPedimento(event: boolean): void {
+        if (event === true) {
+          this.eliminarPlantasAlerta = !event;
+        }
+      }
+    
+      /**
+       * @method eliminarPedimentoDatos
+       * @description
+       * Elimina las plantas seleccionadas del estado y actualiza la lista en el store.
+       * @param {boolean} event - Indica si se debe proceder con la eliminación.
+       */
+      eliminarPedimentoDatos(event: boolean): void {
+        if (event === true) {
+          this.eliminarPlantasConfirmacion = false;
+          const VALOR = this.autorizacionProsecStore.getValue().prosecDatos;
+          if (VALOR.length === 0) {
+            return;
+          }
+          const FILTERED_VALOR = VALOR.filter(
+            (item) => !this.autorizacionProsecStore.getValue().selectedDatos?.includes(item)
+          );
+          this.autorizacionProsecStore.update(
+            (state) => ({
+              ...state,
+              prosecDatos: FILTERED_VALOR,
+              selectedDatos: [],
+            })
+          );
+          this.seleccionarProsecDisponiblesLista = [];
+        }
+        else {
+          this.eliminarPlantasConfirmacion = false;
+        }
+      }
 }

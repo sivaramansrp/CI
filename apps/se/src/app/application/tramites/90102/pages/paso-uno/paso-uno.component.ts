@@ -6,6 +6,8 @@ import { ProsecService } from '../../services/prosec.service';
 import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { DomiciliosDePlantasComponent } from '../../component/domicilios-de-plantas/domicilios-de-plantas.component';
+import { SectoresYMercanciasComponent } from '../../component/sectores-y-mercancias/sectores-y-mercancias.component';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -53,6 +55,17 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Se obtiene a través de la consulta ConsultaioQuery.
    */
   public consultaState!: ConsultaioState;
+    /**
+     * @property {DomiciliosDePlantasComponent} domiciliosDePlantas
+     * @description Referencia al componente de la sección "Domicilios de plantas" del formulario.
+     */
+    @ViewChild('domiciliosRef') domiciliosDePlantas!: DomiciliosDePlantasComponent;
+  
+    /**
+     * @property {SectoresYMercanciasComponent} sectoresYMercancias
+     * @description Referencia al componente de la sección "Sectores y mercancías" del formulario.
+     */
+    @ViewChild('sectoresRef') sectoresYMercancias!: SectoresYMercanciasComponent;
 
   /**
    * Constructor del componente Datos260502Component.
@@ -130,31 +143,32 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
     validarFormularios(): boolean {
       let isValid = true;
-      // if(this.ampliacionAnexoComponent) {
-      //   const AMPLIACION_ANEXO_VALID = this.ampliacionAnexoComponent.validarFormulario();
-        
-      //   // Validar que existan datos en AMBAS tablas
-      //   const HAS_IMMEX_DATA = this.ampliacionAnexoComponent.datosImmex && this.ampliacionAnexoComponent.datosImmex.length > 0;
-      //   const HAS_IMPORTACION_DATA = this.ampliacionAnexoComponent.datosImportacion && this.ampliacionAnexoComponent.datosImportacion.length > 0;
-        
-      //   if (!AMPLIACION_ANEXO_VALID || !HAS_IMMEX_DATA || !HAS_IMPORTACION_DATA) {
-      //     isValid = false;
-      //   }
-      // } else {
-      //   isValid = false;
-      // }
-      
-      // if (this.ampliacion3RsComponent) {
-      //   const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
-        
-      //   if (!AMPLIACION_3RS_VALID) {
-      //     isValid = false;
-      //   }
-      // } else {
-      //   if (this.esDatosRespuesta) {
-      //     isValid = false;
-      //   }
-      // }
+
+      if (this.solicitante?.form) {
+        if (this.solicitante.form.invalid) {
+          this.solicitante.form.markAllAsTouched();
+          isValid = false;
+        }
+      } else {
+        isValid = false;
+      }
+  
+      if (this.domiciliosDePlantas) {
+        if (!this.domiciliosDePlantas.validarFormulario()) {
+          isValid = false;
+        }
+      } else {
+        isValid = false;
+      }
+  
+      if (this.sectoresYMercancias) {
+        if (!this.sectoresYMercancias.validarFormulario()) {
+          isValid = false;
+        }
+      } else {
+        isValid = false;
+      }
+  
       return isValid;
     } 
   }

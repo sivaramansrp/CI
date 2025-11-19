@@ -8,11 +8,11 @@
  * @import { PARATEXTO } from '../../../../shared/constantes/prosec/prosec.module';
  * @import { CatalogosSelect } from '../../../../core/models/shared/components.model';
  * @import { Catalogo } from '../../../../core/models/shared/catalogos.model';
- * @import { ProsecService } from '../../../../core/services/90101/prosec.module';
+ * @import { ProsecService } from '../../../../core/services/90102/prosec.module';
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoServices, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoServices, doDeepCopy, esValidObject, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { FilaProducir, FilaSectors } from '../../models/prosec.module';
@@ -36,7 +36,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 /**
  * @component SectoresYMercanciasComponent
  * @description
- * [ES] Este componente es responsable de manejar los sectores y mercancías en el trámite 90101.
+ * [ES] Este componente es responsable de manejar los sectores y mercancías en el trámite 90102.
  * Permite la gestión de la selección de sectores, la visualización de catálogos y la interacción con el formulario reactivo.
  * Utiliza servicios y stores para obtener y actualizar el estado de los sectores y mercancías, así como para validar el formulario.
  * Implementa la lógica para inicializar el formulario, recuperar datos de catálogos, manejar el modo solo lectura y sincronizar los valores con el store global.
@@ -80,7 +80,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} sector - Array de catálogos de sectores.
    * @compodoc
    */
-  sector: Catalogo[] = [];
+  sectorLista: Catalogo[] = [];
 
   /**
    * @property {typeof TablaSeleccion} TablaSeleccion - Referencia al componente de selección de tabla.
@@ -330,7 +330,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.sectoresYMercancias = this.fb.group({
       sector: [
-        this.sectoresState.Sector
+        this.sectoresState.sector
       ],
       Fraccion_arancelaria: [
         { value: this.sectoresState.Fraccion_arancelaria, disabled: this.esFormularioSoloLectura },
@@ -373,11 +373,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   obtenserListaEstado(): void {
     this.catalogoServices.sectoresCatalogo(this.tramiteId).subscribe({
       next: (data) => {
-        this.sector = data.datos as Catalogo[];
+        this.sectorLista = data.datos as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
-        this.sector = [];
+        this.sectorLista = [];
       }
     });
   }
@@ -390,18 +390,44 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    * @compodoc
    */
-  recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe(
-      (response) => {
-        if (response && Array.isArray(response)) {
-          this.sectors = response.map((item) => ({
-            sectorLista: item['sectorLista'] as string,
-            sectorClave: item['sectorClave'] as string,
-          })) as FilaSectors[];
+  recuperarDatos(cveSectores: string): void {
+    this.ProsecService.obtenerSectoresTablaDatos(cveSectores).pipe(takeUntil(this.destroyNotifier$))
+  .subscribe({
+    next: (response) => {
+      if (esValidObject(response)) {
+        const API_DATOS = doDeepCopy(response);
+        // if (API_DATOS.codigo !== "00") {
+        //   this.mostrarAlerta = true;
+        //   this.mensajeDeAlerta = API_DATOS.error || API_DATOS.mensaje || 'Error al obtener información del sector.';
+        //   return;
+        // }
+        if (
+          esValidObject(API_DATOS.datos) &&
+          Array.isArray(API_DATOS.datos.sector_seleccionado) &&
+          API_DATOS.datos.sector_seleccionado.length > 0
+        ) {
+          const SECTOR_API = API_DATOS.datos.sector_seleccionado[0];
+          const NUEVO_SECTOR: FilaSectors = {
+            sectorLista: SECTOR_API.sector,
+            sectorClave: SECTOR_API.cvSectorCatalogo,
+          };
+          this.sectors = [...this.sectors, NUEVO_SECTOR];
           this.AutorizacionProsecStore.setSectorDatos(this.sectors);
+
+          // Limpiar selección en el formulario
+          this.sectoresYMercancias.get('sector')?.setValue('');
+
+          // Validar formulario y actualizar sección
+          const ISVALID = this.validarFormulario();
+          this.seccionStore.establecerSeccion([ISVALID]);
+          this.seccionStore.establecerFormaValida([ISVALID]);
         }
       }
-    );
+    },
+    error: (error) => {
+      console.error(error);
+    }
+  });
   }
 
     /**
@@ -413,18 +439,45 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   recuperarProducirDatos(): void {
-    this.ProsecService.obtenerTablaDatos('producirDatos.json').subscribe(
-      (response) => {
-        if (response && Array.isArray(response)) {
-          this.producir = response.map((item) => ({
-            arancelaria: item['arancelaria'] as string,
-            sector: item['sector'] as string,
-          })) as FilaProducir[];
-          this.AutorizacionProsecStore.setProducirDatos(this.producir);
+  const PAYLOAD = {
+    fraccion: this.sectoresYMercancias.get('Fraccion_arancelaria')?.value,
+    id_conf_programa_se: "50",
+    cve_sector: this.sectoresYMercancias.get('sector')?.value,
+    id_programa_autorizado: null
+  };
+  this.ProsecService.obtenerFraccionesTablaDatos(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        if (esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if (
+            esValidObject(API_DATOS.datos) &&
+            Array.isArray(API_DATOS.datos.fraccion_seleccionada) &&
+            API_DATOS.datos.fraccion_seleccionada.length > 0
+          ) {
+            const FRACCION_API = API_DATOS.datos.fraccion_seleccionada[0];
+            const NUEVA_FRACCION: FilaProducir = {
+              arancelaria: FRACCION_API.fraccionArancelaria.cveFraccion,
+              sector: FRACCION_API.cveSector,
+            };
+            this.producir = [...this.producir, NUEVA_FRACCION];
+            this.AutorizacionProsecStore.setProducirDatos(this.producir);
+
+            // Limpiar selección en el formulario
+            this.sectoresYMercancias.get('Fraccion_arancelaria')?.setValue('');
+
+            // Validar formulario y actualizar sección
+            const ISVALID = this.validarFormulario();
+            this.seccionStore.establecerSeccion([ISVALID]);
+            this.seccionStore.establecerFormaValida([ISVALID]);
+          }
         }
+      },
+      error: (error) => {
+        console.error(error);
       }
-    );
-  }
+    });
+}
 
   /**
    * @method agregarSector
@@ -434,8 +487,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarSector(): void {
-    if( this.sectoresYMercancias.get('sector')?.value.length > 0){
-    this.recuperarDatos();
+    const cveSectores = this.sectoresYMercancias.get('sector')?.value; 
+    if (cveSectores && cveSectores.length > 0) {
+      this.recuperarDatos(cveSectores); 
     }
   }
 
@@ -478,7 +532,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @compodoc
    */
   sectorSeleccion(Sector: Catalogo): void {
-    this.AutorizacionProsecStore.setActividadProductiva([Sector]);
+    this.AutorizacionProsecStore.setActividadProductivaLista([Sector]);
   }
 
   /**

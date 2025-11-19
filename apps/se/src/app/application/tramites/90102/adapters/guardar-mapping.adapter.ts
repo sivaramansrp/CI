@@ -17,318 +17,420 @@ export class GuardarMappingAdapter {
    * @returns Payload formateado para la API
    */
   
-//   static toFormPayload(state: ProsecState): unknown {
-//     return {
+  static toFormPayload(state: ProsecState): unknown {
+    return {
 
-//       "solicitante": {
-//         "rfc": "AAL0409235E6",
-//         "nombre": "ACEROS ALVARADO S.A. DE C.V.",
-//         "actividadEconomica": "Fabricación de productos de hierro y acero",
-//         "correoElectronico": "contacto@acerosalvarado.com",
-//         "domicilio": {
-//             "pais": "México",
-//             "codigoPostal": "06700",
-//             "estado": "Ciudad de México",
-//             "municipioAlcaldia": "Cuauhtémoc",
-//             "localidad": "Centro",
-//             "colonia": "Roma Norte",
-//             "calle": "Av. Insurgentes Sur",
-//             "numeroExterior": "123",
-//             "numeroInterior": "Piso 5, Oficina A",
-//             "lada": "",
-//             "telefono": "123456"
-//         },
-//       },
-//       "solicitud": {
-//           "discriminatorValue": 260218,
-//           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
-//           "regimen": state.datosSolicitudFormState.regimen,
-//           "aduanaAIFA": "",
-//           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
-//       },
-//       "establecimiento": {
-//           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
-//           "razonSocial": state.datosSolicitudFormState.denominacionRazon,
-//           "correoElectronico": state.datosSolicitudFormState.correoElectronico,
-//           "domicilio": {
-//               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
-//               "entidadFederativa": {
-//                   "clave": ""
-//               },
-//               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
-//               "informacionExtra": state.datosSolicitudFormState.localidad,
-//               "descripcionColonia": state.datosSolicitudFormState.colonia,
-//               "calle": state.datosSolicitudFormState.calle,
-//               "lada": state.datosSolicitudFormState.lada,
-//               "telefono": state.datosSolicitudFormState.telefono
-//           },
-//           "original": "",
-//           "avisoFuncionamiento": state.datosSolicitudFormState.aviso,
-//           "numeroLicencia": state.datosSolicitudFormState.licenciaSanitaria,
-//           "aduanas": state.datosSolicitudFormState.adunasDeEntradas
-//       },
-//       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
-//         return {
-//               "cveScian": datos.clave,
-//               "descripcion": datos.descripcion
-//           }
-//       }),
-//       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
-//         return {
-//               "idMercancia": "",
-//               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
-//               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
-//               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
-//               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
-//               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
-//               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-//               "descripcionMercancia": "",
-//               "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-//               "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
-//               "fraccionArancelaria": {
-//                   "clave": mercancia.fraccionArancelaria,
-//                   "descripcion": mercancia.descripcionFraccion
-//               },
-//               "unidadMedidaComercial": {
-//                   "descripcion": mercancia.cantidadUMCObj?.descripcion
-//               },
-//               "cantidadUMCConComas": mercancia.cantidadUMC,
-//               "unidadMedidaTarifa": {
-//                   "descripcion": mercancia.cantidadUMT
-//               },
-//               "cantidadUMTConComas": mercancia.cantidadUmtValor,
-//               "presentacion": mercancia.presentacion,
-//               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-//               "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-//               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-//               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-//               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
-//               "fechaCaducidadStr": mercancia.fechaCaducidad
-//           }
-//       }),
-//       "representanteLegal": {
-//           "rfc": state.datosSolicitudFormState.representanteRfc,
-//           "resultadoIDC": "",
-//           "nombre": state.datosSolicitudFormState.representanteNombre,
-//           "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
-//           "apellidoMaterno": state.datosSolicitudFormState.apellidoMaterno
-//       },
-//       "gridTerceros_TIPERS_FAB": state.fabricanteTablaDatos.map((fabricante) => {
-//         return {
-//               "idPersonaSolicitud": "",
-//               "ideTipoTercero": "",
-//               "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
-//               "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
-//               "booleanFisicaNoContribuyente": "0",
-//               "denominacion": fabricante.tipoPersona === "Moral" ? fabricante.razonSocial : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
-//               "razonSocial": fabricante.razonSocial,
-//               "rfc": fabricante.rfc,
-//               "curp": fabricante.curp,
-//               "nombre": fabricante.nombres,
-//               "apellidoPaterno": fabricante.primerApellido,
-//               "apellidoMaterno": fabricante.segundoApellido,
-//               "telefono": fabricante.telefono,
-//               "correoElectronico": fabricante.correoElectronico,
-//               "actividadProductiva": "",
-//               "actividadProductivaDesc": "",
-//               "descripcionGiro": "",
-//               "numeroRegistro": "",
-//               "domicilio": {
-//                   "calle": fabricante.calle,
-//                   "numeroExterior": fabricante.numeroExterior,
-//                   "numeroInterior": fabricante.numeroInterior,
-//                   "pais": {
-//                       "clave": fabricante.paisObj?.clave,
-//                       "nombre": fabricante.paisObj?.descripcion
-//                   },
-//                   "colonia": {
-//                       "clave": fabricante.coloniaObj?.clave,
-//                       "nombre": fabricante.coloniaObj?.descripcion
-//                   },
-//                   "delegacionMunicipio": {
-//                       "clave": fabricante.municipioAlcaldiaObj?.clave,
-//                       "nombre": fabricante.municipioAlcaldiaObj?.descripcion
-//                   },
-//                   "localidad": {
-//                       "clave": fabricante.localidadObj?.clave,
-//                       "nombre": fabricante.localidadObj?.descripcion
-//                   },
-//                   "entidadFederativa": {
-//                       "clave": fabricante.entidadFederativaObj?.clave,
-//                       "nombre": fabricante.entidadFederativaObj?.descripcion
-//                   },
-//                   "informacionExtra": "",
-//                   "codigoPostal": fabricante.codigoPostal,
-//                   "descripcionColonia": fabricante.colonia
-//               },
-//               "idSolicitud": "0"
-//           }
-//       }),
-//       "gridTerceros_TIPERS_DES": state.destinatarioFinalTablaDatos.map((destinatario) => {
-//         return {
-//             "idPersonaSolicitud": "",
-//             "ideTipoTercero": "TIPERS.FAB",
-//             "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
-//             "booleanExtranjero": "",
-//             "booleanFisicaNoContribuyente": "0",
-//             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
-//             "razonSocial": destinatario.razonSocial,
-//             "rfc": destinatario.rfc,
-//             "curp": destinatario.curp,
-//             "nombre": destinatario.nombres,
-//             "apellidoPaterno": destinatario.primerApellido,
-//             "apellidoMaterno": destinatario.segundoApellido,
-//             "telefono": destinatario.telefono,
-//             "correoElectronico": destinatario.correoElectronico,
-//             "actividadProductiva": "",
-//             "actividadProductivaDesc": "",
-//             "descripcionGiro": "",
-//             "numeroRegistro": "",
-//             "domicilio": {
-//                 "calle": destinatario.calle,
-//                 "numeroExterior": destinatario.numeroExterior,
-//                 "numeroInterior": destinatario.numeroInterior,
-//                 "pais": {
-//                     "clave": destinatario.paisObj?.clave,
-//                     "nombre": destinatario.paisObj?.descripcion
-//                 },
-//                 "colonia": {
-//                     "clave": destinatario.coloniaObj?.clave,
-//                     "nombre": destinatario.coloniaObj?.descripcion
-//                 },
-//                 "delegacionMunicipio": {
-//                     "clave": destinatario.municipioObj?.clave,
-//                     "nombre": destinatario.municipioObj?.descripcion
-//                 },
-//                 "localidad": {
-//                     "clave": destinatario.localidadObj?.clave,
-//                     "nombre": destinatario.localidadObj?.descripcion
-//                 },
-//                 "entidadFederativa": {
-//                     "clave": "",
-//                     "nombre": ""
-//                 },
-//                 "informacionExtra": "",
-//                 "codigoPostal": destinatario.codigoPostal,
-//                 "descripcionColonia": destinatario.colonia
-//             },
-//             "idSolicitud": "0"
-//           }
-//       }),
-//       "gridTerceros_TIPERS_PVD": state.proveedorTablaDatos.map((proveedor) => {
-//         return {
-//             "idPersonaSolicitud": "",
-//             "ideTipoTercero": "",
-//             "personaMoral": proveedor.tipoPersona === "Moral" ? "1" : "0",
-//             "booleanExtranjero": "",
-//             "booleanFisicaNoContribuyente": "",
-//             "denominacion": proveedor.razonSocial,
-//             "razonSocial": proveedor.razonSocial,
-//             "rfc": proveedor.rfc,
-//             "curp": proveedor.curp,
-//             "nombre": proveedor.nombres,
-//             "apellidoPaterno": proveedor.primerApellido,
-//             "apellidoMaterno": proveedor.segundoApellido,
-//             "telefono": proveedor.telefono,
-//             "correoElectronico": proveedor.correoElectronico,
-//             "actividadProductiva": "",
-//             "actividadProductivaDesc": "",
-//             "descripcionGiro": "",
-//             "numeroRegistro": "",
-//             "domicilio": {
-//                 "calle": proveedor.calle,
-//                 "numeroExterior": proveedor.numeroExterior,
-//                 "numeroInterior": proveedor.numeroInterior,
-//                 "pais": {
-//                     "clave": proveedor.paisObj?.clave,
-//                     "nombre": proveedor.paisObj?.descripcion
-//                 },
-//                 "colonia": {
-//                     "clave": "",
-//                     "nombre": ""
-//                 },
-//                 "delegacionMunicipio": {
-//                     "clave": "",
-//                     "nombre": ""
-//                 },
-//                 "localidad": {
-//                     "clave": "",
-//                     "nombre": ""
-//                 },
-//                 "entidadFederativa": {
-//                     "clave": "",
-//                     "nombre": ""
-//                 },
-//                 "informacionExtra": "",
-//                 "codigoPostal": proveedor.codigoPostal,
-//                 "descripcionColonia": proveedor.colonia
-//             },
-//             "idSolicitud": "0"
-//           }
-//       }),
-//       "gridTerceros_TIPERS_FAC": state.facturadorTablaDatos.map((facturador) => { 
-//         return {
-//           "idPersonaSolicitud": "",
-//           "ideTipoTercero": "",
-//           "personaMoral": facturador.tipoPersona === "Moral" ? "1" : "0",
-//           "booleanExtranjero": "",
-//           "booleanFisicaNoContribuyente": "",
-//           "denominacion": facturador.razonSocial,
-//           "razonSocial": facturador.razonSocial,
-//           "rfc": facturador.rfc,
-//           "curp": facturador.curp,
-//           "nombre": facturador.nombres,
-//           "apellidoPaterno": facturador.primerApellido,
-//           "apellidoMaterno": facturador.segundoApellido,
-//           "telefono": facturador.telefono,
-//           "correoElectronico": facturador.correoElectronico,
-//           "actividadProductiva": "",
-//           "actividadProductivaDesc": "",
-//           "descripcionGiro": "",
-//           "numeroRegistro": "",
-//           "domicilio": {
-//               "calle": facturador.calle,
-//               "numeroExterior": facturador.numeroExterior,
-//               "numeroInterior": facturador.numeroInterior,
-//               "pais": {
-//                   "clave": facturador.paisObj?.clave,
-//                   "nombre": facturador.paisObj?.descripcion
-//               },
-//               "colonia": {
-//                   "clave": "",
-//                   "nombre": ""
-//               },
-//               "delegacionMunicipio": {
-//                   "clave": "",
-//                   "nombre": ""
-//               },
-//               "localidad": {
-//                   "clave": "",
-//                   "nombre": ""
-//               },
-//               "entidadFederativa": {
-//                   "clave": "",
-//                   "nombre": ""
-//               },
-//               "informacionExtra": "",
-//               "codigoPostal": facturador.codigoPostal,
-//               "descripcionColonia": facturador.colonia
-//           },
-//           "idSolicitud": "0"
-//         }
-//       }),
-//       "pagoDeDerechos": {
-//           "claveDeReferencia": state.pagoDerechos.claveReferencia,
-//           "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
-//           "banco": {
-//               "clave": state.pagoDerechos.bancoObject?.clave,
-//               "descripcion": state.pagoDerechos.bancoObject?.descripcion
-//           },
-//           "llaveDePago": state.pagoDerechos.llavePago,
-//           "fecPago": state.pagoDerechos.fechaPago,
-//           "impPago": state.pagoDerechos.importePago
-//       }
+       "tipoDeSolicitud": "guardar",
+    "idSolicitud": 0,
+    "cveUnidadAdministrativa": null,
+    "costoTotal": null,
+    "certificadoSerialNumber": null,
+    "numeroFolioTramiteOriginal": null,
+    "tipoSolicitud": 1,
+    "folioPrograma": null,
+    "fechaFinVigencia": null,
+    "idProgramaAutorizado": null,
+    "discriminatorValue": "90102",
+    "solicitante": {
+        "rfc": "AAL0409235E6",
+        "domicilio": {
+            "cvePais": "MEX",
+            "cveEntidad": "SIN",
+            "cveDelegMun": "25001",
+            "cveColonia": "00181210001",
+            "cveLocalidad": "00181210008",
+            "nombrePais": "ESTADOS UNIDOS MEXICANOS",
+            "codigoPostal": "81210",
+            "nombreEntidad": "SINALOA",
+            "nombreDelegMun": "AHOME",
+            "nombreLocalidad": "LOS MOCHIS",
+            "nombreColonia": "MIGUEL HIDALGO",
+            "calle": "CAMINO VIEJO",
+            "numExterior": "1353",
+            "numInterior": null
+        },
+        "cveUsuario": "AAL0409235E6",
+        "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+        "descripcionGiro": "Siembra, cultivo y cosecha de otros cultivos",
+        "correoElectronico": "vucem2021@gmail.com",
+        "telefono": "55-98764532"
+    },
+    "anioPrograma": null,
+    "idSolicitudSeleccionada": null,
+    "inicio": 1,
+    "repFedSol": null,
+    "cveRolCapturista": "PersonaMoral",
+    "cveUsuarioCapturista": "AAL0409235E6",
+    "puedeCapturarRepresentanteLegalCG": false,
+    "modalidad": "Productor indirecto",
+    "entidadFederativaDomicilios": "SIN",
+    "representacionesFederales": "2540",
+    "actividadProductivaProsec": 3,
+    "mensajeActivado": null,
+    "sectoresProsecConf": "XIXa",
+    "seleccionar": "50",
+    "fraccion": null,
+    "plantas": [
+            {
+                "recintoSolicitudPK": null,
+                "razonSocial": null,
+                "clavePlanta": null,
+                "claveAduana": null,
+                "superficie": null,
+                "ubicacionColindancias": null,
+                "capacidadProduccion": null,
+                "capacidadProduccionUtilizada": null,
+                "tipoLocal": null,
+                "tipoEstablecimiento": null,
+                "ubicacionEstablecimiento": null,
+                "domicilio": null,
+                "empresaSolicitante": null,
+                "empresaDto": {
+                    "idServicio": null,
+                    "descripcionServicio": null,
+                    "domicilioCompleto": "      ",
+                    "numeroPrograma": null,
+                    "tiempoPrograma": null,
+                    "descripcionTestado": null,
+                    "idCompuestoEmpresa": null,
+                    "idServicioAutorizado": null,
+                    "idEmpresa": null,
+                    "tipoEmpresa": null,
+                    "caracterEmpresa": null,
+                    "montoExportacionesUSD": null,
+                    "numeroProgramaDGCESE": null,
+                    "porcentajeParticipacionAccionaria": null,
+                    "porcentajeParticionAccionariaExt": null,
+                    "nombre": null,
+                    "apellidoPaterno": null,
+                    "apellidoMaterno": null,
+                    "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+                    "rfc": "AAL0409235E6",
+                    "certificada": null,
+                    "correoElectronico": null,
+                    "idDireccionSol": null,
+                    "idSolicitud": null,
+                    "testado": null,
+                    "fechaInicioVigencia": null,
+                    "fechaFinVigencia": null,
+                    "blnActivo": null,
+                    "domicilioSolicitud": {
+                        "idDomicilio": null,
+                        "calle": "",
+                        "numExterior": "",
+                        "numInterior": "",
+                        "codigoPostal": null,
+                        "informacionExtra": null,
+                        "clave": null,
+                        "coloniaEntity": {
+                            "clave": null,
+                            "nombre": "",
+                            "fechaCaptura": null,
+                            "cveDelegMun": null,
+                            "cveLocalidad": null,
+                            "cp": null,
+                            "fechaInicioVigencia": null,
+                            "fechaFinVigencia": null,
+                            "satColonyCd": null,
+                            "blnActivo": false,
+                            "delegacionMunicipio": null
+                        },
+                        "cveLocalidad": "",
+                        "cveDelegMun": null,
+                        "delegacionMunicipio": {
+                            "cveDelegMun": null,
+                            "cveEntidad": null,
+                            "nombre": "",
+                            "fechaCaptura": null,
+                            "fechaInicioVigencia": null,
+                            "fechaFinVigencia": null,
+                            "satMunicopality": null,
+                            "blnActivo": false,
+                            "entidadFederativa": null,
+                            "colonias": null
+                        },
+                        "cveEntidad": null,
+                        "entidadFederativa": {
+                            "cveEntidad": null,
+                            "nombre": "",
+                            "codEntidadIdc": null,
+                            "cvePais": null,
+                            "pais": null,
+                            "fechaCaptura": null,
+                            "fechaInicioVigencia": null,
+                            "fechaFinVigencia": null,
+                            "activo": false
+                        },
+                        "cvePais": null,
+                        "pais": {
+                            "cvePais": null,
+                            "nombre": "",
+                            "fechaCaptura": null,
+                            "cveMoneda": null,
+                            "cvePaisWco": null,
+                            "nombreAlterno": null,
+                            "fecFinVigencia": null,
+                            "fecIniVigencia": null,
+                            "blnActivo": false,
+                            "restriccion": null
+                        },
+                        "ciudad": null,
+                        "telefono": null,
+                        "fax": null,
+                        "municipio": "",
+                        "colonia": "",
+                        "descUbicacion": null,
+                        "cveCatalogo": null,
+                        "telefonos": null,
+                        "tipoDomicilio": null,
+                        "localidad": {
+                            "cveLocalidad": "",
+                            "cveDelegMun": null,
+                            "nombre": "",
+                            "fechaCaptura": null,
+                            "fecIniVigencia": null,
+                            "fecFinVigencia": null,
+                            "codigoPostal": null,
+                            "satTownCode": null,
+                            "blnActivo": false
+                        }
+                    }
+                },
+                "rfcRecinto": null,
+                "numeroLicencia": null,
+                "avisoFuncionamiento": null,
+                "rfcResponsableSanitario": null,
+                "correoElectronico": null,
+                "fecFinVigencia": null,
+                "testado": false,
+                "estadoEvaluacionEntidad": null,
+                "estadoEntidad": null,
+                "original": null,
+                "modificado": null,
+                "tipoBodega": null,
+                "tipoDeposito": null,
+                "marbetesPrecintos": null,
+                "idSolicitudRecursiva": null,
+                "idRecintoRecursiva": null,
+                "claveSidefi": null,
+                "nacional": null,
+                "numeroMovimientoVs": null,
+                "descripcionNumeroBodega": null,
+                "blnActivo": null,
+                "booleanAlquilado": null,
+                "blnCertificada": null,
+                "blnGenerico1": null,
+                "capacidadMaxAlmacenamiento": null,
+                "cveUnidadAdministrativa": null,
+                "cveUnidadMedidaCapacidad": null,
+                "cveUnidadMedidaVolumen": null,
+                "descripcionCertificador": null,
+                "fechaInicioVigencia": null,
+                "idAlmacenadoraMercancia": null,
+                "idPersonaSolicitud": null,
+                "tipoInmueble": null,
+                "idTipoRecinto": null,
+                "rfcCertificador": null,
+                "superficieEtr": null,
+                "superficieMarbetes": null,
+                "volumenManejoRecinto": null,
+                "idRecinto": 1,
+                "domicilioDto": {
+                    "idDomicilio": null,
+                    "calle": "AV LA LUNA MZA 4 LTE 1",
+                    "numExterior": "1353",
+                    "numInterior": "",
+                    "codigoPostal": "83600",
+                    "informacionExtra": null,
+                    "clave": null,
+                    "coloniaEntity": {
+                        "clave": null,
+                        "nombre": "OTRA NO ESPECIFICADA EN EL CATALOGO",
+                        "fechaCaptura": null,
+                        "cveDelegMun": null,
+                        "cveLocalidad": null,
+                        "cp": null,
+                        "fechaInicioVigencia": null,
+                        "fechaFinVigencia": null,
+                        "satColonyCd": null,
+                        "blnActivo": false,
+                        "delegacionMunicipio": null
+                    },
+                    "cveLocalidad": null,
+                    "cveDelegMun": null,
+                    "delegacionMunicipio": {
+                        "cveDelegMun": "29005",
+                        "cveEntidad": null,
+                        "nombre": "APIZACO",
+                        "fechaCaptura": null,
+                        "fechaInicioVigencia": null,
+                        "fechaFinVigencia": null,
+                        "satMunicopality": null,
+                        "blnActivo": false,
+                        "entidadFederativa": null,
+                        "colonias": null
+                    },
+                    "cveEntidad": null,
+                    "entidadFederativa": {
+                        "cveEntidad": "SIN",
+                        "nombre": "SONORA",
+                        "codEntidadIdc": null,
+                        "cvePais": null,
+                        "pais": null,
+                        "fechaCaptura": null,
+                        "fechaInicioVigencia": null,
+                        "fechaFinVigencia": null,
+                        "activo": false
+                    },
+                    "cvePais": null,
+                    "pais": {
+                        "cvePais": null,
+                        "nombre": "ESTADOS UNIDOS MEXICANOS",
+                        "fechaCaptura": null,
+                        "cveMoneda": null,
+                        "cvePaisWco": null,
+                        "nombreAlterno": null,
+                        "fecFinVigencia": null,
+                        "fecIniVigencia": null,
+                        "blnActivo": false,
+                        "restriccion": null
+                    },
+                    "ciudad": null,
+                    "telefono": null,
+                    "fax": null,
+                    "municipio": null,
+                    "colonia": null,
+                    "descUbicacion": null,
+                    "cveCatalogo": null,
+                    "telefonos": null,
+                    "tipoDomicilio": null,
+                    "localidad": {
+                        "cveLocalidad": "00590378998",
+                        "cveDelegMun": null,
+                        "nombre": "OTRA NO ESPECIFICADA EN EL CATALOGO",
+                        "fechaCaptura": null,
+                        "fecIniVigencia": null,
+                        "fecFinVigencia": null,
+                        "codigoPostal": null,
+                        "satTownCode": null,
+                        "blnActivo": false
+                    }
+                },
+                "errorImmex": null,
+                "domiciliosMontoInversion": null,
+                "domiciliosEmpleados": null,
+                "domiciliosCapacidad": null,
+                "complementoPlanta": null,
+                "firmantes": null
+            }
+        ],
+    "sectores": [
+        {
+            "sector": "De la Industria Automotriz y de Autopartes a)",
+            "cvSectorCatalogo": "XIXa",
+            "descripcionTestado": null,
+            "cveSector": null,
+            "idConfProgramaSE": 50,
+            "testadoSector": false,
+            "visible": false,
+            "fecIniVigencia": null,
+            "fecFinVigencia": null,
+            "idSolicitud": null,
+            "solicitud": null
+        }
+    ],
+    "fraccionSeleccionada": [
+        {
+            "complemento": null,
+            "fraccionCompuesta": "8486400150",
+            "cveServicioImmex": null,
+            "cveSector": "XIXa",
+            "idSectorProsecSol": null,
+            "blnFraccionSeleccionada": 0,
+            "descripcionTestado": null,
+            "bienesProducidos": null,
+            "proyectosImmex": null,
+            "proyectosClientes": null,
+            "nicoDtos": null,
+            "claveProductoExportacion": null,
+            "idSolicitud": null,
+            "solicitud": null,
+            "cveFraccion": null,
+            "fraccionArancelaria": {
+                "fraccionPadre": null,
+                "descripcionFraccionPadre": null,
+                "tipoFraccion": null,
+                "exenta": null,
+                "fraccionCompuesta": null,
+                "claveFraccionPadre": null,
+                "unidadMedida": null,
+                "fraccionConcatenada": null,
+                "descripcionTestado": null,
+                "testado": false,
+                "tipoOperacion": null,
+                "valorMonedaMensual": null,
+                "valorMonedaAnual": null,
+                "valorProduccionMensual": null,
+                "valorProduccionAnual": null,
+                "valorProduccionAnualSolicitada": null,
+                "claveCategoria": null,
+                "descripcionCategoria": null,
+                "mensaje": null,
+                "descripcionUsuario": null,
+                "umt": null,
+                "idFraccion": null,
+                "idProducto": null,
+                "idProductoPadre": null,
+                "claveProductoExportacion": null,
+                "descripcionServicio": null,
+                "rowID": null,
+                "cveFraccion": "84864001",
+                "capitulo": null,
+                "partida": null,
+                "subPartida": null,
+                "descripcion": null,
+                "fechaCaptura": null,
+                "fechaInicioVigencia": null,
+                "fechaFinVigencia": null,
+                "cveUsuario": null,
+                "cveCapituloFraccion": null,
+                "cvePartidaFraccion": null,
+                "cveSubPartidaFraccion": null,
+                "activo": null,
+                "activoAnexo28": null,
+                "decretoImmex": null,
+                "sector": null,
+                "cveServicioImmex": null,
+                "listaProveedores": null,
+                "listaProyecto": null,
+                "nicoDtos": null
+            },
+            "sector": {
+                "sector": null,
+                "cvSectorCatalogo": null,
+                "descripcionTestado": null,
+                "cveSector": null,
+                "idConfProgramaSE": 50,
+                "testadoSector": false,
+                "visible": false,
+                "fecIniVigencia": null,
+                "fecFinVigencia": null,
+                "idSolicitud": null,
+                "solicitud": null
+            },
+            "testado": false,
+            "claveServicioImmex": null,
+            "tipoFraccion": null,
+            "visible": false,
+            "fraccionPadre": null,
+            "fecIniVigencia": null,
+            "fecFinVigencia": null,
+            "replica": false,
+            "activo": null,
+            "idProductoExp": null
+        }
+    ]
     
-//     }
-//   }
+    }
+  }
 }
