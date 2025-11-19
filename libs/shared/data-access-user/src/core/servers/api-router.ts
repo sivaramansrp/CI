@@ -345,6 +345,12 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
  * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consul…
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20solicitud/consulta-solicitudes-pendientes
+ */
+export const API_GET_BANDEJA_SOLICITUDES = 'bandeja-tarea/solicitudes-pendientes';
  
 /**
  * API para recuperar el catálogo de regímenes aduaneros.
@@ -1182,6 +1188,11 @@ export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): stri
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+/**
+ * API para guardar la solicitud
+ */
+export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
 
 export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
 

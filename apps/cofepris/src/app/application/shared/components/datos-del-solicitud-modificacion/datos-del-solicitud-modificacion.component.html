@@ -161,6 +161,11 @@
                />
           </div>
           <div
+            *ngIf="domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required']"
+            class="mensaje-error">
+            Este campo es obligatorio
+          </div>
+          <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched && domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern']"
             class="mensaje-error">
             El RFC no tiene un formato válido.
@@ -168,27 +173,44 @@
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
+            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched
+            }"
+              >*</span
+            >:</label>
             <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
               formControlName="establecimientoRazonSocial" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'establecimientoRazonSocial'
                 )
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoRazonSocial')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched
+              }"/>
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('establecimientoRazonSocial')?.touched && domicilioEstablecimiento.get('establecimientoRazonSocial')?.errors?.['required']"
-            class="text-danger">
-            La razón social es obligatoria.
+            class="mensaje-error">
+            Este campo es obligatorio
+          
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:
-              <span class="bi bi-question-circle-fill" title="Correo electrónico"
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email'] || domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.touched
+            }"
+              >*</span
+            >:<span class="bi bi-question-circle-fill" title="Correo electrónico"
                 data-bs-toggle="tooltip"></span></label>
             <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
               formControlName="establecimientoCorreoElectronico" (change)="
@@ -196,19 +218,24 @@
                   'domicilioEstablecimiento',
                   'establecimientoCorreoElectronico'
                 )
-              " />
+              "
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.touched
+              }" />
           </div>
           <div *ngIf="
               domicilioEstablecimiento.get('establecimientoCorreoElectronico')
                 ?.touched
             ">
             <div *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
-              class="text-danger">
-              El correo electrónico es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
             <div
               *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
-              class="text-danger"
+              class="mensaje-error"
             >
               El valor Ingresado no es una dirección válida de correo
               electrónico.
@@ -222,8 +249,13 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establecimientoDomicilioCodigoPostal"
-              >Código postal*:</label
-            >
+              >Código postal<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']||domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['pattern'])&& domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched
+            }"
+              >*</span
+            >:</label>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
             <input
               class="form-control"
               type="text"
@@ -236,17 +268,19 @@
                   'domicilioEstablecimiento',
                   'establecimientoDomicilioCodigoPostal'
                 )
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.invalid &&
+                domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched
+              }"/>
             <div *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.touched && 
                    domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']"
-              class="text-danger">
-              El código postal es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
-            <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['maxlength']"
-              class="text-danger"
-            >
-              El código postal no debe exceder los 12 caracteres.
+            <div *ngIf="domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['pattern'] && !domicilioEstablecimiento.get('establecimientoDomicilioCodigoPostal')?.errors?.['required']" class="mensaje-error">
+            Por favor, escribe un número entero válido
             </div>
           </div>
         </div>
@@ -277,18 +311,29 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía*:</label>
-            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase
+            <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('descripcionMunicipio')?.errors?.['required'])&& domicilioEstablecimiento.get('descripcionMunicipio')?.touched
+            }"
+              >*</span
+            >:</label>
+            <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase max="120"
               formControlName="descripcionMunicipio" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
                   'descripcionMunicipio'
                 )
-              " />
+              "
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('descripcionMunicipio')?.invalid &&
+                domicilioEstablecimiento.get('descripcionMunicipio')?.touched
+              }" />
             <div
               *ngIf="domicilioEstablecimiento.get('descripcionMunicipio')?.touched && domicilioEstablecimiento.get('descripcionMunicipio')?.errors?.['required']"
-              class="text-danger">
-              El municipio es obligatorio.
+              class="mensaje-error">
+              Este campo es obligatorio
             </div>
           </div>
         </div>
@@ -342,15 +387,26 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle">Calle*:
+            <label class="form-label" for="calle">Calle<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('calle')?.errors?.['required'])&& domicilioEstablecimiento.get('calle')?.touched
+            }"
+              >*</span
+            >:
               <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
             <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
-              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')" />
+              (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')"
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('calle')?.invalid &&
+                domicilioEstablecimiento.get('calle')?.touched
+              }" />
           </div>
           <div
             *ngIf="domicilioEstablecimiento.get('calle')?.touched && domicilioEstablecimiento.get('calle')?.errors?.['required']"
-            class="text-danger">
-            La calle es obligatoria.
+            class="mensaje-error">
+            Este campo es obligatorio
           </div>
         </div>
       </div>
@@ -373,7 +429,13 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label class="form-label" for="telefono">Teléfono*:</label>
+            <label class="form-label" for="telefono">Teléfono<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('telefono')?.errors?.['required']||domicilioEstablecimiento.get('telefono')?.errors?.['pattern'])&& domicilioEstablecimiento.get('telefono')?.touched
+            }"
+              >*</span
+            >:</label>
             <input
               class="form-control"
               type="text"
@@ -383,14 +445,19 @@
               formControlName="telefono"
               (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'telefono')
-              " />
+              " 
+              [ngClass]="{
+                'is-invalid':
+                domicilioEstablecimiento.get('telefono')?.invalid &&
+                domicilioEstablecimiento.get('telefono')?.touched
+              }"/>
           </div>
           <div *ngIf="domicilioEstablecimiento.get('telefono')?.touched">
-            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="text-danger">
-              El número de teléfono es obligatorio.
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="mensaje-error">
+              Este campo es obligatorio
             </div>
-            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern']" class="text-danger">
-              El teléfono debe contener solo números.
+            <div *ngIf="domicilioEstablecimiento.get('telefono')?.errors?.['pattern'] && !domicilioEstablecimiento.get('telefono')?.errors?.['required']" class="mensaje-error">
+              Por favor, escribe un número entero válido
             </div>
           </div>
         </div>
