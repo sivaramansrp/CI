@@ -18,7 +18,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaAcuses,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaAcuses: [
@@ -45,7 +45,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaResolucion,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaResolucion: [
@@ -249,7 +249,7 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'documento' as keyof BodyTablaOpinion,
-        valor: 'Documento.',
+        valor: 'Documento',
       },
     ],
     accionesTablaOpinion: [
