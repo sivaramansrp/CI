@@ -173,7 +173,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado<span 
-              [ngClass]="{'text-danger': agregarFacturadorForm.get('estado')?.touched && agregarFacturadorForm.get('estado')?.invalid}"
+              [ngClass]="{'text-danger': (agregarFacturadorForm.get('estado')?.touched && agregarFacturadorForm.get('estado')?.invalid)||agregarFacturadorForm.get('estado')?.errors?.['pattern']}"
             >*</span>:</label>
         <input
           type="text"

@@ -114,8 +114,8 @@ export class PeruCertificadoService {
    * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
-  obtenerProductoruNevo(body: { rfc_solicitante: string }): Observable<any> {
-    return this.httpService.post<any>(PROC_110205.AGREGAR_PRODUCTOR, {
+  obtenerProductoruNevo(body: { rfc_solicitante: string }): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110205.AGREGAR_PRODUCTOR, {
       body: body,
     });
   }

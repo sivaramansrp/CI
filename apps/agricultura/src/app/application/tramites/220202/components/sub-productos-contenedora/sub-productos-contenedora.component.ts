@@ -99,6 +99,7 @@ export class SubProductosContenedoraComponent {
       numeroCertificadoInternacional: '',
       fraccionArancelaria: valor.formulario.fraccionArancelaria || '',
       descripcionFraccion: valor.formulario.descripcionFraccion || '',
+      idDescripcionFraccion: valor.formulario.idDescripcionFraccion || 0, 
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',

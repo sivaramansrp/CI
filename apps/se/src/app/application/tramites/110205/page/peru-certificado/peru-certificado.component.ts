@@ -15,14 +15,14 @@ import { DatosPasos, ERROR_FORMA_ALERT, JSONResponse, SeccionLibStore, esValidOb
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AVISO } from '@ng-mf/data-access-user'
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Payload } from '../../constantes/texto.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-peru-certificado',
@@ -39,11 +39,11 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
   @ViewChild(PasoUnoComponent) pasoUnoComponent?: PasoUnoComponent;
 
   /**
-   * @property {ListaPasoWizard[]} pasos
+   * @property {ListaPasosWizard[]} pasos
    * @description
    * Lista de pasos que componen el flujo del trámite en el wizard.
    */
-  pasos: ListaPasoWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @property {string | null} tituloMensaje
@@ -150,7 +150,7 @@ export class PeruCertificadoComponent implements OnInit, OnDestroy {
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
+    ).subscribe(() => {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     });

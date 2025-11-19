@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CURP, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -179,11 +179,11 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
         nombre: [this.agregarDestinatarioState?.nombre, Validators.required],
         primerApellido: [
           this.agregarDestinatarioState?.primerApellido,
-          Validators.required,
+         [Validators.required, Validators.maxLength(18),Validators.pattern('^[a-zA-Z0-9\\s,]*$')],
         ],
         segundoApellido: [
           this.agregarDestinatarioState?.segundoApellido,
-          Validators.required,
+          [Validators.required, Validators.maxLength(18),Validators.pattern('^[a-zA-Z0-9\\s,]*$')]
         ],
         denominacion: [
           this.agregarDestinatarioState?.denominacion,

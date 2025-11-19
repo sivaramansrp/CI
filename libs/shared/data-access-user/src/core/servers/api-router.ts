@@ -1189,9 +1189,21 @@ export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${T
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
 
+/**
+ * API para guardar la solicitud
+ */
+export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
+
 export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
 
 export const API_REPRESENTACION_FEDERAL_PARAM = (TRAMITE: string, ESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/${ESTADO}`;
+
+/**
+ * API para obtener el catálogo de régimen enum por trámite.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/regimen-enum
+ */
+export const CATALOGO_REGIMEN_ENUM = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/regimen-enum`;
+
 /**
  * API para obtener el catálogo de tipo de mecanismo de asignación por trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/tipo-mecanismo-asignacion
@@ -1209,7 +1221,6 @@ export const CATALOGO_NOMBRE_PRODUCTO = (TRAMITE: string): string => `sat-t${TRA
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/catalogo/nombre-subproducto
  */
 export const CATALOGO_NOMBRE_SUBPRODUCTO = (TRAMITE: string): string =>`sat-t${TRAMITE}/catalogo/nombre-subproducto`;
-
 
 /**
  * API para obtener el catálogo de representación federal por trámite.
@@ -1231,3 +1242,8 @@ export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/cat
  * @returns La ruta de la API como cadena de texto.
  */
 export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
+
+
+export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;

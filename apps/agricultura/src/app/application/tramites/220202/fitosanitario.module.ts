@@ -25,12 +25,14 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
+  CargaDocumentoComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TercerosComponent,
   TituloComponent,
-  WizardComponent
+  WizardComponent,
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
@@ -59,7 +61,9 @@ import { TercerospageComponent } from './components/tercerospage/tercerospage.co
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent,
-    TercerospageComponent
+    TercerospageComponent,
+    CargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   providers: [
     ToastrService
