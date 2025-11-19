@@ -28,7 +28,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-           @if (fabricanteSeleccionadoDatos.length === 1) {
+           @if (fabricanteSeleccionadoDatos.length === 1 && fabricanteTablaDatos.length>0) {
             <button
               type="button"
               name="modificarMercancias"
@@ -50,7 +50,7 @@
               Modificar
             </button>
         }   
-        @if (fabricanteSeleccionadoDatos.length > 0) {       
+        @if (fabricanteSeleccionadoDatos.length > 0 && fabricanteTablaDatos.length>0) {       
         <button
           type="button"
           name="eliminarMercancias"
@@ -97,7 +97,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-             @if (destinatarioSeleccionadoDatos.length === 1) {
+             @if (destinatarioSeleccionadoDatos.length === 1 && destinatarioFinalTablaDatos.length>0) {
           <button
             type="button"
             name="modificarMercancias"
@@ -108,7 +108,7 @@
             Modificar
           </button>
         }
-        @if (destinatarioSeleccionadoDatos.length > 0) {
+        @if (destinatarioSeleccionadoDatos.length > 0 && destinatarioFinalTablaDatos.length>0) {
           <button
           type="button"
           name="eliminarMercancias"
@@ -151,7 +151,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-         @if (proveedorSeleccionadoDatos.length === 1) {
+         @if (proveedorSeleccionadoDatos.length === 1 && proveedorTablaDatos.length>0) {
             <button
               type="button"
               name="modificarMercancias"
@@ -162,7 +162,7 @@
               Modificar
             </button>
           }
-        @if (proveedorSeleccionadoDatos.length > 0) {
+        @if (proveedorSeleccionadoDatos.length > 0 && proveedorTablaDatos.length>0) {
         <button
           type="button"
           name="eliminarMercancias"
@@ -202,7 +202,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-           @if (facturadorSeleccionadoDatos.length === 1) {
+           @if (facturadorSeleccionadoDatos.length === 1 && facturadorTablaDatos.length>0) {
             <button
               type="button"
               name="modificarMercancias"
@@ -213,7 +213,7 @@
               Modificar
             </button>
           }
-        @if (facturadorSeleccionadoDatos.length > 0) {        
+        @if (facturadorSeleccionadoDatos.length > 0 && facturadorTablaDatos.length>0) {        
         <button
           type="button"
           name="eliminarMercancias"

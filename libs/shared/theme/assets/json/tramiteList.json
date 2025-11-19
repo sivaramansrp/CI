@@ -1955,8 +1955,8 @@
   {
     "id": 281,
     "tramite": 31910,
-    "linkDashboard": "/aga/desistir-solicitud-informacion-historica/desistir-informacion-historica",
-    "linkDepartment": "/pago/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+    "linkDashboard": "/aga/subsecuente/319/desistir",
+    "linkDepartment": "/pago/subsecuente/319/desistir",
     "department": "aga"
   },
   {
@@ -2174,6 +2174,13 @@
     "tramite": 319,
     "linkDashboard": "/aga/operaciones-de-comercio/exterior",
     "linkDepartment": "/pago/operaciones-de-comercio/exterior",
+    "department": "aga"
+  },
+  {
+    "id": 600,
+    "tramite": 31907,
+    "linkDashboard": "/aga/subsecuente/319/cancelar",
+    "linkDepartment": "/pago/subsecuente/319/cancelar",
     "department": "aga"
   },
   {
