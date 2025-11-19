@@ -246,7 +246,7 @@ export class SolicitudPageComponent {
 
   const PAYLOAD = {
    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 0,
+    "idSolicitud": this.solicitudState.idSolicitud ?? 0,
     "idTipoTramite": 110209,
     "discriminatorValue": "110209",
     "rfc_solicitante": "AAL0409235E6",

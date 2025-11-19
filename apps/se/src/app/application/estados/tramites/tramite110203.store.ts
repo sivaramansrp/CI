@@ -133,6 +133,8 @@ export interface Solicitud110203State {
       datosCertificado?: boolean;
   };
 
+  /** Propiedad opcional que contiene el arreglo de datos del certificado.  
+ * Se usa para enviar o recibir el *payload* asociado a la búsqueda. */
   buscarPayload?: CertificadoData[];
 }
 
@@ -865,6 +867,8 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
     }));
   }
 
+  /** Establece el *payload* de búsqueda asignando el arreglo recibido.  
+ * Actualiza el estado interno mediante la función `update()`. */
   setBuscarPayload(payload: CertificadoData[]): void {
   this.update({ buscarPayload: payload });
 }

@@ -162,6 +162,8 @@ buildTransporte(data:Tramite110209State): unknown {
       }
     }
 
+/** Construye la estructura del certificado de origen a partir del estado dado.  
+ * Devuelve un objeto con los datos procesados según la solicitud. */
       buildCertificadoOrigen(data: Tramite110209State): unknown {
         return {
             "fechaExpedicionStr": data.fechaExpedicion,
@@ -171,8 +173,8 @@ buildTransporte(data:Tramite110209State): unknown {
             "precisa": '',
             "presenta": '',
             "paisAsociado": {
-                "cvePais": "DEU",
-                "nombre": "ALEMANIA (REPUBLICA FEDERAL DE)"
+                "cvePais": data.cvePais,
+                "nombre": data.nombre,
             },
             "tratadoAsociado": {
               "nombre": ""
