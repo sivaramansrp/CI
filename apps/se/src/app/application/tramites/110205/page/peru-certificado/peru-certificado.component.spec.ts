@@ -115,9 +115,6 @@ describe('PeruCertificadoComponent', () => {
       accion: {},
       valor: {}
     });
-    // expect(component.validarTodosFormulariosPasoUno).toHaveBeenCalled();
-    // expect(component.obtenerDatosDelStore).toHaveBeenCalled();
-    // expect(component.pasoNavegarPor).toHaveBeenCalled();
   });
 
   it('should run #pasoNavegarPor()', async () => {
@@ -130,8 +127,6 @@ describe('PeruCertificadoComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should run #obtenerDatosDelStore()', async () => {
@@ -144,11 +139,9 @@ describe('PeruCertificadoComponent', () => {
     component.pasoUnoComponent = component.pasoUnoComponent || {};
     component.pasoUnoComponent.validarFormularios = jest.fn();
     component.validarTodosFormulariosPasoUno();
-    // expect(component.pasoUnoComponent.validarFormularios).toHaveBeenCalled();
   });
 
   it('should run #guardar()', async () => {
-    // Initialize required properties
     component.solicitudState = { idSolicitud: 123 };
     component.tramite110205Store = { setIdSolicitud: jest.fn() };
     component.pasoNavegarPor = jest.fn();
