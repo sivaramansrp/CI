@@ -487,9 +487,16 @@ const ROUTES: Routes = [
   {
     path: 'subsecuente/319/cancelar',
     loadChildren: () =>
-      import(
-        './tramites/31907/cancelar-solicitud-reporte-mensual.module'
-      ).then((m) => m.CancelarSolicitudReporteMensualModule),
+      import('./tramites/31907/cancelar-solicitud-reporte-mensual.module').then(
+        (m) => m.CancelarSolicitudReporteMensualModule
+      ),
+  },
+  {
+    path: 'subsecuente/319/reactivar',
+    loadChildren: () =>
+      import('./tramites/31908/reactivar-reporte-mensual.module').then(
+        (m) => m.ReactivarReporteMensualModule
+      ),
   },
 ];
 
