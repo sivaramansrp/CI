@@ -330,6 +330,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /*
+  * Referencia al componente PasoDatos.
+  */
+  @ViewChild(PasoDatosComponent) pasoDatosComponent!: PasoDatosComponent;
+
   /**
    * Datos de los pasos del wizard.
    */
@@ -485,6 +490,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     if (e?.valor && e.valor > 0 && e.valor <= 4) {
+      if ( this.indice === 2 && this.esTramiteDatos ) {
+        this.ejecutaActualizarSolicitud();
+      }
       this.indice = e.valor;
       this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
 
@@ -526,6 +534,13 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
 
       this.desplazarseHaciaArribaService.desplazarArriba();
     }
+  }
+
+  /**
+   * Invoca el método `actualizarSolicitud` del componente hijo `PasoDatosComponent`.
+   */
+  ejecutaActualizarSolicitud() {
+    this.pasoDatosComponent.actualizarSolicitud();
   }
 
   /**

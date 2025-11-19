@@ -1183,6 +1183,11 @@ export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${T
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
 
+/**
+ * API para guardar la solicitud
+ */
+export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
+
 export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
 
 export const API_REPRESENTACION_FEDERAL_PARAM = (TRAMITE: string, ESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/${ESTADO}`;
