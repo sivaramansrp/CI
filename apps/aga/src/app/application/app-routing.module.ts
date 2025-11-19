@@ -474,7 +474,16 @@ const ROUTES: Routes = [
   {
     path: 'datos-generales-tramite',
     loadComponent: () =>
-      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+      import(
+        './datos-generales-tramite/datos-generales-tramite.component'
+      ).then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+    path: 'subsecuente/319/reactivar',
+    loadChildren: () =>
+      import('./tramites/31908/reactivar-reporte-mensual.module').then(
+        (m) => m.ReactivarReporteMensualModule
+      ),
   },
 ];
 
