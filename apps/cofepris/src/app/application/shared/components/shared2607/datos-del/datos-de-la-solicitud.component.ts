@@ -1,7 +1,7 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
 import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -45,7 +45,7 @@ import { DatosServiceService } from '../../../services/datos-service.service';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
-export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
+export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges {
 
    /**
    * Indica si la sección es colapsable.
@@ -215,6 +215,21 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   rfc: string = 'MAVL621207C95';
 
   /**
+   * Evento que emite el estado de validez del formulario.
+   * Se emite un valor booleano: `true` si el formulario es válido, `false` en caso contrario.
+   * Útil para notificar a componentes padres sobre cambios en la validez del formulario.
+   */
+  @Output() formValidityChange = new EventEmitter<boolean>();
+
+  
+  /**
+   * Indica si se ha activado el evento de continuar.
+   * Este valor se utiliza para controlar el flujo de la solicitud
+   * dependiendo de si el usuario ha decidido continuar con el proceso.
+   */
+   @Input() isContinuarTriggered: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * Inyecta los servicios y utilidades necesarias para:
@@ -279,6 +294,17 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+
+   /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+    this.dataDeLaSolicitudForm.markAllAsTouched();
+    this.clavaScianForm.markAllAsTouched();
+    }
+  }
     /**
    * Alterna el estado colapsable de la sección del formulario.
    * @returns {void}
@@ -1221,6 +1247,7 @@ onChange(): void {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.formValidityChange.emit(this.dataDeLaSolicitudForm.valid);
   }
 
   /** Destrucción del componente */

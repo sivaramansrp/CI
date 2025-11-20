@@ -40,10 +40,8 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
-import {
-  ColumnConfig
-} from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
+import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
+import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 import { CommonModule } from '@angular/common';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
@@ -446,12 +444,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mensajeErrorTabla: boolean = false;
 
   nestedColumns: ColumnConfig[] = [
-    { encabezado: 'Nombre cientifico', clave: 'nombreCientifico', width: '25%' },
+    {
+      encabezado: 'Nombre cientifico',
+      clave: 'nombreCientifico',
+      width: '25%',
+    },
   ];
 
   /**
- * bandera para indicar que el formulario fue tocado
- */
+   * bandera para indicar que el formulario fue tocado
+   */
   markTouched: boolean = false;
   /**
    * Rfc de la pantalla solicitante
@@ -538,9 +540,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
    */
   obtieneDatosTabSolicitud() {
-    this.solicitanteQuery.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
-      this.rfcOriginal = seccionState.rfc_original;
-    })
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.rfcOriginal = seccionState.rfc_original;
+      });
   }
 
   /**
@@ -959,11 +963,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                 aduanaDeIngreso: datos.datos.cve_aduana,
                 numeroDeCarro: datos.datos.numero_carro_ferrocarril,
                 numeroDeGuia: datos.datos.numero_autorizacion,
-                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria,
+                oficinaDeInspeccion:
+                  datos.datos.oficina_inspeccion_sanidad_agropecuaria,
                 puntoDeInspeccion: datos.datos.punto_inspeccion,
-                regimen: datos.datos.clave_regimen
+                regimen: datos.datos.clave_regimen,
               };
-              (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(GUARDAR_VALORES);
+              (
+                this.agriculturaApiService.updateDatosForma as (
+                  value: DatosForma
+                ) => void
+              )(GUARDAR_VALORES);
             } else {
               this.datos.reset();
             }
@@ -996,7 +1005,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
                     mercancia.fraccion_arancelaria_corto || '',
                   descripcionFraccion:
                     mercancia.descripcion_fracción_arancelaria || '',
-                  idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0, 
+                  idDescripcionFraccion:
+                    mercancia.id_fraccion_gubernamental || 0,
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',
@@ -1052,10 +1062,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * de movilizacion nacional
    * @param idSolicitud
    */
-  obtenerPrellenadoMovilizacionNacional(idSolicitud: string) :void {
+  obtenerPrellenadoMovilizacionNacional(idSolicitud: string): void {
     // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, idSolicitud ?? '')
-    this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220202, true, '202850466' ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoMovilizacionNacional(
+        220202,
+        true,
+        '202850466' ?? ''
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (datos) => {
@@ -1064,11 +1079,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
               transporte: datos.datos.id_transporte,
               puntoVerificacion: datos.datos.id_punto_verificacion,
               empresaTransportista: datos.datos.razon_social,
-              identificacion: datos.datos.ide_medio_transporte
+              identificacion: datos.datos.ide_medio_transporte,
             };
-            (this.agriculturaApiService.updateMovilizacion as (value: Movilizacion) => void)(GUARDAR_VALORES);
+            (
+              this.agriculturaApiService.updateMovilizacion as (
+                value: Movilizacion
+              ) => void
+            )(GUARDAR_VALORES);
           }
-        }
+        },
       });
   }
 
@@ -1077,63 +1096,81 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * de terceros relacionados
    * @param idSolicitud
    */
-  obtenerPrellenadoTercerosRelacionados(idSolicitud: string) :void {
+  obtenerPrellenadoTercerosRelacionados(idSolicitud: string): void {
     // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, idSolicitud ?? '')
-    this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220202, true, '202850466' ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoTercerosRelacionados(
+        220202,
+        true,
+        '202850466' ?? ''
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (datos) => {
           if (datos.datos) {
-              const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] = [];
+            const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] =
+              [];
             datos.datos.terceros_destinatario.forEach((item) => {
-              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable = {
-                tipoMercancia: '',
-                nombre: item.nombre,
-                primerApellido: item.apellido_paterno,
-                segundoApellido: item.apellido_materno,
-                razonSocial: item.razon_social,
-                pais: item.pais,
-                codigoPostal: item.codigo_postal,
-                estado: item.cve_entidad,
-                municipio: item.cve_deleg_mun,
-                colonia: item.cve_colonia,
-                calle: item.calle,
-                numeroExterior: item.num_exterior,
-                numeroInterior: item.num_interior,
-                lada: item.lada,
-                telefono: item.telefonos,
-                correo: item.correo,
-                planta: '',
-                domicilio: '',
-                municipioDescripcion: '',
-                estadoDescripcion: '',
-                paisDescripcion: '',
-                coloniaDescripcion: ''
-              };
+              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable =
+                {
+                  tipoMercancia: '',
+                  nombre: item.nombre,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  codigoPostal: item.codigo_postal,
+                  estado: item.cve_entidad,
+                  municipio: item.cve_deleg_mun,
+                  colonia: item.cve_colonia,
+                  calle: item.calle,
+                  numeroExterior: item.num_exterior,
+                  numeroInterior: item.num_interior,
+                  lada: item.lada,
+                  telefono: item.telefonos,
+                  correo: item.correo,
+                  planta: '',
+                  domicilio: '',
+                  municipioDescripcion: '',
+                  estadoDescripcion: '',
+                  paisDescripcion: '',
+                  coloniaDescripcion: '',
+                };
               ARRAY_TERCEROS_DESTINO.push(GUARDAR_VALORES_TERCEROS_DESTINO);
-              (this.agriculturaApiService.updateTercerosRelacionado as (value: TercerosrelacionadosdestinoTable[]) => void)(ARRAY_TERCEROS_DESTINO);
+              (
+                this.agriculturaApiService.updateTercerosRelacionado as (
+                  value: TercerosrelacionadosdestinoTable[]
+                ) => void
+              )(ARRAY_TERCEROS_DESTINO);
             });
-            const ARRAY_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable[] = [];
+            const ARRAY_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable[] =
+              [];
             datos.datos.terceros_exportador.forEach((item) => {
-              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable = {
-                tipoMercancia: '',
-                nombre: item.nombre,
-                razonSocial: item.razon_social,
-                pais: item.pais,
-                telefono: item.telefonos,
-                domicilio: item.descripcion_ubicacion,
-                correo: item.correo,
-                primerApellido: item.apellido_paterno,
-                segundoApellido: item.apellido_materno,
-                lada: item.lada
-              }
-              ARRAY_TERCEROS_EXPORTADOR.push(GUARDAR_VALORES_TERCEROS_EXPORTADOR);
-              (this.agriculturaApiService.updateTercerosExportador as (value: TercerosrelacionadosExportadorTable[]) => void)(ARRAY_TERCEROS_EXPORTADOR);
-            })
-
+              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: TercerosrelacionadosExportadorTable =
+                {
+                  tipoMercancia: '',
+                  nombre: item.nombre,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  telefono: item.telefonos,
+                  domicilio: item.descripcion_ubicacion,
+                  correo: item.correo,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  lada: item.lada,
+                };
+              ARRAY_TERCEROS_EXPORTADOR.push(
+                GUARDAR_VALORES_TERCEROS_EXPORTADOR
+              );
+              (
+                this.agriculturaApiService.updateTercerosExportador as (
+                  value: TercerosrelacionadosExportadorTable[]
+                ) => void
+              )(ARRAY_TERCEROS_EXPORTADOR);
+            });
           }
-        }
+        },
       });
   }
 
@@ -1142,10 +1179,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * de pago de derechos
    * @param idSolicitud
    */
-  obtenerPrellenadoPagoDerechos(idSolicitud: string) :void {
+  obtenerPrellenadoPagoDerechos(idSolicitud: string): void {
     // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
     // this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, idSolicitud ?? '')
-    this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoPagoDerechos(220202, true, '202850466' ?? '')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (datos) => {
@@ -1158,11 +1196,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
               banco: datos.datos.cve_banco,
               llavePago: datos.datos.llave_pago,
               importePago: datos.datos.imp_pago,
-              fechaPago: datos.datos.fec_pago
+              fechaPago: datos.datos.fec_pago,
             };
-            (this.agriculturaApiService.updatePago as (value: PagoDeDerechos) => void)(GUARDAR_VALORES);
+            (
+              this.agriculturaApiService.updatePago as (
+                value: PagoDeDerechos
+              ) => void
+            )(GUARDAR_VALORES);
           }
-        }
+        },
       });
   }
 
@@ -1190,9 +1232,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-
     }
-
   }
 
   /**
@@ -1211,7 +1251,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarMercancia(): void {
-    this.seleccionTabla([]);
+    this.seleccionTabla([],[]);
     this.modalRef.abrir(AgregarMercanciaComponent);
   }
 
@@ -1222,10 +1262,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method seleccionTabla
    * @param {FilaSolicitud} event - Datos de la fila seleccionada.
    */
-  seleccionTabla(event: FilaSolicitud[]): void {
+  seleccionTabla(event: FilaSolicitud[],datosCroosList:string[]): void {
     this.fitosanitarioStore.update((state) => ({
       ...state,
       selectedDatos: event,
+      usoCrossListDatos:datosCroosList
     }));
   }
 
@@ -1307,7 +1348,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }));
 
       // Limpiar selección después de eliminar
-      this.seleccionTabla([]);
+      this.seleccionTabla([],[]);
     }
   }
 
@@ -1356,7 +1397,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }));
 
       // Limpiar selección después de eliminar
-      this.seleccionTabla([]);
+      this.seleccionTabla([],[]);
     } else {
       this.eliminarDatosTabla = false;
     }

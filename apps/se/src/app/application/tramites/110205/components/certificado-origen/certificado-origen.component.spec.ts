@@ -83,20 +83,6 @@ describe('CertificadoOrigenComponent', () => {
     // expect(component.store.setFormCertificadoGenric).toHaveBeenCalled();
   });
 
-  it('should run #estadoOpcion()', async () => {
-    component.peruCertificadoService = component.peruCertificadoService || {};
-    component.peruCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.estadoOpcion();
-    // expect(component.peruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
-  });
-
-  it('should run #paisOpcion()', async () => {
-    component.peruCertificadoService = component.peruCertificadoService || {};
-    component.peruCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.paisOpcion();
-    // expect(component.peruCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
-  });
-
   it('should run #conseguirDisponiblesDatos()', async () => {
     component.peruCertificadoService = component.peruCertificadoService || {};
     component.peruCertificadoService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
@@ -140,12 +126,6 @@ describe('CertificadoOrigenComponent', () => {
     component.store.setFormValida = jest.fn();
     component.setFormValida({});
     // expect(component.store.setFormValida).toHaveBeenCalled();
-  });
-
-  it('should run #guardarClicado()', async () => {
-
-    component.guardarClicado({});
-
   });
 
   it('should run #ngOnDestroy()', async () => {

@@ -1,5 +1,10 @@
 import { BandejaDeSolicitudesResponse } from "@libs/shared/data-access-user/src/core/models/shared/lib-bandeja.model";
 
+/**
+ * Clase transformadora para los datos de la bandeja de solicitudes.
+ * Esta clase toma un objeto de respuesta de la bandeja de solicitudes
+ * y lo transforma en una estructura más adecuada para su uso en la aplicación.
+ */
 export class BandejaSolicitudTransformer {
     id: string;
     id_solicitud: string;

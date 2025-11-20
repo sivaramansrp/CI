@@ -174,9 +174,12 @@ export interface Solicitante110101State {
   descripcionACE: number | null;
   /** Descripción SGP */
   descripcionSGP : number | null;
-
   /** Mercancia de servicio eveluar*/
   descripcion_evaluar: Mercancia | null;
+  /** Indica si la descripción alterna fue modificada */
+  descripcion_alterna_modificada: boolean | null;
+  /** Respuesta de descripción alterna modificada */
+  descripcion_alterna_modificada_response: boolean | null;
 }
 
 
@@ -311,7 +314,9 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     tab_procesos: false,
     id_solcitud: 0,
     proceso_seleccionado: [],
-    juegos_surtidos_tab_procesos: null
+    juegos_surtidos_tab_procesos: null,
+    descripcion_alterna_modificada: null,
+    descripcion_alterna_modificada_response: null
   };
 }
 
@@ -645,6 +650,17 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       exportadorAutorizado,
+    }));
+  }
+
+  /**
+ * Actualiza la información de descripcion alterna.
+ * @param descripcion_alterna_modificada_response - Información del response de validación.
+ */
+  public setDescripcionAlternaModificadaResponse(descripcion_alterna_modificada_response: boolean | null): void {
+    this.update((state) => ({
+      ...state,
+      descripcion_alterna_modificada_response,
     }));
   }
 

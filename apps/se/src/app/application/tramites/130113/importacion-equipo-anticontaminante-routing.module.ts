@@ -1,6 +1,6 @@
+import { AcusePageComponent, IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { RouterModule, Routes } from '@angular/router';
 import { ImportacionEquipoAnticontaminanteComponent } from './pages/importacion-equipo-anticontaminante/importacion-equipo-anticontaminante';
-import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
 
