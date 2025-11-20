@@ -260,14 +260,14 @@
                                 <div class="d-flex gap-3">
                                     <div class="border px-4 py-2 d-flex align-items-center radio-button">
                                         <input class="form-check-input me-3 seleccion-radio" type="radio" formControlName="clasificacionAladi"
-                                            name="clasificacionAladi" [value]="true" id="clasificacionAladi">
+                                            name="clasificacionAladi" [value]="true" id="clasificacionAladi" (click)="abrirModal(true)">
                                         <label class="control-label mb-0" for="clasificacionAladi">Aceptado</label>
                                     </div>
                                     <div class="border px-4 py-2 d-flex align-items-center radio-button">
                                         <input class="form-check-input me-3 seleccion-radio" type="radio" formControlName="clasificacionAladi"
                                             name="clasificacionAladi" [value]="false" id="clasificacionAladi" 
-                                            (click)="abrirModal()">
-                                        <label class="control-label mb-0" for="clasificacionAladi">No aceptada</label>
+                                            (click)="abrirModal(false)">
+                                        <label class="control-label mb-0" for="clasificacionAladi">No aceptado</label>
                                     </div>
                                 </div>
                             </div>
@@ -298,7 +298,22 @@
       </div>
       <div class="modal-footer d-flex justify-content-end p-5 gap-3">
         <button class="btn btn-primary ms-2" (click)="onClasificacionChange(false)">Aceptar</button>
-        <button class="btn btn-default" (click)="cerrarDialogo()">Cancelar</button>
+        <button class="btn btn-default" (click)="cerrarDialogoNoAceptar()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAladiAceptar" #modalAladiAceptar tabindex="-1" aria-labelledby="modalAgregarLabel"
+  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+          <h5>Al aprobar la descripción la calificación del tratado se modificará a "Aprobada". ¿Desea Continuar?</h5>
+      </div>
+      <div class="modal-footer d-flex justify-content-end p-5 gap-3">
+        <button class="btn btn-primary ms-2" (click)="onClasificacionChange(true)">Aceptar</button>
+        <button class="btn btn-default" (click)="cerrarDialogoAceptar()">Cancelar</button>
       </div>
     </div>
   </div>
