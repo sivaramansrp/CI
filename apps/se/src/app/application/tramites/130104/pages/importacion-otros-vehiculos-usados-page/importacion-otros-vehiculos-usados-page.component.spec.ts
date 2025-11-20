@@ -7,7 +7,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { ImportacionOtrosVehiculosUsadosPageComponent } from './importacion-otros-vehiculos-usados-page.component';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
-import { Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
+import { Tramite130104State, Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 import { AccionBoton } from '../../enums/accionbotton.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -18,26 +18,40 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
   let mockService: jest.Mocked<ImportacionOtrosVehiculosUsadosService>;
   let mockStore: jest.Mocked<Tramite130104Store>;
   let mockQuery: jest.Mocked<Tramite130104Query>;
-  let mockToastrService: jest.Mocked<ToastrService>;
-
-  const mockTramiteState = {
+  let mockToastrService: jest.Mocked<ToastrService>;  const mockTramiteState: Tramite130104State = {
     idSolicitud: 0,
-    solicitud: 'TISOL.I',
-    regimen: '01',
-    clasificacion: '01',
     producto: 'CONDMER.N',
     descripcion: 'Test description',
     fraccion: '87012101',
     cantidad: '10',
-    valorFacturaUSD: '1000',
+    valorPartidaUSD: 1000,
     unidadMedida: '6',
+    solicitud: 'TISOL.I',
+    defaultSelect: 'Inicial',
+    defaultProducto: 'CONDMER.U',
+    regimen: '01',
+    clasificacion: '01',
+    filaSeleccionada: [],
+    cantidadPartidasDeLaMercancia: '10',
+    valorPartidaUSDPartidasDeLaMercancia: '1000',
+    descripcionPartidasDeLaMercancia: 'Test description',
+    valorFacturaUSD: '1000',
+    bloque: '',
     usoEspecifico: 'Test uso',
     justificacionImportacionExportacion: 'Test justification',
     observaciones: 'Test observations',
     entidad: 'DGO',
     representacion: '1016',
+    mostrarTabla: false,
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: ''
+    },
+    mostrarPartidas: [],
+    cantidadTotal: '',
+    valorTotalUSD: '',
     fechasSeleccionadas: [],
-    defaultSelect: 'Inicial',
     tableBodyData: [
       {
         id: '1',
@@ -48,23 +62,7 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
         unidadDeMedida: 'Pieza',
         fraccionFrancelaria: '87012101'
       }
-    ],
-    mostrarPartidas: [],
-    filaSeleccionada: [],
-    mostrarTabla: false,
-    valorPartidaUSD: '',
-    defaultProducto: '',
-    cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: '',
-    unidadMedidaPartidasDeLaMercancia: '',
-    descripcionPartidasDeLaMercancia: '',
-    fraccionPartidasDeLaMercancia: '',
-    usoEspecificoPartidasDeLaMercancia: '',
-    justificacionImportacionExportacionPartidasDeLaMercancia: '',
-    bloque: '',
-    modificarPartidasDelaMercanciaForm: {},
-    cantidadTotal: '',
-    valorTotalUSD: ''
+    ]
   };
 
   beforeEach(async () => {
@@ -329,9 +327,7 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
 
       expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
       expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-    });
-
-    it('should set folioTemporal when valid id_solicitud is received', async () => {
+    });    it('should build payload correctly with all data', async () => {
       const mockEvent: AccionBoton = { accion: 'cont', valor: 2 };
       const mockResponse = {
         codigo: '00',
@@ -340,16 +336,58 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
       };
       mockService.guardarDatosPost.mockReturnValue(of(mockResponse));
 
-      // Mock the validation functions
-      jest.doMock('@ng-mf/data-access-user', () => ({
-        ...jest.requireActual('@ng-mf/data-access-user'),
-        esValidObject: jest.fn(() => true),
-        getValidDatos: jest.fn(() => true)
-      }));
+      const result = await component.guardar(mockTramiteState, mockEvent);      const payloadCall = mockService.guardarDatosPost.mock.calls[0][0];
+      expect(payloadCall).toBeDefined();
+      expect(payloadCall['tipoDeSolicitud']).toBe('guardar');
+      expect(payloadCall['mercancia']).toBeDefined();
+      expect(payloadCall['tipo_solicitud_pexim']).toBe(mockTramiteState.defaultSelect);
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should handle response with empty message', async () => {
+      const mockEvent: AccionBoton = { accion: 'cont', valor: 2 };
+      const mockResponse = {
+        codigo: '00',
+        mensaje: '',
+        datos: { id_solicitud: 123, idSolicitud: 123 }
+      };
+      mockService.guardarDatosPost.mockReturnValue(of(mockResponse));
 
       await component.guardar(mockTramiteState, mockEvent);
 
-      expect(mockStore.setIdSolicitud).toHaveBeenCalledWith(456);
+      expect(mockToastrService.success).toHaveBeenCalledWith('');
+    });
+  });
+
+  describe('Constructor behavior', () => {
+    it('should initialize destroyed$ subject', () => {
+      expect(component['destroyed$']).toBeDefined();
+    });
+
+    it('should set up subscription to tramite query', () => {
+      expect(component.solicitudState).toBe(mockTramiteState);
+    });
+  });
+
+  describe('Payload construction', () => {
+    it('should use correct id_solcitud from solicitudState', async () => {
+      const mockEvent: AccionBoton = { accion: 'cont', valor: 2 };
+      const mockResponse = { codigo: '00', mensaje: 'Success' };
+      mockService.guardarDatosPost.mockReturnValue(of(mockResponse));
+      component.solicitudState = { ...mockTramiteState, idSolicitud: 999 };
+
+      await component.guardar(mockTramiteState, mockEvent);      const payloadCall = mockService.guardarDatosPost.mock.calls[0][0];
+      expect(payloadCall['id_solcitud']).toBe(999);
+    });
+
+    it('should use 0 as id_solcitud when solicitudState.idSolicitud is not set', async () => {
+      const mockEvent: AccionBoton = { accion: 'cont', valor: 2 };
+      const mockResponse = { codigo: '00', mensaje: 'Success' };
+      mockService.guardarDatosPost.mockReturnValue(of(mockResponse));
+      component.solicitudState = { ...mockTramiteState, idSolicitud: 0 };
+
+      await component.guardar(mockTramiteState, mockEvent);      const payloadCall = mockService.guardarDatosPost.mock.calls[0][0];
+      expect(payloadCall['id_solcitud']).toBe(0);
     });
   });
 

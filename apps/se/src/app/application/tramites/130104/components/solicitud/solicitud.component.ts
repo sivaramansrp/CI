@@ -13,9 +13,7 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
-import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
 
 
 /**
@@ -89,12 +87,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCatálogo con valores de fracción arancelaria.
    */
   
- fraccionCatalogo: Catalogo[] = fractionValues;
+ fraccionCatalogo: Catalogo[] = [];
  
   /**
    * jest.spyOnCatálogo con opciones de unidad de medida.
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
@@ -630,18 +628,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-// /**
-//    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
-//    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
-//    */
-//   setValoresStore($event: { form: FormGroup; campo: string }): void {
-//     const VALOR = $event.form.get($event.campo)?.value;
-//     this.tramite130104Store.actualizarEstado({ [$event.campo]: VALOR });
-//     if($event.campo === 'fraccion'){
-//       this.tramite130104Store.actualizarEstado({'unidadMedida': '1'});
-//     }
-//   }
- 
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
  * Este método verifica si no hay filas seleccionadas en la tabla dinámica.

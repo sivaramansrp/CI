@@ -242,4 +242,74 @@ export class ImportacionOtrosVehiculosUsadosService {
     }));
   }
   
+  /**
+   * Genera el payload de mercancia para el trámite 130104 basado en la información proporcionada.
+   */
+  getPayloadMercancia(item: Tramite130104State): unknown {
+    return {
+      "cantidadComercial": 0,
+      "cantidadTarifaria": Number(item.cantidad),
+      "valorFacturaUSD": Number(item.valorFacturaUSD),
+      "condicionMercancia": item.producto,
+      "descripcion": item.descripcion,
+      "usoEspecifico": item.usoEspecifico,
+      "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
+      "observaciones": item.observaciones,
+      "unidadMedidaTarifaria": {
+        "clave": item.unidadMedida
+      },
+      "fraccionArancelaria": {
+        "cveFraccion": item.fraccion
+      },
+      "partidasMercancia": this.getPayloadDatos(item),
+    };
+  }
+
+  /**
+   * Genera el payload de productor para el trámite 130104.
+   */
+  getPayloadProductor(): unknown {
+    return {
+      "tipo_persona": true,
+      "nombre": "Juan",
+      "apellido_materno": "López",
+      "apellido_paterno": "Norte",
+      "razon_social": "Aceros Norte",
+      "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
+      "rfc": "AAL0409235E6",
+      "pais": "SIN"
+    };
+  }
+
+  /**
+   * Genera el payload de solicitante para el trámite 130104.
+   */
+  getPayloadSolicitante(): unknown {
+    return {
+      "rfc": "AAL0409235E6",
+      "nombre": "Juan Pérez",
+      "es_persona_moral": true,
+      "certificado_serial_number": "string"
+    };
+  }
+
+  /**
+   * Genera el payload de representación federal para el trámite 130104.
+   */
+  getPayloadRepresentacionFederal(item: Tramite130104State): unknown {
+    return {
+      "cve_entidad_federativa": item.entidad,
+      "cve_unidad_administrativa": item.representacion
+    };
+  }
+
+  /**
+   * Genera el payload de entidad federativa para el trámite 130104.
+   */
+  getPayloadEntidadFederativa(item: Tramite130104State): unknown {
+    return {
+      "cveEntidad": item.entidad
+    };
+  }
+  
 }
