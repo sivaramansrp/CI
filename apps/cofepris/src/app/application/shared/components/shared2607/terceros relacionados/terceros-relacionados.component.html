@@ -156,11 +156,21 @@
                   <small>Este campo es obligatorio</small>
                 </div>
                 }
+                  @if (destinatarioForm.get(['datosPersonales', 'primerApellido'])?.errors?.['pattern'] && destinatarioForm.get(['datosPersonales', 'primerApellido'])?.touched) {
+              <div class="text-danger">
+                <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+              </div>
+              }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="segundoApellido">Segundo apellido:</label>
                 <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
                   (change)="setValoresStore(agregarDestinatario,'segundoApellido', 'setSegundoApellido')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'segundoApellido'])?.errors?.['pattern'] && destinatarioForm.get(['datosPersonales', 'segundoApellido'])?.touched) {
+              <div class="text-danger">
+                <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+              </div>
+              }
               </div>
             </div>
             } @if (selectedTipoPersona === 'moral') {

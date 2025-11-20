@@ -32,6 +32,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+
   /**
    * Lista de opciones para el selector de justificación.
    */
@@ -47,6 +48,11 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * Esta propiedad controla si el campo de fecha de pago debe ser editable o no.
    */
   public setFecha = true;
+
+  /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
 
 
   /**
@@ -325,8 +331,27 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   actualizarPago(): void {
-    this.pagoChanged.emit(this.pagoForm?.value);
+    this.actualizarTodoelForm();
   }
+
+  /**
+ * @desc Actualiza los datos al cambiar algun campo.
+ * @memberof PagoDeDerechoComponent
+ */
+  actualizarTodoelForm() {
+    const DATOS_PAGOS = {
+      exentoPago: this.pagoForm.value.exentoPago,
+      justificacion: this.pagoForm.get('justificacion')?.value,
+      claveReferencia: this.pagoForm.get('claveReferencia')?.value,
+      cadenaDependencia: this.pagoForm.get('cadenaDependencia')?.value,
+      banco: this.pagoForm.get('banco')?.value,
+      llavePago: this.pagoForm.get('llavePago')?.value,
+      importePago: this.pagoForm.get('importePago')?.value,
+      fechaPago: this.pagoForm.get('fechaPago')?.value
+    }
+    this.pagoChanged.emit(DATOS_PAGOS);
+  }
+
 
   /**
    * @description Método que se ejecuta al hacer clic en el botón "Borrar".
@@ -337,9 +362,13 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
   onBorrar(): void {
     this.setFecha = false;
     const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
-    this.pagoForm.reset();
     this.pagoForm.patchValue({
       exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
+      fechaPago: '',
+      llavePago: '',
+      banco: '',
+      justificacion: ''
+
     });
     setTimeout(() => {
       this.setFecha = true;
@@ -356,6 +385,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   validarFormulario(): boolean {
+    this.markTouched = true;
     if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
       this.pagoForm.get('justificacion')?.setValidators([Validators.required]);
       this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);

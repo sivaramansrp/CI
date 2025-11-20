@@ -184,7 +184,7 @@ export const ENCABEZADO_TABLA_ACUSE = [
   },
   {
     key: 'documento',
-    valor: 'Documento.',
+    valor: 'Documento',
   },
 ];
 export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
@@ -198,7 +198,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ],
   datosTablaAcuse: [

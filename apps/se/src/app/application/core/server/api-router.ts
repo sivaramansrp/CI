@@ -82,3 +82,9 @@ export const API_BUSCAR_CUPOS_DISPONIBLES = (TRAMITE: string) : string => `sat-t
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/solicitud/obtener/certificados/disponibles
  */
 export const API_OBTENER_CERTIFICADOS_DISPONIBLES = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/obtener/certificados/disponibles`;
+
+/**
+ * API para obtener detalle de la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/solicitud/obtener/detalle
+ */
+export const API_OBTENER_DETALLE_SOLICITUD = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/obtener/detalle`;

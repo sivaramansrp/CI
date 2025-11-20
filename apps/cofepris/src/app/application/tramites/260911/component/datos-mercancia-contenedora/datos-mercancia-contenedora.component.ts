@@ -41,7 +41,6 @@ import {
   OnInit,
   Output,
   QueryList,
-  ViewChild,
   ViewChildren
 } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
@@ -302,61 +301,61 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   };
 
   /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
+   * Botones de acción para gestionar listas de países de origen.
    */
-  paisDeProcedenciaBotonsUno = [
+  paisDeOriginBotons = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
 
   /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
+   * Botones de acción para gestionar listas de países de procedencia.
    */
-  paisDeProcedenciaBotonsDos = [
+  paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
     },
   ];
 
   /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
+   * Botones de acción para gestionar listas de uso específico.
    */
-  paisDeProcedenciaBotonsTres = [
+  usoEspecificoBotons = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
@@ -1067,7 +1066,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   usoEspesificoSeleccionadasChange(events: string[]): void {
     this.seleccionadasUsoEspesificoDatos = events;
-    this.mercanciaForm.get('usoEspecifico')?.setValue(events);
+    this.mercanciaForm.patchValue({
+      usoEspecifico: events,
+    });
   }
 
   /**
