@@ -65,9 +65,9 @@ export enum ProcesoSolicitud {
  */
 export enum TipoRequerimiento  {
   /** Requerimiento de datos */
-  DATOS= 1,
+  DATOS= 'INFREQ.D',
   /** Requerimiento tipo documentos y datos */
-  DATOS_DOCUMENTOS= 3,
+  DATOS_DOCUMENTOS= 'INFREQ.DR',
   /** Requerimiento tipo documentos */
-  DOCUMENTOS= 2,
+  DOCUMENTOS= 'INFREQ.R',
 }

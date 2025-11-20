@@ -327,7 +327,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   catalogoDocumentos: Catalogo[] = [];
 
   /** Tipo de requerimiento seleccionado */
-  tipoRequerimiento!: number;
+  tipoRequerimiento!: string;
 
   /**
    * Datos que se muestran en la tabla de acuse.
@@ -396,40 +396,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       .subscribe();
 
       this.esTramiteEspecial = TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId);
-    console.log('esTramiteEspecial', this.esTramiteEspecial);
-    if(TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId)) {
-      this.guardarSolicitudService.getSolicitud(this.guardarDatos.procedureId, this.guardarDatos.id_solicitud).pipe(
-        takeUntil(this.destroyNotifier$), 
-      ).subscribe((datosSolicitud) => {
-        if(datosSolicitud.codigo == '00') {
-          this.tipoRequerimiento = datosSolicitud.datos?.tipo_servicio?.cve_tipo_servicio || 0;
-          console.log('tipoRequerimiento', this.tipoRequerimiento);
-          switch(this.tipoRequerimiento) {
-            case TipoRequerimiento.DATOS:
-              this.pasos = PASOS_REQUERIMIENTOS_DATOS;
-              break;
-            case TipoRequerimiento.DOCUMENTOS:
-              this.pasos = PASOS_REQUERIMIENTOS_DOCUMENTOS; 
-              break;
-            case TipoRequerimiento.DATOS_DOCUMENTOS:
-              this.pasos = PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS;
-              break;
-          }
-          this.datosPasos.nroPasos = this.pasos.length;
-          this.cdRef.detectChanges();
-        }
-      });
-    } else {
-      this.pasos = PASOS_REQUERIMIENTOS;
-    }
-
-      this.datosPasos = {
-        nroPasos: this.pasos?.length ? this.pasos.length : 3,
-        indice: this.indice,
-        txtBtnAnt: 'Anterior',
-        txtBtnSig: 'Continuar',
-      };
-      
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -438,6 +404,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.departamento = this.guardarDatos?.department.toLowerCase();
+    this.iniciarAtenderRequerimiento();
   }
 
   /**
@@ -445,8 +412,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Inicializa el componente y obtiene datos necesarios.
    */
   ngOnInit(): void {
-    
-  
+
+    this.pasos = PASOS_REQUERIMIENTOS;
+    this.datosPasos = {
+      nroPasos: this.pasos?.length ? this.pasos.length : 3,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+
     /**
      * Verifica si existe un trámite previamente seleccionado.
      * Si existe, se selecciona automáticamente.
@@ -488,7 +462,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
 
     this.getTabs();
 
-    this.iniciarAtenderRequerimiento();
+
   }
 
   /**
@@ -537,7 +511,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       if ( this.esTramiteEspecial && this.tipoRequerimiento === TipoRequerimiento.DATOS && this.indice === 2) {
         this.ejecutaActualizarSolicitud();
       }
-
       this.indice = e.valor;
 
       this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
@@ -632,9 +605,37 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   iniciarAtenderRequerimiento(): void {
     const NUMFOLIO = this.guardarDatos.folioTramite;
     this.atenderRequerimientoService.getIniciarAtenderRequerimiento(this.tramite, NUMFOLIO).subscribe({
-      next: (response) => {
-        if (response.codigo === '00') {
-          this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
+          next: (response) => {
+            if (response.codigo === '00') {
+              this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
+              this.tipoRequerimiento = this.iniciarAtenderRequerimientoData.alcance_requerimiento || '';
+              this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
+              
+              if(TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId)) {
+              switch(this.tipoRequerimiento) {
+                case TipoRequerimiento.DATOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DATOS;
+                  break;
+                case TipoRequerimiento.DOCUMENTOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DOCUMENTOS; 
+                  break;
+                case TipoRequerimiento.DATOS_DOCUMENTOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS;
+                  break;
+              }
+              this.datosPasos.nroPasos = this.pasos.length;
+              this.cdRef.detectChanges();
+          
+              } else {
+                this.pasos = PASOS_REQUERIMIENTOS;
+              }
+
+              this.datosPasos = {
+                nroPasos: this.pasos?.length ? this.pasos.length : 3,
+                indice: this.indice,
+                txtBtnAnt: 'Anterior',
+                txtBtnSig: 'Continuar',
+              };
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',

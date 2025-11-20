@@ -8,7 +8,11 @@
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
-    <div class="mb-5" *ngIf="tipoRequerimiento !== tipoRequerimientoEnum.DATOS && indice !== 2" >
+    <div class="mb-5"
+  *ngIf="(tipoRequerimiento === tipoRequerimientoEnum.DATOS && (indice !== 2 && indice !== 3))
+      || (!esTramiteEspecial && indice !== 3)
+      || (tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS && indice !== 3)
+      || (tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS && (indice !== 2 && indice !== 3))">
         <lib-encabezado-requerimiento
         [numFolioTramite]="guardarDatos.folioTramite"
         [tipoTramite]="guardarDatos.tipoDeTramite"
@@ -52,7 +56,7 @@
 
     
 
-    @if((indice === 3 && esAcuse === false) || (indice === 4 && esAcuse === false && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
+    @if((indice === 3 && esAcuse === false && tipoRequerimiento !== tipoRequerimientoEnum.DATOS_DOCUMENTOS) || (indice === 4 && esAcuse === false && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
       <div class="row">
                 <div class="col-md-12">
                     <h2 class="titulo mt-5 mb-5">Firmar solicitud</h2>
@@ -67,7 +71,7 @@
     }
 
     @if(esTramiteEspecial){
-      @if((tipoRequerimiento != tipoRequerimientoEnum.DOCUMENTOS &&  indice !=2)|| (tipoRequerimiento != tipoRequerimientoEnum.DATOS_DOCUMENTOS && indice !=3)) {
+      @if((indice !== 2 && tipoRequerimiento !== tipoRequerimientoEnum.DOCUMENTOS) ||  (indice !==3 && tipoRequerimiento !== tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
         <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
@@ -86,7 +90,7 @@
 
 
 
-    <div *ngIf="indice === 2 && tipoRequerimiento === tipoRequerimientoEnum.DATOS">
+    <div *ngIf="indice === 2 && (tipoRequerimiento === tipoRequerimientoEnum.DATOS || tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS) ">
       <paso-datos>  </paso-datos>
     </div>
     
@@ -109,7 +113,7 @@
       ></app-reviewers-tabs>
     </div>
 
-    @if(indice === 2) {
+    @if((indice === 2 && tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS) ||  ( indice ===3 && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS )) {
     <btn-continuar
     [datos]="datosPasos"
     (continuarEvento)="getValorIndice($event)"></btn-continuar>
