@@ -29,6 +29,15 @@ export const PASOS_IMPORTACION = [
     }
 ];
 
+/**
+ * Identificador fijo del procedimiento utilizado en el módulo actual.
+ *
+ * Esta constante se usa para realizar consultas, validaciones o
+ * solicitudes a servicios relacionados con el procedimiento 130113.
+ *
+ * @constant
+ * @type {number}
+ */
 export const ID_PROCEDIMIENTO: number = 130113;
 
 /**
