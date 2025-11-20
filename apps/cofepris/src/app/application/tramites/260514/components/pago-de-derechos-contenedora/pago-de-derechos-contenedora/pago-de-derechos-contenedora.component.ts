@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { PagoDeDerechosBancoComponent } from '../../../../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 
 /**
@@ -23,4 +23,18 @@ export class PagoDeDerechosContenedoraComponent {
    */
   public idProcedimiento: number = 260514;
 
+   /**
+     * Emite el estado de validez del formulario.
+     * Se envía un valor booleano cada vez que cambia la validez del formulario.
+     * Permite comunicar al componente padre si el formulario es válido o no.
+     */
+     formValidityChange:boolean = false;
+     /**
+     * Actualiza el estado local de validez del formulario.
+     * Este método recibe el valor emitido por el componente hijo.
+     * Se utiliza para saber si el formulario es válido o no desde el componente principal.
+     */
+     onFormValidityChange(isValid: boolean):void {
+      this.formValidityChange = isValid;
+    }
 }
