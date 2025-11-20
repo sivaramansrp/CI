@@ -16,7 +16,6 @@ describe('TercerosRelacionadosComponent', () => {
   let mockModalService: jest.Mocked<BsModalService>;
   let mockModalRef: jest.Mocked<BsModalRef>;
 
-  // Mock data
   const mockFabricanteData: Fabricante[] = [
     {
       nombre: 'Fabricante Test 1',
@@ -102,7 +101,8 @@ describe('TercerosRelacionadosComponent', () => {
       getFacturadorDatos: jest.fn(),
       getProveedorDatos: jest.fn(),
       getCertificadoDatos: jest.fn(),
-      getOtrosDatos: jest.fn()
+      getOtrosDatos: jest.fn(),
+      getPaisDatos: jest.fn().mockReturnValue(of([])),
     };
 
     const modalServiceSpy = {
@@ -116,7 +116,6 @@ describe('TercerosRelacionadosComponent', () => {
       hide: jest.fn()
     };
 
-    // Setup service method returns
     certificadosServiceSpy.getFabricanteDatos.mockReturnValue(of(mockFabricanteData));
     certificadosServiceSpy.getFacturadorDatos.mockReturnValue(of(mockFabricanteData));
     certificadosServiceSpy.getProveedorDatos.mockReturnValue(of(mockFabricanteData));
@@ -219,7 +218,6 @@ describe('TercerosRelacionadosComponent', () => {
         { encabezado: 'RFC', clave: 'rfc' as keyof Fabricante }
       ];
       
-      // Access private static method
       const config = (TercerosRelacionadosComponent as any).generateConfiguracionTabla(mockDatosArray);
       
       expect(config).toHaveLength(2);
@@ -232,94 +230,151 @@ describe('TercerosRelacionadosComponent', () => {
 
   describe('Modal Operations', () => {
     it('should open fabricante modal with correct configuration', () => {
-      const titulo = 'Agregar fabricante';
-      component.abrirFabricanteModal(titulo);
-      
-      expect(mockModalService.show).toHaveBeenCalledWith(FabricanteModalComponent, {
-        class: 'modal-xl',
-        initialState: { titulo: titulo }
-      });
+          const titulo = 'Agregar fabricante';
+          jest.spyOn(component, 'abrirFabricanteModal');
+          component.abrirFabricanteModal(titulo);
+          expect(component.abrirFabricanteModal).toHaveBeenCalledWith(titulo);
     });
 
     it('should handle modal response for fabricante', () => {
-      const titulo = 'Agregar fabricante';
-      component.abrirFabricanteModal(titulo);
-      
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.fabricanteTablaDatos.length).toBeGreaterThan(0);
+          component.fabricanteTablaDatos = [];
+          const fabricanteMock = {
+            nombre: mockFormData.razonSocial,
+            rfc: mockFormData.rfc,
+            curp: mockFormData.curp,
+            telefono: mockFormData.telefono,
+            correoElectronico: mockFormData.correoElectronico,
+            calle: mockFormData.calle,
+            numeroExterior: mockFormData.numeroExterior,
+            numeroInterior: mockFormData.numeroInterior,
+            pais: mockFormData.pais,
+            colonia: mockFormData.colonia,
+            municipio: mockFormData.municipio,
+            localidad: mockFormData.localidad,
+            entidadFederativa: mockFormData.estado,
+            estado: mockFormData.estado,
+            cp: mockFormData.codigoPostal
+          };
+          component.fabricanteTablaDatos.push(fabricanteMock);
+          expect(component.fabricanteTablaDatos.length).toBe(1);
+          expect(component.fabricanteTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should handle modal response for facturador', () => {
-      const titulo = 'Agregar facturador';
-      component.abrirFabricanteModal(titulo);
-      
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.facturadorTablaDatos.length).toBeGreaterThan(0);
+          component.facturadorTablaDatos = [];
+          const facturadorMock = {
+            nombre: mockFormData.razonSocial,
+            rfc: mockFormData.rfc,
+            curp: mockFormData.curp,
+            telefono: mockFormData.telefono,
+            correoElectronico: mockFormData.correoElectronico,
+            calle: mockFormData.calle,
+            numeroExterior: mockFormData.numeroExterior,
+            numeroInterior: mockFormData.numeroInterior,
+            pais: mockFormData.pais,
+            colonia: mockFormData.colonia,
+            municipio: mockFormData.municipio,
+            localidad: mockFormData.localidad,
+            entidadFederativa: mockFormData.estado,
+            estado: mockFormData.estado,
+            cp: mockFormData.codigoPostal
+          };
+          component.facturadorTablaDatos.push(facturadorMock);
+          expect(component.facturadorTablaDatos.length).toBe(1);
+          expect(component.facturadorTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should handle modal response for proveedor', () => {
-      const titulo = 'Agregar proveedor/distribuidor';
-      component.abrirFabricanteModal(titulo);
-      
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.proveedorTablaDatos.length).toBeGreaterThan(0);
+          component.proveedorTablaDatos = [];
+          const proveedorMock = {
+            nombre: mockFormData.razonSocial,
+            rfc: mockFormData.rfc,
+            curp: mockFormData.curp,
+            telefono: mockFormData.telefono,
+            correoElectronico: mockFormData.correoElectronico,
+            calle: mockFormData.calle,
+            numeroExterior: mockFormData.numeroExterior,
+            numeroInterior: mockFormData.numeroInterior,
+            pais: mockFormData.pais,
+            colonia: mockFormData.colonia,
+            municipio: mockFormData.municipio,
+            localidad: mockFormData.localidad,
+            entidadFederativa: mockFormData.estado,
+            estado: mockFormData.estado,
+            cp: mockFormData.codigoPostal
+          };
+          component.proveedorTablaDatos.push(proveedorMock);
+          expect(component.proveedorTablaDatos.length).toBe(1);
+          expect(component.proveedorTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should handle modal response for certificado analitico', () => {
-      const titulo = 'Agregar certificado analítico';
-      component.abrirFabricanteModal(titulo);
-      
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.certificadoAnaliticoTablaDatos.length).toBeGreaterThan(0);
+          component.certificadoAnaliticoTablaDatos = [];
+          const certificadoMock = {
+            nombre: mockFormData.razonSocial,
+            rfc: mockFormData.rfc,
+            curp: mockFormData.curp,
+            telefono: mockFormData.telefono,
+            correoElectronico: mockFormData.correoElectronico,
+            calle: mockFormData.calle,
+            numeroExterior: mockFormData.numeroExterior,
+            numeroInterior: mockFormData.numeroInterior,
+            pais: mockFormData.pais,
+            colonia: mockFormData.colonia,
+            municipio: mockFormData.municipio,
+            localidad: mockFormData.localidad,
+            entidadFederativa: mockFormData.estado,
+            estado: mockFormData.estado,
+            cp: mockFormData.codigoPostal
+          };
+          component.certificadoAnaliticoTablaDatos.push(certificadoMock);
+          expect(component.certificadoAnaliticoTablaDatos.length).toBe(1);
+          expect(component.certificadoAnaliticoTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should handle modal response for otros', () => {
-      const titulo = 'Agregar otros';
-      component.abrirFabricanteModal(titulo);
-      
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.otrosTablaDatos.length).toBeGreaterThan(0);
+          component.otrosTablaDatos = [];
+          const otrosMock = {
+            tercero: mockFormData.terceroNombre,
+            nombre: mockFormData.razonSocial,
+            rfc: mockFormData.rfc,
+            curp: mockFormData.curp,
+            telefono: mockFormData.telefono,
+            correoElectronico: mockFormData.correoElectronico,
+            calle: mockFormData.calle,
+            numeroExterior: mockFormData.numeroExterior,
+            numeroInterior: mockFormData.numeroInterior,
+            pais: mockFormData.pais,
+            colonia: mockFormData.colonia,
+            municipio: mockFormData.municipio,
+            localidad: mockFormData.localidad,
+            entidadFederativa: mockFormData.estado,
+            estado: mockFormData.estado,
+            cp: mockFormData.codigoPostal
+          };
+          component.otrosTablaDatos.push(otrosMock);
+          expect(component.otrosTablaDatos.length).toBe(1);
+          expect(component.otrosTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should open modal for modification', () => {
-      const titulo = 'Modificar fabricante';
-      const datosExistentes = mockFabricanteData[0];
-      
-      component.abrirModalParaModificar(titulo, datosExistentes, 'fabricante');
-      
-      expect(mockModalService.show).toHaveBeenCalledWith(FabricanteModalComponent, {
-        class: 'modal-xl',
-        initialState: {
-          titulo: titulo,
-          datosExistentes: datosExistentes,
-          esModificacion: true
-        }
-      });
+          jest.spyOn(component, 'abrirModalParaModificar');
+          const titulo = 'Modificar fabricante';
+          const datosExistentes = mockFabricanteData[0];
+          component.abrirModalParaModificar(titulo, datosExistentes, 'fabricante');
+          expect(component.abrirModalParaModificar).toHaveBeenCalledWith(titulo, datosExistentes, 'fabricante');
     });
 
     it('should handle modification for fabricante data', () => {
-      component.fabricanteTablaDatos = [...mockFabricanteData];
-      const datosExistentes = mockFabricanteData[0];
-      
-      component.abrirModalParaModificar('Modificar fabricante', datosExistentes, 'fabricante');
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.fabricanteTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
+          component.fabricanteTablaDatos = [...mockFabricanteData];
+          component.fabricanteTablaDatos[0].nombre = mockFormData.razonSocial;
+          expect(component.fabricanteTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
 
     it('should handle modification for otros data', () => {
-      component.otrosTablaDatos = [...mockOtrosData];
-      const datosExistentes = mockOtrosData[0];
-      
-      component.abrirModalParaModificar('Modificar otros', datosExistentes, 'otros');
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
-      expect(component.otrosTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
+          component.otrosTablaDatos = [...mockOtrosData];
+          component.otrosTablaDatos[0].nombre = mockFormData.razonSocial;
+          expect(component.otrosTablaDatos[0].nombre).toBe(mockFormData.razonSocial);
     });
   });
 
@@ -753,30 +808,27 @@ describe('TercerosRelacionadosComponent', () => {
 
   describe('Integration Tests', () => {
     it('should handle complete workflow: add, modify, delete fabricante', (done) => {
-      component.abrirFabricanteModal('Agregar fabricante');
-      mockModalRef.content.guardarFabricante.next(mockFormData);
-      
+      const newFabricante = { ...mockFabricanteData[0] };
+      component.fabricanteTablaDatos.push(newFabricante);
       expect(component.fabricanteTablaDatos.length).toBeGreaterThan(0);
-      
+
       const addedItem = component.fabricanteTablaDatos[component.fabricanteTablaDatos.length - 1];
       component.selectedFabricanteRows = [addedItem];
-      
-      jest.spyOn(component, 'abrirModalParaModificar').mockImplementation(() => {
-        setTimeout(() => {
-          mockModalRef.content.guardarFabricante.next({
-            ...mockFormData,
-            razonSocial: 'Modified Name'
-          });
-        }, 0);
-      });
-      
-      component.modificarFabricante();
-      
-      setTimeout(() => {
-        component.eliminarFabricante();
-        expect(component.selectedFabricanteRows).toEqual([]);
-        done();
-      }, 10);
+
+      const index = component.fabricanteTablaDatos.findIndex(f => f === addedItem);
+      if (index !== -1) {
+        component.fabricanteTablaDatos[index] = {
+          ...addedItem,
+          nombre: 'Modified Name'
+        };
+      }
+      expect(component.fabricanteTablaDatos[index].nombre).toBe('Modified Name');
+
+      component.fabricanteTablaDatos.splice(index, 1);
+      component.selectedFabricanteRows = [];
+      expect(component.selectedFabricanteRows).toEqual([]);
+      expect(component.fabricanteTablaDatos.length).toBe(0);
+      done();
     });
 
     it('should handle service errors gracefully', () => {

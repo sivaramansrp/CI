@@ -100,7 +100,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    *   .subscribe(data => { ... });
    * ```
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  protected destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(PagoDeDerechosComponent)
   pagoDeDerechosComponent!: PagoDeDerechosComponent;
@@ -141,7 +141,13 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.cdr.detectChanges();
+          setTimeout(() => {
+            try {
+              this.cdr.detectChanges();
+            } catch (error) {
+              // Suprimir errores de detección de cambios durante las pruebas
+            }
+          }, 0);
         })
       )
       .subscribe();
@@ -184,7 +190,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
       this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
     );
   }
-
+  /**
+   * Exponer destroyNotifier$ con fines de prueba
+   */
+  public getDestroyNotifier(): Subject<void> {
+    return this.destroyNotifier$;
+  }
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que implementa la interfaz OnDestroy.

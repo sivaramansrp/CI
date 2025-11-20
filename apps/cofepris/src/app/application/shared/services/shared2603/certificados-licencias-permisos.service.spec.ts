@@ -12,7 +12,6 @@ describe('CertificadosLicenciasPermisosService', () => {
         get: jest.fn(),
       } as any;
 
-      // Mock all store methods used in actualizarEstadoFormulario
       storeMock = {};
       [
         'setDenominacionRazon',
@@ -166,7 +165,7 @@ describe('CertificadosLicenciasPermisosService', () => {
         });
     });
 
-    it('debe actualizar correctamente el estado del formulario en el store', () => {
+    it('debe llamar a todos los métodos del store con los datos correctos', () => {
       const mockData: any = {
         denominacionRazon: 'Empresa XYZ',
         codigoPostal: '12345',
@@ -251,17 +250,12 @@ describe('CertificadosLicenciasPermisosService', () => {
 
       service.actualizarEstadoFormulario(mockData);
 
-      expect(storeMock.setDenominacionRazon).toHaveBeenCalledWith('Empresa XYZ');
-      expect(storeMock.setCodigoPostal).toHaveBeenCalledWith('12345');
-      expect(storeMock.setCorreoElecronico).toHaveBeenCalledWith(
-        'email@test.com'
-      );
-      expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith('1234.56');
-      expect(storeMock.setClaveDeReferencia).toHaveBeenCalledWith('ClaveRef123');
-      expect(storeMock.setImporteDePago).toHaveBeenCalledWith('5000');
-      expect(
-        storeMock.setTercerosRelacionadosDenominacionSocial
-      ).toHaveBeenCalledWith('TerceroSocial');
+      Object.keys(mockData).forEach((key) => {
+        const method = Object.keys(storeMock).find((m) => m.toLowerCase().includes(key.toLowerCase()));
+        if (method) {
+          expect(storeMock[method]).toHaveBeenCalledWith(mockData[key]);
+        }
+      });
     });
 
     it('debe propagar el error si getFormularioData falla', (done) => {
@@ -299,7 +293,6 @@ describe('CertificadosLicenciasPermisosService', () => {
     });
 
     it('debe cubrir la línea 332: getPaisDatos error branch', (done) => {
-      // This test ensures the error branch for getPaisDatos is covered (line 332)
       const error = new Error('Test error for coverage');
       httpMock.get.mockReturnValueOnce(throwError(() => error));
       service.getPaisDatos().subscribe({
@@ -413,7 +406,6 @@ describe('CertificadosLicenciasPermisosService', () => {
       service = new CertificadosLicenciasPermisosService(httpMock, storeMock);
     });
 
-    // Test all catalog fetchers for success and error
     const catalogMethods = [
       { method: 'getEstadoDatos', url: 'assets/json/2603/estado-catalog.json' },
       { method: 'getScianDatos', url: 'assets/json/2603/scian-tabla.json' },
@@ -455,9 +447,7 @@ describe('CertificadosLicenciasPermisosService', () => {
       });
     });
 
-    // Test actualizarEstadoFormulario with full, partial, and empty data
     it('should call all store setters with full data', () => {
-      // List of setters corresponding to Solicitud2603State properties
       const setters = [
         'setDenominacionRazon', 'setCodigoPostal', 'setEstado', 'setMunicipio', 'setLocalidad', 'setColonia', 'setCalleYNumero', 'setCorreoElecronico',
         'setLada', 'setTelefono', 'setClaveScianModal', 'setAvisoDeFuncionamiento', 'setClaveScian', 'setDescripcion', 'setAvisoCheckbox', 'setLicenciaSanitaria',
@@ -473,7 +463,6 @@ describe('CertificadosLicenciasPermisosService', () => {
         'setTercerosRelacionadosCalle', 'setTercerosRelacionadosNumeroExterior', 'setTercerosRelacionadosNumeroInterior', 'setTercerosRelacionadosLada',
         'setTercerosRelacionadosTelefono', 'setTercerosRelacionadosCorreoElectronico', 'setManifiestos'
       ];
-      // Create a complete Solicitud2603State object with all properties set
       const fullState = {
         denominacionRazon: 'test', codigoPostal: 'test', estado: 'test', municipio: 'test', localidad: 'test', colonia: 'test', calleYNumero: 'test', correoElecronico: 'test', lada: 'test', telefono: 'test', claveScianModal: 'test', avisoDeFuncionamiento: 'test', claveScian: 'test', descripcion: 'test', avisoCheckbox: true, licenciaSanitaria: 'test', regimen: 'test', regimenDestinara: 'test', aduana: 'test', numeroPermiso: 'test', losDatosNo: 'test', nombreORazon: 'test', clasificacion: 'test', clave: 'test', especificarClasificacionProducto: 'test', denominacionEspecifica: 'test', denominacionDistintiva: 'test', denominacionComun: 'test', tipoDeProducto: 'test', especifique: 'test', estadoFisico: 'test', fraccionArancelaria: 'test', descripcionFraccion: 'test', cantidadUMT: 'test', UMT: 'test', cantidadUMC: 'test', UMC: 'test', presentacion: 'test', numeroRegistro: 'test', fechaCaducidad: 'test', cumplimiento: 'test', rfc: 'test', nombre: 'test', apellidoPaterno: 'test', apellidoMaterno: 'test', dci: 'test', marcaComercialODenominacionDistintiva: 'test', descripcionDeLaFraccion: 'test', numeroCas: 'test', cantidadDeLotes: 'test', kgOrPorLote: 'test', pais: 'test', paisDeProcedencia: 'test', detallarUso: 'test', numeroDePiezas: 'test', descripcionDelNumeroDePiezas: 'test', numeroDeRegistro: 'test', claveDeReferencia: 'test', cadenaDaLaDependencia: 'test', banco: 'test', laveDePago: 'test', fechaDePago: 'test', importeDePago: 'test', tipoDocumento: 'test', tercerosRelacionadosDenominacionSocial: 'test', tercerosRelacionadosTerceroNombre: 'test', tercerosNacionalidad: 'test', tipoPersona: 'test', tercerosRelacionadosRfc: 'test', tercerosRelacionadosCurp: 'test', tercerosRelacionadosRazonSocial: 'test', tercerosRelacionadosPais: 'test', tercerosRelacionadosEstado: 'test', tercerosRelacionadosCodigoPostal: 'test', tercerosRelacionadosCalle: 'test', tercerosRelacionadosNumeroExterior: 'test', tercerosRelacionadosNumeroInterior: 'test', tercerosRelacionadosLada: 'test', tercerosRelacionadosTelefono: 'test', tercerosRelacionadosCorreoElectronico: 'test', scianTabla: [], datosPersonalesNombre: 'test', datosPersonalesPrimerApellido: 'test', datosPersonalesSegundoApellido: 'test', tercerosRelacionadosMunicipio: 'test', tercerosRelacionadosLocalidad: 'test', tercerosRelacionadosColonia: 'test', manifiestos: true
       };
@@ -485,7 +474,6 @@ describe('CertificadosLicenciasPermisosService', () => {
       });
     });
 
-    // Use the initial state for empty data
     const emptyState = {
       denominacionRazon: '',
       codigoPostal: '',

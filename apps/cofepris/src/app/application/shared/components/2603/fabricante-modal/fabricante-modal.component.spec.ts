@@ -7,6 +7,7 @@ import { Tramite2603Store, createInitialState as createTramiteInitialState } fro
 import { Tramite2603Query } from '../../../estados/queries/2603/tramite2603.query';
 import { ConsultaioQuery, createConsultaInitialState } from '@ng-mf/data-access-user';
 import { of} from 'rxjs';
+import { CertificadosLicenciasPermisosService } from '../../../services/shared2603/certificados-licencias-permisos.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('FabricanteModalComponent', () => {
@@ -30,6 +31,10 @@ describe('FabricanteModalComponent', () => {
       selectConsultaioState$: of({ ...createConsultaInitialState(), readonly: false }),
     };
 
+    const certificadosLicenciasSvcMock = {
+      getPaisDatos: jest.fn().mockReturnValue(of([])),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
@@ -39,6 +44,7 @@ describe('FabricanteModalComponent', () => {
         { provide: Tramite2603Store, useValue: tramiteStoreMock },
         { provide: Tramite2603Query, useValue: tramiteQueryMock },
         { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: CertificadosLicenciasPermisosService, useValue: certificadosLicenciasSvcMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

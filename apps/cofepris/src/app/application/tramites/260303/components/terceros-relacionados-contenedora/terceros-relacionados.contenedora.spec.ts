@@ -1,94 +1,72 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados.contenedora';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { of} from 'rxjs';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
-import { Fabricante, Otros } from '@libs/shared/data-access-user/src';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Subject } from 'rxjs';
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
   let component: TercerosRelacionadosContenedoraComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
-  let certificadosSvcMock: jest.Mocked<CertificadosLicenciasPermisosService>;
-  let modalServiceMock: jest.Mocked<BsModalService>;
+  let consultaQueryMock: any;
+  let tramite260303QueryMock: any;
+  let tramite260303StoreMock: any;
+  let cdrMock: any;
+  let selectConsultaioState$: Subject<any>;
 
-  const FABRICANTE_MOCK: Fabricante[] = [{ nombre: 'Fabricante Test' } as Fabricante];
-  const OTROS_MOCK: Otros[] = [{
-    tercero: 'T1',
-    nombre: 'Nombre Test',
-    rfc: 'RFC123456',
-    curp: 'CURP123456',
-    telefono: '5551234567',
-    correoElectronico: 'test@example.com',
-    calle: 'Calle Falsa',
-    numeroExterior: '123',
-    numeroInterior: '4B',
-    pais: 'México',
-    colonia: 'Centro',
-    municipio: 'Municipio Test',
-    localidad: 'Localidad Test',
-    entidadFederativa: 'CDMX',
-    estado: 'Activo',
-    cp: '01234',
-  }];
-
-
-  beforeEach(async () => {
-    certificadosSvcMock = {
-      getFabricanteDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
-      getFacturadorDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
-      getProveedorDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
-      getCertificadoDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
-      getOtrosDatos: jest.fn().mockReturnValue(of(OTROS_MOCK)),
-    } as unknown as jest.Mocked<CertificadosLicenciasPermisosService>;
-
-    modalServiceMock = {
-      show: jest.fn(),
-    } as unknown as jest.Mocked<BsModalService>;
-
-    await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosContenedoraComponent],
-      providers: [
-        { provide: CertificadosLicenciasPermisosService, useValue: certificadosSvcMock },
-        { provide: BsModalService, useValue: modalServiceMock },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
-    component = fixture.componentInstance;
-    (component as any).consultaState = { readonly: false };
-    fixture.detectChanges();
+  beforeEach(() => {
+    selectConsultaioState$ = new Subject();
+    consultaQueryMock = { selectConsultaioState$: selectConsultaioState$ };
+    tramite260303QueryMock = {};
+    tramite260303StoreMock = {};
+    cdrMock = { detectChanges: jest.fn() };
+    component = new TercerosRelacionadosContenedoraComponent(
+      consultaQueryMock,
+      tramite260303QueryMock,
+      tramite260303StoreMock,
+      cdrMock
+    );
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe cargar los datos de todas las tablas al inicializarse', () => {
-    expect(certificadosSvcMock.getFabricanteDatos).toHaveBeenCalled();
-    expect(certificadosSvcMock.getFacturadorDatos).toHaveBeenCalled();
-    expect(certificadosSvcMock.getProveedorDatos).toHaveBeenCalled();
-    expect(certificadosSvcMock.getCertificadoDatos).toHaveBeenCalled();
-    expect(certificadosSvcMock.getOtrosDatos).toHaveBeenCalled();
-
-    expect(component.fabricanteTablaDatos).toEqual(FABRICANTE_MOCK);
-    expect(component.facturadorTablaDatos).toEqual(FABRICANTE_MOCK);
-    expect(component.proveedorTablaDatos).toEqual(FABRICANTE_MOCK);
-    expect(component.certificadoAnaliticoTablaDatos).toEqual(FABRICANTE_MOCK);
-    expect(component.otrosTablaDatos).toEqual(OTROS_MOCK);
+  it('should have default values for permisoDefinitivoTitulo, idProcedimiento, esFormularioSoloLectura', () => {
+    expect(Array.isArray(component.permisoDefinitivoTitulo)).toBe(true);
+    expect(Array.isArray(component.idProcedimiento)).toBe(true);
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
- it('debe limpiar las suscripciones al destruirse', () => {
-  // Asegura que consultaState existe para evitar errores en ngOnDestroy
-  (component as any).consultaState = { readonly: false };
 
-  const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-  const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+  it('should update esFormularioSoloLectura and consultaState on subscription', () => {
+    const state = { readonly: true, test: 'value' };
+    selectConsultaioState$.next(state);
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.consultaState).toBe(state);
+    expect(cdrMock.detectChanges).toHaveBeenCalled();
+  });
 
-  component.ngOnDestroy();
+  it('should handle multiple subscription updates', () => {
+    const state1 = { readonly: false };
+    const state2 = { readonly: true };
+    selectConsultaioState$.next(state1);
+    expect(component.esFormularioSoloLectura).toBe(false);
+    selectConsultaioState$.next(state2);
+    expect(component.esFormularioSoloLectura).toBe(true);
+  });
 
-  expect(nextSpy).toHaveBeenCalled();
-  expect(completeSpy).toHaveBeenCalled();
-});
+  it('should handle ngOnDestroy called multiple times gracefully', () => {
+    component.ngOnDestroy();
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('should allow consultaState to be undefined initially', () => {
+    expect(component.consultaState).toBeUndefined();
+    selectConsultaioState$.next({ readonly: false });
+    expect(component.consultaState).toEqual({ readonly: false });
+  });
+
+  it('should clean up subscription on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
 });

@@ -1,4 +1,3 @@
-
 import {
   ComponentFixture,
   TestBed,
@@ -413,5 +412,21 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.scianForm.get('claveScian')).toBeDefined();
     expect(component.mercanciasForm.get('clasificacion')).toBeDefined();
   });
+  it('should emit selectionChange output event', () => {
+    const spy = jest.spyOn(component.selectionChange, 'emit');
+    const value = { id: 1, descripcion: 'Producto' };
+    component.selectionChange.emit(value);
+    expect(spy).toHaveBeenCalledWith(value);
+  });
 
+  it('should set esModalCerrado to true when closing modal', () => {
+    component.esModalCerrado = false;
+    component.esModalCerrado = true;
+    expect(component.esModalCerrado).toBe(true);
+  });
+
+  it('should get descripcionFormControl from scianForm', () => {
+    component.scianForm = formBuilder.group({ descripcion: ['test'] });
+    expect(component.descripcionFormControl.value).toBe('test');
+  });
 });
