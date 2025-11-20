@@ -39,9 +39,15 @@ export class GuardarAdapter_260103 {
             "telefono": "123456"
         },
       },
-
+ solicitud: {
+          discriminatorValue: 260103,
+          regimen: "01",
+          declaracionesSeleccionadas: true,
+          aduanaAIFA: "",
+          informacionConfidencial:true
+      },
       establecimiento: {
-        rfcResponsableSanitario: state.datosSolicitudFormState.rfcSanitario,
+        rfcResponsableSanitario: "XAXX010101000",
         razonSocial: state.datosSolicitudFormState.denominacionRazon,
         correoElectronico: state.datosSolicitudFormState.correoElectronico,
 
@@ -67,6 +73,7 @@ export class GuardarAdapter_260103 {
       datosSCIAN: state.scianConfigDatos.map(item => ({
         cveScian: item.clave,
         descripcion: item.descripcion,
+                 selected: true
       })),
 
       mercancias: (state.tablaMercanciasConfigDatos ?? []).map(merc => ({
@@ -78,11 +85,11 @@ export class GuardarAdapter_260103 {
         nombreSubClasificacionProducto: merc.especificarClasificacionObj?.descripcion,
 
         descDenominacionEspecifica: merc.denominacionEspecificaProducto,
-        descDenominacionDistintiva: merc.denominacionDistintiva,
+        descDenominacionDistintiva: merc.denominacionDistintiva || "Paracetamol Tabletas 500mg",
         descripcionMercancia: "",
 
-        formaFarmaceuticaDescripcionOtros: merc.especifiqueForma,
-        estadoFisicoDescripcionOtros: merc.especifiqueEstado,
+        formaFarmaceuticaDescripcionOtros: merc.especifiqueForma || "Tableta",
+        estadoFisicoDescripcionOtros: merc.especifiqueEstado || "Sólido",
 
         fraccionArancelaria: {
           clave: merc.fraccionArancelaria,
@@ -93,14 +100,11 @@ export class GuardarAdapter_260103 {
           descripcion: merc.cantidadUMCObj?.descripcion
         },
 
-        cantidadUMCConComas: merc.cantidadUMC,
-        unidadMedidaTarifa: {
-          descripcion: merc.cantidadUMT
-        },
-        cantidadUMTConComas: merc.cantidadUmtValor,
+        cantidadUMCConComas:"50,000",
+        cantidadUMTConComas: merc.cantidadUmtValor || '10000',
 
-        presentacion: merc.presentacion,
-        registroSanitarioConComas: merc.numeroRegistroSanitario,
+        presentacion: merc.presentacion || "Frasco x 100 tabletax",
+        registroSanitarioConComas: merc.numeroRegistroSanitario || "COFEPRIS-REG-001-2024-SSA1",
 
         nombreCortoPaisOrigen: merc.paisDeOriginDatos?.toString(),
         nombreCortoPaisProcedencia: merc.paisDeProcedenciaDatos?.toString(),
@@ -108,7 +112,7 @@ export class GuardarAdapter_260103 {
         tipoProductoDescripcionOtros: merc.especifique,
         nombreCortoUsoEspecifico: merc.usoEspecifico?.toString(),
 
-        fechaCaducidadStr: merc.fechaCaducidad,
+        fechaCaducidadStr: merc.fechaCaducidad || "31/12/2026",
         
         // NumeroLotes: merc?.c?.map(l => ({
         //   numeroLote: l.numeroLote,
@@ -126,7 +130,7 @@ export class GuardarAdapter_260103 {
       },
 
       gridTerceros_TIPERS_FAB: state.fabricanteTablaDatos.map(f => ({
-        idPersonaSolicitud: "",
+        idPersonaSolicitud: f.id,
         ideTipoTercero: "TIPERS.FAB",
         personaMoral: f.tipoPersona === "Moral" ? "1" : "0",
         booleanExtranjero: f.nacionalidad === 'Extranjero' ? "1" : "0",
@@ -191,57 +195,67 @@ export class GuardarAdapter_260103 {
         idSolicitud: "",
       })),
 
-      gridTerceros_TIPERS_DES:[
-    {
-        "idPersonaSolicitud": 1,
+      gridTerceros_TIPERS_DES:state.fabricanteTablaDatos.map(f => ({
+        "idPersonaSolicitud": f.id,
         "ideTipoTercero": "TIPERS.FAB",
-        "personaMoral": "0",
-        "booleanExtranjero": "0",
+        personaMoral: f.tipoPersona === "Moral" ? "1" : "0",
         "booleanFisicaNoContribuyente": "0",
-        "denominacion": "",
-        "razonSocial": "",
-        "rfc": "test",
-        "curp": "",
-        "nombre": "test",
-        "apellidoPaterno": "tesst",
-        "apellidoMaterno": "test",
-        "telefono": "",
-        "correoElectronico": "",
-        "actividadProductiva": "",
-        "actividadProductivaDesc": "",
-        "descripcionGiro": "",
-        "numeroRegistro": "",
-        "domicilio": {
-            "calle": "test",
-            "numeroExterior": "test",
-            "numeroInterior": "",
-            "pais": {
-                "clave": "DEU",
-                "nombre": "ALEMANIA (REPUBLICA FEDERAL DE)"
-            },
-            "colonia": {
-                "clave": "02261311999",
-                "nombre": "OTRA NO ESPECIFICADA EN EL CATALOGO"
-            },
-            "delegacionMunicipio": {
-                "clave": "16022",
-                "nombre": "CHARO"
-            },
-            "localidad": {
-                "clave": "02261312001",
-                "nombre": "JARIPEO - CP 61312"
-            },
-            "entidadFederativa": {
-                "clave": "",
-                "nombre": ""
-            },
-            "informacionExtra": "",
-            "codigoPostal": "",
-            "descripcionColonia": "OTRA NO ESPECIFICADA EN EL CATALOGO"
+       
+        denominacion:
+          f.tipoPersona === "Moral"
+            ? f.razonSocial
+            : `${f.nombres} ${f.primerApellido} ${f.segundoApellido}`,
+
+        razonSocial: f.razonSocial,
+        rfc: f.rfc,
+        curp: f.curp,
+
+        nombre: f.nombres,
+        apellidoPaterno: f.primerApellido,
+        apellidoMaterno: f.segundoApellido,
+          telefono: f.telefono,
+        correoElectronico: f.correoElectronico,
+        actividadProductiva: "",
+        actividadProductivaDesc: "",
+        descripcionGiro: "",
+        numeroRegistro: "",
+       
+        domicilio: {
+          calle: "",
+          numeroExterior: f.numeroExterior,
+          numeroInterior: f.numeroInterior,
+
+          pais: {
+            clave: f.paisObj?.clave,
+            nombre: f.paisObj?.descripcion
+          },
+
+          colonia: {
+            clave: f.coloniaObj?.clave,
+            nombre: f.coloniaObj?.descripcion
+          },
+
+          delegacionMunicipio: {
+            clave: f.municipioAlcaldiaObj?.clave,
+            nombre: f.municipioAlcaldiaObj?.descripcion
+          },
+
+          localidad: {
+            clave: f.localidadObj?.clave,
+            nombre: f.localidadObj?.descripcion
+          },
+
+          entidadFederativa: {
+            clave: f.entidadFederativaObj?.clave,
+            nombre: f.entidadFederativaObj?.descripcion
+          },
+
+          informacionExtra: "",
+          codigoPostal: f.codigoPostal,
+          descripcionColonia: f.colonia
         },
-        "idSolicitud": ""
-    }
-],
+        
+    })),
       
 
       pagoDeDerechos: {
@@ -256,12 +270,6 @@ export class GuardarAdapter_260103 {
         llaveDePago: state.pagoDerechos.llavePago,
         fecPago: state.pagoDerechos.fechaPago,
         impPago: state.pagoDerechos.importePago
-      },
-        solicitud: {
-          discriminatorValue: 260103,
-          declaracionesSeleccionadas: true,
-          aduanaAIFA: "",
-          informacionConfidencial:true
       }
 
     };
