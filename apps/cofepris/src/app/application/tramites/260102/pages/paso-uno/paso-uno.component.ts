@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy {
+export class PasoUnoComponent implements OnChanges, OnDestroy {
   /**
    * Índice numérico utilizado como referencia o posición actual.
    * Comienza en 1 por defecto.
@@ -48,6 +48,16 @@ export class PasoUnoComponent implements OnDestroy {
 */
   public readonly idProcedimiento: number = 260102;
 
+  @Input() confirmarSinPagoDeDerechos: number = 0;
+
+  @ViewChild(SolicitanteComponent) solicitanteComponent!: SolicitanteComponent;
+  
+  @ViewChild(ContenedorDeDatosSolicitudComponent) contenedorDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+
+  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosComponent!: TercerosRelacionadosVistaComponent;
+
+  @ViewChild(PagoDeDerechosContenedoraComponent) pagoDerechosComponent!: PagoDeDerechosContenedoraComponent;
+
   /**
    * Constructor del componente que inicializa el estado de la consulta
    * y determina si se deben guardar los datos del formulario o mostrar solo los datos de respuesta.
@@ -65,6 +75,15 @@ export class PasoUnoComponent implements OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+      const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
     }
   }
   /**
@@ -89,6 +108,16 @@ export class PasoUnoComponent implements OnDestroy {
           this.ConsumoPersonalService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  validarPasoUno(): boolean {
+    const ES_TAB_VALIDO = this.contenedorDatosSolicitudComponent?.validarContenedor() ?? false;
+    const ES_TERCEROS_VALIDO = this.tercerosRelacionadosComponent.validarContenedor() ?? false;
+    const ES_PAGO_VALIDO = this.pagoDerechosComponent.validarContenedor() ?? false;
+    return (
+      (ES_TAB_VALIDO && ES_TERCEROS_VALIDO && ES_PAGO_VALIDO) ? true : false
+
+    );
   }
 
   /**
