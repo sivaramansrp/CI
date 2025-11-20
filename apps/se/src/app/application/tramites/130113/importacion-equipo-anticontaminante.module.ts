@@ -5,8 +5,6 @@ import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tram
 import { ImportacionEquipoAnticontaminanteComponent } from './pages/importacion-equipo-anticontaminante/importacion-equipo-anticontaminante';
 import { ImportacionEquipoAnticontaminanteRoutingModule } from './importacion-equipo-anticontaminante-routing.module';
 import { NgModule } from '@angular/core';
-// import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
