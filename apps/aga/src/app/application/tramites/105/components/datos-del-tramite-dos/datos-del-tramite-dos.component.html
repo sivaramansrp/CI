@@ -110,7 +110,7 @@
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="nombres">Nombre(s)*</label>
-                  <input type="text" class="form-control" id="nombres" formControlName="nombres" />
+                  <input type="text" class="form-control" id="nombres" formControlName="nombres" maxlength="200" />
                     <div class="text-danger" *ngIf="agenteForm.get('nombres')?.touched && agenteForm.get('nombres')?.invalid && agenteForm.get('nombres')?.errors?.['pattern']">
                       <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
                     </div>
@@ -127,7 +127,7 @@
                 </div>
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="primerApellido">Primer Apellido*</label>
-                  <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
+                  <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" maxlength="200" />
                     <div class="text-danger" *ngIf="agenteForm.get('primerApellido')?.touched && agenteForm.get('primerApellido')?.invalid && agenteForm.get('primerApellido')?.errors?.['pattern']">
                       <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
                     </div>
@@ -144,7 +144,7 @@
                 </div>
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="segundoApellido">Segundo Apellido*</label>
-                  <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
+                  <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" maxlength="200" />
                     <div class="text-danger" *ngIf="agenteForm.get('segundoApellido')?.touched && agenteForm.get('segundoApellido')?.invalid && agenteForm.get('segundoApellido')?.errors?.['pattern']">
                       <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
                     </div>
@@ -162,7 +162,7 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="numeroPatente">Número de patente de agente aduanal*</label>
                   <input type="number" class="form-control" id="numeroPatente" formControlName="numeroPatente"
-                    maxlength="4" pattern="[0-9]*" inputmode="numeric" />
+                    maxlength="4" pattern="[0-9]*" inputmode="numeric" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)" />
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('numeroPatente')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('numeroPatente')?.hasError('required')">
