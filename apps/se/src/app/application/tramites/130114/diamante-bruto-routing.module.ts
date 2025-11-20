@@ -1,5 +1,5 @@
+import { AcusePageComponent, IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { DiamanteBrutoComponent } from './pages/diamante-bruto/diamante-bruto.component';
-import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
