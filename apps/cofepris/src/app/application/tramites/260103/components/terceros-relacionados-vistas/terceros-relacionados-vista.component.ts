@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-retorno-sanitario.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/shared26010/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
-import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
+import { Tramite260103Store } from '../../estados/tramite260103Store.store';
+import { ViewChild } from '@angular/core';
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
