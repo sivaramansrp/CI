@@ -44,6 +44,14 @@ export interface Tramite130114State {
   */
   valorTotalUSD: string;
 
+  /**
+ * @description
+ * Arreglo que contiene las fechas seleccionadas por el usuario.
+ * 
+ * Este listado se utiliza para almacenar y procesar las fechas
+ * elegidas dentro del formulario o componente, permitiendo validar,
+ * mostrar o enviar dicha información según la lógica del módulo.
+ */
   fechasSeleccionadas: string[];
 
    /**
@@ -125,6 +133,14 @@ export class Tramite130114Store extends Store<Tramite130114State> {
     }));
   }
 
+  /**
+ * @description
+ * Restablece el estado del store realizando una llamada al método `reset()`.
+ * 
+ * Este método encapsula la lógica de reinicio, permitiendo limpiar o
+ * restaurar los valores manejados en el store según la implementación
+ * interna del método `reset()`.
+ */
   resetStore(): void {
     this.reset();
   }

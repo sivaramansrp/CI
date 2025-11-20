@@ -24,7 +24,8 @@ describe('DiamanteBrutoComponent', () => {
     const diamanteBrutoServiceSpy = {
       getAllState: jest.fn(()=> of()),
       getPayloadDatos: jest.fn(()=> of()),
-      guardarDatosPost: jest.fn(()=> of())
+      guardarDatosPost: jest.fn(()=> of()),
+      guardarPayloadDatos: jest.fn(()=> of())
     } as any;
 
     const tramite130114StoreSpy = {

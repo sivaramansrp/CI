@@ -63,6 +63,16 @@ export class DiamanteBrutoComponent implements OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * @description
+   * Folio temporal asignado de manera provisional mientras se genera
+   * o se obtiene el folio definitivo del trámite o solicitud.
+   *
+   * Este valor inicia en 0 y se actualiza conforme avanza el proceso,
+   * permitiendo identificar temporalmente la operación en curso.
+   *
+   * @type {number}
+   */
   folioTemporal: number = 0;
 
   /**
@@ -133,7 +143,27 @@ export class DiamanteBrutoComponent implements OnDestroy {
    */
   cargaEnProgreso: boolean = true;
 
-
+  /**
+   * @description
+   * Constructor del componente.  
+   * 
+   * Inicializa los servicios y stores necesarios para la gestión del trámite
+   * 130114. Además, se suscribe al observable `selectSolicitud$` del query
+   * para mantener actualizado el estado de la solicitud durante el ciclo
+   * de vida del componente.
+   *
+   * @param {DiamanteBrutoService} diamanteBrutoService  
+   * Servicio encargado de las operaciones relacionadas con diamante bruto.
+   *
+   * @param {Tramite130114Store} tramite130114Store  
+   * Store utilizado para manejar el estado global del trámite 130114.
+   *
+   * @param {Tramite130114Query} tramite130114Query  
+   * Query que permite consultar y suscribirse a cambios en el estado del trámite.
+   *
+   * @param {ToastrService} toastrService  
+   * Servicio de notificaciones para mostrar mensajes al usuario.
+   */
   constructor(private diamanteBrutoService: DiamanteBrutoService, private tramite130114Store: Tramite130114Store, private tramite130114Query: Tramite130114Query, private toastrService: ToastrService) {
     this.tramite130114Query.selectSolicitud$.pipe(takeUntil(this.destroyed$)).subscribe((solicitudState) => {
       this.solicitudState = solicitudState;
@@ -229,66 +259,7 @@ export class DiamanteBrutoComponent implements OnDestroy {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Tramite130114State, e: AccionBoton): Promise<JSONResponse> {
-    const MERCANCIA = this.diamanteBrutoService.getPayloadDatos(item);
-    const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
-      "tipo_solicitud_pexim": item.defaultSelect,
-      "mercancia": {
-        "cantidadComercial": 0,
-        "cantidadTarifaria": Number(item.cantidad),
-        "valorFacturaUSD": Number(item.valorFacturaUSD),
-        "condicionMercancia": item.producto,
-        "descripcion": item.descripcion,
-        "usoEspecifico": item.usoEspecifico,
-        "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
-        "observaciones": item.observaciones,
-        "unidadMedidaTarifaria": {
-          "clave": item.unidadMedida
-        },
-        "fraccionArancelaria": {
-          "cveFraccion": item.fraccion
-        },
-        "partidasMercancia": MERCANCIA,
-      },
-      "id_solcitud": this.solicitudState.idSolicitud || 0,
-      "cve_regimen": item.regimen,
-      "cve_clasificacion_regimen": item.clasificacion,
-      "productor": {
-        "tipo_persona": true,
-        "nombre": "Juan",
-        "apellido_materno": "López",
-        "apellido_paterno": "Norte",
-        "razon_social": "Aceros Norte",
-        "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
-        "rfc": "AAL0409235E6",
-        "pais": "SIN"
-      },
-      "solicitante": {
-        "actividad": "",
-        "calle": "",
-        "codigoPostal": "83600",
-        "colonia": "OTRA NO ESPECIFICADA EN EL CATALOGO",
-        "correo": "brpomskyldi@etllpqhpyrpks.zgi",
-        "estado": "26",
-        "lada": "Fijo",
-        "localidad": "REGION ARROYO SECO",
-        "municipio": "CABORCA",
-        "numeroExterior": "1353",
-        "numeroInterior": "",
-        "pais": "ESTADOS UNIDOS MEXICANOS",
-        "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM",
-        "rfc": "MAVL621207C95",
-        "telefono": ""
-      },
-      "representacion_federal": {
-        "cve_entidad_federativa": item.entidad,
-        "cve_unidad_administrativa": item.representacion
-      },
-      "entidades_federativas": {
-        "cveEntidad": item.entidad
-      },
-      "lista_paises": item.fechasSeleccionadas
-    };
+    const PAYLOAD = this.diamanteBrutoService.guardarPayloadDatos(item) as Record<string, unknown>;
 
     return new Promise((resolve, reject) => {
       let shouldNavigate = false;
