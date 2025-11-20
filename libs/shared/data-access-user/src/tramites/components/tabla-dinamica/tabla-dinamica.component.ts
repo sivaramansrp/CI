@@ -414,6 +414,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
         this.filasSeleccionadas.splice(IDX, 1);
       }
     }
+    console.log(this.datos);
     this.listaDeFilaSeleccionada.emit(
       this.datos.filter((_, indice) => this.filasSeleccionadas.includes(indice))
     );

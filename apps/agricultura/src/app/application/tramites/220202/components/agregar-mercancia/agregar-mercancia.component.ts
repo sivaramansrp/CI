@@ -137,7 +137,8 @@ export class AgregarMercanciaComponent implements OnDestroy{
               noPartida: VALOR.noPartida || '',
               tipoDeProducto: VALOR.tipoDeProducto || '',
               numeroDeLote: VALOR.numeroDeLote || '',
-              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
+              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
+              detalleVidaSilvestre: VALOR.detalleVidaSilvestre || []
             };
           }
         })
