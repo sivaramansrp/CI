@@ -34,7 +34,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../constents/datos-solicitud.enum';
-import { forkJoin, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DEFAULT_TABLA_ORDENS } from '../models/terceros-fabricante.enum';
 import { Destinatario } from '../models/terceros-relacionados.model';
@@ -378,12 +378,10 @@ private setupEditMode(): void {
           }));
 
         } else {
-            this.getUpdateListData();
           this.aplicarValoresDespuesDeCarga();
         }
       }));
     } else {
-        this.getUpdateListData();
       this.aplicarValoresDespuesDeCarga();
     }
   }, 50);
@@ -393,8 +391,6 @@ private setupEditMode(): void {
  * Patches form values after all required catalogs have been loaded
  */
 private aplicarValoresDespuesDeCarga(): void {
-
-
   setTimeout(() => {
     // País
     let valorPais = this.datoSeleccionado?.[0]?.pais;
@@ -453,6 +449,7 @@ private aplicarValoresDespuesDeCarga(): void {
       );
       valorColonia = COLONIA_ENCONTRADA ? COLONIA_ENCONTRADA.clave : valorColonia;
     }
+
     this.agregarDestinatarioFinal.patchValue({
       tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
       rfc: this.datoSeleccionado?.[0]?.rfc,
@@ -482,10 +479,11 @@ private aplicarValoresDespuesDeCarga(): void {
     if (this.elementosDeshabilitados.includes('pais')) {
       this.agregarDestinatarioFinal.get('pais')?.disable();
     }
+    console.log(this.agregarDestinatarioFinal.getRawValue());
     
     this.forzarDeshabilitarPais();
    
-  }, 200);
+  }, 300);
 }
 /**
  * Sets up the form in add mode (chequeoValidacionAlGuardar === true)
@@ -1549,43 +1547,6 @@ private actualizarEstadoHabilitacionDesplegables(): void {
     this.estaDeshabilitadoDesplegable = true;
   }
 }
-getUpdateListData(): void {
-  if (this.datoSeleccionado && this.datoSeleccionado.length > 0) {
-    const ESTADO_CLAVE = this.datoSeleccionado[0].estadoObj?.clave ?? '';
-    const MUNICIPIO_CLAVE = this.datoSeleccionado[0].municipioObj?.clave ?? '';
-    
-    const REQUESTS = {
-      municipios: this.catalogoServices.municipiosDelegacionesCatalogo(this.tramiteID, ESTADO_CLAVE),
-      localidades: this.catalogoServices.localidadesCatalogo(this.tramiteID, MUNICIPIO_CLAVE),
-      colonias: this.catalogoServices.coloniasCatalogo(this.tramiteID, ESTADO_CLAVE),
-      codigosPostales: this.catalogoServices.codigoCatalogo(this.tramiteID, MUNICIPIO_CLAVE)
-    };
-
-    this.subscription.add(
-      forkJoin(REQUESTS).pipe(
-        takeUntil(this.unsubscribe$)
-      ).subscribe({
-        next: (responses) => {
-          this.municipiosDatos = responses.municipios.datos as Catalogo[];
-          this.localidadesDatos = responses.localidades.datos as Catalogo[];
-          this.coloniasDatos = responses.colonias.datos as Catalogo[];
-          this.codigosPostalesDatos = responses.codigosPostales.datos as Catalogo[];
-        },
-        error: (error) => {
-          console.error('Error loading catalog data:', error);
-        }
-      })
-    );
-  } else {
-    this.municipiosDatos = [];
-    this.localidadesDatos = [];
-    this.coloniasDatos = [];
-    this.codigosPostalesDatos = [];
-  }
-}
-
-      
-  
  
 
 }

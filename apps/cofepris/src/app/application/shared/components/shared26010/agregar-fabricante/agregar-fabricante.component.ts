@@ -436,10 +436,16 @@ ngOnChanges(currentValue: SimpleChanges): void {
     this.cargarCatalogosParaModificacion().then(() => {
       setTimeout(() => {
         if (
-          this.datoSeleccionado?.[0]?.tipoPersona
+          this.datoSeleccionado?.[0]?.tipoPersona && this.idProcedimiento !== 260103
         ) {
           this.agregarFabricanteForm?.enable();
         }
+        else if(this.idProcedimiento === 260103){
+          this.agregarFabricanteForm?.disable();
+          this.agregarFabricanteForm.get('tipoPersona')?.enable();
+          this.agregarFabricanteForm.get('rfc')?.enable();
+        }
+
         
         this.patchFormWithCatalogObjects();
         this.actualizarEstadoDesplegables();
@@ -594,6 +600,11 @@ private patchFormWithCatalogObjects(): void {
     correoElectronico: SELECTEDDATA.correoElectronico,
     coloniaOEquivalente: SELECTEDDATA.coloniaEquivalente,
   });
+  if(this.idProcedimiento === 260103){
+    this.agregarFabricanteForm.disable();
+    this.agregarFabricanteForm.get('tipoPersona')?.enable();
+    this.agregarFabricanteForm.get('rfc')?.enable();
+  }
 }
 
 
@@ -755,7 +766,7 @@ private patchFormWithCatalogObjects(): void {
    * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
    */
 private forzarDeshabilitarPais(): void {
-    if(this.agregarFabricanteForm.get('tipoPersona')?.value){
+    if(this.agregarFabricanteForm.get('tipoPersona')?.value && this.idProcedimiento !== 260103){
   this.agregarFabricanteForm.patchValue({pais: 'MEX'});
     }
     else{
@@ -1305,6 +1316,13 @@ changeTipoPersona(): void {
           this.agregarFabricanteForm.get(controlName)?.enable();
         }
       });
+
+      if(this.idProcedimiento === 260103){
+        this.agregarFabricanteForm.disable();
+        this.agregarFabricanteForm.get('tipoPersona')?.enable();
+        this.agregarFabricanteForm.get('rfc')?.enable();
+        
+      }
       if (this.chequeoValidacionAlGuardar) {
         this.agregarFabricanteForm.get('tipoPersona')?.disable();
       }
@@ -1350,6 +1368,12 @@ changeTipoPersona(): void {
           telefono: API_RESPONSE.datos[0].telefono,
           correoElectronico: API_RESPONSE.datos[0].correoElectronico,
         })
+        if(this.idProcedimiento === 260103){
+          this.agregarFabricanteForm.disable();
+          this.agregarFabricanteForm.get('tipoPersona')?.enable();
+          this.agregarFabricanteForm.get('rfc')?.enable();
+
+        }
           // form.patchValue(DATOS);
         }
       });
