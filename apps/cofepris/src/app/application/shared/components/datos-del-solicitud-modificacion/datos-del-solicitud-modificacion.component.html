@@ -52,17 +52,23 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <div>
-            <label for="observaciones"> Justificación*:</label>
+            <label for="observaciones"> Justificación<span
+              [ngClass]="
+            {
+              'text-danger': (domicilioEstablecimiento.get('observaciones')?.errors?.['pattern'] || domicilioEstablecimiento.get('observaciones')?.errors?.['required'])&& domicilioEstablecimiento.get('observaciones')?.touched
+            }"
+              >*</span
+            >:</label>
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
-              placeholder="Justificación" maxlength="2000" (change)="
+               maxlength="2000" (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'observaciones')
               "></textarea>
           </div>
           <div *ngIf="domicilioEstablecimiento.get('observaciones')?.touched">
             <div *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['required']" class="text-danger">
-              La justificación es obligatoria.
+              Este campo es obligatorio.
             </div>
             <div *ngIf="domicilioEstablecimiento.get('observaciones')?.errors?.['maxlength']" class="text-danger">
               La justificación no debe exceder los 2000 caracteres.
@@ -181,6 +187,7 @@
               >*</span
             >:</label>
             <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
+            maxlength="100"
               formControlName="establecimientoRazonSocial" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
@@ -210,8 +217,9 @@
               'text-danger': (domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email'] || domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.touched
             }"
               >*</span
-            >:<span class="bi bi-question-circle-fill" title="Correo electrónico"
-                data-bs-toggle="tooltip"></span></label>
+            >:<span class="p-2" tooltip="ejemplo@dominio.com" placement="top">
+              <i class="bi bi-question-circle-fill"></i>
+            </span></label>
             <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
               formControlName="establecimientoCorreoElectronico" (change)="
                 enCambioDeControl(
@@ -350,15 +358,23 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="localidad">Localidad:</label>
-            <input class="form-control" type="text" id="localidad" formControlName="localidad" (change)="
+            <input class="form-control" type="text" id="localidad" formControlName="localidad" 
+            maxlength="120"
+            (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'localidad')
               " />
             <div *ngIf="domicilioEstablecimiento.get('localidad')?.touched && 
                    domicilioEstablecimiento.get('localidad')?.errors?.['required']" class="text-danger">
               La localidad es obligatoria.
             </div>
+            <div *ngIf="domicilioEstablecimiento.get('localidad')?.touched && 
+                   domicilioEstablecimiento.get('localidad')?.errors?.['pattern']" class="mensaje-error">
+                   El valor capturado no es válido.
+
+          </div>
           </div>
         </div>
+        
 
         <div class="col-md-4">
           <div class="form-group">
@@ -368,6 +384,7 @@
             <input
               class="form-control"
               type="text"
+              maxlength="120"
               id="establishomentoColoniasId"
               formControlName="establishomentoColonias"
               (change)="
@@ -393,10 +410,13 @@
               'text-danger': (domicilioEstablecimiento.get('calle')?.errors?.['required'])&& domicilioEstablecimiento.get('calle')?.touched
             }"
               >*</span
-            >:
-              <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
+            >:<span class="p-2" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top">
+              <i class="bi bi-question-circle-fill"></i>
+            </span>
+             </label>
             <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
               (change)="enCambioDeControl('domicilioEstablecimiento', 'calle')"
+              maxlength="100"
               [ngClass]="{
                 'is-invalid':
                 domicilioEstablecimiento.get('calle')?.invalid &&
@@ -422,8 +442,8 @@
             <div *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['maxlength']" class="text-danger">
               La lada no debe tener más de 5 dígitos.
             </div>
-            <div *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['pattern']" class="text-danger">
-              La lada debe contener solo números.
+            <div *ngIf="domicilioEstablecimiento.get('lada')?.errors?.['pattern']" class="mensaje-error">
+              Por favor, escribe un número entero válido.
             </div>
           </div>
         </div>
@@ -499,7 +519,7 @@
           [id]="'avisoCheckbox'"
           [required]="true"
           formControlName="avisoCheckbox"
-          [isDisabled]="true"
+          [isDisabled]="false"
           (change)="
             toggleNoLicenciaSanitaria($event);
             enCambioDeControl('solicitudEstablecimientoForm', 'avisoCheckbox')
@@ -507,10 +527,10 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
-            <span class="bi bi-question-circle-fill" title="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente"
-              data-bs-toggle="tooltip"></span></label>
-          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="20"
+          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:<span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top">
+                <i class="bi bi-question-circle-fill"></i>
+              </span></label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="50"
             formControlName="noLicenciaSanitaria" (change)="
               enCambioDeControl(
                 'solicitudEstablecimientoForm',
@@ -581,6 +601,11 @@
     <div class="row mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         [datos]="mercanciasTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+        <div class="d-flex justify-content-center mt-3" [class.disabled]="esFormularioSoloLectura"
+        [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+        [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'">
+        <app-table-pagination [showCurrentPage]="true"> </app-table-pagination>
+      </div>
       
         <div class="container text-end mt-5">
         <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
@@ -646,7 +671,14 @@
       <div class="modal-header">
         <h4 class="modal-title">Datos mercancía</h4>
       </div>
+
       <div class="modal-body modal-height">
+        @if(mensajeDeError){
+          <ng-alert
+            [CONTENIDO]="mensajeDeError"
+            [CUSTOMECLASS]="'alert-danger text-center'"
+          ></ng-alert>
+        }
         <form [formGroup]="formMercancias">
           <div class="form-group pt-3">
             <app-catalogo-select
@@ -656,10 +688,9 @@
               [required]="true"
               name="clasificacion"
                [placeholder]="'Selecciona una opción'"
+               [markTouched]="formMercancias.get('clasificacion')?.touched ?? false"
             ></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('clasificacion')">
-              {{ getErrorMessage('clasificacion') }}
-            </div>
+           
           </div>
           <div class="form-group pt-1">
             <app-catalogo-select
@@ -669,19 +700,27 @@
               [required]="true"
               name="especificarClasificacionProducto"
                [placeholder]="'Selecciona una opción'"
+               [markTouched]="formMercancias.get('especificarClasificacionProducto')?.touched ?? false"
             ></app-catalogo-select>
-            <div
-              class="text-danger"
-              *ngIf="getErrorMessage('especificarClasificacionProducto')"
-            >
-              {{ getErrorMessage('especificarClasificacionProducto') }}
-            </div>
+            
           </div>
           <div class="form-group">
-            <label for="denominacionEspecifica">Denominación específica del producto*:</label>
-            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica"
-              class="form-control" />
-            <div class="text-danger" *ngIf="getErrorMessage('denominacionEspecifica')">
+            <label for="denominacionEspecifica">Denominación específica del producto<span
+              [ngClass]="
+            {
+              'text-danger': formMercancias.get('denominacionEspecifica')?.errors?.['required'] && formMercancias.get('denominacionEspecifica')?.touched
+            }"
+              >*</span
+            >:</label>
+            <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" maxlength="1000"
+              class="form-control" 
+              [ngClass]="{
+                'is-invalid':
+                formMercancias.get('denominacionEspecifica')?.invalid &&
+                formMercancias.get('denominacionEspecifica')?.touched
+              }"
+              />
+            <div class="mensaje-error" *ngIf="getErrorMessage('denominacionEspecifica')">
               {{ getErrorMessage('denominacionEspecifica') }}
             </div>
           </div>
@@ -718,21 +757,30 @@
            
           <div class="form-group">
             <label for="denominacionComun">
-              Denominación o nombre científico*:
-              <span
-              class="bi bi-question-circle-fill"
-              title="Denominación común internacional o genérica"
-              data-bs-toggle="tooltip"
-              ></span>
+              Denominación o nombre científico<span
+              [ngClass]="
+            {
+              'text-danger': formMercancias.get('denominacionComun')?.errors?.['required'] && formMercancias.get('denominacionComun')?.touched
+            }"
+              >*</span
+            >:<span class="p-2" tooltip="Denominación común internacional o genérica" placement="top">
+                <i class="bi bi-question-circle-fill"></i>
+              </span>
             </label>
             <input
               type="text"
+              maxlength="120"
               id="denominacionComun"
               formControlName="denominacionComun"
               class="form-control"
+              [ngClass]="{
+                'is-invalid':
+                formMercancias.get('denominacionComun')?.invalid &&
+                formMercancias.get('denominacionComun')?.touched
+              }"
             />
             <div
-              class="text-danger"
+              class="mensaje-error"
               *ngIf="getErrorMessage('denominacionComun')"
             >
               {{ getErrorMessage('denominacionComun') }}
@@ -746,17 +794,16 @@
               [required]="true"
               name="tipoDeProducto"
                [placeholder]="'Selecciona una opción'"
+               [markTouched]="formMercancias.get('tipoDeProducto')?.touched ?? false"
             ></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('tipoDeProducto')">
-              {{ getErrorMessage('tipoDeProducto') }}
-            </div>
+           
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="estadoFormaFarmaceutica"
-              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('estadoFormaFarmaceutica')">
-              {{ getErrorMessage('estadoFormaFarmaceutica') }}
-            </div>
+              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"
+                [placeholder]="'Selecciona una opción'"   
+                 [markTouched]="formMercancias.get('estadoFormaFarmaceutica')?.touched ?? false"></app-catalogo-select>
+           
           </div>
           <div class="form-group mt-4">
             <app-catalogo-select
@@ -766,10 +813,9 @@
               [required]="true"
               name="estadoFisico"
                [placeholder]="'Selecciona una opción'"
+               [markTouched]="formMercancias.get('estadoFisico')?.touched ?? false"
             ></app-catalogo-select>
-            <div class="text-danger" *ngIf="getErrorMessage('estadoFisico')">
-              {{ getErrorMessage('estadoFisico') }}
-            </div>
+           
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria<span
@@ -778,12 +824,9 @@
               'text-danger': formMercancias.get('fraccionArancelaria')?.errors?.['required'] && formMercancias.get('fraccionArancelaria')?.touched
             }"
               >*</span
-            >:
-              <span
-              class="bi bi-question-circle-fill"
-              title="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
-              data-bs-toggle="tooltip"
-              ></span>
+            >:<span class="p-2" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado" placement="top">
+                <i class="bi bi-question-circle-fill"></i>
+              </span>
             </label>
             <input
               type="text"
@@ -791,6 +834,11 @@
               formControlName="fraccionArancelaria"
               class="form-control"
               maxlength="8"
+              [ngClass]="{
+                'is-invalid':
+                formMercancias.get('fraccionArancelaria')?.invalid &&
+                formMercancias.get('fraccionArancelaria')?.touched
+              }"
             />
             <div class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
               <ng-container *ngIf="formMercancias.get('fraccionArancelaria')?.errors as errors">
@@ -808,16 +856,27 @@
           </div>
           <div class="form-group">
             <label for="descripcionFraccion"
-              >Descripción de la fracción arancelaria*:</label
+              >Descripción de la fracción arancelaria<span
+              [ngClass]="
+            {
+              'text-danger': formMercancias.get('descripcionFraccion')?.errors?.['required'] && formMercancias.get('descripcionFraccion')?.touched
+            }"
+              >*</span
+            >:</label
             >
             <input
               type="text"
               id="descripcionFraccion"
               formControlName="descripcionFraccion"
               class="form-control"
+              [ngClass]="{
+                'is-invalid':
+                formMercancias.get('descripcionFraccion')?.invalid &&
+                formMercancias.get('descripcionFraccion')?.touched
+              }"
             />
             <div
-              class="text-danger"
+              class="mensaje-error"
               *ngIf="getErrorMessage('descripcionFraccion')"
             >
               {{ getErrorMessage('descripcionFraccion') }}
@@ -826,29 +885,54 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMT">Cantidad UMT*:</label>
-                <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" />
-                <div class="text-danger" *ngIf="getErrorMessage('cantidadUMT')">
+                <label for="cantidadUMT">Cantidad UMT<span
+                  [ngClass]="
+                {
+                  'text-danger': formMercancias.get('cantidadUMT')?.errors?.['required'] && formMercancias.get('cantidadUMT')?.touched
+                }"
+                  >*</span
+                >:<span class="p-2" tooltip="Unidad de medida de la tarifa" placement="top">
+                    <i class="bi bi-question-circle-fill"></i>
+                  </span>
+                </label>
+                <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" 
+                [ngClass]="{
+                  'is-invalid':
+                  formMercancias.get('cantidadUMT')?.invalid &&
+                  formMercancias.get('cantidadUMT')?.touched
+                }"/>
+                <div class="mensaje-error" *ngIf="getErrorMessage('cantidadUMT')">
                   {{ getErrorMessage('cantidadUMT') }}
                 </div>
+                <div *ngIf="formMercancias.get('cantidadUMT')?.errors?.['pattern'] && !formMercancias.get('cantidadUMT')?.errors?.['required']" class="mensaje-error">
+                  Por favor, escribe un número entero válido
+                  </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="UMT">UMT*:
-                  <span
-                   class="bi bi-question-circle-fill"
-                   title="Unidad de medida de la tarifa"
-                  data-bs-toggle="tooltip"
-                  ></span>
+                <label for="UMT">UMT<span
+                  [ngClass]="
+                {
+                  'text-danger': formMercancias.get('UMT')?.errors?.['required'] && formMercancias.get('UMT')?.touched
+                }"
+                  >*</span
+                >:<span class="p-2" tooltip="Unidad de medida de la tarifa" placement="top">
+                    <i class="bi bi-question-circle-fill"></i>
+                  </span>
                 </label>
                 <input
                   type="text"
                   id="UMT"
                   formControlName="UMT"
                   class="form-control"
+                  [ngClass]="{
+                    'is-invalid':
+                    formMercancias.get('UMT')?.invalid &&
+                    formMercancias.get('UMT')?.touched
+                  }"
                 />
-                <div class="text-danger" *ngIf="getErrorMessage('UMT')">
+                <div class="mensaje-error" *ngIf="getErrorMessage('UMT')">
                   {{ getErrorMessage('UMT') }}
                 </div>
               </div>
@@ -857,11 +941,31 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:</label>
-                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" />
-                <div class="text-danger" *ngIf="getErrorMessage('cantidadUMC')">
+                <label for="cantidadUMC">Cantidad UMC<span
+                  [ngClass]="
+                {
+                  'text-danger': formMercancias.get('cantidadUMC')?.errors?.['required'] && formMercancias.get('cantidadUMC')?.touched
+                }"
+                  >*</span
+                >:</label>
+                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" maxlength="20"
+                [ngClass]="{
+                  'is-invalid':
+                  formMercancias.get('cantidadUMC')?.invalid &&
+                  formMercancias.get('cantidadUMC')?.touched
+                }" />
+                <div class="mensaje-error" *ngIf="getErrorMessage('cantidadUMC')">
                   {{ getErrorMessage('cantidadUMC') }}
                 </div>
+                <div *ngIf="formMercancias.get('cantidadUMC')?.errors?.['pattern'] && !formMercancias.get('cantidadUMC')?.errors?.['required']" class="mensaje-error">
+                  Por favor, escribe un número entero válido
+                  </div>
+                  <div *ngIf="formMercancias.get('cantidadUMC')?.errors?.['formatoInvalido'] &&
+            !formMercancias.get('cantidadUMC')?.errors?.['required'] &&
+            formMercancias.get('cantidadUMC')?.touched"
+     class="mensaje-error">
+  Este campo permite doce números enteros y hasta diez decimales
+</div>
               </div>
             </div>
             <div class="col-md-6">
@@ -875,20 +979,36 @@
                   [tooltipQuestionCircle]="true"
                    [placeholder]="'Selecciona una opción'"
                   tooltipQuestionCircleText = "Unidad de medida de comercialización"
+                  [markTouched]="formMercancias.get('UMC')?.touched ?? false"
                 ></app-catalogo-select>
-                <div class="text-danger" *ngIf="getErrorMessage('UMC')">
-                  {{ getErrorMessage('UMC') }}
-                </div>
+              
               </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="presentacion">Presentación farmacéutica o tipo de envase*:</label>
-            <input type="text" id="presentacion" formControlName="presentacion" class="form-control" />
-            <div class="text-danger" *ngIf="getErrorMessage('presentacion')">
+          <div class="row">
+            <div class="col-md-10">
+            <label for="presentacion">Presentación farmacéutica o tipo de envase<span
+              [ngClass]="
+            {
+              'text-danger': formMercancias.get('presentacion')?.errors?.['required'] && formMercancias.get('presentacion')?.touched
+            }"
+              >*</span
+            >:</label>
+            <textarea cols="70" rows="5"  class="form-control"
+              id="presentacion" 
+            formControlName="presentacion"
+            [ngClass]="{
+              'is-invalid':
+              formMercancias.get('presentacion')?.invalid &&
+              formMercancias.get('presentacion')?.touched
+            }" > </textarea> 
+            <div class="mensaje-error"*ngIf="getErrorMessage('presentacion')">
               {{ getErrorMessage('presentacion') }}
             </div>
+            <div class="mensaje-error" *ngIf="formMercancias.controls['presentacion'].errors?.['maxlength'] && formMercancias.controls['presentacion'].touched">
+              Por favor, no escribas más de 250 caracteres.
+            </div>
+          </div>
           </div>
           @if (mostrarNumeroYFecha) {
             <div class="row">
