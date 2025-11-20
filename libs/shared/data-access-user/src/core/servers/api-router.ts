@@ -1279,3 +1279,13 @@ export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): st
  * @returns {string} Endpoint completo para consultar fracciones arancelarias con autocompletado.
  */
 export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;
+
+/**
+ * @description Endpoint de catálogo de estado de unidades administrativas.
+ */
+export const API_ESTADO_UNIDADES_ADMINISTRATIVAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/estado/dependencia/unidades-administrativas/${ID}`;
+
+/**
+ * @description Endpoint de catálogo de representación federal vecina.
+ */
+export const CATALOGO_REPRESENTACION_FEDERAL_VECINA = (TRAMITE: string, CLAVEESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/vecina/${CLAVEESTADO}`;

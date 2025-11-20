@@ -76,6 +76,8 @@ import {
   API_REPRESENTACION_FEDERAL_PARAM,
   API_UNIDADES_MEDIDAS_TARIFARIAS,
   API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE,
+  API_ESTADO_UNIDADES_ADMINISTRATIVAS,
+  CATALOGO_REPRESENTACION_FEDERAL_VECINA,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -1220,6 +1222,28 @@ asignacionCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+/**
+ * @description Obtiene el catálogo de estados de unidades administrativas.
+ * @param tramite Trámite a consultar.
+ * @param id Identificador relacionado.
+ * @returns Observable con la lista de catálogo.
+ */
+catalogoEstadoUnidadesAdministrativas(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_ESTADO_UNIDADES_ADMINISTRATIVAS(tramite, id)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * @description Obtiene el catálogo de representación federal vecina.
+ * @param tramite Trámite a consultar.
+ * @param claveEstado Clave del estado relacionado.
+ * @returns Observable con la lista de catálogo.
+ */
+catalogoRepresentacionFederalVecina(tramite: string, claveEstado: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL_VECINA(tramite, claveEstado)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }
 
 
