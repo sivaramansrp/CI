@@ -78,3 +78,13 @@ export const ID_PROCEDIMIENTO : number = 130109;
  */
 export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string): string =>
   `<p>La solicitud ha quedado registrada con el número temporal ${numeroSolicitud ?? ''}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+/**
+ * Contains the error message displayed when form validation fails.
+ */
+export const FORM_ERROR_ALERT = `<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+     <b>¡Error de registro!</b> Faltan campos por capturar.
+    </div>
+  </div>
+</div>`;

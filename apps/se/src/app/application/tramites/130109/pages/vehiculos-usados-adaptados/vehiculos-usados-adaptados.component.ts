@@ -1,6 +1,6 @@
 import { AVISO,DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
-import { MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/pasos.enum';
+import { FORM_ERROR_ALERT, MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/pasos.enum';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite130109State, Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
 import { AccionBoton } from '../../enums/accion-botton.enum';
@@ -87,14 +87,7 @@ export class VehiculosUsadosAdaptadosComponent implements OnDestroy {
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
    */
-  public formErrorAlert = `<div class="d-flex justify-content-center text-center">
-  <div>
-    <div class="col-md-12">
-     <b>¡Error de registro!</b> Faltan campos por capturar.
-    </div>
-  </div>
-</div>
-`
+  public formErrorAlert = FORM_ERROR_ALERT;
 
   /**
      * Folio temporal de la solicitud.
