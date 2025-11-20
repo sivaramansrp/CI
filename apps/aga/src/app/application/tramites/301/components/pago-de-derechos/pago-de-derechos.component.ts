@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, GENERAR_LINEA_CAPTURA_URL, REGEX_LINEA_CAPTURA, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, GENERAR_LINEA_CAPTURA_URL, MSG_ALERTA_ELIMINAR_ELEMENTO, MSG_SELECCIONA_REGISTRO, Notificacion, NotificacionesComponent, REGEX_LINEA_CAPTURA, TEXTO_ACEPTAR, TEXTO_CANCELAR, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +15,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PAGO_DE_DERECHOS_TABLA } from '../../constantes/301.enum';
 import { PagoDeDerechosTabla } from '../../models/301.models';
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -34,7 +35,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, NotificacionesComponent],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -104,6 +105,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Esta constante apunta al endpoint definido por GENERAR_LINEA_CAPTURA_URL.
    */
   public generarLineaCapturaURL: string = GENERAR_LINEA_CAPTURA_URL;
+
+  /**
+   * Objeto que almacena la notificación actual que se mostrará al usuario.
+   * Puede ser de tipo alerta, confirmación, etc., o null si no hay notificación activa.
+   */
+  public nuevaNotificacion!: Notificacion | null;
 
   /**
    * Constructor del componente `PagoDeDerechosComponent`.
@@ -299,7 +306,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         lineaDeCaptura: this.lineaControl?.value ?? '',
         monto: this.FormSolicitud.get('pagodederechos.monto')?.value ?? ''
       };
-      this.datosTabla.push(DATOS);
+      this.datosTabla = [...this.datosTabla,DATOS];
       this.tramite301Store.setPagoDerechosTabla('pagoDerechosTabla', this.datosTabla);
       this.limpiar();
     } else {
@@ -321,22 +328,60 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @method eliminar
    * @description
-   * Elimina las filas seleccionadas de la tabla de pago de derechos (`datosTabla`).
-   * Recorre el arreglo de filas seleccionadas y elimina cada una de ellas de la tabla,
-   * actualizando el estado dinámico del trámite en el store después de cada eliminación.
+   * Muestra una notificación de confirmación antes de eliminar las filas seleccionadas de la tabla de pago de derechos (`datosTabla`).
+   * Si no hay filas seleccionadas, muestra una alerta informando al usuario que debe seleccionar al menos un registro.
+   * Si hay filas seleccionadas, muestra una notificación de confirmación para proceder con la eliminación.
    */
   eliminar(): void {
-    if (this.listaSeleccionadas.length) {
-      this.listaSeleccionadas.forEach((ele: PagoDeDerechosTabla) => {
-        const INDICE = this.datosTabla.findIndex((item) => item.lineaDeCaptura === ele.lineaDeCaptura);
-        if (INDICE !== -1) {
-          this.datosTabla.splice(INDICE, 1);
-          this.tramite301Store.setPagoDerechosTabla('pagoDerechosTabla', this.datosTabla);
-        }
-      });
+    if (this.listaSeleccionadas.length === 0) {
+      // Si no hay filas seleccionadas, muestra una alerta informando al usuario.
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
     }
+
+    // Si hay filas seleccionadas, muestra una notificación de confirmación para eliminar.
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ALERTA_ELIMINAR_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_ACEPTAR,
+      txtBtnCancelar: TEXTO_CANCELAR,
+    };
   }
 
+
+  /**
+   * Maneja la confirmación del modal para eliminar filas seleccionadas de la tabla.
+   * Si el usuario confirma la acción (`accion` es true), elimina las filas seleccionadas
+   * de `datosTabla` y actualiza el store correspondiente.
+   *
+   * @param {boolean} accion - Indica si el usuario confirmó la acción de eliminación.
+   */
+  confirmacionModal(accion: boolean): void {
+    if (accion) {
+      if (this.listaSeleccionadas.length) {
+        this.listaSeleccionadas.forEach((ele: PagoDeDerechosTabla) => {
+          const INDICE = this.datosTabla.findIndex((item) => item.lineaDeCaptura === ele.lineaDeCaptura);
+          if (INDICE !== -1) {
+            this.datosTabla.splice(INDICE, 1);
+            this.tramite301Store.setPagoDerechosTabla('pagoDerechosTabla', this.datosTabla);
+          }
+        });
+      }
+    }
+  }
   /**
    * @method listaDeFilaSeleccionada
    * @description

@@ -207,11 +207,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
-      this.informacionDeLaform.get('descripcionFraccion')?.enable();
       const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.fraccionArancelariaOptions, this.informacionDeLaform.get('fraccionArancelaria')?.value);
       this.informacionDeLaform.get('descripcionFraccion')?.setValue(VALOR);
     } else {
-      this.informacionDeLaform.get('descripcionFraccion')?.disable();
       this.informacionDeLaform.get('descripcionFraccion')?.setValue('');
     }
   }
@@ -235,11 +233,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
-      this.informacionDeLaform.get('descripcionNico')?.enable();
       const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.nicoOptions, this.informacionDeLaform.get('nico')?.value);
       this.informacionDeLaform.get('descripcionNico')?.setValue(VALOR);
     } else {
-      this.informacionDeLaform.get('descripcionNico')?.disable();
       this.informacionDeLaform.get('descripcionNico')?.setValue('');
     }
   }
