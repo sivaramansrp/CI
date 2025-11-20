@@ -325,7 +325,7 @@ export const TERCEROS = {
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
-export const TRAMITES_PASO_DATOS = ['5701'];
+export const TRAMITES_CUATRO_PASOS = ['5701'];
 
 export const PASOS_REQUERIMIENTOS = [
   {
@@ -363,12 +363,54 @@ export const PASOS_REQUERIMIENTOS_DATOS = [
   },
   {
     indice: 3,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
     titulo: 'Anexar documentos',
     activo: false,
     completado: false,
   },
   {
     indice: 4,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DOCUMENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
     titulo: 'Firmar promoción',
     activo: false,
     completado: false,
