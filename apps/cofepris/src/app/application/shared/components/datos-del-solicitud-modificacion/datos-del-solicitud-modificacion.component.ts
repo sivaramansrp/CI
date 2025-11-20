@@ -131,6 +131,16 @@ export class DatosDelSolicitudModificacionComponent
  */
   @Input() mostrarScianBotones: boolean = true;
 
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
+
+
 
 
 noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
@@ -823,7 +833,10 @@ modificarMercancias(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC), Validators.maxLength(13)]],
+      establecimientoRFCResponsableSanitario: ['', this.idProcedimiento !== 260917
+        ? [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+        : [Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+    ],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],

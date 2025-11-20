@@ -144,7 +144,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
-              sanitario<span
+              sanitario<span  *ngIf="idProcedimiento !== 260917"
               [ngClass]="
             {
               'text-danger': (domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
