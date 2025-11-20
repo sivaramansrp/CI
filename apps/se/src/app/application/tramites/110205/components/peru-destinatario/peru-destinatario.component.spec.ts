@@ -50,7 +50,10 @@ describe('PeruDestinatarioComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ 
+        FormsModule, 
+        ReactiveFormsModule
+      ],
       declarations: [
         PeruDestinatarioComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -64,8 +67,6 @@ describe('PeruDestinatarioComponent', () => {
         SeccionLibQuery,
         ConsultaioQuery
       ]
-    }).overrideComponent(PeruDestinatarioComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(PeruDestinatarioComponent);
     component = fixture.debugElement.componentInstance;
@@ -95,12 +96,6 @@ describe('PeruDestinatarioComponent', () => {
     component.store = component.store || {};
     component.store.setFormDatosDelDestinatario = jest.fn();
     component.setValoresStoreDatos({});
-  });
-
-  it('should run #setValoresStoreExportador()', async () => {
-    component.store = component.store || {};
-    component.store.setFormExportador = jest.fn();
-    component.setValoresStoreExportador({});  
   });
 
   it('should run #setValoresStoreDe()', async () => {

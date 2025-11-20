@@ -18,13 +18,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Solicitud140103Service {
+  /** Host base para las peticiones HTTP*/
   host: string;
   /** URL base del servidor para servicios backend */
   urlServer = ENVIRONMENT.URL_SERVER;
-
   /** URL base para obtener catálogos JSON auxiliares */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
-
   /**
    * Constructor del servicio que inyecta HttpClient y Tramite140103Store.
    * @param http Cliente HTTP para realizar peticiones REST.

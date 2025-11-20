@@ -50,7 +50,7 @@
                     <button type="button" 
                             class="btn btn-primary" 
                             
-                            (click)="onBuscarClick()">
+                            (click)="obtenerBuscarDatos()">
                         Buscar
                     </button>
                 </div>
@@ -158,7 +158,7 @@
 
         <!-- 6.Descripción-del-cupo -->
         <div class="mt-5">
-            <app-descripcion-cupo [consultaState]="consultaState"></app-descripcion-cupo>
+            <app-descripcion-cupo [consultaState]="consultaState" [formDatos]="asignacionFormDatos"></app-descripcion-cupo>
         </div>
 
         <!-- 7.Distribución-de-saldo -->

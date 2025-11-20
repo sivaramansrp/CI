@@ -25,29 +25,25 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
+  CargaDocumentoComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TercerosComponent,
   TituloComponent,
-  WizardComponent
+  WizardComponent,
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 
 @NgModule({
-  declarations: [
-    AgriculturaComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FitosanitarioRoutingModule,
     SharedModule,
-    WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
     AlertComponent,
@@ -59,10 +55,10 @@ import { TercerospageComponent } from './components/tercerospage/tercerospage.co
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
     PagoDeDerechosComponent,
-    TercerospageComponent
+    TercerospageComponent,
+    CargaDocumentoComponent,
+    PasoFirmaComponent,
   ],
-  providers: [
-    ToastrService
-  ]
+  providers: [ToastrService],
 })
-export class FitosanitarioModule { }
+export class FitosanitarioModule {}

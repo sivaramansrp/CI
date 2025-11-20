@@ -2,7 +2,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModu
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { AlertComponent, CatalogoSelectComponent, CatalogoServices, CrosslistComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_DECIMAL, SOLO_REGEX_NUMEROS, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CAMPOS_CLAVE, DATOS_MERCANCIA_CAMPO, DATOS_MERCANCIA_CLAVE_TABLA, ES_VALIDO_REGISTRO_O_VENCIMIENTO, TIPO_PRODUCTO_ESPECIAL } from '../constents/datos-solicitud.enum';
-import { Catalogo, CrossListLable, MercanciaForm, TablaMercanciaClaveConfig, TablaMercanciasDatos, TablaSeleccion } from '../models/datos-solicitud.model';
+import { Catalogo, CrossListLable, MercanciaForm, TablaMercanciaClaveConfig, TablaMercanciasConfig, TablaMercanciasDatos, TablaSeleccion } from '../models/datos-solicitud.model';
 import { FECHA_DE_CADUCIDAD_MERCANICA, FECHA_DE_CADUCIDAD_PAGO, FECHA_DE_FABRICACIO_PAGO } from '../../../models/terceros-relacionados.model';
 import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -89,11 +89,15 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   @Input() public datoSeleccionado!: TablaMercanciasDatos | undefined;
 
+  @Input() public claveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
+
   /**
    * @event mercanciaSeleccionado
    * Evento emitido cuando el usuario selecciona o guarda una mercancía.
    */
   @Output() mercanciaSeleccionado = new EventEmitter<TablaMercanciasDatos>();
+
+  @Output() claveSeleccionada = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event agregarMercanciaDatos
@@ -739,11 +743,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
    * - `datos`: Arreglo que contiene los datos de configuración de las claves de mercancía.
    */
-  public claveConfig = {
-    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
-    datos: [] as TablaMercanciaClaveConfig[],
-  };
   /**
    * @property {TablaMercanciaClaveConfig[]} scianLista
    * Lista de registros Clave seleccionados.
@@ -763,6 +762,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Objeto con la configuración de la fecha inicial del componente.
    */
   fechaDeCaducidadInput: InputFecha = FECHA_DE_CADUCIDAD_PAGO;
+
+  public selectedClaveDatos: TablaMercanciaClaveConfig[] = [];
 
   /**
    * @method crossListRequirdos
@@ -928,23 +929,16 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     if (!this.claveLista.length) {
       return;
     }
+    if(this.selectedClaveDatos.length > 0){
+      this.mercanciaForm.patchValue({
+        claveDeLos: this.selectedClaveDatos[0].clave,
+        fechaDeFabricacio: this.selectedClaveDatos[0].fabricacion,
+        fechaDeCaducidad: this.selectedClaveDatos[0].caducidad,
+      });
+    }
     const CLAVES_A_ELIMINAR = new Set(
       this.claveLista.map((item) => item.clave)
     );
-    const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
-    const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
-    const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
-    for (let i = 0; i < this.claveConfig.datos.length; i++) {
-      const ITEM = this.claveConfig.datos[i];
-      if (CLAVES_A_ELIMINAR.has(ITEM.clave)) {
-        this.claveConfig.datos[i] = {
-          clave: CLAVE,
-          fabricacion: FABRICACION,
-          caducidad: CADUCIDAD,
-        };
-        break;
-      }
-    }
   }
 
   /**
@@ -971,13 +965,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     const FILA_SELECCIONADA = this.claveConfig.datos.find((item) =>
       CLAVES_A_ELIMINAR.has(item.clave)
     );
-    if (FILA_SELECCIONADA) {
-      this.mercanciaForm.patchValue({
-        claveDeLos: FILA_SELECCIONADA.clave,
-        fechaDeFabricacio: FILA_SELECCIONADA.fabricacion,
-        fechaDeCaducidad: FILA_SELECCIONADA.caducidad,
-      });
-    }
+    this.selectedClaveDatos = FILA_SELECCIONADA ? [FILA_SELECCIONADA] : [];
   }
   /**
    * Agrega una nueva clave a la lista `claveConfig.datos`
@@ -988,19 +976,38 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
     const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
     if (CLAVE && FABRICACION && CADUCIDAD) {
-      this.claveConfig.datos = [
-        ...this.claveConfig.datos,
-        {
-          id: (this.claveConfig.datos.length || 0) + 1,
-          clave: CLAVE,
-          fabricacion: FABRICACION,
-          caducidad: CADUCIDAD,
-        },
-      ];
+      if (this.selectedClaveDatos.length > 0) {
+        // Update existing item matched by id
+        const SELECTEDID = this.selectedClaveDatos[0].id;
+        this.claveConfig.datos = this.claveConfig.datos.map(item =>
+          item.id === SELECTEDID
+        ? {
+            ...item,
+            clave: CLAVE,
+            fabricacion: FABRICACION,
+            caducidad: CADUCIDAD,
+          }
+        : item
+        );
+      } else {
+        // Add new item
+        this.claveConfig.datos = [
+          ...this.claveConfig.datos,
+          {
+        id: (this.claveConfig.datos.length || 0) + 1,
+        clave: CLAVE,
+        fabricacion: FABRICACION,
+        caducidad: CADUCIDAD,
+          },
+        ];
+      }
       this.mercanciaForm.get('claveDeLos')?.reset();
       this.mercanciaForm.get('fechaDeFabricacio')?.reset();
       this.mercanciaForm.get('fechaDeCaducidad')?.reset();
     }
+    this.mercanciaForm.get('clavesLote')?.setValue(this.claveConfig.datos);
+    
+    this.claveSeleccionada.emit(this.claveConfig.datos);
   }
 
   /**
@@ -1011,12 +1018,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     if (!this.claveLista.length) {
       return;
     }
-    const CLAVES_A_ELIMINAR = new Set(
-      this.claveLista.map((item) => item.clave)
-    );
-    this.claveConfig.datos = this.claveConfig.datos.filter(
-      (item) => !CLAVES_A_ELIMINAR.has(item.clave)
-    );
+    if(this.selectedClaveDatos.length > 0){
+      const SELECTEDID = this.selectedClaveDatos[0].id;
+      this.claveConfig.datos = this.claveConfig.datos.filter(item => item.id !== SELECTEDID);
+      this.selectedClaveDatos = [];
+    }
   }
 
   /**
@@ -1093,39 +1099,39 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     fraccionArancelaria: [
       this.obtenerValor('fraccionArancelaria'),
       [
-        Validators.required,
-        Validators.maxLength(8),
-        Validators.pattern(SOLO_REGEX_NUMEROS),
+      Validators.required,
+      Validators.maxLength(8),
+      Validators.pattern(SOLO_REGEX_NUMEROS),
       ],
     ],
     descripcionFraccion: [
       {
         value: this.obtenerValor('descripcionFraccion'),
-        disabled: this.elementosDeshabilitados.includes('descripcionFraccion'),
+      disabled: this.elementosDeshabilitados.includes('descripcionFraccion'),
       },
       [Validators.required],
     ],
     cantidadUmtValor: [
       this.obtenerValor('cantidadUmtValor'),
       [
-        Validators.required,
-        Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroConDecimalesValidator()
+      Validators.required,
+      Validators.pattern(REGEX_DECIMAL),
+      DatosMercanciaComponent.numeroConDecimalesValidator()
       ],
     ],
     cantidadUmt: [
       {
         value: this.obtenerValor('cantidadUmt'),
-        disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
+      disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
       },
       [Validators.required],
     ],
     cantidadUmcValor: [
       this.obtenerValor('cantidadUmcValor'),
       [
-        Validators.required,
-        Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroUMCDecimalesValidator(),
+      Validators.required,
+      Validators.pattern(REGEX_DECIMAL),
+      DatosMercanciaComponent.numeroUMCDecimalesValidator(),
 
       ],
     ],
@@ -1154,9 +1160,17 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       this.obtenerValor('especifiqueForma')
     ],
     especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
-    id: [this.obtenerValor('id')]
+    id: [this.obtenerValor('id')],
+    clavesLote: [
+      {
+        value: this.obtenerValor('clavesLote'),
+        disabled: false,
+      },
+    ],
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+   const CLAVEDATA = this.obtenerValor('clavesLote');
+   this.claveConfig.datos = MERCANCIA_FORM_DETALLE.clavesLote || [];
   setTimeout(()=>{
  
       MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
@@ -1273,7 +1287,13 @@ public getIdFromDescripcion(
  */
 public obtenerValor(
   field: keyof TablaMercanciasDatos | keyof MercanciaForm
-): string | number | undefined | string[] | Catalogo | undefined {
+): string | number | undefined | string[] | Catalogo | undefined | 
+[{
+  id: number;
+  clave: string;
+  fabricacion: string | null;
+  caducidad: string | null;
+}] {
   return (
     (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
     (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
@@ -1490,6 +1510,7 @@ public convertToStringArray(value: unknown): string[] {
     
     // Reset form for next use
     this.mercanciaForm.reset();
+    this.claveConfig.datos = [];
     
     // Close the modal
     this.cerrarModal.emit();
@@ -1524,8 +1545,15 @@ actualizarValidadoresClave(): void {
    * @param {string} id - Identificador para filtrar los objetos del catálogo.
    * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
    */
-  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
-    return catalogo.filter(item => item.clave === id);
+  /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[] | undefined} catalogo - Arreglo de objetos de catálogo (puede ser undefined).
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[]} - Arreglo de objetos de catálogo que coinciden con el identificador.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[] | undefined, id: string): Catalogo[] {
+    return (catalogo ?? []).filter(item => item.clave === id);
   }
 
   /**
@@ -1673,7 +1701,7 @@ actualizarValidadoresClave(): void {
    */
   fechaDeCaducidadValor(valor: string): void {
     this.mercanciaForm.patchValue({
-      fechaCaducidad: valor,
+      fechaDeCaducidad: valor,
     });
   }
 

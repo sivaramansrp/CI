@@ -1,6 +1,6 @@
 
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_CURP, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import{ConsultaioQuery} from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Componente para gestionar el pago de derechos en el trámite.
@@ -26,7 +27,7 @@ import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramit
   templateUrl: './pago-de-derecho.component.html',
   styleUrls: ['./pago-de-derecho.component.scss'],
 })
-export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+export class PagoDeDerechoComponent implements OnInit, OnDestroy,OnChanges {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
   pagoDeDerechosForm!: FormGroup;
 
@@ -53,6 +54,14 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  
+    /**
+     * Indica si se ha activado el evento de continuar.
+     * Este valor se utiliza para controlar el flujo de la solicitud
+     * dependiendo de si el usuario ha decidido continuar con el proceso.
+     */
+     @Input() isContinuarTriggered: boolean = false;
   /**
    * Constructor del componente.
    * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
@@ -95,6 +104,17 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+  
+ /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+     this.pagoDeDerechosForm.get('pagoDeDerechos')?.markAllAsTouched();
+    }
+  }
+
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -105,6 +125,28 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
     }
+  }
+
+   /**
+   * Validador estático que verifica si la fecha ingresada es futura.
+   * @returns ValidatorFn
+   */
+  static validadorDeFechaFutura(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) { return null; }
+      // Parse DD/MM/YYYY format
+      const parts = control.value.split('/');
+      if (parts.length !== 3) return null;
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // JS months are 0-based
+      const year = parseInt(parts[2], 10);
+      const SELECTED_DATE = new Date(year, month, day);
+      if (isNaN(SELECTED_DATE.getTime())) return null;
+      const TODAY = new Date();
+      SELECTED_DATE.setHours(0, 0, 0, 0);
+      TODAY.setHours(0, 0, 0, 0);
+      return SELECTED_DATE > TODAY ? { futureDate: true } : null;
+    };
   }
 
   /**
@@ -175,23 +217,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         ],
         llavedepago: [
           { value: this.pagoDeDerechosState?.llavedepago, disabled: this.esFormularioSoloLectura },
-          [Validators.pattern(REGEX_REEMPLAZAR)],
+          [Validators.required, Validators.maxLength(18), Validators.pattern(REGEX_CURP)],
         ],
         fechadepago: [
           { value: this.pagoDeDerechosState?.fechadepago, disabled: this.esFormularioSoloLectura },
-          [Validators.required],
+          [Validators.required, PagoDeDerechoComponent.validadorDeFechaFutura()],
         ],
         importedepago: [
           { value: this.pagoDeDerechosState?.importedepago, disabled: this.esFormularioSoloLectura },
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.pattern(REGEX_SOLO_DIGITOS)
+          ],
         ],
       }),
     });
   }
   cambioFechaPago(nuevo_fechadepago: string): void {
-    this.pagoDeDerechosForm.patchValue({
-      fechadepago: nuevo_fechadepago,
-    });
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(nuevo_fechadepago);
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsTouched();
     this.setValoresStore(this.pagoDeDerechosForm, 'fechadepago', 'setFechadePago');
   }
 

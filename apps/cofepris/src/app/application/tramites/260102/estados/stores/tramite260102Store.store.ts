@@ -1,5 +1,5 @@
+import { DatosSolicitudFormState, TablaMercanciaClaveConfig } from '../../../../shared/models/datos-solicitud.model';
 import { PRODUCTO_TABLA_DATA, TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
-import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
@@ -10,7 +10,7 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
+import { TablaMercanciasDatos } from '../../../../shared/components/shared26010/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
@@ -22,6 +22,10 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * configuraciones de tablas y el estado del pago de derechos.
  */
 export interface Tramite260102State {
+  /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
   /**
    * @property destinatarioFinalTablaDatos
    * @description Lista de destinatarios finales registrados en la tabla.
@@ -88,6 +92,8 @@ export interface Tramite260102State {
    * Utilizado para listar productos o bienes relacionados con el trámite.
    */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
 
   /**
    * @property seleccionadoopcionDatos
@@ -166,6 +172,7 @@ export interface Tramite260102State {
  */
 export function createInitialState(): Tramite260102State {
   return {
+  idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -222,7 +229,8 @@ export function createInitialState(): Tramite260102State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
+    tablaMercanciaClaveConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -455,6 +463,15 @@ export class Tramite260102Store extends Store<Tramite260102State> {
     }));
   }
 
+  public updateTablaMercanciaClaveConfigDatos(
+    tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tablaMercanciaClaveConfigDatos,
+    }));
+  }
+
   /**
    * @function updatePagoDerechos
    * @description Actualiza el estado del formulario de pago de derechos.
@@ -522,6 +539,13 @@ export class Tramite260102Store extends Store<Tramite260102State> {
     this.update((state) => ({
       ...state,
       seleccionadoTablaFacturadorDatos: nuevoTablaFacturadorDatos,
+    }));
+  }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
     }));
   }
 

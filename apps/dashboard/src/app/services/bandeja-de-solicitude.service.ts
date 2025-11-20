@@ -1,9 +1,10 @@
 
-import { API_GET_BANDEJATAREA, ENVIRONMENT, JSONResponse } from '@libs/shared/data-access-user/src';
+import { API_GET_BANDEJATAREA, API_GET_BANDEJA_SOLICITUDES, ENVIRONMENT, JSONResponse } from '@libs/shared/data-access-user/src';
 import { BandejaDeTareasPendientes, BandejaTareasPendientesBody, ResponseTable, RespuestaDatos } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 import { Observable, catchError, map, retry, take, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SolicitudesPendientesRequest } from '@libs/shared/data-access-user/src/core/models/shared/lib-bandeja.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,11 +27,10 @@ export class BandejaDeSolicitudeService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getSolicitudeTablaDatos(): Observable<JSONResponse> {
+  public getSolicitudeTablaDatos(bodyRQ: SolicitudesPendientesRequest): Observable<JSONResponse> {
+    const ENDPOINT = `${this.host}${API_GET_BANDEJA_SOLICITUDES}`;
     return this.http
-      .get<JSONResponse>(
-        'assets/json/bandeja-de-solicitude/bandeja-solicitude-tabla.json'
-      )
+      .post<JSONResponse>(ENDPOINT, bodyRQ)
       .pipe(
         catchError((error) => {
           return throwError(() => error);

@@ -222,7 +222,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     this.destinatarioForm.get('municipio')?.patchValue('');
     this.destinatarioForm.get('colonia')?.patchValue('');
     this.tercerosrelacionadosService
-      .obtieneCatalogoEntidadesFederativasGeneral(220202)
+      .obtieneCatalogoEntidadesFederativasGeneral(220202, 'MEX')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.estadoCatalog = data.datos ?? [];

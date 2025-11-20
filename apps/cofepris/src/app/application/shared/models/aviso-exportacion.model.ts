@@ -104,13 +104,13 @@ export const NICO_TABLA = [
    * @description
    * Columna que muestra el nombre, denominación o razón social del titular.
    */
-  { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel): string => item.nombre, orden: 1 },
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: PermisoModel): string => item.nombre, orden: 1 },
 
   /**
    * @description
    * Columna que muestra el Registro Federal de Contribuyentes (RFC) del titular.
    */
-  { encabezado: 'RFC', clave: (item: PermisoModel): string => item.rfc, orden: 2 },
+  { encabezado: 'R.F.C.', clave: (item: PermisoModel): string => item.rfc, orden: 2 },
 
   /**
    * @description
@@ -122,13 +122,13 @@ export const NICO_TABLA = [
    * @description
    * Columna que muestra el número de teléfono del titular.
    */
-  { encabezado: 'Telefono', clave: (item: PermisoModel): number => item.Teléfono, orden: 4 },
+  { encabezado: 'Teléfono', clave: (item: PermisoModel): number => item.Teléfono, orden: 4 },
 
   /**
    * @description
    * Columna que muestra el correo electrónico del titular.
    */
-  { encabezado: 'Correo electronico', clave: (item: PermisoModel): string => item.CorreoElectrónico, orden: 5 },
+  { encabezado: 'Correo electrónico', clave: (item: PermisoModel): string => item.CorreoElectrónico, orden: 5 },
 
   /**
    * @description
@@ -140,53 +140,53 @@ export const NICO_TABLA = [
    * @description
    * Columna que muestra el número exterior del domicilio del titular.
    */
-  { encabezado: 'numeroExterior', clave: (item: PermisoModel): number => item.numeroExterior, orden: 7 },
+  { encabezado: 'Número exterior', clave: (item: PermisoModel): number => item.numeroExterior, orden: 7 },
 
   /**
    * @description
    * Columna que muestra el número interior del domicilio del titular (si aplica).
    */
-  { encabezado: 'numeroInterior', clave: (item: PermisoModel): number => item.numeroInterior, orden: 8 },
+  { encabezado: 'Número interior', clave: (item: PermisoModel): number => item.numeroInterior, orden: 8 },
 
   /**
    * @description
    * Columna que muestra el país donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'pais', clave: (item: PermisoModel): string => item.calle, orden: 9 },
+  { encabezado: 'País', clave: (item: PermisoModel): string => item.pais, orden: 9 },
 
   /**
    * @description
    * Columna que muestra la colonia donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'colonia', clave: (item: PermisoModel): string => item.colonia, orden: 10 },
+  { encabezado: 'Colonia', clave: (item: PermisoModel): string => item.colonia, orden: 10 },
 
   /**
    * @description
    * Columna que muestra el municipio donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'municipio', clave: (item: PermisoModel): string => item.municipio, orden: 11 },
+  { encabezado: 'Municipio o alcaldía', clave: (item: PermisoModel): string => item.municipio, orden: 11 },
 
   /**
    * @description
    * Columna que muestra la localidad donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'localidad', clave: (item: PermisoModel): string => item.localidad, orden: 12 },
+  { encabezado: 'Localidad', clave: (item: PermisoModel): string => item.localidad, orden: 12 },
 
   /**
    * @description
    * Columna que muestra la entidad federativa donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'entidadFederativa', clave: (item: PermisoModel): string => item.entidadFederativa, orden: 13 },
+  { encabezado: 'Entidad federativa', clave: (item: PermisoModel): string => item.entidadFederativa, orden: 13 },
 
   /**
    * @description
    * Columna que muestra el estado o región de la localidad donde se encuentra el domicilio del titular.
    */
-  { encabezado: 'estadoLocalidad', clave: (item: PermisoModel): string => item.estadoLocalidad, orden: 14 },
+  { encabezado: 'Estado/localidad', clave: (item: PermisoModel): string => item.estadoLocalidad, orden: 14 },
 
   /**
    * @description
    * Columna que muestra el código postal del domicilio del titular.
    */
-  { encabezado: 'codigoPostal', clave: (item: PermisoModel): number => item.codigoPostal, orden: 15 },
+  { encabezado: 'Código postal', clave: (item: PermisoModel): number => item.codigoPostal, orden: 15 },
 ];

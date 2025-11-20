@@ -1,4 +1,5 @@
 import { RouterModule, Routes} from '@angular/router';
+import { AcusePageComponent } from '@ng-mf/data-access-user';
 import { AgregarExportadorComponent } from './components/agregar-exportador/agregar-exportador.component';
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AgregardestinatarioComponent } from './components/agregardestinatario/agregardestinatario.component';
@@ -11,7 +12,7 @@ import { SubProductosContenedoraComponent } from './components/sub-productos-con
 
 export const ROUTES_FITOSANITARIO: Routes = [
   {
-    path: 'agricultura',
+    path: 'registrofitosanitario',
     component: AgriculturaComponent,
   },
   {
@@ -43,9 +44,13 @@ export const ROUTES_FITOSANITARIO: Routes = [
     component: SubProductosContenedoraComponent
   },
   {
+    path: 'acuse',
+    component: AcusePageComponent
+  },
+  {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'agricultura',
+    redirectTo: 'registrofitosanitario',
   },
 
 ];

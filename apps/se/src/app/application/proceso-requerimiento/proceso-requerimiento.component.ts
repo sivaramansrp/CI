@@ -5,6 +5,7 @@
 import {
   AccionBoton,
   AcuseComponent, 
+  AnexarDocumentosComponent,
   BodyTablaAcuse, 
   BtnContinuarComponent, 
   CATALOGOS_ID, 
@@ -88,8 +89,9 @@ import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/s
     forwardRef(() => EncabezadoRequerimientoComponent),
     forwardRef(() => RequerimientoInformacionComponent),
     NotificacionesComponent,
-    PasoCargaDocumentoComponent
-  ],
+    PasoCargaDocumentoComponent,
+    AnexarDocumentosComponent
+],
   providers: [AtenderRequerimientoService],
   templateUrl: './proceso-requerimiento.component.html',
   styleUrl: './proceso-requerimiento.component.scss',

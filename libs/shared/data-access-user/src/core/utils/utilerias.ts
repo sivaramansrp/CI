@@ -508,6 +508,35 @@ export function formatFechaCreacion(fecha_creacion: string): string {
     return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
 }
 
+/**
+ * Formatea una fecha en formato 'DD/MM/YYYY' a 'YYYY-MM-DD HH:mm:ss' con hora fija.
+ * @param fechaStr Fecha en formato 'DD/MM/YYYY' como string.
+ * @returns Fecha formateada como string 'YYYY-MM-DD HH:mm:ss'.
+ */
+export function formatearFechaSolicitud(fechaStr: string): string {
+  if (!fechaStr) { return '' }
+
+  const PARTES = fechaStr.split('/');
+  if (PARTES.length !== 3) { return '' }
+
+  const [DIA, MES, ANIO] = PARTES;
+  const FECHA = new Date(Number(ANIO), Number(MES) - 1, Number(DIA));
+
+  // Puedes usar hora fija o actual. Aquí dejo fija 18:44:00
+  const HORAS = 18;
+  const MINUTOS = 44;
+  const SEGUNDOS = 0;
+  FECHA.setHours(HORAS, MINUTOS, SEGUNDOS);
+
+  const YYYY = FECHA.getFullYear();
+  const MM = String(FECHA.getMonth() + 1).padStart(2, '0');
+  const DD = String(FECHA.getDate()).padStart(2, '0');
+  const HH = String(FECHA.getHours()).padStart(2, '0');
+  const MI = String(FECHA.getMinutes()).padStart(2, '0');
+  const SS = String(FECHA.getSeconds()).padStart(2, '0');
+
+  return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}`;
+}
 
 /**
  * Formatea la fecha en formato 'MM/YYYY'.
@@ -519,3 +548,4 @@ export function formatMonthYear(date: Date): string {
   const YEAR = date.getFullYear();
   return `${MONTH}/${YEAR}`;
 }
+
