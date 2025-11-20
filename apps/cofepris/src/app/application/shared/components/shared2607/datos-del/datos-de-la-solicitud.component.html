@@ -78,7 +78,7 @@
                         <app-catalogo-select
                         id="estadoData"
                         formControlName="estado"
-                        [catalogo]="estadoData.catalogos"
+                        [catalogo]="estadoData"
                         [label]="'Estado'"
                         [required]="true"
                         (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
@@ -181,10 +181,11 @@
                     <app-catalogo-select
                       id="claveScianData"
                       formControlName="claveScian"
-                      [catalogo]="claveScianData.catalogos"
+                      [catalogo]="claveScianDatos"
                       [label]="'Clave S.C.I.A.N'"
                       [required]="true"
                       [isDisabled]="esFormularioSoloLectura"
+                      (change)="onClaveScianChange($event);"
                     ></app-catalogo-select>
                   </div>
                 </div>
@@ -192,14 +193,8 @@
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <div class="form-group">
-                    <app-catalogo-select
-                      id="descripcionDelScianData"
-                      formControlName="descripcionDelScian"
-                      [catalogo]="descripcionDelScianData.catalogos"
-                      [label]="'Descripcion del S.C.I.A.N'"
-                      [required]="true"
-                      [isDisabled]="esFormularioSoloLectura"
-                    ></app-catalogo-select>
+   <label for="nombreComun">Descripcion del S.C.I.A.N</label>
+                  <input type="text" id="claveDescripcionModal" formControlName="descripcionDelScian" class="form-control" [readonly]="true"  (change)="setValoresStore(claveScianG,'descripcionDelScian', 'setDescripcionDelScian')"/>
                   </div>
                 </div>
               </div>
@@ -208,7 +203,7 @@
               <div class="btn-group">
                 <button class="btn btn-danger" type="button" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
                 <button class="btn btn-primary me-2" type="button" (click)="onLimpiar()">Limpiar</button>
-                <button class="btn btn-primary me-2" type="submit" >Agregar</button>
+                <button class="btn btn-primary me-2" type="submit">Agregar</button>
               </div>
             </div>
           </form>
@@ -241,7 +236,7 @@
             <app-catalogo-select 
             id="regimenalqueData"
             formControlName="regimenalque"
-            [catalogo]="regimenalqueData.catalogos" 
+            [catalogo]="regimenalqueData" 
             [label]="'Régimen al que se destinarán la mercancías'" 
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
@@ -251,7 +246,7 @@
             <app-catalogo-select 
             id="aduanaData"
             formControlName="aduana"
-            [catalogo]="aduanaData.catalogos" 
+            [catalogo]="aduanaData" 
             [label]="'Aduana'" 
             [required]="false"
             [isDisabled]="esFormularioSoloLectura"

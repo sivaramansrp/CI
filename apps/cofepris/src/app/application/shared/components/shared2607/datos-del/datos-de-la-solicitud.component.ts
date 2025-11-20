@@ -1,7 +1,7 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
 import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,7 +20,6 @@ import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramit
 import { TEXTOS } from '../../../constantes/constantes.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
 /**
  * Componente para gestionar los datos de la solicitud.
  */
@@ -162,8 +161,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Fila seleccionada */
   selectedRow: FilaData | FilaData2 | null = null;
 
-  /** Configuración de datos del estado */
-  public estadoData = ESTADO_DATA;
+  /**
+   * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
+   */
+  estadoData: Catalogo[] = [];
+/**
+ * Configuración de datos de estado
+ */
+  claveScianDatos: Catalogo[] = [];
 
   /** Configuración de datos de clave SCIAN */
   public claveScianData = CLAVE_SCIAN_DATA;
@@ -172,10 +177,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   public descripcionDelScianData = DESCRIPCION_SCIAN_DATA;
 
   /** Configuración de datos del régimen */
-  public regimenalqueData = REGIMEN_AL_QUE_DATA;
+  public regimenalqueData : Catalogo[] = [];
 
   /** Configuración de datos de la aduana */
-  public aduanaData = ADUANA_DATA;
+  public aduanaData: Catalogo[] = [];
 
   /** Configuración para el campo de selección de clasificación del producto */
   public delProducto = CLASIFICACION_PRODUCTO_DATA;
@@ -198,7 +203,11 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
  * Ejemplo: 'MAVL621207C95'.
  */
   rfc: string = 'MAVL621207C95';
-
+/**
+ * ID del procedimiento.
+ * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
+ */
+   @Input() idProcedimiento!: number;
   /**
    * Constructor del componente.
    *
@@ -223,7 +232,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private solicitud260702Store: Solicitud260702Store,
     private solicitud260702Query: Solicitud260702Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private service: RegistrarSolicitudMcpService,
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -599,7 +609,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['',],
-        descripcionDelScian: [''],
+        descripcionDelScian: [ 
+        { value: this.dataDeLaSolicitudState?.descripcionDelScian, disabled: true },
+        Validators.required,],
       }),
     });
   }
@@ -650,24 +662,58 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   }
 
   /** Obtiene los datos de los estados */
-  getEstadosData(): void {
-    this.registrarsolicitudmcp
+  getEstadosData(): void { 
+     if (this.idProcedimiento) {
+    this.service
+      .obtenerEstadoList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.estadoData = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getEstadosData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
-        this.estadoData.catalogos = data as Catalogo[];
+      .subscribe((data): void => {
+        this.estadoData = data;
       });
+    }
   }
   /** Obtiene los datos de clave SCIAN */
   getClaveScianData(): void {
-    this.registrarsolicitudmcp
+if (this.idProcedimiento) {
+    this.service
+      .obtenerClavesScian(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.claveScianDatos = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getClaveScianData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.claveScianData.catalogos = data as Catalogo[];
+      .subscribe((data): void => {
+        this.claveScianDatos = data;
       });
+    }
   }
 
+   onClaveScianChange(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    let SELECTED_OPTION;
+    if (this.idProcedimiento) {
+      SELECTED_OPTION = this.claveScianDatos?.find((item) => Number(item.clave) === Number(SELECTED_VALUE));
+    } 
+
+    if (SELECTED_OPTION) {
+      const CLAVE_SCIAN_G_CONTROL = this.clavaScianForm.get('claveScianG');
+      if (CLAVE_SCIAN_G_CONTROL) {
+        CLAVE_SCIAN_G_CONTROL.patchValue({
+          descripcionDelScian: SELECTED_OPTION.descripcion,
+        });
+      }
+    }
+  }
   /** Obtiene los datos de descripción del SCIAN */
   getClaveDescripcionDelData(): void {
     this.registrarsolicitudmcp
@@ -680,22 +726,40 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
 
   /** Obtiene los datos del régimen */
   getRegimenalqueData(): void {
-    this.registrarsolicitudmcp
+     if (this.idProcedimiento) {
+    this.service
+      .obtenerRegimenes(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.regimenalqueData = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getRegimenalqueData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.regimenalqueData.catalogos = data as Catalogo[];
+      .subscribe((data): void => {
+        this.regimenalqueData = data;
       });
+    }
   }
 
   /** Obtiene los datos de la aduana */
   getAduanaData(): void {
-    this.registrarsolicitudmcp
+   if (this.idProcedimiento) {
+    this.service
+      .obtenerAduanas(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.aduanaData = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getAduanaData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.aduanaData.catalogos = data as Catalogo[];
+      .subscribe((data): void => {
+        this.aduanaData = data;
       });
+    }
   }
   /**
    * Método para habilitar el formulario de datos de la solicitud.
@@ -766,29 +830,37 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Maneja el evento de envío del formulario */
 
   onSubmit(): void {
-      const MODAL_ELEMENT = document.getElementById('claveScianModal');
+     const MODAL_ELEMENT = document.getElementById('claveScianModal');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
-    MODAL_INSTANCE.hide(); 
+    MODAL_INSTANCE.hide();
   }
 
-    const FORM_DATA = { ...this.clavaScianForm.value };
-    FORM_DATA.claveScianG.claveScian =
-      this.claveScianData.catalogos.find(
-        (item: Catalogo) =>
-          String(item.id) === String(FORM_DATA.claveScianG.claveScian)
-      )?.descripcion || 'Not Found';
-
-
-    FORM_DATA.claveScianG.descripcionDelScian =
-      this.descripcionDelScianData.catalogos.find(
-        (item: Catalogo) =>
-          String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
-      )?.descripcion || 'Not Found';
-    this.tableData = [...this.tableData, FORM_DATA];
-    this.showClavaScianForm = false;
-    this.clavaScianForm.reset();
+  const CLAVE_SCIAN_G_VALUE = this.clavaScianForm.get('claveScianG')?.value;
+  if (!CLAVE_SCIAN_G_VALUE || !CLAVE_SCIAN_G_VALUE.claveScian) {
+    return;
   }
+
+  // Find the selected claveScian in the catalog
+  const SELECTED_CATALOG = this.claveScianDatos.find(
+    (item: Catalogo) => String(item.id) === String(CLAVE_SCIAN_G_VALUE.claveScian)
+  );
+
+  // Prepare the row to add
+  const NEW_ROW: FilaData = {
+    id: this.tableData.length > 0 ? Math.max(...this.tableData.map(row => row.id)) + 1 : 1,
+    claveScianG: {
+      claveScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.claveScian,
+      descripcionDelScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.descripcionDelScian
+    }
+  };
+
+  this.tableData = [...this.tableData, NEW_ROW];
+  this.showClavaScianForm = false;
+  this.clavaScianForm.reset();
+  }
+
+  /** Última fila seleccionada */
 lastSelectedRow: FilaData2 | null = null;
 
   /** Maneja la selección de filas */
@@ -1072,6 +1144,11 @@ onModificarMercancias(): void {
       'datosDelTramiteRealizar'
     ) as FormGroup;
   }
+
+  get claveScianG(): FormGroup {
+    return this.clavaScianForm.get('claveScianG') as FormGroup;
+  }
+
 /** Establece valores en el store */
 onSave(): void {
   const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };

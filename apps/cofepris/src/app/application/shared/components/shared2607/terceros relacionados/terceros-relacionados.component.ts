@@ -1,6 +1,6 @@
 import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
 import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../../constantes/constantes.enum';
@@ -65,12 +65,14 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   esFormularioVisible = false;
 
   /** Datos del catálogo de países */
-  public paisData: CatalogosSelect = {
-    labelNombre: 'Pais',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+  // public paisData: CatalogosSelect = {
+  //   labelNombre: 'Pais',
+  //   required: true,
+  //   primerOpcion: 'Selecciona un medio de transporte',
+  //   catalogos: [],
+  // };
+
+  paisData: Catalogo[] = [];
 
   /**
    * Variable para almacenar el tipo de persona seleccionada (por ejemplo, 'fisica' o 'moral').
@@ -129,8 +131,10 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
 
   /** Datos de los fabricantes para 260702 */
   fabricanteDatos: Destinatario[] = [];
-  
-
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   */
+   @Input() idProcedimiento!: number;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -143,7 +147,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     private registrarsolicitudmcp: RegistrarSolicitudMcpService,
     private solicitud260702Store: Solicitud260702Store,
     private solicitud260702Query: Solicitud260702Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private service: RegistrarSolicitudMcpService,
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -162,6 +167,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
       )
       .subscribe();
     this.crearFormTransporte();
+    console.log(`idProcedimientoConstructor: ${this.idProcedimiento}`);
+    
   }
 
   /**
@@ -232,6 +239,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     } else {
       this.inicializarFormulario();
     }
+     console.log(`idProcedimientoInit: ${this.idProcedimiento}`);
+   
   }
 
   /**
@@ -322,13 +331,22 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData(): void {
-    this.registrarsolicitudmcp
+  getPaisData(): void { 
+     if (this.idProcedimiento) {
+    this.service
+      .obtenerPaises(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.paisData = data.datos ?? [];
+      });
+    } else {
+      this.service
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
-        this.paisData.catalogos = data as Catalogo[];
+      .subscribe((data): void => {
+        this.paisData = data;
       });
+    }
   }
 
   /**
@@ -411,12 +429,12 @@ onGuardar(): void {
    * @param paisId ID del país.
    * @returns Nombre del país o 'N/A' si no se encuentra.
    */
-  private getPaisName(paisId: string): string {
-    const PAIS_ENCONTRADO = this.paisData.catalogos.find(
-      (catalogo) => catalogo.id === Number(paisId)
-    );
-    return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
-  }
+  // private getPaisName(paisId: string): string {
+  //   const PAIS_ENCONTRADO = this.paisData.catalogos.find(
+  //     (catalogo) => catalogo.id === Number(paisId)
+  //   );
+  //   return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
+  // }
 
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
