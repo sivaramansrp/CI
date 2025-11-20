@@ -231,8 +231,8 @@ export class Shared2605Service {
       },
       "original": "",
       "avisoFuncionamiento": true,
-      "numeroLicencia": "123456"
-      // "aduanas": "ALTAMIRA"
+      "numeroLicencia": "123456",
+      "aduanas": Array.isArray(data['aduanasDeEntrada']) ? data['aduanasDeEntrada'].join(', ') : '',
     }
   }
 

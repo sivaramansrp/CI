@@ -1987,6 +1987,11 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     return this.validacionesService.isValid(form, campo);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  markPaisTouched(formgroup: FormGroup): boolean {
+    return Boolean(formgroup?.get('pais')?.touched);
+  }
+
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
