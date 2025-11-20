@@ -112,6 +112,9 @@ export class DatosProductorComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.datosState = state as DatosGrupos;
+          if(state.datosProductor.persona_tipo) {
+            this.onTipoPersonaProductorChange(state.datosProductor.persona_tipo);
+          }
         })
       )
       .subscribe();
