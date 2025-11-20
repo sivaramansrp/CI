@@ -895,7 +895,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         this.obtenerValor('cantidadUmtValor') ?? null,
         [
           Validators.required,
-          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+          DatosMercanciaContenedoraComponent.cantidadUmtValidator
         ],
       ],
       cantidadUmcValor: [
@@ -1188,5 +1188,20 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       txtBtnCancelar: '',
     };
     this.elementoParaEliminar = i;
+}
+
+/** Custom validator for 12 integers and up to 5 decimals */
+static cantidadUmtValidator(control: AbstractControl) {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === undefined || VALUE === '') return null;
+
+  const REGEX= /^(\d{1,12})(\.\d{1,5})?$/;
+  if (!/^\d+(\.\d+)?$/.test(VALUE)) {
+    return { notNumber: true };
+  }
+  if (!REGEX.test(VALUE)) {
+    return { maxDigits: true };
+  }
+  return null;
 }
 }
