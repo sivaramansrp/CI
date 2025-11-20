@@ -142,34 +142,33 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Retorna true si todos los formularios son válidos, false en caso contrario.
    */
     validarFormularios(): boolean {
-      let isValid = true;
+      //let isValid = true;
 
-      if (this.solicitante?.form) {
-        if (this.solicitante.form.invalid) {
-          this.solicitante.form.markAllAsTouched();
-          isValid = false;
-        }
-      } else {
-        isValid = false;
-      }
-  
+      // if (this.solicitante?.form) {
+      //   if (this.solicitante.form.invalid) {
+      //     this.solicitante.form.markAllAsTouched();
+      //     isValid = false;
+      //   }
+      // } else {
+      //   isValid = false;
+      // }
       if (this.domiciliosDePlantas) {
-        if (!this.domiciliosDePlantas.validarFormulario()) {
-          isValid = false;
-        }
-      } else {
-        isValid = false;
+        return this.domiciliosDePlantas.validarFormulario();
       }
-  
-      if (this.sectoresYMercancias) {
-        if (!this.sectoresYMercancias.validarFormulario()) {
-          isValid = false;
-        }
-      } else {
-        isValid = false;
+      if(this.sectoresYMercancias){
+        return this.sectoresYMercancias.validarFormulario();
       }
+      return false;
   
-      return isValid;
+      // if (this.sectoresYMercancias) {
+      //   if (!this.sectoresYMercancias.validarFormulario()) {
+      //     isValid = false;
+      //   }
+      // } else {
+      //   isValid = false;
+      // }
+  
+      //return isValid;
     } 
   }
 

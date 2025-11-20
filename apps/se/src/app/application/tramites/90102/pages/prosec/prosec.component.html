@@ -7,6 +7,12 @@
 indirecto
         </h3>
       </div>
+          <div class="col-12">
+        @if (esFormaValido) {
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
+      }
+      </div>
+
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>

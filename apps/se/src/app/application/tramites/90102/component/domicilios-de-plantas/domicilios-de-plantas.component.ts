@@ -243,7 +243,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.initActionFormBuild();
+    //this.initActionFormBuild();
     this.obtenerLista();
 
     this.forma.statusChanges
@@ -609,12 +609,11 @@ recuperarDatos(): void {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
     validarFormulario(): boolean {
-      if (this.forma.valid) {
-        return true;
-      }
+     if (!this.forma) {return false;}
       this.forma.markAllAsTouched();
-      return false
+      return this.forma.valid;
     }
+   
      /**
        * @method eliminarPedimento
        * @description

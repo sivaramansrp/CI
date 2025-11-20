@@ -204,7 +204,6 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    * @returns {void}
    */
   public setRepresentacionFederalLista(RepresentacionFederalLista: Catalogo[]): void {
-    console.log(" RepresentacionFederal en store:", RepresentacionFederalLista);
     this.update((state) => ({ ...state, RepresentacionFederalLista }));
   }
 
@@ -219,7 +218,6 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    * @returns {void}
    */
   public setActividadProductiva(ActividadProductiva: string): void {
-    console.log(" ActividadProductiva en store:", ActividadProductiva);
     this.update((state) => ({ ...state, ActividadProductiva }));
   }
 

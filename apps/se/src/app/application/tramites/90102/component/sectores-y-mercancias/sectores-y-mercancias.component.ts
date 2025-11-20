@@ -417,10 +417,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           // Limpiar selección en el formulario
           this.sectoresYMercancias.get('sector')?.setValue('');
 
-          // Validar formulario y actualizar sección
-          const ISVALID = this.validarFormulario();
-          this.seccionStore.establecerSeccion([ISVALID]);
-          this.seccionStore.establecerFormaValida([ISVALID]);
         }
       }
     },
@@ -466,10 +462,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
             // Limpiar selección en el formulario
             this.sectoresYMercancias.get('Fraccion_arancelaria')?.setValue('');
 
-            // Validar formulario y actualizar sección
-            const ISVALID = this.validarFormulario();
-            this.seccionStore.establecerSeccion([ISVALID]);
-            this.seccionStore.establecerFormaValida([ISVALID]);
           }
         }
       },
@@ -741,12 +733,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   validarFormulario(): boolean {
-    if (this.sectoresYMercancias.valid) {
-      return true;
+     if (!this.sectoresYMercancias) {return false;}
+      this.sectoresYMercancias.markAllAsTouched();
+      return this.sectoresYMercancias.valid;
     }
-    this.sectoresYMercancias.markAllAsTouched();
-    return false
-  }
 
   /**
    * @method ngOnDestroy

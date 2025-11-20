@@ -1,12 +1,13 @@
-import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AVISO, ERROR_FORMA_ALERT, esValidObject, getValidDatos, ListaPasosWizard, PASOS, RegistroSolicitudService } from '@libs/shared/data-access-user/src';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -108,6 +109,10 @@ idSolicitud: number = 0;
    * Indica si el formulario actual es válido. Se utiliza para mostrar alertas cuando faltan campos por capturar.
    */
   esFormaValido: boolean = false;
+       /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger text-center';
 
   /**
    * Constructor del componente.
@@ -140,12 +145,12 @@ idSolicitud: number = 0;
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    
-    if (e.accion === 'cont') {
-      let isValid = true;
+  if (e.accion === 'cont') {
+    let isValid = true;
 
-      if (this.indice === 1 && this.pasoUnoComponent) {
+    if (this.indice === 1 && this.pasoUnoComponent) {
       isValid = this.pasoUnoComponent.validarFormularios();
+      console.log('PasoUnoComponent valid:', isValid);
     }
 
     if (!isValid) {
@@ -156,14 +161,13 @@ idSolicitud: number = 0;
       return;
     }
 
-    // const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.storeData);
-    const PAYLOAD = {}
-    let shouldNavigate = false;
+    const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);
+    console.log('PAYLOAD', PAYLOAD);
+
     this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).subscribe(response => {
-      shouldNavigate = response.codigo === '00';
+      console.log('GuardarDatos response:', response);
+      const shouldNavigate = response.codigo === '00';
       if (!shouldNavigate) {
-        const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
-        this.formErrorAlert = ProsecComponent.generarAlertaDeError(ERROR_MESSAGE);
         this.esFormaValido = true;
         this.indice = 1;
         this.datosPasos.indice = 1;
@@ -171,39 +175,67 @@ idSolicitud: number = 0;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-      if(shouldNavigate) {
-        if(esValidObject(response) && esValidObject(response.datos)) {
-          this.esFormaValido = false;
-          const DATOS = response.datos as { id_solicitud?: number };
-          const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
-          this.solicitudState.idSolicitud = ID_SOLICITUD;
-          this.store.setIdSolicitud(ID_SOLICITUD);
-        }
-        // Calcular el nuevo índice basado en la acción
-        let indiceActualizado = e.valor;
-        if (e.accion === 'cont') {
-          indiceActualizado = e.valor;
-        }
-        this.toastrService.success(response.mensaje);
-        if (indiceActualizado > 0 && indiceActualizado < 5) {
-          this.indice = indiceActualizado;
-          this.datosPasos.indice = indiceActualizado;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
-      } else {
-        this.toastrService.error(response.mensaje);
+      // Success: move to paso 2
+      this.esFormaValido = false;
+      if (esValidObject(response) && esValidObject(response.datos)) {
+        const DATOS = response.datos as { id_solicitud?: number };
+        const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+        this.solicitudState.idSolicitud = ID_SOLICITUD;
+        this.store.setIdSolicitud(ID_SOLICITUD);
       }
+      this.toastrService.success(response.mensaje);
+
+      // Always go to paso 2 after success
+      this.indice = 2;
+      this.datosPasos.indice = 2;
+      this.wizardComponent.siguiente();
     });
-  }else{
+  } else {
     this.indice = e.valor;
     this.datosPasos.indice = this.indice;
     this.wizardComponent.atras();
   }
-  }
+}
+//  getValorIndice(e: AccionBoton): void {
+//   if (e.accion === 'cont') {
+//     const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);
+//     console.log('PAYLOAD', PAYLOAD);
+//     let shouldNavigate = false;
+//     this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).subscribe(response => {
+//       shouldNavigate = response.codigo === '00';
+//       if (!shouldNavigate) {
+//         const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+//         this.formErrorAlert = ProsecComponent.generarAlertaDeError(ERROR_MESSAGE);
+//         this.esFormaValido = true;
+//         this.indice = 1;
+//         this.datosPasos.indice = 1;
+//         this.wizardComponent.indiceActual = 1;
+//         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+//         return;
+//       }
+//       if (shouldNavigate) {
+//         if (esValidObject(response) && esValidObject(response.datos)) {
+//           this.esFormaValido = false;
+//           const DATOS = response.datos as { id_solicitud?: number };
+//           const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+//           this.solicitudState.idSolicitud = ID_SOLICITUD;
+//           this.store.setIdSolicitud(ID_SOLICITUD);
+//         }
+//         // Always go to paso 2 after success
+//         this.indice = 2;
+//         this.datosPasos.indice = 2;
+//         this.wizardComponent.siguiente();
+//         this.toastrService.success(response.mensaje);
+//       } else {
+//         this.toastrService.error(response.mensaje);
+//       }
+//     });
+//   } else {
+//     this.indice = e.valor;
+//     this.datosPasos.indice = this.indice;
+//     this.wizardComponent.atras();
+//   }
+// }
   /**
    * Genera una alerta de error con los mensajes proporcionados.
    * @param mensajes Mensajes de error a mostrar en la alerta.
