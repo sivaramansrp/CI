@@ -199,6 +199,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    this.solicitud260703Store.setFormValidity('datosDelSolicitude', event);
   }
 
+  /**
+   * Valida los formularios relacionados con la solicitud actual.
+   * 
+   * Esta función verifica la validez del componente de datos de la solicitud
+   * accediendo al estado actual de `solicitud260703Query` y consultando la propiedad
+   * `formValidity.datosDelSolicitude`. Si la propiedad no está definida, retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario de datos de la solicitud es válido, `false` en caso contrario.
+   */
    validarFormularios(): boolean {
     this.isDatosDeLaSolicitudComponentValid = (
       this.solicitud260703Query.getValue().formValidity?.datosDelSolicitude ) ?? false;

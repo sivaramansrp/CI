@@ -64,14 +64,29 @@ export class DatosComponent implements OnInit {
      */
     @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
     
+    /**
+     * Indica si la opción de peligro está activada.
+     * Cuando es verdadero, representa que la condición de peligro está presente.
+     */
     isPeligro:boolean=true;
 
+  /**
+   * Crea una instancia del componente, inyectando el store y el query necesarios para la gestión de la solicitud 260703.
+   * 
+   * @param solicitud260703Store - Store para manejar el estado de la solicitud 260703.
+   * @param solicitud260703Query - Query para consultar el estado de la solicitud 260703.
+   */
   constructor( public solicitud260703Store:Solicitud260702Store,
       private solicitud260703Query:Solicitud260702Query){
  //
   }
 
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y actualiza las propiedades locales `solicitudState` y `isContinuarTriggered` según los datos recibidos.
+   */
   ngOnInit():void{
      this.solicitud260703Query.selectSolicitud$.pipe().subscribe((data) => {
       this.solicitudState = data;
