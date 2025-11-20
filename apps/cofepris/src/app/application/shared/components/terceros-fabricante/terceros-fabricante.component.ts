@@ -1988,6 +1988,23 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
   }
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ *
+ * Esta función recibe un FormGroup y devuelve un valor booleano que indica
+ * si el control llamado 'pais' existe y ha sido marcado como touched.
+ *
+ * Se utiliza para determinar si debe mostrarse un estado visual de validación
+ * relacionado con el campo 'pais' en el formulario.
+ *
+ * @param formgroup - El FormGroup que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  // eslint-disable-next-line class-methods-use-this
+  markPaisTouched(formgroup: FormGroup): boolean {
+    return Boolean(formgroup?.get('pais')?.touched);
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
