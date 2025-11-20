@@ -1287,7 +1287,13 @@ public getIdFromDescripcion(
  */
 public obtenerValor(
   field: keyof TablaMercanciasDatos | keyof MercanciaForm
-): string | number | undefined | string[] | Catalogo | undefined {
+): string | number | undefined | string[] | Catalogo | undefined | 
+[{
+  id: number;
+  clave: string;
+  fabricacion: string | null;
+  caducidad: string | null;
+}] {
   return (
     (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
     (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])

@@ -296,7 +296,12 @@ export interface TablaMercanciasDatos {
   paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
   id?: number,
-  clavesLote?: string[],
+  clavesLote?: [{
+  id: number;
+  clave: string;
+  fabricacion: string | null;
+  caducidad: string | null;
+}];
 }
 
 /**

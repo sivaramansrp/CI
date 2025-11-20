@@ -10,7 +10,7 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
+import { TablaMercanciasDatos } from '../../../../shared/components/shared26010/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 

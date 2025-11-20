@@ -19,6 +19,7 @@ export class GuardarAdapter_260102 {
    * @returns Payload formateado para la API
    */
   static toFormPayload(state: Tramite260102State): unknown {
+    console.log('Estado para payload:', state);
     return {
   "solicitante": {
         "rfc": "AAL0409235E6",
@@ -114,11 +115,11 @@ export class GuardarAdapter_260102 {
 
         fechaCaducidadStr: merc.fechaCaducidad || "31/12/2026",
         
-        // NumeroLotes: merc?.c?.map(l => ({
-        //   numeroLote: l.numeroLote,
-        //   fechaElaboracionStr: l.fechaElaboracion,
-        //   fechaCaducidadStr: l.fechaCaducidad
-        // })) ?? []
+        NumeroLotes: merc.clavesLote?.map(l => ({
+          numeroLote: l.clave,
+          fechaElaboracionStr: l.fabricacion,
+          fechaCaducidadStr: l.caducidad
+        })) ?? []
       })),
 
       representanteLegal: {
