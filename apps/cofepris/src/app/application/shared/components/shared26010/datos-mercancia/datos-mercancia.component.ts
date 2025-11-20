@@ -89,13 +89,15 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   @Input() public datoSeleccionado!: TablaMercanciasDatos | undefined;
 
-  public claveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
+  @Input() public claveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
 
   /**
    * @event mercanciaSeleccionado
    * Evento emitido cuando el usuario selecciona o guarda una mercancía.
    */
   @Output() mercanciaSeleccionado = new EventEmitter<TablaMercanciasDatos>();
+
+  @Output() claveSeleccionada = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event agregarMercanciaDatos
@@ -747,8 +749,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
 
-  public claveData: TablaMercanciaClaveConfig[] = []
-
   /**
    * @property {InputFecha} fechaDeFabricacioInput
    * Objeto con la configuración de la fecha inicial del componente.
@@ -1006,6 +1006,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       this.mercanciaForm.get('fechaDeCaducidad')?.reset();
     }
     this.mercanciaForm.get('clavesLote')?.setValue(this.claveConfig.datos);
+    
+    this.claveSeleccionada.emit(this.claveConfig.datos);
   }
 
   /**

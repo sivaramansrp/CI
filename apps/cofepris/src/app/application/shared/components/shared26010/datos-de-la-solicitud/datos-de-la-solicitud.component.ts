@@ -142,6 +142,7 @@ export class DatosDeLaSolicitudComponent
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> =
     new EventEmitter<TablaMercanciasDatos[]>();
   
+  @Output() claveSeleccionada: EventEmitter<TablaMercanciaClaveConfig[]> = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event datosDeTablaSeleccionados
@@ -2088,6 +2089,16 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   this.cdr.markForCheck();
 }
 
+
+
+/**
+ * Maneja la selección de claves de mercancía desde el modal.
+ * @param claveData Array de objetos TablaMercanciaClaveConfig seleccionados.
+ * @emits claveSeleccionada - Emite el array de claves seleccionadas al componente padre.
+ */
+onClaveSeleccionado(claveData: TablaMercanciaClaveConfig[]): void {
+  this.claveSeleccionada.emit(claveData);
+}
   /**
  * Updates the table after merchandise changes
  */
