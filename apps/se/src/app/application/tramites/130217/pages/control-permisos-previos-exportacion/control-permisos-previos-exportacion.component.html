@@ -1,12 +1,37 @@
 <div class="page">
     <div class="container">
       <div class="row">
-        <div class="col-md-6">
-          <h1>Exportación Minerales de Hierro</h1>
+        @if(indice === 1){
+          <div class="col-md-12">
+            <h2>Exportación Minerales de Hierro</h2>
+          </div>
+        }
+        @if(indice === 2){
+          <div class="col-md-12">
+            <h1>Cargar archivos</h1>
+          </div>
+        }
+        @if(indice === 3){
+          <div class="col-md-12">
+            <h1>Firmar</h1>
+          </div>
+        }
+        <div class="col-12">
+          @if(esFormaValido){
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          </div>
+          }
         </div>
-        <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
+    </div>
+    <div class="row mt-5" *ngIf="indice === 3">
+      <div class="col-md-12">
+        <lib-notificaciones
+          [notificacionInput]="alertaNotificacion"
+        ></lib-notificaciones>
       </div>
-  
+    </div>
+    <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
       <div class="row">
         @switch(indice){
                 @case(1){

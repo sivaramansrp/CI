@@ -3,7 +3,7 @@
  * Estos incluyen datos relacionados con el asistente de pasos (wizard) y las enumeraciones específicas de la aplicación. 
  */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS_EXPORTACION } from '../../constants/control-permisos-previos-exportacion.enum';
 
@@ -51,6 +51,12 @@ export class ControlPermisosPreviosExportacionComponent {
     txtBtnAnt: 'Anterior', // Texto para el botón "Anterior".
     txtBtnSig: 'Continuar', // Texto para el botón "Continuar".
   };
+
+   /**
+     * Folio temporal de la solicitud.
+     * Se utiliza para mostrar el folio en la notificación de éxito.
+     */
+  public alertaNotificacion!: Notificacion;
 
   /**
    * Actualiza el índice del paso actual según la acción del usuario.
