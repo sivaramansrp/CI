@@ -194,4 +194,46 @@ buildTransporte(data:Solicitud110203State): unknown {
     }
   }
 
+/** Construye la estructura del certificado de origen a partir del estado dado.  
+ * Devuelve un objeto con los datos procesados según la solicitud. */
+  buildCertificadoOrigen(data: Solicitud110203State): unknown {
+    return {
+        "fechaExpedicionStr": data.expedicion,
+        "fechaVencimientoStr": data.vencimiento,
+        "medioTransporte": data.medio,
+        "mercanciasAsociadas": [{
+                "cantidad": data.cantidad,
+                "complementoDescripcion": data.complemento,
+                "descripcion": data.complemento,
+                "fechaFactura": data.factura,
+                "fraccionArancelaria": data.arancelaria,
+                "idMercanciaCertificado": data.numeroDeCertificado,
+                "marca": data.marca,
+                "masaBruta": data.bruta,
+                "nombreComercial": data.nombre,
+                "nombreIngles": data.ingles,
+                "nombreTecnico": data.tecnico,
+                "numeroFactura": data.factura,
+                "numeroOrden": data.orden,
+                "numeroRegistro": data.registro,
+                "tipoFactura": data.tipo,
+                "unidadMedidaComercial": data.comercial,
+                "unidadMedidaDescripcion": data.medida,
+                "unidadMedidaMasaBruta": data.medida,
+                "valorMercancia": data.valor
+        }
+      ],
+      "observaciones": data.observaciones,
+      "paisAsociado": {
+            "cvePais": data.cvePais,
+            "nombre": data.nombre,
+        },
+        "precisa": data.precisa ?? '',
+        "presenta": data.presenta ?? '',
+        "tratadoAsociado": {
+          "nombre": ""
+        }
+    }
+  }
+
 }

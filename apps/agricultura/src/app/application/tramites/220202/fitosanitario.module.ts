@@ -38,18 +38,12 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 
 @NgModule({
-  declarations: [
-    AgriculturaComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FitosanitarioRoutingModule,
     SharedModule,
-    WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
     AlertComponent,
@@ -63,10 +57,8 @@ import { TercerospageComponent } from './components/tercerospage/tercerospage.co
     PagoDeDerechosComponent,
     TercerospageComponent,
     CargaDocumentoComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
   ],
-  providers: [
-    ToastrService
-  ]
+  providers: [ToastrService],
 })
-export class FitosanitarioModule { }
+export class FitosanitarioModule {}

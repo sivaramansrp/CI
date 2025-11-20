@@ -23,10 +23,12 @@ import {
   NotificacionesComponent,
   PASOS_REQUERIMIENTOS,
   PASOS_REQUERIMIENTOS_DATOS,
+  PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS,
+  PASOS_REQUERIMIENTOS_DOCUMENTOS,
   RequerimientoInformacionComponent,
   RequerimientosStates,
   TITULO_ACUSE,
-  TRAMITES_PASO_DATOS,
+  TRAMITES_CUATRO_PASOS,
   TXT_ALERTA_ACUSE_RECIBO,
   TramiteFolioQueries,
   WizardComponent,
@@ -50,7 +52,7 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
 
-import { CodigoRespuesta, ProcesoSolicitud } from '../core/enums/aga-core-enum';
+import { CodigoRespuesta, ProcesoSolicitud, TipoRequerimiento } from '../core/enums/aga-core-enum';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
@@ -68,6 +70,7 @@ import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/s
 import { formatFecha } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../tramites/5701/pages/paso-uno/paso-uno.component';
 import { PasoDatosComponent } from '../tramites/5701/components/paso-datos/paso-datos.component';
+import { GuardaSolicitudService } from '../core/services/5701/guardar/guarda-solicitud.service';
 
 /**
  * Componente principal para el proceso de requerimiento.
@@ -308,9 +311,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   esAcuse: boolean = false;
 
   /**
+   * Bandera que indica si la solicitud  5701 es de tipo datos.
+   */
+  esTramiteEspecial: boolean = false;
+
+  /**
+   * Bandera que indica si la solicitud 5701 es de tipo documentos.
    * 
    */
-  esTramiteDatos: boolean = false;
+  esTramiteDocumentos: boolean = false;
 
   /**
    * Catálogo de documentos disponibles.
@@ -346,6 +355,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Lista de trámites que utilizan el flujo de cuatro pasos.
+   */
+  tramitesCuatroPasos: string[] = ['5701'];
+
+  /**
+   * Enumera los tipos de requerimiento disponibles.
+   */
+  tipoRequerimientoEnum = TipoRequerimiento;
+  /**
    * Constructor del componente.
    * Inicializa servicios y suscripciones necesarias.
    */
@@ -360,7 +378,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private location: Location,
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private consultaReq: RequerimientosStates,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private guardarSolicitudService: GuardaSolicitudService
   ) {
 
     /**
@@ -375,11 +394,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      /**
-       * Obtiene el idTipoRequerimiento del store de requerimientos
-       */
-      this.tipoRequerimiento = this.consultaReq.getIdTipoRequerimiento();
-        
+
+      this.esTramiteEspecial = TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId);
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -388,6 +404,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.departamento = this.guardarDatos?.department.toLowerCase();
+    this.iniciarAtenderRequerimiento();
   }
 
   /**
@@ -395,14 +412,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Inicializa el componente y obtiene datos necesarios.
    */
   ngOnInit(): void {
-    this.esTramiteDatos = TRAMITES_PASO_DATOS.includes(this.guardarDatos?.procedureId);
-    this.pasos = TRAMITES_PASO_DATOS.includes(this.guardarDatos?.procedureId) ? PASOS_REQUERIMIENTOS_DATOS : PASOS_REQUERIMIENTOS;
+
+    this.pasos = PASOS_REQUERIMIENTOS;
     this.datosPasos = {
-      nroPasos: this.pasos.length,
+      nroPasos: this.pasos?.length ? this.pasos.length : 3,
       indice: this.indice,
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     };
+
     /**
      * Verifica si existe un trámite previamente seleccionado.
      * Si existe, se selecciona automáticamente.
@@ -444,7 +462,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
 
     this.getTabs();
 
-    this.iniciarAtenderRequerimiento();
+
   }
 
   /**
@@ -490,10 +508,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     if (e?.valor && e.valor > 0 && e.valor <= 4) {
-      if ( this.indice === 2 && this.esTramiteDatos ) {
+      if ( this.esTramiteEspecial && this.tipoRequerimiento === TipoRequerimiento.DATOS && this.indice === 2) {
         this.ejecutaActualizarSolicitud();
       }
       this.indice = e.valor;
+
       this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
 
       if (this.indice === 2) {
@@ -523,7 +542,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos.id_solicitud
         );
       }
-      if (this.indice === 4) {
+      if (this.indice === this.datosPasos.nroPasos) {
         this.mostrarFirmarAtenderRequerimiento();
       }
       if (e.accion === 'cont') {
@@ -586,9 +605,37 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   iniciarAtenderRequerimiento(): void {
     const NUMFOLIO = this.guardarDatos.folioTramite;
     this.atenderRequerimientoService.getIniciarAtenderRequerimiento(this.tramite, NUMFOLIO).subscribe({
-      next: (response) => {
-        if (response.codigo === '00') {
-          this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
+          next: (response) => {
+            if (response.codigo === '00') {
+              this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
+              this.tipoRequerimiento = this.iniciarAtenderRequerimientoData.alcance_requerimiento || '';
+              this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
+              
+              if(TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId)) {
+              switch(this.tipoRequerimiento) {
+                case TipoRequerimiento.DATOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DATOS;
+                  break;
+                case TipoRequerimiento.DOCUMENTOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DOCUMENTOS; 
+                  break;
+                case TipoRequerimiento.DATOS_DOCUMENTOS:
+                  this.pasos = PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS;
+                  break;
+              }
+              this.datosPasos.nroPasos = this.pasos.length;
+              this.cdRef.detectChanges();
+          
+              } else {
+                this.pasos = PASOS_REQUERIMIENTOS;
+              }
+
+              this.datosPasos = {
+                nroPasos: this.pasos?.length ? this.pasos.length : 3,
+                indice: this.indice,
+                txtBtnAnt: 'Anterior',
+                txtBtnSig: 'Continuar',
+              };
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',

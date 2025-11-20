@@ -21,10 +21,11 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   SOLO_REGEX_NUMEROS,
-  
+  TablePaginationComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
   TituloComponent,
@@ -57,6 +58,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 
@@ -79,6 +81,7 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 
 import {TablaDinamicaComponent} from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 /*
@@ -102,6 +105,9 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+    TooltipModule,
+    TablePaginationComponent,
+
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
@@ -125,6 +131,16 @@ export class DatosDelSolicitudModificacionComponent
  */
   @Input() mostrarScianBotones: boolean = true;
 
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
+
+
 
 
 noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
@@ -141,6 +157,8 @@ noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
  * @default true
  */
   @Input() mostrarNumeroYFecha: boolean = true;
+
+  mensajeDeError: string = '';
 
   @Input() mostrarAlerta: boolean = true; // o false, según lo que necesites
   /**
@@ -787,6 +805,26 @@ modificarMercancias(): void {
       });
   }
 
+  static numeroUMCDecimalesValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+        const VALUE = control.value;
+        
+        // Skip validation if empty
+        if (!VALUE) {
+          return null;
+        }
+        
+        // Regex pattern: up to 12 digits before decimal, up to 10 after
+        const PATTERN = /^\d{1,12}(\.\d{1,10})?$/;
+        
+        if (!PATTERN.test(VALUE)) {
+          return { formatoInvalido: true };
+        }
+        
+        return null;
+      };
+    }
+
   /**
    * Método de limpieza del componente.
    * Se utiliza para liberar recursos y evitar fugas de memoria.
@@ -795,15 +833,18 @@ modificarMercancias(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC), Validators.maxLength(13)]],
+      establecimientoRFCResponsableSanitario: ['', this.idProcedimiento !== 260917
+        ? [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+        : [Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+    ],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
       descripcionMunicipio: ['', Validators.required],
-      localidad: [''],
+      localidad: ['',[Validators.pattern(REGEX_IMPORTE_PAGO)]],
       establishomentoColonias: [''],
       calle: ['', Validators.required],
-      lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      lada: ['', [ Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30),  this.noOnlySpacesValidator]],
       establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS), this.noOnlySpacesValidator]],
     });
@@ -823,18 +864,18 @@ modificarMercancias(): void {
     this.formMercancias = this.fb.group({
       clasificacion: ['', Validators.required],
       especificarClasificacionProducto: ['', Validators.required],
-      denominacionEspecifica: ['', Validators.required],
+      denominacionEspecifica: ['', [Validators.required,this.noOnlySpacesValidator]],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       estadoFormaFarmaceutica: ['', Validators.required],
       fraccionArancelaria: ['', [Validators.required, Validators.minLength(8),Validators.pattern(SOLO_REGEX_NUMEROS),]],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+      cantidadUMT: ['', [Validators.required,Validators.pattern(SOLO_REGEX_NUMEROS)]],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+      cantidadUMC: ['', [Validators.required,Validators.pattern(SOLO_REGEX_NUMEROS),DatosDelSolicitudModificacionComponent.numeroUMCDecimalesValidator()]],
       UMC: ['', Validators.required],
-      presentacion: ['', Validators.required],
+      presentacion: ['', [Validators.required, this.noOnlySpacesValidator, Validators.maxLength(250)]],
       seleccionadasPaisDeOriginDatos: ['', Validators.required],
       seleccionadasPaisDeProcedenciaDatos: ['', Validators.required],
       seleccionadasEspecificoDatos: ['', Validators.required],
@@ -1097,8 +1138,14 @@ modificarMercancias(): void {
   this.seleccionadasPaisDeProcedenciaDatos= [];
   this.seleccionadasEspecificoDatos= [];
       this.cerrarModalMercancía();
-    }
+    
+  }else{
+    this.formMercancias.markAllAsTouched();
+    this.mensajeDeError = 'Faltan campos por capturar.';
+     return;
   }
+    this.mensajeDeError = '';
+}
 
   limpiarMercancia(): void { 
   this.abrirModalMercancia();

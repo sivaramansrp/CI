@@ -7,7 +7,7 @@ export interface ConfirmarNotificacionIniciarResponse {
   id_notificacion: number;
 
   /** Fecha en que se envió la notificación */
-  fecha_envio_notificacion: Date;
+  fecha_envio_notificacion: string;
 
   /** Número de folio del trámite asociado */
   num_folio_tramite: string;

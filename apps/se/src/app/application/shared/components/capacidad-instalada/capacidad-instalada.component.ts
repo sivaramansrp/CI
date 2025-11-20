@@ -34,6 +34,12 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Notificación que se muestra al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+    /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
 
   /**
    * Notificación que se muestra al usuario al eliminar un registro.
@@ -241,7 +247,23 @@ export class CapacidadInstaladaComponent implements OnInit {
    * del formulario no están definidos o no son válidos.
    */
   agregar(): void {
-    const CAPACIDAD: CapacidadInstalada = {
+      if (!this.capacidadForm.valid) {
+         this.notificacionAgregarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',          
+        };
+        this.capacidadForm.markAllAsTouched();
+  }
+  else
+  {
+const CAPACIDAD: CapacidadInstalada = {
       PLANTA: this.capacidadForm.value.fraccionArancelariaProductoTerminado, // Adjust field mapping as needed
       FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO: this.capacidadForm.value.fraccionArancelariaProductoTerminado,
       UMT: this.capacidadForm.value.umt,
@@ -267,6 +289,8 @@ export class CapacidadInstaladaComponent implements OnInit {
     }
     this.SelectedInstaladaDatos = [];
     this.limpiar();
+  }
+    
   }
 
   /**

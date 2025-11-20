@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_REMOVE_COMA, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-equipo-anticontaminante.enum';
@@ -124,6 +124,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   unidadCatalogo: Catalogo[] = [];
 
   /**
+   * Lista de opciones del catálogo utilizadas para la modificación de la fracción
+   * arancelaria en la sección *Partidas de la mercancía*.
+   *
+   * Esta propiedad almacena los elementos del catálogo que se mostrarán en el
+   * componente (por ejemplo, en un dropdown o autocompletado) para que el usuario
+   * seleccione la fracción correspondiente.
+   */
+  fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
+
+  /**
    * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
    */
   mostrarErroresMercancia = false;
@@ -131,7 +141,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
-
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -146,6 +155,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       controlName: 'clasificacion',
     },
   ];
+
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
@@ -218,7 +228,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      */
     public nuevaNotificacion!: Notificacion;
 
-    fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = []
+  /**
+   * Lista de elementos del catálogo que contienen las descripciones asociadas
+   * a las fracciones arancelarias dentro de *Partidas de la mercancía*.
+   *
+   * Esta propiedad se utiliza para poblar los controles (por ejemplo, un
+   * dropdown o autocompletado) donde el usuario puede seleccionar la descripción
+   * correspondiente a la fracción arancelaria.
+   */
+  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
    * Constructor del componente.
@@ -370,6 +388,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
+      fraccionTigiePartidasDeLaMercancia:[
+          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionTigiePartidasDeLaMercancia,
+          [Validators.required]
+        ],
+        fraccionDescripcionPartidasDeLaMercancia:[
+          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionDescripcionPartidasDeLaMercancia,
+          []
+        ]
     });
 
     this.formForTotalCount = this.fb.group({
@@ -477,13 +503,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
-          "id": String(this.tableBodyData.length + 1),
-          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
-          "unidadDeMedida": UMT || "",
-          "fraccionFrancelaria": this.seccionState?.fraccion || "",
-          "descripcion": this.seccionState?.descripcion || "",
-          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
-          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+          id: String(this.tableBodyData.length + 1),
+          cantidad: this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          unidadDeMedida: UMT.replace(REGEX_REMOVE_COMA, '') || "",
+          fraccionFrancelaria: this.seccionState?.fraccionDescripcionPartidasDeLaMercancia || "",
+          descripcion: this.seccionState?.descripcionPartidasDeLaMercancia || "",
+          precioUnitarioUSD: PRECIO_UNITARIO_USD || "",
+          totalUSD: this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
@@ -560,11 +586,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
-
+    if(evento.fraccionFrancelaria){
+      this.getFraccionAllDatos(evento.fraccionFrancelaria?.toString() || '0');
+    }
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
       descripcionPartidasDeLaMercancia: evento.descripcion,
+      fraccionModificationPartidasDeLaMercancia: evento.fraccionFrancelaria,
     });
   }
 
@@ -774,12 +803,42 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtiene la descripción de la fracción arancelaria correspondiente a las
+   * *Partidas de la mercancía* y actualiza la lista de descripciones del catálogo.
+   *
+   * Este método consume el servicio `getFraccionDescripcionPartidasDeLaMercanciaService`
+   * enviando el ID del procedimiento y el ID seleccionado por el usuario.
+   *
+   * @param {string} ID - Identificador de la fracción seleccionada.
+   * @returns {void}
+   */
   getFraccionDescripcionPartidasDeLaMercancia(ID: string): void {
       this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), ID)
         .subscribe((data)=>{
           this.fraccionDescripcionPartidasDeLaMercancia = data as Catalogo[];
         });
     }
+
+  /**
+   * Obtiene todos los datos relacionados con una fracción arancelaria específica
+   * dentro de *Partidas de la mercancía*, actualizando la lista utilizada para la
+   * modificación de la fracción seleccionada.
+   *
+   * Este método consulta el mismo servicio que obtiene la descripción de la fracción,
+   * pero almacena el resultado en `fraccionModificationPartidasDeLaMercancia` para
+   * fines de edición o actualización.
+   *
+   * @param {string} id - Identificador de la fracción cuyos datos deben consultarse.
+   * @returns {void}
+   */
+    getFraccionAllDatos(id: string): void {
+    this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), id).subscribe((data) => {
+      this.fraccionModificationPartidasDeLaMercancia = data as Catalogo[];
+      });
+    }
+
+    
 
   /**
    * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
@@ -803,8 +862,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
                 descripcion: item.descripcionOriginal?.toString() || '',
                 precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
                 totalUSD: item.importeTotalUSD?.toString() || '',
-                fraccionTigiePartidasDeLaMercancia: "",
-                fraccionDescripcionPartidasDeLaMercancia: "",
+                fraccionTigiePartidasDeLaMercancia: item.fraccionClave,
+                fraccionDescripcionPartidasDeLaMercancia: item.fraccionDescripcion,
               }));
               this.tramite130105Store.actualizarEstado({tableBodyData: TABLE_BODY })
           }

@@ -179,6 +179,12 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
   */
   @ViewChild('modalAladi', { static: false }) modalElement!: ElementRef;
 
+  
+  /**
+    * Referencia al elemento modal para Aladi.
+  */
+  @ViewChild('modalAladiAceptar', { static: false }) modalAladiAceptar!: ElementRef;
+
   /**
    * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
    * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
@@ -190,7 +196,21 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
    * this.modalInstance.show();
    * this.modalInstance.hide();
   */
-  private modalInstance!: Modal
+  private modalInstanceNoAceptado!: Modal
+
+  /**
+   * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
+   * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
+   *
+   * @type {Modal}
+   * @private
+   * @memberof DatosMercanciaComponent
+   * @example
+   * this.modalInstance.show();
+   * this.modalInstance.hide();
+  */
+  private modalInstanceAceptado!: Modal
+
 
   /**
    * Configuración de la tabla de observaciones del dictamen.
@@ -289,14 +309,14 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
    // Actualizamos el formulario
     this.dictamenForm.get('clasificacionAladi')?.setValue(value);
 
-    // Si el valor es false => No aceptada
-    const ESNOACEPTADA = !value;
-    this.generarDictamenClasificacionService.setNoAceptada(ESNOACEPTADA);
+    this.generarDictamenClasificacionService.setNoAceptada(value);
 
-    // Cerramos el modal
-    this.cerrarDialogo();
-
-    this.dictamenForm.get('clasificacionAladi')?.setValue(false);
+    if (value === true) {
+      this.modalInstanceAceptado?.hide();
+    } else {
+      this.modalInstanceNoAceptado?.hide();
+      this.dictamenForm.get('clasificacionAladi')?.setValue(false);
+    }
   }
 
   /**
@@ -306,11 +326,18 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
    * Inicializa la instancia del modal si no existe y lo muestra.
    * @returns {void}
  */
-  public abrirModal(): void{
-   if (!this.modalInstance && this.modalElement) {
-      this.modalInstance = new Modal(this.modalElement.nativeElement);
+  public abrirModal(bandera: boolean): void{
+    if(bandera){
+      if (!this.modalInstanceAceptado && this.modalAladiAceptar) {
+       this.modalInstanceAceptado = new Modal(this.modalAladiAceptar.nativeElement);
+      }
+      this.modalInstanceAceptado?.show();
+    }else{
+      if (!this.modalInstanceNoAceptado && this.modalElement) {
+       this.modalInstanceNoAceptado = new Modal(this.modalElement.nativeElement);
+      }
+       this.modalInstanceNoAceptado?.show();
     }
-    this.modalInstance?.show();
   }
 
   /**
@@ -519,9 +546,22 @@ private determinarCalificadorTipo(data: IniciarDictamenResponse | IniciarAutoriz
    * this.cerrarDialogo();
    * // El modal se oculta.
    */
-  cerrarDialogo(): void {
+  cerrarDialogoNoAceptar(): void {
     this.dictamenForm.get('clasificacionAladi')?.setValue(true);
-    this.modalInstance?.hide();
+    this.generarDictamenClasificacionService.setNoAceptada(true);
+    this.modalInstanceNoAceptado?.hide();
+  }
+
+  /**
+   * Cierra el modal de agregar o editar mercancías.
+   * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
+   *
+   * @example
+   * this.cerrarDialogo();
+   * // El modal se oculta.
+   */
+  cerrarDialogoAceptar():void{
+    this.modalInstanceAceptado?.hide();
   }
 
   /**

@@ -99,6 +99,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   idsolicitud?: string;
 
+  /**
+   * Evento emitido cuando la solicitud ha sido guardada exitosamente.
+   * El valor emitido es el identificador de la solicitud guardada.
+   * @event solicitudGuardada
+   * @type {EventEmitter<string>}
+   */
   @Output() solicitudGuardada = new EventEmitter<string>();
 
 

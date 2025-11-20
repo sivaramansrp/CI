@@ -16,6 +16,9 @@ import {
   REGEX_SOLO_NUMEROS,  
   TituloComponent,
   ValidacionesFormularioService,
+  doDeepCopy,
+  esValidArray,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
@@ -38,6 +41,7 @@ import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
@@ -431,6 +435,7 @@ eliminarProveedor(): void {
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
+    private _sharedSvc: Shared2605Service,
     private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
@@ -542,10 +547,21 @@ eliminarProveedor(): void {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ * @param formGroup Grupo de formulario que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  public markPaisTouched!: ((formGroup: FormGroup) => boolean);
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.markPaisTouched = (formGroup: FormGroup): boolean => {
+      return Boolean(formGroup?.get('pais')?.touched);
+    };
     
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
@@ -892,7 +908,8 @@ eliminarProveedor(): void {
   onTipoPersonaChange(formGroup: FormGroup): void {
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
-    if (TIPO_PERSONA_CONTROL?.value) {
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
+    if (TIPO_PERSONA_CONTROL?.value && this.nacional && !this.extranjero) {
       if(this.fisica || this.moral) {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.disable();
@@ -903,7 +920,9 @@ eliminarProveedor(): void {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.enable();
       }
-    }
+    } else {
+      formGroup.enable();
+    }  
   }
 
   /**
@@ -1120,7 +1139,7 @@ eliminarProveedor(): void {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string): void {
+  public inputChecked(checkBoxName: string, formGroup?: FormGroup): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -1155,6 +1174,28 @@ eliminarProveedor(): void {
       this.noContribuyente = true;
       this.fisica = false;
       this.moral = false;
+    }
+
+    // Condition for updating the validitity on tipo persona change
+    if (this.extranjero && (this.fisica || this.moral) && formGroup) {
+      if (this.fisica) {
+        ['rfc', 'curp', 'denominacionRazonSocial', 'codigoPostaloEquivalente', 'entidadFederativa','municipioAlcaldia', 'extranjeroCodigo', 'extranjeroColonia', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['nombre', 'primerApellido', 'segundoApellido'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      } else if (this.moral) {
+        ['rfc', 'curp', 'entidadFederativa', 'codigoPostaloEquivalente', 'municipioAlcaldia','extranjeroCodigo', 'extranjeroColonia', 'nombre', 'primerApellido', 'segundoApellido', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['denominacionRazonSocial'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      }
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && (this.fisica || this.moral) && formGroup) {
+      ['rfc'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(15), TercerosRelacionadosComponent.rfcValidator,]));
+      ['curp'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && this.noContribuyente && formGroup) {
+      ['curp'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(18), TercerosRelacionadosComponent.curpValidator,]));
+      ['rfc'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
     }
   }
 
@@ -1314,8 +1355,9 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    *
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitFabricanteForm(): void {
- /**
+  submitFabricanteForm(forma: FormGroup): void {
+    if (this.agregarFabricanteFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
   const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1367,7 +1409,11 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
   this.showFabricanteButtons = false;
   this.showTableDiv = !this.showTableDiv;
   this.showFabricante = !this.showFabricante;  
-  this.agregarFabricanteFormGroup.reset();
+    this.limpiar(forma);
+    } else {
+      this.agregarFabricanteFormGroup.markAllAsTouched();
+    }
+    
 }  
 
 /**
@@ -1376,8 +1422,9 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    *
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitFormuladorForm(): void {
-    /**
+  submitFormuladorForm(forma: FormGroup): void {
+    if (this.agregarFormuladorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1514,8 +1561,12 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    this.showFormuladorButtons = false;   
     this.tableValidEvent.emit('formulador');
     this.showTableDiv = !this.showTableDiv;
-    this.showFormulador = !this.showFormulador; 
-   this.agregarFormuladorFormGroup.reset();
+    this.showFormulador = !this.showFormulador;
+    this.limpiar(forma);
+    } else {
+      this.agregarFormuladorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1524,8 +1575,9 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm(): void {
-    /**
+  submitProveedorForm(forma: FormGroup): void {
+    if (this.agregarProveedorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1665,7 +1717,11 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     this.showProveedor = !this.showProveedor;
     this.selectedProveedorRow = null;
     this.showProveedorButtons = false; 
-    this.agregarProveedorFormGroup.reset();
+    this.limpiar(forma);
+    } else {
+      this.agregarProveedorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1724,23 +1780,62 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number): void {
+  cambiarRadio(value: string | number, formGroup: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    const TIPO_PERSONA_CONTROL = this.agregarFabricanteFormGroup.get('tipoPersona');
-    if (TIPO_PERSONA_CONTROL) {
-      TIPO_PERSONA_CONTROL.reset();
-    }
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad']);
+    this.disableAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
+
+  /**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  disableAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.disableAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.disable();
+      }
+    });
+  }
+
+/**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  resetAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.resetAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.reset();
+      }
+    });
+  }
+
 
   /**
    * Cambia el valor del radio button seleccionado.
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number): void {
+  cambiarRadioFisica(value: string | number, formGroup?: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    this.inputChecked(VALOR_SELECCIONADO);
+    this.inputChecked(VALOR_SELECCIONADO, formGroup);
   }
 
   /**
@@ -1753,33 +1848,119 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     forma.reset();
   }
 
+  /**
+  * @method mapApiResponseToForm
+  * @description
+  * Método estático que mapea la respuesta de una API a un objeto compatible con el formulario.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @returns Objeto con los campos mapeados para el formulario.
+  */
+ static mapApiResponseToForm(apiResponse: Record<string, unknown>): Record<string, unknown> {
+   const CONTRIBUYENTE: unknown = apiResponse?.['contribuyente'] || {};
+   const DOMICILIO =
+     typeof CONTRIBUYENTE === 'object' && CONTRIBUYENTE !== null && 'domicilio' in CONTRIBUYENTE
+       ? (CONTRIBUYENTE as { domicilio?: unknown }).domicilio || {}
+       : {};
+
+   return {
+     ...TercerosRelacionadosComponent.mapPersonFields(apiResponse, CONTRIBUYENTE as {
+       curp?: string;
+       nombre?: string;
+       apellido_paterno?: string;
+       apellido_materno?: string;
+       razon_social?: string;
+       telefono?: string;
+       correo_electronico?: string;
+     }),
+     ...TercerosRelacionadosComponent.mapAddressFields(DOMICILIO),
+     lada: '',
+     extranjeroCodigo: '',
+     extranjeroEstado: '',
+     extranjeroColonia: '',
+   };
+ }
+
+ /**
+  *  @method mapPersonFields
+  * @description
+  * Método estático que mapea los campos personales de la respuesta de la API y del contribuyente.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @param CONTRIBUYENTE Objeto que contiene los datos del contribuyente.
+  * @returns Objeto con los campos personales mapeados.
+  */
+  private static mapPersonFields(
+    apiResponse: { curp?: string; nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string } = {},
+    CONTRIBUYENTE: { curp?: string; nombre?: string; apellido_paterno?: string; apellido_materno?: string; razon_social?: string; telefono?: string; correo_electronico?: string } = {}
+  ): Record<string, unknown> {
+    return {
+      curp: apiResponse.curp ?? CONTRIBUYENTE.curp ?? '',
+      nombre: apiResponse.nombre ?? CONTRIBUYENTE.nombre ?? '',
+      primerApellido: apiResponse.apellidoPaterno ?? CONTRIBUYENTE.apellido_paterno ?? '',
+      segundoApellido: apiResponse.apellidoMaterno ?? CONTRIBUYENTE.apellido_materno ?? '',
+      denominacionRazonSocial: CONTRIBUYENTE.razon_social ?? '',
+      telefono: CONTRIBUYENTE.telefono ?? '',
+      correoElectronico: CONTRIBUYENTE.correo_electronico ?? '',
+    };
+  }
+
+  /**
+   * @method mapAddressFields
+   * @description Método estático que mapea los campos de dirección de la respuesta de la API.
+   * @param DOMICILIO Objeto que contiene los datos de la dirección.
+   * @returns Objeto con los campos de dirección mapeados.
+   */
+  private static mapAddressFields(DOMICILIO: {
+    pais?: { nombre?: string };
+    entidad_federativa?: { nombre?: string };
+    delegacion_municipio?: { nombre?: string };
+    localidad?: { nombre?: string };
+    cp?: string;
+    colonia?: { nombre?: string };
+    calle?: string;
+    num_exterior?: string;
+    num_interior?: string;
+  } = {}): Record<string, unknown> {
+    return {
+      pais: DOMICILIO?.pais?.nombre ?? '',
+      estadoLocalidad: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      municipioAlcaldia: DOMICILIO?.delegacion_municipio?.nombre ?? '',
+      localidad: DOMICILIO?.localidad?.nombre ?? '',
+      entidadFederativa: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      codigoPostaloEquivalente: DOMICILIO?.cp ?? '',
+      colonia: DOMICILIO?.colonia?.nombre ?? '',
+      coloniaoEquivalente: '',
+      calle: DOMICILIO?.calle ?? '',
+      numeroExterior: DOMICILIO?.num_exterior ?? '',
+      numeroInterior: DOMICILIO?.num_interior ?? '',
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   buscar(form: FormGroup): void {
-    if (form.get('rfc')?.valid) {
-      form.patchValue({
-        curp: 'MAVL621207HDGRLS06',
-        nombre: 'Juan Pérez',
-        primerApellido: 'Gómez',
-        segundoApellido: 'López',
-        denominacionRazonSocial: 'Razón Social Ejemplo',
-        pais: 'México',
-        estadoLocalidad: 'Estado Ejemplo',
-        municipioAlcaldia: 'Municipio Ejemplo',
-        localidad: 'Localidad Ejemplo',
-        entidadFederativa: 'Entidad Federativa Ejemplo',
-        codigoPostaloEquivalente: 'Código Postal Ejemplo',
-        colonia: 'Colonia Ejemplo',
-        coloniaoEquivalente: 'Colonia Equivalente Ejemplo',
-        calle: 'Calle Ejemplo',
-        numeroExterior: 'Número Exterior Ejemplo',
-        numeroInterior: '',
-        lada: '',
-        telefono: '618-256-2532',
-        correoElectronico: '',
-        extranjeroCodigo: 'Código del Extranjero Ejemplo',
-        extranjeroEstado: 'Estado del Extranjero Ejemplo',
-        extranjeroColonia: 'Colonia del Extranjero Ejemplo',
-      })
+    const PROCEDIMIENTO = String(this.idProcedimiento);
+    let DATOS: Record<string, unknown> = {};
+    if (form.get('rfc')?.valid && getValidDatos(form.get('rfc')?.value)) {
+      const PAYLOAD = {
+        "rfcRepresentanteLegal": form.get('rfc')?.value
+      }
+      this._sharedSvc.getRepresentanteLegala(PAYLOAD, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidArray(API_RESPONSE.datos)) {
+          DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+          form.patchValue(DATOS);
+        }
+      });
+    } else if (form.get('curp')?.valid && getValidDatos(form.get('curp')?.value)) {
+       const CURP = form.get('curp')?.value;
+       this._sharedSvc.getCURP(CURP, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+       .subscribe((response) => {
+          const API_RESPONSE = doDeepCopy(response);
+          if(esValidArray(API_RESPONSE.datos)) {
+            DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+            form.patchValue(DATOS);
+          }
+       });
     } else {
       form.get('rfc')?.markAsTouched();
       form.get('curp')?.markAsTouched();
