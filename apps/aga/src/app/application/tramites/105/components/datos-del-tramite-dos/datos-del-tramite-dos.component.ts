@@ -10,7 +10,8 @@ import {
   TableComponent,
   TipoNotificacionEnum,
   TituloComponent,
-  NotificacionesComponent
+  NotificacionesComponent,
+  REGEX_LLAVE_DE_PAGO_DE_DERECHO
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -449,9 +450,9 @@ onMercanciaRowsSelected(rows: AgentestableDatos[]) {
     });
 
     this.agenteForm = this.fb.group({
-      nombres: ['', [Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      nombres: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      segundoApellido: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       numeroPatente: ['', [Validators.required, Validators.maxLength(4)]],
     });
 

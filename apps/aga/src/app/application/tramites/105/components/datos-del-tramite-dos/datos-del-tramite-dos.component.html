@@ -111,6 +111,9 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="nombres">Nombre(s)*</label>
                   <input type="text" class="form-control" id="nombres" formControlName="nombres" />
+                    <div class="text-danger" *ngIf="agenteForm.get('nombres')?.touched && agenteForm.get('nombres')?.invalid && agenteForm.get('nombres')?.errors?.['pattern']">
+                      <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                    </div>
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('nombres')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('nombres')?.hasError('required')">
@@ -125,6 +128,9 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="primerApellido">Primer Apellido*</label>
                   <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
+                    <div class="text-danger" *ngIf="agenteForm.get('primerApellido')?.touched && agenteForm.get('primerApellido')?.invalid && agenteForm.get('primerApellido')?.errors?.['pattern']">
+                      <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                    </div>
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('primerApellido')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('primerApellido')?.hasError('required')">
@@ -139,6 +145,9 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="segundoApellido">Segundo Apellido*</label>
                   <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
+                    <div class="text-danger" *ngIf="agenteForm.get('segundoApellido')?.touched && agenteForm.get('segundoApellido')?.invalid && agenteForm.get('segundoApellido')?.errors?.['pattern']">
+                      <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                    </div>
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('segundoApellido')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('segundoApellido')?.hasError('required')">
