@@ -5,6 +5,8 @@ import {
   ListaPasosWizard,
   Notificacion,
   RegistroSolicitudService,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { PASOS, TITULOMENSAJE } from '../../constants/importacion-retorno-sanitario.enum';
@@ -16,7 +18,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { getValidDatos,esValidObject  } from '../../../../../../../../../libs/shared/data-access-user/src/core/utils/utilerias';
+
+
 /**
  * @component
  * @name ContenedorDePasosComponent
@@ -40,7 +43,7 @@ import { getValidDatos,esValidObject  } from '../../../../../../../../../libs/sh
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
-export class ContenedorDePasosComponent  implements OnInit{
+export class ContenedorDePasosComponent implements OnInit{
     /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
