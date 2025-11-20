@@ -1251,8 +1251,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarMercancia(): void {
-    // const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
-    // const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
     this.seleccionTabla([],[]);
     this.modalRef.abrir(AgregarMercanciaComponent);
   }
