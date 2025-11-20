@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, CrosslistComponent, InicioSesionService, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InicioSesionService, InputRadioComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ControlPermisosPreviosExportacionComponent } from './pages/control-permisos-previos-exportacion/control-permisos-previos-exportacion.component';
 import { ControlPermisosPreviosExportacionRoutingModule } from './control-permisos-previos-exportacion-routing.module';
@@ -38,7 +38,9 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    NotificacionesComponent,
+    AlertComponent
   ],
   providers:[ToastrService, InicioSesionService]
 })
