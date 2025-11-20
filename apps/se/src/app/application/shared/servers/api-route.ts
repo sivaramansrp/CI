@@ -62,6 +62,10 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     guardarCertificadoDisponsible: `${BASE_URL}${API}${procedure}${SOLICITUD}/guardar`,
     generaCadena:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/genera-cadena-original`,
     certificadoOrigen:(solicitudId:number) => `${BASE_URL}${API}${procedure}${SOLICITUD}/${solicitudId}/obtener-certificado-origen`,
+    buscarDomicilios: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-domicilios`,
+    sectoresDatos:(sectorClave:string): string => `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-sectores/${sectorClave}`,
+    buscarSectorFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-fraccion-arancelaria`,
+    buscarProductorIndirecto: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-productor-indirecto`,
 });
 
 
