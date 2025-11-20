@@ -1,12 +1,13 @@
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import {
   Catalogo,
   ConsultaioQuery,
+  REGEX_NUMERO_DECIMAL_3_DIGITOS,
   REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY,
   REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import {
   Tramite130203State,
@@ -339,11 +340,11 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.datosDeLosDiamantes = this.fb.group({
       cantidadEnQuilates: [
         this.seccionState?.cantidadEnQuilates,
-        [Validators.required, Validators.maxLength(11)],
+        [Validators.required, this.maxDigitsValidator(11), Validators.pattern(REGEX_NUMERO_DECIMAL_3_DIGITOS)],
       ],
       valorDeLosDiamantes: [
         this.seccionState?.valorDeLosDiamantes,
-        [Validators.required, Validators.maxLength(11)],
+        [Validators.required, this.maxDigitsValidator(11), Validators.pattern(REGEX_NUMERO_DECIMAL_3_DIGITOS)],
       ],
     });
   }
@@ -508,23 +509,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-/**
- * @description
- * Permite solo la entrada de números en el campo especificado del formulario.
- * Elimina automáticamente cualquier carácter no numérico mientras el usuario escribe.
- * @param evento Evento de entrada del campo.
- * @param formulario FormGroup al que pertenece el control.
- * @param nombreControl Nombre del control a limpiar.
- */
-  soloNumerosEnInput = (evento: Event, formulario: FormGroup, nombreControl: string): void => {
-    const INPUT = evento.target as HTMLInputElement;
-    const VALOR = INPUT.value.replace(/[^0-9]/g, '');
-    formulario.get(nombreControl)?.setValue(VALOR, { emitEvent: false });
 
-    if(this.soloNumerosEnInputVar){
-      // Actualiza el store con el valor limpio
-    }
-  }
   /*
    * @description
    * Maneja el evento de cambio del checkbox.
@@ -542,6 +527,87 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * @description
+   * Custom validator para contar solo dígitos enteros (excluyendo punto decimal y dígitos decimales).
+   * @param maxDigits Número máximo de dígitos enteros permitidos.
+   */
+  private maxDigitsValidator(maxDigits: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      
+      // Obtener solo la parte entera (antes del punto decimal)
+      const VALUE_STRING = String(control.value);
+      const INTEGER_PART = VALUE_STRING.includes('.') ? 
+        VALUE_STRING.split('.')[0] : VALUE_STRING;
+      
+      // Contar solo los dígitos de la parte entera
+      const INTEGER_DIGITS = INTEGER_PART.replace(/\D/g, '');
+      
+      if (INTEGER_DIGITS.length > maxDigits) {
+        return { maxDigits: { actualLength: INTEGER_DIGITS.length, maxLength: maxDigits } };
+      }
+      
+      return null;
+    };
+  }
+
+  /**
+   * @description
+   * Método para filtrar caracteres no numéricos del input.
+   * Solo permite números y puntos decimales.
+   * @param event Evento del input.
+   */
+  onNumericKeyUp(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value;
+    const FIELD_ID = INPUT.id; // Obtener el ID del campo (valorDeLosDiamantes o cantidadEnQuilates)
+    
+    // Filtrar solo números y puntos decimales
+    const FILTERED_VALUE = String(VALUE).replace(/[^0-9.]/g, '');
+    
+    // Solo actualizar si el valor cambió después del filtro
+    if (VALUE !== FILTERED_VALUE) {
+      INPUT.value = FILTERED_VALUE;
+      
+      // Actualizar el valor en el formulario y forzar la validación
+      const CONTROL = this.datosDeLosDiamantes.get(FIELD_ID);
+      CONTROL?.setValue(FILTERED_VALUE);
+      CONTROL?.updateValueAndValidity();
+      
+      this.setValoresStore(this.datosDeLosDiamantes, FIELD_ID);
+    }
+  }
+
+  /**
+   * @description
+   * Método para prevenir la entrada de caracteres no numéricos.
+   * Solo permite números y punto decimal.
+   * @param event Evento del teclado.
+   */
+  onKeyPress(event: KeyboardEvent): boolean {
+    const CHAR_CODE = event.which ? event.which : event.keyCode;
+    
+    // Permitir solo números (0-9) y punto decimal (.)
+    if ((CHAR_CODE >= 48 && CHAR_CODE <= 57) || CHAR_CODE === 46) {
+      const INPUT = event.target as HTMLInputElement;
+      const CURRENT_VALUE = INPUT.value;
+      
+      // Permitir solo un punto decimal
+      if (CHAR_CODE === 46 && CURRENT_VALUE.includes('.')) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+    
+    // Bloquear alphabets y special characters
+    event.preventDefault();
+    return false;
   }
    
 }

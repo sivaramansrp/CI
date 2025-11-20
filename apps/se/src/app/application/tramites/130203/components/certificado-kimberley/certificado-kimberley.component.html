@@ -356,21 +356,26 @@
               class="form-control"
               type="text"
               id="cantidadEnQuilates"
+              maxlength="15"
               formControlName="cantidadEnQuilates"
               libUppercase
               aria-labelledby="cantidadEnQuilates"
-              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'cantidadEnQuilates')"
+              (input)="onNumericKeyUp($event)"
+              (keypress)="onKeyPress($event)"
               (change) = "setValoresStore(datosDeLosDiamantes, 'cantidadEnQuilates')"
               [ngClass]="{'is-invalid': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
             />
-            <div *ngIf="isInvalid('cantidadEnQuilates', datosDeLosDiamantes)" class="invalid-feedback">
-              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['maxlength']">
-                El número debe tener 11 dígitos enteros
-              </small>
-            </div>
+            @if (datosDeLosDiamantes.get('cantidadEnQuilates')?.invalid && datosDeLosDiamantes.get('cantidadEnQuilates')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['pattern']) {
+                <small>El número debe tener 3 dígitos decimales</small>
+                } @else if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['maxDigits']) {
+                <small>El número debe tener 11 dígitos enteros</small>
+                }
+              </div>
+              }
           </div>
         </div>
 
@@ -389,18 +394,22 @@
               placeholder=""
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
-              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'valorDeLosDiamantes')"
               (change) = "setValoresStore(datosDeLosDiamantes, 'valorDeLosDiamantes')"
+              (input)="onNumericKeyUp($event)"
+              (keypress)="onKeyPress($event)"
               [ngClass]="{'is-invalid': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
             />
-            <div *ngIf="isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)" class="invalid-feedback">
-            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['required']">
-              Este campo es obligatorio.
-            </small>
-            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['maxlength']">
-              El número debe tener 11 dígitos enteros
-            </small>
-          </div>
+             @if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.invalid && datosDeLosDiamantes.get('valorDeLosDiamantes')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['pattern']) {
+                <small>El número debe tener 3 dígitos decimales</small>
+                } @else if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['maxDigits']) {
+                <small>El número debe tener 11 dígitos enteros</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>

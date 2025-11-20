@@ -1339,3 +1339,12 @@ export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
  */
 
 export const REGEX_REMOVE_COMA = /,/g;
+
+/**
+ * Expresión regular para validar números decimales con hasta 3 dígitos decimales opcionales.
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - ".123" (falta de dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_DECIMAL_3_DIGITOS = /^\d+(\.\d{0,3})?$/;
