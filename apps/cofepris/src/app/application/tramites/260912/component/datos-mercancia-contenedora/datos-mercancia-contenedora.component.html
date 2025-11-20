@@ -38,6 +38,7 @@
             class="form-control"
             id="marca"
             type="text"
+            maxlength="1000"
             formControlName="denominacionEspecificaProducto"
             [ngClass]="isValid(mercanciaForm, 'denominacionEspecificaProducto') ? 'required' : ''"
           />
@@ -109,6 +110,7 @@
               class="form-control"
               id="denominacionComun"
               type="text"
+              maxlength="120"
               formControlName="denominacionComun"
             />
             <div
@@ -302,7 +304,7 @@
             >Cantidad UMT*:</label
           >
           <input
-            maxlength="16"
+            maxlength="18"
             class="form-control"
             id="cantidadUmtValor"
             type="text"
@@ -357,7 +359,7 @@
             >Cantidad UMC*:</label
           >
           <input
-            maxlength="16"
+            maxlength="20"
             class="form-control"
             id="cantidadUmcValor"
             type="text"
