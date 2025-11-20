@@ -1163,14 +1163,14 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     id: [this.obtenerValor('id')],
     clavesLote: [
       {
-        value: this.claveConfig.datos,
+        value: this.obtenerValor('clavesLote'),
         disabled: false,
       },
     ],
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
-   const CLAVEDATA = this.obtenerValor('claveDeLos');
-  //  this.claveConfig.datos = Array.isArray(CLAVEDATA) ? CLAVEDATA : CLAVEDATA ? [CLAVEDATA] : [];
+   const CLAVEDATA = this.obtenerValor('clavesLote');
+   this.claveConfig.datos = MERCANCIA_FORM_DETALLE.clavesLote || [];
   setTimeout(()=>{
  
       MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
