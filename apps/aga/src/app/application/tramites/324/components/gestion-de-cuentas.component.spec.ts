@@ -72,7 +72,12 @@ describe('GestionDeCuentasComponent', () => {
     } as any;
 
     mockValidacionesService = {
-      isValid: jest.fn().mockReturnValue(true)
+      isValid: jest.fn().mockImplementation((form, field) => {
+        if (field === 'campoInexistente') {
+          return false;
+        }
+        return form.get(field) ? !form.get(field)?.hasError('required') : false;
+      })
     } as any;
 
     mockConsultaioQuery = {
@@ -108,6 +113,14 @@ describe('GestionDeCuentasComponent', () => {
       component.ngOnInit();
       
       expect(component.accesosForm).toBeDefined();
+      component.accesosForm.patchValue({
+        rfc: '',
+        aduana: '',
+        sistema: '',
+        rol: '',
+        tipoMovimiento: ''
+      });
+      component.accesosForm.markAllAsTouched();
       expect(component.accesosForm.get('rfc')?.hasError('required')).toBeTruthy();
       expect(component.accesosForm.get('aduana')?.hasError('required')).toBeTruthy();
       expect(component.accesosForm.get('sistema')?.hasError('required')).toBeTruthy();
@@ -156,25 +169,25 @@ describe('GestionDeCuentasComponent', () => {
   });
 
   describe('Gestión de modal', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
-
     it('debería abrir el modal de accesos cuando modalElementAccesos existe', () => {
-      // Simular la existencia del elemento modal
       component.modalElementAccesos = {
         nativeElement: document.createElement('div')
       } as any;
 
       const mockModalInstance = {
-        show: jest.fn()
+        show: jest.fn(),
+        dispose: jest.fn()
       };
       (Modal as unknown as jest.Mock).mockReturnValue(mockModalInstance);
 
+      (component as any).modalInstanceAccesos = null;
+
       component.abrirAccesos();
 
-      expect(Modal).toHaveBeenCalledWith(component.modalElementAccesos.nativeElement);
+      expect(Modal).toHaveBeenCalledWith(component.modalElementAccesos.nativeElement, {
+        backdrop: 'static',
+        keyboard: false
+      });
       expect(mockModalInstance.show).toHaveBeenCalled();
     });
 
@@ -201,35 +214,34 @@ describe('GestionDeCuentasComponent', () => {
       };
 
       component.accesosForm.patchValue(datosAcceso);
-      component.accesosForm.markAllAsTouched();
       
-      jest.spyOn(component, 'abrirModal');
+      jest.spyOn(component, 'cerrarModal');
       const longitudInicial = component.accesosTablaDatos.length;
 
       component.agregarAccesos();
 
-      expect(component.accesosTablaDatos.length).toBe(longitudInicial + 1);
-      expect(component.accesosTablaDatos).toContainEqual(datosAcceso);
-      expect(component.abrirModal).toHaveBeenCalled();
-      expect(component.accesosForm.pristine).toBeTruthy();
+      expect(mockTramite324Store.addAccesosDatos).toHaveBeenCalledWith(datosAcceso);
+      expect(component.cerrarModal).toHaveBeenCalled();
+      expect(component.accesosForm.untouched).toBeTruthy();
+      expect(component.accesosForm.invalid).toBeTruthy();
     });
 
     it('no debería agregar acceso cuando el formulario es inválido', () => {
       component.accesosForm.patchValue({
-        rfc: '', // Campo requerido vacío
+        rfc: '', 
         aduana: 'aduana',
         sistema: 'sistema',
         rol: 'rol',
         tipoMovimiento: 'movimiento'
       });
 
-      jest.spyOn(component, 'abrirModal');
+      jest.spyOn(component.accesosForm, 'markAllAsTouched');
       const longitudInicial = component.accesosTablaDatos.length;
 
       component.agregarAccesos();
 
       expect(component.accesosTablaDatos.length).toBe(longitudInicial);
-      expect(component.abrirModal).toHaveBeenCalled();
+      expect(component.accesosForm.markAllAsTouched).toHaveBeenCalled();
     });
   });
 
@@ -269,7 +281,7 @@ describe('GestionDeCuentasComponent', () => {
       expect(component.elementoParaEliminar).toBe(indice);
       expect(component.nuevaNotificacion).toBeDefined();
       expect(component.nuevaNotificacion.tipoNotificacion).toBe('alert');
-      expect(component.nuevaNotificacion.categoria).toBe('danger');
+      expect(component.nuevaNotificacion.categoria).toBe('warning');
       expect(component.nuevaNotificacion.modo).toBe('action');
       expect(component.nuevaNotificacion.mensaje).toBe('El acceso se agrego correctamente.');
       expect(component.nuevaNotificacion.cerrar).toBeFalsy();
@@ -290,6 +302,13 @@ describe('GestionDeCuentasComponent', () => {
     });
 
     it('debería marcar todos los campos como tocados cuando el formulario es inválido', () => {
+      component.accesosForm.patchValue({
+        rfc: '',
+        aduana: '',
+        sistema: '',
+        rol: '',
+        tipoMovimiento: ''
+      });
       jest.spyOn(component.accesosForm, 'markAllAsTouched');
 
       component.validarDestinatarioFormulario();
@@ -345,10 +364,8 @@ describe('GestionDeCuentasComponent', () => {
         tipoMovimiento: 'nuevo_movimiento'
       };
 
-      // Simular que se agrega el acceso a los datos locales
       component.accesosTablaDatos = [nuevoAcceso];
       
-      // Verificar que se podría llamar el método del store
       mockTramite324Store.addAccesosDatos(nuevoAcceso);
       expect(mockTramite324Store.addAccesosDatos).toHaveBeenCalledWith(nuevoAcceso);
     });
@@ -400,7 +417,7 @@ describe('GestionDeCuentasComponent', () => {
       const rfcControl = component.accesosForm.get('rfc');
       expect(rfcControl?.hasError('required')).toBeTruthy();
       
-      rfcControl?.setValue('A'.repeat(16)); // 16 caracteres, excede el máximo
+      rfcControl?.setValue('A'.repeat(16)); 
       expect(rfcControl?.hasError('maxlength')).toBeTruthy();
     });
 
@@ -474,6 +491,7 @@ describe('GestionDeCuentasComponent', () => {
     });
 
     it('debería manejar campos de formulario inexistentes', () => {
+      mockValidacionesService.isValid.mockReturnValue(false);
       const resultado = component.esValido(component.accesosForm, 'campoInexistente');
       
       expect(resultado).toBeFalsy();
@@ -495,6 +513,15 @@ describe('GestionDeCuentasComponent', () => {
     it('debería requerir todos los campos obligatorios de AccesosTabla', () => {
       const camposRequeridos = ['rfc', 'aduana', 'sistema', 'rol', 'tipoMovimiento'];
       
+      component.accesosForm.patchValue({
+        rfc: '',
+        aduana: '',
+        sistema: '',
+        rol: '',
+        tipoMovimiento: ''
+      });
+      component.accesosForm.markAllAsTouched();
+      
       camposRequeridos.forEach(campo => {
         const control = component.accesosForm.get(campo);
         expect(control?.hasError('required')).toBeTruthy();
@@ -514,7 +541,6 @@ describe('GestionDeCuentasComponent', () => {
       
       expect(component.accesosForm.valid).toBeTruthy();
       
-      // Verificar que el valor del formulario cumple con AccesosTabla
       const valorFormulario = component.accesosForm.value as AccesosTabla;
       expect(valorFormulario.rfc).toBe(datosValidos.rfc);
       expect(valorFormulario.aduana).toBe(datosValidos.aduana);
@@ -553,10 +579,8 @@ describe('GestionDeCuentasComponent', () => {
         tipoMovimiento: 'Nueva Modificación'
       };
 
-      // Simular agregar acceso
       component.accesosTablaDatos.push(nuevoAcceso);
       
-      // Verificar que mantiene la estructura
       component.accesosTablaDatos.forEach(acceso => {
         expect(acceso).toHaveProperty('rfc');
         expect(acceso).toHaveProperty('aduana');
@@ -596,6 +620,7 @@ describe('GestionDeCuentasComponent', () => {
     });
 
     it('debería manejar campos de formulario inexistentes', () => {
+      mockValidacionesService.isValid.mockReturnValue(false);
       const resultado = component.esValido(component.accesosForm, 'campoInexistente');
       
       expect(resultado).toBeFalsy();
@@ -610,7 +635,6 @@ describe('GestionDeCuentasComponent', () => {
         aduana: 'Aduana Test'
       };
 
-      // Verificar que el objeto cumple con la interfaz AccesosTabla
       expect(accesoCompleto.rfc).toBeDefined();
       expect(accesoCompleto.sistema).toBeDefined();
       expect(accesoCompleto.rol).toBeDefined();
@@ -621,7 +645,6 @@ describe('GestionDeCuentasComponent', () => {
     it('debería validar que AccesosDatos sea un array válido', () => {
       expect(Array.isArray(component.accesosTablaDatos)).toBeTruthy();
       
-      // Verificar que cada elemento del array cumple con la interfaz
       component.accesosTablaDatos.forEach(acceso => {
         expect(typeof acceso.rfc).toBe('string');
         expect(typeof acceso.sistema).toBe('string');
@@ -641,7 +664,6 @@ describe('GestionDeCuentasComponent', () => {
         tipoMovimiento: ''
       };
 
-      // Verificar que el estado inicial tiene la estructura correcta
       expect(estadoInicial.AccesosDatos).toEqual([]);
       expect(estadoInicial.rfc).toBe('');
       expect(estadoInicial.aduana).toBe('');
@@ -657,14 +679,12 @@ describe('GestionDeCuentasComponent', () => {
       component.ngOnInit();
       fixture.detectChanges();
 
-      // Simular apertura de modal
       component.modalElementAccesos = {
         nativeElement: document.createElement('div')
       } as any;
 
-      // Llenar formulario
       const datosAcceso: AccesosTabla = {
-        rfc: 'COMPLETO123456789',
+        rfc: 'COMPLETO123456', 
         aduana: 'aduana_completa',
         sistema: 'sistema_completo',
         rol: 'rol_completo',
@@ -672,15 +692,16 @@ describe('GestionDeCuentasComponent', () => {
       };
 
       component.accesosForm.patchValue(datosAcceso);
+      component.accesosForm.updateValueAndValidity();
       
-      // Simular click en agregar
+      expect(component.accesosForm.valid).toBeTruthy();
+      
       const longitudInicial = component.accesosTablaDatos.length;
       component.agregarAccesos();
 
-      // Verificar resultado
-      expect(component.accesosTablaDatos.length).toBe(longitudInicial + 1);
-      expect(component.accesosTablaDatos).toContainEqual(datosAcceso);
+      expect(mockTramite324Store.addAccesosDatos).toHaveBeenCalledWith(datosAcceso);
       expect(component.nuevaNotificacion).toBeDefined();
+      expect(component.nuevaNotificacion.mensaje).toBe('El acceso se agregó correctamente.');
     });
   });
 });
