@@ -177,6 +177,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
+  isInvalidaPartidas: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb Servicio para la creación de formularios reactivos.
    * @param http Servicio para realizar solicitudes HTTP.
@@ -501,6 +506,37 @@ validarYEnviarFormulario(): void {
           (pais: Catalogo) => pais.descripcion
         );
       });
+  }
+
+  /**
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formDelTramite.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.tableBodyData.length === 0) {
+      this.isInvalidaPartidas = true;
+      isValid = false;
+    } else if (this.tableBodyData.length > 0) {
+      this.isInvalidaPartidas = false;
+    }
+    if (this.paisForm.invalid) {
+      this.paisForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.frmRepresentacionForm.invalid) {
+      this.frmRepresentacionForm.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
   }
 
   /**

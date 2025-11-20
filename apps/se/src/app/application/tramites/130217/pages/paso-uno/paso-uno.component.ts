@@ -1,7 +1,8 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente que representa el primer paso del trámite 130217.
@@ -36,6 +37,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Contiene la información relevante para el flujo del trámite en este paso.
    */
   public consultaState!:ConsultaioState;
+
+  /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
 
   /**
    * Constructor del componente PasoUnoComponent.

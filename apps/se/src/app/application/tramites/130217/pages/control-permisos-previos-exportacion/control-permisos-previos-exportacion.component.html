@@ -35,11 +35,15 @@
       <div class="row">
         @switch(indice){
                 @case(1){
-                <app-paso-uno></app-paso-uno>
+                  <app-paso-uno></app-paso-uno>
                 }@case(2){
-                  <app-paso-dos></app-paso-dos>
+                  <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'130217'"
+                    [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+                    (reenviarCargaRealizada)="cargaRealizada($event)"
+                    (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
                 }@case(3){
-                  <app-paso-tres></app-paso-tres>
+                  <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="130217"
+                    [procedureUrl]="'previos-exportacion/control-permisos-previos-exportacion'"></paso-firma>
                 }
         }
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>

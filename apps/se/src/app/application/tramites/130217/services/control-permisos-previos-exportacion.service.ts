@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { Tramite130217Query } from '../../../estados/queries/tramite130217.query';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class ControlPermisosPreviosExportacionService {
   constructor(
     private http: HttpClient,
     private tramite130217Store: Tramite130217Store,
+    private tramite130217Query: Tramite130217Query
   ) {
     //
   }
@@ -96,6 +98,14 @@ export class ControlPermisosPreviosExportacionService {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite130217State> {
     return this.http.get<Tramite130217State>('assets/json/130217/control-permisos-datos.json');
+  }
+
+  /**
+     * Obtiene todos los datos del estado almacenado en el store.
+     * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+     */
+  getAllState(): Observable<Tramite130217State> {
+    return this.tramite130217Query.selectSolicitud$;
   }
 
 }

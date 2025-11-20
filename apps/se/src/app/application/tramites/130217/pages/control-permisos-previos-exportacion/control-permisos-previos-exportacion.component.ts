@@ -2,10 +2,16 @@
  * Importamos los módulos necesarios y constantes.
  * Estos incluyen datos relacionados con el asistente de pasos (wizard) y las enumeraciones específicas de la aplicación. 
  */
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src';
-import { AccionBoton } from '../../enums/accion-botton.enum';
+import { AccionBoton, FORM_ERROR_ALERT } from '../../enums/accion-botton.enum';
 import { PASOS_EXPORTACION } from '../../constants/control-permisos-previos-exportacion.enum';
+import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, take, takeUntil } from 'rxjs';
+import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 
  /**
    * Selector para usar este componente dentro de otras partes de la aplicación.
@@ -59,21 +65,160 @@ export class ControlPermisosPreviosExportacionComponent {
   public alertaNotificacion!: Notificacion;
 
   /**
-   * Actualiza el índice del paso actual según la acción del usuario.
-   * Permite la navegación hacia adelante (cont) o hacia atrás a través de los pasos del asistente.
-   * 
-   * @param e - Un objeto que contiene el valor del paso objetivo y el tipo de acción 
-   * ('cont' para continuar o 'back' para retroceder).
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = FORM_ERROR_ALERT;
+
+  /**
+   * Indica si la carga de documentos está en progreso.
+   * Se inicializa en true para indicar que la carga está en progreso al inicio.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario del paso actual es válido.
+   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+  * Indica si la sección de carga de documentos está activa.
+  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+  */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+  * Indica si el botón para cargar archivos está habilitado.
+  */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+    * Evento que se emite para cargar archivos.
+    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+    */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * @property {Tramite130217State} solicitudState
+   * @description
+   * Estado actual de la solicitud del trámite 130105.
+   */
+  solicitudState!: Tramite130217State;
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   * Se utiliza para acceder a las funcionalidades del primer paso del asistente.
+   */
+  @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
+  
+  /**
+   * @description
+   * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
+  
+  /**
+   * @description
+   * Constructor de la clase.
+   * @param controlPermisosPreviosExportacionService
+   * @param tramite130217Store
+   */
+  constructor(private controlPermisosPreviosExportacionService: ControlPermisosPreviosExportacionService,
+     private tramite130217Store: Tramite130217Store,
+     private tramite130217Query: Tramite130217Query,
+     private toastrService: ToastrService) {
+    this.tramite130217Query.selectSolicitud$.pipe(takeUntil(this.destroyed$)).subscribe((solicitudState) => {
+      this.solicitudState = solicitudState;
+    });
+  }
+
+  /**
+   * Método para actualizar el índice del paso actual en el asistente.
+   * También navega al siguiente o al paso anterior según la acción especificada.
+   *
+   * Objeto de tipo `AccionBoton` que contiene:
+   *  - `valor`: El nuevo índice del paso.
+   *  - `accion`: La acción a realizar ('cont' para continuar o 'ant' para retroceder).
    */
   getValorIndice(e: AccionBoton): void {
-    // Verifica que el índice del paso objetivo esté dentro del rango válido.
-    if (e.valor > 0 && e.valor < 4) {
-      this.indice = e.valor; // Actualiza el índice del paso actual.
+    this.esFormaValido = false;
+    if (this.indice === 1 && e.accion === 'cont') {
+      this.datosPasos.indice = 1;
+      const ISVALID = this.pasoUnoComponent?.solicitudComponent?.validarFormulario();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+      this.obtenerDatosDelStore(e);
+    } else if (e.valor > 0 && e.valor <= this.pasosSolicitar.length) {
+      this.pasoNavegarPor(e);
+    }
+  }
+
+  /**
+  * Obtiene el valor del índice de la acción del botón.
+  * @param e Acción del botón.
+  */
+  pasoNavegarPor(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente(); // Llama al método para avanzar al siguiente paso.
+        this.wizardComponent.siguiente();
       } else {
-        this.wizardComponent.atras(); // Llama al método para regresar al paso anterior.
+        this.wizardComponent.atras();
       }
     }
   }
+
+  /**
+    * Obtiene los datos del store y los guarda utilizando el servicio.
+    */
+  obtenerDatosDelStore(e: AccionBoton): void {
+    this.controlPermisosPreviosExportacionService.getAllState()
+      .pipe(take(1))
+      .subscribe((data) => {
+        // this.guardar(data, e);
+      });
+  }
+
+  /**
+   *  Método para manejar el evento de carga en progreso.
+   * @param carga Indica si la carga está en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado de la sección de carga de documentos.
+  *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+  * {void} No retorna ningún valor.
+  */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia los recursos y restablece el estado del store asociado al trámite 130105.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    this.tramite130217Store.resetStore();
+  }
+
 }

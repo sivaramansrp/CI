@@ -7,6 +7,10 @@ import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-
  * Interfaz que define la estructura del estado para Tramite130217.
  */
 export interface Tramite130217State {
+  /**
+   * ID de la solicitud asociada al trámite.
+   */
+  idSolicitud: number;
   /** Nombre del producto */
   producto: string;
   /** Descripción del producto */
@@ -62,6 +66,7 @@ export interface Tramite130217State {
  */
 export function createInitialState(): Tramite130217State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
@@ -110,4 +115,24 @@ export class Tramite130217Store extends Store<Tramite130217State> {
       ...valores,
     }));
   }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
+  }
+
 }
