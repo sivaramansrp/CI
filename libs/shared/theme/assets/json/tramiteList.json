@@ -499,8 +499,8 @@
   {
     "id": 72,
     "tramite": 220202,
-    "linkDashboard": "/agricultura/certificado-fitosanitario/agricultura",
-    "linkDepartment": "/pago/certificado-fitosanitario/agricultura",
+    "linkDashboard": "/agricultura/certificado-fitosanitario/registrofitosanitario",
+    "linkDepartment": "/pago/certificado-fitosanitario/registrofitosanitario",
     "department": "agricultura"
   },
   {
