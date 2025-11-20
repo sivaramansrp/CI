@@ -145,7 +145,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Sujeto para gestionar la destrucción de suscripciones.
    */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
   /**
    * @description Arreglo que almacena un catálogo de elementosDeBloque.
    * @type {Catalogo[]}
@@ -229,10 +229,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private tramite130106Store: Tramite130106Store,
     private tramite130106Query: Tramite130106Query,
-    private solocitud130106Service: Solocitud130106Service,
+    public solocitud130106Service: Solocitud130106Service,
     private consultaioQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -267,7 +266,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.getRegimenes();
     this.getFraccionArancelaria();
-    this.getUMTCatalogo();
     this.enCambioDeBloque(105);
   }
 
@@ -504,6 +502,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
 
+  /**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas) || 0;
+    const TOTAL_USD = Number(cantidadUSD) || 0;
+
+    if (TOTAL_PARTIDAS === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 3;
+    const IMPORTE_UNITARIO_USD = TOTAL_USD / TOTAL_PARTIDAS;
+
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
+  }
 
 
   /**
@@ -511,95 +528,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
-      const CONTROL = this.mercanciaForm.get(controlName);
-      if (CONTROL) {
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-      }
-    });
-
-    if (this.mercanciaForm.get('cantidad')?.invalid ||
-      this.mercanciaForm.get('valorFacturaUSD')?.invalid
-    ) {
-      this.mostrarErroresMercancia = true;
-      this.mostrarErroresPartidas = false;
-      return;
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    } else {
+      this.mostrarTabla = true;
+      this.tramite130106Store.actualizarEstado({ mostrarTabla: true });
+      const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+      const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
+      const DATOS = [
+        {
+          "id": String(this.tableBodyData.length + 1),
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": UMT || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+        }
+      ];
+      this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.partidasDelaMercanciaForm.reset();
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+      const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+      this.formForTotalCount.patchValue({
+        cantidadTotal: CANTIDAD_TOTAL,
+        valorTotalUSD: TOTAL_USD,
+      });
+      this.tramite130106Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     }
-    this.mostrarErroresMercancia = false;
-    [
-      'cantidadPartidasDeLaMercancia',
-      'valorPartidaUSDPartidasDeLaMercancia',
-      'descripcionPartidasDeLaMercancia'
-    ].forEach(controlName => {
-      const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
-      if (CONTROL) {
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-      }
-    });
-    if (
-      this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
-      this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
-      this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
-    ) {
-      this.mostrarErroresPartidas = true;
-      return;
-    }
-    // Si fracción no tiene valor, mostrar popup y detener flujo
-    if (!this.mercanciaForm.get('fraccion')?.value) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'info',
-        modo: '',
-        titulo: '',
-        mensaje: 'Debes seleccionar una Fracción arancelaria',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-        tamanioModal: 'modal-sm'
-      };
-      this.mostrarNotificacion = true;
-      return;
-    }
-    const CURRENT_TABLE = this.tramite130106Query.getValue().tableBodyData || [];
-    const CANTIDAD = Number(this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value);
-    const TOTALUSD = Number(this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value);
-    const PRECIOUNITARIO_USD =
-      CANTIDAD && !isNaN(CANTIDAD) && !isNaN(TOTALUSD)
-        ? (TOTALUSD / CANTIDAD).toFixed(2)
-        : '';
-    const NEW_ROW: PartidasDeLaMercanciaModelo = {
-      id: Date.now().toString(),
-      cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-      totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-      descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-      unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-      fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
-      precioUnitarioUSD: PRECIOUNITARIO_USD
-    };
-    const UPDATED_TABLE = [...CURRENT_TABLE, NEW_ROW];
-    this.tramite130106Store.actualizarEstado({
-      tableBodyData: UPDATED_TABLE,
-      mostrarTabla: true
-    });
-    this.tableBodyData = UPDATED_TABLE;
-    this.mostrarTabla = true;
-    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-      (sum, row) => sum + Number(row.cantidad),
-      0
-    );
-    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-      (sum, row) => sum + Number(row.totalUSD),
-      0
-    );
-    this.tramite130106Store.actualizarEstado({
-      cantidadTotal: String(CANTIDAD_TOTAL),
-      valorTotalUSD: String(VALOR_TOTAL_USD)
-    });
-    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
-    this.partidasDelaMercanciaForm.reset();
-    this.mostrarErroresPartidas = false;
   }
 
   /**
@@ -687,6 +645,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if ($event.campo === 'fraccion') {
       this.mercanciaForm.get('unidadMedida')?.setValue('1');
       this.tramite130106Store.actualizarEstado({ 'unidadMedida': '1' });
+    }
+
+     if ($event.campo === 'fraccion') {
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUMTCatalogo(VALOR);
     }
   }
   /**
@@ -869,11 +832,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de unidades de medida desde el servicio.
    * Actualiza la propiedad del componente con los datos obtenidos.
    */
-  getUMTCatalogo(): void {
-    this.solocitud130106Service.getUMTCatalogo('130106').subscribe((data) => {
+  getUMTCatalogo(FRACCION_ID: string): void {
+    this.solocitud130106Service.getUMTCatalogo('130106', FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data || [];
+       if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130106Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
     });
   }
+ 
   /**
   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
   */

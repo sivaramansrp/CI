@@ -4,8 +4,10 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { Solicitud130106State, Tramite130106Store } from '../../../estados/tramites/tramite130106.store';
-import { Catalogo, CatalogoServices } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoServices, JSONResponse } from '@libs/shared/data-access-user/src';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { PROC_130106 } from '../servers/api-routes';
+import { Tramite130106Query } from '../../../estados/queries/tramite130106.query';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +27,8 @@ export class Solocitud130106Service {
 
   /** Constructor que inyecta servicios HTTP y el store del trámite 130106.  
    *  Utilizado para inicializar dependencias necesarias en el componente. */
-  constructor(private http: HttpClient, private tramite130106Store: Tramite130106Store, private catalogoServices: CatalogoServices) {
+  constructor(private http: HttpClient, private tramite130106Store: Tramite130106Store,
+    private catalogoServices: CatalogoServices, private tramite130106Query: Tramite130106Query) {
     // Lógica de inicialización si es necesario
   }
   /** Actualiza el estado del formulario en el store con los datos proporcionados.  
@@ -91,11 +94,18 @@ export class Solocitud130106Service {
    *  @param {string} tramite - El identificador del trámite.
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de unidades de medida.
    */
-  getUMTCatalogo(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.getUMTCatalogo(tramite, "87012301").pipe(
+  getUMTCatalogo(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID).pipe(
       map(res => res?.datos ?? [])
     );
   }
+
+  //   getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
+  //   return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
+  //     .pipe(
+  //       map(res => res?.datos ?? [])
+  //     );
+  // }
   /** Obtiene el catálogo de bloques para el trámite especificado.  
    *  @param {string} tramite - El identificador del trámite.
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de bloques.
@@ -154,6 +164,67 @@ export class Solocitud130106Service {
     return this.catalogoServices.getpaisesBloqueCatalogo(tramite, _bloqueId.toString()).pipe(
       map(res => res?.datos ?? [])
     );
+  }
+  /**
+     * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+     *
+     * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+     * @returns Observable con la respuesta de la solicitud POST.
+     */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_130106.GUARDAR, body);
+  }
+
+  /**
+      * Obtiene todos los datos del estado almacenado en el store.
+      * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+      */
+  getAllState(): Observable<Solicitud130106State> {
+    return this.tramite130106Query.selectSolicitud$;
+  }
+
+  /**
+*  Obtiene el catálogo de unidades de medida tarifaria asociado a un identificador y fracción arancelaria.
+* @param ID Identificador para obtener las unidades de medida tarifaria
+* @param FRACCION_ID Identificador de la fracción arancelaria
+* @returns Observable con un arreglo de unidades de medida tarifaria (o vacío si no hay datos)
+*/
+  getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+    * Genera el payload de datos para el trámite 130106 basado en la información proporcionada.
+    *
+    * @param {Tramite130106State} item - Objeto que contiene la información del trámite,
+    * incluyendo datos de tabla y valores autorizados.
+    *
+    * @returns {any[]} Arreglo de objetos con los datos transformados para ser enviados
+    * en el payload del trámite.
+    *
+    * @description
+    * Este método toma las filas de `tableBodyData` dentro del objeto `item` y construye un
+    * arreglo de objetos con los valores solicitados y autorizados.  
+    * Convierte valores numéricos, extrae descripciones y agrega claves arancelarias y de unidad de medida.
+    */
+  getPayloadDatos(item: Solicitud130106State): unknown {
+    const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
+    return ROWS.map(row => ({
+      unidadesSolicitadas: Number(row.cantidad),
+      unidadesAutorizadas: Number(item.cantidad),
+      descripcionSolicitada: row.descripcion,
+      descripcionAutorizada: item.descripcion,
+      importeUnitarioUSD: Number(row.precioUnitarioUSD),
+      importeTotalUSD: Number(row.totalUSD),
+      autorizada: true,
+      importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
+      importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
+      fraccionArancelariaClave: item.fraccion,
+      unidadMedidaClave: item.unidadMedida
+    }));
   }
 
 }

@@ -29,7 +29,7 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t110222';
+const PROCEDURE = '/sat-t130106';
 
 /**
  * Rutas de la API para el procedimiento 110223.
@@ -37,7 +37,6 @@ const PROCEDURE = '/sat-t110222';
  */
 export const PROC_130106 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
-    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar`,
     TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
     
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
@@ -48,4 +47,3 @@ export const PROC_130106 = {
     API_POST_FIRMA : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`,
 }
 
-export const PRODUCTORS_EXPORTADOR = (rfc: string): string => `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=${rfc}`;
