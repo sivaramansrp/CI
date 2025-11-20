@@ -1181,6 +1181,14 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     return MOCKTARIFDATA[fraccionArancelaria] || null;
   }
 
+  /**
+   * @method limpiarCamposArancelarios
+   * @description
+   * Limpia los campos arancelarios del formulario `mercanciaForm`, estableciendo los valores de
+   * `descripcionFraccion` y `cantidadUmt` a cadenas vacías. Además, habilita ambos campos para su edición.
+   *
+   * @memberof DatosMercanciaContenedoraComponent
+   */
   limpiarCamposArancelarios(): void {
     
     this.mercanciaForm.patchValue({

@@ -1766,8 +1766,8 @@ public markMercanciasTableTouched(): void {
    * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
    */
-  // eslint-disable-next-line class-methods-use-this
-  public isValid(control: AbstractControl, campo?: string): boolean | null {
+ 
+  public static isValid(control: AbstractControl, campo?: string): boolean | null {
     if (!control) {
       return null;
     }
