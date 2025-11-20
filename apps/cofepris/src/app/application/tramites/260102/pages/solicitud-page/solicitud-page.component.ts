@@ -8,13 +8,16 @@ import {
   PasoCargaDocumentoComponent,
   PasoFirmaComponent,
   RegistroSolicitudService,
-  WizardComponent
+  WizardComponent,
+  esValidObject,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, MENSAJE_DE_VALIDACION, PASOS } from '../../constantes/consumo-personal.enum';
 import { Tramite260102State, Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { GuardarAdapter_260102 } from '../../adapters/guardar-payload.adapter';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -146,55 +149,101 @@ export class SolicitudPageComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.accion === 'cont') {
-          let isValid = true;
-    
-            if (this.indice === 1 && this.pasoUnoComponent) {
-            isValid = this.pasoUnoComponent.validarPasoUno();
-          }
-          if(!this.pasoUnoComponent.pagoDerechosComponent.validarContenedor()){
-            this.mostrarAlerta=true;
-            this.seleccionarFilaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: 'danger',
-              modo: 'action',
-              titulo: '',
+      let isValid = true;
+        if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
+      }
+      if(!this.pasoUnoComponent.pagoDerechosComponent.validarContenedor() && !this.requiresPaymentData){
+          this.mostrarAlerta=true;
+          this.confirmarSinPagoDeDerechos = 2;
+          this.seleccionarFilaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
               mensaje: 'Debe capturar los datos de pago de derechos para continuar.',
-              cerrar: true,
-              tiempoDeEspera: 2000,
-              txtBtnAceptar: 'SI',
-              txtBtnCancelar: 'NO',
-            }
-            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            cerrar: true,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'SI',
+            txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar:'flex-row-reverse'
           }
-          if (!isValid) {
-            this.esFormaValido = true;
-            this.datosPasos.indice = this.indice;
-            return;
-          }
-          this.esFormaValido = false;
-          this.postGuardarDatos(e);
-        }else{
-          this.indice = e.valor;
-          this.datosPasos.indice = this.indice;
-          this.wizardComponent.atras();
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         }
+      if (!isValid) {
+        this.formErrorAlert = MENSAJE_DE_VALIDACION;
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+      this.esFormaValido = false;
+      this.postGuardarDatos(e);
+    }else{
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+    }
   }
   postGuardarDatos(e: AccionBoton): void {
-            // Calcular el nuevo índice basado en la acción
-            let indiceActualizado = e.valor;
-            if (e.accion === 'cont') {
-              indiceActualizado = e.valor;
+        const PAYLOAD = GuardarAdapter_260102.toFormPayload(this.storeData);
+          let shouldNavigate = false;
+          this.registroSolicitudService.postGuardarDatos('260102', PAYLOAD).subscribe(response => {
+            shouldNavigate = response.codigo === '00';
+            if (!shouldNavigate) {
+              const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+              this.formErrorAlert = SolicitudPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+              this.esFormaValido = false;
+              this.indice = 1;
+              this.datosPasos.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+              return;
             }
-            if (indiceActualizado > 0 && indiceActualizado < 5) {
-              this.indice = indiceActualizado;
-              this.datosPasos.indice = indiceActualizado;
-              if (e.accion === 'cont') {
-                this.wizardComponent.siguiente();
-              } else {
-                this.wizardComponent.atras();
+            if(shouldNavigate) {
+              if(esValidObject(response) && esValidObject(response.datos)) {
+                const DATOS = response.datos as { id_solicitud?: number };
+                if(getValidDatos(DATOS.id_solicitud)) {
+                  this.tramite260102Store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+                } else {
+                  this.tramite260102Store.setIdSolicitud(0);
+                }
               }
+              // Calcular el nuevo índice basado en la acción
+              let indiceActualizado = e.valor;
+              if (e.accion === 'cont') {
+                indiceActualizado = e.valor;
+              }
+              this.toastrService.success(response.mensaje);
+              if (indiceActualizado > 0 && indiceActualizado < 5) {
+                this.indice = indiceActualizado;
+                this.datosPasos.indice = indiceActualizado;
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
+            } else {
+              this.toastrService.error(response.mensaje);
             }
-          }
+          });
+      }
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
+  }
 
   onBlancoObligatoria(enBlanco: boolean): void {
     this.isSaltar = enBlanco;

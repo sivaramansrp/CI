@@ -20,17 +20,34 @@ export class GuardarAdapter_260102 {
    */
   static toFormPayload(state: Tramite260102State): unknown {
     return {
-
-      solicitud: {
-        discriminatorValue: 260102,
-        declaracionesSeleccionadas: state.datosSolicitudFormState.manifesto,
-        regimen: state.datosSolicitudFormState.regimen,
-        aduanaAIFA: "",
-        informacionConfidencial: state.datosSolicitudFormState.publico === 'si'
+  "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividadEconomica": "Fabricación de productos de hierro y acero",
+        "correoElectronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+            "pais": "México",
+            "codigoPostal": "06700",
+            "estado": "Ciudad de México",
+            "municipioAlcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numeroExterior": "123",
+            "numeroInterior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+        },
       },
-
+ solicitud: {
+          discriminatorValue: 260103,
+          regimen: "01",
+          declaracionesSeleccionadas: true,
+          aduanaAIFA: "",
+          informacionConfidencial:true
+      },
       establecimiento: {
-        RFCResponsableSanitario: state.datosSolicitudFormState.rfcSanitario,
+        rfcResponsableSanitario: "XAXX010101000",
         razonSocial: state.datosSolicitudFormState.denominacionRazon,
         correoElectronico: state.datosSolicitudFormState.correoElectronico,
 
@@ -56,6 +73,7 @@ export class GuardarAdapter_260102 {
       datosSCIAN: state.scianConfigDatos.map(item => ({
         cveScian: item.clave,
         descripcion: item.descripcion,
+                 selected: true
       })),
 
       mercancias: (state.tablaMercanciasConfigDatos ?? []).map(merc => ({
@@ -67,11 +85,11 @@ export class GuardarAdapter_260102 {
         nombreSubClasificacionProducto: merc.especificarClasificacionObj?.descripcion,
 
         descDenominacionEspecifica: merc.denominacionEspecificaProducto,
-        descDenominacionDistintiva: merc.denominacionDistintiva,
+        descDenominacionDistintiva: merc.denominacionDistintiva || "Paracetamol Tabletas 500mg",
         descripcionMercancia: "",
 
-        formaFarmaceuticaDescripcionOtros: merc.especifiqueForma,
-        estadoFisicoDescripcionOtros: merc.especifiqueEstado,
+        formaFarmaceuticaDescripcionOtros: merc.especifiqueForma || "Tableta",
+        estadoFisicoDescripcionOtros: merc.especifiqueEstado || "Sólido",
 
         fraccionArancelaria: {
           clave: merc.fraccionArancelaria,
@@ -82,14 +100,11 @@ export class GuardarAdapter_260102 {
           descripcion: merc.cantidadUMCObj?.descripcion
         },
 
-        cantidadUMCConComas: merc.cantidadUMC,
-        unidadMedidaTarifa: {
-          descripcion: merc.cantidadUMT
-        },
-        cantidadUMTConComas: merc.cantidadUmtValor,
+        cantidadUMCConComas:"50,000",
+        cantidadUMTConComas: merc.cantidadUmtValor || '10000',
 
-        presentacion: merc.presentacion,
-        registroSanitarioConComas: merc.numeroRegistroSanitario,
+        presentacion: merc.presentacion || "Frasco x 100 tabletax",
+        registroSanitarioConComas: merc.numeroRegistroSanitario || "COFEPRIS-REG-001-2024-SSA1",
 
         nombreCortoPaisOrigen: merc.paisDeOriginDatos?.toString(),
         nombreCortoPaisProcedencia: merc.paisDeProcedenciaDatos?.toString(),
@@ -97,9 +112,8 @@ export class GuardarAdapter_260102 {
         tipoProductoDescripcionOtros: merc.especifique,
         nombreCortoUsoEspecifico: merc.usoEspecifico?.toString(),
 
-        fechaCaducidadStr: merc.fechaCaducidad,
-
-        // Nuevo campo: NumeroLotes
+        fechaCaducidadStr: merc.fechaCaducidad || "31/12/2026",
+        
         // NumeroLotes: merc?.c?.map(l => ({
         //   numeroLote: l.numeroLote,
         //   fechaElaboracionStr: l.fechaElaboracion,
@@ -116,7 +130,7 @@ export class GuardarAdapter_260102 {
       },
 
       gridTerceros_TIPERS_FAB: state.fabricanteTablaDatos.map(f => ({
-        idPersonaSolicitud: "",
+        idPersonaSolicitud: f.id,
         ideTipoTercero: "TIPERS.FAB",
         personaMoral: f.tipoPersona === "Moral" ? "1" : "0",
         booleanExtranjero: f.nacionalidad === 'Extranjero' ? "1" : "0",
@@ -181,68 +195,68 @@ export class GuardarAdapter_260102 {
         idSolicitud: "",
       })),
 
-      gridTerceros_TIPERS_DES: state.destinatarioFinalTablaDatos.map(d => ({
-        idPersonaSolicitud: 1,
-        ideTipoTercero: "TIPERS.FAB",
-        personaMoral: d.tipoPersona === "Moral" ? "1" : "0",
-        booleanExtranjero: "0",
-        booleanFisicaNoContribuyente: "0",
+      gridTerceros_TIPERS_DES:state.fabricanteTablaDatos.map(f => ({
+        "idPersonaSolicitud": f.id,
+        "ideTipoTercero": "TIPERS.FAB",
+        personaMoral: f.tipoPersona === "Moral" ? "1" : "0",
+        "booleanFisicaNoContribuyente": "0",
+       
+        denominacion:
+          f.tipoPersona === "Moral"
+            ? f.razonSocial
+            : `${f.nombres} ${f.primerApellido} ${f.segundoApellido}`,
 
-        denominacion: d.razonSocial,
-        razonSocial: d.razonSocial,
+        razonSocial: f.razonSocial,
+        rfc: f.rfc,
+        curp: f.curp,
 
-        rfc: d.rfc,
-        curp: d.curp,
-
-        nombre: d.nombres,
-        apellidoPaterno: d.primerApellido,
-        apellidoMaterno: d.segundoApellido,
-
-        telefono: d.telefono,
-        correoElectronico: d.correoElectronico,
-
-        actividadProductiva:"",
+        nombre: f.nombres,
+        apellidoPaterno: f.primerApellido,
+        apellidoMaterno: f.segundoApellido,
+          telefono: f.telefono,
+        correoElectronico: f.correoElectronico,
+        actividadProductiva: "",
         actividadProductivaDesc: "",
         descripcionGiro: "",
-        numeroRegistro:"",
-
+        numeroRegistro: "",
+       
         domicilio: {
-          calle: d.calle,
-          numeroExterior: d.numeroExterior,
-          numeroInterior: d.numeroInterior,
+          calle: "",
+          numeroExterior: f.numeroExterior,
+          numeroInterior: f.numeroInterior,
 
           pais: {
-            clave: d.paisObj?.clave,
-            nombre: d.paisObj?.descripcion
+            clave: f.paisObj?.clave,
+            nombre: f.paisObj?.descripcion
           },
 
           colonia: {
-            clave: d.coloniaObj?.clave,
-            nombre: d.coloniaObj?.descripcion
+            clave: f.coloniaObj?.clave,
+            nombre: f.coloniaObj?.descripcion
           },
 
           delegacionMunicipio: {
-            clave: d.municipioObj?.clave,
-            nombre: d.municipioObj?.descripcion
+            clave: f.municipioAlcaldiaObj?.clave,
+            nombre: f.municipioAlcaldiaObj?.descripcion
           },
 
           localidad: {
-            clave: d.localidadObj?.clave,
-            nombre: d.localidadObj?.descripcion
+            clave: f.localidadObj?.clave,
+            nombre: f.localidadObj?.descripcion
           },
 
           entidadFederativa: {
-            clave:"",
-            nombre: ""
+            clave: f.entidadFederativaObj?.clave,
+            nombre: f.entidadFederativaObj?.descripcion
           },
 
-          informacionExtra:"",
-          codigoPostal: d.codigoPostal,
-          descripcionColonia: d.colonia
+          informacionExtra: "",
+          codigoPostal: f.codigoPostal,
+          descripcionColonia: f.colonia
         },
-
-        idSolicitud: ""
-      })),
+        
+    })),
+      
 
       pagoDeDerechos: {
         claveDeReferencia: state.pagoDerechos.claveReferencia,
