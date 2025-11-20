@@ -1126,34 +1126,71 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
 
   /**
    * Cambia la fracción arancelaria en el formulario de mercancía.
-   *
-   * Este método se utiliza para actualizar la fracción arancelaria y la cantidad de UMT
-   * en el formulario de mercancía, deshabilitando los campos correspondientes si es necesario.
+   * Auto-populates descripcionFraccion and cantidadUmt based on fraccionArancelaria value.
    */
-  cambiarFraccionArancelaria(): void {
-    if (
-      this.mercanciaForm.get('fraccionArancelaria') &&
-      this.mercanciaForm.get('cantidadUmt')?.disabled
-    ) {
-      this.mercanciaForm
-        .get('descripcionFraccion')
-        ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-      this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
-      if (
-        REGEX_SOLO_NUMEROS.test(
-          this.mercanciaForm.get('fraccionArancelaria')?.value
-        )
-      ) {
-        this.mercanciaForm
-          .get('descripcionFraccion')
-          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-        this.mercanciaForm
-          .get('cantidadUmt')
-          ?.setValue(UMT_DESHABILITADO_VALOR);
-      } else {
-        this.abrirModal();
-      }
+  cambiarFraccionArancelaria() {
+    const FRACCIONARANCELARIA = this.mercanciaForm.get('fraccionArancelaria')?.value;
+    
+    
+    if (FRACCIONARANCELARIA && FRACCIONARANCELARIA.length === 8) {
+     
+      this.autoPopularCamposArancelarios(FRACCIONARANCELARIA);
+    } else {
+      
+      this.limpiarCamposArancelarios();
     }
+  }
+
+  /**
+   * Auto-populates tariff-related fields based on fraccionArancelaria
+   * @param fraccionArancelaria - The 8-digit tariff fraction code
+   */
+  autoPopularCamposArancelarios(fraccionArancelaria: string) {
+   
+    const TARIFDATA = this.obtenerDatosMockPorFraccion(fraccionArancelaria);
+    
+    if (TARIFDATA) {
+     
+      this.mercanciaForm.patchValue({
+        descripcionFraccion: TARIFDATA.descripcion,
+        cantidadUmt: TARIFDATA.umt
+      });
+      
+      // Disable the auto-populated fields
+      this.mercanciaForm.get('descripcionFraccion')?.disable();
+      this.mercanciaForm.get('cantidadUmt')?.disable();
+    } else {
+      // If no data found, clear fields
+      this.limpiarCamposArancelarios();
+    }
+  }
+
+  /**
+   * Returns mock tariff data based on fraccionArancelaria
+   * Replace this with your actual data mapping logic
+   */
+  obtenerDatosMockPorFraccion(fraccionArancelaria: string): {descripcion: string, umt: string} | null {
+    
+    const MOCKTARIFDATA: {[key: string]: {descripcion: string, umt: string}} = {
+      '12345678': {
+        descripcion: 'Productos farmacéuticos para uso médico',
+        umt: 'Kilogramos'
+      }
+    };
+    
+    return MOCKTARIFDATA[fraccionArancelaria] || null;
+  }
+
+  limpiarCamposArancelarios(): void {
+    
+    this.mercanciaForm.patchValue({
+      descripcionFraccion: '',
+      cantidadUmt: ''
+    });
+    
+    
+    this.mercanciaForm.get('descripcionFraccion')?.enable();
+    this.mercanciaForm.get('cantidadUmt')?.enable();
   }
 
   /**
@@ -1190,10 +1227,12 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     this.elementoParaEliminar = i;
 }
 
-/** Custom validator for 12 integers and up to 5 decimals */
+/** Validador personalizado para 12 enteros y hasta 5 decimales */
 static cantidadUmtValidator(control: AbstractControl) {
   const VALUE = control.value;
-  if (VALUE === null || VALUE === undefined || VALUE === '') return null;
+  if (VALUE === null || VALUE === undefined || VALUE === '') {
+    return null;
+  }
 
   const REGEX= /^(\d{1,12})(\.\d{1,5})?$/;
   if (!/^\d+(\.\d+)?$/.test(VALUE)) {

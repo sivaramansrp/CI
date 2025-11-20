@@ -283,9 +283,10 @@
           <input
             class="form-control"
             id="descripcionFraccion"
-            disable
             type="text"
             formControlName="descripcionFraccion"
+            [class.auto-populated]="mercanciaForm.get('descripcionFraccion')?.disabled"
+            readonly="mercanciaForm.get('descripcionFraccion')?.disabled"
           />
           <div
             class="mensaje-error"
@@ -329,7 +330,7 @@
             *ngIf="mercanciaForm.get('cantidadUmtValor')?.touched && mercanciaForm.get('cantidadUmtValor')?.errors?.['maxDigits']"
             class="mensaje-error"
           >
-            Máximo 12 enteros y hasta cinco decimales.
+           Este campo permite doce números enteros y hasta cinco decimales.
           </div>
         </div>
       </div>
@@ -346,6 +347,8 @@
             id="cantidadUmt"
             type="text"
             formControlName="cantidadUmt"
+            [class.auto-populated]="mercanciaForm.get('cantidadUmt')?.disabled"
+            readonly="mercanciaForm.get('cantidadUmt')?.disabled"
             [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''"
           />
           <div
@@ -390,7 +393,7 @@
             *ngIf="mercanciaForm.get('cantidadUmcValor')?.touched && mercanciaForm.get('cantidadUmcValor')?.errors?.['maxDigits']"
             class="mensaje-error"
           >
-            Máximo 12 enteros y hasta cinco decimales.
+           Este campo permite doce números enteros y hasta cinco decimales.
           </div>
         </div>
       </div>
