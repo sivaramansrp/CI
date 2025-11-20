@@ -162,7 +162,7 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="numeroPatente">Número de patente de agente aduanal*</label>
                   <input type="number" class="form-control" id="numeroPatente" formControlName="numeroPatente"
-                    maxlength="4" pattern="[0-9]*" inputmode="numeric" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)" />
+                    maxlength="4" pattern="[0-9]*" inputmode="numeric" (input)="onNumeroPatenteInput($event)" />
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('numeroPatente')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('numeroPatente')?.hasError('required')">

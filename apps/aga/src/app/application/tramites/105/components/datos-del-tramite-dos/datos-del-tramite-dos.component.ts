@@ -81,12 +81,39 @@ interface TableBodyData {
   styleUrl: './datos-del-tramite-dos.component.scss',
 })
 export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Limita el campo numeroPatente a 4 dígitos y actualiza el valor en el formulario.
+   */
+  onNumeroPatenteInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.value.length > 4) {
+      input.value = input.value.slice(0, 4);
+    }
+    this.agenteForm.get('numeroPatente')?.setValue(input.value);
+  }
   /**
    * Índice de la mercancía seleccionada en la tabla
    */
+  /**
+   * Índice de la mercancía seleccionada en la tabla.
+   * Es null si no hay ninguna seleccionada.
+   */
   public selectedMercanciaIndex: number|null = null;
+
+  /**
+   * Arreglo de filas de mercancía seleccionadas en la tabla.
+   */
   public selectedMercanciaRows: AgentestableDatos[] = [];
+
+  /**
+   * Indica si el botón de eliminar debe estar habilitado (true si hay al menos una fila seleccionada).
+   */
   public canDelete: boolean = false;
+
+  /**
+   * Indica si el botón de editar debe estar habilitado (true si hay exactamente una fila seleccionada).
+   */
   public canEdit: boolean = false;
   /**
    * Maneja la selección de una fila de la tabla de mercancías
@@ -99,16 +126,25 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
      */
   public nuevaNotificacion: Notificacion | undefined;
 
-onMercanciaRowsSelected(rows: AgentestableDatos[]) {
-  this.selectedMercanciaRows = rows;
-  this.canDelete = rows.length > 0;
-  this.canEdit = rows.length === 1;
-  if (rows.length === 1) {
-    this.selectedMercanciaIndex = this.mercanciTablaDatos.findIndex(item => item === rows[0]);
-  } else {
-    this.selectedMercanciaIndex = null;
+  /**
+   * Maneja la selección de filas en la tabla de mercancías.
+   *
+   * - Actualiza el arreglo de filas seleccionadas.
+   * - Habilita o deshabilita los botones de eliminar y editar según la cantidad de filas seleccionadas.
+   * - Si hay una sola fila seleccionada, guarda su índice para edición; si no, lo limpia.
+   *
+   * @param rows Arreglo de filas seleccionadas de tipo AgentestableDatos.
+   */
+  onMercanciaRowsSelected(rows: AgentestableDatos[]) {
+    this.selectedMercanciaRows = rows;
+    this.canDelete = rows.length > 0;
+    this.canEdit = rows.length === 1;
+    if (rows.length === 1) {
+      this.selectedMercanciaIndex = this.mercanciTablaDatos.findIndex(item => item === rows[0]);
+    } else {
+      this.selectedMercanciaIndex = null;
+    }
   }
-}
 
   /**
    * Maneja la respuesta del modal de confirmación de eliminación
