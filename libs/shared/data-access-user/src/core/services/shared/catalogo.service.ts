@@ -1080,16 +1080,53 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene el catálogo de Actividad Productiva PROSEC asociado al trámite indicado.
+   *
+   * Este método construye dinámicamente el endpoint correspondiente y realiza una
+   * solicitud HTTP GET para obtener un catálogo de opciones relacionado con la
+   * actividad productiva del trámite PROSEC.
+   *
+   * @param {string} tramite - Identificador del trámite utilizado para armar la ruta del servicio.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable que emite la respuesta del servicio con la lista de elementos del catálogo.
+   */
   getActividadProductivaProsecCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_ACTIVIDAD_PRODUCTIVA_PROSEC(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
   
+  /**
+   * Obtiene el catálogo de Representación Federal de México filtrado por trámite y estado.
+   *
+   * Este método construye la URL del servicio utilizando los parámetros recibidos
+   * y realiza una solicitud HTTP GET para recuperar la lista correspondiente.
+   *
+   * @param {string} tramite - Identificador del trámite requerido por el servicio.
+   * @param {string} estado - Clave del estado que se utilizará como parámetro del catálogo.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable que emite la respuesta con el catálogo solicitado.
+   */
   getRepresentacionFederalMexCatalogo(tramite: string, estado:string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_PARAM(tramite, estado)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene el catálogo de fracciones arancelarias mediante una búsqueda tipo
+   * autocompletado, basada en el trámite e identificador proporcionados.
+   *
+   * La URL se construye usando parámetros dinámicos y se realiza una petición
+   * HTTP GET para obtener un catálogo filtrado de fracciones arancelarias.
+   *
+   * @param {string} tramite - Identificador del trámite usado para generar la ruta.
+   * @param {string} id - Parámetro de búsqueda para autocompletar fracciones arancelarias.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable con la respuesta del servicio que contiene la lista de fracciones.
+   */
    getFraccionesArancelariasAutoCompleteCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE(tramite, id)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);

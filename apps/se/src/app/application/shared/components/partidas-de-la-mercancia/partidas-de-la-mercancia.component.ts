@@ -225,6 +225,29 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
      */
     @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
+    /**
+     * @description
+     * Lista de fracciones arancelarias utilizada para modificar
+     * las partidas de la mercancía.  
+     * 
+     * Este arreglo se recibe desde el componente padre y contiene
+     * elementos del catálogo que se usarán para mostrar o seleccionar
+     * la fracción correspondiente dentro del formulario.
+     *
+     * @type {Catalogo[]}
+     */
+    @Input() fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
+
+    /**
+     * @description
+     * Indica si la fracción arancelaria corresponde a TIGIE.  
+     * 
+     * Este valor es recibido desde el componente padre y permite
+     * habilitar o deshabilitar lógica específica relacionada con
+     * la selección o validación de la fracción TIGIE.
+     *
+     * @type {boolean}
+     */
     @Input() isFraccionTIGIE: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -238,11 +261,44 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
       // Add only if they do NOT exist
       this.addControlIfMissing('fraccionTigiePartidasDeLaMercancia');
       this.addControlIfMissing('fraccionDescripcionPartidasDeLaMercancia');
+
+      this.addControlModificationMissing('fraccionTigiePartidasDeLaMercancia');
+      this.addControlModificationMissing('fraccionDescripcionPartidasDeLaMercancia');
   }
 
+  /**
+ * @description
+ * Agrega un control al formulario `partidasDelaMercanciaForm` si no existe.
+ * 
+ * Este método valida si el control indicado por su nombre ya está
+ * registrado en el formulario. En caso de que no exista, lo crea con
+ * un `FormControl` vacío.
+ *
+ * @param {string} controlName - Nombre del control a verificar o agregar.
+ */
   private addControlIfMissing(controlName: string): void {
   if (!this.partidasDelaMercanciaForm.contains(controlName)) {
     this.partidasDelaMercanciaForm.addControl(
+      controlName,
+      new FormControl('', [])
+    );
+  }
+}
+
+/**
+ * @description
+ * Agrega un control al formulario `modificarPartidasDelaMercanciaForm`
+ * si no existe.
+ * 
+ * Funciona como la versión original, pero está orientado al formulario
+ * utilizado para modificar partidas de la mercancía. Solo crea el control
+ * si aún no está presente en el formulario.
+ *
+ * @param {string} controlName - Nombre del control que se desea agregar si falta.
+ */
+private addControlModificationMissing(controlName: string): void {
+  if (!this.modificarPartidasDelaMercanciaForm.contains(controlName)) {
+    this.modificarPartidasDelaMercanciaForm.addControl(
       controlName,
       new FormControl('', [])
     );

@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PROC_130113 } from '../servers/api-route';
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130113Query } from '../estados/queries/tramite130113.query';
 
 
@@ -35,92 +33,6 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * 
-   * Obtiene la lista de países disponibles desde un archivo JSON.
-   * {Observable<Catalogo[]>} Observable que emite la lista de países.
-   */
-  // getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>('/assets/json/130113/pais-procenia.json');
-  // }
-
-  /**
-   * 
-   * Obtiene la lista de países por bloque desde un archivo JSON.
-   * {number} _bloqueId - El ID del bloque.
-   * {Observable<Catalogo[]>} Observable que emite la lista de países por bloque.
-   */
-  // getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130113/paises-por-bloque.json'
-  //   );
-  // }
-
-  /**
-   * 
-   * Obtiene la ista de entidades federativas desde un archivo JSON.
-   * {Observable<Catalogo[]>} Observable que emite la lista de entidades federativas.
-   */
-  // getEntidadFederativa(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130113/entidad-federativa.json'
-  //   );
-  // }
-
-  /**
-   * 
-   * Obtiene la lista de representaciones federales desde un archivo JSON.
-   * {Observable<Catalogo[]>} Observable que emite la lista de representaciones federales.
-   */
-  // getRepresentacionFederal(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130113/representacion-federal.json'
-  //   );
-  // }
-
-  /**
-   * 
-   * Obtiene las opciones de solicitud desde un archivo JSON.
-   * {Observable<ProductoResponse>} Observable que emite las opciones de solicitud.
-   */
-  // getSolicitudeOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130113/solicitude-options.json'
-  //   );
-  // }
-
-  /**
-   * 
-   * Obtiene las opciones de producto desde un archivo JSON.
-   * {Observable<ProductoResponse>} Observable que emite las opciones de producto.
-   */
-  // getProductoOptions(): Observable<ProductoResponse> {
-  //   return this.http.get<ProductoResponse>(
-  //     'assets/json/130113/producto-otions.json'
-  //   );
-  // }
-
-  /**
-   * 
-   * Obtiene la lista de fracciones y descripciones de partidas de la mercancía desde un archivo JSON.
-   * {Observable<Catalogo[]>} Observable que emite la lista de fracciones y descripciones.
-   */
-  // getFraccionDescripcionPartidasDeLaMercancia(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(
-  //     '/assets/json/130113/fraccion-descripcion-partidas-de-la-mercancia.json'
-  //   );
-  // }
-
-  /**
-   * Obtiene la tabla de datos de partidas de la mercancía desde un archivo JSON.
-   * {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite la lista de partidas de la mercancía.
-   */
-  // getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-  //     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-  //           'assets/json/130113/partidas-de-la.json'
-  //         );
-  //   }
-
-  /**
    * Actualiza el estado del formulario en el store.
    * @param DATOS Estado actualizado del trámite.
    */
@@ -129,13 +41,28 @@ export class ImportacionEquipoAnticontaminanteService {
   }
   
    /**
-       * Obtiene todos los datos del estado almacenado en el store.
-       * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
-       */
+    * Obtiene todos los datos del estado almacenado en el store.
+    * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+    */
     getAllState(): Observable<Tramite130113State> {
       return this.tramite130113Query.selectSolicitud$;
     }
   
+    /**
+     * Genera el payload de datos a partir del estado del trámite 130113.
+     *
+     * Este método toma la información contenida en el estado (`Tramite130113State`)
+     * y construye un arreglo de objetos con los valores necesarios para enviar al
+     * backend, principalmente para las partidas de la mercancía.  
+     *
+     * Si `tableBodyData` no es un arreglo válido, se utiliza un arreglo vacío para
+     * evitar errores.
+     *
+     * @param {Tramite130113State} item - Estado actual del trámite con la información
+     *        capturada y calculada por el usuario.
+     *
+     * @returns {unknown} Arreglo de objetos con el payload listo para enviarse.
+     */
      getPayloadDatos(item: Tramite130113State): unknown {
         const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
         return ROWS.map(row => ({
@@ -149,7 +76,8 @@ export class ImportacionEquipoAnticontaminanteService {
           importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
           importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
           fraccionArancelariaClave: item.fraccion,
-          unidadMedidaClave: item.unidadMedida
+          unidadMedidaClave: item.unidadMedida,
+          unidadMedidaDescripcion: row.unidadDeMedida
         }));
       }
 
@@ -284,6 +212,19 @@ export class ImportacionEquipoAnticontaminanteService {
       );
   }
 
+  /**
+   * Obtiene las descripciones de las fracciones arancelarias correspondientes
+   * al trámite especificado y las devuelve en forma de catálogo.
+   *
+   * Este método consume el servicio `getFraccionesArancelariasAutoCompleteCatalogo`,
+   * el cual retorna un objeto que contiene la propiedad `datos`.  
+   * Si la respuesta no contiene datos válidos, se retorna un arreglo vacío.
+   *
+   * @param {string} tramite - Identificador del trámite para el cual se realiza la consulta.
+   * @param {string} ID - Clave o término que se utilizará para filtrar la fracción arancelaria.
+   *
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de elementos del catálogo.
+   */
    getFraccionDescripcionPartidasDeLaMercanciaService(tramite: string, ID: string): Observable<Catalogo[]> {
     return this.catalogoServices.getFraccionesArancelariasAutoCompleteCatalogo(tramite, ID)
       .pipe(
@@ -292,11 +233,11 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
     /**
-       * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
-       *
-       * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
-       * @returns Observable con la respuesta de la solicitud POST.
-       */
+     * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+     *
+     * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+     * @returns Observable con la respuesta de la solicitud POST.
+     */
     guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
       return this.http.post<JSONResponse>(PROC_130113.GUARDAR, body);
     }

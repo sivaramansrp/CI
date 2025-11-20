@@ -1,18 +1,18 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_REMOVE_COMA, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/importacion-equipo-anticontaminante.enum';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/constants/diamante-bruto.enum';
 import { MostrarPartidas,Notificacion, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite130113State, Tramite130113Store } from '../../estados/tramites/tramites130113.store';
+import { Tramite130114State, Tramite130114Store } from '../../../../estados/tramites/tramite130114.store';
+import { DiamanteBrutoService } from '../../services/diamante-bruto.service';
 import { HttpClient } from '@angular/common/http';
-import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
+import { Tramite130114Query } from '../../../../estados/queries/tramite130114.query';
 
 
 /**
@@ -124,16 +124,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   unidadCatalogo: Catalogo[] = [];
 
   /**
-   * Lista de opciones del catálogo utilizadas para la modificación de la fracción
-   * arancelaria en la sección *Partidas de la mercancía*.
-   *
-   * Esta propiedad almacena los elementos del catálogo que se mostrarán en el
-   * componente (por ejemplo, en un dropdown o autocompletado) para que el usuario
-   * seleccione la fracción correspondiente.
-   */
-  fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
-
-  /**
    * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
    */
   mostrarErroresMercancia = false;
@@ -141,6 +131,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
+
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -155,7 +146,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       controlName: 'clasificacion',
     },
   ];
-
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
@@ -204,7 +194,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * Utilizado para gestionar y almacenar la información relacionada con esta sección.
   * Propiedad privada.
   */
-  private seccionState!: Tramite130113State;
+  public seccionState!: Tramite130114State;
 
   /**
    * jest.spyOnIdentificador del procedimiento actual.
@@ -229,24 +219,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public nuevaNotificacion!: Notificacion;
 
   /**
-   * Lista de elementos del catálogo que contienen las descripciones asociadas
-   * a las fracciones arancelarias dentro de *Partidas de la mercancía*.
-   *
-   * Esta propiedad se utiliza para poblar los controles (por ejemplo, un
-   * dropdown o autocompletado) donde el usuario puede seleccionar la descripción
-   * correspondiente a la fracción arancelaria.
-   */
-  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
-
-  /**
    * Constructor del componente.
    */
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private tramite130105Store: Tramite130113Store,
-    private tramite130105Query: Tramite130113Query,
-    private importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService,
+    private tramite130114Store: Tramite130114Store,
+    private tramite130114Query: Tramite130114Query,
+    private diamanteBrutoService: DiamanteBrutoService,
     private consultaioQuery: ConsultaioQuery,
   ) {
     this.inicializarFormularios();
@@ -271,13 +251,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.getFraccionCatalogo();
     this.getEntidadesFederativasCatalogo();
     this.getBloque();
-    this.tramite130105Query.mostrarTabla$
+    this.tramite130114Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
       });
 
-      this.tramite130105Query.selectSolicitud$
+      this.tramite130114Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.seccionState = data;
@@ -349,10 +329,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
-      fraccionTigiePartidasDeLaMercancia: [
-        '',[Validators.required, Validators.maxLength(255)],
-      ],
-      fraccionDescripcionPartidasDeLaMercancia: [''],
     });
 
     this.paisForm = this.fb.group({
@@ -388,14 +364,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ],
       ],
-      fraccionTigiePartidasDeLaMercancia:[
-          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionTigiePartidasDeLaMercancia,
-          [Validators.required]
-        ],
-        fraccionDescripcionPartidasDeLaMercancia:[
-          this.seccionState?.modificarPartidasDelaMercanciaForm?.fraccionDescripcionPartidasDeLaMercancia,
-          []
-        ]
     });
 
     this.formForTotalCount = this.fb.group({
@@ -439,7 +407,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
-    this.tramite130105Query.selectSolicitud$
+    this.tramite130114Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
           this.seccionState = seccionState;
@@ -485,7 +453,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130105Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
+      this.tramite130114Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
     }
   }
 
@@ -498,18 +466,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
+      this.tramite130114Store.actualizarEstado({ mostrarTabla: true });
       const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
       const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
       const DATOS = [
         {
-          id: String(this.tableBodyData.length + 1),
-          cantidad: this.seccionState?.cantidadPartidasDeLaMercancia || "",
-          unidadDeMedida: UMT.replace(REGEX_REMOVE_COMA, '') || "",
-          fraccionFrancelaria: this.seccionState?.fraccionDescripcionPartidasDeLaMercancia || "",
-          descripcion: this.seccionState?.descripcionPartidasDeLaMercancia || "",
-          precioUnitarioUSD: PRECIO_UNITARIO_USD || "",
-          totalUSD: this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+          "id": String(this.tableBodyData.length + 1),
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": UMT || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
         }
       ];
       this.tableBodyData = [...this.tableBodyData, ...DATOS];
@@ -520,7 +488,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cantidadTotal: CANTIDAD_TOTAL,
         valorTotalUSD: TOTAL_USD,
       });
-      this.tramite130105Store.actualizarEstado({
+      this.tramite130114Store.actualizarEstado({
         tableBodyData: this.tableBodyData
       })
     }
@@ -532,8 +500,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130105Store.actualizarEstado({ mostrarTabla: true });
-      this.tramite130105Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
+      this.tramite130114Store.actualizarEstado({ mostrarTabla: true });
+      this.tramite130114Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
     }
   }
   /**
@@ -549,7 +517,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
-    this.tramite130105Store.actualizarEstado({ [$event.campo]: VALOR });
+    this.tramite130114Store.actualizarEstado({ [$event.campo]: VALOR });
     if ($event.campo === 'regimen') {
       const VALOR = this.formDelTramite.get('regimen')?.value;
       this.getClasificacionRegimenCatalogo(VALOR);
@@ -561,10 +529,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if ($event.campo === 'entidad') {
       const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
       this.getRepresentacionFederalCatalogo(VALOR);
-    }
-    if ($event.campo === 'fraccionTigiePartidasDeLaMercancia') {
-      const VALOR = this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.value;
-      this.getFraccionDescripcionPartidasDeLaMercancia(VALOR);
     }
   }
 
@@ -586,14 +550,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @param evento 
  */
   modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
-    if(evento.fraccionFrancelaria){
-      this.getFraccionAllDatos(evento.fraccionFrancelaria?.toString() || '0');
-    }
+
     this.modificarPartidasDelaMercanciaForm.patchValue({
       cantidadPartidasDeLaMercancia: evento.cantidad,
       valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
       descripcionPartidasDeLaMercancia: evento.descripcion,
-      fraccionModificationPartidasDeLaMercancia: evento.fraccionFrancelaria,
     });
   }
 
@@ -621,7 +582,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           valorTotalUSD: TOTAL_USD,
         });
 
-        this.tramite130105Store.actualizarEstado({
+        this.tramite130114Store.actualizarEstado({
           tableBodyData: this.tableBodyData
         })
   }
@@ -651,7 +612,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           cantidadTotal: CANTIDAD_TOTAL,
           valorTotalUSD: TOTAL_USD,
         });
-          this.tramite130105Store.actualizarEstado({
+          this.tramite130114Store.actualizarEstado({
           tableBodyData: this.tableBodyData
         })
   }
@@ -705,7 +666,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * @returns {void}
   */
   getRegimenCatalogo(): void {
-    this.importacionEquipoAnticontaminanteService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+    this.diamanteBrutoService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
       this.catalogosArray[0] = data as Catalogo[];
     });
   }
@@ -716,7 +677,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getClasificacionRegimenCatalogo(VALOR: string): void {
-    this.importacionEquipoAnticontaminanteService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+    this.diamanteBrutoService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
       this.catalogosArray[1] = data as Catalogo[];
     });
   }
@@ -727,7 +688,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getFraccionCatalogo(): void {
-    this.importacionEquipoAnticontaminanteService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
+    this.diamanteBrutoService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
       this.fraccionCatalogo = data?.map(item => ({
         ...item,
         descripcion: `${item.clave} - ${item.descripcion}`
@@ -740,11 +701,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param FRACCION_ID 
    */
   getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
-    this.importacionEquipoAnticontaminanteService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
+    this.diamanteBrutoService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data as Catalogo[];
       if (this.unidadCatalogo.length > 0) {
         this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
-        this.tramite130105Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+        this.tramite130114Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
       }
     });
   }
@@ -755,7 +716,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getBloque(): void {
-    this.importacionEquipoAnticontaminanteService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
+    this.diamanteBrutoService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
       this.elementosDeBloque = data as Catalogo[];
     });
   }
@@ -765,7 +726,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param ID 
    */
   getPaisesPorBloque(ID: string): void {
-    this.importacionEquipoAnticontaminanteService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
+    this.diamanteBrutoService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
       this.paisesPorBloque = data as Catalogo[];
     });
   }
@@ -776,7 +737,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEntidadesFederativasCatalogo(): void {
-    this.importacionEquipoAnticontaminanteService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+    this.diamanteBrutoService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
       this.entidadFederativa = data as Catalogo[];
     })
   }
@@ -786,7 +747,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param cveEntidad 
    */
   getRepresentacionFederalCatalogo(cveEntidad: string): void {
-    this.importacionEquipoAnticontaminanteService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
+    this.diamanteBrutoService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
     });
   }
@@ -797,48 +758,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   todosPaisesSeleccionados(evento: boolean): void {
     if (evento) {
-      this.importacionEquipoAnticontaminanteService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
+      this.diamanteBrutoService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
         this.paisesPorBloque = data as Catalogo[];
       });
     }
   }
-
-  /**
-   * Obtiene la descripción de la fracción arancelaria correspondiente a las
-   * *Partidas de la mercancía* y actualiza la lista de descripciones del catálogo.
-   *
-   * Este método consume el servicio `getFraccionDescripcionPartidasDeLaMercanciaService`
-   * enviando el ID del procedimiento y el ID seleccionado por el usuario.
-   *
-   * @param {string} ID - Identificador de la fracción seleccionada.
-   * @returns {void}
-   */
-  getFraccionDescripcionPartidasDeLaMercancia(ID: string): void {
-      this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), ID)
-        .subscribe((data)=>{
-          this.fraccionDescripcionPartidasDeLaMercancia = data as Catalogo[];
-        });
-    }
-
-  /**
-   * Obtiene todos los datos relacionados con una fracción arancelaria específica
-   * dentro de *Partidas de la mercancía*, actualizando la lista utilizada para la
-   * modificación de la fracción seleccionada.
-   *
-   * Este método consulta el mismo servicio que obtiene la descripción de la fracción,
-   * pero almacena el resultado en `fraccionModificationPartidasDeLaMercancia` para
-   * fines de edición o actualización.
-   *
-   * @param {string} id - Identificador de la fracción cuyos datos deben consultarse.
-   * @returns {void}
-   */
-    getFraccionAllDatos(id: string): void {
-    this.importacionEquipoAnticontaminanteService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), id).subscribe((data) => {
-      this.fraccionModificationPartidasDeLaMercancia = data as Catalogo[];
-      });
-    }
-
-    
 
   /**
    * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
@@ -850,7 +774,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if(this.seccionState?.idSolicitud){
       idSolicitud = this.seccionState?.idSolicitud;
     }
-    this.importacionEquipoAnticontaminanteService.getMostrarPartidasService(idSolicitud).subscribe((data) => {
+    this.diamanteBrutoService.getMostrarPartidasService(idSolicitud).subscribe((data) => {
       if(data.codigo === '00'){
           this.mostrarPartidas = data.datos as MostrarPartidas[];
           if(this.mostrarPartidas.length > 0){
@@ -862,12 +786,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
                 descripcion: item.descripcionOriginal?.toString() || '',
                 precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
                 totalUSD: item.importeTotalUSD?.toString() || '',
-                fraccionTigiePartidasDeLaMercancia: item.fraccionClave,
-                fraccionDescripcionPartidasDeLaMercancia: item.fraccionDescripcion,
+                fraccionTigiePartidasDeLaMercancia: "",
+                fraccionDescripcionPartidasDeLaMercancia: "",
               }));
-              this.tramite130105Store.actualizarEstado({tableBodyData: TABLE_BODY })
+              this.tramite130114Store.actualizarEstado({tableBodyData: TABLE_BODY })
           }
-          this.tramite130105Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+          this.tramite130114Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
       }
     });
   }
@@ -877,7 +801,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param evento 
    */
   fechasSeleccionadas(evento: string[]): void {
-    this.tramite130105Store.actualizarEstado({ fechasSeleccionadas: evento });
+    this.tramite130114Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 
 /**

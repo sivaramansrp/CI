@@ -1193,9 +1193,18 @@ export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: nu
  * API para guardar la solicitud
  */
 export const API_POST_ACTUALIZAR_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: string): string => `sat-t${TRAMITE}/solicitud/${ID_SOLICITUD}/actualizar`;
-
+/**
+ * Genera la ruta del endpoint para consultar el catálogo de
+ * *Actividad Productiva PROSEC* correspondiente al trámite indicado.
+ */
 export const API_ACTIVIDAD_PRODUCTIVA_PROSEC = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/actividad-productiva-prosec`;
 
+/**
+ * Construye el endpoint para obtener el catálogo de
+ * *Representación Federal de México*, filtrado por trámite y por estado.
+ *
+ * La ruta es generada dinámicamente con base en los parámetros recibidos.
+ */
 export const API_REPRESENTACION_FEDERAL_PARAM = (TRAMITE: string, ESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/${ESTADO}`;
 
 /**
@@ -1243,9 +1252,32 @@ export const CATALOGO_SECTOR = (TRAMITE: string): string => `sat-t${TRAMITE}/cat
  */
 export const OFICIO_ASIGNACION = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/anios-oficio-asignacion`;
 
-
+/**
+ * Genera el endpoint para consultar las unidades de medida tarifarias
+ * asociadas a una fracción arancelaria específica dentro de un trámite.
+ *
+ * La URL se construye dinámicamente utilizando el identificador del trámite
+ * y el ID de la fracción arancelaria.
+ *
+ * @param {string} TRAMITE - Identificador del trámite que forma parte de la ruta.
+ * @param {string} ID - Identificador de la fracción arancelaria.
+ *
+ * @returns {string} Endpoint completo para obtener las unidades de medida tarifarias.
+ */
 export const API_UNIDADES_MEDIDAS_TARIFARIAS = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
 
+/**
+ * Genera el endpoint utilizado para realizar una búsqueda de
+ * fracciones arancelarias mediante autocompletado.
+ *
+ * El endpoint se construye dinámicamente con el identificador del trámite
+ * y el parámetro de búsqueda proporcionado.
+ *
+ * @param {string} TRAMITE - Identificador del trámite para construir la ruta.
+ * @param {string} ID - Valor utilizado como criterio de búsqueda en el autocompletado.
+ *
+ * @returns {string} Endpoint completo para consultar fracciones arancelarias con autocompletado.
+ */
 export const API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias/auto-complete/${ID}`;
 
 /**
