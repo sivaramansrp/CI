@@ -71,4 +71,25 @@ describe('ImportacionDeVehiculosUsadosComponent', () => {
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
+  it('should not update indice if pasosSolicitar is empty', () => {
+    component.pasosSolicitar = [];
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const accionBoton = { accion: 'cont', valor: 1 };
+    const prevIndice = component.indice;
+    component.getValorIndice(accionBoton);
+    expect(component.indice).toBe(prevIndice);
+  });
+  it('should not update indice if pasosSolicitar is undefined', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const accionBoton = { accion: 'cont', valor: 1 };
+    const prevIndice = component.indice;
+    component.getValorIndice(accionBoton);
+    expect(component.indice).toBe(prevIndice);
+  });
 });

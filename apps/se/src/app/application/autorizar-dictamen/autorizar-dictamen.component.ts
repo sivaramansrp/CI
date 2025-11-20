@@ -340,7 +340,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       observacion: ['',],
     });
 
-    this.config = this.tramiteConfigService.getConfig(this.tramite);
+    this.config = this.tramiteConfigService.getConfigAutorizarDictamen(this.tramite);
     this.serviceConfig = this.tramiteConfigService.getServiceConfig(this.tramite);
     this.serviceConfigModelo = this.tramiteConfigService.getModeloConfig(this.tramite);
     this.vistasModificacion110101 = this.tramiteConfigService.getModeloConfig(this.tramite);
