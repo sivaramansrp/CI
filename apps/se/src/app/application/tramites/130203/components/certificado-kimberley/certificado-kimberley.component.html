@@ -109,8 +109,10 @@
         <app-catalogo-select
           [catalogo]="paisesEmisores"
           [label]="'País de origen'"
+          [required]="true"
           formControlName="paisOrigen"
           (change)="setValoresStore(formularioEmpresa, 'paisOrigen')"
+          [markTouched]="formularioEmpresa.get('paisOrigen')?.touched ?? false"
           [isDisabled]="esFormularioSoloLectura || disabledCatalogoPaisOrigen"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen', formularioEmpresa)" class="invalid-feedback">
