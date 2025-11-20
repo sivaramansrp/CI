@@ -168,7 +168,11 @@ export interface Solicitud260702State {
 
   /** Datos de la tabla de destinatarios */
     tableData2: Destinatario[];
-
+/**
+ * Método para actualizar la descripción del SCIAN en el estado.
+ */
+descripcionDelScian: string;
+    
 }
 
 /**
@@ -339,6 +343,11 @@ export function createInitialSolicitudState(): Solicitud260702State {
     tableData: [],
     /** Datos de la tabla de destinatarios */
     tableData2: [],
+    /**
+     * Método para actualizar la descripción del SCIAN en el estado.
+     */
+    descripcionDelScian: '',
+    
   };
 }
 /**
@@ -941,6 +950,13 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     this.update((state) => ({
       ...state,
       tableData2,
+    }));
+  }
+
+  setDescripcionDelScian(descripcionDelScian: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionDelScian,
     }));
   }
 }
