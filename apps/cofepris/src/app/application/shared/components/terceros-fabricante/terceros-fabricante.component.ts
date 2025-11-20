@@ -547,10 +547,21 @@ eliminarProveedor(): void {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ * @param formGroup Grupo de formulario que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  public markPaisTouched!: ((formGroup: FormGroup) => boolean);
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.markPaisTouched = (formGroup: FormGroup): boolean => {
+      return Boolean(formGroup?.get('pais')?.touched);
+    };
     
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
@@ -1985,23 +1996,6 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    */
   public esValido(campo: string, form: FormGroup): boolean | null {
     return this.validacionesService.isValid(form, campo);
-  }
-
-  /**
- * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
- *
- * Esta función recibe un FormGroup y devuelve un valor booleano que indica
- * si el control llamado 'pais' existe y ha sido marcado como touched.
- *
- * Se utiliza para determinar si debe mostrarse un estado visual de validación
- * relacionado con el campo 'pais' en el formulario.
- *
- * @param formgroup - El FormGroup que contiene el control 'pais'.
- * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
- */
-  // eslint-disable-next-line class-methods-use-this
-  markPaisTouched(formgroup: FormGroup): boolean {
-    return Boolean(formgroup?.get('pais')?.touched);
   }
 
   /**
