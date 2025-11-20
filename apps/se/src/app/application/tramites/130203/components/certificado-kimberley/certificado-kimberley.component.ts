@@ -4,7 +4,6 @@ import {
   ConsultaioQuery,
   REGEX_NUMERO_DECIMAL_3_DIGITOS,
   REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY,
-  REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -333,7 +332,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       ],
       numeroDeFactura: [
         this.seccionState?.numeroDeFactura,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.maxLength(50) ],
       ],
     });
 
