@@ -172,9 +172,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario
    * @memberof PasoUnoComponent
    */ 
-public validarFormularios(): boolean {
-  let isValid = true;
-
+  public async validarFormularios(): Promise<boolean> {
   const tabsValidadas = [
     { index: 2, ref: this.datosSolicitud },
     { index: 3, ref: this.datosParaMovilizacion },
@@ -182,17 +180,30 @@ public validarFormularios(): boolean {
     { index: 5, ref: this.pagoDerechos }
   ];
 
+    // Validación síncrona de pestañas
   for (const tab of tabsValidadas) {
+    const validaPestañas = tab.ref.validarFormulario();
 
-    var validaPestañas = tab.ref.validarFormulario();
-    if (tab.ref && !validaPestañas) {
-      this.indice = tab.index; // mover a la pestaña con error
-        isValid = false;
-      return isValid;
+    if (!validaPestañas) {
+      this.indice = tab.index;
+      return false;
     }
-    }
+  }
 
-  return isValid;
+    // Ahora sí, espera a guardarSolicitud()
+    try {
+      const codigo = await firstValueFrom(this.guardarSolicitud());
+
+      if (codigo === "00") {
+        return true;
+      } else {
+        return false;
+      }
+
+    } catch (err) {
+      console.error("Error en guardarSolicitud:", err);
+      return false;
+    }
 }
 
   /**
@@ -248,6 +259,7 @@ async guardarDatosFormulario(): Promise<void> {
   }
 
   private crearPayload(datos: Acuicultura): GuardarSolicitud {
+    console.log("crearPayload datos", JSON.stringify(datos));
     return {
       id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
         && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
@@ -276,6 +288,7 @@ async guardarDatosFormulario(): Promise<void> {
           clave_paises_origen: t.paisDeOrigen ?? '',
           clave_paises_procedencia: t.paisDeProcedencia ?? '',
           idNombreCientifico: '',
+          descripción_especie: t.especie ?? '',
           lista_detalle_mercancia: (t.lista_detalle_mercancia ?? []).map(x => ({
             id_vida_silvestre: String(x.nombreCientifico)
           }))

@@ -9,6 +9,9 @@
         <ng-alert [CONTENIDO]="FORM_ERROR_ALERT" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
       </div>
       }
+      @if (esPasoUnoCompleto) {
+      <div class="alert alert-info" [innerHTML]="mensajePasos"></div>
+      }
       <app-wizard [listaPasos]="PASOS"></app-wizard>
     </div>
 

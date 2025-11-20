@@ -82,7 +82,7 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Fracción arancelaria de la mercancía'"
           (change)="setValoresStore(mercanciaGroup, 'fraccionArancelaria')"
-                    [markTouched]="mercanciaGroup.get('fraccionArancelaria')?.touched || false"
+          [markTouched]="mercanciaGroup.get('fraccionArancelaria')?.touched || false"
 
         ></app-catalogo-select>
       </div>
@@ -134,6 +134,7 @@
           id="descripcion"
           rows="10"
           formControlName="descripcion"
+          maxlength="1000"
         [ngClass]="
             mercanciaGroup.get('descripcion')?.invalid &&
             mercanciaGroup.get('descripcion')?.touched
@@ -200,10 +201,10 @@ mercanciaGroup.get('descripcion')?.touched){
               [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"></i></label>
         <input
           class="form-control"
-          id="umt"
-          formControlName="umt"
+          id="descripcionUMT"
+          formControlName="descripcionUMT"
           placeholder=""
-          name="umt"
+          name="descripcionUMT"
           type="text"
           [maxlength]="100"
           />
@@ -418,11 +419,7 @@ mercanciaGroup.get('descripcion')?.touched){
           placeholder=""
           name="nombreCientifico"
           type="text"
-          [maxlength]="40"
-          (change)="
-          setValoresDetalleStore(
-          )
-        " 
+          [maxlength]="40"          
         />
       </div>
     </div>

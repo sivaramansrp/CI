@@ -49,6 +49,7 @@ export interface Mercancia {
   clave_paises_procedencia: string;
   idNombreCientifico: string;
   lista_detalle_mercancia: DetalleMercancia[];
+  descripción_especie: string;
 }
 
 /**

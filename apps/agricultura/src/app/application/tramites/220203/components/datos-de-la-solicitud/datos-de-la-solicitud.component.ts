@@ -370,9 +370,8 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.obtenerDatosTablaSolicitud();
     this.getaduanaLista();
     this.getRegimenLista();
+    this.catalogoOficinas();
     forkJoin([
-      //  this.obtenerCatalogosTransporte(),
-    // this.obtenerCatalogosArancelaria(),
     this.obtenerCatalogosUMC(),
     this.obtenerCatalogosUMT(),
     this.obtenerCatalogosUSO()
@@ -386,8 +385,33 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       this.datosMercanciaStore = datos.realizarGroup;
 
       if(this.datosMercanciaFormGroup) {
+        if (datos.realizarGroup.aduanaIngreso !== '' && datos.realizarGroup.aduanaIngreso !== undefined) {
+          console.log("datos.realizarGroup", datos.realizarGroup);
+
+          this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, datos.realizarGroup.aduanaIngreso)
+            .pipe(
+              takeUntil(this.destroyNotifier$))
+            .subscribe(
+              (data): void => {
+                this.oficinaInspeccionList = data.datos ?? [];
+                if (datos.realizarGroup.oficinaInspeccion !== '' && datos.realizarGroup.oficinaInspeccion !== undefined) {
+                  this.catalogosService.obtieneCatalogoPuntoInspeccion(220203, datos.realizarGroup.oficinaInspeccion)
+                    .pipe(
+                      takeUntil(this.destroyNotifier$))
+                    .subscribe((data): void => {
+                      this.puntoInspeccionList = data.datos ?? [];
+                    });
+                }
+
+              }
+            );
+        }
+
           this.datosMercanciaFormGroup.patchValue({
-            realizarGroup: this.datosMercanciaStore
+            realizarGroup: {
+              ...this.datosMercanciaStore
+
+            }
           });
       }
        this.inicializarEstadoFormulario();
@@ -456,29 +480,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   async ngOnInit(): Promise<void> {
       await this.createFromGroup();
   }
-
-
-//   /**
-//    * Obtiene los datos del catálogo de transporte y puntos de inspección.
-//    * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
-//    * 
-//    * @public
-//    * @method obtenerCatalogosTransporte
-//    * @memberof DatosDeLaSolicitudComponent
-//    * @returns {void}
-//    */
-// public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
-//   return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-//     map((data) => {
-//       this.aduanaDeIngresoList = data.data as Catalogo[];
-//       this.tipoRequisitoList = data.data as Catalogo[];
-//       return data.data as Catalogo[];
-//     }),
-//     catchError((err) => {
-//       return of([]); 
-//     })
-//   );
-// }
 
   /**
   * bandera para indicar que el formulario fue tocado
@@ -577,7 +578,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @method catalogoOficinas
    */
   catalogoOficinas(_forma?: FormGroup): void {
-    const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    const VALOR = this.datosMercanciaFormGroup?.get('realizarGroup')?.value || {};
     this.obtenerSanidadoficinaInspeccionList(VALOR.aduanaIngreso);
   }
 
@@ -586,7 +587,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @method obtenerPuntoInspeccion
    */
   obtenerPuntoInspeccion(_forma?: FormGroup): void {
-  const VALOR = this.datosMercanciaFormGroup.get('realizarGroup')?.value;
+    const VALOR = this.datosMercanciaFormGroup?.get('realizarGroup')?.value || {};
     this.obtenerPuntoInspeccionList(VALOR.oficinaInspeccion);
   }
 
@@ -849,14 +850,8 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
-      // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
-      // this.obtenerPrellenadoMovilizacionNacional('202850466');
-      // this.obtenerPrellenadoTercerosRelacionados('202850466');
-      // this.obtenerPrellenadoPagoDerechos('202850466');
       this.catalogosService
-        // .obtenSolicitudPrellenado(event.id_solicitud)
         .obtenSolicitudPrellenado(220203, true, '202738175' ?? '')
-        // this.catalogosService.obtenSolicitudPrellenado(220202, true, event.id_solicitud ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: async (datos) => {
@@ -868,7 +863,6 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
                 datos.datos.oficina_inspeccion_sanidad_agropecuaria || ''
               );
               //Regimen
-              // this.getRegimenLista();
               this.getRegimenLista(datos.datos?.clave_regimen || '');
               this.datosMercanciaFormGroup.patchValue({
                 aduanaDeIngreso: datos.datos.cve_aduana || '',
@@ -876,12 +870,8 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
                   datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA'
                     ? 'no'
                     : 'yes', //'yes' para animales vivos, 'no' para subproductos
-                oficinaDeInspeccion:
-                  datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
+                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
                 puntoDeInspeccion: datos.datos.punto_inspeccion || '',
-                // claveUCON: datos.datos.clave_UCON || '',
-                // establecimientoTIF: datos.datos.establecimiento_TIF || '',
-                // nombreVeterinario: datos.datos.nombre_veterinario || '',
                 regimen: datos.datos.clave_regimen || '',
                 numeroDeGuia: datos.datos.numero_autorizacion || '',
                 numeroDeCarro: datos.datos.numero_carro_ferrocarril || '',
@@ -902,31 +892,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
               (datos?.datos as PrellenadoSolicitud) || [];
             if (DETALLE_MERCANCIA.mercancia.length > 0) {
               const FILAS_SOLICITUD: FilaSolicitud[] = [];
-              // eslint-disable-next-line complexity
               DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
-                // const LISTADETALLEVIDASILVESTRE: DetalleVidaSilvestre[] =
-                //   (mercancia.lista_detalle_mercancia?.map((vidaSilvestre) => ({
-                //     idDetalleMercancia:
-                //       vidaSilvestre.id_detalle_mercancia || '',
-                //     idMercanciaGob: vidaSilvestre.id_mercancia_gob || '',
-                //     idVidaSilvestre: vidaSilvestre.id_vida_silvestre || '',
-                //     nombreCientifico: vidaSilvestre.nombre_cientifico || '',
-                //   })) as DetalleVidaSilvestre[]) || [];
-
-                // const LISTADETALLESENSIBLES: Sensible[] = mercancia.lista_detalle_mercancia?.map((animal) => ({
-                //   noPartida: mercancia.numero_partida.toString(),
-                //   NumeroLote: animal.numero_lote_detalle || '',
-                //   ColorPelaje: animal.color_pelaje_detalle || '',
-                //   EdadAnimal: animal.edad_animal_detalle || '',
-                //   FaseDesarrollo: animal.fase_desarrollo_detalle || '',
-                //   FuncionZootecnica: animal.funcion_zootecnica_detalle || '',
-                //   NumeroIdentificacion: animal.numeroidentificacion_detalle || '',
-                //   Raza: animal.raza_detalle || '',
-                //   Sexo: animal.id_sexo_detalle || '',
-                //   NombreCientifico: animal.nombre_cientifico_detalle || '',
-                //   NombreMercancia: animal.nombre_mercancia_detalle || '',
-                // })) as Sensible[] || [];
-
                 const FILAS: FilaSolicitud = {
                   certificadoInternacional: '',
                   especie: '',
@@ -955,24 +921,14 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
                   descripcionUMT: mercancia.descripcion_umt || '',
                   descripcionUMC: mercancia.descripcion_umc || '',
                   cantidadUMC: mercancia.cantidad_umc.toString() || '0',
-                  // especie: mercancia.descripcion_especie || '',
                   uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
                   paisDeOrigen: mercancia.clave_paises_origen || '',
-                  // paisDeDestino: mercancia.nombre_pais_procedencia || '',
                   paisDeProcedencia: mercancia.clave_paises_procedencia || '',
                   descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
-                  descripcionPaisDeProcedencia:
-                    mercancia.nombre_pais_procedencia || '',
-                  // tipoPresentacionDescripcion: mercancia.id_tipo_presentacion || '',
-                  // tipoPlanta: mercancia.descripcion_tipo_planta || '',
-                  // plantaAutorizadaOrigen: mercancia.descripcion_planta_autorizada || '',
-                  certificadoInternacionalElectronico:
-                    String(mercancia.numero_certificado) || '',
+                  descripcionPaisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
                   tipoDeProducto: '',
-                  numeroDeLote: mercancia.numero_lote || '',
-                  // sensibles: LISTADETALLESENSIBLES,
-                  // detalleProductos: LISTADETALLEPRODUCTOS,
-                  // detalleVidaSilvestre: LISTADETALLEVIDASILVESTRE,
+                  numeroDeLote: mercancia.numero_lote || '',                  
                   descripcion: mercancia.descripcion_mercancia || ''
                 };
                 FILAS_SOLICITUD.push(FILAS);
@@ -980,7 +936,6 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
 
               this.acuiculturaStore.actualizarMercanciaGroup(FILAS_SOLICITUD);
             }
-            // this.radioBotonSeleccionado()
           },
           error: (error) => {
             console.error(

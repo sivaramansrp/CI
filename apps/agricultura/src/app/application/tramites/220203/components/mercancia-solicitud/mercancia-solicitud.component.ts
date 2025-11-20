@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, AlertComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, AlertComponent, REGEX_DESCRIPCION, NUMERICO_CON_PUNTO_REGEX } from '@libs/shared/data-access-user/src';
 import { CatalogoData, Detalles, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
@@ -177,9 +177,8 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.getCatalogoUsosMercancia();
     this.getcatalogosDatospaisOrigenLista()
 
-    // this.obtenerCatalogosTransporte();
-    // this.obtenerUMCCatalogosTransporte();
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+      console.log('datos mercancia obtener datos', JSON.stringify(datos));
       this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as FilaSolicitud;
     })
   }
@@ -276,7 +275,8 @@ export class MercanciaSolicitudComponent implements OnInit {
         (data): void => {
 
           this.mercanciaGroup.patchValue({
-            umt: data.datos?.descripcion ?? 'Sin descripción'
+            umt: data.datos?.clave ?? 'sin clave',
+            descripcionUMT: data.datos?.descripcion ?? 'Sin descripción'
           });
         }
       );
@@ -405,7 +405,8 @@ export class MercanciaSolicitudComponent implements OnInit {
         ).subscribe(
           (data): void => {
             this.mercanciaGroup.patchValue({
-              descripcionFraccionArancelaria: data.datos?.descripcion ?? 'Sin descripción'
+              descripcionFraccionArancelaria: data.datos?.descripcion ?? 'Sin descripción',
+              idDescripcionFraccion: data.datos?.id_fraccion ?? 0
             });
             this.getNicoFraccionArancelariaLista(this.mercanciaGroup.get('fraccionArancelaria')?.value);
             this.getUnidadMedida();
@@ -479,16 +480,18 @@ export class MercanciaSolicitudComponent implements OnInit {
     return this.fb.group({
       tipoRequisito: [MERCANCIA_DATA.tipoRequisito || '', Validators.required],
       requisito: [MERCANCIA_DATA.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [MERCANCIA_DATA.numeroCertificadoInternacional || '', Validators.required],
+      numeroCertificadoInternacional: [MERCANCIA_DATA.numeroCertificadoInternacional || '', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       numeroOficioCasoEspecial: [MERCANCIA_DATA.numeroOficioCasoEspecial || ''],
       fraccionArancelaria: [MERCANCIA_DATA.fraccionArancelaria || '', Validators.required],
       descripcionFraccionArancelaria: [{value: MERCANCIA_DATA.descripcionFraccionArancelaria || '', disabled: true}, Validators.required],
+      idDescripcionFraccion: [MERCANCIA_DATA.idDescripcionFraccion || 0],
       nico: [MERCANCIA_DATA.nico || '', Validators.required],
       descripcionNico: [{value: MERCANCIA_DATA.descripcionNico || '', disabled: true}, Validators.required],
-      descripcion: [MERCANCIA_DATA.descripcion || '', Validators.required],
-      cantidadUMT: [MERCANCIA_DATA.cantidadUMT || '', Validators.required],
-      umt: [{value: MERCANCIA_DATA.umt || '', disabled: true}, Validators.required],
-      cantidadUMC: [MERCANCIA_DATA.cantidadUMC || '', Validators.required],
+      descripcion: [MERCANCIA_DATA.descripcion || '', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: [MERCANCIA_DATA.cantidadUMT || '', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umt: [{ value: MERCANCIA_DATA.umt || '', disabled: true }, Validators.required],
+      descripcionUMT: [{ value: MERCANCIA_DATA.descripcionUMT || '', disabled: true }, Validators.required],
+      cantidadUMC: [MERCANCIA_DATA.cantidadUMC || '', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: [MERCANCIA_DATA.umc || '', Validators.required],
       uso: [MERCANCIA_DATA.uso || '', Validators.required],
       numeroDeLote: [MERCANCIA_DATA.numeroDeLote || '', Validators.required],
@@ -508,6 +511,7 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {FormGroup} El grupo de formularios para detalles
    */
   public createDetallesGroup(): FormGroup {
+    this.cuerpoTablaDetalle = this.datosMercanciaStore.lista_detalle_mercancia || []
     return this.fb.group({
       nombreCientifico: [''],
     });
@@ -554,9 +558,8 @@ export class MercanciaSolicitudComponent implements OnInit {
     }
 
     else {
-
-
-    const NUEVO_DETALLE: FilaSolicitud = this.mercanciaGroup.getRawValue();
+      const NUEVA_MERCANCIA: FilaSolicitud = this.mercanciaGroup.getRawValue();
+      NUEVA_MERCANCIA.lista_detalle_mercancia = this.cuerpoTablaDetalle;
     const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
     let FILTERED_VALOR: FilaSolicitud[] = [];
     
@@ -568,12 +571,12 @@ export class MercanciaSolicitudComponent implements OnInit {
       FILTERED_VALOR = ESTADO_ACTUAL;
     }
     
-    const NUEVA_DETALLE_LIST = [
+      const NUEVA_MERCANCIA_LIST = [
       ...(FILTERED_VALOR || []),
-      NUEVO_DETALLE
+        NUEVA_MERCANCIA
     ];
     
-    this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_DETALLE_LIST);
+      this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_MERCANCIA_LIST);
     this.detallesGroup.reset();
     this.cerrar.emit();
   }
@@ -634,5 +637,47 @@ export class MercanciaSolicitudComponent implements OnInit {
    */
   seleccionTabla(event: Detalles[]): void {
     this.detallesSeleccionados = event || {} as Detalles;
+  }
+
+  /**
+ * Validador personalizado para verificar si el número tiene más de 3 decimales
+ * @param control - Control del formulario a validar
+ * @returns ValidationErrors si tiene más de 3 decimales, null si es válido
+ */
+  static maxDecimalsValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const DECIMAL_PART = STRING_VALUE.split('.')[1];
+
+    if (DECIMAL_PART && DECIMAL_PART.length > 3) {
+      return { maxDecimals: true };
+    }
+
+    return null;
+  }
+
+  /**
+   * Validador personalizado para verificar si el número tiene más de 12 números enteros
+   * @param control - Control del formulario a validar
+   * @returns ValidationErrors si tiene más de 12 números enteros, null si es válido
+   */
+  static maxWholeNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const WHOLE_PART = STRING_VALUE.split('.')[0];
+
+    if (WHOLE_PART.length > 12) {
+      return { maxWholeNumbers: true };
+    }
+
+    return null;
   }
 }

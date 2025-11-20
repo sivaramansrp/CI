@@ -113,4 +113,11 @@ export const ERROR_FORMA_ALERT =
     <strong>¡Error de registro! </strong> Faltan campos por capturar</div>
   </div>
 </div>
-`
+`;
+
+/**
+ * mensaje cuando se finaliza la solicitud paso 1.
+ * @const
+ * @type {string}
+ */
+export const MENSAJE_DE_EXITO_ETAPA_UNO = `La solicitud ha quedado registrada con el número temporal _folio_. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`;
