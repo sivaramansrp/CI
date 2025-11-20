@@ -1,7 +1,7 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
-import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,8 +18,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { TEXTOS } from '../../../constantes/constantes.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { DatosServiceService } from '../../../services/datos-service.service';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -38,12 +39,21 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     InputFechaComponent,
     CrosslistComponent,
     InputCheckComponent,
-    NotificacionesComponent,
+  NotificacionesComponent,
+  AlertComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
-export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
+export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges {
+
+   /**
+   * Indica si la sección es colapsable.
+   * @type {boolean}
+   * @default true
+   */
+  public colapsable: boolean = true;
+  
   /** Formulario principal para los datos de la solicitud */
   dataDeLaSolicitudForm!: FormGroup;
 
@@ -191,6 +201,11 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  /**
+   * Almacena el número o identificador del trámite (procedimiento) seleccionado o en curso.
+   * Se obtiene del servicio DatosServiceService y puede ser utilizado para lógica relacionada con el trámite.
+   */
+  procedureNo: any;
 
   /** 
  * RFC del solicitante.
@@ -198,6 +213,21 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
  * Ejemplo: 'MAVL621207C95'.
  */
   rfc: string = 'MAVL621207C95';
+
+  /**
+   * Evento que emite el estado de validez del formulario.
+   * Se emite un valor booleano: `true` si el formulario es válido, `false` en caso contrario.
+   * Útil para notificar a componentes padres sobre cambios en la validez del formulario.
+   */
+  @Output() formValidityChange = new EventEmitter<boolean>();
+
+  
+  /**
+   * Indica si se ha activado el evento de continuar.
+   * Este valor se utiliza para controlar el flujo de la solicitud
+   * dependiendo de si el usuario ha decidido continuar con el proceso.
+   */
+   @Input() isContinuarTriggered: boolean = false;
 
   /**
    * Constructor del componente.
@@ -223,8 +253,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private solicitud260702Store: Solicitud260702Store,
     private solicitud260702Query: Solicitud260702Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private datosService: DatosServiceService
   ) {
+    this.procedureNo = this.datosService.procedureNo;
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -261,6 +293,30 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
+
+
+   /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+    this.dataDeLaSolicitudForm.markAllAsTouched();
+    this.clavaScianForm.markAllAsTouched();
+    }
+  }
+    /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @returns {void}
+   */
+  public mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+    /**
+     * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
+     * @type {typeof AL_DAR}
+     */
+    public TEXTO = AL_DAR;
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -373,11 +429,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       descripcionFraccionArancelaria: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
-       Validators.maxLength(200),
+        [Validators.required, Validators.maxLength(200)],
       ],
       cantidadUMT: [
         this.dataDeLaSolicitudState?.cantidadUMT,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ]
       ],
       umt: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
@@ -385,7 +444,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       cantidadUMC: [
         this.dataDeLaSolicitudState?.cantidadUMC,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ]
       ],
       umc: [this.dataDeLaSolicitudState?.umc, Validators.required],
       tipoProducto: [
@@ -402,12 +464,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       nombreProductoEspecifico: [
         this.dataDeLaSolicitudState?.nombreProductoEspecifico,
-        Validators.required,
+        [Validators.required, Validators.maxLength(150)]
       ],
       marca: [this.dataDeLaSolicitudState?.marca, Validators.required],
       fraccionArancelaria: [
         this.dataDeLaSolicitudState?.fraccionArancelaria,
-        Validators.required,
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       datosDelTramiteRealizar: this.fb.group({
          tipoOperacion: [
@@ -446,7 +508,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
          [
             Validators.required,
             Validators.maxLength(120),
-            Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),
+            Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO),
           ],
         ],
         colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
@@ -1185,6 +1247,7 @@ onChange(): void {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.formValidityChange.emit(this.dataDeLaSolicitudForm.valid);
   }
 
   /** Destrucción del componente */

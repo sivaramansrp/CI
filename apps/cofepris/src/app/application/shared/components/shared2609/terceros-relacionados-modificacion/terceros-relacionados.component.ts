@@ -855,13 +855,23 @@ cerrarFacturadorModal(): void {
   eliminarDotosAlerta(evento: boolean): void {
     if (evento) {
       if (this.eliminarFabricanteAlerta) {
+        /*
         this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
           (fabricante: Fabricante) => {
             return !this.fabricanteSeleccionadoDatos.some(
               (idx2: Fabricante) => idx2.rfc === fabricante.rfc
             );
           }
-        );
+        );*/
+        if (Array.isArray(this.fabricanteSeleccionadoDatos) && this.fabricanteSeleccionadoDatos.length > 0) {
+          this.fabricanteSeleccionadoDatos.forEach(selected => {
+            const idx = this.fabricanteTablaDatos.indexOf(selected);
+            if (idx > -1) {
+              this.fabricanteTablaDatos.splice(idx, 1);
+            }
+          });
+        }
+        this.fabricanteTablaDatos = [...this.fabricanteTablaDatos];
         this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
         this.eliminarFabricanteAlerta = false;
       } else if (this.eliminarDestinatarioAlerta) {
@@ -876,6 +886,7 @@ cerrarFacturadorModal(): void {
         this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
         this.eliminarDestinatarioAlerta = false;
       } else if (this.eliminarProveedorAlerta) {
+        /*
         this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
           (proveedor: Proveedor) => {
             return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
@@ -886,7 +897,16 @@ cerrarFacturadorModal(): void {
             });
           }
         );
-
+        */
+        if (Array.isArray(this.proveedorSeleccionadoDatos) && this.proveedorSeleccionadoDatos.length > 0) {
+          this.proveedorSeleccionadoDatos.forEach(selected => {
+            const idx = this.proveedorTablaDatos.indexOf(selected);
+            if (idx > -1) {
+              this.proveedorTablaDatos.splice(idx, 1);
+            }
+          });
+        }
+        this.proveedorTablaDatos = [...this.proveedorTablaDatos];
         this.proveedorEliminar.emit(this.proveedorTablaDatos);
         this.eliminarProveedorAlerta = false;
       } else if (this.eliminarFacturadorAlerta) {

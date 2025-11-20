@@ -53,10 +53,22 @@ export const API_POST_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/reque
 export const API_POST_ACUSE_REQUERIMIENTO = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/requerimiento/atender/acuse/guardar`;
 
 /**
+ * Api para guardar la solicitud del tramite
+ * @param tramite id del tramite
+ * @returns endpoint para guardar la solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Guardar-Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = (tramite: number | string): string =>
+  `sat-t${tramite}/solicitud/guardar`;
+
+/**
  * API para obtener la cadena original
+ * @param tramite id del tramite
+ * @param idSolicitud id de la solicitud
+ * @returns endpoint para obtener la cadena original
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Firma-Electronica/obtener-cadena-original
  */
 export const API_POST_CADENA_ORIGINAL = (
   tramite: string,
   idSolicitud: string
-): string => `sat-t${tramite}/tramite/${idSolicitud}/cadena-original`;
+): string => `sat-t${tramite}/solicitud/${idSolicitud}/genera-cadena-original`;

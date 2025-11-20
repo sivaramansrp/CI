@@ -427,6 +427,7 @@ export class PantallasComponent implements OnInit {
           //Modal insumos
           peso:null,
           volumen: null,
+          descripcion_alterna_modificada: this.solicitudeState.descripcion_alterna_modificada
         }
       }
     };
@@ -440,16 +441,21 @@ export class PantallasComponent implements OnInit {
                 response.datos?.mercancia?.descripciones_alternas_aelc?.length || 
                 response.datos?.mercancia?.descripciones_alternas_sgp?.length) {
                 this.tramite110101Store.addDescripcionServicioEvaluar(response.datos.mercancia);
-              this.pasoTabsInternos.descripcionesAdicionales(response.datos.mercancia);
+                if(!response.datos?.mercancia.proceso_es_requerido === true){
+                   this.pasoTabsInternos.descripcionesAdicionales(response.datos.mercancia);
+                }
             }
 
             if(response.datos?.errores?.length && response.datos.errores.length > 0){
                this.mostrarMensajeServicio = true;
-                this.mensajeErrores = response.datos.errores;
+              this.mensajeErrores = response.datos.errores; 
+              this.tramite110101Store.setTabProceso(response.datos?.mercancia.proceso_es_requerido ?? false);
+              this.tramite110101Store.addProcesoSolicitado(response.datos?.mercancia.procesos_solicitados ?? []);
+              this.tramite110101Store.setDescripcionAlternaModificadaResponse(response.datos?.mercancia.descripcion_alterna_modificada);
                 return;
             }
            this.evaluarSolicitudResponse = response.datos ?? {} as ValidarSolicitudResponse;
-           this.tramite110101Store.addTratadosServicioEvaluar(this.evaluarSolicitudResponse.tratados_agregados)
+           this.tramite110101Store.addTratadosServicioEvaluar(this.evaluarSolicitudResponse.tratados_agregados);
             if (onSuccessCallBack) {
             onSuccessCallBack();
            }

@@ -61,4 +61,16 @@ describe('PasoUnoComponent', () => {
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
+    it('ngOnDestroy no debe fallar si destroyNotifier$ no está definido', () => {
+    (component as any).destroyNotifier$ = undefined;
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+   it('ngOnInit debe suscribirse a selectConsultaioState$ y actualizar esDatosRespuesta si update es true', () => {
+    mockConsultaQuery.selectConsultaioState$ = of({ update: true });
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(false);
+  });
+
 });

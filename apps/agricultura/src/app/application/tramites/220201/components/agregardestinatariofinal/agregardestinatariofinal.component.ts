@@ -172,7 +172,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
   pairsCatalogChange(): void {
 
     this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      console.warn('Paises', data);
       this.pairsCatalog = data.datos ?? [];
     });
   }
@@ -275,11 +274,4 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
     }
   }
 
-  /**
-   * Actualiza los datos almacenados en el store.
-   * @method setValoresStore
-   */
-  setValoresStore(): void {
-    const VALOR = this.destinatarioForm.value;
-  }
 }

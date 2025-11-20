@@ -3,11 +3,11 @@ import {
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
 } from '../../../core/enums/constantes-alertas.enum';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -61,13 +61,16 @@ export class AcusePageComponent implements OnInit {
    * @type {number}
    * @default 0
    */
-  procedure:number=0;
+  procedure: number = 0;
 
 
   constructor(
     private tramiteQueries: TramiteFolioQueries,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+
+  }
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
@@ -80,9 +83,19 @@ export class AcusePageComponent implements OnInit {
     this.url = URL_ACTUAL.split('/')[2];
 
     this.folio = this.tramiteQueries.getTramite();
+    this.idSolicitud = this.tramiteQueries.getIdSolicitud();
+    this.procedure = this.tramiteQueries.getProcedure();
+    // Si no se obtienen idSolicitud y procedure del servicio, intentar obtenerlos del localStorage.
+    // los micro frontends no comparten estado, por lo que se usa localStorage como medio de comunicación.
+    if (this.idSolicitud === 0 && this.procedure === 0) {
+      const SOLICITUD_DATA = localStorage.getItem('solicitud');
+      if (SOLICITUD_DATA) {
+        const SOLICITUD = JSON.parse(SOLICITUD_DATA);
+        this.idSolicitud = SOLICITUD.idsolicitud;
+        this.folio = SOLICITUD.folio;
+        this.procedure = SOLICITUD.procedure;
+      }
+    }
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
-
-     this.idSolicitud = this.tramiteQueries.getIdSolicitud();
-     this.procedure = this.tramiteQueries.getProcedure();
   }
 }

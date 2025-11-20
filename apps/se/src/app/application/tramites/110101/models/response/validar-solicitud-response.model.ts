@@ -52,6 +52,15 @@ export interface Mercancia {
 
   /** Descripciones alternas para Acuerdos de Complementación Económica (ACE) */
   descripciones_alternas_ace: DescripcionAlternaResponse[] | null;
+
+  /** Procesos solicitados */
+  procesos_solicitados: ProcesoSolicitado[] | null;
+
+  /** Indica si el proceso es requerido */
+  proceso_es_requerido: boolean;
+    
+  /** Descripción alterna modificada (null si no aplica) */
+  descripcion_alterna_modificada: boolean | null;
 }
 
 /**
@@ -109,4 +118,28 @@ export interface DescripcionAlternaResponse {
     
     /** Descripción detallada de la fracción */
     descripcion: string;
+}
+
+
+/**
+ * Modelo para proceso solicitado
+ */
+export interface ProcesoSolicitado {
+    /** ID del proceso CEROR */
+    id_proceso_ceror: number;
+    
+    /** Nombre del proceso */
+    nombre: string;
+    
+    /** Fecha de inicio de vigencia */
+    fec_ini_vigencia: string;
+    
+    /** Fecha de fin de vigencia (null si no aplica) */
+    fec_fin_vigencia: string | null;
+    
+    /** Indica si el proceso está activo */
+    activo: boolean;
+    
+    /** Indica si cumple con el proceso */
+    cumple_proceso: boolean;
 }

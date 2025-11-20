@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { 
   AlertComponent, 
   Catalogo, 
@@ -32,7 +32,6 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
 import { ColumnConfig } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 import { PrellenadoMovilizacion, PrellenadoSolicitud, PrellenadoTercerosRelacionados } from '../../models/220201/prellenado-solicitud.model';
@@ -47,7 +46,6 @@ import { TercerosrelacionadosdestinoTable } from '../../../220202/models/220202/
 
 import { SharedFormService } from '../../services/220201/SharedForm.service';
 
-import { EventEmitter } from '@angular/core';
 import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
 
 
@@ -363,11 +361,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   pagoDeDerechos = {} as PagoDeDerechos;
 
+  /**
+   * Variable para almacenar los datos de la solicitud capturada.
+   * Se utiliza para guardar la información completa de la solicitud antes de enviarla al backend.
+   */
   guardaSolicitud!: CapturarSolicitud;
 
+  /**
+   * Identificador de la solicitud guardada.
+   * Se actualiza cuando se guarda la solicitud de manera total.
+   * @type {string | null}
+   */
   idSolicitud: string | null = null;
-
-
 
   /**
    * Constructor del componente.
@@ -380,7 +385,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private consultaQuery: ConsultaioQuery,
@@ -910,6 +914,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
                   fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
                   descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
+                  idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0, 
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',
@@ -985,8 +990,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           next: (response) => {
             if (response.datos && 'terceros_exportador' in response.datos && 'terceros_destinatario' in response.datos) {
               this.sharedService.enviarTercerosRelacionadosPrellenado(response.datos as PrellenadoTercerosRelacionados);
-            } else {
-              console.error('Invalid data format for PrellenadoTercerosRelacionados:', response.datos);
             }
           },
           error: () => {
