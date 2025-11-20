@@ -75,30 +75,30 @@ ngOnInit(): void {
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
-      this.guardarDatosFormulario();
+      // this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
 }
 
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.controlPermisosService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.controlPermisosService.actualizarEstadoFormulario(resp);
-        }else {
-          this.esDatosRespuesta = false;
-        }
-      });
-  }
+// /**
+//    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+//    * Luego reinicializa el formulario con los valores actualizados desde el store.
+//    */
+//   guardarDatosFormulario(): void {
+//     this.controlPermisosService
+//       .getRegistroTomaMuestrasMercanciasData().pipe(
+//         takeUntil(this.destroyNotifier$)
+//       )
+//       .subscribe((resp) => {
+//         if(resp){
+//         this.esDatosRespuesta = true;
+//         this.controlPermisosService.actualizarEstadoFormulario(resp);
+//         }else {
+//           this.esDatosRespuesta = false;
+//         }
+//       });
+//   }
 
   /**
    * Selecciona una pestaña específica.

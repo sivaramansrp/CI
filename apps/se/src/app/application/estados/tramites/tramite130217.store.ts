@@ -38,7 +38,7 @@ export interface Tramite130217State {
   /** Cantidad de partidas de la mercancía */
   cantidadPartidasDeLaMercancia: string;
   /** Valor en USD de las partidas de la mercancía */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
   /** Descripción de las partidas de la mercancía */
   descripcionPartidasDeLaMercancia: string;
   /** Valor de la factura en USD */
@@ -57,6 +57,31 @@ export interface Tramite130217State {
   representacion: string;
   /** Indicador para mostrar u ocultar la tabla */
   mostrarTabla: boolean;
+
+  /** Lista de partidas de la mercancía asociadas al trámite. */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+
+  /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
+
+  /**   
+   * Cantidad total de las partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /**   
+   * Valor total en USD de las partidas de la mercancía.
+   */
+  valorTotalUSD: string;
+  
 }
 
 /**
@@ -71,17 +96,17 @@ export function createInitialState(): Tramite130217State {
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
-    producto: 'Nuevo',
+    defaultSelect: 'TISOL.I',
+    producto: 'CONDMER.U',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.U',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -90,6 +115,14 @@ export function createInitialState(): Tramite130217State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
+    cantidadTotal: '',
+    valorTotalUSD: '',
   };
 }
 
