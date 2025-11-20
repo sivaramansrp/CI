@@ -1,5 +1,5 @@
 
-import { AVISO } from '@libs/shared/data-access-user/src';
+
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -68,10 +68,6 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
    */
   infoAlert = 'alert-info';
 
-  /**
-   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
-   */
-  TEXTOS = AVISO.Aviso;
 /**
  * Estado de la sección que contiene los datos del procedimiento.
  * 

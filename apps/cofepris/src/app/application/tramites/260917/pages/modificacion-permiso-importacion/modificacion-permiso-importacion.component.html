@@ -25,7 +25,7 @@
     @if(1 === indice) {
       <div class="mt-5">
         <div class="mt-5">
-          <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+          <app-aviso-de-privacidad *ngIf="indice === 1"></app-aviso-de-privacidad>
         </div>
       </div>
       }

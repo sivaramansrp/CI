@@ -17,11 +17,10 @@
     <div class="row">
       @switch (indice) { 
         @case (1) {
-          <app-paso-uno #pasoUnoComponent></app-paso-uno>
+          <app-paso-uno (buscarDatos)="handleFormaDatos($event)" #pasoUnoComponent></app-paso-uno>
         } 
         @case (2) {
-          <!-- Add your second step component here if different from paso-uno -->
-          <app-paso-tres></app-paso-tres>
+         <paso-firma [idSolicitud]="idSolicitud" [procedure]="120702"  [procedureUrl]="'expedicion-certificados-frontera/solicitante'"></paso-firma>
         }
       }
     </div>

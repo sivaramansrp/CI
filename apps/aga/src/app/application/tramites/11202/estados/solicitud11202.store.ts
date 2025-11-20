@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud11202
  */
 export interface Solicitud11202State {
+  idSolicitud: number;
   rfc: string;
   denominacion: string;
   actividadEconomica: string;
@@ -45,6 +46,7 @@ export function createInitialState(): Solicitud11202State {
     numeroInterior: '',
     lada: '',
     telefono: 0,
+    idSolicitud: 0,
   };
 }
 
@@ -107,6 +109,13 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
       correoElectronico,
     }));
   }
+
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  } 
 
   /**
    * Guarda el país en el estado.

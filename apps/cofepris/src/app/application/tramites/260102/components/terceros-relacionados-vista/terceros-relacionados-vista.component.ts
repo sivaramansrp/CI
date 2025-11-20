@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -70,6 +70,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 * @readonly
 */
   public readonly idProcedimiento: number = 260102;
+
+  @ViewChild(TercerosRelacionadosComponent)
+  tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
@@ -292,6 +295,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     eliminarFacturador(facturador: Facturador[]): void {
       this.tramiteStore.updateFacturadorTablaDatos(facturador, TIPO_ACTUALIZACION.ELIMINAR);
     }
+
+    validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ??
+      false
+    );
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

@@ -134,6 +134,14 @@
                 <label class="form-label" for="localidad">Localidad:</label>
                 <input class="form-control" id="localidad" type="text" formControlName="localidad"
                 (change)="setValoresStore(datosDelTramiteRealizar,'localidad', 'setLocalidad')"/>
+                  @if (
+                    dataDeLaSolicitudForm.get('datosDelTramiteRealizar')?.get('localidad')?.hasError('pattern') &&
+                    dataDeLaSolicitudForm.get('datosDelTramiteRealizar')?.get('localidad')?.touched
+                  ) {
+                    <div class="text-danger">
+                      <small>El valor capturado no es válido.</small>
+                    </div>
+                  }
             </div>
             <div class="col-md-4 mb-3">
                 <label class="form-label" for="colonia">Colonia:</label>
@@ -159,6 +167,9 @@
                 <label class="form-label" for="lada">Lada:</label>
                 <input class="form-control" id="lada" type="text" formControlName="lada"
                 (change)="setValoresStore(datosDelTramiteRealizar,'lada', 'setLada')"/>
+                  <div *ngIf="dataDeLaSolicitudForm.get('datosDelTramiteRealizar.lada')?.hasError('maxlength') && dataDeLaSolicitudForm.get('datosDelTramiteRealizar.lada')?.touched" class="text-danger">
+                  <small>Por favor, no escribas más de 5 caracteres</small>
+                </div>
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="telefono">Telefono*:</label>
@@ -341,6 +352,8 @@
                   <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
                   <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" />
+                  <span class="mensaje-error" *ngIf="dataDeLaSolicitudForm.controls['nombreProductoEspecifico'].errors?.['maxlength']">Por favor, no escribas más de 150 caracteres</span>
+                   
                     @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('nombreProductoEspecifico')?.hasError('required') && dataDeLaSolicitudForm.get('nombreProductoEspecifico')?.touched) {
             <div class="text-danger">
                 <small>Este campo es obligatorio</small>
@@ -379,12 +392,19 @@
                   </label>
                   <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"/>
-                   @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('fraccionArancelaria')?.hasError('required') &&
+                   
+                  @if (dataDeLaSolicitudForm && dataDeLaSolicitudForm.get('fraccionArancelaria')?.hasError('required') &&
                       dataDeLaSolicitudForm.get('fraccionArancelaria')?.touched) {
                       <div class="text-danger">
                         <small>Este campo es obligatorio</small>
                       </div>
                       }
+                      @else if (dataDeLaSolicitudForm.get('fraccionArancelaria')?.errors?.['pattern'] && (dataDeLaSolicitudForm.get('fraccionArancelaria')?.touched
+              )) {
+              <div class="text-danger">
+                <small>Por favor, sólo escribe dígitos</small>
+              </div>
+              }
                 </div>
               </div>
               <div class="row mt-5">
@@ -411,6 +431,12 @@
                         <small>Este campo es obligatorio</small>
                       </div>
                       }
+                      @else if (dataDeLaSolicitudForm.get('cantidadUMT')?.hasError('pattern') &&
+                      dataDeLaSolicitudForm.get('cantidadUMT')?.touched) {
+                      <div class="text-danger">
+                        <small>Por favor, escribe un número entero válido</small>
+                      </div>
+                      }
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
@@ -434,6 +460,12 @@
                       dataDeLaSolicitudForm.get('cantidadUMC')?.touched) {
                       <div class="text-danger">
                         <small>Este campo es obligatorio</small>
+                      </div>
+                      }
+                       @else if (dataDeLaSolicitudForm.get('cantidadUMC')?.hasError('pattern') &&
+                      dataDeLaSolicitudForm.get('cantidadUMC')?.touched) {
+                      <div class="text-danger">
+                        <small>Por favor, escribe un número entero válido</small>
                       </div>
                       }
                 </div>

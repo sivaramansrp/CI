@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 /**
  * @descripcion
  * Componente que representa el paso uno del trámite.
@@ -11,12 +12,19 @@ import { ImportacionEquipoAnticontaminanteService } from '../../services/importa
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy{
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+     * Referencia al componente SolicitudComponent.
+     * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+     */
+  @ViewChild(SolicitudComponent, { static: false }) solicitudComponent!: SolicitudComponent;
+
 
   /**
    * Estado actual de la consulta cargado desde el store.
@@ -30,10 +38,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    */
   indice: number = 1;
 
-   /**
-   * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
-   * La lógica de inicialización se delega a métodos específicos.
-   */
+  /**
+  * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
+  * La lógica de inicialización se delega a métodos específicos.
+  */
   constructor(
     private importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService,
     private consultaQuery: ConsultaioQuery
@@ -60,20 +68,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
       )
       .subscribe();
   }
-    /**
-  * Obtiene los datos de la solicitud desde un servicio y actualiza el estado del formulario.  
-  * Si la respuesta es válida, activa el indicador de datos cargados.
-  */
+  /**
+* Obtiene los datos de la solicitud desde un servicio y actualiza el estado del formulario.  
+* Si la respuesta es válida, activa el indicador de datos cargados.
+*/
   guardarDatosFormulario(): void {
-       this.importacionEquipoAnticontaminanteService
+    this.importacionEquipoAnticontaminanteService
       .getDatosDeLaSolicitud().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.importacionEquipoAnticontaminanteService.actualizarEstadoFormulario(resp);
-        }else {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.importacionEquipoAnticontaminanteService.actualizarEstadoFormulario(resp);
+        } else {
           this.esDatosRespuesta = false;
         }
       });
@@ -85,10 +93,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-   /**
-  * Método de limpieza que se ejecuta al destruir el componente.  
-  * Finaliza las suscripciones observables utilizando `destroyNotifier$`.
-  */
+  /**
+ * Método de limpieza que se ejecuta al destruir el componente.  
+ * Finaliza las suscripciones observables utilizando `destroyNotifier$`.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

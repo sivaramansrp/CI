@@ -109,7 +109,6 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
-      this.getBandejaDeTablaDatos();
       this.getNombreDelDepartamento();
       this.obtieneTipoSolicitudes();
       this.obtieneTareas();

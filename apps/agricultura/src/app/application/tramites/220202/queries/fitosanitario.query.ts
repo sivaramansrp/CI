@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
-
 import { FitosanitarioStore } from '../estados/fitosanitario.store';
-import { DatosForma, ListaDeDatosFinal } from '../models/220202/fitosanitario.model';
+import { Injectable } from '@angular/core';
+import { ListaDeDatosFinal } from '../models/220202/fitosanitario.model';
+import { Query } from '@datorama/akita';
 
 /**
  * @summary Servicio de consulta para el estado de fitosanitarios.
