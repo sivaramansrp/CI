@@ -499,8 +499,8 @@
   {
     "id": 72,
     "tramite": 220202,
-    "linkDashboard": "/agricultura/certificado-fitosanitario/agricultura",
-    "linkDepartment": "/pago/certificado-fitosanitario/agricultura",
+    "linkDashboard": "/agricultura/certificado-fitosanitario/registrofitosanitario",
+    "linkDepartment": "/pago/certificado-fitosanitario/registrofitosanitario",
     "department": "agricultura"
   },
   {
@@ -4345,6 +4345,13 @@
     "tramite": 303,
     "linkDashboard": "/aga/despacho-mercancias/registro/registro",
     "linkDepartment": "/pago/despacho-mercancias/registro/registro",
+    "department": "aga"
+  },
+   {
+    "id": 617,
+    "tramite": 31908,
+    "linkDashboard": "/aga/subsecuente/319/reactivar",
+    "linkDepartment": "/pago/subsecuente/319/reactivar",
     "department": "aga"
   }
 ]

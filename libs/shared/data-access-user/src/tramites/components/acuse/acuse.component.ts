@@ -114,7 +114,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ];
 

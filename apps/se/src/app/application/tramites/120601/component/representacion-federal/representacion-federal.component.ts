@@ -237,7 +237,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
  */
   obtenerEstado(): void {
-    this.catalogoService.estadosCatalogo(this.tramites)
+    this.catalogoService.catalogoEstadoUnidadesAdministrativas(this.tramites,'TIUAD.RF')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -251,18 +251,19 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
  * @returns {void} No devuelve ningún valor, solo actualiza el estado del componente.
  */
   obtenerRepresentacionFederal(claveEstado: string): void {
-    this.catalogoService.representacionFederalCatalogo(this.tramites, claveEstado)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          this.representacion = response?.datos ?? [];
-          if (this.representacion.length > 0) {
-          const OPCION_PRESELECCIONADA = this.representacion[0];
-          this.representacion = [OPCION_PRESELECCIONADA];
+  this.catalogoService.catalogoRepresentacionFederalVecina(this.tramites, claveEstado)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {
+        this.representacion = response?.datos ?? [];
+        if (this.representacion.length > 0) {
+          this.formulario.patchValue({
+            representacion: this.representacion[0].clave
+          });
         }
-        }
-      });
-  }
+      }
+    });
+}
 
   /**
  * Recupera y establece la información de las plantas según el estado seleccionado.

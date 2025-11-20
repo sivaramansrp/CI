@@ -12,7 +12,7 @@ import { SubProductosContenedoraComponent } from './components/sub-productos-con
 
 export const ROUTES_FITOSANITARIO: Routes = [
   {
-    path: 'agricultura',
+    path: 'registrofitosanitario',
     component: AgriculturaComponent,
   },
   {
@@ -50,7 +50,7 @@ export const ROUTES_FITOSANITARIO: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'agricultura',
+    redirectTo: 'registrofitosanitario',
   },
 
 ];

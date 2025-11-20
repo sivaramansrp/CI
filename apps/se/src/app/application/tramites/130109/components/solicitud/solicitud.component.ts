@@ -1,23 +1,18 @@
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/pasos.enum';
+import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130109State, Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
+
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130109Query } from '../../../../estados/queries/tramite130109.query';
-import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
-import fractionValues from '@libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130109/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130109/unidad_da.json';
 
 
 /**
@@ -30,808 +25,688 @@ import unidadOptions from '@libs/shared/theme/assets/json/130109/unidad_da.json'
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-    /**
+
+  /**
    * form
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
-    partidasDelaMercanciaForm!: FormGroup;
-    /**
-     * jest.spyOnFormulario reactivo para los datos del trámite.
-     */
-    formDelTramite!: FormGroup;
-   
-    /**
-     * jest.spyOnFormulario reactivo para los detalles de la mercancía.
-     */
-    mercanciaForm!: FormGroup;
-    /**
-     * formForTotalCount
-     * Formulario reactivo para capturar los totales de las partidas.
-     */
-    formForTotalCount!: FormGroup;
-    /**
-     * Formulario reactivo para la selección de países.
-     */
-    paisForm!: FormGroup;
-    /**
-     * Formulario reactivo para la representación.
-     */
-    frmRepresentacionForm!: FormGroup;
-    /**
-     * tableHeaderData
-     * Configuración de las columnas de la tabla dinámica.
-     */
-    tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
-    /**
-     * tableBodyData
-     * Datos que se mostrarán en el cuerpo de la tabla dinámica.
-     */
-    tableBodyData: PartidasDeLaMercanciaModelo[] = [];
-    /**
-     * mostrarTabla
-     * Bandera para mostrar u ocultar la tabla dinámica.
-     */
-    mostrarTabla = true; 
-    /**
-     * CHECKBOX
-     * Tipo de selección de la tabla dinámica (checkbox).
-     */
-    checkBox = TablaSeleccion.CHECKBOX; 
-    /**
-     * getEstablecimientoTableData
-     * Datos de configuración de la tabla obtenidos de un archivo JSON.
-     */
-    public getEstablecimientoTableData = PartidasdelaTable;
-   
-    /**
-     * filaSeleccionada
-     * Fila seleccionada en la tabla dinámica.
-     */
-    filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
-   
-    /**
-     * jest.spyOnOpciones para el campo "producto".
-     */
-    productoOpciones: ProductoOpción[] = [];
-    /**
-     * jest.spyOnCatálogo con valores de fracción arancelaria.
-     */
-    
-   fraccionCatalogo: Catalogo[] = fractionValues;
-   
-    /**
-     * jest.spyOnCatálogo con opciones de unidad de medida.
-     */
-    unidadCatalogo: Catalogo[] = unidadOptions;
-    /**
-     * jest.spyOnCampos de entrada configurables para detalles adicionales.
-     */
-   
-    datosInputFields = [
-      {
-        label: 'Régimen al que se destinará la mercancía*',
-        placeholder: 'Seleccione un documento',
-        required: true,
-        controlName: 'regimen',
-      },
-      {
-        label: 'Clasificación del régimen*',
-        placeholder: 'Seleccione un documento',
-        required: true,
-        controlName: 'clasificacion',
-      },
-    ];
-    /**
-     * jest.spyOnMatriz de catálogos adicionales para el formulario.
-     */
-    catalogosArray: Catalogo[][] = solicitudeSelectVal;
-    /**
-     * jest.spyOnOpciones de solicitud configurables.
-     */
-    opcionesSolicitud: ProductoOpción[] = [];
-   
-    /**
-     * jest.spyOnSujeto para gestionar la destrucción de suscripciones.
-     */
-    private destroyed$ = new Subject<void>();
-    /**
-     * jest.spyOnArreglo que almacena un catálogo de elementosDeBloque.
-     */
-    elementosDeBloque: Catalogo[] = [];
-    /**
-     * jest.spyOnArreglo que contiene un catálogo de países organizados por bloque.
-     */
-    paisesPorBloque: Catalogo[] = [];
-    /**
-     * jest.spyOnArreglo que guarda un catálogo de entidades federativas.
-     */
-    entidadFederativa: Catalogo[] = [];
-    /**
-     * jest.spyOnArreglo que almacena un catálogo de representaciones federales.
-     */
-    representacionFederal: Catalogo[] = [];
-    /**
-     * jest.spyOnArreglo de cadenas que representa las opciones seleccionables de rangos de días.
-     */
-    selectRangoDias: string[] = [];
-    /**
-     * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
-     */
-    TEXTOS = TEXTOS;
-    /**
-     * Indica si el formulario está en modo solo lectura.
-     * Cuando es `true`, los campos del formulario no se pueden editar.
-     */
-    esFormularioSoloLectura: boolean = false;
-
-   /**
-    * Estado interno de la sección actual del trámite 130110.
-    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
-    * Propiedad privada.
-   */
-    private seccionState!: Tramite130109State;
-
-    /**
-     * Indica si se debe mostrar el error de clasificación.
-     */
-    mostrarErrorClasificacion = true;
-    /**
-   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
-   */
-    mostrarErroresPartidas = false;
+  partidasDelaMercanciaForm!: FormGroup;
   /**
-   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   * jest.spyOnFormulario reactivo para los datos del trámite.
    */
-    mostrarErroresMercancia = false;
-    /*
-      * @descripcion Indica si se debe mostrar una notificación.
-      */
-    mostrarNotificacion = false;
-    /**
-      * @descripcion Notificación para mostrar mensajes al usuario.
-      */
-    public nuevaNotificacion!: Notificacion;
+  formDelTramite!: FormGroup;
 
-    /**
-     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
-     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
-     */
-    @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
-    /*
-      * modificarPartidasDelaMercanciaForm
-      * Formulario reactivo para modificar las partidas.
-      */
-    modificarPartidasDelaMercanciaForm!: FormGroup;
+  /**
+   * jest.spyOnFormulario reactivo para los detalles de la mercancía.
+   */
+  mercanciaForm!: FormGroup;
+  /**
+   * formForTotalCount
+   * Formulario reactivo para capturar los totales de las partidas.
+   */
+  formForTotalCount!: FormGroup;
 
-    /**
-     * Constructor del componente.
-     */
-    constructor(
-      private fb: FormBuilder,
-      private http: HttpClient,
-      private tramite130109Store: Tramite130109Store,
-      private tramite130109Query: Tramite130109Query,
-      private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService,
-      private consultaioQuery: ConsultaioQuery,
-    ) {
-      this.consultaioQuery.selectConsultaioState$
+  /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
+  isInvalidaPartidas: boolean = false;
+
+  /**
+   * Formulario reactivo para la selección de países.
+   */
+  paisForm!: FormGroup;
+  /**
+   * Formulario reactivo para la representación.
+   */
+  frmRepresentacionForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm!: FormGroup;
+  /**
+   * tableHeaderData
+   * Configuración de las columnas de la tabla dinámica.
+   */
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
+  /**
+   * tableBodyData
+   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
+  /**
+   * mostrarTabla
+   * Bandera para mostrar u ocultar la tabla dinámica.
+   */
+  mostrarTabla = false;
+  /**
+   * CHECKBOX
+   * Tipo de selección de la tabla dinámica (checkbox).
+   */
+  checkBox = TablaSeleccion.CHECKBOX;
+  /**
+   * getEstablecimientoTableData
+   * Datos de configuración de la tabla obtenidos de un archivo JSON.
+   */
+  public getEstablecimientoTableData = [];
+
+  /**
+   * filaSeleccionada
+   * Fila seleccionada en la tabla dinámica.
+   */
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
+
+  /**
+   * jest.spyOnOpciones para el campo "producto".
+   */
+  productoOpciones: ProductoOpción[] = PRODUCTO_OPCION;
+  /**
+   * jest.spyOnCatálogo con valores de fracción arancelaria.
+   */
+
+  fraccionCatalogo: Catalogo[] = [];
+
+  /**
+   * jest.spyOnCatálogo con opciones de unidad de medida.
+   */
+  unidadCatalogo: Catalogo[] = [];
+  /**
+   * jest.spyOnCampos de entrada configurables para detalles adicionales.
+   */
+
+  datosInputFields = [
+    {
+      label: 'Régimen al que se destinará la mercancía',
+      placeholder: 'Seleccione un documento',
+      required: true,
+      controlName: 'regimen',
+    },
+    {
+      label: 'Clasificación del régimen',
+      placeholder: 'Seleccione un documento',
+      required: true,
+      controlName: 'clasificacion',
+    },
+  ];
+  /**
+   * jest.spyOnMatriz de catálogos adicionales para el formulario.
+   */
+  catalogosArray: Catalogo[][] = [[], []];
+  /**
+   * jest.spyOnOpciones de solicitud configurables.
+   */
+  opcionesSolicitud: ProductoOpción[] = OPINIONES_SOLICITUD;
+
+  /**
+   * jest.spyOnSujeto para gestionar la destrucción de suscripciones.
+   */
+  private destroyed$ = new Subject<void>();
+  /**
+   * jest.spyOnArreglo que almacena un catálogo de elementosDeBloque.
+   */
+  elementosDeBloque: Catalogo[] = [];
+  /**
+   * jest.spyOnArreglo que contiene un catálogo de países organizados por bloque.
+   */
+  paisesPorBloque: Catalogo[] = [];
+  /**
+   * jest.spyOnArreglo que guarda un catálogo de entidades federativas.
+   */
+  entidadFederativa: Catalogo[] = [];
+  /**
+   * jest.spyOnArreglo que almacena un catálogo de representaciones federales.
+   */
+  representacionFederal: Catalogo[] = [];
+  /**
+   * jest.spyOnArreglo de cadenas que representa las opciones seleccionables de rangos de días.
+   */
+  selectRangoDias: string[] = [];
+  /**
+   * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
+   */
+  TEXTOS = TEXTOS;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+  * Estado interno de la sección actual del trámite 130110.
+  * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+  * Propiedad privada.
+  */
+  private seccionState!: Tramite130109State;
+
+  /**
+   * jest.spyOnIdentificador del procedimiento actual.
+   * @type {number}
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+
+  /**
+   * jest.spyOnArreglo que almacena las partidas a mostrar en la tabla.
+   * @type {MostrarPartidas[]}
+   */
+  mostrarPartidas: MostrarPartidas[] = [];
+
+  /**
+   * Constructor del componente.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private tramite130109Store: Tramite130109Store,
+    private tramite130109Query: Tramite130109Query,
+private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.inicializarFormularios();
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState)=>{
-          this.esFormularioSoloLectura = seccionState.readonly; 
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
-    }
-    /**
-     * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
-     */
-    ngOnInit(): void {
-      this.tramite130109Store.actualizarEstado({
-        solicitud: 'Inicial',
-        producto: 'Nuevo',
-        defaultSelect: 'Inicial',
-        defaultProducto: 'Nuevo'
+      .subscribe();
+  }
+  /**
+   * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
+   */
+  ngOnInit(): void {
+    this.getMostrarPartidas();
+    this.configuracionFormularioSuscripciones();
+    this.getRegimenCatalogo();
+    this.getFraccionCatalogo();
+    this.getEntidadesFederativasCatalogo();
+    this.getBloque();
+    this.tramite130109Query.mostrarTabla$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((mostrarTabla) => {
+        this.mostrarTabla = mostrarTabla;
       });
-        this.inicializarEstadoFormulario();
-        this.opcionesDeBusqueda();
-        this.fetchEntidadFederativa();
-        this.fetchRepresentacionFederal();
-        this.listaDePaisesDisponibles();
 
-        this.tramite130109Query.select(state => state.tableBodyData)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          this.tableBodyData = data || [];
-        });
-    }
-
-    
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormularios();
-    }
-  }
-
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormularios();
-  }
-
-  /**
-     * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
-     * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
-     * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
-     */
-    suscribirseAEstadoDeSolicitud(): void {
       this.tramite130109Query.selectSolicitud$
-        ?.pipe(takeUntil(this.destroyed$))
-        .subscribe((data: Tramite130109State) => {
-          this.seccionState = data;
-        });
-    }
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableBodyData = data.tableBodyData || [];
+      });
+  }
 
-    /**
-     * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
-     */
-    
-    inicializarFormularios(): void {  
-    this.suscribirseAEstadoDeSolicitud(); 
-      this.formDelTramite = this.fb.group({
-        solicitud: [this.seccionState?.solicitud, Validators.required],
-        regimen: [this.seccionState?.regimen, Validators.required],
-        clasificacion: [this.seccionState?.clasificacion, Validators.required],
-      });
-   
-      this.mercanciaForm = this.fb.group({
-        producto: [this.seccionState?.producto],
-        descripcion: [
-         this.seccionState?.descripcion,
-          [
-            Validators.required,
-            SolicitudComponent.validarSinCaracterAnguloDerecho
-          ],
-        ],
-        fraccion: [this.seccionState?.fraccion, Validators.required],
-        cantidad: [
-          this.seccionState?.cantidad,
-          [
-            Validators.required,
-            SolicitudComponent.validarNumeroTresDecimales,
-            Validators.min(1),
-          ],
-        ],
-        valorFacturaUSD: [
-          this.seccionState?.valorFacturaUSD,
-          [
-            Validators.required,
-            SolicitudComponent.validarNumeroTresDecimales,
-            Validators.min(0.01),
-          ],
-        ],
-   
-        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
-      });
-      this.partidasDelaMercanciaForm = this.fb.group({
-        cantidadPartidasDeLaMercancia: [
-          this.seccionState?.cantidadPartidasDeLaMercancia,
-          [
-            Validators.required,
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
-            Validators.maxLength(18),
-          ],
-        ],
-        descripcionPartidasDeLaMercancia: [
-          this.seccionState?.descripcionPartidasDeLaMercancia,
-          [Validators.required, Validators.maxLength(255)],
-        ],
-        valorPartidaUSDPartidasDeLaMercancia: [
-          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
-          [
-            Validators.required,
-            Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
-            Validators.maxLength(20),
-          ],
-        ],
-      });
-      this.modificarPartidasDelaMercanciaForm = this.fb.group({
-        cantidadPartidasDeLaMercancia: [
-          this.seccionState?.cantidadPartidasDeLaMercancia,
-          [
-            Validators.required,
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
-            Validators.maxLength(18),
-          ],
-        ],
-        descripcionPartidasDeLaMercancia: [
-          this.seccionState?.descripcionPartidasDeLaMercancia,
-          [Validators.required, Validators.maxLength(255)],
-        ],
-        valorPartidaUSDPartidasDeLaMercancia: [
-          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
-          [
-            Validators.required,
-            Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
-            Validators.maxLength(20),
-          ],
-        ],
-      });
-      this.formularioTotalCount(
-        String(this.seccionState?.cantidadTotal),
-        String(this.seccionState?.valorTotalUSD)
-      );
-      this.paisForm = this.fb.group({
-        bloque: [this.seccionState?.bloque],
-        usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-        observaciones: [this.seccionState?.observaciones],
-      });
-      this.frmRepresentacionForm = this.fb.group({
-        entidad: [this.seccionState?.entidad, Validators.required],
-        representacion: [this.seccionState?.representacion, Validators.required],
-      });
-    }
-
-
-    
-    /**
-   * formularioTotalCount
-   * Crea el formulario reactivo para capturar los totales de las partidas.
+  /**
+   * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
-  formularioTotalCount(cantidadTotal: string , valorTotalUSD: string): void {
-  this.formForTotalCount = this.fb.group({
-    cantidadTotal: [{ value: cantidadTotal, disabled: true }],
-    valorTotalUSD: [{ value: valorTotalUSD, disabled: true }],
-  });
-}
-   
-    /**
-     * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
-     */
-    opcionesDeBusqueda(): void {
-      this.vehiculosUsadosAdaptadosService
-        .getSolicitudeOptions()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: (data) => {
-            this.opcionesSolicitud = data.options;
-            this.tramite130109Store.actualizarEstado({
-              solicitud: data.options[0]?.value || '',
-              defaultSelect: data.defaultSelect || 'Inicial',
-            });
-          },
-          error: (error) =>
-            console.error('Error loading solicitude options:', error),
-        });
-   
-      this.vehiculosUsadosAdaptadosService
-        .getProductoOptions()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: (data) => {
-            this.productoOpciones = data.options;
-            this.tramite130109Store.actualizarEstado({
-              producto: data.options[0]?.value || 'Nuevo',
-              defaultProducto: data.options[0]?.value || 'Nuevo',
-            });
-          },
-        });
-    }
-    /**
-     * manejarlaFilaSeleccionada
-     * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
-     * Lista de filas seleccionadas.
-     */
-    manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-      this.filaSeleccionada = filasSeleccionadas.length
-        ? filasSeleccionadas
-        : [];
-      if (this.filaSeleccionada) {
-        this.tramite130109Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
-      }
-    }
-    /**
-	   * onModificarPartidaSeleccionada
-	   * Maneja la modificación de una partida seleccionada.
-	   * @param partida - La partida que se va a modificar.
-	   */
-	  onModificarPartidaSeleccionada(partida: PartidasDeLaMercanciaModelo) :void{
-	    this.modificarPartidasDelaMercanciaForm.setValue({
-	        cantidadPartidasDeLaMercancia: partida.cantidad,
-	        descripcionPartidasDeLaMercancia: partida.descripcion,
-	        valorPartidaUSDPartidasDeLaMercancia: partida.totalUSD
-	      });
-	  }
-	  /**
-	   * onPartidaModificada
-	   * Maneja la modificación de una partida.
-	   * @param partida - La partida que se va a modificar.
-	   */
-	  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
-	    this.tableBodyData = this.tableBodyData.map(row =>
-	      row.id === partida.id ? { ...row, ...partida } : row
-	    );
-	    this.tramite130109Store.actualizarEstado({ tableBodyData: this.tableBodyData });
-	    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-	      (sum, row) => sum + Number(row.cantidad),
-	      0
-	    );
-	    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-	      (sum, row) => sum + Number(row.totalUSD),
-	      0
-	    );
-	    this.tramite130109Store.actualizarEstado({
-	      cantidadTotal: String(CANTIDAD_TOTAL),
-	      valorTotalUSD: String(VALOR_TOTAL_USD)
-	    });
-	    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
-	  }
 
-   
-    /**
-     * validarYEnviarFormulario
-     * Valida el formulario y muestra la tabla dinámica si es válido.
-     */
-    validarYEnviarFormulario(): void {
-  ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
-    const CONTROL = this.mercanciaForm.get(controlName);
-    if (CONTROL) {
-      CONTROL.markAsTouched();
-      CONTROL.updateValueAndValidity();
-    }
-  });
-  
-  if (this.mercanciaForm.get('cantidad')?.invalid ||
-    this.mercanciaForm.get('valorFacturaUSD')?.invalid
-  ) {
-    this.mostrarErroresMercancia = true;
-    this.mostrarErroresPartidas = false;
-    return;
-  }
-  this.mostrarErroresMercancia = false;
-  [
-    'cantidadPartidasDeLaMercancia',
-    'valorPartidaUSDPartidasDeLaMercancia',
-    'descripcionPartidasDeLaMercancia'
-  ].forEach(controlName => {
-    const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
-    if (CONTROL) {
-      CONTROL.markAsTouched();
-      CONTROL.updateValueAndValidity();
-    }
-  });
-  if (
-    this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
-    this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
-    this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
-  ) {
-    this.mostrarErroresPartidas = true;
-    return;
-  }
-    // Si fracción no tiene valor, mostrar popup y detener flujo
-  if (!this.mercanciaForm.get('fraccion')?.value) {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'info',
-      modo: '',
-      titulo: '',
-      mensaje: 'Debes seleccionar una Fracción arancelaria',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
-    };
-    this.mostrarNotificacion = true;
-    return;
-  }
-    const CURRENT_TABLE = this.tramite130109Query.getValue().tableBodyData || [];
-    const CANTIDAD = Number(this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value);
-    const TOTALUSD = Number(this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value);
-    const PRECIOUNITARIO_USD =
-      CANTIDAD && !isNaN(CANTIDAD) && !isNaN(TOTALUSD)
-        ? (TOTALUSD / CANTIDAD).toFixed(2)
-        : '';
-    const NEW_ROW: PartidasDeLaMercanciaModelo = {
-      id: Date.now().toString(),
-      cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-      totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-      descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-      unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-      fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
-      precioUnitarioUSD: PRECIOUNITARIO_USD
-    };
-    const UPDATED_TABLE = [...CURRENT_TABLE, NEW_ROW];
-    this.tramite130109Store.actualizarEstado({ 
-      tableBodyData: UPDATED_TABLE, 
-      mostrarTabla: true 
+  inicializarFormularios(): void {
+    this.formDelTramite = this.fb.group({
+      solicitud: [this.seccionState?.defaultSelect, Validators.required],
+      regimen: [this.seccionState?.regimen, Validators.required],
+      clasificacion: [this.seccionState?.clasificacion, Validators.required],
     });
-    this.tableBodyData = UPDATED_TABLE;
-    this.mostrarTabla = true;
-    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-    (sum, row) => sum + Number(row.cantidad),
-    0
-  );
-  const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-    (sum, row) => sum + Number(row.totalUSD),
-    0
-  );
-  this.tramite130109Store.actualizarEstado({
-    cantidadTotal: String(CANTIDAD_TOTAL),
-    valorTotalUSD: String(VALOR_TOTAL_USD)
-  });
-    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
-    this.partidasDelaMercanciaForm.reset();
-    this.mostrarErroresPartidas = false;
-}
 
+    this.mercanciaForm = this.fb.group({
+      producto: [this.seccionState?.defaultProducto],
+      descripcion: [
+        this.seccionState?.descripcion,
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+        ],
+      ],
+      fraccion: [this.seccionState?.fraccion, Validators.required],
+      cantidad: [
+        this.seccionState?.cantidad,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.min(1),
+        ],
+      ],
 
+      valorFacturaUSD: [
+        this.seccionState?.valorFacturaUSD,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.min(0.01),
+        ],
+      ],
 
-   
-    /**
-     * navegarParaModificarPartida
-     * Navega para modificar una partida específica y actualiza el estado global.
-     */
-    navegarParaModificarPartida(): void {
-      if (this.filaSeleccionada) {
-        this.tramite130109Store.actualizarEstado({mostrarTabla:true});
-        this.tramite130109Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
-      }
-    }
+      unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
+    });
+    this.partidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        this.seccionState?.cantidadPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.maxLength(18),
+        ],
+      ],
+      descripcionPartidasDeLaMercancia: [
+        this.seccionState?.descripcionPartidasDeLaMercancia,
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
+
+    this.paisForm = this.fb.group({
+      bloque: [this.seccionState?.bloque],
+      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+      observaciones: [this.seccionState?.observaciones],
+    });
+    this.frmRepresentacionForm = this.fb.group({
+      entidad: [this.seccionState?.entidad, Validators.required],
+      representacion: [this.seccionState?.representacion, Validators.required],
+    });
+
+    this.modificarPartidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.cantidadPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.maxLength(18),
+        ],
+      ],
+      descripcionPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.descripcionPartidasDeLaMercancia,
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        this.seccionState?.modificarPartidasDelaMercanciaForm?.valorPartidaUSDPartidasDeLaMercancia,
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
+
+    this.formForTotalCount = this.fb.group({
+      cantidadTotal: [{ value: this.seccionState?.cantidadTotal, disabled: true }],
+      valorTotalUSD: [{ value: this.seccionState?.valorTotalUSD, disabled: true }],
+    });
+  }
+
   /**
-   * Método para obtener la lista de entidades federativas.
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
    */
-  fetchEntidadFederativa(): void {
-    this.vehiculosUsadosAdaptadosService
-      .getEntidadFederativa()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.entidadFederativa = data;
-      });
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.formDelTramite.invalid) {
+      this.formDelTramite.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.tableBodyData.length === 0) {
+      this.isInvalidaPartidas = true;
+      isValid = false;
+    } else if (this.tableBodyData.length > 0) {
+      this.isInvalidaPartidas = false;
+    }
+    if (this.paisForm.invalid) {
+      this.paisForm.markAllAsTouched();
+      isValid = false;
+    }
+    if (this.frmRepresentacionForm.invalid) {
+      this.frmRepresentacionForm.markAllAsTouched();
+      isValid = false;
+    }
+    return isValid;
   }
+
   /**
-  * Método para obtener la lista de representaciones federales.
-  */
-  fetchRepresentacionFederal(): void {
-    this.vehiculosUsadosAdaptadosService
-      .getRepresentacionFederal()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.representacionFederal = data;
-      });
+   * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
+   */
+  configuracionFormularioSuscripciones(): void {
+    this.tramite130109Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+          
+          this.formDelTramite.patchValue({
+            solicitud: seccionState.defaultSelect,
+            regimen: seccionState.regimen,
+            clasificacion: seccionState.clasificacion,
+          });
+
+          this.mercanciaForm.patchValue({
+            producto: seccionState.producto,
+            descripcion: seccionState.descripcion,
+            fraccion: seccionState.fraccion,
+            cantidad: seccionState.cantidad,
+            valorFacturaUSD: seccionState.valorFacturaUSD,
+            unidadMedida: seccionState.unidadMedida,
+          });
+
+          this.paisForm.patchValue({
+            bloque: seccionState.bloque,
+            usoEspecifico: seccionState.usoEspecifico,
+            justificacionImportacionExportacion:
+              seccionState.justificacionImportacionExportacion,
+            observaciones: seccionState.observaciones,
+          });
+
+          this.frmRepresentacionForm.patchValue({
+            entidad: seccionState.entidad,
+            representacion: seccionState.representacion,
+          });
+        })
+      ).subscribe();
   }
+
   /**
-  * Método para obtener la lista de países disponibles.
-  */
-  listaDePaisesDisponibles(): void {
-    this.vehiculosUsadosAdaptadosService
-      .getListaDePaisesDisponibles()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.elementosDeBloque = data;
-      });
+   * manejarlaFilaSeleccionada
+   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
+   * Lista de filas seleccionadas.
+   */
+  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
+    this.filaSeleccionada = filasSeleccionadas.length
+      ? filasSeleccionadas
+      : [];
+    if (this.filaSeleccionada) {
+      this.tramite130109Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
+    }
   }
+
   /**
-  * Método para obtener la lista de países por bloque.
-  * Identificador del bloque.
-  */
-  fetchPaisesPorBloque(_bloqueId: number): void {
-    this.vehiculosUsadosAdaptadosService
-      .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
+   * validarYEnviarFormulario
+   * Valida el formulario y muestra la tabla dinámica si es válido.
+   */
+  validarYEnviarFormulario(): void {
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    } else {
+      this.mostrarTabla = true;
+      this.tramite130109Store.actualizarEstado({ mostrarTabla: true });
+      const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+      const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
+      const DATOS = [
+        {
+          "id": String(this.tableBodyData.length + 1),
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": UMT || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+        }
+      ];
+      this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.partidasDelaMercanciaForm.reset();
+const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + (parseInt(item.cantidad, 10) || 0), 0);   
+   const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+      this.formForTotalCount.patchValue({
+        cantidadTotal: CANTIDAD_TOTAL,
+        valorTotalUSD: TOTAL_USD,
       });
+      this.tramite130109Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
+    }
+  }
+
+  /**
+   * navegarParaModificarPartida
+   * Navega para modificar una partida específica y actualiza el estado global.
+   */
+  navegarParaModificarPartida(): void {
+    if (this.filaSeleccionada) {
+      this.tramite130109Store.actualizarEstado({ mostrarTabla: true });
+      this.tramite130109Store.actualizarEstado({ filaSeleccionada: this.filaSeleccionada });
+    }
   }
   /**
   * Maneja el cambio de bloque seleccionado.
   * Identificador del bloque seleccionado.
   */
   enCambioDeBloque(bloqueId: number): void {
-    this.fetchPaisesPorBloque(bloqueId);
+    this.getPaisesPorBloque(bloqueId.toString());
   }
-    /**
-     * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
-     * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
-     */
+  /**
+   * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
+   * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
+   */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
-  const VALOR = $event.form.get($event.campo)?.value;
-
-  if ($event.campo === 'regimen') {
-    this.formDelTramite.get('clasificacion')?.setValue('');
-    this.mostrarErrorClasificacion = false;
-    this.tramite130109Store.actualizarEstado({
-      [ $event.campo ]: VALOR,
-      clasificacion: ''
-    });
-  } else {
-    this.tramite130109Store.actualizarEstado({ [ $event.campo ]: VALOR });
-    if ($event.campo === 'clasificacion' && VALOR) {
-      this.mostrarErrorClasificacion = true;
+    const VALOR = $event.form.get($event.campo)?.value;
+    this.tramite130109Store.actualizarEstado({ [$event.campo]: VALOR });
+    if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimenCatalogo(VALOR);
+    }
+    if ($event.campo === 'fraccion') {
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUnidadesMedidaTarifaria(VALOR);
+    }
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.getRepresentacionFederalCatalogo(VALOR);
     }
   }
 
-  if ($event.campo === 'fraccion') {
-     this.mercanciaForm.get('unidadMedida')?.setValue('1'); 
-       this.tramite130109Store.actualizarEstado({ 'unidadMedida': '1' });
-  }
-}
-   
   /**
    * Determina si el botón "Modificar" debe estar deshabilitado.
    * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
    * 
    */
-    disabledModificar() : boolean {
-      let disabled = false;
-      if(this.filaSeleccionada.length === 0){
-        disabled = true
-      }
-      return disabled;
+  disabledModificar(): boolean {
+    let disabled = false;
+    if (this.filaSeleccionada.length === 0) {
+      disabled = true
     }
-    /**
-     * jest.spyOnCiclo de vida de Angular: limpia las suscripciones al destruir el componente.
-     */
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+    return disabled;
+  }
 
-    /**
-     * Valida que un número tenga como máximo tres decimales.
-     */
-    static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
-      const VALOR = control.value;
-      if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+/**
+ *  Modifica los valores del formulario de partidas de la mercancía según el evento recibido.
+ * @param evento 
+ */
+  modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
 
-      if (!/^\d+(\.\d+)?$/.test(VALOR)) {
-        return { noEsNumero: true };
-      }
-
-      if (/^\d+\.\d{4,}$/.test(VALOR)) {
-        return { maximoTresDecimales: true };
-      }
-
-      return null;
-    }
-
-    /**
-     * Valida que un string no contenga el carácter de ángulo derecho (›).
-     */
-    static validarSinCaracterAnguloDerecho(control: AbstractControl): ValidationErrors | null {
-      if (typeof control.value === 'string' && control.value.includes('›')) {
-        return { validarSinCaracterAnguloDerecho: true };
-      }
-      return null;
-    }
-
-     /*
-    Valida que un número tenga como máximo 14 enteros y 3 decimales.
-    */
-    static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
-      const VALOR = control.value;
-        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
-
-        if (!/^\d*\.?\d*$/.test(VALOR)) {
-          return { noEsNumero: true };
-        }
-
-        if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
-          return { validarCatorceEnterosTresDecimales: true };
-        }
-
-        return null;
-    }
-  /*
-    Valida que un número tenga como máximo 16 enteros y 3 decimales.
-    */
-    static validarCatorceEnterosTresDecimalesUSD(control: AbstractControl): ValidationErrors | null {
-      const VALOR = control.value;
-        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
-
-        if (!/^\d*\.?\d*$/.test(VALOR)) {
-          return { noEsNumero: true };
-        }
-
-        if (!/^\d{1,16}(\.\d{1,3})?$/.test(VALOR)) {
-          return { validarCatorceEnterosTresDecimalesUSD: true };
-        }
-
-        return null;
-    }
-      /**
-     * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
-     */
-    validarYCargarArchivo(): void {
-      ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
-        const CONTROL = this.mercanciaForm.get(controlName);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-          CONTROL.updateValueAndValidity();
-        }
-      });
-      if (
-        this.mercanciaForm.get('cantidad')?.invalid ||
-        this.mercanciaForm.get('valorFacturaUSD')?.invalid
-      ) {
-        this.mostrarErroresMercancia = true;
-        this.mostrarErroresPartidas = false;
-        return;
-      }
-      this.mostrarErroresMercancia = false;
-      [
-        'cantidadPartidasDeLaMercancia',
-        'valorPartidaUSDPartidasDeLaMercancia',
-        'descripcionPartidasDeLaMercancia'
-      ].forEach(controlName => {
-        const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-          CONTROL.updateValueAndValidity();
-        }
-      });
-      if (
-        this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
-        this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
-        this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
-      ) {
-        this.mostrarErroresPartidas = true;
-        return;
-      }
-      if (!this.mercanciaForm.get('fraccion')?.value) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'info',
-          modo: '',
-          titulo: '',
-          mensaje: 'Debes seleccionar una Fracción arancelaria',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-          tamanioModal: 'modal-sm'
-        };
-        this.mostrarNotificacion = true;
-        return;
-      }
-      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
-    }
-
-    /*
-    * Método que se ejecuta cuando se eliminan partidas de la tabla.
-    * Actualiza los datos de la tabla y recalcula los totales.  
-    */
-    onPartidasEliminadas(ids: string[]): void {
-      this.tableBodyData = this.tableBodyData.filter(row => !ids.includes(row.id));
-      this.mostrarTabla = this.tableBodyData.length > 0;
-      const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-        (sum, row) => sum + Number(row.cantidad),
-        0
-      );
-      const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-        (sum, row) => sum + Number(row.totalUSD),
-        0
-      );
-    this.tramite130109Store.actualizarEstado({
-       cantidadTotal: String(CANTIDAD_TOTAL),
-       valorTotalUSD: String(VALOR_TOTAL_USD)
+    this.modificarPartidasDelaMercanciaForm.patchValue({
+      cantidadPartidasDeLaMercancia: evento.cantidad,
+      valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
+      descripcionPartidasDeLaMercancia: evento.descripcion,
     });
-    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
-      this.tramite130109Store.actualizarEstado({ 
-        tableBodyData: this.tableBodyData, 
-        mostrarTabla: this.mostrarTabla 
+  }
+
+  /**
+   *  Actualiza la partida modificada en la tabla de datos.
+   * @param evento 
+   */
+  partidaModificada(evento: PartidasDeLaMercanciaModelo): void {
+    this.tableBodyData = this.tableBodyData.map(item => {
+      if (item.id === evento.id) {
+        return {
+          ...item,
+          cantidad: evento.cantidad,
+          totalUSD: evento.totalUSD,
+          precioUnitarioUSD: evento.precioUnitarioUSD,
+          descripcion: evento.descripcion,
+        };
+      }
+      return item;
+    });
+     const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+
+        this.tramite130109Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
+  }
+
+  /**
+  * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+  *
+  * @returns {void}
+  */
+  getRegimenCatalogo(): void {
+    this.vehiculosUsadosAdaptadosService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+      this.catalogosArray[0] = data as Catalogo[];
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de tratados o acuerdos desde el servicio y lo asigna a la propiedad `tratadoAcuerdoCertificado`.
+   *
+   * @returns {void}
+   */
+  getClasificacionRegimenCatalogo(VALOR: string): void {
+    this.vehiculosUsadosAdaptadosService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+      this.catalogosArray[1] = data as Catalogo[];
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de fracciones arancelarias desde el servicio y lo asigna a la propiedad `fraccionCatalogo`.
+   *
+   * @returns {void}
+   */
+  getFraccionCatalogo(): void {
+    this.vehiculosUsadosAdaptadosService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
+      this.fraccionCatalogo = data?.map(item => ({
+        ...item,
+        descripcion: `${item.clave} - ${item.descripcion}`
+      }));
+    });
+  }
+
+  /**
+   *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
+   * @param FRACCION_ID 
+   */
+  getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
+    this.vehiculosUsadosAdaptadosService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
+      this.unidadCatalogo = data as Catalogo[];
+      if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130109Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
+    });
+  }
+
+  /**
+   * Obtiene los bloques desde el servicio y los asigna a la propiedad `elementosDeBloque`.
+   *
+   * @returns {void}
+   */
+  getBloque(): void {
+    this.vehiculosUsadosAdaptadosService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
+      this.elementosDeBloque = data as Catalogo[];
+    });
+  }
+
+  /**
+   *  Obtiene los países por bloque desde el servicio y los asigna a la propiedad `paisesPorBloque`.
+   * @param ID 
+   */
+  getPaisesPorBloque(ID: string): void {
+    this.vehiculosUsadosAdaptadosService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
+      this.paisesPorBloque = data as Catalogo[];
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de entidades federativas desde el servicio y lo asigna a la propiedad `entidadFederativa`.
+   *
+   * @returns {void}
+   */
+  getEntidadesFederativasCatalogo(): void {
+    this.vehiculosUsadosAdaptadosService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
+      this.entidadFederativa = data as Catalogo[];
+    })
+  }
+
+  /**
+   *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+   * @param cveEntidad 
+   */
+  getRepresentacionFederalCatalogo(cveEntidad: string): void {
+    this.vehiculosUsadosAdaptadosService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
+      this.representacionFederal = data as Catalogo[];
+    });
+  }
+
+  /**
+   *  Maneja la selección de todos los países.
+   * @param evento 
+   */
+  todosPaisesSeleccionados(evento: boolean): void {
+    if (evento) {
+      this.vehiculosUsadosAdaptadosService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
+        this.paisesPorBloque = data as Catalogo[];
       });
     }
+  }
+
+  /**
+   * Obtiene las partidas a mostrar desde el servicio y las asigna a la propiedad `mostrarPartidas`.
+   *
+   * @returns {void}
+   */
+  getMostrarPartidas(): void {
+    this.vehiculosUsadosAdaptadosService.getMostrarPartidasService(202859165).subscribe((data) => {
+      if(data.codigo === '00'){
+          this.mostrarPartidas = data.datos as MostrarPartidas[];
+          this.tramite130109Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+      }
+    });
+  }
+
+  /**
+   *  Maneja la selección de fechas y actualiza el estado global.
+   * @param evento 
+   */
+  fechasSeleccionadas(evento: string[]): void {
+    this.tramite130109Store.actualizarEstado({ fechasSeleccionadas: evento });
+  }
+
+/**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas) || 0;
+    const TOTAL_USD = Number(cantidadUSD) || 0;
+
+    if (TOTAL_PARTIDAS === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 3;
+    const IMPORTE_UNITARIO_USD = TOTAL_USD / TOTAL_PARTIDAS;
+
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
+  }
+
+  /**
+   * jest.spyOnCiclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }
-   
