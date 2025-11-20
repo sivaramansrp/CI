@@ -12,7 +12,9 @@ import { Tramite120501Query } from '../../estados/queries/tramite120501.query';
  *  Interfaz que describe la estructura de un objeto de acción de botón.
  */
 interface AccionBoton {
+  /** Acción a realizar */
   accion: string;
+  /** Valor asociado a la acción */
   valor: number;
 }
 
@@ -38,6 +40,10 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
    *  Arreglo que contiene los pasos del wizard.
    */
   pasosSolicitar: ListaPasosWizard[] = PASOS;
+  /**
+   * {string} LOGIN
+   *  Login del usuario actual.
+   */
   LOGIN: string = "";
   /**
    * {number} indice
@@ -51,6 +57,16 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
    */
   esFormaValido: boolean = false;
+
+  /**
+   * Identificador numérico del mecanismo seleccionado.
+   * 
+   * @remarks
+   * Este valor se utiliza para determinar el mecanismo actual en uso dentro del componente.
+   * 
+   * @defaultValue 0
+   */
+  idMecanismo: number = 0;
 
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
@@ -109,6 +125,10 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
       */
   public alertaNotificacion!: Notificacion;
 
+  /**
+   * {number} folioTemporal
+   *  Folio temporal de la solicitud.
+   */
   folioTemporal: number = 0;
   /**
    * {DatosPasos} datosPasos
@@ -131,6 +151,7 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((solicitud) => {
         this.solicitudState = solicitud;
+        this.idMecanismo = this.solicitudState['idMecanismo'] as number;
       });
   }
 
@@ -206,76 +227,7 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
      * La llamada al servicio actualmente está comentada.
      */
   guardar(item: Solicitud120501State, e: AccionBoton): Promise<JSONResponse> {
-    const PAYLOAD = {
-      entidadFederativa: {
-        entidad: {
-          clave: item.entidadFederativa
-        }
-      },
-      idSolicitud:0,
-      unidadAdministrativaRepresentacionFederal: {
-        clave: item.representacionFederal
-      },
-      licitacion: {
-        producto: "Filetes de pescado frescos o refrigerados y congelados",
-        unidadMedidaTarifaria: "Kilogramo",
-        bloqueComercial: "Bloque Unilateral",
-        paises: "Estados Unidos Mexicanos",
-        idLicitacion: item.licitacionesDatos.licitacionPublica.idLicitacion,
-        anio: item.licitacionesDatos.licitacionPublica.anio,
-        cantidadMaxima: item.licitacionesDatos.licitacionPublica.cantidadMaxima,
-        fechaLimiteCalificacion: item.licitacionesDatos.licitacionPublica.fechaLimiteCalificacion,
-        fechaConcurso: item.fechaDelEventoDelicitacion,
-        fechaInicioVigencia: item.fechaDeiniciodeVigenciadelCupo,
-        fechaFinVigencia: item.fechaDefindeVigenciadelCupo,
-        fundamento: item.licitacionesDatos.licitacionPublica.fundamento,
-        ideTipoConstancia: item.licitacionesDatos.licitacionPublica.ideTipoConstancia,
-        ideTipoLicitacion: item.licitacionesDatos.licitacionPublica.ideTipoLicitacion,
-        numeroLicitacion: item.numeraDelicitacion,
-        idMecanismoAsignacion: item.licitacionesDatos.licitacionPublica.idMecanismoAsignacion
-      },
-      fraccionArancelaria: item.licitacionesDatos.fraccionArancelaria,
-      solicitud: {
-        participante: {
-          rfc: item.rfc
-        },
-        solicitante: {
-          rfc: "AAL0409235E6",
-          nombre: "ACEROS ALVARADO S.A. DE C.V.",
-          actividad_economica: "Fabricación de productos de hierro y acero",
-          correo_electronico: "contacto@acerosalvarado.com",
-          certificado_serial_number: "SN123456789",
-          domicilio: {
-            pais: "México",
-            codigo_postal: "06700",
-            estado: "Ciudad de México",
-            municipio_alcaldia: "Cuauhtémoc",
-            localidad: "Centro",
-            colonia: "Roma Norte",
-            calle: "Av. Insurgentes Sur",
-            numero_exterior: 123,
-            numero_interior: "Piso 5, Oficina A",
-            lada: 55,
-            telefono: 123456,
-            entidad_federativa: {
-                    cveEntidad: "BCS",
-                    nombre: "Ciudad de México",
-                    codEntidadIdc: "CDMX",
-                    cvePais: "MEX",
-                    fechaCaptura: "2025-06-09",
-                    fechaInicioVigencia: "2025-06-01",
-                    fechaFinVigencia: "2025-12-31",
-                    activo: true,
-                    pais: "México",
-                    claveEnIDC: "CDMX09"
-                }
-          }
-        },
-        maximoTransferir: item.licitacionesDatos.maximoTransferir,
-        montoTransferir: item.licitacionesDatos.montoTransferir,
-        idAsignacion: 52777
-      } 
-    };
+    const PAYLOAD = this.licitacionesDisponiblesService.getGuardarPayload(item);
     return new Promise((resolve, reject) => {
       let shouldNavigate = false;
       this.licitacionesDisponiblesService.guardarDatosPost(PAYLOAD).subscribe(
@@ -332,6 +284,10 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
     });
   }
 
+  /**
+   * Navega al paso anterior en el asistente.
+   * {void} No retorna ningún valor.
+   */
   anterior(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
@@ -374,6 +330,10 @@ export class SolicitarTransferenciaCuposMainComponent implements OnInit, OnDestr
     this.cargaEnProgreso = carga;
   }
 
+  /**
+   * Método para navegar al siguiente paso en el asistente.
+   * {void} No retorna ningún valor.
+   */
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
     this.wizardComponent.siguiente();

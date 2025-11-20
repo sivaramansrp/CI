@@ -6,33 +6,64 @@ import { LicitacionesResponse } from '../../models/solicitud.model';
  * @returns Solicitud120501
  */
 export interface Solicitud120501State {
+  /** Identificador de la asignación */
+  idAsignacion: number;
+  /** Identificador de la solicitud */
   idSolicitud: number;
+  /** Identificador del mecanismo */
+  idMecanismo: number;
+  /** Entidad federativa */
   entidadFederativa: string;
+  /** Representación federal */
   representacionFederal: string;
+  /** Número de licitación */
   numeraDelicitacion: string;
+  /** Fecha del evento de licitación */
   fechaDelEventoDelicitacion: string;
+  /** Descripción del producto */
   descripcionDelProducto: string;
+  /** Unidad tarifaria */
   unidadTarifaria: string;
+  /** Régimen aduanero */
   regimenAduanero: string;
+  /** Fracción arancelaria */
   fraccionArancelaria: string;
+  /** Fecha de inicio de vigencia del cupo */
   fechaDeiniciodeVigenciadelCupo:string,
+  /** Fecha de fin de vigencia del cupo */
   fechaDefindeVigenciadelCupo:string,
+  /** Observaciones */
   obserVaciones:string,
+  /** Bloque comercial */
   bloqueComercial:string,
+  /** Países */
   paises:string,
+  /** Monto adjudicado */
   montoadJudicado:string,
+  /** Monto disponible */
   montoDisponible:string,
+  /** Monto máximo */
   montoMaximo:string,
+  /** RFC */
   rfc:string,
+  /** Monto disponible del adquiriente */
   adquirienteMontoDisponible:string,
+  /** Monto a recibir */
   montoRecibir:string,
+  /** RFC1 */
   rfc1:string,
+  /** Datos de licitaciones */
   licitacionesDatos:LicitacionesResponse
 }
-
+/**
+ *  Crea el estado inicial para el store de tramite 120501.
+ * @returns  Solicitud120501State - Estado inicial del store.
+ */
 export function createInitialState(): Solicitud120501State {
   return{
+      idAsignacion:0,
       idSolicitud: 0,
+      idMecanismo:0,
       entidadFederativa:'',
       representacionFederal:'',
       numeraDelicitacion: '',
@@ -54,10 +85,6 @@ export function createInitialState(): Solicitud120501State {
       montoRecibir:'',
       rfc1:'',
       licitacionesDatos:{
-        producto: '',
-        unidadMedidaTarifaria: '',
-        bloqueComercial: '',
-        paises: '',
         idSolicitud: 0,
         fechaCreacion: "",
         fechaInicioTramite: "",
@@ -171,7 +198,11 @@ export function createInitialState(): Solicitud120501State {
             ideTipoConstancia: "",
             ideTipoLicitacion: "",
             numeroLicitacion: "",
-            idMecanismoAsignacion: 0
+            idMecanismoAsignacion: 0,
+            producto: '',
+            unidadMedidaTarifaria: '',
+            bloqueComercial: '',
+            paises: '',
         },
         asignacion: "",
         participante: {
@@ -233,7 +264,15 @@ export function createInitialState(): Solicitud120501State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite120501', resettable: true })
+/**
+ * Store para el manejo del estado del trámite 120501.
+ * Extiende la clase Store de Akita para gestionar el estado específico del trámite.
+ */
 export class Tramite120501Store extends Store<Solicitud120501State> {
+  /**
+   * Constructor del store.
+   * Inicializa el store con el estado inicial definido por createInitialState().
+   */
   constructor() {
     super(createInitialState());
   }

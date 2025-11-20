@@ -1,7 +1,15 @@
 import { LicitacionResponse, ParticipanteLicitacion } from "../models/solicitud.model";
-
+/**
+ * Identificador del procedimiento.
+ * @constant {number} ID_PROCEDIMIENTO - El valor del identificador del procedimiento.
+ */
 export const ID_PROCEDIMIENTO = 120501;
 
+/**
+ * Configuración de las columnas para la tabla de licitaciones vigentes.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso y orden.
+ * @constant {Array} CONFIGURACION_ACCIONISTAS_TABLA - Arreglo de configuraciones de columnas para la tabla.
+ */
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
   {
     encabezado: 'Número de licitación',
@@ -35,6 +43,11 @@ export const CONFIGURACION_ACCIONISTAS_TABLA = [
   }
 ];
 
+/**
+ * Configuración de las columnas para la tabla de participantes de licitación.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso y orden.
+ * @constant {Array} CONFIGURACION_ACCIONISTAS - Arreglo de configuraciones de columnas para la tabla.
+ */
 export const CONFIGURACION_ACCIONISTAS = [
   {
     encabezado: 'Registro Federal de Contribuyentes ',
@@ -43,6 +56,10 @@ export const CONFIGURACION_ACCIONISTAS = [
   },
 ];
 
+/**
+ * Genera el mensaje HTML para error de registro
+ * @returns Mensaje HTML formateado para error de registro
+ */
 export const MSG_ERROR_REGISTRO = `<div class="d-flex justify-content-center text-center">
   <div>
     <div class="col-md-12">

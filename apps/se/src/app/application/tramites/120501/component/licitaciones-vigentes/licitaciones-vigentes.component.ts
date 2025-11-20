@@ -160,13 +160,16 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   /**
    * Indica si se muestra la representación federal.
    */
-  showRepresentacionFederal: boolean = true;
+  showRepresentacionFederal: boolean = false;
 
   /**
   * Indica si se muestra la selección de participante.
   */
   showSeleccionarParticipante: boolean = false;
 
+  /**
+   * Identificador del procedimiento.
+   */
   idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
@@ -185,7 +188,10 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
  * los formularios del componente con los valores correspondientes a la solicitud en curso.
  */
   private seccionState!: Solicitud120501State;
-
+/**
+ * RFC del usuario logueado.
+ * Esta propiedad almacena el RFC (Registro Federal de Contribuyentes) del usuario logueado.
+ */
   loginRfc: string = '';
   /**
    * Constructor del componente.
@@ -223,8 +229,6 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.getEntidadFederativa();
-    // this.getDetallesDelalicitacion();
-    // this.getAdquiriente();
     this.obtenerDatosDeTabla();
   }
   /**
@@ -378,21 +382,17 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
   obtenerDatosDeTabla(): void {
     this.service.getLicitacionesDisponiblesData(this.loginRfc).pipe(
       takeUntil(this.destroyed$)).subscribe((response) => {
-        if (response.codigo === '01') {
-          this.licitacionTablaDatos = (response as unknown as JSONResponse).datos?.licitaciones || [{
-            "idAsignacion": 52777,
-            "numeroLicitacion": "007/2016",
-            "montoAdjudicado": 1234567,
-            "fechaInicioVigencia": "2016-06-01",
-            "fechaFinVigenciaAprobada": "2016-12-31",
-            "nombreProducto": "Filetes de pescado frescos o refrigerados y congelados",
-            "fechaConcurso": "2016-06-01"
-          }];
+        if (response.codigo === '00') {
+          this.licitacionTablaDatos = (response as unknown as JSONResponse).datos?.licitaciones || [];
         }
       }
       );
   }
 
+  /**
+   *  Llena el formulario de detalles de la licitación con los datos obtenidos del servicio.
+   * @param idAsignacion  - Identificador de la asignación.
+   */
   fillFormLicitacionesFormData(idAsignacion: number): void {
     const REQUEST_DATA = {
       rfc: this.loginRfc,
@@ -400,26 +400,27 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     }
     this.service.getLicitacionesFormData(REQUEST_DATA).pipe(takeUntil(this.destroyed$))
       .subscribe((response) => {
-        if( response.codigo === '3'){
-          this.showRepresentacionFederal = true;
+        if( response.codigo === '00'){
           this.tramite120501Store.actualizarEstado({ licitacionesDatos: (response as unknown as JSONLicitacionesResponse).datos as LicitacionesResponse });
           this.showRepresentacionFederal = true;
+          this.tramite120501Store.actualizarEstado({ idAsignacion: idAsignacion });
           const LICITACION = (response as unknown as JSONLicitacionesResponse).datos;
+          this.tramite120501Store.actualizarEstado({ idMecanismo: LICITACION?.licitacionPublica?.idMecanismoAsignacion || 0 });
           this.datosParticipantes = LICITACION?.participantesLicitacion;
           this.detalledelaLicitacionForm.patchValue({
             numeraDelicitacion: LICITACION?.licitacionPublica.numeroLicitacion,
             fechaDelEventoDelicitacion: LICITACION?.licitacionPublica.fechaConcurso,
-            descripcionDelProducto: LICITACION?.producto,
-            unidadTarifaria: LICITACION?.unidadMedidaTarifaria,
+            descripcionDelProducto: LICITACION?.licitacionPublica.producto,
+            unidadTarifaria: LICITACION?.licitacionPublica.unidadMedidaTarifaria,
             regimenAduanero: LICITACION?.regimen,
             fraccionArancelaria: LICITACION?.fraccionArancelaria,
-            fechaDeiniciodeVigenciadelCupo: LICITACION?.licitacionPublica.fechaInicioVigencia,
-            fechaDefindeVigenciadelCupo: LICITACION?.licitacionPublica.fechaFinVigencia,
-            obserVaciones: LICITACION?.observaciones,
-            bloqueComercial: LICITACION?.bloqueComercial,
-            paises: LICITACION?.paises,
-            montoadJudicado: LICITACION?.participante.montoAdjudicado,
-            montoDisponible: LICITACION?.participante.montoDisponible,
+            fechaDeiniciodeVigenciadelCupo: (LICITACION?.licitacionPublica.fechaInicioVigencia)?.split('T')[0],
+            fechaDefindeVigenciadelCupo: (LICITACION?.licitacionPublica.fechaFinVigencia)?.split('T')[0],
+            obserVaciones: LICITACION?.licitacionPublica.fundamento,
+            bloqueComercial: LICITACION?.licitacionPublica.bloqueComercial,
+            paises: LICITACION?.licitacionPublica.paises,
+            montoadJudicado: LICITACION?.maximoTransferir,
+            montoDisponible: LICITACION?.montoTransferir,
             montoMaximo: LICITACION?.licitacionPublica.cantidadMaxima
           });
         }
@@ -493,8 +494,14 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
       this.adquiriente.get('adquirienteMontoDisponible')?.setValue(selectedEntry.montoDisponible)
       this.datosParticipantes.splice(INDEX, 1);
     }
+    this.tramite120501Store.actualizarEstado({ rfc: selectedEntry.rfc });
+    this.tramite120501Store.actualizarEstado({ montoDisponible: (selectedEntry.montoDisponible).toString() });
   }
 
+  /**
+   *  Valida los formularios principales del componente.
+   * @returns  boolean - `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
   validarFormulario(): boolean {
     let valid = true;
     if (this.adquiriente.invalid && this.formulario.invalid) {

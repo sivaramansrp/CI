@@ -34,7 +34,7 @@
         (reenviarCargaRealizada)="cargaRealizada($event)"
         (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
       }@case(3){
-      <paso-firma [idSolicitud]="solicitudState.idSolicitud || 0" [procedure]="120501"
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud || 0" [procedure]="120501" [idMecanismo]="idMecanismo"
         [procedureUrl]="'solicitartransferencia/cupos-solicitud-transferencia'">
       </paso-firma>
       }
