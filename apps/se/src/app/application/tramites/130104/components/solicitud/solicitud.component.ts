@@ -10,7 +10,6 @@ import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
@@ -76,11 +75,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Tipo de selección de la tabla dinámica (checkbox).
    */
   checkBox = TablaSeleccion.CHECKBOX; 
-  /**
-   * getEstablecimientoTableData
-   * Datos de configuración de la tabla obtenidos de un archivo JSON.
-   */
-  public getEstablecimientoTableData = PartidasdelaTable;
  
   /**
    * filaSeleccionada
