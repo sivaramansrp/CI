@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FECHA_EXPEDICION, FECHA_VENCIMIENTO } from '../../constant/destinatario.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent } from "@ng-mf/data-access-user";
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent, formatDateToDDMMYYYY } from '@libs/shared/data-access-user/src';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
 /**
@@ -24,7 +26,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 @Component({
   selector: 'app-tratados-110203',
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule],
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './tratados-110203.component.html',
   styleUrl: './tratados-110203.component.scss'
 })
@@ -72,6 +74,17 @@ export class Tratados110203Component implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Fecha de expedición del certificado.
+     * @type {InputFecha}
+     */
+    fechaDeVencimientoInput: InputFecha = FECHA_VENCIMIENTO;
+    /**
+     * Fecha de vencimiento del certificado.
+     * @type {InputFecha}
+      */
+    fechaDeExpedicionInput: InputFecha = FECHA_EXPEDICION;
+
   /**
    * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias.
    * 
@@ -101,41 +114,33 @@ export class Tratados110203Component implements OnInit, OnDestroy {
    * El formulario incluye los campos 'tratado', 'bloque', 'origen', 'destino', 'expedicion', 'vencimiento'.
    */
   private inicializarFormulario(): void {
-    this.tramite110203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud110203State;
-        })
-      )
-      .subscribe();
+  this.tramite110203Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.solicitudState = seccionState as Solicitud110203State;
 
-    // Inicializa el formulario con valores del estado de la solicitud
-    this.tratadosForm = this.fb.group({
-      tratado: [this.solicitudState.tratado, Validators.required],
-      bloque: [this.solicitudState.bloque, Validators.required],
-      origen: [this.solicitudState.origen, Validators.required],
-      destino: [this.solicitudState.destino, Validators.required],
-      expedicion: [this.solicitudState.expedicion, Validators.required],
-      vencimiento: [this.solicitudState.vencimiento, Validators.required],
-    });
-
-    this.updateForm();
-  }
-
-  /**
-   * Método que deshabilita el formulario y establece los valores predeterminados en cada campo.
-   */
-  updateForm(): void {
-    this.tratadosForm.disable(); // Deshabilita el formulario para que no se pueda modificar
-
-    // Carga los valores predeterminados en cada uno de los controles del formulario
-    this.tratadosForm.get('tratado')?.setValue('Tratado de Libre Comercio México-,');
-    this.tratadosForm.get('bloque')?.setValue('ISLANDIA (REPUBLICA DE)');
-    this.tratadosForm.get('origen')?.setValue('México');
-    this.tratadosForm.get('destino')?.setValue('ISLANDIA (REPUBLICA DE)');
-    this.tratadosForm.get('expedicion')?.setValue('2025-02-18');
-    this.tratadosForm.get('vencimiento')?.setValue('2026-02-18');
+    if (!this.tratadosForm) {
+        this.tratadosForm = this.fb.group({
+          tratado: [this.solicitudState.tratado, Validators.required],
+          bloque: [this.solicitudState.bloque, Validators.required],
+          origen: [this.solicitudState.origen, Validators.required],
+          destino: [this.solicitudState.bloque, Validators.required],
+          expedicion: [formatDateToDDMMYYYY(this.solicitudState.expedicion), Validators.required],
+          vencimiento: [formatDateToDDMMYYYY(this.solicitudState.vencimiento), Validators.required],
+        });
+        this.tratadosForm.disable();
+      } else {
+        this.tratadosForm.patchValue({
+          tratado: this.solicitudState.tratado,
+          bloque: this.solicitudState.bloque,
+          origen: this.solicitudState.origen,
+          destino: this.solicitudState.bloque,
+          expedicion: formatDateToDDMMYYYY(this.solicitudState.expedicion),
+          vencimiento: formatDateToDDMMYYYY(this.solicitudState.vencimiento),
+        });  
+        this.tratadosForm.disable();
+      }
+  });
   }
 
   /**

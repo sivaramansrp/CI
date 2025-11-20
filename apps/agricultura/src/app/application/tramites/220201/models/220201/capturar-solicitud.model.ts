@@ -64,7 +64,15 @@ export interface CapturarSolicitud {
   datosForma: DestinatarioForm[];
   seletedTerceros: TercerosrelacionadosdestinoTable;
   seletedExdora: DestinatarioForm;
+
+  idTramite: string | null;
+  firma: string | null;
+  idSolicitud: number | null;
+  procedure: number | null;
+
 }
+
+
 
 /**
  * Representa la información del solicitante principal.
@@ -319,6 +327,10 @@ export interface FilaSolicitud {
    * Descripción de la fracción arancelaria del producto.
    */
   descripcionFraccion: string;
+    /**
+   * Descripción de la fracción arancelaria del producto.
+   */
+  idDescripcionFraccion: number;
   /**
    * Código NICO.
    */
@@ -335,6 +347,11 @@ export interface FilaSolicitud {
    * Unidad de medida de trámite (UMT).
    */
   umt: string;
+
+  /**
+   * Clave de la unidad de medida de trámite (UMT).
+   */
+  clave_umt?: string;
   /**
    * Cantidad en UMT.
    */
@@ -654,12 +671,16 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     selectedDatos: params.selectedDatos || [],
     datosForma: params.datosForma || [],
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
-    seletedExdora: params.seletedExdora || {} as DestinatarioForm
+    seletedExdora: params.seletedExdora || {} as DestinatarioForm,
+    idTramite: params.idTramite || null,
+    firma: params.firma || null,
+    idSolicitud: params.idSolicitud || null,
+    procedure: params.procedure || null
   }
 }
 
-  export interface FraccionArancelariaDecripcionModel {
-    cve_fraccion: string;
-    descripcion: string;
-    id_fraccion: number;
-  }
+export interface FraccionArancelariaDecripcionModel {
+  cve_fraccion: string;
+  descripcion: string;
+  id_fraccion: number;
+}

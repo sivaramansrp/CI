@@ -1,127 +1,60 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { ExpedirMonto } from '../../tramites/120201/models/cupos.model';
 import { Injectable } from '@angular/core';
-import { InstrumentoCupoTPLForm } from '../../tramites/120201/models/cupos.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 120201
  * @returns Cupos120201
  */
 export interface Cupos120201State {
-  /**
-   * Clave del tratado
-   * @type {string}
-   */
-  cveTratado: string;
+  asignacionOficioNumeroForm: {
+    cveAniosAutorizacion?: string;
+    numFolioAsignacionAux?: string;
+  };
 
-  /**
-   * Clave del régimen de clasificación
-   * @type {string}
-   */
-  cveRegimenClasificacion: string;
+  representacionFederalForm: {
+    estado?: string;
+    representacionFederal?: string;
+  };
 
-  /**
-   * Clave del país de destino
-   * @type {string}
-   */
-  cvePaisDestino: string;
+  controlMontosAsignacionForm: {
+    sumaAprobada?: number | null;
+    sumaExpedida?: number | null;
+    montoDisponible?: number | null;
+  };
 
-  /**
-   * Clave de la fracción arancelaria
-   * @type {string}
-   */
-  fraccionArancelaria: string;
+  asignacionDatosForm: {
+    numOficio?: string;
+    fechaInicio?: string;
+    fechaFinVigenciaAprobada?: string;
+  };
 
-  /**
-   * Descripción del producto
-   * @type {string}
-   */
-  productoDescripcion: string;
+  cupoDescripcionForm: {
+    regimenAduanero?: string;
+    descripcionProducto?: string;
+    clasificaionSubproducto?: string;
+    unidadMedidaOficialCupo?: string;
+    fechaInicioVigencia?: string;
+    fechaFinVigencia?: string;
+    mecanismoAsignacion?: string;
+    tratado?: string;
+    fraccionesArancelarias?: string;
+    paisesCupo?: string;
+    observaciones?: string;
+    descripcionFundamento?: string;
+  };
 
-  /**
-   * Descripción de la categoría textil
-   * @type {string}
-   */
-  categoriaTextilDescripcion: string;
+  distribucionSaldoForm: {
+    montoDisponibleAsignacion?: number | null;
+    montoExpedir?: number | null;
+    totalExpedir?: number;
+  };
 
-  /**
-   * Clave del país de destino
-   * @type {string}
-   */
-  paisDestino: string;
-
-  /**
-   * Clave del subproducto
-   * @type {string}
-   */
-  subproductoClasificacion: string;
-
-  /**
-   * Mecanismo de asignación
-   * @type {string}
-   */
-  asignacionMecanismo: string;
-
-  /**
-   * Categoría textil
-   * @type {string}
-   */
-  categoriaTextil: string;
-
-  /**
-   * Unidad
-   * @type {string}
-   */
-  unidad: string;
-
-  /**
-   * Factor de conversión
-   * @type {number | null}
-   */
-  conversionFactor: number | null;
-
-  /**
-   * Fecha de inicio
-   * @type {string}
-   */
-  fechaInicio: string;
-
-  /**
-   * Fecha final
-   * @type {string}
-   */
-  fechaFinal: string;
-
-  /**
-   * Clave del estado
-   * @type {string}
-   */
-  cveEstado: string;
-
-  /**
-   * Clave de la representación federal
-   * @type {string}
-   */
-  cveRepresentacionFederal: string;
-
-
-  /**
-   * Descripción del bien final
-   * @type {string}
-   */
-  bienFinalDescripcion: string;
-
-  /**
-   * Mostrar detalles del cupo
-   * @type {boolean}
-   */
-  mostrarDetallesCupo: boolean;
-
-  /**
-   * Cuerpo de la tabla de datos
-   * @type {InstrumentoCupoTPLForm[]}
-   */
-  cuerpoTablaDatos: InstrumentoCupoTPLForm[];
+  // Fields that do NOT belong to a formGroup:
+  cuerpoTabla?: ExpedirMonto[];
+  mostrarDetalle?: boolean;
 }
+
 
 /**
  * Crea el estado inicial del trámite 120201.
@@ -129,29 +62,46 @@ export interface Cupos120201State {
  */
 export function createInitialState(): Cupos120201State {
   return {
-    cveTratado: '',
-    cveRegimenClasificacion: '',
-    cvePaisDestino: '',
-    fraccionArancelaria: '',
 
-    productoDescripcion: '',
-    categoriaTextilDescripcion: '',
-    paisDestino: '',
-    subproductoClasificacion: '',
-    asignacionMecanismo: '',
-    categoriaTextil: '',
-    unidad: '',
-    conversionFactor: null,
-    fechaInicio: '',
-    fechaFinal: '',
-
-    cveEstado: '',
-    cveRepresentacionFederal: '',
-
-    bienFinalDescripcion: '',
-
-    mostrarDetallesCupo: false,
-    cuerpoTablaDatos: []
+    asignacionOficioNumeroForm: {
+      cveAniosAutorizacion: '',
+      numFolioAsignacionAux: '',
+    },
+    representacionFederalForm: {
+      estado: '',
+      representacionFederal: '',
+    },
+    controlMontosAsignacionForm: {
+      sumaAprobada: null,
+      sumaExpedida: null,
+      montoDisponible: null,
+    },
+    asignacionDatosForm: {
+      numOficio: '',
+      fechaInicio: '',
+      fechaFinVigenciaAprobada: '',
+    },
+    cupoDescripcionForm: {
+      regimenAduanero: '',
+      descripcionProducto: '',
+      clasificaionSubproducto: '',
+      unidadMedidaOficialCupo: '',
+      fechaInicioVigencia: '',
+      fechaFinVigencia: '',
+      mecanismoAsignacion: '',
+      tratado: '',
+      fraccionesArancelarias: '',
+      paisesCupo: '',
+      observaciones: '',
+      descripcionFundamento: '',
+    },
+    distribucionSaldoForm: {
+      montoDisponibleAsignacion: null,
+      montoExpedir: null,
+      totalExpedir: 0,
+    },
+    cuerpoTabla: [],
+    mostrarDetalle: false
   };
 }
 
@@ -174,141 +124,185 @@ export class Tramite120201Store extends Store<Cupos120201State> {
     super(createInitialState());
   }
 
-  /**
-   * Actualiza el tratado.
-   * @param cveTratado - Nuevo tratado.
+  /** Método para actualizar el estado del formulario de número de oficio de asignación.
+   * @param campo - El campo específico del formulario a actualizar.
+   * @param valor - El nuevo valor para el campo especificado.
    */
-  public setTratado(cveTratado: string): void {
+  public setAsignacionOficioNumeroForm(campo: string, valor: unknown):void {
+  this.update(state => ({
+    ...state,
+    asignacionOficioNumeroForm: {
+      ...state.asignacionOficioNumeroForm,
+      [campo]: valor
+    }
+  }));
+  }
+
+  /** Método para actualizar el campo `numFolioAsignacionAux` en el formulario de número de oficio de asignación.
+   * @param numFolioAsignacionAux - El nuevo valor para `numFolioAsignacionAux`.
+   */
+  public setNumFolioAsignacionAux(numFolioAsignacionAux: string): void {
     this.update((state) => ({
       ...state,
-      cveTratado,
+      asignacionOficioNumeroForm: {
+        ...state.asignacionOficioNumeroForm,
+        numFolioAsignacionAux,
+      },
+    }));
+  }
+
+  /** Método para actualizar el estado del formulario de representación federal.
+   * @param campo - El campo específico del formulario a actualizar.
+   * @param valor - El nuevo valor para el campo especificado.
+   */
+ setRepresentacionFederalForm(campo: string, valor: unknown):void {
+  this.update(state => ({
+    ...state,
+    representacionFederalForm: {
+      ...state.representacionFederalForm,
+      [campo]: valor
+    }
+  }));
+}
+
+/** Método para actualizar el estado del formulario de control de montos de asignación.
+ * @param campo - El campo específico del formulario a actualizar.
+ * @param valor - El nuevo valor para el campo especificado.
+ */
+public setControlMontosAsignacionForm(campo: string, valor: unknown): void {
+  this.update((state) => ({
+    ...state,
+    controlMontosAsignacionForm: {
+      ...state.controlMontosAsignacionForm,
+      [campo]: valor,
+    },
+  }));
+}
+
+/** Método para actualizar el estado del formulario de datos de asignación.
+ * @param campo - El campo específico del formulario a actualizar.
+ * @param valor - El nuevo valor para el campo especificado.
+ */
+public setAsignacionDatosForm(campo: string, valor: unknown): void {
+  this.update((state) => ({
+    ...state,
+    asignacionDatosForm: {
+      ...state.asignacionDatosForm,
+      [campo]: valor,
+    },
+  }));
+}
+
+/** Método para actualizar el estado del formulario de descripción del cupo.
+ * @param campo - El campo específico del formulario a actualizar.
+ * @param valor - El nuevo valor para el campo especificado.
+ */
+public setCupoDescripcionForm(campo: string, valor: unknown): void {
+  this.update((state) => ({
+    ...state,
+    cupoDescripcionForm: {
+      ...state.cupoDescripcionForm,
+      [campo]: valor,
+    },
+  }));
+}
+
+/** Método para actualizar el estado del formulario de distribución de saldo.
+ * @param campo - El campo específico del formulario a actualizar.
+ * @param valor - El nuevo valor para el campo especificado.
+ */
+public setDistribucionSaldoForm(campo: string, valor: unknown): void {
+  this.update((state) => ({
+    ...state,
+    distribucionSaldoForm: {
+      ...state.distribucionSaldoForm,
+      [campo]: valor,
+    },
+  }));
+}
+
+
+  /**
+    * Establece el Año del oficio de autorización.
+    * @param cveAniosAutorizacion - Clave del año de autorización.
+    */
+  public setAniosAutorizacion(cveAniosAutorizacion: string): void {
+    this.update((state) => ({
+      ...state,
+      cveAniosAutorizacion,
+    }));
+  }
+
+
+  /**
+   * Establece el estado de la solicitud.
+   * @param estado - Estado de la solicitud.
+   */
+  public setEstado(estado: string): void {
+    this.update((state) => ({
+      ...state,
+      estado,
     }));
   }
 
   /**
-   * Actualiza el régimen de clasificación.
-   * @param cveRegimenClasificacion - Nuevo régimen de clasificación.
+   * Establece la representación federal.
+   * @param representacionFederal - Representación federal.
    */
-  public setRegimenClasificacion(cveRegimenClasificacion: string): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
-      cveRegimenClasificacion,
+      representacionFederal,
     }));
   }
 
   /**
-   * Actualiza el país destino.
-   * @param cvePaisDestino - Nuevo país destino.
+   * Establece la suma aprobada.
+   * @param sumaAprobada - Monto total aprobado.
    */
-  public setCvePaisDestino(cvePaisDestino: string): void {
+  public setSumaAprobada(sumaAprobada: number | null): void {
     this.update((state) => ({
       ...state,
-      cvePaisDestino,
+      sumaAprobada,
     }));
   }
 
   /**
-   * Actualiza la fracción arancelaria.
-   * @param fraccionArancelaria - Nueva fracción arancelaria.
+   * Establece la suma expedida.
+   * @param sumaExpedida - Monto total expedido.
    */
-  public setFraccionArancelaria(fraccionArancelaria: string): void {
+  public setSumaExpedida(sumaExpedida: number | null): void {
     this.update((state) => ({
       ...state,
-      fraccionArancelaria,
+      sumaExpedida,
     }));
   }
 
   /**
-   * Actualiza la descripción del producto.
-   * @param productoDescripcion - Nueva descripción del producto.
+   * Establece el monto disponible.
+   * @param montoDisponible - Monto disponible.
    */
-  public setProductoDescripcion(productoDescripcion: string): void {
+  public setMontoDisponible(montoDisponible: number | null): void {
     this.update((state) => ({
       ...state,
-      productoDescripcion,
-    }));
-  }  
-
-  /**
-   * Actualiza la descripción de la categoría textil.
-   * @param categoriaTextilDescripcion - Nueva descripción de la categoría textil.
-   */
-  public setCategoriaTextilDescripcion(categoriaTextilDescripcion: string): void {
-    this.update((state) => ({
-      ...state,
-      categoriaTextilDescripcion,
+      montoDisponible,
     }));
   }
 
   /**
-   * Actualiza el país destino.
-   * @param paisDestino - Nuevo país destino.
+   * Establece el número de oficio.
+   * @param numOficio - Número de oficio.
    */
-  public setPaisDestino(paisDestino: string): void {
+  public setNumOficio(numOficio: string): void {
     this.update((state) => ({
       ...state,
-      paisDestino,
+      numOficio,
     }));
   }
 
   /**
-   * Actualiza la clasificación del subproducto.
-   * @param subproductoClasificacion - Nueva clasificación del subproducto.
-   */
-  public setSubproductoClasificacion(subproductoClasificacion: string): void {  
-    this.update((state) => ({
-      ...state,
-      subproductoClasificacion,
-    }));
-  }
-
-  /**
-   * Actualiza el mecanismo de asignación.
-   * @param asignacionMecanismo - Nuevo mecanismo de asignación.
-   */
-  public setAsignacionMecanismo(asignacionMecanismo: string): void {
-    this.update((state) => ({
-      ...state,
-      asignacionMecanismo,
-    }));
-  }
-
-  /**
-   * Actualiza la categoría textil.
-   * @param categoriaTextil - Nueva categoría textil.
-   */
-  public setCategoriaTextil(categoriaTextil: string): void {
-    this.update((state) => ({
-      ...state,
-      categoriaTextil,
-    }));
-  }
-
-  /**
-   * Actualiza la unidad.
-   * @param unidad - Nueva unidad.
-   */
-  public setUnidad(unidad: string): void {
-    this.update((state) => ({
-      ...state,
-      unidad,
-    }));
-  }
-
-  /**
-   * Actualiza el factor de conversión.
-   * @param conversionFactor - Nuevo factor de conversión.
-   */
-  public setConversionFactor(conversionFactor: number | null): void {
-    this.update((state) => ({
-      ...state,
-      conversionFactor,
-    }));
-  }
-
-  /**
-   * Actualiza la fecha de inicio.
-   * @param fechaInicio - Nueva fecha de inicio.
+   * Establece la fecha de inicio.
+   * @param fechaInicio - Fecha de inicio.
    */
   public setFechaInicio(fechaInicio: string): void {
     this.update((state) => ({
@@ -318,68 +312,208 @@ export class Tramite120201Store extends Store<Cupos120201State> {
   }
 
   /**
-   * Actualiza la fecha final.
-   * @param fechaFinal - Nueva fecha final.
+   * Establece la fecha de fin de vigencia aprobada.
+   * @param fechaFinVigenciaAprobada - Fecha de fin de vigencia aprobada.
    */
-  public setFechaFinal(fechaFinal: string): void {
+  public setFechaFinVigenciaAprobada(fechaFinVigenciaAprobada: string): void {
     this.update((state) => ({
       ...state,
-      fechaFinal,
+      fechaFinVigenciaAprobada,
     }));
   }
 
   /**
-   * Actualiza el estado.
-   * @param cveEstado - Nuevo estado.
-   */
-  public setEstado(cveEstado: string): void {
+   * Establece el régimen aduanero.
+   * @param regimenAduanero - Régimen aduanero.
+   * */
+  public setRegimenAduanero(regimenAduanero: string): void {
     this.update((state) => ({
       ...state,
-      cveEstado,
+      regimenAduanero,
     }));
   }
 
   /**
-   * Actualiza la representación federal.
-   * @param cveRepresentacionFederal - Nueva representación federal.
+   * Establece la descripción del producto.
+   * @param descripcionProducto - Descripción del producto.
    */
-  public setRepresentacionFederal(cveRepresentacionFederal: string): void {
+  public setDescripcionProducto(descripcionProducto: string): void {
     this.update((state) => ({
       ...state,
-      cveRepresentacionFederal,
+      descripcionProducto,
     }));
   }
 
   /**
-   * Actualiza la descripción del bien final.
-   * @param bienFinalDescripcion - Nueva descripción del bien final.
+   * Establece la clasificación del subproducto.
+   * @param clasificaionSubproducto - Clasificación del subproducto.
    */
-  public setBienFinalDescripcion(bienFinalDescripcion: string): void {
+  public setClasificaionSubproducto(clasificaionSubproducto: string): void {
     this.update((state) => ({
       ...state,
-      bienFinalDescripcion,
+      clasificaionSubproducto,
     }));
   }
 
   /**
-   * Actualiza la visibilidad de los detalles del cupo.
-   * @param mostrarDetallesCupo - Nueva visibilidad de los detalles del cupo.
+   * Establece la unidad de medida oficial del cupo.
+   * @param unidadMedidaOficialCupo - Unidad de medida oficial del cupo.
    */
-  public setMostrarDetallesCupo(mostrarDetallesCupo: boolean): void {
+  public setUnidadMedidaOficialCupo(unidadMedidaOficialCupo: string): void {
     this.update((state) => ({
       ...state,
-      mostrarDetallesCupo,
+      unidadMedidaOficialCupo,
     }));
   }
 
   /**
-   * Actualiza el cuerpo de la tabla de datos.
-   * @param cuerpoTablaDatos - Nuevo cuerpo de la tabla de datos.
+   * Establece la fecha de inicio de vigencia.
+   * @param fechaInicioVigencia - Fecha de inicio de vigencia.
    */
-  public setCuerpoTablaDatos(cuerpoTablaDatos: InstrumentoCupoTPLForm[]): void {
+  public setFechaInicioVigencia(fechaInicioVigencia: string): void {
     this.update((state) => ({
       ...state,
-      cuerpoTablaDatos,
+      fechaInicioVigencia,
     }));
+  }
+
+  /**
+   * Establece la fecha de fin de vigencia.
+   * @param fechaFinVigencia - Fecha de fin de vigencia.
+   */
+  public setFechaFinVigencia(fechaFinVigencia: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaFinVigencia,
+    }));
+  }
+
+  /**
+   * Establece el mecanismo de asignación.
+   * @param mecanismoAsignacion - Mecanismo de asignación.
+   */
+  public setMecanismoAsignacion(mecanismoAsignacion: string): void {
+    this.update((state) => ({
+      ...state,
+      mecanismoAsignacion,
+    }));
+  }
+
+  /**
+   * Establece el tratado.
+   * @param tratado - Tratado.
+   */
+  public setTratado(tratado: string): void {
+    this.update((state) => ({
+      ...state,
+      tratado,
+    }));
+  }
+
+  /**
+   * Establece las fracciones arancelarias.
+   * @param fraccionesArancelarias - Fracciones arancelarias.
+   */
+  public setFraccionesArancelarias(fraccionesArancelarias: string): void {
+    this.update((state) => ({
+      ...state,
+      fraccionesArancelarias,
+    }));
+  }
+
+  /**
+   * Establece los países del cupo.
+   * @param paisesCupo - Países del cupo.
+   */
+  public setPaisesCupo(paisesCupo: string): void {
+    this.update((state) => ({
+      ...state,
+      paisesCupo,
+    }));
+  }
+
+  /**
+   * Establece las observaciones.
+   * @param observaciones - Observaciones.
+   */
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({
+      ...state,
+      observaciones,
+    }));
+  }
+
+  /**
+   * Establece la descripción del fundamento.
+   * @param descripcionFundamento - Descripción del fundamento.
+   */
+  public setDescripcionFundamento(descripcionFundamento: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionFundamento,
+    }));
+  }
+
+  /**
+   * Establece el monto disponible de asignación.
+   * @param montoDisponibleAsignacion - Monto disponible de asignación.
+   */
+  public setMontoDisponibleAsignacion(montoDisponibleAsignacion: number | null): void {
+    this.update((state) => ({
+      ...state,
+      montoDisponibleAsignacion,
+    }));
+  }
+
+  /**
+   * Establece el monto a expedir.
+   * @param montoExpedir - Monto a expedir.
+   */
+  public setMontoExpedir(montoExpedir: number | null): void {
+    this.update((state) => ({
+      ...state,
+      montoExpedir,
+    }));
+  }
+
+  /**
+   * Establece el total de monto a expedir.
+   * @param totalExpedir - Total de monto a expedir.
+   */
+  public setTotalExpedir(totalExpedir: number): void {
+    this.update((state) => ({
+      ...state,
+      totalExpedir,
+    }));
+  }
+
+  /**
+   * Establece el cuerpo de la tabla.
+   * @param cuerpoTabla - Cuerpo de la tabla.
+   */
+  public setCuerpoTabla(cuerpoTabla: ExpedirMonto[]): void {
+    this.update((state) => ({
+      ...state,
+      cuerpoTabla,
+    }));
+  }
+
+  /**
+   * Este método actualiza el estado de la propiedad `mostrarDetalle` en el store.
+   * @param mostrarDetalle - Indica si se debe mostrar el detalle o no.
+   */
+  public setMostrarDetalle(mostrarDetalle: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mostrarDetalle,
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la consulta de persona física.
+   * @param nuevoDatos - Nuevo estado de la consulta de persona física.
+   */
+  public setConsultaPersonaFisicaState(nuevoDatos: Cupos120201State): void {
+    this.update(nuevoDatos);
   }
 }

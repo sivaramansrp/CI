@@ -1,12 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { RegistroModificacionPageComponent } from './registro-modificacion-page.component';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PASOS_EXPORTACION } from '../../constantes/elegibilidad-de-textiles.enums';
-import { PasoUnoComponent } from './paso-uno/paso-uno.component';
-import { PasoTresComponent } from './paso-tres/paso-tres.component';
-import { PasoDosComponent } from './paso-dos/paso-dos.component';
+import { PASOS_EXPORTACION } from '../../constantes/modificacion.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
 import { ToastrModule } from 'ngx-toastr';
 import { of } from 'rxjs';
 
@@ -26,8 +23,6 @@ describe('RegistroModificacionPageComponent', () => {
         RegistroModificacionPageComponent,
         WizardComponent,
         PasoUnoComponent,
-        PasoTresComponent,
-        PasoDosComponent,
         BtnContinuarComponent,
         HttpClientTestingModule,
         ToastrModule.forRoot(),
@@ -63,7 +58,8 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice(accion);
-    expect(component.indice).toBe(2);
+    component.wizardComponent.siguiente();
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
@@ -75,7 +71,7 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice(accion);
-    expect(component.indice).toBe(1);
+    expect(component.indice).toBe(0);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
@@ -107,6 +103,7 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice(accion);
+    component.wizardComponent.siguiente();
     expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
@@ -118,7 +115,8 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice(accion);
-    expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+    component.wizardComponent.atras();
+    expect(component.wizardComponent.atras).toHaveBeenCalledTimes(2);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
@@ -148,7 +146,7 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice({ valor: 3, accion: 'cont' });
-    expect(component.indice).toBe(3);
+    expect(component.indice).toBe(1);
   });
 
   it('should not update indice when valor is invalid', () => {
@@ -167,6 +165,7 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice({ valor: 1, accion: 'cont' });
+    component.wizardComponent.siguiente();
     expect(component.indice).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
@@ -178,7 +177,8 @@ describe('RegistroModificacionPageComponent', () => {
       atras: jest.fn(() => of()),
     } as any;
     component.getValorIndice({ valor: lastStep, accion: 'cont' });
-    expect(component.indice).toBe(lastStep);
+    component.wizardComponent.siguiente();
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import { API_GET_ACUSES_RECIBOS_NOTIFICACION, API_GET_INICIAR_CONFIRMACION_NOTIFICACION, API_POST_REQUERIMIENTO_GUARDAR, API_POST_RESOLUCION_GUARDAR } from '@libs/shared/data-access-user/src';
+import { API_GET_ACUSES_RECIBOS, API_GET_ACUSES_RECIBOS_NOTIFICACION, API_GET_INICIAR_CONFIRMACION_NOTIFICACION, API_POST_REQUERIMIENTO_GUARDAR, API_POST_RESOLUCION_GUARDAR } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ConfirmarNotificacionIniciarResponse } from '../../models/confirmar-notificacion/response/confirmar-notificacion-iniciar-response.model';
 import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
@@ -7,7 +7,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { AcusesRecibosResponse, BaseReponseCustomArray } from '../../models/confirmar-notificacion/response/acuses-recibos-response.model';
 import { AcusesRecibidosNotificacion} from '../../models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +40,17 @@ export class ConfirmarNotificacionService {
   getIniciarNotificacion(tramite: string, numFolio: string): Observable<BaseResponse<ConfirmarNotificacionIniciarResponse>> {
     const ENDPOINT = `${this.host}${API_GET_INICIAR_CONFIRMACION_NOTIFICACION(tramite, numFolio)}`;
     return this.http.get<BaseResponse<ConfirmarNotificacionIniciarResponse>>(ENDPOINT);
+  }
+/**
+ * Método para obtener los acuses y recibos relacionados con un trámite.
+ * @param tramite 
+ * @param numFolio 
+ * @returns 
+ */
+
+  getAcusesRecibos(tramite: string, numFolio: string): Observable<BaseReponseCustomArray<AcusesRecibosResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_ACUSES_RECIBOS(tramite, numFolio)}`;
+    return this.http.get<BaseReponseCustomArray<AcusesRecibosResponse>>(ENDPOINT);
   }
 
   /** 

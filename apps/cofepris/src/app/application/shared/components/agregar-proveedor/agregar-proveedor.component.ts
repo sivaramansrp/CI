@@ -1,6 +1,7 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
+  CatalogoServices,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
@@ -25,10 +26,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
+import { Subject, Subscription } from 'rxjs';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Proveedor } from '../../models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
@@ -181,6 +182,15 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
      * Arreglo que contiene los proveedores seleccionados en la tabla.
      */
     @Output() guardarYSalir = new EventEmitter<void>();
+        /**
+     * Suscripción para manejar observables.
+     */
+    private subscription: Subscription = new Subscription();
+    
+  /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  @Input() tramiteID: string = '';
   /**
    * Constructor del componente AgregarProveedorComponent.
    *
@@ -191,7 +201,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
+    private ubicaccion: Location,
+    private catalogoServices: CatalogoServices,
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -202,7 +213,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.cambiarHabilitacionNacionalidad();
-    this.cargarDatos();
+    this.obtenerListaPaises(this.tramiteID);
     this.validarElementos();
     this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
@@ -231,9 +242,9 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
   /**
    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
    * @param {keyof Proveedor } field - Nombre del campo a obtener.
-   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   * @returns {string | number | undefined | string[] | Catalogo} - Valor del campo especificado.
    */
-  public obtenerValor(field: keyof Proveedor): string | number | undefined {
+  public obtenerValor(field: keyof Proveedor): string | number | undefined | Catalogo {
     return this.datoSeleccionado?.[0]?.[field as keyof Proveedor] ?? '';
   }
 
@@ -249,7 +260,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       curp: [this.obtenerValor('curp')],
       denominacionRazon: [
         this.obtenerValor('nombreRazonSocial'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [ Validators.pattern(REGEX_NOMBRE)],
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -261,7 +272,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       ],
       segundoApellido: [
         this.obtenerValor('segundoApellido'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
@@ -328,12 +339,20 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         if (this.datoSeleccionado?.[0]?.tipoPersona) {
           this.agregarProveedorForm?.enable();
         }
+        let valorPais = this.datoSeleccionado?.[0]?.pais;
+        if (valorPais && this.paisesDatos.length > 0) {
+          const PAIS_ENCONTRADO = this.paisesDatos.find(p => 
+            p.descripcion === valorPais || 
+            p.clave?.toString() === valorPais?.toString()
+          );
+          valorPais = PAIS_ENCONTRADO ? PAIS_ENCONTRADO.clave : valorPais;
+        }
         this.agregarProveedorForm.patchValue({
           tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
           nombres: this.datoSeleccionado?.[0]?.nombres,
           primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
           segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
-          pais: this.datoSeleccionado?.[0]?.pais,
+          pais: valorPais,
           estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
           codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
           colonia: this.datoSeleccionado?.[0]?.colonia,
@@ -417,7 +436,17 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         this.paisesDatos = data;
       });
   }
-
+  /**
+   * Obtiene la lista de países según el trámite especificado.
+   */
+ obtenerListaPaises(tramite: string): void {
+    this.subscription.add(this.catalogoServices.paisesCatalogo(tramite).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.paisesDatos = DATOS;
+    }));
+}
   /**
    * @method guardarProveedor
    * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
@@ -440,44 +469,47 @@ guardarProveedor(): void {
   }
 
   const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
+  
+  const NUEVO_PROVEEDOR: Proveedor = VALOR_FORMULARIO as Proveedor;
+  
+  const PAIS_ID = this.agregarProveedorForm.get('pais')?.value;
+  const PAIS_OBJ = AgregarProveedorComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
+  
+  NUEVO_PROVEEDOR.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+  NUEVO_PROVEEDOR.paisObj = PAIS_OBJ?.[0] ?? undefined;
+  
+  NUEVO_PROVEEDOR.colonia = this.agregarProveedorForm.get('colonia')?.value || '';
+  NUEVO_PROVEEDOR.municipioAlcaldia = this.agregarProveedorForm.get('municipioAlcaldia')?.value || '';
+  NUEVO_PROVEEDOR.localidad = this.agregarProveedorForm.get('localidad')?.value || '';
+  NUEVO_PROVEEDOR.entidadFederativa = '';
+  NUEVO_PROVEEDOR.estadoLocalidad = this.agregarProveedorForm.get('estado')?.value || '';
+  NUEVO_PROVEEDOR.codigoPostal = this.agregarProveedorForm.get('codigoPostal')?.value || '';
+  NUEVO_PROVEEDOR.coloniaEquivalente = '';
 
   let nombreRazonSocial: string;
-
   if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
     nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
   } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-      VALOR_FORMULARIO.primerApellido
-    } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
   } else {
-    nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    nombreRazonSocial = '';
   }
+  NUEVO_PROVEEDOR.nombreRazonSocial = nombreRazonSocial;
 
-  const NUEVO_PROVEEDOR: Proveedor = {
-    nacionalidad: VALOR_FORMULARIO.nacionalidad,
-    tipoPersona: VALOR_FORMULARIO.tipoPersona,
-    nombreRazonSocial: nombreRazonSocial,
-    rfc: VALOR_FORMULARIO.rfc || '',
-    curp: VALOR_FORMULARIO.curp || '',
-    telefono: `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim(),
-    correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
-    calle: VALOR_FORMULARIO.calle || '',
-    numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
-    numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
-    pais: this.getPaisDescription(VALOR_FORMULARIO.pais),
-    colonia: VALOR_FORMULARIO.colonia || '',
-    municipioAlcaldia: VALOR_FORMULARIO.municipioAlcaldia || '',
-    localidad: VALOR_FORMULARIO.localidad || '',
-    entidadFederativa: '',
-    estadoLocalidad: VALOR_FORMULARIO.estado || '',
-    codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
-    coloniaEquivalente: '',
-    nombres: VALOR_FORMULARIO.nombres,
-    primerApellido: VALOR_FORMULARIO.primerApellido,
-    segundoApellido: VALOR_FORMULARIO.segundoApellido,
-    razonSocial: VALOR_FORMULARIO.denominacionRazon,
-    lada: VALOR_FORMULARIO.lada,
-  };
+  NUEVO_PROVEEDOR.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
+  NUEVO_PROVEEDOR.tipoPersona = VALOR_FORMULARIO.tipoPersona;
+  NUEVO_PROVEEDOR.rfc = VALOR_FORMULARIO.rfc || '';
+  NUEVO_PROVEEDOR.curp = VALOR_FORMULARIO.curp || '';
+  NUEVO_PROVEEDOR.telefono = `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim();
+  NUEVO_PROVEEDOR.correoElectronico = VALOR_FORMULARIO.correoElectronico || '';
+  NUEVO_PROVEEDOR.calle = VALOR_FORMULARIO.calle || '';
+  NUEVO_PROVEEDOR.numeroExterior = VALOR_FORMULARIO.numeroExterior || '';
+  NUEVO_PROVEEDOR.numeroInterior = VALOR_FORMULARIO.numeroInterior || '';
+  NUEVO_PROVEEDOR.nombres = VALOR_FORMULARIO.nombres;
+  NUEVO_PROVEEDOR.primerApellido = VALOR_FORMULARIO.primerApellido;
+  NUEVO_PROVEEDOR.segundoApellido = VALOR_FORMULARIO.segundoApellido;
+  NUEVO_PROVEEDOR.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
+  NUEVO_PROVEEDOR.lada = VALOR_FORMULARIO.lada;
 
   let UPDATED_PROVEEDORES: Proveedor[] = Array.isArray(this.proveedorTablaDatos) 
     ? [...this.proveedorTablaDatos] 
@@ -507,16 +539,20 @@ guardarProveedor(): void {
   }
 
   this.updateProveedorTablaDatos.emit(UPDATED_PROVEEDORES);
-
   this.agregarProveedorForm.reset();
   this.datoSeleccionado = [];
   this.guardarYSalir.emit();
 }
 
-private getPaisDescription(paisId: string | number): string {
-  if (!paisId || !this.paisesDatos) {return '';}
-  const PAIS = this.paisesDatos.find(p => p.id.toString() === paisId.toString());
-  return PAIS ? PAIS.descripcion : '';
+  /**
+ * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+ *
+ * @param {Catalogo[]} catalogo - Arreglo de objetos de catálogo.
+ * @param {string} id - Identificador para filtrar los objetos del catálogo.
+ * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
+ */
+static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+  return catalogo.filter(item => item.clave === id);
 }
   /**
    * @method limpiarFormulario
@@ -525,7 +561,11 @@ private getPaisDescription(paisId: string | number): string {
    * @returns {void} Este método no retorna ningún valor.
    */
   limpiarFormulario(): void {
+    this.agregarProveedorForm.markAsUntouched();
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.estaDeshabilitadoDesplegable= true;
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
@@ -614,7 +654,54 @@ private getPaisDescription(paisId: string | number): string {
         this.estaDeshabilitadoDesplegable = false;
       });
     }
+     this.updateDenominacionRazonValidation();
   }
+
+  /**
+   * Actualiza las validaciones del campo denominacionRazon basado en el valor de tipoPersona
+   */
+private updateDenominacionRazonValidation(): void {
+   const DENOMINACIONRAZONCONTROL = this.agregarProveedorForm?.get('denominacionRazon');
+  const NOMBRESCONTROL = this.agregarProveedorForm?.get('nombres');
+  const PRIMERAPELLIDOCONTROL = this.agregarProveedorForm?.get('primerApellido');
+
+  if (!DENOMINACIONRAZONCONTROL || !NOMBRESCONTROL || !PRIMERAPELLIDOCONTROL) {
+    return;
+  }
+  
+   const TIPOPERSONAVALUE = this.agregarProveedorForm?.get('tipoPersona')?.value;
+  
+  if (TIPOPERSONAVALUE === this.tipoPersona.MORAL) {
+    DENOMINACIONRAZONCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+
+  } else if (TIPOPERSONAVALUE === this.tipoPersona.FISICA || TIPOPERSONAVALUE === this.tipoPersona.NO_CONTRIBUYENTE) {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    
+    NOMBRESCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    PRIMERAPELLIDOCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+  } else {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+  }
+  
+  DENOMINACIONRAZONCONTROL.updateValueAndValidity();
+  NOMBRESCONTROL.updateValueAndValidity();
+  PRIMERAPELLIDOCONTROL.updateValueAndValidity();
+}
 
   /**
    * @method ngOnDestroy

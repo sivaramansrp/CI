@@ -30,6 +30,11 @@ export class DatosDelTramiteComponent implements OnChanges{
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
   @Input() esFormularioSoloLectura!: boolean;
+
+  /**
+   * @description Identificador del procedimiento asociado al trámite.
+   */
+  @Input() idProcedimiento!: number;
   
   /**
    * @description El grupo de formulario reactivo que contiene los datos del trámite.
@@ -58,7 +63,7 @@ export class DatosDelTramiteComponent implements OnChanges{
   /**
    * @description Indica si se debe mostrar el error de clasificación.
    */
-  @Input() mostrarErrorClasificacion: boolean = true;
+  @Input() mostrarErrorClasificacion: boolean = false;
 
   /**
    * @description Opciones de solicitud configuradas para el formulario.

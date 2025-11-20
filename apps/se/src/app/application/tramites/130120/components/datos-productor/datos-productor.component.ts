@@ -47,7 +47,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   templateUrl: './datos-productor.component.html',
   styleUrl: './datos-productor.component.scss',
 })
-export class DatosProductorComponent implements OnInit, OnDestroy{
+export class DatosProductorComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} datosProductor
@@ -99,7 +99,7 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
     public consultaQuery: ConsultaioQuery,
     private cdr: ChangeDetectorRef,
     private formValidation: FormValidationService
-  ){
+  ) {
   }
 
   /**
@@ -108,25 +108,28 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
    */
   async ngOnInit(): Promise<void> {
     this.query.selectDatos$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((state) => {
-            this.datosState = state as DatosGrupos;
-          })
-        )
-        .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.datosState = state as DatosGrupos;
+          if(state.datosProductor.persona_tipo) {
+            this.onTipoPersonaProductorChange(state.datosProductor.persona_tipo);
+          }
+        })
+      )
+      .subscribe();
     await this.initActionFormBuild();
 
     this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
-    if(this.esFormularioSoloLectura){
+    if (this.esFormularioSoloLectura) {
       this.datosProductor.disable();
     }
   }
@@ -138,10 +141,10 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
   initActionFormBuild(): void {
     this.datosProductor = this.fb.group({
       persona_tipo: [this.datosState.datosProductor.persona_tipo],
-      personales_nombre: [this.datosState.datosProductor.personales_nombre,Validators.required],
-      primer_apellido: [this.datosState.datosProductor.primer_apellido,Validators.required],
-      segundo_apellido: [this.datosState.datosProductor.segundo_apellido,Validators.required],
-      denominación_razón_social: [this.datosState.datosProductor.denominación_razón_social,Validators.required],
+      personales_nombre: [this.datosState.datosProductor.personales_nombre, Validators.required],
+      primer_apellido: [this.datosState.datosProductor.primer_apellido, Validators.required],
+      segundo_apellido: [this.datosState.datosProductor.segundo_apellido, Validators.required],
+      denominacion_razon_social: [this.datosState.datosProductor.denominacion_razon_social, Validators.required],
       domicilio: [this.datosState.datosProductor.domicilio, [Validators.required, Validators.maxLength(200)]],
     });
   }
@@ -154,7 +157,6 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
   onTipoPersonaProductorChange(value: string | number): void {
     this.tipoPersonaProductor = String(value);
     const GRUPO = this.datosProductor as FormGroup;
-
     this.store.setPersona_tipo(this.tipoPersonaProductor);
 
     // Siempre requerido
@@ -168,8 +170,8 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
     GRUPO.get('primer_apellido')?.setValue('');
     GRUPO.get('segundo_apellido')?.clearValidators();
     GRUPO.get('segundo_apellido')?.setValue('');
-    GRUPO.get('denominación_razón_social')?.clearValidators();
-    GRUPO.get('denominación_razón_social')?.setValue('');
+    GRUPO.get('denominacion_razon_social')?.clearValidators();
+    GRUPO.get('denominacion_razon_social')?.setValue('');
     GRUPO.get('domicilio')?.clearValidators();
     GRUPO.get('domicilio')?.setValue('');
 
@@ -179,12 +181,12 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
       GRUPO.get('primer_apellido')?.setValidators([Validators.required, Validators.maxLength(200)]);
       GRUPO.get('segundo_apellido')?.setValidators([Validators.required, Validators.maxLength(200)]);
       GRUPO.get('domicilio')?.setValidators([Validators.required, Validators.maxLength(200)]);
-      // "denominación_razón_social" no visible, limpiar valor y validadores
-      GRUPO.get('denominación_razón_social')?.setValue('');
-      GRUPO.get('denominación_razón_social')?.clearValidators();
-      this.store.setDenominación_razón_social('');
+      // "denominacion_razon_social" no visible, limpiar valor y validadores
+      GRUPO.get('denominacion_razon_social')?.setValue('');
+      GRUPO.get('denominacion_razon_social')?.clearValidators();
+      this.store.setDenominacion_razon_social('');
     } else if (this.tipoPersonaProductor === 'Moral') {
-      GRUPO.get('denominación_razón_social')?.setValidators([Validators.required, Validators.maxLength(250)]);
+      GRUPO.get('denominacion_razon_social')?.setValidators([Validators.required, Validators.maxLength(250)]);
       GRUPO.get('domicilio')?.setValidators([Validators.required, Validators.maxLength(200)]);
       // Los personales y apellidos no visibles, limpiar valor y validadores
       GRUPO.get('personales_nombre')?.setValue('');
@@ -205,14 +207,13 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
       GRUPO.get('primer_apellido')?.clearValidators();
       GRUPO.get('segundo_apellido')?.setValue('');
       GRUPO.get('segundo_apellido')?.clearValidators();
-      GRUPO.get('denominación_razón_social')?.setValue('');
-      GRUPO.get('denominación_razón_social')?.clearValidators();
+      GRUPO.get('denominacion_razon_social')?.setValue('');
+      GRUPO.get('denominacion_razon_social')?.clearValidators();
       this.store.setPersonales_nombre('');
       this.store.setPrimer_apellido('');
       this.store.setSegundo_apellido('');
-      this.store.setDenominación_razón_social('');
+      this.store.setDenominacion_razon_social('');
     }
-
     // Actualizar validez de todos los controles
     Object.keys(GRUPO.controls).forEach(key => GRUPO.get(key)?.updateValueAndValidity());
   }
@@ -235,8 +236,10 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
     );
   }
 
-  
-validarFormulario(): boolean {
+/**
+ * Validación del formulario al enviar los datos
+ */
+  validarFormulario(): boolean {
     this.formValidation.marcarFormularioComoTocado(this.datosProductor);
     this.cdr.detectChanges();
     return this.datosProductor.valid;
@@ -250,5 +253,4 @@ validarFormulario(): boolean {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

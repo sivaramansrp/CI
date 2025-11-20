@@ -51,8 +51,8 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             [ngClass]="{'is-invalid': mostrarErroresDeCampoPago && pagoDeDerechosForm.get('clave')?.invalid}"
           >
-            <option value="">Seleccione un valor</option>
-            <option *ngFor="let banco of bancoList" [value]="banco.name">{{ banco.name }}</option>
+            <option value="">Seleccione una opción</option>
+            <option *ngFor="let banco of bancoList" [value]="banco.descripcion">{{ banco.descripcion }}</option>
           </select>
          <span class="text-danger">
           <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('clave')?.errors?.['custom']">
@@ -119,14 +119,24 @@
             maxlength="16"
             name="impPago"
             formControlName="impPago"
-            (change)="setValoresStore(pagoDeDerechosForm, 'impPago'); validarSinComas('impPago')"
+            (change)="setValoresStore(pagoDeDerechosForm, 'impPago'); validarImporte('impPago')"
             [ngClass]="{'is-invalid': mostrarErroresDeCampoPago && pagoDeDerechosForm.get('impPago')?.invalid}"
           />
           <span class="text-danger">
-          <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('impPago')?.errors?.['custom']">
-            {{ pagoDeDerechosForm.get('impPago')?.errors?.['custom'] }}
-          </small>
-      </span>
+            <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('impPago')?.errors?.['custom']">
+              {{ pagoDeDerechosForm.get('impPago')?.errors?.['custom'] }}
+            </small>
+          </span>
+          <span class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['numeroInvalido']">
+              Por favor, escribe un número entero válido
+            </small>
+          </span>
+          <span class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['maxDecimales']">
+              Este campo solo permite números hasta dos decimales
+            </small>
+          </span>
        </div>
       </div>
     </div>

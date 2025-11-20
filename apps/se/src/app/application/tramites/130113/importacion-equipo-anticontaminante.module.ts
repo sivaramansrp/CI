@@ -1,13 +1,12 @@
-import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InputRadioComponent, NotificacionesComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { ImportacionEquipoAnticontaminanteComponent } from './pages/importacion-equipo-anticontaminante/importacion-equipo-anticontaminante';
 import { ImportacionEquipoAnticontaminanteRoutingModule } from './importacion-equipo-anticontaminante-routing.module';
 import { NgModule } from '@angular/core';
-import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -20,7 +19,6 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     ImportacionEquipoAnticontaminanteComponent,
     PasoUnoComponent,
     SolicitudComponent,
-   
   ],
   imports: [
     CommonModule,
@@ -39,8 +37,11 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PaisProcendenciaComponent,
     RepresentacionComponent,
     CrosslistComponent,
-    PartidasDeLaMercanciaComponent
-   
+    PartidasDeLaMercanciaComponent,
+    AlertComponent,
+    NotificacionesComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ]
 })
 export class ImportacionEquipoAnticontaminanteModule { }

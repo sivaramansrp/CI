@@ -22,6 +22,8 @@ import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-re
 import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 
 import { AcusesRecibidosNotificacion } from '../core/models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
+import { ModeloConfig } from '../shared/models/service-config.model';
+import { TramiteConfigService } from '../shared/services/tramiteConfig.service';
 
 /**
  * @component ConfirmarNotificacionComponent
@@ -74,6 +76,13 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   folio: string = '';
 
   /**
+   * Datos de la resolución que se mostrarán en la tabla.
+   * @type {BodyTablaResolucion[]}
+   * Solo se utiliza si hay resoluciones que mostrar y si el trámite lo requiere.
+   */
+  datosTablaResolucion?: BodyTablaResolucion[] = [];
+
+  /**
   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
   * Se utiliza para completar el observable cuando el componente se destruye.
   */
@@ -116,11 +125,29 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    banderaVistaAcuse!: string;
 
   /**
+   * @property {ModeloConfig} serviceConfigModelo
+   * @description Configuración de modelo específicos del trámite, obtenida del servicio TramiteConfigService.
+  */
+  serviceConfigModelo!: ModeloConfig;
+
+  /**
+ * @property {number} tramite
+ * @description Identificador del trámite seleccionado.
+ */
+  tramite: number = 0;
+
+  /**
    * Datos de la tabla.
    * Contiene los registros que se mostrarán en la tabla.
    * @type {BodyTablaResolucion[]}
   */
   datosTabla: BodyTablaResolucion[] = [];
+
+  /**
+   * Arreglo que contiene los números de trámite que requieren documentos de resolución.
+   * Se deberá añadir un número de trámite a este arreglo si es necesario mostrar documentos de resolución para ese trámite.
+   */
+  tramitesDocumentosResolucion = ['130102'];
 
 
   /**
@@ -150,15 +177,9 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private firmaService: FirmaService,
     private tramiteStore: TramiteFolioStore,
-    private cadenaOriginalService: CadenaOriginalService) {
-    const CURRENT_NAVIGATION = this.router.getCurrentNavigation();
-    if (CURRENT_NAVIGATION?.extras.state?.['isAcuseRecibo']) {
-      this.indiceDePaso = 3;
-    }
-  }
-
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
+    private cadenaOriginalService: CadenaOriginalService,
+    private tramiteConfigService: TramiteConfigService) {
+     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -166,7 +187,17 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+    const CURRENT_NAVIGATION = this.router.getCurrentNavigation();
+    if (CURRENT_NAVIGATION?.extras.state?.['isAcuseRecibo']) {
+      this.indiceDePaso = 3;
+    }
+    this.tramite = Number(this.guardarDatos?.procedureId);
+    this.serviceConfigModelo = this.tramiteConfigService.getModeloConfig(this.tramite);
+  }
+
+  ngOnInit(): void {
     this.getConfirmarNotificacion();
+    this.obtenerAcusesRecibos();
   }
 
   /**
@@ -309,7 +340,6 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-          //this.indiceDePaso = this.PasoNotificacion.FIRMAR;
         }
       },
       error: (error) => {
@@ -325,7 +355,6 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
               txtBtnCancelar: '',
             };
           }
-          //this.indiceDePaso = this.PasoNotificacion.FIRMAR;
       }
     });
   }
@@ -440,6 +469,29 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   }
 
 
+    /**
+   * Obtiene los acuses y recibos relacionados con la resolución.
+   */
+  obtenerAcusesRecibos(): void {
+    if (this.tramitesDocumentosResolucion.includes(this.guardarDatos.procedureId)){
+      this.confirmarNotificacionService.getAcusesRecibos(this.guardarDatos.procedureId, this.guardarDatos.folioTramite).subscribe({
+      next: (data) => {
+        if (data?.codigo === "00" && data?.datos) {
+          this.datosTablaResolucion = [{
+            id: 1,
+            idDocumento: data.datos[0].id_documento_oficial + "",
+            documento: data.datos[0].desc_documento,
+            urlPdf: data.datos[0].documento_minio
+          }]
+        }
+      },
+    });
+    }
+    
+  }
+
+
+
   /**
    * @method cerrar
    * @description
@@ -503,6 +555,11 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     const NUMFOLIO = this.guardarDatos.folioTramite;
     const PAYLOAD: CadenaOriginalRequest = {
       fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()),
+      ...(this.tramiteConfigService.getModeloConfig(this.tramite)?.actualizarModelo && {
+        id_notificacion: this.notificacionData.id_notificacion,
+        fecha_envio_notificacion: this.notificacionData.fecha_envio_notificacion,
+        tipo_notificacion:this.notificacionData.tipo_notificacion,
+      }),
       usuario: {
         apellido_materno: 'Pérez',
         rfc: 'MAVL621207C95',

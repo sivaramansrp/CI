@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component,EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CertificadoDisponibles, ConsultaioQuery, ConsultaioState, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -22,6 +22,11 @@ import { DuplicadoDeCertificadoComponent } from '../duplicado-de-certificado/dup
   styleUrl: './paso-uno.component.scss'
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+  /**
+ * Evento que se emite cuando no se encuentran datos.
+ * @type {EventEmitter<void>}
+ */
+  @Output() noDatosError = new EventEmitter<void>();
   /**
  * Indica si se ha recibido una respuesta con datos.
  * Se utiliza para mostrar u ocultar información en la interfaz según el estado de la respuesta.
@@ -210,6 +215,12 @@ constructor(
             }
           });
 }
+/**   * Deshabilita la pestaña de certificado estableciendo la variable `certificadoTabEnabled` en `false`.
+   *
+   */
+disableCertificado(): void {
+  this.certificadoTabEnabled = false;
+}
 /**
  * Obtiene los datos vigentes de licitaciones mediante el servicio y actualiza el estado del formulario.
  *
@@ -241,9 +252,9 @@ constructor(
   public validarFormularios(): boolean {
     let isValid = true;
 
-    if (this.solicitante?.form) {
-      if (this.solicitante.form.invalid) {
-        this.solicitante.form.markAllAsTouched();
+    if (this.Solicitante?.form) {
+      if (this.Solicitante.form.invalid) {
+        this.Solicitante.form.markAllAsTouched();
         isValid = false;
       }
     } else {

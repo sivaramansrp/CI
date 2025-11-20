@@ -11,6 +11,7 @@ import {
   ConfiguracionColumna,
   SeccionLibQuery,
   SeccionLibState,
+  formatearFechaYyyyMmDd,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -47,8 +48,7 @@ import { ValidacionPosterioriService } from '../../service/validacion-posteriori
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Lista de estados disponibles en el catálogo.
    *
@@ -244,7 +244,16 @@ export class CertificadoOrigenComponent
       )
       .subscribe();
   }
-
+  /**
+   * @descripcion
+   * Maneja el evento cuando se selecciona "Sí" en el formulario.
+   * @param event - Indica si se seleccionó "Sí".
+   */
+  onSeleccionadoSi(event: boolean): void {
+    if (event) {
+      this.store.updateMercanciaSeleccionadasTablaDatos([]);
+    }
+  }
   /**
    * @descripcion
    * Actualiza el almacén con los datos del formulario de certificado.
@@ -270,33 +279,39 @@ export class CertificadoOrigenComponent
       rfcExportador: 'AAL0409235E6',
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] },
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] },
+      fraccionArancelaria: this.certificadoState.formCertificado['fraccionArancelariaForm'] || '',
+      numeroRegistro: this.certificadoState.formCertificado['registroProductoForm'] || null,
+      nombreComercial: this.certificadoState.formCertificado['nombreComercialForm'] || '',
+      fechaInicio: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaInicioInput'] as string) || "",
+      fechaFin: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaFinalInput'] as string) || "",
     };
 
-this.peruCertificadoService
-  .buscarMercanciasCert(PAYLOAD)
-  .pipe(takeUntil(this.destroyNotifier$))
-  .subscribe({
-    next: (res) => {
-      const RESPONSE = res as unknown as BuscarMercanciasResponse;
+    this.peruCertificadoService
+      .buscarMercanciasCert(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (res) => {
+          const RESPONSE = res as unknown as BuscarMercanciasResponse;
 
-      const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
-        id: item.idMercancia,
-        fraccionArancelaria: item.fraccionArancelaria || '',
-        numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
-        fechaExpedicion: item.fechaExpedicion || '',
-        fechaVencimiento: item.fechaVencimiento || '',
-        nombreTecnico: item.nombreTecnico || '',
-        nombreComercial: item.nombreComercial || '',
-        criterioParaConferirOrigen: item.criterioOrigen || '',
-        valorDeContenidoRegional: item.valorContenidoRegional || '',
-        normaOrigen: item.normaOrigen || '',
-        nombreIngles: item.nombreIngles || '',
-      }));
+          const MAPPED_DATA: Mercancia[] = (RESPONSE.datos ?? []).map((item) => ({
+            id: item.idMercancia,
+            fraccionArancelaria: item.fraccionArancelaria || '',
+            numeroDeRegistrodeProductos: item.numeroRegistroProducto || '',
+            fechaExpedicion: item.fechaExpedicion || '',
+            fechaVencimiento: item.fechaVencimiento || '',
+            nombreTecnico: item.nombreTecnico || '',
+            nombreComercial: item.nombreComercial || '',
+            criterioParaConferirOrigen: item.criterioOrigen || '',
+            valorDeContenidoRegional: item.valorContenidoRegional || '',
+            normaOrigen: item.normaOrigen || '',
+            nombreIngles: item.nombreIngles || '',
+            numeroRegistroProducto: item.numeroRegistroProducto || '',
+          }));
 
-      this.disponiblesDatos = MAPPED_DATA;
-      this.store.setDisponsiblesDatos(MAPPED_DATA);
-    },
-  });
+          this.disponiblesDatos = MAPPED_DATA;
+          this.store.setDisponsiblesDatos(MAPPED_DATA);
+        },
+      });
 
   }
 

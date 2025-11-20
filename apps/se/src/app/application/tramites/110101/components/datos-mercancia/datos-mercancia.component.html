@@ -1,15 +1,68 @@
-<div [hidden]="esFormularioSoloLectura" class="container mt-4">
+<div [hidden]="esFormularioSoloLectura">
 
     <ng-titulo titulo="Mercancía" />
     <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="warningAlert"></ng-alert>
     <form [formGroup]="formMercancia">
-        <div class="row mb-3">
+      <div class="row mb-3">
+          <div class="col-md-12">
+            @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo === true || this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama_uruguay === true) {
+              <label  class="form-label" *ngIf="this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama_uruguay === true" >Método utilizado para el cálculo del valor de contenido regional*:</label> 
+              <ng-alert [CONTENIDO]="TEXTO_MOSTRAR_TIPO_METODO.TIPO_METODO"></ng-alert>
+              <div class="col-md-12">
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio" id="valorMetodoRadio"
+                  formControlName="valorMetodoRadioUruguayPanama"  value="TIMET.VT"
+                    (change)="setValoresStore(formMercancia,'valorMetodoRadioUruguayPanama', 'setValorMetodoRadio')">
+                  <label class="form-check-label me-3" for="inlineRadio1">Método de valor de transacción</label>
+                </div>
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio" id="metodocostoneto"  formControlName="valorMetodoRadioUruguayPanama"  
+                  value="TIMET.CN" (change)="setValoresStore(formMercancia,'valorMetodoRadioUruguayPanama', 'setValorMetodoRadio')">
+                  <label class="form-check-label" for="inlineRadio2">Método costo neto</label>
+                </div>
+              </div>
+            }
+            @if(this.solicitudeState.materiales_fungibles_ap === true){
+               <ng-alert [CONTENIDO]="ALIANZA_JUEGOS.TIPO_JUEGOS_ALIANZA"></ng-alert>
+            }
+            @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama_uruguay === true || this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_panama === true) {
+                <ng-alert [CONTENIDO]="TEXTO_MOSTRAR_TIPO_METODO_PANAMA.TIPO_METODO_PANAMA"></ng-alert>
+              <div class="col-md-12">
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio"  id="valorMetodoRadio"
+                  formControlName="valorMetodoRadioPanama"  value="TIMET.VT"
+                    (change)="setValoresStore(formMercancia,'valorMetodoRadioPanama', 'setValorMetodoRadioPanama')">
+                  <label class="form-check-label me-3" for="inlineRadio1">Método de valor de transacción</label>
+                </div>
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio"  formControlName="valorMetodoRadioPanama"  
+                  value="TIMET.CN" (change)="setValoresStore(formMercancia,'valorMetodoRadioPanama', 'setValorMetodoRadioPanama')">
+                  <label class="form-check-label" for="inlineRadio2">Costo neto</label>
+                </div>
+              </div>
+            }
+              @if ( this.solicitudeState.respuestaServiceConfiguracion.mostrar_tipo_metodo_alianza_p === true && this.solicitudeState.materiales_fungibles_ap !== true) {
+                <ng-alert [CONTENIDO]="TEXTO_ACUERDO_P_COSTO.ALIANZA_DEL_PACIFICO" [CUSTOMECLASS]="warningAlert"></ng-alert>
+              <div class="col-md-12">
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio" formControlName="valorMetodoRadioP"  value="TIMET.FO"
+                    (change)="setValoresStore(formMercancia,'valorMetodoRadioP', 'setValorMetodoRadioP')">
+                  <label class="form-check-label me-3" for="inlineRadio1">FOB</label>
+                </div>
+                <div class="form-check form-check-inline me-3">
+                  <input class="me-3" type="radio" id="costoneto"  formControlName="valorMetodoRadioP"  
+                  value="TIMET.CN" (change)="setValoresStore(formMercancia,'valorMetodoRadioP', 'setValorMetodoRadioP')">
+                  <label class="form-check-label" for="inlineRadio2">Costo neto</label>
+                </div>
+              </div>
+            }
+            
+          </div>
             <div class="col-md-8">
                 <label for="nombreComercial" class="form-label">Nombre comercial de la mercancía (igual que en la factura)*:</label>
                 <input type="text" id="nombreComercial" 
                 class="form-control" 
                 formControlName="nombreComercial" 
-                placeholder="Nombre comercial de la mercancía (igual que en la factura)"
                 (change)="setValoresStore(formMercancia,'nombreComercial', 'setNombreComercial')"
                 >
                 @if(formMercancia.get('nombreComercial')?.invalid && formMercancia.get('nombreComercial')?.touched) {
@@ -20,54 +73,156 @@
                     </div>
                 }
             </div>
-        </div>
-        <div class=" row mb-3">
-          @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_nombre_ingles === true) {
-            <div class="col-md-8">
-                <label for="nombreIngles" class="form-label">Nombre en inglés*:</label>
-                <input type="text" id="nombreIngles" 
-                class="form-control" 
-                formControlName="nombreIngles" 
-                placeholder="Nombre en inglés"
-                (change)="setValoresStore(formMercancia,'nombreIngles', 'setNombreIngles')"
-                >
-                @if(formMercancia.get('nombreIngles')?.invalid && formMercancia.get('nombreIngles')?.touched) {
+          </div>
+      <div class=" row mb-3">
+        @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_nombre_ingles === true) {
+          <div class="col-md-8">
+              <label for="nombreIngles" class="form-label">Nombre en inglés*:</label>
+              <input type="text" id="nombreIngles" 
+              class="form-control" 
+              formControlName="nombreIngles" 
+              (change)="setValoresStore(formMercancia,'nombreIngles', 'setNombreIngles')"
+              >
+              @if(formMercancia.get('nombreIngles')?.invalid && formMercancia.get('nombreIngles')?.touched) {
+                  <div>
+                      @if(formMercancia.get('nombreIngles')?.errors?.['required']) {
+                          <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                      }
+                  </div>
+              }
+          </div>
+        }
+      </div>
+      <div class="row mb-3">
+          <div class="col-md-4 mb-3">
+              <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+              <input type="text" id="fraccionArancelaria" 
+              formControlName="fraccionArancelaria" 
+              class="form-control"
+              (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')">
+              @if(formMercancia.get('fraccionArancelaria')?.invalid && formMercancia.get('fraccionArancelaria')?.touched) {
+                  <div>
+                      @if(formMercancia.get('fraccionArancelaria')?.errors?.['required']) {
+                          <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                      }
+                  </div>
+              }
+          </div>
+          <div class="col-md-8 mb-3">
+              <label for="descripcion" class="form-label">Descripción:</label>
+              <textarea id="descripcion" class="form-control" 
+              formControlName="descripcion" 
+              (change)="setValoresStore(formMercancia,'descripcion', 'setDescripcion')"
+              ></textarea>
+          </div>
+      </div>
+      @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladi === true){
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="clasificacionNaladi" class="form-label">Clasificación NALADI*:</label>
+            <input type="text" id="clasificacionNaladi" formControlName="clasificacionNaladi" class="form-control"
+              (change)="setValoresStore(formMercancia,'clasificacionNaladi', 'setClasificacionNaladi')">
+              @if(formMercancia.get('clasificacionNaladi')?.invalid && formMercancia.get('clasificacionNaladi')?.touched) {
                     <div>
-                        @if(formMercancia.get('nombreIngles')?.errors?.['required']) {
+                        @if(formMercancia.get('clasificacionNaladi')?.errors?.['required']) {
                             <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
                         }
                     </div>
                 }
-            </div>
+          </div>
+        </div>
+      }
+      @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_93 === true){
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="clasificacionNaladi1993" class="form-label">Clasificación NALADI 1993*:</label>
+          <input type="text" id="clasificacionNaladi1993" formControlName="clasificacionNaladi1993" class="form-control"
+            (change)="setValoresStore(formMercancia,'clasificacionNaladi1993', 'setClasificacionNaladi1993')">
+              @if(formMercancia.get('clasificacionNaladi1993')?.invalid && formMercancia.get('clasificacionNaladi1993')?.touched) {
+                  <div>
+                      @if(formMercancia.get('clasificacionNaladi1993')?.errors?.['required']) {
+                          <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                      }
+                  </div>
+              }
+        </div>
+      </div>
+      }
+      @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_96 === true){
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="clasificacionNaladi1996" class="form-label">Clasificación NALADI 1996*:</label>
+            <input type="text" id="clasificacionNaladi1996" formControlName="clasificacionNaladi1996" class="form-control"
+              (change)="setValoresStore(formMercancia,'clasificacionNaladi1996', 'setClasificacionNaladi1996')">
+               @if(formMercancia.get('clasificacionNaladi1996')?.invalid && formMercancia.get('clasificacionNaladi1996')?.touched) {
+                    <div>
+                        @if(formMercancia.get('clasificacionNaladi1996')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+          </div>
+        </div>
+      }
+      @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_naladisa_02 === true){
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="clasificacionNaladi2002" class="form-label">Clasificación NALADI 2002*:</label>
+            <input type="text" id="clasificacionNaladi2002" formControlName="clasificacionNaladi2002" class="form-control"
+              (change)="setValoresStore(formMercancia,'clasificacionNaladi2002', 'setClasificacionNaladi2002')">
+              @if(formMercancia.get('clasificacionNaladi2002')?.invalid && formMercancia.get('clasificacionNaladi2002')?.touched) {
+                    <div>
+                        @if(formMercancia.get('clasificacionNaladi2002')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+          </div>
+        </div>
+      }
+      @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_valor_transaccional_fob === true || formMercancia.get('valorMetodoRadioPanama')?.value === 'TIMET.VT' || formMercancia.get('valorMetodoRadioUruguayPanama')?.value === 'TIMET.VT' ){
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
+              <input type="text" id="valorTransaccion"
+                formControlName="valorTransaccion" 
+                class="form-control" 
+                pattern="\d+(\.\d{4})?"
+                inputmode="decimal"
+                oninput="this.value=this.value.replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1')"
+                onblur="this.value=this.value.includes('.')?this.value.padEnd(this.value.indexOf('.')+5,'0'):this.value&&(this.value+'.0000')"
+                (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')">
+                @if(formMercancia.get('valorTransaccion')?.invalid && formMercancia.get('valorTransaccion')?.touched) {
+                  <div>
+                      @if(formMercancia.get('valorTransaccion')?.errors?.['required']) {
+                          <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                      }
+                  </div>
+                }
+          </div>
+        </div>
+      }
+      @if(mostrarSelectPeso){
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="unidadMedida" class="form-label">Unidad de medida del peso (Mercancía e Insumos)*:</label>
+          <select id="unidadMedida" formControlName="unidadMedidaPeso" class="form-select form-control"
+            (change)="onPaisChange($event)" >
+            <option value="null">Seleccionar</option>
+            <option *ngFor="let pais of unidadMedidaComercial" [value]="pais.clave">
+              {{ pais.descripcion }}
+            </option>
+          </select>
+          @if(ninoFormGroup.get('unidadMedidaPeso')?.invalid && ninoFormGroup.get('unidadMedidaPeso')?.touched) {
+          <div>
+            @if(ninoFormGroup.get('unidadMedidaPeso')?.errors?.['required']) {
+            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+            }
+          </div>
           }
         </div>
-        <div class="row mb-3">
-            <div class="col-md-4 mb-3">
-                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
-                <input type="text" id="fraccionArancelaria" 
-                formControlName="fraccionArancelaria" 
-                class="form-control"
-                (change)="setValoresStore(formMercancia,'fraccionArancelaria', 'setFraccionArancelaria')">
-            </div>
-            <div class="col-md-8 mb-3">
-                <label for="descripcion" class="form-label">Descripción:</label>
-                <textarea id="descripcion" class="form-control" 
-                formControlName="descripcion" 
-                (change)="setValoresStore(formMercancia,'descripcion', 'setDescripcion')"
-                ></textarea>
-            </div>
-        </div>
-      @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_valor_transaccional_fob === true){
-       <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="valorTransaccion" class="form-label">Valor de transacción*:</label>
-            <input type="text" id="valorTransaccion"
-             formControlName="valorTransaccion" 
-             class="form-control"
-             (change)="setValoresStore(formMercancia,'valorTransaccion', 'setValorTransaccion')">
-        </div>
-       </div>
-       }
+      </div>
+      }
        @if (this.solicitudeState.respuestaServiceConfiguracion.mostrar_precio_franco_fabrica === true) {
         <div class="row mb-3">
           <div class="col-md-4">
@@ -75,7 +230,64 @@
               <input type="text" id="francofabrica"
               formControlName="francofabrica" 
               class="form-control"
+              pattern="\d+(\.\d{4})?"
+              inputmode="decimal"
+              oninput="this.value=this.value.replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1')"
+              onblur="this.value=this.value.includes('.')?this.value.padEnd(this.value.indexOf('.')+5,'0'):this.value&&(this.value+'.0000')"
               (change)="setValoresStore(formMercancia,'francofabrica', 'setFrancofabrica')">
+               @if(formMercancia.get('francofabrica')?.invalid && formMercancia.get('francofabrica')?.touched) {
+                    <div>
+                        @if(formMercancia.get('francofabrica')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+          </div>
+        </div>
+       }
+       <!-- Campo visible solo si seleccionan FOB -->
+       @if (formMercancia.get('valorMetodoRadioP')?.value === 'TIMET.FO' || this.solicitudeState.materiales_fungibles_ap === true) {
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <label for="valorFobDolares" class="form-label">Valor FOB (en dólares)*:</label>
+              <input type="text" id="valorFobDolares"
+                formControlName="valorFobDolares" 
+                class="form-control"
+                pattern="\d+(\.\d{4})?"
+                inputmode="decimal"
+                oninput="this.value=this.value.replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1')"
+                onblur="this.value=this.value.includes('.')?this.value.padEnd(this.value.indexOf('.')+5,'0'):this.value&&(this.value+'.0000')"
+                (change)="setValoresStore(formMercancia,'valorFobDolares', 'setvalorFobDolares')">
+                @if(formMercancia.get('valorFobDolares')?.invalid && formMercancia.get('valorFobDolares')?.touched) {
+                    <div>
+                        @if(formMercancia.get('valorFobDolares')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
+          </div>
+        </div>
+       }
+       <!-- Campo visible solo si seleccionan COSTO NETO -->
+        @if (formMercancia.get('valorMetodoRadioP')?.value === 'TIMET.CN' || formMercancia.get('valorMetodoRadioPanama')?.value === 'TIMET.CN' || formMercancia.get('valorMetodoRadioUruguayPanama')?.value === 'TIMET.CN' || this.solicitudeState.respuestaServiceConfiguracion.mostrar_costo_neto_fob === true) {
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <label for="costoNetoDolares" class="form-label">Costo neto (en dólares)*:</label>
+              <input type="text" id="costoNetoDolares"
+              formControlName="costoNetoDolares" 
+              class="form-control"
+              pattern="\d+(\.\d{4})?"
+              inputmode="decimal"
+              oninput="this.value=this.value.replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1')"
+              onblur="this.value=this.value.includes('.')?this.value.padEnd(this.value.indexOf('.')+5,'0'):this.value&&(this.value+'.0000')"
+              (change)="setValoresStore(formMercancia,'costoNetoDolares', 'setCostoNetoDolares')">
+               @if(formMercancia.get('costoNetoDolares')?.invalid && formMercancia.get('costoNetoDolares')?.touched) {
+                    <div>
+                        @if(formMercancia.get('costoNetoDolares')?.errors?.['required']) {
+                            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                        }
+                    </div>
+                }
           </div>
         </div>
        }
@@ -89,6 +301,11 @@
             [datos]="insumosTablaDatos" (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaInsumos($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
           </app-tabla-dinamica>
+          <div>
+            @if(validacionInsumo) {
+            <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+            }
+          </div>
         </div>
         <div class="col-md-12">
           <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
@@ -103,7 +320,7 @@
           insumos</button>
       </div>
       <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('INSUMOS')">Carga por
           archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar insumos</button>
       </div>
@@ -131,7 +348,7 @@
           envases</button>
       </div>
       <div class="text-end mt-5">
-        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo()">Carga por
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('EMPAQUES')">Carga por
           archivo</button>
         <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar envases</button>
       </div>
@@ -161,9 +378,18 @@
               </div>
         
               <div class="col-md-4 mt-4">
-                <app-catalogo-select [catalogo]="paisOrigen" formControlName="pais" [required]="true"
-                  [label]="'Valor de transacción'" [required]="true" name="Tratado o Acuerdo"
-                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                <label for="clasificacionNaladi1996" class="form-label">Pais de origen*:</label>
+                <select 
+                  id="pais" 
+                  formControlName="pais" 
+                  class="form-select form-control"
+                  (change)="onPaisChange($event)"
+                  [disabled]="esFormularioSoloLectura">
+                  <option value="null">Seleccionar</option>
+                  <option *ngFor="let pais of paisOrigen" [value]="pais.clave">
+                    {{ pais.descripcion }}
+                  </option>
+                </select>
                 @if(ninoFormGroup.get('pais')?.invalid && ninoFormGroup.get('pais')?.touched) {
                 <div>
                   @if(ninoFormGroup.get('pais')?.errors?.['required']) {
@@ -172,6 +398,7 @@
                 </div>
                 }
               </div>
+              @if(mostrarRFC){
               <div class="col-md-4 mt-4">
                 <label for="rfc" class="form-label">RFC*:</label>
                 <input type="text" id="rfc" formControlName="rfc" class="form-control">
@@ -183,6 +410,7 @@
                 </div>
                 }
               </div>
+              }
               <div class="col-md-4 mt-4">
                 <label for="fabricante" class="form-label">Fabricante o productor:</label>
                 <input type="text" id="fabricante" formControlName="fabricante" class="form-control">
@@ -212,6 +440,8 @@
       <div class="modal-body">
         <form [formGroup]="formularioArchivo">
           <div class="row">
+            <ng-titulo
+              [titulo]="'Cargar archivo'" />
             <div class="col-md-12">
 
               <div class="form-group">
@@ -229,7 +459,7 @@
       </div>
       <div class="modal-footer d-flex justify-content-end p-5 gap-3">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
-        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Enviar</button>
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarCsv()">Enviar</button>
       </div>
     </div>
   </div>
@@ -252,59 +482,7 @@
 </div>
 
 @if(esFormularioSoloLectura === true){
-  <form [formGroup]="formEvaluarMercancia">
-    <ng-container *ngFor="let campo of camposEvaluar">
-
-      <ng-container *ngIf="campo.section">
-        <ng-titulo *ngIf="shouldShowSection(campo.sectionKey)" [titulo]="campo.section"></ng-titulo>
-      </ng-container>
-
-      <ng-container *ngIf="campo.controlName && formEvaluarMercancia.get(campo.controlName)?.value">
-        <div>
-          <div [class]="'col-md-' + (campo.col || 4)">
-            <ng-container *ngIf="campo.type === 'radio'">
-              <div class="row w-100 align-items-center">
-                <div class="col-md-7">
-                  <label class="form-label mb-0">{{ campo.label }}</label>
-                </div>
-                <div class="col-md-4 justify-content-end">
-                  <div class="d-inline-flex align-items-center gap-3">
-                    <ng-container *ngFor="let opcion of campo.options">
-                      <div class="form-check form-check-inline mb-0">
-                        <input
-                          class="form-check-input"
-                          type="radio"
-                          [id]="campo.controlName + opcion.value"
-                          [value]="opcion.value"
-                          [formControlName]="campo.controlName"
-                          [disabled]="esFormularioSoloLectura"
-                        />
-                        <label class="form-check-label mb-0 ms-2" [for]="campo.controlName + opcion.value">
-                          {{ opcion.label }}
-                        </label>
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="!campo.type || campo.type === 'text'">
-              <label [for]="campo.controlName" class="form-label">{{ campo.label }}</label>
-              <input
-                *ngIf="formEvaluarMercancia.get(campo.controlName)?.value !== null"
-                type="text"
-                [id]="campo.controlName"
-                class="form-control"
-                [formControlName]="campo.controlName"
-                [placeholder]="campo.placeholder"
-                [readonly]="esFormularioSoloLectura"
-              />
-            </ng-container>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
-  </form>
+  <app-datos-mercancia-evaluacion></app-datos-mercancia-evaluacion>
 }
 
 @if (nuevaNotificacion) {

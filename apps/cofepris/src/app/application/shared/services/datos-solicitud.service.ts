@@ -1,8 +1,30 @@
+import { API_OBTENER_FRACCIONES_ARANCELARIAS, API_OBTENER_UMT, Catalogo } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { API_BUSCAR_REPRESENTANTE } from '../../core/server/api-router';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '../models/datos-solicitud.model';
+
+
+/**
+ * Interface for RFC search payload to backend
+ */
+export interface RfcSearchPayload {
+  rfcRepresentanteLegal: string;
+}
+
+/**
+ * Interface for representative data
+ */
+export interface RepresentanteData {
+  rfc: string;
+  nombre?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  nombreORazonSocial?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +38,14 @@ export class DatosSolicitudService {
    */
   private jsonUrl = 'assets/json/cofepris/domicilio.json';
 
+  /**
+   * URL base para las peticiones HTTP.
+   * @type {string}
+   */
+  host!: string;
+
   constructor(public httpServicios: HttpClient) {
-    // No se necesita lógica de inicialización adicional.
+      this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -119,4 +147,39 @@ export class DatosSolicitudService {
       .get<{ colonia: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.colonia));
   }
+
+  /**
+   * Busca un representante legal por RFC enviando payload al backend.
+   * @param tramite Número del trámite 
+   * @param PAYLOAD Datos de búsqueda del representante.
+   * @returns Observable con la respuesta del servidor.
+   */
+  buscarRepresentantePorRfc(tramite: string, PAYLOAD: RfcSearchPayload):
+    Observable<BaseResponse<RepresentanteData>> {
+    const ENDPOINT = `${this.host}${API_BUSCAR_REPRESENTANTE(tramite)}`;
+    return this.httpServicios.post<BaseResponse<RepresentanteData>>(ENDPOINT, PAYLOAD);
+  }
+
+  /**
+   * Obtiene la descripción de las fracciones arancelarias.
+   * @param tramiteId ID del trámite.
+   * @param clave Clave de la fracción arancelaria.
+   * @returns Observable con la respuesta del servidor.
+   */
+  obtenerFraccionesArancelarias<T>(tramiteId: number, clave: string): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_FRACCIONES_ARANCELARIAS(tramiteId, clave)}`;
+    return this.httpServicios.get<BaseResponse<T>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene la unidad de medida por fracción arancelaria.
+   * @param tramiteId ID del trámite.
+   * @param cveFraccion Clave de la fracción arancelaria.
+   * @returns Observable con la respuesta del servidor.
+   */
+  obtenerUMT<T>(tramiteId: number, cveFraccion: string): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.host}${API_OBTENER_UMT(tramiteId, cveFraccion)}`;
+    return this.httpServicios.get<BaseResponse<T>>(ENDPOINT);
+  }
+
 }

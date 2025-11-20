@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Anexar necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -122,10 +122,10 @@ export const MENSAJE_ALERTA_TRATADOS = {
   MENSAJE_ALERTA: `
 <ul>
   Para seleccionar un tratado y criterio, siga los siguientes pasos:
-  <li>Primero seleccione un país o bloque</li>
-  <li>Después seleccione un tratado o acuerdo</li>
-  <li>Seleccione el criterio para conferir origen</li>
-  <li>Finalmente, agregue su selección a la lista de tratados</li>
+  <li>Primero seleccione un país o bloque.</li>
+  <li>Después seleccione un tratado o acuerdo.</li>
+  <li>Seleccione el criterio para conferir origen.</li>
+  <li>Finalmente, agregue su selección a la lista de tratados.</li>
 </ul>
 `,
 };
@@ -141,6 +141,22 @@ export const INSTANCIA_ALIANZA = {
 export const ELVALORALERTA = {
   ADJUNTAR: `<p>El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.</p>`,
 };
+
+export const COSTO_NETO_VALOR_FOB = {
+  ALIANZA_DEL_PACIFICO: `<p>Para el Acuerdo Alianza del Pacifico corresponden los valores: Costo neto y Valor FOB</p>`,
+};
+
+export const TIPO_METODO = {
+  TIPO_METODO: `<p>Para el tratado de uruguay corresponden los valores: Método de valor de transacción y Método de costo neto </p>`,
+};
+
+export const TIPO_METODO_PANAMA = {
+  TIPO_METODO_PANAMA: `<p>Para el tratado de Panamá corresponden los valores: Valor de transacción y Costo Neto </p>`,
+};
+
+export const ALIANZA_JUEGOS_SURTIDOS ={
+  TIPO_JUEGOS_ALIANZA: `<p>Para el Acuerdo Alianza del Pacifico  con juegos o Surtidos corresponde el Valor FOB</p>`,
+}
 
 export const PROTESTA = {
   ADJUNTAR: `
@@ -168,7 +184,7 @@ export const ENCABEZADO_TABLA_ACUSE = [
   },
   {
     key: 'documento',
-    valor: 'Documento.',
+    valor: 'Documento',
   },
 ];
 export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
@@ -182,7 +198,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ],
   datosTablaAcuse: [
@@ -309,7 +325,78 @@ export const TERCEROS = {
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
+export const TRAMITES_CUATRO_PASOS = ['5701'];
+
 export const PASOS_REQUERIMIENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DATOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 4,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DOCUMENTOS = [
   {
     indice: 1,
     titulo: 'Requerimiento de información',
@@ -436,6 +523,21 @@ export const CONDICIONES_JUEGOS_SURTIDOS = {
   si el valor de transacción de todas las mercancías no originarias utilizadas en la formación del juego o surtido, 
   ajustado sobre la base CIF, no excede del 10 por ciento del valor de transacción del juego o surtido, 
   ajustado sobre la base FOB.</p></li>`,
+};
+
+/**
+ * Constante que contiene las condiciones para que los juegos o sutidos de mercancías califiquen como originarios bajo el Acuerdo de la Alicanza del Pacífico.
+ * 
+ * @constant
+ * @type {{ CONDICION_ALIZANZA: string}}
+ */
+export const CONDICIONES_JUEGOS_SURTIDOS_ALIANZA = {
+  CONDICION_ALIANZA:
+  `<li><p> Un juego o surtido, se clasificará como tal cuando se cumpla con las reglas 1 o 3 de las Reglas Generales 
+  para la Interpretación del Sistema Armonizado (SA) y con las Reglas 3 a) y 3 b) del ACUERDO por el que se dan a 
+  conocer las Notas Explicativas de la Tarifa Arancelaria.<br></p></li>` +
+  `<li><p> Cuando cada uno de los componentes del juego o surtido sean originarios, dicho juego o surtido será considerado 
+  originario.</p></li>`
 };
 
 /**

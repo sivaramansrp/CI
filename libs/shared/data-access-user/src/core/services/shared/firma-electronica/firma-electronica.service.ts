@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL, AUTH_ROUTE } from '../../../servers/api-router';
 import { FielPayload, FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
@@ -55,19 +54,31 @@ export class FirmaElectronicaService {
   async firmarCadena(
     cerInput: HTMLInputElement,
     keyInput: HTMLInputElement,
-    passwordInput: HTMLInputElement,
+    password: string,
     cadenaOriginal?: string,
     soloValidar: boolean = false
-  ): Promise<{ firma?: string; certificado: any; serialNumber: string; rfc: string, fechaFin: string }> {
+): Promise<{ firma?: string; certificado: any; serialNumber: string; rfc: string, fechaFin: string }> {
     try {
       const PKI = window['PKI' as WindowKey];
 
       if (!PKI?.SAT?.FielUtil) { throw new Error('La librería FielUtil no está disponible'); }
       if (!cerInput.files?.length || !keyInput.files?.length) { throw new Error('No se seleccionaron archivos válidos'); }
-      if (!passwordInput.value) { throw new Error('La contraseña no puede estar vacía'); }
+      if (!password) { throw new Error('La contraseña no puede estar vacía'); }
+
+      // Crear un input temporal REAL del DOM
+      const TEMP_PASSWORD_INPUT = document.createElement('input');
+      TEMP_PASSWORD_INPUT.type = 'password';
+      TEMP_PASSWORD_INPUT.value = password;
+      
+      TEMP_PASSWORD_INPUT.style.display = 'none';
+      document.body.appendChild(TEMP_PASSWORD_INPUT);
 
       const COMPATIBILIDAD = PKI.SAT.FielUtil.validaNavegador(cerInput);
-      if (COMPATIBILIDAD !== true) { throw new Error(PKI.SAT.FielUtil.obtenMensajeError(COMPATIBILIDAD)); }
+      if (COMPATIBILIDAD !== true) { 
+        // Limpiar el input temporal
+        document.body.removeChild(TEMP_PASSWORD_INPUT);
+        throw new Error(PKI.SAT.FielUtil.obtenMensajeError(COMPATIBILIDAD)); 
+      }
 
       const CADENAAFIRMAR = soloValidar ? ' ' : (cadenaOriginal || '');
 
@@ -75,9 +86,14 @@ export class FirmaElectronicaService {
         PKI.SAT.FielUtil.validaFielyFirmaCadena(
           cerInput,
           keyInput,
-          passwordInput,
+          TEMP_PASSWORD_INPUT,
           () => CADENAAFIRMAR,
           (error_code: any, certificado: any, firma: any) => {
+            // Limpiar el input temporal después de usar
+            if (document.body.contains(TEMP_PASSWORD_INPUT)) {
+              document.body.removeChild(TEMP_PASSWORD_INPUT);
+            }
+            
             if (error_code === 0) {
               try {
                 const CERT = new PKI.SAT.Certificado(certificado);

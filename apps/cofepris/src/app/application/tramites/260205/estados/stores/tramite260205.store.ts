@@ -18,6 +18,11 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
  * Representa el estado de la solicitud para el trámite 260205.
  */
 export interface Tramite260205State {
+/**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+
   /**
    * Lista de destinatarios finales en la tabla de datos.
    */
@@ -92,6 +97,7 @@ export interface Tramite260205State {
    * Índice utilizado para identificar elementos específicos.
    */
   indice: number;
+
 }
 
 /**
@@ -168,6 +174,7 @@ export interface Tramite260205State {
  */
 export function createInitialState(): Tramite260205State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -189,7 +196,7 @@ export function createInitialState(): Tramite260205State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -218,7 +225,7 @@ export function createInitialState(): Tramite260205State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -231,7 +238,7 @@ export function createInitialState(): Tramite260205State {
       fechaPago: '',
       importePago: '',
     },
-    indice: 1
+    indice: 1,    
   };
 }
 
@@ -294,7 +301,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+      fabricanteTablaDatos: [ ...newFabricantes],
     }));
   }
 
@@ -325,7 +332,6 @@ export class Tramite260205Store extends Store<Tramite260205State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -355,7 +361,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [ ...newProveedores],
     }));
   }
 
@@ -382,7 +388,7 @@ export class Tramite260205Store extends Store<Tramite260205State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [ ...newFacturadores],
     }));
   }
 
@@ -465,4 +471,15 @@ export class Tramite260205Store extends Store<Tramite260205State> {
       indice
     }))
   }
+ /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
+    }));
+  }  
 }

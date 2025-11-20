@@ -1,11 +1,15 @@
-import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { API_POST_SOLICITUD, BUSCAR_PRODUCTOR, PROC_110223 } from '../servers/api-route';
+import { Catalogo, CatalogoLista, DisponiblesTabla, HistoricoColumnas, MercanciaTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpCoreService, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable,map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
-import { HttpClient } from '@angular/common/http';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { GuadarSolicitudResponse } from '../models/response/guardar-solicitud-response.model';
 import { Injectable } from '@angular/core';
-import { PROC_110223 } from '../servers/api-route';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 import { ProductorExportador } from '../models/certificado-origen.model';
+import { Tramite110223Query } from '../query/tramite110223.query';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
@@ -18,13 +22,22 @@ import { ProductorExportador } from '../models/certificado-origen.model';
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
-    url: string = '../../../../../assets/json/110221/';
+    url: string = '../../../../../assets/json/110223/';
+
+    /**
+   * La URL base del servidor al que se realizarán las solicitudes.
+   * Esta propiedad es de solo lectura y se utiliza para construir las rutas de los servicios.
+   */
+  private readonly servidor!: string;
+
   /**
    * Constructor del servicio.
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes a los archivos JSON.
    */
-  constructor(private http: HttpClient,private store: Tramite110223Store, public httpService: HttpCoreService) { }
+  constructor(private http: HttpClient,private store: Tramite110223Store, public httpService: HttpCoreService,
+    private tramite110223Query: Tramite110223Query
+  ) { }
 
   /**
    * Obtiene la lista de idiomas disponibles.
@@ -63,15 +76,26 @@ export class CertificadosOrigenService {
   }
 
   /**
-   * Obtiene la lista de productores/exportadores disponibles.
-   * 
-   * Este método realiza una solicitud HTTP para obtener los datos de productores/exportadores desde un archivo JSON.
-   * 
+   * @method obtenerProductorPorExportador
+   * @description
+   * Obtiene la lista de productores/exportadores disponibles desde un archivo JSON local.
    * @returns {Observable<ProductorExportador>} Un observable que emite la lista de productores/exportadores.
    */
-  obtenerProductorPorExportador(): Observable<ProductorExportador> {
-    return this.http
-      .get<ProductorExportador>('assets/json/110223/productor-exportador.json');
+  obtenerProductorPorExportador(rfc: string): Observable<ProductorExportador> {
+    return this.httpService.get<ProductorExportador>(BUSCAR_PRODUCTOR(rfc));
+  }
+
+  /**
+   * @method obtenerProductorNuevo
+   * @description
+   * Agrega un nuevo productor/exportador al sistema.
+   * @param body - Objeto que contiene el RFC del solicitante
+   * @returns {Observable<unknown>} Un observable que emite la respuesta del servidor
+   */
+  obtenerProductorNuevo(body: { rfc_solicitante: string }): Observable<unknown> {
+    return this.httpService.post<unknown>(PROC_110223.AGREGAR_PRODUCTOR, {
+      body: body,
+    });
   }
 
   /**
@@ -165,29 +189,7 @@ export class CertificadosOrigenService {
               return this.http
                 .get<MercanciasHistoricos>('assets/json/110221/mercancias-seleccionadas.json');
             }
-      
-      
-        /**
-         * Obtiene la lista de países bloque desde un archivo JSON local.
-         * @method obtenerPaisBloque
-         * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
-         */
-        obtenerPaisBloque(): Observable<Catalogo[]> {
-          return this.http
-            .get<{ data: Catalogo[] }>('assets/json/110204/país-bloque.json') // Solicita los datos del archivo JSON
-            .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-        }
-         /**
-           * Obtiene la lista de estados desde un archivo JSON local.
-           * @method obtenerListaEstado
-           * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
-           */
-          obtenerListaEstado(): Observable<Catalogo[]> {
-            return this.http
-              .get<{ data: Catalogo[] }>('./assets/json/110204/estado.json') // Solicita los datos del archivo JSON
-              .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-          }
-          
+         
             /**
              * Obtiene el catálogo de unidades de medida comercial (UMC).
              * @returns Observable con la respuesta del catálogo de UMC.
@@ -238,4 +240,183 @@ export class CertificadosOrigenService {
       false
     );
   }
+
+  /**
+   * Busca mercancías para el certificado de origen.
+   * @param body Objeto que contiene los parámetros de búsqueda.
+   * @returns Observable con la respuesta de la búsqueda de mercancías.
+   */
+  buscarMercanciasCert(body: { [key: string]: unknown }): Observable<{ [key: string]: unknown }> {
+    return this.httpService.post<{ [key: string]: unknown }>(PROC_110223.BUSCAR, { body: body });
+  }
+  
+  /**
+   * Guarda los datos del certificado de origen.
+   * @param body Objeto que contiene los datos a guardar.
+   * @returns Observable con la respuesta del guardado.
+   */
+  guardarDatosPost(
+    body: Record<string, unknown>
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_110223.GUARDAR, {
+      body: body,
+    });
+  }
+
+  /**
+   * Guarda la solicitud del trámite 80208.
+   * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postSolicitud(
+    solicitud: unknown
+  ): Observable<BaseResponse<GuadarSolicitudResponse>> {
+    const ENDPOINT = `${this.servidor}` + API_POST_SOLICITUD;
+    return this.http
+      .post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud)
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((httpError) => {
+          if (httpError instanceof HttpErrorResponse) {
+            return throwError(() => ({
+              success: false,
+              error: httpError.error,
+            }));
+          }
+          const ERROR = new Error(
+            `Ocurrió un error al guardar la información ${ENDPOINT} `
+          );
+          return throwError(() => ERROR);
+        })
+      );
+  }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<TramiteState> {
+    return this.tramite110223Query.selectPexim$;
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildMercanciasProductor(data: MercanciaTabla[]): unknown[] {
+    return data.map(item => ({
+      "fraccionArancelaria": item.fraccionArancelaria,
+      "cantidadComercial": item.cantidad,
+      "descUnidadMedidaComercial": item.unidadMedida,
+      "valorTransaccional": item.valorMercancia,
+      "descFactura": item.fetchFactura,
+      "fechaFactura": item.fetchFactura,
+      "numeroFactura": item.numeroFactura,
+      "complementoDescripcion": item.complementoDescripcion,
+      "rfcProductor": item.rfcProductor1
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  // eslint-disable-next-line class-methods-use-this
+  buildProductoresPorExportador(data: HistoricoColumnas[]): unknown[] {
+    return data.map(item => ({
+      "nombreCompleto": item.nombreProductor,
+      "rfc": item.numeroRegistroFiscal,
+      "direccionCompleta": item.direccion,
+      "correoElectronico": item.correoElectronico,
+      "telefono": item.telefono,
+      "fax": item.fax
+    }));
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildCertificado(data: TramiteState): unknown {
+    return {
+      "tratado_acuerdo": data.formCertificado['entidadFederativa'] || 102,
+      "pais_bloque": data.formCertificado['bloque'] || '',
+      "fraccion_arancelaria": data.formCertificado['fraccionArancelariaForm'] || '',
+      "nombre_comercial": data.formCertificado['nombreComercialForm'] || '',
+      "registro_producto": data.formCertificado['registroProductoForm'] || '',
+      "fecha_inicio": data.formCertificado['fechaInicio'] || '',
+      "fecha_fin": data.formCertificado['fechaFin'] || '',
+      "realizo_tercer_operador": { 
+        "tercer_operador": data.formCertificado['si'] || false,
+        "nombre": data.formCertificado['nombres'] || '',
+        "primer_apellido": data.formCertificado['primerApellido'] || '',
+        "segundo_apellido": data.formCertificado['segundoApellido'] || '',
+        "numero_registro_fiscal": data.formCertificado['numeroDeRegistroFiscal'] || '',
+        "razon_social": data.formCertificado['razonSocial'] || ''
+      },
+      "domicilio_tercer_operador": {
+        "pais": data.formCertificado['pais'] || '',
+        "ciudad": data.formCertificado['ciudad'] || '',
+        "calle": data.formCertificado['calle'] || '',
+        "numero_letra": data.formCertificado['numeroLetra'] || '',
+        "telefono": data.formCertificado['telefono'] || '',
+        "correo_electronico": data.formCertificado['correo'] || ''
+      },
+      "mercancias_seleccionadas": this.buildCertificadoMercancia(data.mercanciaTabla)
+    }
+  }
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildCertificadoMercancia(data: Mercancia[]): unknown {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+    return data.map((item) => ({
+      ...item,
+      id: item.id ?? '',
+      fraccion_arancelaria: item.fraccionArancelaria ?? '',
+      cantidad: item.cantidad ?? '',
+      unidad_medida: item.umc ?? '',
+      valor_mercancia: item.valorMercancia ?? '',
+      tipo_factura: item.tipoFactura ?? '',
+      num_factura: item.numeroFactura ?? '',
+      complemento_descripcion: item.complementoDescripcion ?? '',
+      fecha_factura: item.fechaFactura ?? '',
+    }));
+  }  
+
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildDatosDelCertificado(data: TramiteState): unknown {
+    return {
+      observaciones: data.formDatosCertificado['observacionesDates'],
+      representacion_federal: {
+        entidad_federativa: data.formDatosCertificado['EntidadFederativaDates'],
+        representacion_federal: data.formDatosCertificado['representacionFederalDates'],
+      },
+    };
+  }
+  
+  /** Construye el objeto destinatario a partir del estado del trámite 110223. */
+  buildDestinatario(data: TramiteState): unknown {
+    const FORM_DESTINATARIO = data.formDestinatario || {};
+
+    return {
+      "nombre": FORM_DESTINATARIO['nombre'] || '',
+      "primer_apellido": FORM_DESTINATARIO['primerApellido'] || '',
+      "segundo_apellido": FORM_DESTINATARIO['segundoApellido'] || '',
+      "numero_registro_fiscal": FORM_DESTINATARIO['numeroRegistroFiscal'] || '',
+      "razon_social": FORM_DESTINATARIO['razonSocial'] || '',
+      "domicilio": {
+          "ciudad_poblacion_estado_provincia": FORM_DESTINATARIO['ciudad'] || '',
+          "calle": FORM_DESTINATARIO['calle'] || '',
+          "numero_letra": FORM_DESTINATARIO['numeroLetra'] || '',
+          "telefono": FORM_DESTINATARIO['telefono'] || '',
+          "fax": FORM_DESTINATARIO['fax'] || '',
+          "correo_electronico": FORM_DESTINATARIO['correoElectronico'] || '',
+          "pais_destino": FORM_DESTINATARIO['paisDestino'] || ''
+      },
+      "generalesRepresentanteLegal": {
+          "lugarRegistro": FORM_DESTINATARIO['lugarRegistro'] || '',
+          "nombre": FORM_DESTINATARIO['nombreRepresentante'] || '',
+          "razonSocial": FORM_DESTINATARIO['razonSocialRepresentante'] || '',
+          "puesto": FORM_DESTINATARIO['puestoRepresentante'] || '',
+          "telefono": FORM_DESTINATARIO['telefonoRepresentante'] || '',
+          "correoElectronico": FORM_DESTINATARIO['correoRepresentante'] || ''
+        }
+    }
+  }
+
 }

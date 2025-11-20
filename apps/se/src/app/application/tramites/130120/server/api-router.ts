@@ -28,7 +28,7 @@ export const API_GET_CAT_TIPOS_ADUANAS = `sat-t130120/catalogo/tipos-aduanas`;
  * API para el catálogo de tipos de monedas.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-tipos-monedas
  */
-export const API_GET_CAT_TIPOS_MONEDAS = `sat-t130120/tipos-monedas`;
+export const API_GET_CAT_TIPOS_MONEDAS = `sat-t130120/catalogo/tipos-monedas`;
 
 /**
  * API para el catálogo de países.
@@ -47,7 +47,7 @@ export const API_GET_CAT_UNIDADES_ADMINISTRATIVAS = (CVEENTIDAD: string): string
  * @param CVEFRACCION - Clave de la fracción arancelaria para la cual se desean obtener las unidades de medidas tarifarias.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-unidades-medidas-tarifarias
  */
-export const API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS = (CVEFRACCION: string): string => `sat-t130120/fraccion-arrancelaria/${CVEFRACCION}/unidades-medidas-tarifarias`;
+export const API_GET_CAT_UNIDADES_MEDIDAS_TARIFARIAS = (CVEFRACCION: string): string => `sat-t130120/catalogo/fraccion-arrancelaria/${CVEFRACCION}/unidades-medidas-tarifarias`;
 
 /**
  * API para el catálogo de unidades de medida.
@@ -95,4 +95,28 @@ export const API_GET_CAT_FRACCIONES_CALZADOS = (CVEREGIMEN: string, CVECLASIFICA
  * @param claveMoneda - Clave de la moneda para la cual se desea obtener el monto de conversión.
  * @returns 
  */
-export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/registro/solicitud/monto-conversion/${claveMoneda}`;
+export const API_GET_MONTO_CONVERSION = (claveMoneda: string): string => `sat-t130120/solicitud/monto-conversion/${claveMoneda}`;
+
+/**
+ * Api para consultar un fabricante extranjero por su nombre del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/guardar
+ */
+export const API_POST_GUARDAR_TRAMITE = 'sat-t130120/solicitud/guardar'
+
+/**
+ * Api para generar la cadena original de la solicitud del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t130120/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+
+/**
+ * Api para firmar la solicitud del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Registro-Solicitud/firmar_2
+ */
+export const API_POST_FIRMAR = (IDSOLICITUD: string) : string => `sat-t130120/solicitud/${IDSOLICITUD}/firmar`;
+
+/**
+ * Api para consultar el detalle de una solicitud por su folio del tramite 120301.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Consulta-Solicitudes/solicitud-detalle
+ */
+export const API_GET_SOLICITUD_DETALLE = (numFolioTramite: string) : string => `sat-t130120/tramite/${numFolioTramite}/solicitud/detalle`;

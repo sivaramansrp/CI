@@ -2,24 +2,19 @@
  * Este componente maneja el formulario de registro de mercancía.
  */
 
-import { CommonModule } from '@angular/common';
-
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Catalogo, CatalogoServices, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Catalogo, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209State, Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { CommonModule } from '@angular/common';
+import { FECHA_FACTURA } from '../../constantes/certificado-sgp.enum';
+import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
-
-import { Subject, takeUntil } from 'rxjs';
 import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL} from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
-
-import { InputFechaComponent } from "@ng-mf/data-access-user";
-
-import { FECHA_FACTURA } from '../../constantes/certificado-sgp.enum';
 
 /**
  * Este componente maneja el formulario de registro de mercancía.
@@ -67,6 +62,23 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
   @Output() modificarEventMercancia: EventEmitter<boolean> = new EventEmitter<boolean>(false);
 
   /**
+   * Identificador único del trámite asociado a este componente.
+   * @default '110203'
+   */
+  tramites: string = '110209';
+
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**  
+  * Contiene el estado actual de la solicitud del trámite 110209.  
+  * Permite acceder y manipular los datos relacionados con el flujo del trámite.  
+  */
+  public solicitudState!: Tramite110209State;
+
+  /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de mercancías.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -74,7 +86,7 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    * @param {Router} router - Servicio para la navegación.
    * @param {Tramite110209Query} tramite110209Query - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query,private tramite110209Store:Tramite110209Store) {
+  constructor(private fb: FormBuilder, private service: MercanciasService, private router: Router, private tramite110209Query: Tramite110209Query,private tramite110209Store:Tramite110209Store, private catalogoService: CatalogoServices,) {
     this.mercanciaFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
@@ -95,59 +107,43 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getMercanciasValor();
-    this.getTipoFactura();
-    this.getUnidadValor();
-  }
-
-  /**
-   * Obtiene las opciones de tipo de factura desde el servicio.
-   */
-  getTipoFactura(): void {
-    this.service.getTipoDeFactura().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.tipoFacturaOptions = data;
-      }
-    );
-  }
-
-  /**
-   * Obtiene las opciones de unidad de medida desde el servicio.
-   */
-  getUnidadValor(): void {
-    this.service.getUnidad().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: Catalogo[]) => {
-        this.unidadOptions = data;
-      }
-    );
+    this.obtenerUnidadComercializacion();
+    this.obtenerTipoFactura();
   }
 
   /**
    * Obtiene los valores de las mercancías desde el store y los asigna al formulario.
    */
-  getMercanciasValor(): void {
-    this.tramite110209Query.selectTramite110209$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.mercanciaFrom.patchValue({
-          nombreComercial: data.mercanciasSeleccionadas.nombreComercial,
-          nombreIngles: data.mercanciasSeleccionadas.nombreIngles,
-          cantidad: 21343,
-          fechaFactura: '2025-02-25',
-          descripcion:data.descripcion,
-          marca:data.marca,
-          valorMercancia:data.valorMercancia,
-          unidadMedida:data.unidadMedida,
-          numeroFactura:data.numeroFactura,
-          tipoFactura:data.tipoFactura
+    getMercanciasValor(): void {
+    this.tramite110209Query.selectTramite110209$
+    .pipe(
+      takeUntil(this.destroyed$),
+            map((seccionState) => {
+            this.solicitudState = seccionState as Tramite110209State;
+            })
+          )
+          .subscribe();
+      
+        this.mercanciaFrom = this.fb.group({
+          nombreComercial: this.solicitudState.mercanciasSeleccionadas.nombreComercial,
+          nombreIngles: this.solicitudState.mercanciasSeleccionadas.nombreIngles,
+          descripcion:this.solicitudState.descripcion,
+          marca:this.solicitudState.marca,
+          valorMercancia:this.solicitudState.valorMercancia,
+          cantidad: this.solicitudState.cantidad,
+          unidadMedida:this.solicitudState.unidadMedida,
+          numeroFactura:this.solicitudState.numeroFactura,
+          tipoFactura:this.solicitudState.tipoFactura,
+          fechaFactura: this.solicitudState.fechaFactura
         });
+
+        if (this.mercanciaFrom.get('nombreComercial')) {
+          this.mercanciaFrom.get('nombreComercial')?.disable();
+        }
+        if (this.mercanciaFrom.get('nombreIngles')) {
+          this.mercanciaFrom.get('nombreIngles')?.disable();
+        }
       }
-    );
-  }
 
 
     /**
@@ -162,7 +158,35 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
       this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
   
+ /*
+   * Consulta el catálogo de unidades de medida de comercialización basado en los trámites actuales.
+   * El resultado se almacena en la propiedad `comercializacion`.
+   * Se cancela automáticamente la suscripción al destruir el componente.
+   */
+  obtenerUnidadComercializacion(): void {
+    this.catalogoService.unidadesMedidaComercialCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.unidadOptions = response?.datos ?? [];
+        }
+      });
+  }
 
+    /*
+   * Consulta el catálogo de tipos de factura según los trámites actuales.
+   * El resultado se almacena en la propiedad `tipoDatos`.
+   * La suscripción se gestiona automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  obtenerTipoFactura(): void {
+    this.catalogoService.tipoFacturaCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.tipoFacturaOptions = response?.datos ?? [];
+        }
+      });
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

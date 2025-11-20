@@ -6,7 +6,7 @@
           @for (item of encabezadoTablaDocumentos; track $index) {
             <th>{{ item.valor }}</th>
             }
-          <th class="center">Acciones</th>
+          <th class="center">Descargar</th>
         </tr>
       </thead>
       <tbody>
@@ -27,11 +27,11 @@
           }
           <td class="center">
             <button type="button" class="btn btn-link me-2" id="verPdf" data-bs-toggle="button"
-              data-bs-placement="top" title="Ver Documento" (click)="verPdf(row.urlPdf ?? '')">
+              data-bs-placement="top" title="Ver Documento" (click)="verDetalleAcuse(row.urlPdf ?? '', row.nombreArchivo)">
               <i class="bi bi-eye bi-c text-gold"></i>
             </button>
             <button type="button" class="btn btn-link me-2" id="descargarPdf" data-bs-toggle="button"
-              data-bs-placement="top" title="Ver Documento" (click)="descargarPdf(row.urlPdf ?? '')">
+              data-bs-placement="top" title="Ver Documento" (click)="descargarPdfAcuse(row.urlPdf ?? '', row.nombreArchivo)">
               <i class="bi bi-download bi-c text-gray"></i>
             </button>
           </td>

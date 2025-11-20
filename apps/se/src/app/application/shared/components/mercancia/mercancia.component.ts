@@ -13,6 +13,7 @@ import {
   FECHA_FACTURA_REFERENCIA_IDS,
   FECHA_PAGO,
   FRACCION_ARANCELARIA_IDS,
+  MARCA_BRUTA_IDS,
   MARCA_IDS,
   NOMBRE_EN_INGLES_IDS,
   NORMA_ORIGEN_IDS,
@@ -30,6 +31,7 @@ import {
   TIPO_DE_FACTURA_IDS,
   TIPO_DE_FACTURA_REFERENCIA_IDS,
   UMC_IDS,
+  UMC_MARCA_BRUTA_IDS,
   UNIDAD_MEDIDA_COMERCIALIZACION_IDS,
   VALOR_CONTENIDO_REGIONAL_IDS,
   VALOR_MERCANCIA_IDS,
@@ -41,8 +43,10 @@ import {
   InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_DESCRIPCION,
   SeccionLibQuery,
   SeccionLibState,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   CatalogoServices,
@@ -186,6 +190,12 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Lista de facturas disponibles.
    */
   factura: Catalogo[] = [];
+
+  /**
+     * @descripcion
+     * Lista de unidades de medida y clasificación (UMC) disponibles para la marca bruta.
+     */
+  umcMarcaBrutaCatalogo: Catalogo[] = [];
 
   /**
    * @descripcion
@@ -359,14 +369,24 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
   MARCA: number[] = MARCA_IDS;
 
   /**
+   * Contiene los identificadores asociados a la marca bruta.
+   * @type {number[]}
+   */
+  MARCA_BRUTA: number[] = MARCA_BRUTA_IDS;
+
+  /**
+   * Contiene los identificadores en los que el campo "UMC Marca Bruta" es obligatorio.
+   */
+  UMC_MARCA_BRUTA: number[] = UMC_MARCA_BRUTA_IDS;
+  /**
    * Contiene los identificadores en los que el campo "Cantidad" es obligatorio.
    */
-  CRITERIO_PARA_CLASIFICATION: number[]= CRITERIO_PARA_CLASIFICATION;
+  CRITERIO_PARA_CLASIFICATION: number[] = CRITERIO_PARA_CLASIFICATION;
 
   /**
    * Contiene los identificadores en los que el campo "Fecha de pago" es obligatorio.
    */
-  FECHA_DE_PAGO: number[]= FECHA_DE_PAGO;
+  FECHA_DE_PAGO: number[] = FECHA_DE_PAGO;
 
   /**
    * @description
@@ -396,7 +416,8 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private readonly fb: FormBuilder,
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
-    public catalogoServices: CatalogoServices
+    public catalogoServices: CatalogoServices,
+     private validacionesService: ValidacionesFormularioService
   ) { }
 
   /**
@@ -411,9 +432,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     if (this.UNIDAD_MEDIDA_COMERCIALIZACION.includes(this.idProcedimiento)) {
       this.getUmc();
     }
+    if (this.UMC_MARCA_BRUTA.includes(this.idProcedimiento)) {
+      this.getUumcMarcaBruta();
+    }
     this.getUnidadesMedidaComercial();
     this.getTipoFactura();
     this.initActionFormBuild();
+  }
+  /** Método público para marcar todos los campos como tocados y mostrar errores */
+  public markAllFieldsTouched(): void {
+    if (this.mercanciaForm) {
+      this.mercanciaForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -465,21 +495,44 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nombreTecnico: [
         { value: this.datosSeleccionados?.nombreTecnico, disabled: true },
       ],
-      normaOrigen: [{ value: this.datosSeleccionados?.normaOrigen, disabled: true }],
-      nombreIngles: [{ value: this.datosSeleccionados?.nombreIngles, disabled: true }],
-      otrasInstancias: [{ value: this.datosSeleccionados?.otrasInstancias, disabled: true }],
-      criterioParaConferirOrigen: [{ value: this.datosSeleccionados?.criterioParaConferirOrigen, disabled: true }],
-      criterioParaTratoPreferencial: [{ value: this.datosSeleccionados?.criterioParaTratoPreferencial, disabled: true }],
-      criterioParaClasificacion: [this.datosSeleccionados?.criterioParaClasificacion ?? null],
-      fechaDePago: [ this.datosSeleccionados?.fechaDePago ?? null],
-      valorDeContenidoRegional: [{ value: this.datosSeleccionados?.valorDeContenidoRegional, disabled: true }],
+      normaOrigen: [
+        { value: this.datosSeleccionados?.normaOrigen, disabled: true },
+      ],
+      nombreIngles: [
+        { value: this.datosSeleccionados?.nombreIngles, disabled: true },
+      ],
+      otrasInstancias: [
+        { value: this.datosSeleccionados?.otrasInstancias, disabled: true },
+      ],
+      criterioParaConferirOrigen: [
+        {
+          value: this.datosSeleccionados?.criterioParaConferirOrigen,
+          disabled: true,
+        },
+      ],
+      criterioParaTratoPreferencial: [
+        {
+          value: this.datosSeleccionados?.criterioParaTratoPreferencial,
+          disabled: true,
+        },
+      ],
+      criterioParaClasificacion: [
+        this.datosSeleccionados?.criterioParaClasificacion ?? null,
+      ],
+      fechaDePago: [this.datosSeleccionados?.fechaDePago ?? null],
+      valorDeContenidoRegional: [
+        {
+          value: this.datosSeleccionados?.valorDeContenidoRegional,
+          disabled: true,
+        },
+      ],
       fechaFactura: [
         this.datosSeleccionados?.fechaFactura ?? null,
         REQUIRED_FECHA_FACTURA.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
-      marca: [this.datosSeleccionados?.marca ?? null],
+      marca: [this.datosSeleccionados?.marca ?? null, [Validators.pattern(REGEX_DESCRIPCION)]],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [
@@ -492,6 +545,18 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       umc: [
         this.datosSeleccionados?.umc ? this.datosSeleccionados?.umc : '',
         REQUIRED_UMC.includes(this.idProcedimiento)
+          ? [Validators.required]
+          : null,
+      ],
+      marcaBruta: [
+        this.datosSeleccionados?.marcaBruta ? this.datosSeleccionados?.marcaBruta : '',
+        MARCA_BRUTA_IDS.includes(this.idProcedimiento)
+          ? [Validators.required]
+          : [],
+      ],
+      umcMarcaBruta: [
+        this.datosSeleccionados?.umcMarcaBruta ? this.datosSeleccionados?.umcMarcaBruta : '',
+        UMC_MARCA_BRUTA_IDS.includes(this.idProcedimiento)
           ? [Validators.required]
           : null,
       ],
@@ -539,6 +604,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Cierra el modal y oculta la alerta.
    */
   cerrarModal(): void {
+    this.mercanciaForm.reset();
     this.cerrarClicado.emit();
     this.mostrarAlerta = false;
   }
@@ -548,8 +614,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Activa la alerta en el modal.
    */
   activarModal(): void {
-    this.mostrarAlerta = true;
-    this.abrirModal();
+    this.acceptar(false);
   }
   /*
    * @descripcion
@@ -577,10 +642,15 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       onlySelf: false,
       emitEvent: false,
     });
-
+    
+    if (this.mercanciaForm.valid) {
+      this.mostrarAlerta = true;
+      this.abrirModal();
+    }
     if (!(agregar && this.mercanciaForm.valid)) {
       return;
     }
+
 
     this.guardarClicado.emit(this.mercanciaForm.value);
     const MERCANIADATO = this.mercanciaForm.getRawValue();
@@ -596,6 +666,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
   }
+    /**
+     * Valida un campo del formulario.
+     *
+     * @param {FormGroup} form - El formulario reactivo.
+     * @param {string} field - El nombre del campo a validar.
+     * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+     */
+    isValid(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) || false;
+    }
 
   /**
    * Construye un objeto de tipo `Mercancia` a partir de los datos proporcionados,
@@ -637,7 +717,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       unidadMedidaMasaBruta: FALLBACK(MERCANIADATO.unidadMedidaMasaBruta),
       complementoClasificacion: FALLBACK(MERCANIADATO.complementoClasificacion),
       complementoDescripcion: FALLBACK(MERCANIADATO.complementoDescripcion),
-      criterioParaClasificacion: FALLBACK(MERCANIADATO.criterioParaClasificacion),
+      criterioParaClasificacion: FALLBACK(
+        MERCANIADATO.criterioParaClasificacion
+      ),
       fechaDePago: FALLBACK(MERCANIADATO.fechaDePago),
       fraccionNaladi: MERCANIADATO.fraccionNaladi,
       fraccionNaladiSa93: MERCANIADATO.fraccionNaladiSa93,
@@ -646,6 +728,17 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       nalad: MERCANIADATO.nalad,
       fechaFactura: MERCANIADATO.fechaFactura,
     };
+  }
+
+  /**
+   * @descripcion
+   * Obtiene el catálogo de tipos de factura y actualiza las opciones del campo de formulario correspondiente.
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza el campo 'tipoFactura' en `factura` con las opciones obtenidas.
+   */
+  conseguirUMCDescripcion(clave: string): string {
+    const UMC = this.optionsUMC.find((item) => item.clave === clave);
+    return UMC ? UMC.descripcion : '';
   }
 
   /**
@@ -723,7 +816,20 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionTipoFactura(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      tipoFactura: evento.clave,
+      tipoFactura: evento.descripcion,
+    });
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el valor del control 'marcaBruta' en el formulario reactivo
+   * 'mercanciaForm' cuando el usuario selecciona una marca bruta del catálogo.
+   * 
+   * @param evento Objeto del tipo Catalogo que contiene la opción seleccionada.
+   */
+  selectionUmcMarcaBruta(evento: Catalogo): void {
+    this.mercanciaForm.patchValue({
+      umcMarcaBruta: evento.descripcion,
     });
   }
 
@@ -736,7 +842,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   selectionUMC(evento: Catalogo): void {
     this.mercanciaForm.patchValue({
-      umc: evento.clave,
+      umc: evento.descripcion,
     });
   }
 
@@ -790,5 +896,53 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((res) => {
         this.factura = res.datos ?? [];
       });
+  }
+
+  /**
+   * @description
+   * Obtiene el catálogo de Unidades de Medida de Masa Bruta (UUMC) para la marca bruta
+   **/
+  getUumcMarcaBruta(): void {
+    const TRAMITES_ID = this.idProcedimiento.toString();
+    this.catalogoServices
+      .unidadMasaBrutaCatalogo(TRAMITES_ID)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((res) => {
+        this.umcMarcaBrutaCatalogo = res.datos ?? [];
+      });
+  }
+
+  /**
+   *  @description
+   * Valida y formatea el valor de un campo de entrada para asegurarse de que es un número decimal válido.
+   * Si el valor es un número válido, se formatea a cuatro decimales y se actualiza el formulario reactivo.
+   * Si el valor no es válido, se limpia el campo de entrada.
+   * @param evento 
+   */
+  validarCantidadDecimal(evento: Event): void {
+    const INPUT_ELEMENT = evento.target as HTMLInputElement;
+    if (!isNaN(Number(INPUT_ELEMENT.value)) && INPUT_ELEMENT.value.trim() !== '') {
+      const NUMERO_FORMATEADO = parseFloat(INPUT_ELEMENT.value).toFixed(4);
+      INPUT_ELEMENT.value = NUMERO_FORMATEADO;
+    } else {
+      INPUT_ELEMENT.value = '';
+    }
+  }
+
+  /**
+   * @description
+   * Valida y formatea el valor de un campo de entrada para mercancía, asegurándose de que es un número decimal válido.
+   * Si el valor es un número válido, se formatea a cuatro decimales y se actualiza el campo de entrada.
+   * Si el valor no es válido, se limpia el campo de entrada.
+   * @param evento Evento que contiene el valor del campo de entrada a validar.
+   */
+  validarMercanciaDecimal(evento: Event): void {
+    const INPUT_ELEMENT = evento.target as HTMLInputElement;
+    if (!isNaN(Number(INPUT_ELEMENT.value)) && INPUT_ELEMENT.value.trim() !== '') {
+      const NUMERO_FORMATEADO = parseFloat(INPUT_ELEMENT.value).toFixed(4);
+      INPUT_ELEMENT.value = NUMERO_FORMATEADO;
+    } else {
+      INPUT_ELEMENT.value = '';
+    }
   }
 }

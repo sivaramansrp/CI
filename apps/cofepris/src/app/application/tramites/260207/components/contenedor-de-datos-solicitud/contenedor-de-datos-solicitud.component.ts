@@ -24,7 +24,7 @@ import { ELEMENTOS_REQUERIDOS } from '../../constants/tratamientos-especiales.en
 import { ID_PROCEDIMIENTO } from '../../constants/tratamientos-especiales.enum';
 import { Subject } from 'rxjs';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component
  * @name ContenedorDeDatosSolicitudComponent
@@ -128,6 +128,22 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
+   /**
+             * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+             * @description
+             * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+             * mediante el decorador `@ViewChild`.
+             *
+             * Esta propiedad permite acceder a los métodos públicos y propiedades
+             * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+             *
+             * > Nota: Angular inicializa esta referencia después de que la vista
+             * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+             */
+            @ViewChild(DatosDeLaSolicitudComponent)
+            datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+         
+
   /**
    * @property {string} idProcedimiento
    * @description
@@ -187,7 +203,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            JSON.parse(JSON.stringify(this.tramiteState.tablaMercanciasConfigDatos));
         })
       )
       .subscribe();
@@ -240,6 +256,26 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260207Store.updateDatosSolicitudFormState(event);
   }
 
+   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
+
   /**
    * @method datosDeTablaSeleccionados
    * @description
@@ -256,6 +292,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       opcionesColapsableState: event.opcionesColapsableState,
     }));
   }
+
 
   /**
    * @method ngOnDestroy

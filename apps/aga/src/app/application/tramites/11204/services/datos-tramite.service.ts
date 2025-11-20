@@ -2,7 +2,7 @@ import { RespuestaCatalog, RespuestaConsulta } from "../models/datos-tramite.mod
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
+import { RespuestaCatalogos,ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "../models/datos-tramite.model";
 
 /**
@@ -13,38 +13,23 @@ import { RespuestaContenedor } from "../models/datos-tramite.model";
 })
 export class DatosTramiteService {
   /**
-   * Constructor del servicio.
-   * @param http Cliente HTTP para realizar solicitudes a la API.
+   * Constructor del servicio DatosTramiteService.
+   * 
+   * @param {HttpClient} http - Cliente HTTP para realizar peticiones a APIs o archivos JSON.
    */
+  
+  urlServer = ENVIRONMENT.API_HOST;
+
   constructor(
     private http: HttpClient
     // eslint-disable-next-line no-empty-function
   ) {}
 
-  /**
-   * Obtiene la lista de contenedores.
-   * @returns Un observable con la respuesta de los catálogos de contenedores.
-   */
-  getContenedores(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`assets/json/11204/tipoLista.json`);
-  }
 
-  /**
-   * Agrega una solicitud.
-   * @returns Un observable con la respuesta del contenedor.
-   */
-  agregarSolicitud(): Observable<RespuestaContenedor> {
-    return this.http.get<RespuestaContenedor>(`assets/json/11204/contenedorLista.json`);
-  }
+ 
 
-  /**
-   * Obtiene la lista de aduanas.
-   * @param _catalogo Identificador del catálogo.
-   * @returns Un observable con la respuesta de los catálogos de aduanas.
-   */
-  getAduanaLista(_catalogo: string): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`assets/json/11204/aduanaList.json`);
-  }
+  
+
 
   /**
    * Obtiene los datos para mostrar en la tabla.
@@ -64,6 +49,58 @@ export class DatosTramiteService {
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/11204/consultaDatos.json`);
+  }
+
+  /**
+   * Retrieves the list of customs offices (aduanas) from the server.
+   *
+   * Sends a GET request to the `/api/sat-t11201/catalogo/aduanas` endpoint.
+   *
+   * @returns An `Observable` emitting the response containing the customs catalog data.
+   */
+  getAduanaLista(): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11204/catalogo/aduanas` ;
+    return this.http.get(ENDPOINT);
+  }
+
+  
+  /**
+   * Obtiene la lista de contenedores.
+   * @returns Un observable con la respuesta de los catálogos de contenedores.
+   */
+  getContenedores(): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11204/catalogo/tipo-contenedor` ;
+    return this.http.get(ENDPOINT);
+  }
+
+
+  /**
+   * Sends a POST request to add a new solicitud (request) with the provided payload and solicitud ID.
+   *
+   * @param PAYLOAD - The data to be sent in the body of the POST request.
+   * @param idSolicitud - The identifier of the solicitud to be validated and added.
+   * @returns An Observable emitting the response from the server.
+   */
+  agregarSolicitud(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-tc/validar`
+    return this.http.post(ENDPOINT, PAYLOAD);
+  }
+
+   /**
+   * Uploads a file and validates its CSV content for a specific solicitud (request).
+   *
+   * @param PAYLOAD - The payload containing the file data to be uploaded.
+   * @param idSolicitud - The identifier of the solicitud for which the file is being uploaded.
+   * @returns An Observable emitting the server response after file upload and validation.
+   */
+  fileUpload(PAYLOAD:any): Observable<any> {
+      const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/constancia-tc/validar-csv` ;
+      return this.http.post(ENDPOINT,PAYLOAD);
+  }
+
+  solicitudGuardar(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.urlServer}/api/sat-t11204/solicitud/guardar`
+    return this.http.post(ENDPOINT, PAYLOAD);
   }
 
 }

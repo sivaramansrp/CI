@@ -14,27 +14,28 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, } from '@ng-mf/data-access-user';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CategoriaMensaje, Notificacion, SolicitanteQuery, SolicitanteState, Usuario, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, ERROR_FORMA_FALTAN, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { GuardadoService } from '../../services/guardado.service';
+import { GuardarSolicitudCompletaRequest } from '../../models/request/guardar-solicitud-request.model';
 import { IniciarRequest } from '../../models/request/iniciar-request.model';
 import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { GuardadoService } from '../../services/guardado.service';
-import { GuardarSolicitudCompletaRequest } from '../../models/request/guardar-solicitud-request.model';
-import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
+import { USUARIO_INFO } from '../../../../shared/enum/datos-usuario-documentos';
 
-import { Subject, map, takeUntil } from 'rxjs';
-import { setMonth } from 'ngx-bootstrap/chronos/utils/date-setters';
+
 
 
 /**
@@ -114,6 +115,26 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    */
   public formularioAlertaError = ERROR_FORMA_ALERT;
 
+
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+  * Indica si el botón para cargar archivos está habilitado.
+  */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+  * Indica si la sección de carga de documentos está activa.
+  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+  */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+    * Evento que se emite para cargar archivos.
+    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+    */
+  cargarArchivosEvento = new EventEmitter<void>();
+
   /**
    * Contiene el mensaje de error que se muestra cuando el año ingresado no es válido.
    */
@@ -128,6 +149,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    * Controla la visibilidad del mensaje de error cuando el año ingresado no es válido.
    */
   anoFormValido: boolean = false;
+
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true;
 
   /**
    * @property {FormGroup} formGroup
@@ -319,6 +343,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     txtBtnSig: 'Continuar',
   };
 
+  numeroSolicitud: string = '';
   /**
    * @constructor
    * @description Constructor del componente ElegibilidadTextilesComponent.
@@ -343,16 +368,19 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private seccionStore: SeccionLibStore,
     private guardadoService: GuardadoService,
-    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
-    private tramiteStore: Tramite120301Store,
     private tramiteQuery: Tramite120301Query,
     private solicitanteQuery: SolicitanteQuery,
-    private textilesState: ElegibilidadDeTextilesStore) {
+  ) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
     });
+    const CURRENT_STATE = this.tramiteQuery.getValue();
+    if (CURRENT_STATE.idSolicitud) {
+      this.numeroSolicitud = CURRENT_STATE.idSolicitud.toString();
+    }
   }
 
   /**
@@ -432,6 +460,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.datosPasos.indice = this.indice;
     this.wizardComponent.atras();
     this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
+  }
+
+  onMensajeError(mensaje: string): void {
+    this.formularioAlertaError = mensaje;
+    this.esFormaValido = true;
   }
 
   guardarSolicitudCompleta(): void {
@@ -607,6 +640,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
         this.solicitudState = state;
+        if (state.idSolicitud) {
+          this.numeroSolicitud = state.idSolicitud.toString() || '';
+        }
       });
 
     this.ElegibilidadDeTextilesQuery.selectTextile$
@@ -770,6 +806,68 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   }
 
   /**
+* Método para manejar el evento de carga de documentos.
+* Actualiza el estado del botón de carga de archivos.
+*  carga - Indica si la carga de documentos está activa o no.
+* {void} No retorna ningún valor.
+*/
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+ * Método para navegar a la sección anterior del wizard.
+ * Actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param cargando Valor booleano que indica si la carga está en progreso.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
+
+
+  /**
  * @method ngOnDestroy
  * @description Método que se ejecuta cuando el componente es destruido.
  * Implementa la limpieza necesaria para evitar fugas de memoria cancelando
@@ -783,4 +881,5 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

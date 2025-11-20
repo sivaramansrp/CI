@@ -64,4 +64,7 @@ export interface EvaluarTratadosResponse {
 
   /** Descripción del proceso (null si no aplica) */
   descripcion_proceso: string | null;
+
+   /** Clave grupo criterio */
+  cve_grupo_criterio: string | null;
 }

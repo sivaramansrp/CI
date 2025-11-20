@@ -1,15 +1,16 @@
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
 import { FilaSolicitud, FraccionArancelariaDecripcionModel } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CommonModule } from '@angular/common';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
 import { RegistroSolicitudService } from '../../../tramites/220201/services/220201/registro-solicitud/registro-solicitud.service';
 import { Subject } from 'rxjs';
+
+import { CatalogosService } from '../../../tramites/220201/services/220201/catalogos/catalogos.service';
 
 
 
@@ -209,7 +210,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    private catalogoService: CatalogosService
   ) {
   }
 
@@ -291,7 +293,9 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       presentacion: [''],
       cantidadPresentacion: [],
       detalleProductos: this.fb.array([]),
-      modificado: [false], 
+      clave_fraccion: [''],
+      clave_umt: [''],
+      modificado: [false],
     });
 
     this.detalleForm = this.fb.group({
@@ -352,8 +356,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   agregarProductos(): void {
     const FUEMODIFICADO = this.productosForm.get('modificado')?.value as boolean;
     const DETALLE_PRODUCTOS_ARRAY = this.productosForm.get('detalleProductos') as FormArray;
-    
-    if(FUEMODIFICADO) {
+
+    if (FUEMODIFICADO) {
       this.productosForm.reset();
       this.detalleForm.reset();
       this.detalleTablaDatos = [];
@@ -363,8 +367,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       this.productosForm.markAllAsTouched();
     }
     else {
-    
-        // Formatea cantidadUMC a dos decimales si es un número válido
+
+      // Formatea cantidadUMC a dos decimales si es un número válido
       let cantidadUMCValue = this.productosForm.get('cantidadUMC')?.value || '';
       if (cantidadUMCValue !== '' && !isNaN(Number(cantidadUMCValue))) {
         cantidadUMCValue = Number(cantidadUMCValue).toFixed(2);
@@ -374,37 +378,42 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         DETALLE_PRODUCTOS_ARRAY.push(this.fb.group(detalle));
       });
 
-  // Build the FilaSolicitud object from the form values
-  const NUEVOS_SENSIBLES: FilaSolicitud = {
-    ...this.productosForm.getRawValue(),
-    noPartida: FUEMODIFICADO ? this.productosForm.get('noPartida')?.value : this.cantidadRegistros + 1,
-    descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.productosForm.get('tipoRequisito')?.value)?.descripcion || '',
-    descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.productosForm.get('especie')?.value)?.descripcion || '',
-    descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.productosForm.get('uso')?.value)?.descripcion || '',
-    descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.productosForm.get('paisDeOrigen')?.value)?.descripcion || '',
-    descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.productosForm.get('paisDeProcedencia')?.value)?.descripcion || '',
-    descripcionNico: this.productosForm.get('descripcionNico')?.value || '',
-    descripcionFraccion: this.productosForm.get('descripcionFraccion')?.value || '',
-    descripcionUMT: this.productosForm.get('umt')?.value || '',
-    descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
-    tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
-    tipoPlanta: this.catalogosDatos.tipoPlantaList.find(item => item.clave === this.productosForm.get('tipoPlanta')?.value)?.descripcion || '',
-    plantaAutorizadaOrigen: this.catalogosDatos.plantaAutorizadaOrigenList.find(item => item.clave === this.productosForm.get('plantaAutorizadaOrigen')?.value)?.descripcion || '',   
-    tipoPresentacionDescripcion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
-    cantidadUMC: cantidadUMCValue,
-    modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
-    detalleProductos: this.detalleTablaDatos
-  };
+      // Construye el objeto FilaSolicitud a partir de los valores del formulario
+      const NUEVOS_SENSIBLES: FilaSolicitud = {
+        ...this.productosForm.getRawValue(),
+        noPartida: FUEMODIFICADO ? this.productosForm.get('noPartida')?.value : this.cantidadRegistros + 1,
+        descripcionTipoRequisito: this.catalogosDatos.tipoRequisitoList.find(item => item.clave === this.productosForm.get('tipoRequisito')?.value)?.descripcion || '',
+        descripcionEspecie: this.catalogosDatos.especieList.find(item => item.clave === this.productosForm.get('especie')?.value)?.descripcion || '',
+        descripcionUso: this.catalogosDatos.usoList.find(item => item.clave === this.productosForm.get('uso')?.value)?.descripcion || '',
+        descripcionPaisDeOrigen: this.catalogosDatos.paisOrigenList.find(item => item.clave === this.productosForm.get('paisDeOrigen')?.value)?.descripcion || '',
+        descripcionPaisDeProcedencia: this.catalogosDatos.paisDeProcedenciaList.find(item => item.clave === this.productosForm.get('paisDeProcedencia')?.value)?.descripcion || '',
+        descripcionNico: this.productosForm.get('descripcionNico')?.value || '',
+        descripcionFraccion: this.productosForm.get('descripcionFraccion')?.value || '',
+        descripcionUMT: this.productosForm.get('umt')?.value || '',
+        descripcionUMC: this.catalogosDatos.umcList.find(item => item.clave === this.productosForm.get('umc')?.value)?.descripcion || '',
+        tipoPresentacion: this.catalogosDatos.tipoPresentacionList.find(item => item.clave === this.productosForm.get('tipoPresentacion')?.value)?.descripcion || '',
+        tipoPlanta: this.productosForm.get('tipoPlanta')?.value || '',
+        plantaAutorizadaOrigen: this.productosForm.get('plantaAutorizadaOrigen')?.value || '',
+        tipoPresentacionDescripcion: this.productosForm.get('tipoPresentacion')?.value || '',
+        cantidadUMC: cantidadUMCValue,
+        modificado: FUEMODIFICADO || this.cantidadRegistros > 0 ? true : false,
+        fraccionArancelaria: this.productosForm.get('clave_fraccion')?.value || '',
+        nico: this.productosForm.get('nico')?.value || '',
+        umt: this.productosForm.get('clave_umt')?.value || '',
+        umc: this.productosForm.get('umc')?.value || '',
+        detalleProductos: this.detalleTablaDatos
+      };
+      console.warn('NUEVOS_SENSIBLES', NUEVOS_SENSIBLES);
 
-  // Si no hay selección, agrega normalmente
-  this.agregarDatosFormulario.emit(
-    {
-      formulario: NUEVOS_SENSIBLES,
-      detallasDatosTablaDatos: this.detalleTablaDatos
-    }
-  );
+      // Si no hay selección, agrega normalmente
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: NUEVOS_SENSIBLES,
+          detallasDatosTablaDatos: this.detalleTablaDatos
+        }
+      );
 
-    this.cerrar.emit();
+      this.cerrar.emit();
     }
   }
 
@@ -474,6 +483,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       (response: BaseResponse<FraccionArancelariaDecripcionModel>) => {
         if (response && response.codigo === '00' && response.datos) {
           this.productosForm.get('descripcionFraccion')?.setValue(response.datos.descripcion);
+          this.productosForm.get('clave_fraccion')?.setValue(response.datos.id_fraccion);
         } else {
           this.productosForm.get('descripcionFraccion')?.setValue('');
         }
@@ -483,6 +493,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.registroSolicitudService.obtieneUnidadMedida(220201, VALOR).subscribe(
       (response: BaseResponse<Catalogo>) => {
         if (response && response.codigo === '00' && response.datos) {
+          this.productosForm.get('clave_umt')?.setValue(response.datos.cve_unidad_medida);          
           this.productosForm.get('umt')?.setValue(response.datos.descripcion);
         } else {
           this.productosForm.get('umt')?.setValue('');
@@ -492,6 +503,14 @@ export class SubProductosComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Establece los valores de la descripción del NICO en el formulario de productos
+   * utilizando los valores de fracción arancelaria y NICO proporcionados.
+   * 
+   * Realiza una solicitud al servicio `registroSolicitudService` para obtener
+   * la descripción del NICO correspondiente y actualiza el formulario con el
+   * resultado. Si no se encuentra una descripción válida, se establece un valor vacío.
+   */
   setValoresStoreFraccionNico(): void {
     const VALOR_FRACCION = this.productosForm.value.fraccionArancelaria;
     const VALOR_NICO = this.productosForm.value.nico;
@@ -537,8 +556,6 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       return;
     }
 
-
-
     if (this.detalleForm.value.numeroDeLote !== '') {
       const DETALLE: DetallasDatos = {
         numeroDeLote: this.detalleForm.value.numeroLote,
@@ -550,17 +567,18 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         fechaFinCaducidadProducto: this.detalleForm.value.fechaFinCaducidadProducto,
       };
       this.detalleTablaDatos = [...this.detalleTablaDatos, DETALLE];
-
-
-
-
-
       this.detalleForm.reset();
     }
     this.detalleForm.get('rangoDeFecha')?.setValue('si');
   }
 
 
+  /**
+   * Actualiza el valor de un campo de formulario con una nueva fecha y marca el campo como no modificado.
+   * 
+   * @param nuevo_valor - El nuevo valor de fecha que se asignará al campo.
+   * @param campo - El nombre del campo en el formulario que será actualizado.
+   */
   public seleccionaFecha(nuevo_valor: string, campo: string): void {
     this.detalleForm.get(campo)?.setValue(nuevo_valor);
     this.detalleForm.get(campo)?.markAsUntouched();
@@ -599,6 +617,11 @@ export class SubProductosComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Maneja la confirmación de acciones en un modal según el proceso actual.
+   * 
+   * @param confirmar - Indica si se confirma la acción (true) o se cancela (false).
+   */
   confirmacionModal(confirmar: boolean): void {
     switch (this.procesoModal) {
       case 'lda_dd':
@@ -610,8 +633,41 @@ export class SubProductosComponent implements OnInit, OnDestroy {
           break;
         }
       default:
-        // No action required for other cases
+        // No se requiere ninguna acción para otros casos
         break;
+    }
+  }
+
+  /**
+   * Obtiene la lista de plantas autorizadas según el tipo de planta y el país de origen seleccionados.
+   * Si no se encuentran plantas autorizadas, muestra una notificación de advertencia al usuario.
+   *
+   * @remarks
+   * Este método realiza una llamada al servicio `catalogoService` para obtener el catálogo de plantas autorizadas.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  plantaAutorizadaOrigen(): void {
+    const VALORTIPOPLANTA = this.productosForm.value.tipoPlanta;
+    const VALORPAISDEORIGEN = this.productosForm.value.paisDeOrigen;
+
+    if (VALORPAISDEORIGEN && VALORTIPOPLANTA) {
+      this.catalogoService.obtieneCatalogoPlantasAutorizadas(220201, VALORPAISDEORIGEN, VALORTIPOPLANTA).subscribe((data) => {
+        if (data.datos && data.datos.length > 0) {
+          this.catalogosDatos.plantaAutorizadaOrigenList = data.datos;
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'warning',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'No existen plantas para el tipo seleccionado.',
+            cerrar: false,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+        }
+      });
     }
   }
 

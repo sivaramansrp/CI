@@ -1,7 +1,7 @@
-import { CatalogoServices,InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoServices, InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent, formatFechaCustom } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -10,10 +10,12 @@ import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/11020
 import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponse, CertificadoData, TablaRow } from '../../models/datos-tramite.model';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
+import {ENVIRONMENT} from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
-import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
@@ -33,6 +35,22 @@ import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.
   styleUrl: './datos-busqueda.component.css',
 })
 export class DatosBusquedaComponent implements OnInit, OnDestroy {
+/**
+ * Constante que define los tipos de búsqueda disponibles, 
+ * incluyendo la búsqueda por número de certificado y por tratado o país/bloque.
+ */
+  private readonly SEARCH_TYPE_ID = {
+    CERTIFICADO: 0, // "Por número de certificado"
+    PAIS_DEL_TRATADO: 1 // "Por Tratado/Acuerdo País/Bloque"
+  } as const;
+
+/**
+ * Obtiene el índice de la opción seleccionada en el grupo de radios,
+ * comparando el valor actual seleccionado con las opciones disponibles.
+ */
+  private getSelectedOptionIndex(): number {
+    return this.radioOptions.findIndex(option => option.value === this.valorSeleccionado);
+  }
 
   /**
   * Almacena el valor seleccionado, que puede ser un string o un número.
@@ -153,6 +171,23 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   tramites:string='110203';
 
+  /**
+ * Indica si una fila de la tabla o listado está actualmente seleccionada.
+ */
+  public filaSeleccionada: boolean = false;
+
+  /**
+ * Almacena los datos de las filas que han sido seleccionadas en una tabla.
+ * Cada elemento del arreglo corresponde a un objeto de tipo `TableBodyData`.
+ */
+  public datosFilasSeleccionadas: TableBodyData[] = [];
+
+  /**
+ * Almacena el estado completo del certificado de la solicitud 110203.
+ * Se utiliza internamente en la clase para mantener los datos del certificado actual.
+ */
+  private certificadoState!: Solicitud110203State;
+
   /** 
    * Constructor del componente.
    * Se inyectan las dependencias necesarias para el funcionamiento del componente.
@@ -245,9 +280,21 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
      * Si el usuario cambia el valor, este se almacena en la tienda de Akita  
      * llamando al método setTratadoAcuerdo.  
      */
-    this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(valor => this.tramite110203Store.setTratadoAcuerdo(valor));
+  this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
+  .pipe(takeUntil(this.unsubscribe$),
+   distinctUntilChanged(),
+  debounceTime(200))
+  .subscribe(valor => {
+    this.tramite110203Store.setTratadoAcuerdo(valor);
+    
+    this.datosBusquedaFormulario.get('paisBloque')?.setValue('', { emitEvent: false });
+    
+    if (valor && valor.trim() !== '') {
+      this.obtenerPaisesPorTratado(valor);
+    } else {
+      this.paisBloque = [];
+    }
+  });
 
     /** 
      * Escucha los cambios en el campo "paisBloque" del formulario.  
@@ -261,15 +308,8 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
-
-    /** 
-    * Llama a la función para obtener los datos del establecimiento.
-    */
-    this.getEstableCimiento();
     
     this.obtenerTratadoAcuerdo();
-
-    this.obtenerPaisesBloque();
   }
   /**
    * Handles radio value changes.
@@ -281,14 +321,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.valorSeleccionado = valor;
     this.validadoresActualización();
     this.tramite110203Store.setValorSeleccionado(valor);
-  }
-
-  /**
-   * Assigns establishment table data, including headers and body, from a JSON file.
-   */
-  private getEstableCimiento(): void {
-    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
-    this.establecimientoBodyData = this.destinatarioTableData?.cuerpoTabla;
   }
 
   /**
@@ -312,16 +344,18 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * - Clears validators if no condition matches.
    */
   private validadoresActualización(): void {
+    const SELECCIONADO_INDICE = this.getSelectedOptionIndex();
+    
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.setValidators(
-      this.valorSeleccionado === 'Por número de certificado' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.CERTIFICADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('paisBloque')?.setValidators(
-      this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque' ? Validators.required : null
+      SELECCIONADO_INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO ? Validators.required : null
     );
 
     this.datosBusquedaFormulario.get('numeroDeCertificado')?.updateValueAndValidity();
@@ -335,38 +369,51 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
   /** 
    * Método para realizar la búsqueda y mostrar la tabla de resultados.
    */
-public buscar(): void {
-  if (!this.datosBusquedaFormulario.valid) {
-    if (this.valorSeleccionado === 'Por número de certificado') {
+  public buscar(): void {
+    if (!this.datosBusquedaFormulario.valid) {
+      const INDICE = this.getSelectedOptionIndex();
+      
+      let mensaje = 'Datos requeridos';
+      if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+        mensaje = 'El número de certificado es requerido';
+      } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+        mensaje = 'La selección de un país/bloque es requerida';
+      }
+
       this.alertaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'El número de certificado es requerido',
+        mensaje,
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    } else if (this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque') {
-      this.alertaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'La selección de un país/bloque es requerida',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+    } else {
+      this.verTabla = true;
+      this.buscarDatos();
     }
-  } else {
-    this.verTabla = true;
   }
+
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por número de certificado.
+ * @returns `true` si la opción seleccionada es "Por número de certificado", de lo contrario `false`.
+ */
+busquedaDeCertificado(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.CERTIFICADO;
 }
 
+/**
+ * Verifica si la búsqueda seleccionada corresponde a la opción de 
+ * búsqueda por tratado, país o bloque.
+ * @returns `true` si la opción seleccionada es "Por Tratado/País/Bloque", de lo contrario `false`.
+ */
+busquedaDeTratadoPais(): boolean {
+  return this.getSelectedOptionIndex() === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO;
+}
 
   /**
    * Restores form values from global state.
@@ -391,8 +438,21 @@ public buscar(): void {
    * Redirects to `/pago/seleccion-tramite` using Angular's Router.
    */
   navigateToSeleccionTramite(): void {
+    if (!this.filaSeleccionada) {
+    this.alertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Es necesario seleccionar un certificado',
+      cerrar: false,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  } else {
     this.router.navigate(['../tecnicosdatos'], { relativeTo: this.route });
-
+  }
   }
 
   /**
@@ -404,7 +464,7 @@ public buscar(): void {
    * el componente se destruye, evitando fugas de memoria.
    */
   obtenerTratadoAcuerdo(): void {
-    this.catalogoService.tratadosAcuerdosCatalogoDatos(this.tramites,"UE")
+    this.catalogoService.tratadosAcuerdosCatalogoDatosNew(this.tramites)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
@@ -413,20 +473,165 @@ public buscar(): void {
       });
   }
 
-  /**
-   * Obtiene el catálogo de países por bloque relacionado con los trámites actuales.
-   * Realiza una solicitud al servicio de catálogo y actualiza la propiedad `paisBloque` con los datos recibidos.
-   * La suscripción se cancela automáticamente cuando el componente se destruye.
-   */
-  obtenerPaisesBloque(): void {
-    this.catalogoService.paisBloqueCatalogo(this.tramites)
+/**
+ * Actualiza el estado de selección de filas y guarda las filas seleccionadas.
+ *
+ * @param tieneSeleccion - Indica si hay filas seleccionadas (true) o no (false).
+ */
+  onRowSelectionChange(tieneSeleccion: boolean): void {
+  this.filaSeleccionada = tieneSeleccion;
+    if (tieneSeleccion) {
+    this.datosFilasSeleccionadas = this.establecimientoBodyData.filter(row => row.selected);
+  } else {
+    this.datosFilasSeleccionadas = [];
+  }
+}
+
+/**
+ * Obtiene la lista de países asociados a un tratado y, si hay resultados, 
+ * obtiene los tratados y acuerdos relacionados al primer país clave encontrado.
+ *
+ * @param tratadoId - Identificador del tratado para filtrar los países.
+ */
+obtenerPaisesPorTratado(tratadoId: string): void {
+  this.catalogoService.getPaisesPorTratado(this.tramites, tratadoId)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (response) => {        
+        if (response?.datos && response.datos.length > 0) {
+          this.paisBloque = response.datos;
+        } else {
+          this.paisBloque = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error obteniendo países por tratado:', error);
+        this.paisBloque = [];
+      }
+    });
+}
+
+/**
+ * Ejecuta la búsqueda de datos según los criterios definidos en el estado actual.
+ */
+buscarDatos(): void {
+
+    type CertificadoPayload =
+      | { numeroCertificado: string; rfcSolicitante: string }
+      | { cvePaisSeleccionado: string; cveTratadoAcuerdoSeleccionado: string; rfcSolicitante: string };
+
+    let PAYLOAD: CertificadoPayload;
+    const INDICE = this.getSelectedOptionIndex();
+
+    if (INDICE === this.SEARCH_TYPE_ID.CERTIFICADO) {
+      PAYLOAD = {
+        numeroCertificado: this.datosBusquedaFormulario.get('numeroDeCertificado')?.value || '',
+        rfcSolicitante: ENVIRONMENT.RFC
+      };
+    } else if (INDICE === this.SEARCH_TYPE_ID.PAIS_DEL_TRATADO) {
+      PAYLOAD = {
+        cvePaisSeleccionado: `P-${this.datosBusquedaFormulario.get('paisBloque')?.value || ''}`,
+        cveTratadoAcuerdoSeleccionado: this.datosBusquedaFormulario.get('tratadoAcuerdo')?.value || '',
+        rfcSolicitante: ENVIRONMENT.RFC
+      };
+    } else {
+      return;
+    }
+
+    this.Solocitud110203Service.buscarCertificado(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => { 
-            this.paisBloque = response?.datos ?? [];
+      .subscribe((response: unknown) => {
+      const API_RESPONSE = response as ApiResponse;
+      const DATOS: CertificadoData[] = API_RESPONSE.datos ?? [];
+      this.tramite110203Store.setBuscarPayload(DATOS);
+
+        if (DATOS.length > 0) {
+          this.procesarDatosCertificado(DATOS[0]);
+          this.actualizarTabla(DATOS);
         }
       });
-  }
+
+    this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla;
+}
+
+private procesarDatosCertificado(data: CertificadoData): void {
+    this.actualizarDatosTratado(data);
+    this.actualizarDatosDestinatario(data);
+    this.actualizarDatosTransporte(data);
+    this.actualizarDatosCertificado(data);
+    this.actualizarDatosMercancias(data);
+}
+
+private actualizarDatosTratado(data: CertificadoData): void {
+    this.tramite110203Store.setTratado(data.tratadoAsociado.nombre ?? '');
+    this.tramite110203Store.setBloque(data.paisAsociado.nombre ?? '');
+    this.tramite110203Store.setOrigen(data.cvePaisFabricacion || 'México');
+    this.tramite110203Store.setDestino(data.solicitud.paisDestino ?? '');
+    this.tramite110203Store.setExpedicion(data.fechaExpedicion ?? '');
+    this.tramite110203Store.setVencimiento(data.fechaVencimiento ?? '');
+}
+
+private actualizarDatosDestinatario(data: CertificadoData): void {
+    const PERSONA = data.solicitud.personaSolicitud;
+    this.tramite110203Store.setNombre(PERSONA.nombre ?? '');
+    this.tramite110203Store.setPrimer(PERSONA.apellidoMaterno ?? '');
+    this.tramite110203Store.setSegundo(PERSONA.apellidoPaterno ?? '');
+    this.tramite110203Store.setFiscal(PERSONA.numeroIdentificacionFiscal ?? '');
+    this.tramite110203Store.setRazon(PERSONA.razonSocial ?? '');
+
+    const DOMICILIO = PERSONA.domicilio;
+    this.tramite110203Store.setCalle(DOMICILIO.calle ?? '');
+    this.tramite110203Store.setLetra(DOMICILIO.letra ?? '');
+    this.tramite110203Store.setCiudad(DOMICILIO.ciudad ?? '');
+    this.tramite110203Store.setCorreo(PERSONA.correoElectronico ?? '');
+    this.tramite110203Store.setFax(DOMICILIO.fax ?? '');
+    this.tramite110203Store.setTelefono(DOMICILIO.telefono ?? '');
+}
+
+private actualizarDatosTransporte(data: CertificadoData): void {
+    this.tramite110203Store.setMedio(data.medioTransporte);
+}
+
+private actualizarDatosCertificado(data: CertificadoData): void {
+    this.tramite110203Store.setPrecisa(data.precisa);
+    this.tramite110203Store.setPresenta(data.presenta);
+    this.tramite110203Store.setObservaciones(data.observaciones);
+}
+
+private actualizarDatosMercancias(data: CertificadoData): void {
+    const MERCANCIA = data.mercanciasAsociadas[0];
+    this.tramite110203Store.setOrden(MERCANCIA.numeroOrden ?? '');
+    this.tramite110203Store.setArancelaria(MERCANCIA.fraccionArancelaria ?? '');
+    this.tramite110203Store.setNombretecnico(MERCANCIA.nombreTecnico ?? '');
+    this.tramite110203Store.setComercial(MERCANCIA.nombreComercial ?? '');
+    this.tramite110203Store.setIngles(MERCANCIA.nombreIngles ?? '');
+    this.tramite110203Store.setRegistro(MERCANCIA.numeroRegistro ?? '');
+    this.tramite110203Store.setComplemento(MERCANCIA.complementoDescripcion ?? '');
+    this.tramite110203Store.setMarca(MERCANCIA.marca ?? '');
+    this.tramite110203Store.setValor(MERCANCIA.valorMercancia ?? '');
+    this.tramite110203Store.setCantidad(MERCANCIA.cantidad ?? '');
+    this.tramite110203Store.setComercializacion(MERCANCIA.unidadMedidaComercial ?? '');
+    this.tramite110203Store.setBruta(MERCANCIA.masaBruta ?? '');
+    this.tramite110203Store.setMedida(MERCANCIA.unidadMedidaMasaBruta ?? '');
+    this.tramite110203Store.setFactura(MERCANCIA.numeroFactura ?? '');
+    this.tramite110203Store.setTipo(MERCANCIA.tipoFactura ?? '');
+    this.tramite110203Store.setFechaFactura(MERCANCIA.fechaFactura ?? '');
+}
+
+private actualizarTabla(datos: CertificadoData[]): void {
+    const CUERPO_TABLA = datos.map((item: CertificadoData) => ({
+      numeroDeCertificado: item.numeroCertificado,
+      expedicion: formatFechaCustom(item.fechaExpedicion),
+      vencimiento: formatFechaCustom(item.fechaVencimiento),
+    }));
+    
+    this.establecimientoBodyData = [];
+    CUERPO_TABLA.forEach((row: TablaRow) => {
+      const TABLE_ROW: TableBodyData = { tbodyData: [] };
+      TABLE_ROW.tbodyData = [row.numeroDeCertificado, row.expedicion, row.vencimiento];
+      this.establecimientoBodyData.push(TABLE_ROW);
+    });
+}
 
   /** 
    * Método de ciclo de vida de Angular que se ejecuta cuando el componente se destruye.  

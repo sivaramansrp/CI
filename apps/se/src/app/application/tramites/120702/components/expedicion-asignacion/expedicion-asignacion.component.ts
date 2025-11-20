@@ -1,3 +1,4 @@
+import { AsignacionResponse,Monto, MontoExpedirTablaDatos,TablaDatos} from '../../models/expedicion-certificados-frontera.models';
 import {
   CONFIGURATION_TABLA_MONTO,
   INPUT_FECHA_FIN,
@@ -7,40 +8,32 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   ConfiguracionColumna,
   InputFechaComponent,
-  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  Monto,
-  MontoExpedirTablaDatos,
-  TablaDatos,
-} from '../../models/expedicion-certificados-frontera.models';
 import { Solicitud120702State, Tramite120702Store } from '../../estados/tramite120702.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject,takeUntil } from 'rxjs';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-/**
- * Componente responsable de la sección de asignación de expedición de certificados.
- * 
- * Maneja el formulario de datos de oficio y monto, y realiza operaciones sobre la tabla
- * de montos a expedir. Se comunica con el store del trámite 120702 y un servicio de datos estáticos.
- */
+
 @Component({
   selector: 'app-expedicion-asignacion',
   standalone: true,
@@ -51,23 +44,29 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
     InputFechaComponent,
     ReactiveFormsModule,
     FormasDinamicasComponent,
-    TableComponent,TablaDinamicaComponent
+    TableComponent,
+    TablaDinamicaComponent,
+    CommonModule
   ],
   templateUrl: './expedicion-asignacion.component.html',
   styleUrl: './expedicion-asignacion.component.scss',
 })
 export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
- /**
- * Arreglo de montos que representa las filas de la tabla.
- * Cada elemento corresponde a un registro de tipo `Monto`.
- * Inicializado con los datos de `MONTO_DATOS`.
- */
- saldo: Monto[] =MONTO_DATOS; 
- /**
- * Configuración de las columnas de la tabla dinámica.
- * Define encabezados, claves de acceso a los datos y orden de cada columna.
- * Utiliza la constante `CONFIGURATION_TABLA_MONTO` para la inicialización.
- */configuracionTablas: ConfiguracionColumna<Monto>[] = CONFIGURATION_TABLA_MONTO;
+  /**
+   * Arreglo de montos que representa las filas de la tabla.
+   * Cada elemento corresponde a un registro de tipo `Monto`.
+   * Initialize as empty array instead of MONTO_DATOS
+   */
+
+   @Output() public formaDatos =
+    new EventEmitter<AsignacionResponse>();
+
+  saldo: Monto[] = []; // Changed from MONTO_DATOS to empty array
+  /**
+   * Configuración de las columnas de la tabla dinámica.
+   * Define encabezados, claves de acceso a los datos y orden de cada columna.
+   * Utiliza la constante `CONFIGURATION_TABLA_MONTO` para la inicialización.
+   */configuracionTablas: ConfiguracionColumna<Monto>[] = CONFIGURATION_TABLA_MONTO;
    /**
    * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
    * @type {Monto[]}
@@ -79,6 +78,21 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   public checkbox = TablaSeleccion.CHECKBOX;
     /**
+   * Controla la visibilidad del modal de confirmación
+   */
+  public mostrarModalConfirmacion = false;
+
+  /**
+   * Mensaje de error para mostrar cuando no hay selección
+   */
+  public mensajeError = '';
+
+  /**
+   * Controla la visibilidad del mensaje de error
+   */
+  public mostrarError = false;
+
+  /**
    * Bandera para mostrar u ocultar secciones después del botón "Buscar".
    */
   mostrarSecciones = false;
@@ -136,6 +150,21 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    /** Estado de la solicitud tipo 40302. 
  *  Contiene información y progreso de la solicitud. */
   public solicitudState!: Solicitud120702State;
+
+  /**
+   * Identificador del trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único asociado al trámite de expedición y asignación.
+   */
+  tramites:string="120702"
+
+  /**
+   * Contiene los datos de respuesta relacionados con la asignación en el formulario.
+   * 
+   * @type {AsignacionResponse}
+   */
+  asignacionFormDatos!:AsignacionResponse ;
   
   /**
    * Constructor del componente.
@@ -149,7 +178,9 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     private tramite120702Store : Tramite120702Store,
     private tramite120702Query: Tramite120702Query,
     private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoServices:CatalogoServices,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter
   ) {}
 
   /**
@@ -166,19 +197,20 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
     });
 
+
+    
+    // Remove the automatic addition of default data
+    // Comment out or remove this section:
+    /*
     if (this.montoTablaFilaDatos.length === 0) {
       const OBRA_DE_ARTE_ROW: TablaDatos = {
       tbodyData: ["10"],
     };
     this.montoTablaFilaDatos.push(OBRA_DE_ARTE_ROW);
-  }
+    }
+    */
 
-    this.expedicionCertificadosFronteraService
-      .getAnoOficioDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.anoOficioDatos = data;
-      });
+   this.getAnoOficioDatos();
 
     this.expedicionCertificadosFronteraService
       .getMontoExpedirTabla()
@@ -186,7 +218,27 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       .subscribe((data: MontoExpedirTablaDatos) => {
         this.montoTablaDatos = data.columns;
       });
+
   }
+
+/**
+ * Obtiene los datos del catálogo de año de oficio relacionados con los trámites actuales.
+ * Realiza una solicitud al servicio de catálogo utilizando los trámites seleccionados,
+ * y asigna la respuesta al arreglo `anoOficioDatos` como una lista de objetos `Catalogo`.
+ * La suscripción se cancela automáticamente al destruir el componente.
+ */
+getAnoOficioDatos():void{
+ this.catalogoServices
+      .asignacionCatalogo(this.tramites)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.anoOficioDatos = res.datos as Catalogo[];
+      });
+
+}
+
+
+
 
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.  
@@ -235,40 +287,45 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Establece la estructura inicial del formulario reactivo de asignación.
    */
   establecerAsignacionFormGroup(): void {
-      /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
-    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
-    this.tramite120702Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud120702State;
-        })
-      )
-      .subscribe();
-
     this.asignacionForm = this.fb.group({
+    
       anoDelOficio: ['', [Validators.required]],
-      numeroOficio: ['', [Validators.required]],
-      estado: [{ value: 'CHIHUAHUA', disabled: true }],
-      representacionFederal: [{ value: 'CIUDAD JUAREZ', disabled: true }],
-      montoAsignado: [{ value: '500', disabled: true }],
-      montoExpedido: [{ value: '130', disabled: true }],
-      montoDisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      datosNumeroOficio: [{ value: '2', disabled: true }],
-      fechaInicioVigencia: [{ value: '15/11/2024', disabled: true }],
-      fechaFinVigencia: [{ value: '15/11/2025', disabled: true }],
-      montoADisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      montoAExpedir: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
-      totalAExpedir: [{ value: '', disabled: true }],
+      numeroOficio: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoAExpedir: ['', [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(15)]],
+      montoADisponible: [''],
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+      estado: [''],
+      representacionFederal: [''],
+      montoAsignado: [''],
+      montoExpedido: [''],
+      montoDisponible: [''],
+      datosNumeroOficio: [''],
+      totalAExpedir: ['']
     });
 
-    this.asignacionForm.patchValue({
-      anoDelOficio:this.solicitudState.anoDelOficio,
-      numeroOficio:this.solicitudState.numeroOficio,
-      montoAExpedir:this.solicitudState.montoAExpedir,
-      fechaInicioVigencia:this.solicitudState.fechaInicioVigencia,
-      fechaFinVigencia:this.solicitudState.fechaFinVigencia,
-    })
+}
+
+  /**
+   * Método para forzar la validación de todos los campos del formulario
+   */
+  public forzarValidacion(): void {
+    if (this.asignacionForm) {
+      Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      
+  Object.keys(this.asignacionForm.controls).forEach(key => {
+        const CONTROL = this.asignacionForm.get(key);
+        if (CONTROL && CONTROL.errors) {
+            // El control tiene errores de validación; manejar o registrar si es necesario
+        }
+      });
+    }
   }
 
   /**
@@ -320,43 +377,183 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
  eliminarSeleccionados(): void {
-  if (this.seleccionadaguardarClicado.length > 0) {
-    this.saldo = this.saldo.filter(item => !this.seleccionadaguardarClicado.includes(item));
-    this.seleccionadaguardarClicado = [];
+  if (this.seleccionadaguardarClicado.length === 0) {
+    this.mensajeError = 'Debe seleccionar al menos un registro para eliminar.';
+    this.mostrarError = true;
+    this.mostrarModalConfirmacion = true;
+    return;
   }
+
+  this.mensajeError = `¿Está seguro que desea eliminar ${this.seleccionadaguardarClicado.length} registro(s)?`;
+  this.mostrarModalConfirmacion = true;
 }
-  /**
-   * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
-   */
-  public enviarMontoFormulario(): void {
-    const MONTO_A_EXPEDIR = this.asignacionForm.get('montoAExpedir')?.value || 0;
 
-    const MONTO_DISPONIBLE = this.asignacionForm.get('montoADisponible')?.value || this.defaultMontoDisponible;
-    const UPDATED_MONTO_DISPONIBLE = MONTO_DISPONIBLE - MONTO_A_EXPEDIR;
-
-    this.asignacionForm.get('montoADisponible')?.setValue(
-      UPDATED_MONTO_DISPONIBLE >= 0 ? UPDATED_MONTO_DISPONIBLE : 0
+/**
+ * Confirma la eliminación de los registros seleccionados
+ */
+confirmarEliminacion(): void {
+  if (this.seleccionadaguardarClicado.length > 0) {
+   
+    this.saldo = this.saldo.filter(item => 
+      !this.seleccionadaguardarClicado.some(selected => 
+        selected.Montoaexpedir === item.Montoaexpedir
+      )
     );
 
-    const MONTO_A_EXPEDIR_FILA: Monto = {
-    Montoaexpedir: MONTO_A_EXPEDIR.toString(),
-    };
-    this.saldo.push(MONTO_A_EXPEDIR_FILA);
-    this.saldo = [...this.saldo];  
+    
+    this.seleccionadaguardarClicado = [];
+    
+   
+    this.calcularTotalAExpedir();
+  }
+  
+  this.mostrarModalConfirmacion = false;
+}
 
-    const TOTAL_A_EXPEDIR = this.asignacionForm.get('totalAExpedir')?.value || 0;
-    this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL_A_EXPEDIR + MONTO_A_EXPEDIR);
+/**
+ * Cancela la eliminación y cierra el modal
+ */
+cancelarEliminacion(): void {
+  this.mostrarModalConfirmacion = false;
+  this.mostrarError = false;
+}
 
-    this.asignacionForm.get('montoAExpedir')?.setValue('');
-    this.asignacionForm.get('montoAExpedir')?.markAsUntouched();
+/**
+ * Calcula el total de los montos a expedir y actualiza el campo totalAExpedir
+ */
+public calcularTotalAExpedir(): void {
+  const TOTAL = this.saldo.reduce((sum, item) => {
+    const MONTO = parseFloat(item.Montoaexpedir) || 0;
+    return sum + MONTO;
+  }, 0);
+  
+this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL);
+  }
+
+/**
+ * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
+ */
+public enviarMontoFormulario(): void {
+
+  const MONTOEXPEDIR = this.asignacionForm.get('montoAExpedir')?.value;
+  
+
+  if (MONTOEXPEDIR === null || MONTOEXPEDIR === undefined || MONTOEXPEDIR === '') {
+   
+    return;
+  }
+  
+const PARSEDVALUE = parseFloat(MONTOEXPEDIR);
+  if (isNaN(PARSEDVALUE)) {
+    
+    return;
+  }
+
+  const NUEVOMONTO: Monto = {
+    Montoaexpedir: PARSEDVALUE.toString() 
+  };
+  
+this.saldo.push(NUEVOMONTO);
+this.saldo = [...this.saldo];
+this.asignacionForm.get('montoAExpedir')?.setValue('');
+this.calcularTotalAExpedir();
+  
   }
 /**
  * Método que se ejecuta al hacer clic en el botón "Buscar".
+ * Valida que los campos requeridos tengan valores antes de mostrar las secciones.
  */
 onBuscarClick(): void {
-  this.mostrarSecciones = true; // Muestra el contenido que está debajo
+ 
+  this.asignacionForm.get('anoDelOficio')?.markAsTouched();
+  this.asignacionForm.get('numeroOficio')?.markAsTouched();
+
+  
+  const ANODELOFICIO = this.asignacionForm.get('anoDelOficio')?.value;
+  const NUMEROOFICIO = this.asignacionForm.get('numeroOficio')?.value;
+  const ISANOOFICIOVALID = ANODELOFICIO && ANODELOFICIO.trim() !== '';
+  const ISNUMEROOFICIOVALID = NUMEROOFICIO && 
+    NUMEROOFICIO.trim() !== '' && 
+    this.asignacionForm.get('numeroOficio')?.valid;
+
+  if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
+    this.mostrarSecciones = true; 
+
+  } else {
+   this.mostrarSecciones = false; 
+  }
 }
-  /**
+
+/**
+ * Obtiene y busca los datos relacionados con la asignación de certificados de frontera.
+ *
+ * Marca los campos 'anoDelOficio' y 'numeroOficio' como tocados para activar la validación.
+ * Verifica que ambos campos sean válidos y no estén vacíos. Si son válidos, muestra las secciones correspondientes.
+ * Construye los parámetros necesarios y realiza una petición al servicio `expedicionCertificadosFronteraService`
+ * para obtener los datos asociados. Al recibir la respuesta, emite los datos obtenidos, los carga en el formulario
+ * y los asigna a la variable local.
+ *
+ * @remarks
+ * Este método depende de la validez de los campos del formulario y realiza una petición asíncrona.
+ *
+ * @returns {void}
+ */
+obtenerBuscarDatos(): void {
+ this.asignacionForm.get('anoDelOficio')?.markAsTouched();
+  this.asignacionForm.get('numeroOficio')?.markAsTouched();
+
+  
+  const ANODELOFICIO = this.asignacionForm.get('anoDelOficio')?.value;
+  const NUMEROOFICIO = this.asignacionForm.get('numeroOficio')?.value;
+  const ISANOOFICIOVALID = ANODELOFICIO && ANODELOFICIO.trim() !== '';
+  const ISNUMEROOFICIOVALID = NUMEROOFICIO && 
+    NUMEROOFICIO.trim() !== '' && 
+    this.asignacionForm.get('numeroOficio')?.valid;
+
+  if (ISANOOFICIOVALID && ISNUMEROOFICIOVALID) {
+    this.mostrarSecciones = true; 
+
+  } else {
+   this.mostrarSecciones = false; 
+  }
+
+  const URL_PARAM = { 
+    rfcSolicitante: "MAVL621207C95",
+    numFolioAsignacion: NUMEROOFICIO,
+    anioAutorizacion: ANODELOFICIO
+  };
+
+  this.expedicionCertificadosFronteraService.getBuscarDatos(URL_PARAM)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((response) => {
+      this.formaDatos.emit(response.datos);
+      this.cargarDatosAsignacion(response.datos);
+      this.asignacionFormDatos=response.datos;
+    });
+}
+
+
+/**
+ * Carga los datos de la asignación cuando la búsqueda es exitosa.
+ * Este método puede ser expandido para cargar datos reales desde un servicio.
+ */
+private cargarDatosAsignacion(datos:AsignacionResponse): void {
+  this.asignacionForm.patchValue({
+    estado: datos.participante?.licitacionPublica?.fundamento,
+    representacionFederal: datos.participante?.tipoParticipante,
+    montoAsignado: datos?.participante?.montoAdjudicado,
+    montoExpedido: datos?.montoExpedido,
+    montoADisponible: datos?.montoDisponible,
+    datosNumeroOficio: this.asignacionForm.get('numeroOficio')?.value,
+    anoDelOficio:datos?.idAsignacion,
+    numeroOficio:datos?.añoAutorizacion,
+    montoAExpedir:datos?.participante?.montoAdjudicado,
+    fechaInicioVigencia:datos?.fechaAutorizacion,
+    fechaFinVigencia:datos?.fechaFinVigenciaAprobada
+  });
+}
+
+/**
    * Método del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera las suscripciones activas.
    */

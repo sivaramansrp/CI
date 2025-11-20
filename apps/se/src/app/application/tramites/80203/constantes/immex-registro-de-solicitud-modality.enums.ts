@@ -598,3 +598,134 @@ export const SECCIONES_TRAMITE_80203 = {
         requiereValidacion: true,
     },
 };
+
+/**
+ * @const ERROR_FORMA_ALERT
+ * @description Mensaje de error HTML para el campo "Cambio de modalidad" cuando es requerido.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando no se ha seleccionado una modalidad de cambio.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación en el formulario
+ * this.errorMessage = ERROR_FORMA_ALERT;
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <p>Corrija los siguientes errores:</p>
+      <p> 1. - (Cambio de modalidad) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+
+/**
+ * @const ERROR_SERVICIOS_ALERT
+ * @description Mensaje de error HTML para cuando no se han agregado servicios requeridos.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando debe agregar al menos un servicio a la solicitud.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación cuando faltan servicios
+ * this.errorMessage = ERROR_SERVICIOS_ALERT;
+ */
+export const ERROR_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <p>1. (Las fracciones de exportación son obligatorias para cada permiso) es un campo requerido</p>
+    <p>2. (Los datos del detalle de la mercancía) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+/**
+ * @const ERROR_FRACCION_ALERT
+ * @description Mensaje de error HTML para cuando no se han agregado fracciones de exportación requeridas.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando debe agregar al menos una fracción de exportación para cada permiso IMMEX.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación cuando faltan fracciones de exportación
+ * this.errorMessage = ERROR_FRACCION_ALERT;
+ */
+export const ERROR_FRACCION_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <p>1. (Las fracciones de exportación son obligatorias para cada permiso) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+/**
+ * @const ERROR_DETALLE_ALERT
+ * @description Mensaje de error HTML para cuando no se han completado los datos del detalle de la mercancía.
+ * Contiene una estructura HTML con clases Bootstrap para mostrar el error de validación
+ * centrado al usuario cuando debe completar la información detallada de la mercancía en el formulario.
+ * 
+ * @type {string}
+ * @example
+ * // Se utiliza para mostrar errores de validación cuando faltan datos del detalle de mercancía
+ * this.errorMessage = ERROR_DETALLE_ALERT;
+ */
+export const ERROR_DETALLE_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+    <p>Corrija los siguientes errores:</p>
+    <p>1. (Los datos del detalle de la mercancía) es un campo requerido</p>
+    </div>
+  </div>
+</div>
+`
+
+export const ERROR_NICO = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Debe contener al menos un nico.
+  </div>
+</div>
+`;
+
+export const ERROR_REQ_MERCANCIA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Los campos marcados con (*) son requeridos.
+  </div>
+</div>
+`;
+
+export const ERROR_CANTIDAD = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Las cantidades deben tener un valor mayor a cero.
+  </div>
+</div>
+`;
+
+export const ERROR_CAPACIDAD = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    La capacidad instalada por periodo debe ser menor o igual a la cantidad anual.
+  </div>
+</div>
+`;
+
+export const ERROR_CANDIDAD_POR_PERIODO = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    La cantidad por periodo no puede ser mayor a la cantida anual dividida entre 3.
+  </div>
+</div>
+`;

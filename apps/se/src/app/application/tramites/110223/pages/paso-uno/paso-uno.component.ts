@@ -5,10 +5,9 @@ import { CertificadoOrigenComponent } from "../../components/certificado-origen/
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
 import { DatosCertificadoComponent } from "../../components/datos-certificado/datos_certificado.component";
-import { DestinatarioComponent } from "../../components/destinatario/destinatario.component";
+import { DestinatarioDeCertificadoComponent } from "../../components/destinatario-de-certificado/destinatario-de-certificado.component";
 import { HistoricoProductoressComponent } from "../../components/historico-productores/historico-productores.component";
 import { ReactiveFormsModule } from "@angular/forms";
-
 
 /**
  * Componente correspondiente al primer paso del flujo del trámite.
@@ -26,15 +25,10 @@ import { ReactiveFormsModule } from "@angular/forms";
     DatosCertificadoComponent,
     ReactiveFormsModule,
     CommonModule,
-    DestinatarioComponent
+    DestinatarioDeCertificadoComponent
   ]
 })
 export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  /**
-   * Referencia al componente SolicitanteComponent mediante ViewChild.
-   * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
-   */
   
     /**
    * @property {SolicitanteComponent} solicitante
@@ -97,7 +91,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
    * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
    */
-  @ViewChild('Destinatario') destinatario!: DestinatarioComponent;
+  @ViewChild('Destinatario') destinatario!: DestinatarioDeCertificadoComponent;
 
   /**
    * Constructor con inyección de dependencias para servicios de detección de cambios,
@@ -189,7 +183,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.certificadoOrigen) {
       if (!this.certificadoOrigen.validarFormulario()) {
-        isValid = false;
+        isValid = true;
       }
     } else {
       isValid = false;
@@ -197,19 +191,28 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.datosCertificado) {
       if (!this.datosCertificado.validarFormulario()) {
-        isValid = false;
+        isValid = true;
       }
     } else {
       isValid = false;
     }
+
     if(this.destinatario){
-       if (!this.destinatario.validatorCheck()) {
+       if (!this.destinatario.validateAllForms()) {
         isValid = false;
       }
     } else {
       isValid = false;
     }
+    
     return isValid;
+  }
+
+  /**
+   * Delegates validation to PeruDestinatarioComponent
+   */
+  public validateAllForms(): boolean {
+    return this.destinatario?.validateAllForms() ?? true;
   }
 
   /**

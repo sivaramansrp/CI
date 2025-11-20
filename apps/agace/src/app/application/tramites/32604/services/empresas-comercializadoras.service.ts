@@ -1,4 +1,4 @@
-import { EnlaceOperativo, GuardarDatosFormulario, Inventarios, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
+import { EnlaceOperativo, GuardarDatosFormulario, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
 import { Instalaciones, RespuestaAduanas } from '../constants/agregar.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -99,16 +99,6 @@ export class EmpresasComercializadorasService {
   }
 
   /**
-   * Obtiene los inventarios registrados desde un archivo JSON local.
-   * @returns Observable con un arreglo de Inventarios.
-   */
-  conseguirInventarios(): Observable<Inventarios[]> {
-    return this.http.get<Inventarios[]>(
-      'assets/json/32604/inventarios-datos.json'
-    );
-  }
-
-  /**
    * Realiza una solicitud HTTP GET para obtener los datos guardados del formulario
    * desde un archivo JSON local.
    *
@@ -140,7 +130,7 @@ export class EmpresasComercializadorasService {
     return this.http.get<Instalaciones[]>(`assets/json/32604/datosTabla.json`);
   }
 
-    /**
+  /**
    * Obtener una lista de Contenedores
    * 
    * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
@@ -148,8 +138,15 @@ export class EmpresasComercializadorasService {
   getContenedores(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoLista.json`);
   }
-
-      /**
+  /**
+   * Obtener una lista de obtenerTipoInstalacion
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con respuesta de contenedor para obtenerTipoInstalacion.
+   */
+  obtenerTipoInstalacion(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoInstalacion.json`);
+  }
+  /**
    * Obtener una lista de Contenedores
    * 
    * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
@@ -157,7 +154,14 @@ export class EmpresasComercializadorasService {
   getNationalidad(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/32604/nacionalidad.json`);
   }
-
+  /**
+   * Obtener una lista de Contenedores
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
+   */
+  getTipPersona(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipo-persona.json`);
+  }
   /**
    * Actualiza el estado del formulario en el store `solicitud32604Store`
    * con los datos proporcionados en la respuesta.

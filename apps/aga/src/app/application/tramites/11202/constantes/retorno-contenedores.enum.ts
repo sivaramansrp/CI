@@ -57,13 +57,13 @@ export const TEXTOS_REQUISITOS = {
  */
 export const GRID_CONTENEDORES: ConfiguracionColumna<GridContenedores>[] = [
   { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
-  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
-  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
+  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.iniciales_contenedor, orden: 1 },
+  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numero_contenedor, orden: 2 },
+  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digito_verificador, orden: 3 },
+  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipo_contenedor, orden: 4 },
   { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 }
+  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.puede_registrar, orden: 6 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existe_en_vucem, orden: 7 }
 ];
 
 /**
@@ -79,13 +79,13 @@ export const GRID_CONTENEDORES: ConfiguracionColumna<GridContenedores>[] = [
  */
 export const CSV_DE_TABLA: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
   { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
-  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
-  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
+  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.iniciales_contenedor, orden: 1 },
+  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numero_contenedor, orden: 2 },
+  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digito_verificador, orden: 3 },
+  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipo_contenedor, orden: 4 },
   { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 }
+  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.puede_registrar, orden: 6 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existe_en_vucem, orden: 7 }
 ];
 
 /**

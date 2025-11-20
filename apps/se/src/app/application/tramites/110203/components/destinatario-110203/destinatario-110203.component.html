@@ -1,3 +1,18 @@
+<!-- <app-datos-del-destinatario
+  [datosForm]="formDatosDelDestinatarioValues"
+  [idProcedimiento]="110203"
+  (formDatosDelDestinatarioEvent)="setValoresStores($event)"
+  (formaValida)="setFormValida($event)"
+></app-datos-del-destinatario>
+
+<app-destinatario
+  [idProcedimiento]="110203"
+  (formDestinatarioEvent)="setValoresStoreDe($event)"
+  [datosForm]="formDestinatarioValues"
+  (formaValida)="setFormValidaDestinatario($event)"
+></app-destinatario> -->
+
+
 <div class="container" [formGroup]="destinatarioForm">
   <ng-titulo titulo="Datos del destinatario"></ng-titulo>
   <div>
@@ -49,8 +64,8 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="fiscal">Número de registro fiscal*:</label>
-          <input class="form-control" id="fiscal" formControlName="fiscal" type="type" maxlength="30"  (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
+          <label class="form-label" for="fiscal">Número de registro fiscal<span [class.label-invalid]="destinatarioForm.controls['fiscal'].invalid && destinatarioForm.controls['fiscal'].touched">*</span>:</label>
+          <input class="form-control" [class.is-invalid]="destinatarioForm.controls['fiscal'].invalid && destinatarioForm.controls['fiscal'].touched" id="fiscal" formControlName="fiscal" type="text" maxlength="30"  (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
         </div>
         @if(destinatarioForm.controls['fiscal'].invalid && destinatarioForm.controls['fiscal'].touched) {
   <div class="d-grid">
@@ -87,32 +102,63 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle:*</label>
-          <input class="form-control" id="calle" formControlName="calle" type="text" [placeholder]="placeholder.calle" (change)="setValoresStore(destinatarioForm,'calle', 'setCalle')">
+          <label class="form-label" for="calle">Calle<span [class.label-invalid]="destinatarioForm.controls['calle'].invalid && destinatarioForm.controls['calle'].touched">*</span>:</label>
+          <input class="form-control" [class.is-invalid]="destinatarioForm.controls['calle'].invalid && destinatarioForm.controls['calle'].touched" id="calle" formControlName="calle" type="text" (change)="setValoresStore(destinatarioForm,'calle', 'setCalle')" maxlength="100">
         </div>
+        @if(destinatarioForm.controls['calle'].invalid && destinatarioForm.controls['calle'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['calle'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="letra">Número y/o letra:*</label>
-          <input class="form-control" id="letra" formControlName="letra" type="text" [placeholder]="placeholder.letra" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')">
+          <label class="form-label" for="letra">Número y/o letra<span [class.label-invalid]="destinatarioForm.controls['letra'].invalid && destinatarioForm.controls['letra'].touched">*</span>:</label>
+          <input class="form-control" [class.is-invalid]="destinatarioForm.controls['letra'].invalid && destinatarioForm.controls['letra'].touched" id="letra" formControlName="letra" type="text" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')" maxlength="30">
         </div>
+        @if(destinatarioForm.controls['letra'].invalid && destinatarioForm.controls['letra'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['letra'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-          <input class="form-control" id="ciudad" formControlName="ciudad" type="text" [placeholder]="placeholder.ciudad" (change)="setValoresStore(destinatarioForm,'ciudad', 'setCiudad')">
+          <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)<span [class.label-invalid]="destinatarioForm.controls['ciudad'].invalid && destinatarioForm.controls['ciudad'].touched">*</span>:</label>
+          <input class="form-control" [class.is-invalid]="destinatarioForm.controls['ciudad'].invalid && destinatarioForm.controls['ciudad'].touched" id="ciudad" formControlName="ciudad" type="text" (change)="setValoresStore(destinatarioForm,'ciudad', 'setCiudad')" maxlength="50">
         </div>
+        @if(destinatarioForm.controls['ciudad'].invalid && destinatarioForm.controls['ciudad'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['ciudad'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        </div>
+        }
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico:*</label>
-          <input class="form-control" id="correo" formControlName="correo" type="text" [placeholder]="placeholder.correo" (change)="setValoresStore(destinatarioForm,'razon', 'setCorreo')">
+          <label class="form-label" for="correo">Correo electrónico<span [class.label-invalid]="destinatarioForm.controls['correo'].invalid && destinatarioForm.controls['correo'].touched">*</span>:</label>
+          <input class="form-control" [class.is-invalid]="destinatarioForm.controls['correo'].invalid && destinatarioForm.controls['correo'].touched" id="correo" formControlName="correo" type="email" (change)="setValoresStore(destinatarioForm,'correo', 'setCorreo')" maxlength="70">
         </div>
+        @if(destinatarioForm.controls['correo'].invalid && destinatarioForm.controls['correo'].touched) {
+        <div class="d-grid">
+        @if(destinatarioForm.controls['correo'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(destinatarioForm.controls['correo'].errors?.['email']) {
+        <span class="mensaje-error">Por favor, escriba una direccion de correo valida.</span>
+        }
+        </div>
+        }
       </div>
     </div>
 
@@ -120,14 +166,14 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="fax">Fax:</label>
-          <input class="form-control" id="fax" formControlName="fax" type="text" [placeholder]="placeholder.fax" (change)="setValoresStore(destinatarioForm,'fax', 'setFax')">
+          <input class="form-control" id="fax" formControlName="fax" type="text" (change)="setValoresStore(destinatarioForm,'fax', 'setFax')" maxlength="30">
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="telefono">Teléfono:</label>
-          <input class="form-control" id="telefono" formControlName="telefono" type="text" [placeholder]="placeholder.telefono" (change)="setValoresStore(destinatarioForm,'telefono', 'setTelefono')">
+          <input class="form-control" id="telefono" formControlName="telefono" type="text" (change)="setValoresStore(destinatarioForm,'telefono', 'setTelefono')" maxlength="30">
         </div>
       </div>
     </div>

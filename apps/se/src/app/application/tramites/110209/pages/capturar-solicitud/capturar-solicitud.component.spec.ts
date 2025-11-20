@@ -7,6 +7,7 @@ describe('CapturarSolicitudComponent', () => {
   let component: CapturarSolicitudComponent;
   let mockCertificadoService: any;
   let mockConsultaQuery: any;
+  let mockTramite110209Query: any;
 
   beforeEach(() => {
     mockCertificadoService = {
@@ -16,9 +17,13 @@ describe('CapturarSolicitudComponent', () => {
     mockConsultaQuery = {
       selectConsultaioState$: of({ update: false })
     };
+    mockTramite110209Query = {
+      selectTramite110209$: of({})
+    };
     component = new CapturarSolicitudComponent(
       mockCertificadoService,
-      mockConsultaQuery
+      mockConsultaQuery,
+      mockTramite110209Query
     );
   });
 
@@ -45,32 +50,34 @@ describe('CapturarSolicitudComponent', () => {
     mockConsultaQuery.selectConsultaioState$ = of({ update: true });
     component = new CapturarSolicitudComponent(
       mockCertificadoService,
-      mockConsultaQuery
+      mockConsultaQuery,
+      mockTramite110209Query
     );
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
     component.ngOnInit();
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('debe ejecutar guardarDatosFormulario y llamar actualizarEstadoFormulario si resp existe', () => {
-    mockCertificadoService.getCertificadoDatos = jest.fn().mockReturnValue(of({}));
+  it('debe ejecutar guardarDatosFormulario y establecer esDatosRespuesta en true cuando hay datos en el store', () => {
+    mockTramite110209Query.selectTramite110209$ = of({});
     component = new CapturarSolicitudComponent(
       mockCertificadoService,
-      mockConsultaQuery
+      mockConsultaQuery,
+      mockTramite110209Query
     );
     component.guardarDatosFormulario();
     expect(component.esDatosRespuesta).toBe(true);
-    expect(mockCertificadoService.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('debe ejecutar guardarDatosFormulario y establecer esDatosRespuesta en false si resp no existe', () => {
-    mockCertificadoService.getCertificadoDatos = jest.fn().mockReturnValue(of(null));
+  it('debe ejecutar guardarDatosFormulario y establecer esDatosRespuesta en true desde el store', () => {
+    mockTramite110209Query.selectTramite110209$ = of({ someData: 'test' });
     component = new CapturarSolicitudComponent(
       mockCertificadoService,
-      mockConsultaQuery
+      mockConsultaQuery,
+      mockTramite110209Query
     );
     component.guardarDatosFormulario();
-    expect(component.esDatosRespuesta).toBe(false);
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
   it('debe cambiar el índice al llamar seleccionaTab', () => {
@@ -84,5 +91,22 @@ describe('CapturarSolicitudComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debe suscribirse al store de tramite110209 correctamente', () => {
+    const mockData = { certificado: 'test', mercancias: [] };
+    mockTramite110209Query.selectTramite110209$ = of(mockData);
+    
+    component = new CapturarSolicitudComponent(
+      mockCertificadoService,
+      mockConsultaQuery,
+      mockTramite110209Query
+    );
+    
+    const subscribeSpy = jest.spyOn(mockTramite110209Query.selectTramite110209$, 'subscribe');
+    component.guardarDatosFormulario();
+    
+    expect(subscribeSpy).toHaveBeenCalled();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 });

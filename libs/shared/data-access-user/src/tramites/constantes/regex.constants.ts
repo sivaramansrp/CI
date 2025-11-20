@@ -345,6 +345,13 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas y los siguientes caracteres especiales: ( ) - . / # & ,
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z), dígitos (0-9), espacios y los caracteres especiales permitidos.
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO_FACTURADO = /^[a-zA-Z0-9 ()\-\.\/#&,]*$/;
+
+/**
  * Expresión regular para validar una llave de pago.
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
@@ -381,6 +388,10 @@ export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
  * Expresión regular para validar números enteros y decimales.
  */
 export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
+/**
+ * Expresión regular para validar números con hasta 14 dígitos enteros y 3 decimales.
+ */
+export const REGEX_NUMERO_ENTERO_14_3 = /^\d{1,14}(\.\d{1,3})?$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -400,6 +411,17 @@ export const REGEX_POSTAL = /^\d{5}$/;
  * - "Hola@123" (contiene un carácter especial)
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
+
+export const REGEX_TEXTO_CON_SIMBOLOS = /^[a-zA-Z0-9\s\-.,()&]*$/;
+
+export const REGEX_TEXTO_ALFANUMERICO_EXTENDIDO = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.,()\-]+$/;
+
+export const REGEX_TEXTO_CON_SYMBOLOS = /^[a-zA-Z0-9\s&()\-\/.,]*$/;
+
+
+
+
+
 
 /**
  * Expresión regular para reemplazar caracteres no alfanuméricos ni espacios.
@@ -606,6 +628,15 @@ export const REGEX_VALID_UMC = /^\d{1,12}(\.\d{1,10})?$/
  * - "abc" (contiene caracteres no numéricos)
  */
 export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
+
+/**
+ * Expresión regular para validar números enteros positivos con al menos 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123.4567"
+ * - "0.1234"
+ */
+export const REGEX_NUMERO_ENTERO_POSITIVO = /^\d+\.\d{4,}$/;
 
 /* Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales.
  * 
@@ -873,6 +904,23 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+/**
+ * Expresión regular para validar números de teléfono de 10 dígitos.
+ * 
+ * Acepta únicamente caracteres numéricos (0-9) y requiere que el número tenga exactamente 10 dígitos.
+ * 
+ * Ejemplos válidos:
+ * - 5512345678
+ * - 8187654321
+ * 
+ * Ejemplos inválidos:
+ * - 123456789 (menos de 10 dígitos)
+ * - 12345678901 (más de 10 dígitos)
+ * - 55-1234-5678 (contiene caracteres no numéricos)
+ */
+export const TELEFONO = /^[0-9]{10}$/;
+
 /**
  * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
  *
@@ -957,6 +1005,8 @@ export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
   */
 export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
+
+export const VALIDAR_DIRECCION_DE_CORREO_ELECTRONICO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
@@ -1261,3 +1311,24 @@ export const REGEX_NICO = /[^0-9]/g;
  * Utilizada para validación de entrada de teclas en campos numéricos.
  */
 export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
+
+/**
+ * Expresión regular para reemplazar la parte decimal de un número.
+ * Coincide con el punto seguido de uno o más dígitos al final de la cadena.
+ * Ejemplo: "123.45" => ".45"
+ */
+export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
+
+/**
+ * Expresión regular utilizada para eliminar todas las comas presentes en una cadena.
+ *
+ * @constant
+ * @type {RegExp}
+ * @example
+ * // Ejemplo de uso:
+ * const texto = "1,234,567";
+ * const resultado = texto.replace(REGEX_REMOVE_COMA, "");
+ * // resultado: "1234567"
+ */
+
+export const REGEX_REMOVE_COMA = /,/g;

@@ -1,10 +1,9 @@
 import { Catalogo, ConsultaioQuery } from "@libs/shared/data-access-user/src";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Subject,map,takeUntil } from "rxjs";
+import { Observable, Subject,map,takeUntil } from "rxjs";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
+import { CommonModule } from "@angular/common";
 import { DatosCertificadoDeComponent } from "../../../../shared/components/datos-certificado-de/datos-certificado-de.component";
-import { FormBuilder } from "@angular/forms";
-import { HttpErrorResponse } from "@angular/common/http";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
@@ -27,6 +26,7 @@ import { Tramite110223Store } from "../../estados/Tramite110223.store";
   selector: 'app-datos-certificado',
   standalone: true,
   imports: [
+    CommonModule,
     DatosCertificadoDeComponent
   
   ],
@@ -76,32 +76,15 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     idiomaDatos: Catalogo[] = [];
   
     /**
-     * @description
-     * Catálogo de entidades federativas disponibles.
-     * 
-     * Lista de entidades federativas que pueden ser seleccionadas en el formulario.
-     * Se utiliza para la selección de la ubicación del certificado.
-     * 
-     * @property {Catalogo[]} entidadFederativas
-     * @default []
-     * 
-     * @example
-     * ```typescript
-     * // Estructura del catálogo
-     * [
-     *   { id: 1, descripcion: 'Ciudad de México', codigo: 'CDMX' },
-     *   { id: 2, descripcion: 'Jalisco', codigo: 'JAL' }
-     * ]
-     * ```
+     * Observable que contiene la lista de entidades federativas disponibles.
      */
-    entidadFederativas: Catalogo[] = [];
-  
+    entidadFederativas$!: Observable<Catalogo[]>;
+
     /**
-     * @descripcion
-     * Almacena la lista de representaciones federales disponibles.
+     * Observable que contiene la lista de representaciones federales disponibles.
      */
-    representacionFederal: Catalogo[] = [];
-  
+    representacionFederal$!: Observable<Catalogo[]>;
+
     /**
      * @property destroyNotifier$
      * @privado
@@ -135,6 +118,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     esFormularioSoloLectura: boolean = false;
   
     /**
+     * @property {number} idProcedimiento
+     * @description
+     * Identificador único del procedimiento 110223.
+     * Se utiliza para configurar validaciones y comportamientos específicos del trámite.
+     */
+    public readonly idProcedimiento: number = 110223;
+
+    /**
      * @descripcion
      * Constructor del componente DatosCertificado.
      * 
@@ -152,26 +143,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @param {Tramite110221Query} query - Consultas al estado del trámite
      * @param {ConsultaioQuery} consultaQuery - Consultas generales del sistema
      * 
-     * @example
-     * ```typescript
-     * constructor(
-     *   private readonly fb: FormBuilder,
-     *   private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
-     *   private store: Tramite110221Store,
-     *   private query: Tramite110221Query,
-     *   private consultaQuery: ConsultaioQuery
-     * ) {
-     *   // Suscripción al estado del formulario
-     *   this.query.formDatosCertificado$.pipe(
-     *     takeUntil(this.destroyNotifier$)
-     *   ).subscribe(estado => {
-     *     this.formDatosCertificadoValues = estado;
-     *   });
-     * }
-     * ```
      */
     constructor(
-      private readonly fb: FormBuilder,
       private ValidarInicialmenteCertificadoService: CertificadosOrigenService,
       private store: Tramite110223Store,
       private query: Tramite110223Query,
@@ -182,6 +155,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       ).subscribe(estado => {
         this.formDatosCertificadoValues = estado;
       });
+
+      this.entidadFederativas$ = this.query.selectEntidadFederativa$;
+      this.representacionFederal$ = this.query.selectrepresentacionFederal$;
     }
     /**
      * @property datosCertificadoDeRef
@@ -230,9 +206,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @implementa OnInit
      */
     ngOnInit(): void {
-      this.idiomOpcion();
-      this.entidadFederativasOpcion();
-      this.representacionFederalOpcion();
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -278,84 +251,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     }
   
     /**
-     * @metodo idiomOpcion
-     * @descripcion
-     * Obtiene y carga la lista de idiomas disponibles desde el servicio.
-     * 
-     * @proceso
-     * - Realiza una petición al servicio para obtener el catálogo de idiomas
-     * - Almacena los datos en la property idiomaDatos
-     * - En caso de error, inicializa el arreglo vacío
-     */
-    idiomOpcion(): void {
-      this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('idioma.json')
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe({
-          next: (data) => {
-            this.idiomaDatos = data as Catalogo[];
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.idiomaDatos = [];
-          },
-        });
-    }
-  
-    /**
-     * @metodo entidadFederativasOpcion
-     * @descripcion
-     * Obtiene y carga la lista de entidades federativas desde el servicio.
-     * 
-     * @proceso
-     * - Consulta el servicio para obtener el catálogo de entidades
-     * - Actualiza la property entidadFederativas con los datos
-     * - Maneja errores inicializando un arreglo vacío si falla
-     */
-    entidadFederativasOpcion(): void {
-      this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe({
-          next: (data) => {
-            this.entidadFederativas = data as Catalogo[];
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.entidadFederativas = [];
-          },
-        });
-    }
-  
-    /**
-     * @metodo representacionFederalOpcion
-     * @descripcion
-     * Obtiene y carga la lista de representaciones federales desde el servicio.
-     * 
-     * @proceso
-     * - Realiza la petición al servicio para obtener el catálogo
-     * - Almacena los datos en la property representacionFederal
-     * - En caso de error, inicializa la lista como vacía
-     */
-    representacionFederalOpcion(): void {
-      this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe({
-          next: (data) => {
-            this.representacionFederal = data as Catalogo[];
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Error al obtener los datos:', error);
-            this.representacionFederal = [];
-          },
-        });
-    }
-  
-    /**
      * @metodo obtenerDatosFormulario
      * @descripcion
      * Procesa y almacena los datos del formulario en el almacén central.
@@ -386,41 +281,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      */
     idiomaSeleccion(estado: Catalogo): void {
       this.store.setIdiomaSeleccion(estado);
-    }
-  
-    /**
-     * @metodo entidadFederativaSeleccion
-     * @descripcion
-     * Procesa la selección de una entidad federativa y actualiza el estado.
-     * 
-     * @parametros
-     * @param {Catalogo} estado - Entidad federativa seleccionada del catálogo
-     * 
-     * @dispara
-     * - Actualización del almacén central
-     * - Actualización de dependencias relacionadas
-     */
-    entidadFederativaSeleccion(estado: Catalogo): void {
-      this.store.setEntidadFederativaSeleccion(estado);
-    }
-  
-    /**
-     * @metodo representacionFederalSeleccion
-     * @descripcion
-     * Gestiona la selección de una representación federal y actualiza el estado.
-     * 
-     * @parametros
-     * @param {Catalogo} estado - Representación federal seleccionada del catálogo
-     * 
-     * @dispara
-     * - Actualización en el almacén central
-     * - Actualización de campos relacionados
-     * 
-     * @uso
-     * Se invoca cuando el usuario selecciona una nueva representación federal
-     */
-    representacionFederalSeleccion(estado: Catalogo): void {
-      this.store.setRepresentacionFederalDatosSeleccion(estado);
     }
   
     /**
@@ -466,26 +326,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * @descripcion
      * Realiza la validación completa del formulario del certificado.
      * 
-     * Delega la validación al componente hijo DatosCertificadoDe,
-     * que contiene toda la lógica específica de validación.
-     * 
-     * @retorna {boolean} 
-     * - true: El formulario es válido
-     * - false: El formulario contiene errores
-     * 
-     * @uso
-     * Debe llamarse antes de procesar o enviar los datos del formulario
-     * para garantizar su validez.
-     * 
-     * @example
-     * ```typescript
-     * // Uso en componente padre
-     * if (this.validarFormulario()) {
-     *   // Proceder con el envío del formulario
-     * } else {
-     *   // Mostrar mensaje de error
-     * }
-     * ```
      */
     validarFormulario(): boolean {
       return this.datosCertificadoDeRef.validarFormularios();

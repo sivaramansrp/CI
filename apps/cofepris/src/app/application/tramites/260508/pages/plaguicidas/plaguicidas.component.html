@@ -6,21 +6,32 @@
           Permiso de importación de permiso de importación de nutrientes vegetales
         </h3>
       </div>
-
+       <div *ngIf="isPeligro" class="alert alert-danger text-center" role="alert" [innerHTML]="textoPeligro">
+          {{textoPeligro}}
+        </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-paso-uno> 
       } @case (2) {
-      <app-paso-dos></app-paso-dos>
+        <app-paso-carga-documento 
+          [idSolicitud]="guardarIdSolicitud"
+          [idTipoTRamite]="'260508'"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgreso)="onCargaEnProgreso($event)"
+        ></app-paso-carga-documento>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } }
+        <paso-firma [idSolicitud]="guardarIdSolicitud" [procedure]="260508" [procedureUrl]="'permiso-nutrientes/plaguicidas'"></paso-firma>
+      } 
+    }
 
       <btn-continuar
         [datos]="datosPasos"
+        [dePadre]="true"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
       <app-aviso-de-privacidad *ngIf="indice === 1"></app-aviso-de-privacidad>

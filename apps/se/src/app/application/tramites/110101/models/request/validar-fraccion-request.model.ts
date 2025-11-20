@@ -3,10 +3,11 @@
  */
 export interface FraccionValidarRequest {
     /** Clave de la fracción arancelaria */
-    clave_fraccion_arancelaria: string;
+    clave_fraccion_arancelaria: string | null;
     
     /** Tipo de fracción arancelaria */
-    tipo_fraccion_arancelaria: string;
+    tipo_fraccion_arancelaria: string | null;
+    
     
     /** Datos de la mercancía */
     mercancia: MercanciaRequest;
@@ -20,46 +21,47 @@ export interface FraccionValidarRequest {
  */
 export interface MercanciaRequest {
     /** ID descripción alterna UE */
-    id_descripcion_alterna_ue: number;
+    id_descripcion_alterna_ue: number | null;
+    
     
     /** ID descripción alterna AELC */
-    id_descripcion_alterna_aelc: number;
+    id_descripcion_alterna_aelc: number | null;
     
     /** ID descripción alterna SGP */
-    id_descripcion_alterna_sgp: number;
+    id_descripcion_alterna_sgp: number | null;
     
     /** ID descripción alterna ACE */
-    id_descripcion_alterna_ace: number;
+    id_descripcion_alterna_ace: number| null;
     
     /** Indica si requiere juegos o surtidos */
-    requiere_juegos_o_surtidos: boolean;
+    requiere_juegos_o_surtidos: boolean | null;
     
     /** Indica si el peso es requerido */
-    peso_es_requerido: boolean;
+    peso_es_requerido: boolean | null;
     
     /** Indica si el volumen es requerido */
-    volumen_es_requerido: boolean;
+    volumen_es_requerido: boolean | null;
     
     /** Fracción NALADI */
-    fraccion_naladi: string;
+    fraccion_naladi: string | null;
     
     /** Fracción NALADISA 93 */
-    fraccion_naladisa93: string;
+    fraccion_naladisa93: string | null;
     
     /** Fracción NALADISA 96 */
-    fraccion_naladisa96: string;
-    
+    fraccion_naladisa96: string | null;
+
     /** Fracción NALADISA 02 */
-    fraccion_naladisa02: string;
-    
+    fraccion_naladisa02: string | null;
+
     /** Tipo de proceso de mercancía */
-    tipo_proceso_mercancia: string;
-    
+    tipo_proceso_mercancia: string | null;
+
     /** Valor transaccional FOB */
-    valo_transaccional_fob: number;
-    
+    valo_transaccional_fob: number | null;
+
     /** Costo neto AP */
-    costo_neto_ap: number;
+    costo_neto_ap: number | null;
 }
 
 /**
@@ -67,23 +69,23 @@ export interface MercanciaRequest {
  */
 export interface TratadoSeleccionado {
     /** Clave del grupo de criterio */
-    cve_grupo_criterio: string;
+    cve_grupo_criterio: string | null;
     
     /** ID del bloque comercial */
-    id_bloque: number;
+    id_bloque: number | null;
     
     /** Clave del tratado o acuerdo */
-    cve_tratado_acuerdo: string;
+    cve_tratado_acuerdo: string | null;
     
     /** ID del tratado o acuerdo */
-    id_tratado_acuerdo: number;
+    id_tratado_acuerdo: number | null;
     
     /** Clave del país */
-    cve_pais: string;
+    cve_pais: string | null;
     
     /** ID descripción alterna fracción */
-    id_desc_alterna_fraccion: number;
+    id_desc_alterna_fraccion: number | null;
     
     /** ID tipo proceso mercancía */
-    ide_tipo_proceso_mercancia: string;
+    ide_tipo_proceso_mercancia: string | null;
 }

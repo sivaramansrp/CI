@@ -49,7 +49,7 @@ export class ResumenValoresFormularioComponent implements OnChanges {
     this.formResumenValores = this.fb.group({
       impInsumosOriginarios: [{value: '', disabled: true}],
       impInsumosNoOriginarios: [{value: '', disabled: true}],
-      impEnvasesOriginarios: [{value: '', disabled: true}],
+      impEnvasesOriginarios: [{value: '', disabled: true}], 
       impEnvasesNoOriginarios: [{value: '', disabled: true}],
       impInsumosEnvOriginarios: [{value: '', disabled: true}],
       impInsumosEnvNoOriginarios: [{value: '', disabled: true}],
@@ -77,7 +77,7 @@ export class ResumenValoresFormularioComponent implements OnChanges {
    * 
    * @method ngOnInit
    */
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['valoresRecibidosResumen']?.currentValue) {
     const DATOS = changes['valoresRecibidosResumen'].currentValue;
 
@@ -90,14 +90,13 @@ export class ResumenValoresFormularioComponent implements OnChanges {
     this.formResumenValores.patchValue({
       impInsumosOriginarios: DATOS?.imp_insumos_originarios,
       impInsumosNoOriginarios: DATOS?.imp_insumos_no_originarios,
-      impEnvaseOriginarios: DATOS?.imp_envases_originarios,
-      impEnvaseNoOriginarios: DATOS?.imp_envases_no_originarios,
+      impEnvasesOriginarios: DATOS?.imp_envases_originarios,
+      impEnvasesNoOriginarios: DATOS?.imp_envases_no_originarios,
       impInsumosEnvOriginarios: DATOS?.imp_insu_env_originarios,
       impInsumosEnvNoOriginarios: DATOS?.imp_insu_env_no_originarios,
       ptcValorNoOriginarios: DATOS?.pct_valor_no_originarios,
       ptcPesoTotalFibras: DATOS?.pct_peso_total_fibras,
       ptcPesoTotalMercancia: DATOS?.pct_peso_total_mercancia,
-      calAprobadaDictaminador: DATOS?.cal_aprobada_dictaminador,
       precioFrancoFabrica: DATOS?.precio_franco_fabrica,
       valorTransaccion: DATOS?.valor_transaccion,
       valorTransaccionFOB: DATOS?.valor_transaccion_fob,

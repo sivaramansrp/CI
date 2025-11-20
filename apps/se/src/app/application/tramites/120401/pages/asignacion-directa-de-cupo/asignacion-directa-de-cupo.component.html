@@ -4,6 +4,16 @@
       <div class="col-md-12">
         <h1>Asignación directa de cupo personas físicas (primera vez)</h1>
       </div>
+      
+      <!-- Validation messages above wizard -->
+      @if (mostrarMensajeValidacion) {
+        <div class="col-md-12 mb-3">
+          <div class="alert alert-primary alert-dismissible fade show custom-info-alert" role="alert" (click)="cerrarMensajeValidacion()">
+            {{ mensajeValidacion }}
+            </div>
+        </div>
+      }
+      
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">

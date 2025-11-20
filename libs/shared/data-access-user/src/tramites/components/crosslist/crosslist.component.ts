@@ -119,6 +119,15 @@ export class CrosslistComponent implements OnInit, OnChanges {
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * Indica si el control debe marcarse como tocado para mostrar errores de validación.
+   * Útil para controlar la visualización de errores desde el componente padre.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() markTouched: boolean = false;
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * - Verifica si la propiedad `botones` está definida. Si no lo está, llama al método
    *   `setButtonDefault` para establecer un valor predeterminado.
@@ -178,6 +187,14 @@ export class CrosslistComponent implements OnInit, OnChanges {
 
     if (changes['botones'] && changes['botones'].currentValue) {
       this.botones = changes['botones'].currentValue;
+    }
+
+    if (changes['markTouched']) {
+      if (this.markTouched) {
+        this.fechaSeleccionada?.markAsTouched();
+      } else {
+        this.fechaSeleccionada?.markAsUntouched();
+      }
     }
   }
 
@@ -302,7 +319,7 @@ export class CrosslistComponent implements OnInit, OnChanges {
             txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           });
-          return;
+        return;
       }
 
       const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);

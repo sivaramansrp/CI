@@ -4,16 +4,14 @@
       <div class="col-md-12">
         <h4>Registro de solicitud IMMEX modalidad ampliación subsecuente sensibles</h4>
       </div>
-      <div class="col-12">
-        @if (!esFormaValido) {
-          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
+      @if(!isValid) {
+          <ng-alert [CONTENIDO]="errorAlerta" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         }
-      </div>
-      <app-wizard [listaPasos]="pasos"></app-wizard>
+      <app-wizard #wizzard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUno></app-paso-uno>
       } @case (2) {
       <app-paso-carga-documento 
         [idSolicitud]="storeData.idSolicitud"

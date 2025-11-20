@@ -374,6 +374,11 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * Elimina datos de importación seleccionados del grid.
    */
   eliminarImportacion(): void {
+    if (this.domiciliosSeleccionados.length === 0) {
+    this.mostrarAlerta = true;
+    this.mensajeDeAlerta = 'Seleccione la(s) Fracción(es) de Importación a eliminar.';
+    return;
+  }
     const INDICE = this.datosImportacion.findIndex((item:ArancelariaImportacion) => item.fraccionArancelaria === this.domiciliosSeleccionados[0]?.['fraccionArancelaria']);
     if (INDICE !== -1) {
       const DATOS_IMPORTACION_ACTUALIZADOS = [...this.datosImportacion];

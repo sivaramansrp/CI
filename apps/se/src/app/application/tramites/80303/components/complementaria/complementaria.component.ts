@@ -1,31 +1,29 @@
 import {
-  CONFIGURACION_CONTRIBUYENTES_ACCIONISTAS,
   CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS,
   CONFIGURACION_FEDERATARIOS,
   CONFIGURACION_FEDERATARIOS_DOMICILIO,
-  CONFIGURACION_PLANTAS_MANUFACTURERAS,
-  CONFIGURACION_SERVICIOS_IMMEX,
+  CONFIGURACION_PLANTAS_MANUFACTURERAS
 } from '../../constants/complementaria.enum';
+import { Complimentaria, Empresas, Plantas } from '../../../../shared/models/complementaria.model';
 import { Component, OnDestroy } from '@angular/core';
 import {
-  ConfiguracionColumna,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  DatosContribuyente,
-  DatosEmpresaSubmanufacturera,
-  DatosPlantaManufacturera,
   Federatario,
   FederatarioRealizaranLasOperaciones,
-  ServicioImmex,
+  JSONRespuesta,
+  ServiciosImmex,
 } from '../../models/complementaria.model';
+
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComplementariaComponent } from '../../../../shared/components/complementaria/complementaria.component';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
-import { signal } from '@angular/core';
+
+import { Operacions } from '../../../80302/estados/models/plantas-consulta.model';
+
+import { CONFIGURACION_OPERACIONES } from '../../../80302/constantes/modificacion.enum';
+import { Tramite80303Store } from '../../estados/tramite80303Store.store';
 
 /**
  * Decorador `@Component` utilizado para definir un componente en Angular.
@@ -40,42 +38,13 @@ import { signal } from '@angular/core';
  * @property {string} styleUrl - Ruta relativa al archivo SCSS que define los estilos del componente.
  */
 @Component({
-  selector: 'app-complementaria',
+  selector: 'app-complementario',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, ComplementariaComponent],
   templateUrl: './complementaria.component.html',
   styleUrl: './complementaria.component.scss',
 })
-export class ComplementariaComponent implements OnDestroy {
-  /**
-   * Señal que representa el estado de certificación SAT.
-   * 
-   * @type {Signal<string>}
-   * @valor Inicialmente configurado con el valor 'Sí'.
-   * 
-   * Esta señal se utiliza para indicar si la certificación SAT está activa o no.
-   */
-  public certificacionSAT$ = signal('Sí');
-
-  /**
-   * Tipo de selección de la tabla.
-   * @property {TablaSeleccion} tablaSeleccion
-   */
-  public tablaSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
-
-  /**
-   * Configuración de la tabla para los accionistas.
-   * 
-   * Esta propiedad define la configuración de las columnas para mostrar
-   * los datos de los contribuyentes accionistas en la tabla. Utiliza
-   * una estructura de configuración predefinida que se encuentra en
-   * `CONFIGURACION_CONTRIBUYENTES_ACCIONISTAS`.
-   * 
-   * @type {ConfiguracionColumna<DatosContribuyente>[]} 
-   */
-  public configuracionAccionistasTabla: ConfiguracionColumna<DatosContribuyente>[] =
-    CONFIGURACION_CONTRIBUYENTES_ACCIONISTAS;
-
+export class ComplementarioComponent implements OnDestroy {
   /**
    * Arreglo que almacena los datos de los accionistas relacionados con el contribuyente.
    * 
@@ -83,15 +52,7 @@ export class ComplementariaComponent implements OnDestroy {
    * detallada de cada accionista. Se utiliza para gestionar y mostrar los datos de los accionistas
    * en la tabla correspondiente dentro del componente.
    */
-  public accionistasTablaDatos: DatosContribuyente[] = [];
-
-  /**
-   * Arreglo que almacena los datos seleccionados de los accionistas en la tabla.
-   * 
-   * Este arreglo contiene objetos de tipo `DatosContribuyente` que representan
-   * la información de los accionistas seleccionados por el usuario en la interfaz.
-   */
-  public accionistasTablaSeleccionada: DatosContribuyente[] = [];
+  public accionistasTablaDatos: Complimentaria[] = [];
 
   /**
    * Configuración de la tabla de federatarios.
@@ -115,15 +76,6 @@ export class ComplementariaComponent implements OnDestroy {
   public federatariosTablaDatos: Federatario[] = [];
 
   /**
-   * Arreglo que almacena los federatarios seleccionados en la tabla.
-   * 
-   * Este arreglo se utiliza para gestionar los federatarios que han sido seleccionados
-   * por el usuario en la interfaz de usuario. Cada elemento del arreglo es una instancia
-   * de la clase `Federatario`.
-   */
-  public federatariosTablaSeleccionada: Federatario[] = [];
-
-  /**
    * Configuración de las columnas para la lista de federatarios que realizarán las operaciones
    * en las plantas IMMEX. Esta configuración se utiliza para definir las propiedades y 
    * características de las columnas en la tabla correspondiente.
@@ -144,63 +96,38 @@ export class ComplementariaComponent implements OnDestroy {
   public plantasIMMEXDatos: FederatarioRealizaranLasOperaciones[] = [];
 
   /**
-   * Arreglo que almacena las plantas IMMEX seleccionadas para realizar operaciones.
-   * 
-   * Cada elemento del arreglo es de tipo `FederatarioRealizaranLasOperaciones`, 
-   * que representa la información de las plantas seleccionadas.
-   * 
-   * Este arreglo se utiliza para gestionar y procesar las plantas IMMEX 
-   * asociadas a las operaciones complementarias dentro del componente.
-   */
-  public plantasIMMEXSeleccionada: FederatarioRealizaranLasOperaciones[] = [];
-
-  /**
    * Configuración de columnas para la tabla de empresas submanufactureras.
    * Define cómo se mostrarán los datos en la tabla dinámica.
    */
-  public configuracionEmpresasSubmanufacturerasTabla: ConfiguracionColumna<DatosEmpresaSubmanufacturera>[] =
+  public configuracionEmpresasSubmanufacturerasTabla: ConfiguracionColumna<Empresas>[] =
     CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS;
 
   /**
    * Arreglo que contiene los datos que se mostrarán en la tabla de empresas submanufactureras.
    */
-  public empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[] =
-    [];
-
-  /**
-   * Arreglo que almacena las filas seleccionadas por el usuario desde la tabla dinámica.
-   * Se actualiza cada vez que el usuario selecciona una fila.
-   */
-  public empresasSubmanufacturerasTablaSeleccionada: DatosEmpresaSubmanufacturera[] =
+  public empresasSubmanufacturerasTablaDatos: Empresas[] =
     [];
 
   /**
    * Configuración de columnas para la tabla de plantas manufactureras.
    */
-  public configuracionPlantasManufacturerasTabla: ConfiguracionColumna<DatosPlantaManufacturera>[] =
+  public configuracionPlantasManufacturerasTabla: ConfiguracionColumna<Plantas>[] =
     CONFIGURACION_PLANTAS_MANUFACTURERAS;
-
+/**
+   * Configuración de las columnas de la tabla para las operaciones.
+   * @type {ConfiguracionColumna<Operacions>[]}
+   */
+   configuracionOperacion: ConfiguracionColumna<Operacions>[] =
+    CONFIGURACION_OPERACIONES;
+/**
+   * Datos de las operaciones obtenidos desde el servicio.
+   * @type {Operacions[]}
+   */
+  datosOperacions: Operacions[] = [];
   /**
    * Datos que se mostrarán en la tabla de plantas manufactureras.
    */
-  public plantasManufacturerasTablaDatos: DatosPlantaManufacturera[] = [];
-
-  /**
-   * Filas seleccionadas por el usuario en la tabla de plantas manufactureras.
-   */
-  public plantasManufacturerasTablaSeleccionada: DatosPlantaManufacturera[] =
-    [];
-
-  /**
-   * Configuración de la tabla para los servicios IMMEX.
-   * 
-   * Esta propiedad define la configuración de las columnas para la tabla
-   * que muestra los servicios IMMEX. Utiliza un arreglo de objetos de tipo
-   * `ConfiguracionColumna<ServicioImmex>` que se inicializa con la constante
-   * `CONFIGURACION_SERVICIOS_IMMEX`.
-   */
-  public configuracionServiciosImmexTabla: ConfiguracionColumna<ServicioImmex>[] =
-    CONFIGURACION_SERVICIOS_IMMEX;
+  public plantasManufacturerasTablaDatos: Plantas[] = [];
 
   /**
    * Arreglo que almacena los datos de los servicios IMMEX.
@@ -209,16 +136,7 @@ export class ComplementariaComponent implements OnDestroy {
    * los servicios relacionados con el programa IMMEX. Se utiliza para
    * gestionar y mostrar la información correspondiente en la tabla de datos.
    */
-  public serviciosImmexTablaDatos: ServicioImmex[] = [];
-
-  /**
-   * Arreglo que almacena los servicios seleccionados de tipo Immex en la tabla.
-   * 
-   * Este arreglo se utiliza para gestionar los servicios Immex que han sido seleccionados
-   * por el usuario en la interfaz de usuario. Cada elemento del arreglo es una instancia
-   * de la clase `ServicioImmex`.
-   */
-  public serviciosImmexTablaSeleccionada: ServicioImmex[] = [];
+  public serviciosImmexTablaDatos: ServiciosImmex[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
@@ -226,6 +144,11 @@ export class ComplementariaComponent implements OnDestroy {
    * suscripciones activas y prevenir fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+   * Certificación SAT proporcionada como entrada al componente.
+   */
+  certificacionSAT: string = '';
 
   /**
    * Constructor de la clase `ComplementariaComponent`.
@@ -242,32 +165,18 @@ export class ComplementariaComponent implements OnDestroy {
    */
   constructor(
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
-    public tramite80303Querry: Tramite80303Query
+    public tramite80303Querry: Tramite80303Query,
+    public tramite80303Store: Tramite80303Store,
   ) {
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'accionistasTablaDatos',
-      '/80303/accionistasTablaDatos.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'federatariosTablaDatos',
-      '/80303/federatariosTablaDatos.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'plantasIMMEXDatos',
-      '/80303/plantasIMMEXDatos.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'empresasSubmanufacturerasTablaDatos',
-      '/80303/empresasSubmanufacturerasTablaDatos.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'plantasManufacturerasTablaDatos',
-      '/80303/plantasManufacturerasTablaDatos.json'
-    );
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'serviciosImmexTablaDatos',
-      '/80303/serviciosImmexTablaDatos.json'
-    );
+     this.fetchAccionistasTablaDatos(); 
+      this.fetchFederatariosTablaDatos(); 
+     this.fetchPlantasIMMEXDatos(); 
+    this.fetchDatosCertificacionSAT('AAL0409235E6');
+     this.fetchEmpresasSubmanufacturerasTablaDatos('202734892'); 
+
+      this.fetchPlantasManufacturerasTablaDatos('202734892,202734901'); 
+  
+  this.fetchServiciosImmexTablaDatos();
 
     this.tramite80303Querry.selectTramiteState$.pipe(takeUntil(this.destroyNotifier$)).subscribe(state => {
       this.accionistasTablaDatos = state.accionistasTablaDatos;
@@ -278,22 +187,150 @@ export class ComplementariaComponent implements OnDestroy {
       this.serviciosImmexTablaDatos = state.serviciosImmexTablaDatos;
     });
   }
+/**
+ * Fetches data for `plantasManufacturerasTablaDatos` using the API.
+ * @param idSolicitud - Comma-separated IDs for the API query.
+ */
+fetchPlantasManufacturerasTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarPlantasSubmanufactureras(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.plantasManufacturerasTablaDatos = response.datos; 
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Plantas Manufactureras Datos:', error);
+      }
+    );
+}
+/**
+ * Fetches data for `empresasSubmanufacturerasTablaDatos` using the API.
+ * @param idSolicitud - The ID for the API query.
+ */
+fetchEmpresasSubmanufacturerasTablaDatos(idSolicitud: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarEmpresaSubmanufacturera(idSolicitud)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.empresasSubmanufacturerasTablaDatos = response.datos; 
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Empresas Submanufactureras Datos:', error);
+      }
+    );
+}
+/** * Fetches data for `serviciosImmexTablaDatos` using the API.
+ */
+fetchServiciosImmexTablaDatos(): void {
+  const BODY = {
+    idSolicitud: ["3198492", "3198493"], 
+  };
 
-  /**
-   * Maneja el evento de cambio de entrada en un elemento HTML de tipo input.
-   * 
-   * Este método se activa cuando ocurre un cambio en el valor del campo de entrada.
-   * Convierte el evento recibido en un elemento de entrada HTML y, si el elemento existe,
-   * actualiza el valor de la propiedad `certificacionSAT$` con el nuevo valor del campo de entrada.
-   * 
-   * @param event - El evento de cambio generado por el elemento de entrada HTML.
-   */
-  onInputChange(event: Event): void {
-    const INPUT_ELEMENT = event.target as HTMLInputElement;
-    if (INPUT_ELEMENT) {
-      this.certificacionSAT$.set(INPUT_ELEMENT.value);
-    }
-  }
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarServiciosImmex(BODY)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response: JSONRespuesta<ServiciosImmex[]>) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.serviciosImmexTablaDatos = response.datos; 
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Servicios IMMEX Datos:', error);
+        console.error('Error Details:', error.error); 
+      }
+    );
+}
+/**
+ * Fetches data for `accionistasTablaDatos` using the API.
+ */
+fetchAccionistasTablaDatos(): void {
+  const BODY = {
+    idSolicitud: [202734900, 202734904], 
+  };
+
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarSocioAccionista(BODY)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.accionistasTablaDatos = response.datos; 
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Accionistas Tabla Datos:', error);
+      }
+    );
+}
+/**
+ * Fetches data for `federatariosTablaDatos` using the API.
+ */
+fetchFederatariosTablaDatos(): void {
+  const BODY = {
+    idSolicitud: [202734900, 202734904], // Example payload with IDs
+  };
+
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarNotariosConsulta(BODY)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.federatariosTablaDatos = response.datos; 
+        } 
+      },
+      (error) => {
+        console.error('Error fetching Federatarios Tabla Datos:', error);
+      }
+    );
+}
+/**
+ * Fetches data for `plantasIMMEXDatos` using the API.
+ */
+fetchPlantasIMMEXDatos(): void {
+  const BODY = {
+    idSolicitud: [202734892, 202734901], 
+  };
+
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarPlantas(BODY)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.datosOperacions = response.datos; 
+        } 
+      },
+     
+    );
+}
+/** * Fetches data for `certificacionSAT` using the API.
+ * @param rfc - The RFC for the API query.
+ */
+fetchDatosCertificacionSAT(rfc: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .buscarDatosCertificacionSAT(rfc)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((respuesta) => {
+      this.certificacionSAT = respuesta.datos?.certificacionSAT || '';
+      this.tramite80303Store.setCertificacionSAT(this.certificacionSAT);
+    }, );
+}
 
   /**
 * Método que se ejecuta cuando el componente es destruido.

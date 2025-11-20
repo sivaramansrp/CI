@@ -70,6 +70,8 @@
         [datos]="anexoUnoTablaLista"
         (filaSeleccionada)="setAnexoUnoLista($event)"
         [disableSeleccionTablaRadio]="formularioDeshabilitado"
+        [showPagination]="true" [mode]="'client'"
+        [totalItems]="anexoUnoTablaLista.length"
       ></app-tabla-dinamica>
     </div>
   </form>
@@ -237,3 +239,10 @@
     </div>
   </div>
 </ng-container>
+@if (notificacionAgregarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicios">
+  </lib-notificaciones>
+</section>
+}

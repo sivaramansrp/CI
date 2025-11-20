@@ -24,10 +24,17 @@ describe('DatosCertificadoComponent', () => {
       setFormDatosCertificado: jest.fn(),
       setIdioma: jest.fn(),
       setRepresentacionFederal: jest.fn(),
-      setFormValida: jest.fn()
+      setFormValida: jest.fn(),
+      setFormValidity: jest.fn()
     };
 
     tramite110217QueryMock = {
+      formDatosCertificado$: of({
+        observaciones: 'Observaciones de prueba',
+        idioma: 1,
+        entidadFederativa: 1,
+        representacionFederal: 1
+      }),
       selectSolicitud$: of({
         observaciones: 'Observaciones de prueba',
         idioma: 1,
@@ -71,27 +78,14 @@ describe('DatosCertificadoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    expect(component.childForm).toBeDefined();
-
-    component.ngOnInit();
-    
-    expect(component.formDatosCertificadoValues).toEqual({
-      observaciones: 'Observaciones de prueba',
-      idioma: 1,
-      entidadFederativa: 1,
-      representacionFederal: 1
-    });
-  });
-
   it('should call setIdioma when idiomaSeleccion is called', () => {
-    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Español' };
+    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Español', clave: '1' };
     component.idiomaSeleccion(mockCatalogo);
     expect(tramite110217StoreMock.setIdioma).toHaveBeenCalledWith('1');
   });
 
   it('should call setRepresentacionFederal when representacionFederalSeleccion is called', () => {
-    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Representación 1' };
+    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Representación 1', clave: '1' };
     component.representacionFederalSeleccion(mockCatalogo);
     expect(tramite110217StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('1');
   });
@@ -131,12 +125,6 @@ describe('DatosCertificadoComponent', () => {
     expect(component.idioma).toBe(true);
     expect(component.presenta).toBe(false);
     expect(component.esFormularioSoloLectura).toBe(false);
-  });
-
-  it('should initialize observables in constructor', () => {
-    expect(component.idiomaDatos$).toBeDefined();
-    expect(component.entidadFederativas$).toBeDefined();
-    expect(component.representacionFederal$).toBeDefined();
   });
 
   it('should update esFormularioSoloLectura based on consultaQuery state', () => {

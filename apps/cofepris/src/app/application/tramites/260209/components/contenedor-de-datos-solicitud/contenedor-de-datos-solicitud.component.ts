@@ -17,6 +17,7 @@ import {
   Tramite260209Store,
 } from '../../estados/tramite260209Store.store';
 import { map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -24,7 +25,7 @@ import { ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/destinados-donacio.enum';
 import { Subject } from 'rxjs';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component
  * @name ContenedorDeDatosSolicitudComponent
@@ -59,6 +60,22 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual del trámite 260209.
    */
   public tramiteState!: Tramite260209State;
+
+   /**
+         * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+         * @description
+         * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+         * mediante el decorador `@ViewChild`.
+         *
+         * Esta propiedad permite acceder a los métodos públicos y propiedades
+         * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+         *
+         * > Nota: Angular inicializa esta referencia después de que la vista
+         * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+         */
+        @ViewChild(DatosDeLaSolicitudComponent)
+        datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+     
 
   /**
    * @property {object} opcionConfig
@@ -159,13 +176,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260209Query: Tramite260209Query,
     private tramite260209Store: Tramite260209Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+        private cdr: ChangeDetectorRef
   ) {
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.esFormularioSoloLectura = seccionState.readonly;
+            this.cdr.detectChanges();
           })
         )
         .subscribe();
@@ -186,7 +205,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            JSON.parse(JSON.stringify(this.tramiteState.tablaMercanciasConfigDatos));
         })
       )
       .subscribe();
@@ -213,6 +232,26 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260209Store.updateScianConfigDatos(event);
   }
 
+
+ /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * @method mercanciasSeleccionado
    * @description

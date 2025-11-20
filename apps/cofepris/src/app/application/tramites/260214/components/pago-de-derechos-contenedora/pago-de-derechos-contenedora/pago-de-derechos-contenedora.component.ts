@@ -6,7 +6,7 @@
  * También interactúa con el estado global del trámite a través del store `Tramite260214Store`.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -63,6 +63,9 @@ export class PagoDeDerechosContenedoraComponent {
    */
   public pagoDerechos: PagoDerechosFormState;
 
+  @ViewChild(PagoDeDerechosComponent)
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
   /**
    * @constructor
    * @description
@@ -85,5 +88,11 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

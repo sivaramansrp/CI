@@ -18,37 +18,21 @@
             </li>
           
         </ul>
-        <ng-container>
-            @switch (indice) {
-            @case (1) {
-        
-                <solicitante #Solicitante></solicitante>
-            }
-            @case (2) {
-                 @if (esDatosRespuesta) {    
-                <app-tratados-110203></app-tratados-110203>   
-           
-            }
-        }
-            @case (3) {
-                 @if (esDatosRespuesta) {    
-                <app-destinatario-110203></app-destinatario-110203>       
-           
-            }
-        }
-            @case (4) {
-                 @if (esDatosRespuesta) {    
-                <app-transporte-110203></app-transporte-110203>   
-           
-            }
-        }
-            @case (5) {
-                 @if (esDatosRespuesta) {    
-                <app-datos-certificado-110203></app-datos-certificado-110203>      
-                 }
-            }
-          
-            }
-        </ng-container>
+
+<ng-container>
+  <!-- indice = 1 -->
+  <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
+  @if (esDatosRespuesta) {
+    <!-- indice = 2 -->
+    <app-tratados-110203 #TratadosComponent [hidden]="indice !== 2"></app-tratados-110203>
+    <!-- indice = 3 -->
+    <app-destinatario-110203 #DestinatarioComponent [hidden]="indice !== 3"></app-destinatario-110203>
+    <!-- indice = 4 -->
+    <app-transporte-110203 #TransporteComponent [hidden]="indice !== 4"></app-transporte-110203>
+    <!-- indice = 5 -->
+    <app-datos-certificado-110203 #DatosCertificadoComponent [hidden]="indice !== 5"></app-datos-certificado-110203>
+  }
+</ng-container>
+
     </div>
 </div>

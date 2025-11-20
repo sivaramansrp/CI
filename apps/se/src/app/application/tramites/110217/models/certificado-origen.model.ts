@@ -25,6 +25,9 @@ export interface HistoricoColumnas {
   
   /** Número de fax del productor (opcional) */
   fax: string;
+
+  /** Indica si el productor es nuevo. */
+  nuevo?: boolean;
 }
 /**
  * Representa los datos del productor exportador.
@@ -80,7 +83,7 @@ export interface AgregarDatosProductorFormulario {
  */
 export interface GrupoReceptor {
   /** Nombre del receptor */
-  nombre: string;
+  nombres: string;
   
   /** Primer apellido del receptor */
   apellidoPrimer: string;
@@ -121,6 +124,9 @@ export interface GrupoDeDirecciones {
   
   /** Dirección de correo electrónico */
   correoElectronico: string;
+
+  /** Pais */
+  pais: string;
 }
 /**
  * Representa los datos del grupo representativo.
@@ -459,4 +465,29 @@ export interface ConsultaDatos {
   
   /** Array de productores exportadores históricos */
   productoresExportador: HistoricoColumnas[];
+}
+
+/**
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la tabla de mercancías.
+ * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
+ * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
+ * valor de la mercancía y RFC del productor.
+ * 
+ */
+export interface MercanciaTabla {
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?: string;
+  nombreTecnico?: string;
+  nombreComercial?: string;
+  valorMercancia: string;
+  rfcProductor?: string;
+  numeroFactura?: string;
+  complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
 }

@@ -2,10 +2,10 @@ import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } fro
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import { ConsultaioQuery, ConsultaioState,convertDate } from '@ng-mf/data-access-user';
+import { FECHA_INGRESO, VIGENCIA,SearchType } from '../../enums/datos-tramite.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil,tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
@@ -13,6 +13,11 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 import moment from 'moment';
+import {
+    SolicitanteService
+} from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -34,6 +39,11 @@ import moment from 'moment';
   providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+
+  @Input() RFC: string = 'LEQI8101314S7';
+
+  rfc_original: string = "";
+
   /**
    * Formulario principal de la solicitud.
    */
@@ -158,15 +168,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
-    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.iniciales_contenedor, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numero_contenedor, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digito_verificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipo_contenedor, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fecha_ingreso, orden: 5 },
     { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.puede_registrar, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe_en_vucem, orden: 9 }
   ];
 
   /**
@@ -174,15 +184,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public csvTabla: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
-    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.iniciales_contenedor, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numero_contenedor, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digito_verificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (articulo) => articulo.tipo_contenedor, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fecha_ingreso, orden: 5 },
     { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estado, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe, orden: 9 }
+    { encabezado: 'Estado de constancia', clave: (articulo) => articulo.puede_registrar, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existe_en_vucem, orden: 9 }
   ];
 
   /**
@@ -246,6 +256,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitanteServicio: SolicitanteService,
+    private toastrService: ToastrService,
+
+
   ) {
     this.aduana = {
       catalogos: [],
@@ -295,7 +309,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
+    this.getDatosGenerales(this.RFC);
+    this.solicitudForm.get('archivoSeleccionadoName')?.disable();
+    this.datosDelContenedor = this.solicitud11204State.datosDelContenedor || [];
+    this.datosDelCsvArchivo = this.solicitud11204State.datosDelCsvArchivo || [];
   }
 
   /**
@@ -305,6 +322,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  getDatosGenerales(RFC: string): void {
+        this.solicitanteServicio
+            .getDatosGeneralesAPI(RFC)
+            .pipe(
+                tap((response: any) => {
+                    if (response) {
+                        this.rfc_original = response.datos.rfc_original
+                    }
+                })
+            )
+            .subscribe();
+    }
 
   /**
    * Inicializa el formulario reactivo.
@@ -323,7 +353,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11204State.aduanaMenuDesplegable,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
+      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required],
+      archivoSeleccionadoName: [{ value: '', disabled: true }],
     });
     this.mostrarCampos();
     if (this.soloLectura) {
@@ -366,7 +397,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       return;
     }
     const VALUE = TARGET.value;
-   
     if (controlName === 'inicialesContenedor') {
       const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
       this.solicitudForm.get(controlName)?.setValue(SANITIZED);
@@ -390,6 +420,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('vigencia')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     }
+
+
   }
   
   /**
@@ -467,6 +499,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarSeccionExcel = false;
     this.mostrarAgregarTipoContenedor = false;
     this.solicitudForm.get('archivoSeleccionado')?.disable();
+    this.datosDelContenedor = [];
+    this.datosDelCsvArchivo = [];
   }
 
   /**
@@ -481,14 +515,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar modal de captura de datos.
    */
   datosCapturaModal(): void {
-    if (this.solicitudForm.value.aduana && this.solicitudForm.value.inicialesContenedor && this.solicitudForm.value.numeroContenedor) {
-      if (this.modalElement) {
+    if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
       }
-    } else {
-      this.solicitudForm.markAllAsTouched();
-    }
+    
   }
 
   /**
@@ -525,8 +556,21 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
-      this.agregarSolicitud();
+    const DIGITOCONTROL = this.solicitudForm.value.digitoDeControl || '';
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
+      const API_PAYLOAD = {
+        "rfc": this.rfc_original,
+        "aduana": ADUANA,
+        "iniciales_contenedor": INICIALESCONTENEDOR,
+        "numero_contenedor": NUMEROCONTENEDOR,
+        "digito_verificador": DIGITOCONTROL,
+        "fecha_ingreso": convertDate(FECHAINGRESO),
+        "vigencia": convertDate(VIGENCIA),
+        "tipo_contenedor": CONTENEDORES,
+        "numero_constancia": ""
+      }
+
+      this.agregarSolicitud(API_PAYLOAD);
     }
   }
 
@@ -539,23 +583,32 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
-        this.mostrarArchivoSeleccionadoTable = true;
-      };
-      READER.readAsText(FILE);
-    }
-    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      const formData = new FormData();
+            formData.append('archivo', FILE);
+            formData.append('rfc', this.rfc_original);
+            formData.append('aduana', this.solicitudForm.get('aduanaMenuDesplegable')?.value);
+            formData.append('fingreso', convertDate(this.solicitudForm.get('fechaDeIngreso')?.value));
+
+             this.datosTramiteService.fileUpload(formData).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
-        if (respuesta?.success) {
+     if (respuesta?.codigo === '00') {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
-          this.datosDelCsvArchivo.push(respuesta.datos);
+          this.solicitudForm.get('archivoSeleccionadoName')?.setValue(FILE.name);//it not working
+          this.datosDelCsvArchivo =  respuesta?.datos.contenedores.map((item: any) => ({
+                            ...item,
+                            vigencia : item.vigencia ? item.vigencia.split(' ')[0] : '',
+                            fecha_inicio : item.fecha_inicio ? item.fecha_inicio.split(' ')[0] : '',
+                            fecha_ingreso : item.fecha_ingreso ? item.fecha_ingreso.split(' ')[0] : '',
+                            existe_en_vucem: item.existe_en_vucem ? 'Sí' : 'No'
+          }));
           (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+
+
         }
       }
     );
+    }
+   
   }
 
   /**
@@ -599,16 +652,34 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Agregar solicitud.
    */
-  agregarSolicitud(): void {
-      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+  agregarSolicitud(payload: any): void {
+      const tipoBusqueda = this.solicitudForm.value.tipoBusqueda;
+      this.datosTramiteService.agregarSolicitud(payload).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
-        if (respuesta?.success) {
+        if (respuesta?.codigo === '00') {
+          respuesta.datos.existe_en_vucem = respuesta.datos.existe_en_vucem ? 'Sí' : 'No';
+          respuesta.datos.fecha_ingreso = respuesta.datos.fecha_ingreso ? respuesta.datos.fecha_ingreso.split(' ')[0] : '';
+          respuesta.datos.fecha_inicio = respuesta.datos.fecha_inicio ? respuesta.datos.fecha_inicio.split(' ')[0] : '';
+          respuesta.datos.vigencia = respuesta.datos.vigencia ? respuesta.datos.vigencia.split(' ')[0] : '';
           respuesta.datos.id = this.datosDelContenedor.length + 1;
-          this.datosDelContenedor.push(respuesta.datos);
+          this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
+          this.mostrarButtons = true;
+          this.mostrarAgregarTipoContenedor = false;
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
+          this.solicitudForm.value.inicialesContenedor = '';
+          this.solicitudForm.value.numeroContenedor = '';
+          this.solicitudForm.value.digitoDeControl = '';
+          this.mostrarAgregarTipoContenedor = false;
+          this.solicitudForm.get('tipoBusqueda')?.setValue(tipoBusqueda);
+        }
+        else if(respuesta?.codigo === 'SAT11204-CT02'){
+            this.datosCapturaModal()
+          }
+        else{
+          this.toastrService.error(respuesta.error);
         }
       }
     );
@@ -620,7 +691,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   cargarCatalogos(): void {
     this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
-        this.contenedores.catalogos = data.data;
+        this.contenedores.catalogos = data.datos;
       },
     );
   }
@@ -630,9 +701,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public fetchgetaduanaLista(): void {
     this.datosTramiteService
-      .getAduanaLista('aduanaLista')
+      .getAduanaLista()
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
-        this.catalogoList = respuesta.data;
+        this.catalogoList = respuesta.datos;
       });
   }
 
@@ -663,5 +734,94 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   continuar(): void {
     this.continuarEvento.emit('');
   }
+  
+ 
+
+    /**
+     * Guarda la solicitud actual construyendo y enviando un payload al servicio de trámite.
+     *
+     * La función:
+     * - Lee el tipo de búsqueda seleccionado desde this.solicitudForm ('tipoBusqueda') y, según
+     *   SearchType, selecciona la fuente de datos adecuada (this.datosDelContenedor o this.datosDelCsvArchivo).
+     * - Normaliza cada elemento de la lista de "contenedores":
+     *   - Convierte el campo existe_en_vucem de la cadena 'Sí' a true (cualquier otro valor se deja como false).
+     *   - Si las propiedades de fecha (fecha_ingreso, fecha_inicio, vigencia) están presentes,
+     *     les concatena " 00:00:00".
+     * - Construye el payload con:
+     *   - id_solcitud: tomado de this.solicitud11204State.idSolicitud o null si no existe.
+     *   - solicitante: objeto con datos del solicitante (en el código actual contiene valores estáticos,
+     *     incluyendo this.rfc_original para el RFC).
+     *   - contenedores: el arreglo ya normalizado.
+     * - Llama a this.datosTramiteService.solicitudGuardar(PAYLOAD) y se subscribe al resultado.
+     *   - La suscripción está gestionada con takeUntil(this.destroyNotifier$) para evitar fugas de memoria.
+     *   - En caso de respuesta exitosa (respuesta?.codigo === '00'), actualiza el store
+     *     this.Tramite11204Store.setIdSolicitud(...) con el id recibido y llama a this.continuar().
+     *
+     * Notas:
+     * - No devuelve valor (void).
+     * - No lanza excepciones explícitas; cualquier manejo de errores dependiente del servicio
+     *   debería implementarse en la suscripción (p.ej. manejador error).
+     * - El campo "solicitante" en el payload contiene valores hardcodeados en la implementación actual;
+     *   considere reemplazarlos por datos dinámicos según corresponda.
+     *
+     * @returns {void} No retorna valor.
+     * @remarks Dependencias internas:
+     * - this.solicitudForm (para obtener tipoBusqueda)
+     * - SearchType enum (para determinar la fuente de datos)
+     * - this.datosDelContenedor | this.datosDelCsvArchivo (orígenes de contenedores)
+     * - this.solicitud11204State.idSolicitud (para id_solcitud)
+     * - this.rfc_original (para solicitante.rfc)
+     * - this.datosTramiteService.solicitudGuardar (llamada al backend)
+     * - this.Tramite11204Store (para persistir id de solicitud)
+     * - this.continuar() (flujo posterior a guardado exitoso)
+     */
+    solicitudGuardar(): void {
+        const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value as SearchType;
+        const normalize = (item: any) => ({
+            ...item,
+            existe_en_vucem: item.existe_en_vucem == 'Sí' ? true : false,
+            fecha_ingreso: item.fecha_ingreso ? `${item.fecha_ingreso} 00:00:00` : item.fecha_ingreso,
+            fecha_inicio: item.fecha_inicio ? `${item.fecha_inicio} 00:00:00` : item.fecha_inicio,
+            vigencia: item.vigencia ? `${item.vigencia} 00:00:00` : item.vigencia
+        });
+
+        let contenedores: any[] = [];
+        switch (TIPO_BUSQUEDA) {
+            case SearchType.Contenedor:
+                contenedores = this.datosDelContenedor.map(normalize);
+                break;
+            case SearchType.ArchivoCsv:
+                contenedores = this.datosDelCsvArchivo.map(normalize);
+                break;
+            default:
+                contenedores = [];
+        }
+
+        const PAYLOAD = {
+            "id_solcitud": this.solicitud11204State.idSolicitud || null,
+            "solicitante": {
+                "rfc": this.rfc_original,
+                "nombre": "Juan Pérez",
+                "es_persona_moral": true,
+                "certificado_serial_number": "string"
+            },
+            "contenedores": contenedores
+        }
+        this.datosTramiteService
+            .solicitudGuardar(PAYLOAD)
+            .pipe(takeUntil(this.destroyNotifier$)
+
+            )
+            .subscribe(
+                (respuesta) => {
+                    // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
+                    if (respuesta?.codigo === '00') {
+                        this.Tramite11204Store.setIdSolicitud(respuesta.datos.id_solicitud);
+                        this.continuar();
+                    }
+                }
+            );
+    }
+
 
 }

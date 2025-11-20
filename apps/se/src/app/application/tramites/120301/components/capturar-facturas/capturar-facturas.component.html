@@ -102,13 +102,13 @@
                     </option>
                   </select>
                 </div>
-
                 <div class="col-md-4">
                   <div class="form-group capturar-factura-datepicker">
                     <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
                       [datos]="fechaInicioInputs"
                       (valorCambiado)="facturaForm.get('fechaExpedicionFactura')?.setValue($event)"
-                      [deshabilitarFuturas]="true">
+                      [deshabilitarFuturas]="true"
+                      [asteriskClass]="facturaForm.get('fechaExpedicionFactura')?.invalid && (facturaForm.get('fechaExpedicionFactura')?.touched || facturaForm.get('fechaExpedicionFactura')?.dirty) ? 'mensaje-error' : ''">
                     </input-fecha>
                   </div>
                   <div
@@ -150,6 +150,7 @@
                     <ng-titulo titulo="Datos del emisor/consignatario" />
                   </div>
                   <div class="row mt-5">
+                    @if (facturaForm.get('pais')?.value === 'ESTADOS UNIDOS DE AMERICA') {
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="taxId">TAX ID:</label>
@@ -164,6 +165,7 @@
                         }
                       </div>
                     </div>
+                    }
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="razonSocial">
@@ -175,7 +177,8 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" id="razonSocial" placeholder="" type="text" libUppercase
-                          name="razonSocial" formControlName="razonSocial"  (input)="onInputUppercase('razonSocial', $event)"
+                          name="razonSocial" formControlName="razonSocial"
+                          (input)="onInputUppercase('razonSocial', $event)"
                           (change)="setValoresStore(facturaForm,'razonSocial','setRazonSocial')" />
                         @if (facturaForm.get('razonSocial')?.hasError('required') &&
                         (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
@@ -189,6 +192,39 @@
                         }
                       </div>
                     </div>
+                    @if (facturaForm.get('pais')?.value === 'CANADA') {
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="domicilio">
+                          Domicilio<span [ngClass]="{
+                              'mensaje-error':
+                                facturaForm.get('domicilio')?.invalid &&
+                                (facturaForm.get('domicilio')?.touched ||
+                                  facturaForm.get('domicilio')?.dirty)
+                            }">*</span>:
+                        </label>
+                        <input class="form-control" value="" id="domicilio" placeholder="" type="text" libUppercase
+                          name="domicilio" formControlName="domicilio" (change)="
+                            setValoresStore(
+                              facturaForm,
+                              'domicilio',
+                              'setDomicilio'
+                            )
+                          " />
+                        @if (facturaForm.get('domicilio')?.hasError('required') &&
+                        (facturaForm.get('domicilio')?.touched || facturaForm.get('domicilio')?.dirty)) {
+                        <small class="mensaje-error">Este campo es obligatorio</small>
+                        } @else if (facturaForm.get('domicilio')?.hasError('maxlength') &&
+                        (facturaForm.get('domicilio')?.touched || facturaForm.get('domicilio')?.dirty)) {
+                        <small class="mensaje-error">Por favor, no escribas más de 70 caracteres</small>
+                        } @else if (facturaForm.get('domicilio')?.hasError('pattern') &&
+                        facturaForm.get('domicilio')?.touched) {
+                        <span class="mensaje-error">Por favor, sólo escribe dígitos</span>
+                        }
+                      </div>
+                    </div>
+                    }
+                    @if (facturaForm.get('pais')?.value === 'ESTADOS UNIDOS DE AMERICA') {
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="calle">Calle<span [ngClass]="{
@@ -221,7 +257,8 @@
                             }">*</span>:
                         </label>
                         <input class="form-control" value="" class="form-control" id="ciudad" placeholder="" type="text"
-                          libUppercase name="ciudad" formControlName="ciudad" (input)="onInputUppercase('ciudad', $event)" (change)="
+                          libUppercase name="ciudad" formControlName="ciudad"
+                          (input)="onInputUppercase('ciudad', $event)" (change)="
                             setValoresStore(facturaForm, 'ciudad', 'setCiudad')
                           " />
                         @if (facturaForm.get('ciudad')?.hasError('required') && (facturaForm.get('ciudad')?.touched ||
@@ -278,6 +315,7 @@
                         }
                       </div>
                     </div>
+                    }
                   </div>
                 </div>
               </div>

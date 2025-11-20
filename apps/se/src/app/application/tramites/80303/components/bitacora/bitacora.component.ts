@@ -1,12 +1,6 @@
-import {
-  BITACORA_ENCABEZADO_DE_TABLA,
-  Bitacora,
-} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { Bitacora } from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { BitacoraTablaComponent } from '../../../../shared/components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Subject } from 'rxjs';
@@ -28,7 +22,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-bitacora',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, BitacoraTablaComponent],
   templateUrl: './bitacora.component.html',
   styleUrl: './bitacora.component.scss',
 })
@@ -47,20 +41,6 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * los registros de la bitácora asociados a la aplicación.
    */
   bitacoraTablaDatos: Bitacora[] = [];
-  /**
-   * Configuración de la tabla para la bitácora.
-   * 
-   * Este objeto contiene la configuración necesaria para inicializar
-   * y renderizar la tabla de la bitácora, utilizando un encabezado
-   * predefinido.
-   * 
-   * Propiedades:
-   * - `configuracionTabla`: Define el encabezado de la tabla basado en
-   *   la constante `BITACORA_ENCABEZADO_DE_TABLA`.
-   */
-  bitacoraTablaConfiguracion = {
-    configuracionTabla: BITACORA_ENCABEZADO_DE_TABLA,
-  };
 
   /**
    * Constructor de la clase BitacoraComponent.
@@ -82,16 +62,37 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * - Gestiona automáticamente la finalización de la suscripción al destruir el componente.
    */
   ngOnInit(): void {
-    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
-      'bitacoraTablaDatos',
-      '/80303/bitacoraTablaDatos.json'
+  
+      this.fetchBitacoraDatos('120662'); // Pass the `idPrograma` dynamically
+
+}
+/**
+ * Fetches data for `bitacoraTablaDatos` using the API.
+ * @param idPrograma - The ID of the program to query.
+ */
+fetchBitacoraDatos(idPrograma: string): void {
+  this.modificacionProgramaImmexBajaSubmanufactureraService
+    .consultarBitacoraImmex(idPrograma)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(
+      (response) => {
+        if (response && response.codigo === '00' && response.datos) {
+          this.bitacoraTablaDatos = response.datos; 
+        } else {
+          console.error('Unexpected response format:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching Bitácora Datos:', error);
+        console.error('Error Details:', {
+          status: error.status,
+          statusText: error.statusText,
+          url: error.url,
+          message: error.message,
+        });
+      }
     );
-    this.tramite80303Querry.selectTramiteState$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((state) => {
-        this.bitacoraTablaDatos = state.bitacoraTablaDatos;
-      });
-  }
+}
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.

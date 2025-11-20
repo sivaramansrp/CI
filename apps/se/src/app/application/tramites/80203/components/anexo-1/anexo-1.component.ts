@@ -1,4 +1,5 @@
 import {
+  AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
   CatalogoServices,
@@ -8,6 +9,7 @@ import {
   NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
+  SoloNumerosDirective,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -21,7 +23,9 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  forwardRef
 } from '@angular/core';
+import { ERROR_CANDIDAD_POR_PERIODO, ERROR_CANTIDAD, ERROR_CAPACIDAD, ERROR_NICO, ERROR_REQ_MERCANCIA } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import {
   FRACCION_EXPORTACION,
   FraccionInfo,
@@ -114,6 +118,8 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    AlertComponent,
+    forwardRef(() => SoloNumerosDirective),
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
@@ -224,6 +230,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   permisoImmexDatos: PermisoImmexGridDatos[] = [];
 
+  isFormValid = true;
+
+  errorAlerta: string = "";
+
   /**
    * @property {FraccionInfo[]} fraccionDatos
    * @description Array que contiene los datos de fracciones arancelarias obtenidos del servicio.
@@ -295,6 +305,13 @@ export class Anexo1Component implements OnInit, OnDestroy {
   espectaculoAlerta: boolean = false;
 
   /**
+   * @property {boolean} eliminarPermisoImmexConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar un permiso IMMEX seleccionado.
+   */
+  eliminarPermisoImmexConfirmacion: boolean = false;
+
+  /**
    * @property {FilaPlantas[]} listSelectedView
    * @description
    * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
@@ -364,6 +381,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Se utiliza para mantener el estado de la selección actual en los selects de NICO.
    */
   NICO_SELECCIONADO: Catalogo[] = [];
+  /**
+   * @property {boolean} eliminarNICOAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ningún elemento NICO para eliminar.
+   * Se establece a `true` cuando el usuario intenta eliminar códigos NICO sin haber seleccionado ninguno,
+   * mostrando un mensaje de error que solicita elegir al menos un NICO para eliminar.
+   */
+  eliminarNICOAlerta: boolean = false
 
   /**
    * @constructor
@@ -609,7 +634,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
   // Update the nico selection method for importacion modal
   cambioSeleccionNicoImportacion(params: Catalogo): void {
     this.mercanciaImportacionForm.patchValue({
-      commodityNicoDescImportacion: params.nicoDescription
+      commodityNicoDescImportacion: params.nicoDescription,
+      nico: params.clave
     });
     const NICO_ENCONTRADO = this.nico.find(
       (item) => item.clave === params.clave
@@ -629,6 +655,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
   cambioSeleccionNicoExportacion(event: Catalogo | null): void {
     if (event?.nicoDescription) {
       this.mercanciaExportacionForm.get('exportacionDescExportacion')?.setValue(event.nicoDescription);
+      this.mercanciaExportacionForm.get('nico')?.setValue(event.clave);
     } else {
       this.mercanciaExportacionForm.get('exportacionDescExportacion')?.setValue('');
     }
@@ -654,13 +681,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
   
   this.showTableExport = true;
   this.showTableFractionExp = true;
+  this.immexRegistroform.get('permisoImmexDatos')?.setValue('');
 }
 
 
 obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   if (!PERMISO_VALUE || PERMISO_VALUE.trim() === '') {
     this.espectaculoAlerta = true;
-    this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe introducir un número de permiso IMMEX válido.');
+    this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Tiene que introducir el permiso immex.');
     return;
   }
 
@@ -697,10 +725,21 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
               // this.immexTableDatos = IMMEX_RESPONSE;
               this.immexTableDatos = API_DATOS.datos.datosConsultaProgramaDtos;
               totalRecords += API_DATOS.datos.datosConsultaProgramaDtos.length;
+              this.immexTableDatos = this.immexTableDatos.map((item: PermisoImmexGridDatos, index: number) => ({
+                ...item,
+                consecutivo: index + 1
+              }));
             }
 
             if (esValidArray(API_DATOS.datos.productoExportacionDtoList)) {
               this.fraccionTablaDatos = API_DATOS.datos.productoExportacionDtoList;
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
               totalRecords += API_DATOS.datos.productoExportacionDtoList.length;
             }
 
@@ -785,7 +824,7 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   mostrarDetalleMercanciaExportacion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Fracción.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar una fracción de importación');
     } else {
       this.obtenerIngresoSelectList('exportacion');
        this.mercanciaExportacionForm?.patchValue({
@@ -822,22 +861,33 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    */
   showTableFractionExport(): void {
     this.showTableFractionExp = true;
+    this.espectaculoAlerta = false;
     const FRACCION_VALUE = this.immexRegistroform.get('fraccionArancelariaExportacion')?.value;
     const FRACCION_DESC = this.immexRegistroform.get('FraccionDescExportacion')?.value;
 
     if (!FRACCION_VALUE || FRACCION_VALUE.trim() === '') {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe introducir el número de fracción arancelaria.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Tiene que introducir la Fracción arancelaria y su descripción');
       return;
     }
 
     if (!this.listaFilaSeleccionada) {
       this.espectaculoAlerta = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un Permiso.');
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe seleccionar un permiso immex.');
       return;
     }
 
-    this.espectaculoAlerta = false;
+    const EL = this.fraccionTablaDatos.find(item => item.fraccionArancelaria.cveFraccion === FRACCION_VALUE && item.fraccionArancelaria.descripcionUsuario === FRACCION_DESC);
+    if(EL){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('La fracción que intenta ingresar ya se encuentra registrada.');
+      return;
+    }
+
+    this.immexRegistroform?.patchValue({
+      fraccionArancelariaExportacion: '',
+      FraccionDescExportacion: ''
+    });
 
     this.obtenerFraccionDatos(FRACCION_VALUE, FRACCION_DESC); 
   }
@@ -871,10 +921,17 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
                   ...API_DATOS.datos
                 }
               }
+              this.fraccionTablaDatos.push(DATOS as FraccionInfo);
+              this.fraccionTablaDatos = this.fraccionTablaDatos.map((item: FraccionInfo, index: number) => ({
+                ...item,
+                fraccionArancelaria: {
+                  ...item.fraccionArancelaria,
+                  consecutivo: index + 1
+                }
+              }));
               this.immexRegistroStore.establecerDatos({
                 fraccionTablaDatos: [
-                  ...this.fraccionTablaDatos,
-                  DATOS
+                  ...this.fraccionTablaDatos
                 ]
               })
             }
@@ -987,7 +1044,8 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
 
   eliminarNico(params:string): void {
     if (this.listSelectedView.length === 0) {
-      return;
+      this.eliminarNICOAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Debe elegir al menos un nico para eliminar.');
     }
     const SELECTED_IDS = new Set(
       this.listSelectedView.map((item) => item.claveNico)
@@ -1039,24 +1097,30 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Actualiza el estado en el store tras la eliminación.
    */
   eliminarPermisoImmex(): void {
-    this.eliminarPlantasAlerta = true;
+    
     if (!this.listaFilaSeleccionada) {
+      this.espectaculoAlerta = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
     } else if (this.listaFilaSeleccionada) {
-      this.eliminarPlantasConfirmacion = true;
-      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
+      this.eliminarPermisoImmexConfirmacion = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Al eliminar el permiso también se eliminaran las fracciones relacionadas. ¿Desea eliminar el registro?', '', 'danger', 'Cancelar');
     }
-    if (this.listaFilaSeleccionada) {
-      const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionada].map((item) => item.consecutivo)
-      );
-      this.immexTableDatos = this.immexTableDatos.filter(
-        (item) => !SELECTED_IDS.has(item.consecutivo)
-      );
-      this.listaFilaSeleccionada = null;
-      this.immexRegistroStore.establecerDatos({
-        immexTableDatos: this.immexTableDatos,
-      });
+  }
+
+  eliminarPermisoImmexDatos(event: boolean): void {
+    if (event === true) {
+      if (this.listaFilaSeleccionada) {
+        this.immexTableDatos = this.immexTableDatos.filter(
+          (item) => item.consecutivo !== this.listaFilaSeleccionada?.consecutivo
+        ).map((item, index)=>{
+          item.consecutivo = index + 1
+          return item;
+        });
+        this.listaFilaSeleccionada = null;
+        this.immexRegistroStore.establecerDatos({
+          immexTableDatos: this.immexTableDatos,
+        });
+      }
     }
   }
 
@@ -1070,24 +1134,22 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
   eliminarFraccion(): void {
     if (!this.listaFilaSeleccionadaFraccion) {
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('Selecciona la planta que desea eliminar.');
-      this.eliminarPlantasAlerta = true;
+      this.espectaculoAlerta = true;
     } else if (this.listaFilaSeleccionadaFraccion) {
       this.eliminarPlantasConfirmacion = true;
       this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('¿Estás seguro de eliminar la(s) planta(s)?', '', 'danger', 'Cancelar');
-    }
-    if (this.listaFilaSeleccionadaFraccion) {
-      const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionadaFraccion].map(
-          (item) => item.fraccionArancelaria.cveFraccion
-        )
-      );
-      this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
-        (item) => !SELECTED_IDS.has(item.fraccionArancelaria.cveFraccion)
-      );
-      this.listaFilaSeleccionadaFraccion = null;
-      this.immexRegistroStore.establecerDatos({
-        fraccionTablaDatos: this.fraccionTablaDatos,
-      });
+      if (this.listaFilaSeleccionadaFraccion) {
+        this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
+          (item) => item.fraccionArancelaria.consecutivo !== this.listaFilaSeleccionadaFraccion?.fraccionArancelaria.consecutivo
+        ).map((item, index)=>{
+          item.fraccionArancelaria.consecutivo = index + 1
+          return item;
+        });
+        this.listaFilaSeleccionadaFraccion = null;
+        this.immexRegistroStore.establecerDatos({
+          fraccionTablaDatos: this.fraccionTablaDatos,
+        });
+      }
     }
   }
 
@@ -1120,20 +1182,69 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
    * Add method to save mercancia importacion data
    */ 
   guardarMercanciaImportacion(): void {
-    if (this.mercanciaImportacionForm.valid) {
-      const VALOR = this.nicoTablaDatosImportacion;
-      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
-      this.modalCancelar('Importacion');
-    } else {
-      this.mercanciaImportacionForm.markAllAsTouched();
-      
+    this.errorAlerta = '';
+    this.isFormValid = true;
+    if(this.nicoTablaDatosImportacion.length === 0) {
+      this.isFormValid = false;
+      this.errorAlerta = ERROR_NICO;
+      document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+      return;
     }
+    if (this.mercanciaImportacionForm.valid) {
+      setTimeout(()=>{
+        const CANDIDAD_ANNUAL = Number(this.mercanciaImportacionForm.get('candiadAnual')?.value);
+        const CAPACIDAD_PERIODO = Number(this.mercanciaImportacionForm.get('capacidadPeriodo')?.value);
+        const CANDIDAD_POR_PERIODO = Number(this.mercanciaImportacionForm.get('candidadPorPeriodo')?.value);
+        if( CANDIDAD_ANNUAL <= 0 || CAPACIDAD_PERIODO <= 0 || CANDIDAD_POR_PERIODO <= 0){
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CANTIDAD;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return
+        }
+        if(CANDIDAD_ANNUAL < CAPACIDAD_PERIODO){
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CAPACIDAD;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        if(CANDIDAD_POR_PERIODO > CANDIDAD_ANNUAL / 3) {
+          this.isFormValid = false;
+          this.errorAlerta = ERROR_CANDIDAD_POR_PERIODO;
+          document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        const VALOR = this.nicoTablaDatosImportacion;
+        this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
+        this.modalCancelar('Importacion');
+      },500);
+    } else {
+      setTimeout(()=>{
+        this.mercanciaImportacionForm.markAllAsTouched();
+        this.isFormValid = false;
+        this.errorAlerta = ERROR_REQ_MERCANCIA;
+        document.getElementsByClassName("modal")[0].scrollTo({ top: 0, behavior: 'smooth' });
+      },500);
+    }
+  }
+
+  /**
+   * Cierra el modal de confirmación.
+   */
+  cerrarModal(): void {
+    this.espectaculoAlerta = false;
   }
 
   /**
    * Add method to save mercancia exportacion data
    */
   guardarMercanciaExportacion(): void {
+    this.isFormValid = true;
+    if(this.nicoTablaDatosExportacion.length === 0) {
+      this.isFormValid = false;
+      this.errorAlerta = ERROR_NICO;
+      document.getElementById("mercanciaExportacionModal")?.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     if (this.mercanciaExportacionForm.valid) {
       const VALOR = this.nicoTablaDatosExportacion;
 
@@ -1166,4 +1277,47 @@ obtenerpermisoImmexDatos(PERMISO_VALUE: string): void {
       this.mercanciaExportacionForm.markAllAsTouched();
     }
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de registro IMMEX verificando múltiples condiciones:
+   * 1. Verifica que existan datos en las tablas de IMMEX y fracciones arancelarias
+   * 2. Si ambas tablas tienen datos, valida el formulario de mercancía de importación
+   * 3. Si las tablas están vacías, marca el formulario principal como tocado y establece errores específicos en el store
+   * 
+   * Establece errores específicos en el store para cada condición no cumplida:
+   * - mercanciaImportacionFormError: cuando el formulario de importación es inválido
+   * - IMMEXTablaError: cuando la tabla de permisos IMMEX está vacía
+   * - fraccionTablaError: cuando la tabla de fracciones arancelarias está vacía
+   * 
+   * @returns {boolean} `true` si todas las validaciones pasan correctamente, `false` en caso contrario
+   */
+  validarFormulario(): boolean {
+      let VALID = true;
+      if (this.immexTableDatos.length > 0 && this.fraccionTablaDatos.length > 0) {
+        // if(this.mercanciaImportacionForm.valid){
+          VALID = true;
+        // }
+        // else{  
+        //   VALID = false;
+        //   this.immexRegistroStore.establecerDatos({
+        //     mercanciaImportacionFormError: true
+        //   })
+        // }
+      } else {
+        this.immexRegistroform.markAllAsTouched();
+        VALID = false;
+        if(this.immexTableDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            IMMEXTablaError: true
+          })
+        }
+        if(this.fraccionTablaDatos.length === 0){
+          this.immexRegistroStore.establecerDatos({
+            fraccionTablaError: true
+          })
+        }
+      }
+      return VALID;
+    }
 }

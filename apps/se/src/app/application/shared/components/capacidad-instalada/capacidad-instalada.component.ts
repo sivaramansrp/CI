@@ -3,13 +3,13 @@ import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSelecci
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
 import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
 import { Location } from '@angular/common';
-import {  Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la capacidad instalada
@@ -34,6 +34,12 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Notificación que se muestra al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+    /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicios!: Notificacion;
 
   /**
    * Notificación que se muestra al usuario al eliminar un registro.
@@ -170,8 +176,8 @@ export class CapacidadInstaladaComponent implements OnInit {
       .subscribe();
     this.capacidadForm = this.fb.group({
       fraccionArancelariaProductoTerminado: [this.solicitudState.fraccionArancelariaProductoTerminado, Validators.required],
-      umt: [this.solicitudState.umt, Validators.required],
-      descripcionComercialProductoTerminado: [this.solicitudState.descripcionComercialProductoTerminado, Validators.required],
+      umt: [{ value: this.solicitudState.umt, disabled: true }, Validators.required],
+      descripcionComercialProductoTerminado: [{ value: this.solicitudState.descripcionComercialProductoTerminado, disabled: true }, Validators.required],
       turnos: [this.solicitudState.turnos, [Validators.required]],
       horasPorTurno: [this.solicitudState.horasPorTurno, [Validators.required]],
       cantidadEmpleados: [this.solicitudState.cantidadEmpleados, [Validators.required]],
@@ -241,7 +247,23 @@ export class CapacidadInstaladaComponent implements OnInit {
    * del formulario no están definidos o no son válidos.
    */
   agregar(): void {
-    const CAPACIDAD: CapacidadInstalada = {
+      if (!this.capacidadForm.valid) {
+         this.notificacionAgregarServicios = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe capturar todos los datos marcados como obligatorios(*)',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',          
+        };
+        this.capacidadForm.markAllAsTouched();
+  }
+  else
+  {
+const CAPACIDAD: CapacidadInstalada = {
       PLANTA: this.capacidadForm.value.fraccionArancelariaProductoTerminado, // Adjust field mapping as needed
       FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO: this.capacidadForm.value.fraccionArancelariaProductoTerminado,
       UMT: this.capacidadForm.value.umt,
@@ -267,6 +289,8 @@ export class CapacidadInstaladaComponent implements OnInit {
     }
     this.SelectedInstaladaDatos = [];
     this.limpiar();
+  }
+    
   }
 
   /**
@@ -401,5 +425,20 @@ export class CapacidadInstaladaComponent implements OnInit {
         txtBtnCancelar: '',
       };
     }
+}
+/**
+ * Maneja el cambio en la fracción arancelaria del producto terminado.
+ * 
+ * Actualiza los campos 'umt' y 'descripcionComercialProductoTerminado' en el formulario
+ * `capacidadForm` basándose en la selección realizada.
+ * @param selected 
+ */
+onFraccionArancelariaProductoTerminadoChange(selected: any): void {
+  if (selected) {
+    this.capacidadForm.patchValue({
+      umt: selected.umt || '',
+      descripcionComercialProductoTerminado: selected.descripcionComercialProductoTerminado || ''
+    });
+  }
 }
 }

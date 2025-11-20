@@ -1,6 +1,7 @@
 <div class="page">
   <div class="container">
     <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
+    <rfc-solicitante></rfc-solicitante>
     <div class="row">
       <table class="table table-responsive table-striped table-hover">
         <thead>
@@ -18,8 +19,11 @@
                 <td> {{$index + 1}}</td>
                 <td> {{item?.department}}</td>
                 <td> {{item?.tramite}}</td>
-                <td> <a [routerLink]=item.linkDepartment>{{ ruta }}{{item.linkDepartment}}</a>
-                </td>
+               <td>
+              <a [routerLink]="item.linkDepartment" (click)="onTramiteClick(item?.tramite)">
+              {{ ruta }}{{item?.linkDepartment}}
+             </a>
+             </td>
               </tr>
             }
           }

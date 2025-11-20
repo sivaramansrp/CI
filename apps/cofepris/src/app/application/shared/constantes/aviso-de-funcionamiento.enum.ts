@@ -19,8 +19,8 @@ export const DESPACHO_LDA = {
  * Declaración de manifiestos para cumplir con normatividad.
  */
 export const MANIFIESTOS_DECLARACION = {
-  MANIFIESTOS:
-    'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.',
+  MANIFIESTOS: `Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.`
+
 };
 
 export const TRAMITES_ASOCIADOS : ConfiguracionColumna<Asociados>[] = [
@@ -347,11 +347,11 @@ export const CROSLISTA_DE_PAISES: string[] = [
  * Textos utilizados en la aplicación.
  */
 export const TEXTOS = {
-  ALERTA: `¡Precaución! Debes capturar localidad y colonia`,
+  ALERTA: `<p style="text-align: center;"><b>¡Precaución!</b> Debes capturar localidad y colonia </p>`,
   /**
    * Texto para la solicitud.
    */
-  TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.',
+  TEXTOS_SOLICITUD: '<p style="text-align: center;">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud. </p>',
 
   /**
    * Texto para la leyenda de confirmación de la sección.
@@ -364,19 +364,19 @@ export const TEXTOS = {
  * */
 export const MENSAJE_DE_VALIDACI0N : { [key: string]: string } = {
   clasificacion: 'La clasificación del producto es obligatoria.',
-  especificarClasificacionProducto: 'Especificar la clasificación del producto es obligatoria.',
-  denominacionEspecifica: 'La denominación específica del producto es obligatoria.',
-  denominacionDistintiva: 'La denominación distintiva es obligatoria.',
-  denominacionComun: 'La denominación o nombre científico es obligatorio.',
-  tipoDeProducto: 'El tipo de producto es obligatorio.',
-  estadoFisico: 'El estado físico es obligatorio.',
-  estadoFormaFarmaceutica: 'La forma farmacéutica es obligatoria.',
-  fraccionArancelaria: 'La fracción arancelaria es obligatoria.',
-  descripcionFraccion: 'La descripción de la fracción es obligatoria.',
-  cantidadUMT: 'La cantidad UMT es obligatoria.',
-  UMT: 'La unidad de medida UMT es obligatoria.',
-  cantidadUMC: 'La cantidad UMC es obligatoria.',
-  UMC: 'La unidad de medida UMC es obligatoria.',
-  presentacion: 'La presentación farmacéutica o tipo de envase es obligatoria.',
+  especificarClasificacionProducto: 'Este campo es obligatorio.',
+  denominacionEspecifica: 'Este campo es obligatorio.',
+  denominacionDistintiva: 'Este campo es obligatorio.',
+  denominacionComun: 'Este campo es obligatorio.',
+  tipoDeProducto: 'Este campo es obligatorio.',
+  estadoFisico: 'Este campo es obligatorio.',
+  estadoFormaFarmaceutica: 'Este campo es obligatorio..',
+  fraccionArancelaria: 'Este campo es obligatorio.',
+  descripcionFraccion: 'Este campo es obligatorio.',
+  cantidadUMT: 'Este campo es obligatorio.',
+  UMT: 'Este campo es obligatorio.',
+  cantidadUMC: 'Este campo es obligatorio.',
+  UMC: 'Este campo es obligatorio.',
+  presentacion: 'Este campo es obligatorio.',
   numeroRegistro: 'El número de registro sanitario es obligatorio.',
 };

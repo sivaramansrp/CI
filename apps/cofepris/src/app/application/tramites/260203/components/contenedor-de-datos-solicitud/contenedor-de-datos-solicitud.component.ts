@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -18,6 +18,7 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constantes/materias-primas.enum';
 import { Subject } from 'rxjs';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
 
@@ -42,6 +43,11 @@ import { Tramite260203Query } from '../../estados/queries/tramite260203Query.que
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+      /**
+       * @property {number} idProcedimiento
+       * @description Identificador del procedimiento.
+       */
+      public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Notificador para destruir observables y evitar fugas de memoria.
    */
@@ -110,7 +116,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  esFormularioSoloLectura!: boolean;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Lista de elementos que son obligatorios para completar el formulario.
@@ -118,6 +124,19 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * según los requisitos del sistema.
    */
    elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario','scian'];
+     /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   *
+   * Esta propiedad permite acceder a los métodos públicos y propiedades
+   * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+   *
+   * > Nota: Angular inicializa esta referencia después de que la vista
+   * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
 
   /**
    * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.
@@ -128,8 +147,19 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260203Query: Tramite260203Query,
     private tramite260203Store: Tramite260203Store,
-    private consultaQuery: ConsultaioQuery
-  ) {}
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((seccionState) => {
+      if(!seccionState.create && seccionState.procedureId === '260203') {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      } 
+    });
+  }
 
   ngOnInit(): void {
     this.tramite260203Query.selectTramiteState$
@@ -140,19 +170,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos =
-            this.tramiteState.tablaMercanciasConfigDatos;
+            JSON.parse(JSON.stringify(seccionState.tablaMercanciasConfigDatos))
         })
       )
       .subscribe();
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-      .subscribe((seccionState) => {
-        if(!seccionState.create && seccionState.procedureId === '260203') {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        } 
-      });
   }
 
   /**
@@ -227,5 +248,24 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+    /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 }

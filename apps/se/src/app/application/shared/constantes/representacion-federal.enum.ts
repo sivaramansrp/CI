@@ -17,4 +17,4 @@ export const INSTRUCCIONES_REPRESENTACION_FEDERAL_POR_PROCEDIMIENTO: Record<numb
 /**
  * Declaraciones utilizadas en la representación federal.
  */
-export const REPRESENTACION_FEDERAL_DECLARACIONES = [130112, 130203];
+export const REPRESENTACION_FEDERAL_DECLARACIONES = [130112, 130203, 130105,130111];

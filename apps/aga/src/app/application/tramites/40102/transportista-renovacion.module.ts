@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent,CatalogosService} from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -28,7 +28,7 @@ import { TransportistaRenovacionRoutingModule } from './transportista-renovacion
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { forwardRef } from '@angular/core';
-
+import { AcuseReciboComponent } from '../../shared/components/acuse-recibo/acuse-recibo.component';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -48,7 +48,7 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
-    forwardRef(() => FirmaElectronicaComponent),   
+    forwardRef(() => FirmaElectronicaComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),
@@ -59,13 +59,14 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
     ChoferesComponent,
-    TablaDinamicaComponent
-],
+    TablaDinamicaComponent,
+    AcuseReciboComponent
+  ],
   exports: [
     PasoUnoComponent,
     PasoDosComponent,
-   
+
   ],
   providers: [ToastrService, CatalogosService, Chofer40102Service],
 })
-export class TransportistaRenovacionModule {}
+export class TransportistaRenovacionModule { }

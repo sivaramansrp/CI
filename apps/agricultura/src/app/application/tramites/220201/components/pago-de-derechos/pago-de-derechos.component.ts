@@ -1,10 +1,10 @@
-import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
@@ -88,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
     private readonly httpServicios: HttpClient,
-    private catalogoService: CatalogosService
+    private catalogoService: CatalogosService,
   ) {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
@@ -158,9 +158,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   validarFormulario(): boolean {
     if (this.PagoDeDerechoComponent) {
       return this.PagoDeDerechoComponent.validarFormulario();
-    } 
-      return false;
-    
+    }
+    return false;
+
   }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
@@ -170,5 +170,4 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

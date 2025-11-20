@@ -1,11 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { Tramite260501Query } from '../../../../shared/estados/queries/260501/tramite260501.query';
+import { Tramite260501Store } from '../../../../shared/estados/stores/260501/tramite260509.store';
 
 /**
  * Componente que representa el primer paso del proceso de solicitud.
@@ -16,6 +20,16 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  public idProcedimiento: number = 260501;
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
@@ -56,6 +70,22 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   public consultaState!: ConsultaioState;
 
+  /** Indicadores booleanos que validan el estado de los componentdatos de la solicitud */
+  private isDatosDeLaSolicitudComponentValid: boolean = false;
+
+   /** Indicadores booleanos que validan el estado de los component terceros */
+  private isTercerosComponentValid: boolean = false;
+
+  /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+     * Proporciona acceso a sus métodos y propiedades.
+     */
+    @ViewChild('DatosDeLaComponent', { static: false }) datosDeLaComponent!: DatosDeLaComponent;
+  
+    /** Referencia al componente 'TercerosRelacionadosFabricanteComponent' en la plantilla.
+     * Proporciona acceso a sus métodos y propiedades.
+     */
+    @ViewChild('TercerosRelacionadosComponent', { static: false }) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * Constructor del componente Datos260502Component.
    *
@@ -65,7 +95,9 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   constructor(
     private datosDomicilioLegalService: DatosDomicilioLegalService,
     private pagoBancoService: PagoBancoService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public store: Tramite260501Store,
+    public query: Tramite260501Query,
   ) {}
 
   /**
@@ -116,6 +148,58 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
           this.pagoBancoService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /** Maneja el evento de validez de tabla y actualiza el estado correspondiente en el store. */
+  onTableValidEvent(event: string): void {
+    if (event === 'fabricante') {
+      this.store.setFormValidity('fabricanteTablaValid', true);
+    }
+    if (event === 'formulador') {
+      this.store.setFormValidity('formuladorTablaValid', true);
+    }
+    if (event === 'proveedor') {
+      this.store.setFormValidity('proveedorTablaValid', true);
+    }
+    this.tercerosRelacionadosComponent?.markTouched();
+  }
+
+  /** Actualiza la validez del formulario de datos del establecimiento en el store. */
+  public datosEstabelicimientoFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('datosEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de domicilio del establecimiento en el store. */
+  public domicilioFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('domicilioEstablecimiento', event);
+  }
+
+  /** Actualiza la validez del formulario de manifiestos en el store. */
+  public manifiestosFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('manifiestos', event);
+  }
+
+  /** Actualiza la validez del formulario de representante legal en el store. */
+  public representanteLegalFormValidityChange(event: boolean): void {
+    this.store.setFormValidity('representanteLegal', event);
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.query.getValue().formValidity?.datosEstablecimiento && 
+      this.query.getValue().formValidity?.domicilioEstablecimiento &&
+      this.query.getValue().formValidity?.manifiestos &&
+      this.query.getValue().formValidity?.representanteLegal ) ?? false;
+    this.isTercerosComponentValid = (this.query.getValue().formValidity?.fabricanteTablaValid &&
+      this.query.getValue().formValidity?.formuladorTablaValid &&
+      this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
+
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid;
+
   }
 
   /**

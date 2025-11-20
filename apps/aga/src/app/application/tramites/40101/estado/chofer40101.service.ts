@@ -1,9 +1,9 @@
-import { BehaviorSubject, Observable } from 'rxjs'; 
-import { ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ApiResponse, Catalogo } from '@libs/shared/data-access-user/src';
+import { ApiResponseChofer, ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { Chofer40101Store } from './chofer40101.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40101/transportista-terrestre.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /**
@@ -23,6 +23,47 @@ export class Chofer40101Service {
    * URL base del servidor para realizar solicitudes HTTP.
    */
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
+
+  private static getApiHeaders(): HttpHeaders {
+    const CLAVEUSUARIO = localStorage.getItem('ClaveUsuario') || '';
+    const RFC = localStorage.getItem('Rfc') || '';
+    const CVEROLE = localStorage.getItem('CveRole') || '';
+
+    return new HttpHeaders({
+      'ClaveUsuario': CLAVEUSUARIO,
+      'Rfc': RFC,
+      'CveRole': CVEROLE
+    });
+  }
+
+  /**
+ * Recupera datos simulados para el Director General.
+ *
+ * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
+ *
+ * @returns Un Observable que emite el objeto DirectorGeneralData.
+ */
+  getDirectorGeneralData(): Observable<DirectorGeneralData> {
+    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
+  }
+
+
+  /**
+   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
+   *
+   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
+   */
+  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
+    this.chofer40101Store.update((state) => ({
+      ...state,
+      //directorGeneral: data,
+      nombre: data.nombre,
+      primerApellido: data.primerApellido,
+      segundoApellido: data.segundoApellido,
+      apellidoPaterno: data.primerApellido,
+      apellidoMaternoCHN: data.apellidoMaternoCHN,
+    }));
+  }
 
   /**
    * Sujeto de comportamiento que almacena la lista de choferes.
@@ -110,13 +151,21 @@ export class Chofer40101Service {
     );
   }
 
+
   /**
    * Obtiene el catálogo de países emisores.
    * 
    * @returns Un observable con el catálogo de países emisores.
    */
   getPaisEmisor(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40101/pais-catalogo.json');
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t40101/catalogo/paises', { headers: Chofer40101Service.getApiHeaders() })
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching countries:', error);
+          return of([]);
+        })
+      );
   }
 
   /**
@@ -184,10 +233,35 @@ export class Chofer40101Service {
     return this.http.get<Catalogo[]>('/assets/json/40101/estado.json');
   }
 
+
+  /**
+  * Obtiene la lista de estados desde un archivo JSON local.
+  *
+  * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+  */
+  getEstadosPorPaisMex(): Observable<Catalogo[]> {
+    return this.http.get<ApiResponse<Catalogo>>('/api/sat-t40101/catalogo/entidades-federativas', { headers: Chofer40101Service.getApiHeaders() })
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching Estados:', error);
+          return of([]);
+        })
+      );
+  }
+
+
   getMunicipiosPorEstado(
-    claveEstado: number
+    claveEstado: string
   ): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(`/assets/json/40101/municipio.json`);
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t40101/catalogo/entidad-federativa/${claveEstado}/municipio-o-alcaldia`, { headers: Chofer40101Service.getApiHeaders() })
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching Municipios:', error);
+          return of([]);
+        })
+      );
   }
   /**
    * Obtiene la lista de colonias de un municipio específico.
@@ -196,11 +270,16 @@ export class Chofer40101Service {
    * @returns Un observable con la lista de colonias.
    */
   getColoniasPorMunicipio(
-        municipiosId: number
+    clave: string
   ): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      `/assets/json/40101/colonia.json`
-    );
+    return this.http.get<ApiResponse<Catalogo>>(`/api/sat-t40101/catalogo/municipio-o-alcaldia/${clave}/colonia`, { headers: Chofer40101Service.getApiHeaders() })
+      .pipe(
+        map(response => response.datos),
+        catchError(error => {
+          console.error('Error fetching Colonia:', error);
+          return of([]);
+        })
+      );
   }
 
 
@@ -244,72 +323,26 @@ export class Chofer40101Service {
   }
 
   /**
-   * Recupera datos simulados para el Director General.
+   * Obtiene los datos de una tabla desde un archivo JSON.
    *
-   * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
-   *
-   * @returns Un Observable que emite el objeto DirectorGeneralData.
+   * @template T El tipo genérico de los datos que se espera recibir.
+   * @param {string} fileName - Nombre del archivo JSON que contiene los datos.
+   * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
    */
-  getDirectorGeneralData(): Observable<DirectorGeneralData> {
-    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
+  obtenerDatos(nss: string): Observable<ApiResponseChofer> {
+    const FULL_URL = `/api/sat-t40101/chofer/detalles/nss/${nss}`;
+    return this.http.get<ApiResponseChofer>(FULL_URL, { headers: Chofer40101Service.getApiHeaders() });
   }
 
-  /**
-   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
-   *
-   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
-   */
-  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      //directorGeneral: data,
-      nombre: data.nombre,
-      primerApellido: data.primerApellido,
-      segundoApellido: data.segundoApellido,
-      apellidoPaterno: data.primerApellido,
-      apellidoMaternoCHN: data.apellidoMaternoCHN,
-    }));
+  loadInitialDrivers(type: 'nacional' | 'extranjero', drivers: (DatosDelChoferNacional | ChoferesExtranjeros)[]): void {
+    this.chofer40101Store.loadInitialDrivers(type, drivers);
   }
 
-  updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalAlta: data
-    }));
-  }
+  guardarDatosFirma(datos: { id_solicitud: number; cadena_original: string, is_extranjero: boolean }): void {
+    this.chofer40101Store.update({
+      id_solicitud: datos.id_solicitud,
+      cadena_original: datos.cadena_original,
 
-  updateDatosDelChoferNacionalModification(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalModification: data
-    }));
-  }
-
-  updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferNacionalRetirada: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjero(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosAlta: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjeroModification(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosModification: data
-    }));
-  }
-
-  updateDatosDelChoferExtranjeroRetirada(data: ChoferesExtranjeros[]): void {
-    this.chofer40101Store.update((state) => ({
-      ...state,
-      datosDelChoferExtranjerosRetirada: data
-    }));
+    });
   }
 }

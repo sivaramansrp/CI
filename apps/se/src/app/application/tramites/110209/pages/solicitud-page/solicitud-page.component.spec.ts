@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 @Component({
   selector: 'app-wizard',
@@ -17,6 +19,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [SolicitudPageComponent, MockWizardComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();

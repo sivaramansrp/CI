@@ -7,7 +7,7 @@
           <app-catalogo-select [catalogo]="fraccionArancelariaProductoTerminadoCatlogo"
             [label]="'Fracción arancelaria de producto terminado'" [required]="true"
             name="fraccionArancelariaProductoTerminado" formControlName="fraccionArancelariaProductoTerminado"
-            (change)="setValoresStore(capacidadForm, 'fraccionArancelariaProductoTerminado', 'setFraccionArancelariaProductoTerminado')"></app-catalogo-select>
+            (change)="onFraccionArancelariaProductoTerminadoChange($event);setValoresStore(capacidadForm, 'fraccionArancelariaProductoTerminado', 'setFraccionArancelariaProductoTerminado')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <label class="form-label" for="umt">UMT*:</label>
@@ -34,7 +34,8 @@
       <div class="row mt-5">
         <div class="col-md-6 mt-5">
           <label class="form-label" for="turnos">Turnos*:</label>
-          <input class="form-control min-hgt" id="turnos" formControlName="turnos" type="number" (input)="onInputMaxLength($event, 3, 'turnos')"
+          <input class="form-control min-hgt" id="turnos" formControlName="turnos" type="number"
+            (input)="onInputMaxLength($event, 3, 'turnos')"
             (change)="setValoresStore(capacidadForm, 'turnos', 'setTurnos')" />
           <div *ngIf="capacidadForm.get('turnos')?.invalid && capacidadForm.get('turnos')?.touched" class="text-danger">
             Este campo es obligatorio.
@@ -43,7 +44,8 @@
         <div class="col-md-4 mt-5">
           <label class="form-label" for="horasPorTurno">Horas por turno*:</label>
           <input class="form-control min-hgt" id="horasPorTurno" formControlName="horasPorTurno" type="number"
-           (input)="onInputMaxLength($event, 2, 'horasPorTurno')" (change)="setValoresStore(capacidadForm, 'horasPorTurno', 'setHorasPorTurno')" />
+            (input)="onInputMaxLength($event, 2, 'horasPorTurno')"
+            (change)="setValoresStore(capacidadForm, 'horasPorTurno', 'setHorasPorTurno')" />
           <div *ngIf="capacidadForm.get('horasPorTurno')?.invalid && capacidadForm.get('horasPorTurno')?.touched"
             class="text-danger">
             Este campo es obligatorio.
@@ -54,7 +56,8 @@
         <div class="col-md-6">
           <label class="form-label" for="cantidadEmpleados">Cantidad empleados*:</label>
           <input class="form-control min-hgt" id="cantidadEmpleados " formControlName="cantidadEmpleados" type="number"
-            (input)="onInputMaxLength($event, 11, 'cantidadEmpleados')" (change)="setValoresStore(capacidadForm, 'cantidadEmpleados', 'setCantidadEmpleados')" />
+            (input)="onInputMaxLength($event, 11, 'cantidadEmpleados')"
+            (change)="setValoresStore(capacidadForm, 'cantidadEmpleados', 'setCantidadEmpleados')" />
           <div
             *ngIf="capacidadForm.get('cantidadEmpleados')?.invalid && capacidadForm.get('cantidadEmpleados')?.touched"
             class="text-danger">
@@ -64,7 +67,8 @@
         <div class="col-md-4">
           <label class="form-label" for="cantidadMaquinaria">Cantidad maquinaria*:</label>
           <input class="form-control min-hgt" id="cantidadMaquinaria" formControlName="cantidadMaquinaria" type="number"
-           (input)="onInputMaxLength($event, 11, 'cantidadMaquinaria')" (change)="setValoresStore(capacidadForm, 'cantidadMaquinaria', 'setCantidadMaquinaria')" />
+            (input)="onInputMaxLength($event, 11, 'cantidadMaquinaria')"
+            (change)="setValoresStore(capacidadForm, 'cantidadMaquinaria', 'setCantidadMaquinaria')" />
           <div
             *ngIf="capacidadForm.get('cantidadMaquinaria')?.invalid && capacidadForm.get('cantidadMaquinaria')?.touched"
             class="text-danger">
@@ -87,7 +91,7 @@
       </div>
       <br>
       <div class="row mt-5">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="form-label" for="capacidadInstaladaMensual">Capacidad instalada mensual*:</label>
           <input class="form-control min-hgt" id="capacidadInstaladaMensual" formControlName="capacidadInstaladaMensual"
             type="number" (input)="onInputMaxLength($event, 11, 'capacidadInstaladaMensual')"
@@ -112,27 +116,30 @@
         </div>
       </div>
       <div class="row mt-5">
-        <div class="col-md-6">
-          <label class="form-label" for="calculoCapacidadInstalada">Cálculo de la capacidad instalada*:</label>
-          <input class="form-control min-hgt" id="calculoCapacidadInstalada" formControlName="calculoCapacidadInstalada"
-            type="text"
-            (change)="setValoresStore(capacidadForm, 'calculoCapacidadInstalada', 'setCalculoCapacidadInstalada')" />
-          <div
-            *ngIf="capacidadForm.get('calculoCapacidadInstalada')?.invalid && capacidadForm.get('calculoCapacidadInstalada')?.touched"
-            class="text-danger">
-            Este campo es obligatorio.
-          </div>
-        </div>
         <div class="col-md-4">
-          <label class="form-label" for="capacidadUtilizadaPct">
-            Capacidad efectivamente utilizada (porcentaje):</label>
-          <p>((horasTurno * turnos)* empleados/capacidadEfectiva)*</p>
-          <input class="form-control min-hgt" id="capacidadUtilizadaPct" formControlName="capacidadUtilizadaPct"
+          <label class="form-label text-start mb-1" for="capacidadUtilizadaPct">
+            Capacidad efectivamente utilizada (porcentaje)*:
+          </label>
+          <input class="form-control min-hgt w-100 mt-60" id="capacidadUtilizadaPct" formControlName="capacidadUtilizadaPct"
             type="number" (input)="onInputMaxLength($event, 10, 'capacidadUtilizadaPct')"
             (change)="setValoresStore(capacidadForm, 'capacidadUtilizadaPct', 'setCapacidadUtilizadaPct')"
             (blur)="alPerderFocoCapacidadUtilizadaPct()" />
           <div
             *ngIf="capacidadForm.get('capacidadUtilizadaPct')?.invalid && capacidadForm.get('capacidadUtilizadaPct')?.touched"
+            class="text-danger">
+            Este campo es obligatorio.
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="calculoCapacidadInstalada">Cálculo de la capacidad instalada*:</label>
+          <p class="text-start mb-2">
+            ((horasTurno*turnos) * empleados/capacidadEfectiva)
+          </p>
+          <input class="form-control min-hgt" id="calculoCapacidadInstalada" formControlName="calculoCapacidadInstalada"
+            type="text"
+            (change)="setValoresStore(capacidadForm, 'calculoCapacidadInstalada', 'setCalculoCapacidadInstalada')" />
+          <div
+            *ngIf="capacidadForm.get('calculoCapacidadInstalada')?.invalid && capacidadForm.get('calculoCapacidadInstalada')?.touched"
             class="text-danger">
             Este campo es obligatorio.
           </div>
@@ -178,9 +185,15 @@
 }
 
 @if (nuevaNotificacionEliminar) {
-<section> 
+<section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacionEliminar">
   </lib-notificaciones>
 </section>
 }
-
+@if (notificacionAgregarServicios) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicios">
+  </lib-notificaciones>
+</section>
+}

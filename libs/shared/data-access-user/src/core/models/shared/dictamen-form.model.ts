@@ -31,4 +31,19 @@ export interface DictamenForm {
    * Fecha de fin de vigencia autorizada (opcional).
    */
   fechaFinVigenciaAutorizada: string;
+
+   /**
+   * Cumplimiento de clasificacion UE(1 = cumple, 0 = no cumple, etc.).
+   */
+  clasificacionUE?: boolean | null;
+
+  /**
+   * Cumplimiento de clasificacion  Japon(1 = cumple, 0 = no cumple, etc.).
+   */
+  clasificacionJpn?: boolean | null;
+
+  /**
+   * Cumplimiento de clasificacion Aladi(1 = cumple, 0 = no cumple, etc.).
+   */
+  clasificacionAladi?: boolean | null;
 }

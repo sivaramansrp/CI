@@ -4,12 +4,13 @@
 
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosDelCertificadoComponent } from '../../components/datos-del-certificado/datos-del-certificado.component';
 import { DatosDelDestinatarioComponent } from '../../components/datos-del-destinatario/datos-del-destinatario.component';
 import { DetallesDelTransporteComponent } from '../../components/detalles-del-transporte/detalles-del-transporte.component';
 import { DomicilioDelDestinatarioComponent } from '../../components/domicilio-del-destinatario/domicilio-del-destinatario.component';
 import { SgpCertificadoService } from '../../services/sgp-certificado/sgp-certificado.service';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { TransporteComponent } from '../../components/transporte/transporte.component';
 
 /**
@@ -101,7 +102,8 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
   constructor(
       @Inject(SgpCertificadoService)
       public certificadoService: SgpCertificadoService,
-      private consultaQuery: ConsultaioQuery
+      private consultaQuery: ConsultaioQuery,
+      private tramite110209Query: Tramite110209Query 
     ) {
   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
     }
@@ -116,36 +118,31 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
      *
      * @returns {void}
      */
-    ngOnInit(): void {
-          this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-              this.consultaState = seccionState;
-          })).subscribe();
-        if(this.consultaState.update) {
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.consultaState = seccionState;
+
+        if (this.consultaState.update) {
           this.guardarDatosFormulario();
         } else {
           this.esDatosRespuesta = true;
         }
-    }
+      });
+  }
 
     /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
-    this.certificadoService
-      .getCertificadoDatos().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
+  guardarDatosFormulario(): void {    
+    this.tramite110209Query.selectTramite110209$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
         this.esDatosRespuesta = true;
-        this.certificadoService.actualizarEstadoFormulario(resp);
-        }else {
-          this.esDatosRespuesta = false;
-        }
       });
   }
-
 
   /**
    * Selecciona el tab especificado por el índice.
@@ -177,14 +174,6 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
     if (this.solicitanteComponent?.form) {
       if (this.solicitanteComponent.form.invalid) {
         this.solicitanteComponent.form.markAllAsTouched();
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-
-    if (this.detallesDelTransporteComponent) {
-      if (!this.detallesDelTransporteComponent.validarFormulario()) {
         isValid = false;
       }
     } else {

@@ -44,7 +44,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
   templateUrl: './datos-exportador.component.html',
-  styleUrl: './datos-exportador.component.css',
+  styleUrl: './datos-exportador.component.scss',
 })
 export class DatosExportadorComponent implements OnInit, OnDestroy {
 
@@ -110,11 +110,13 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((state) => {
         this.datosState = state as DatosGrupos;
+        if(state.datosExportador.persona_tipo) {
+          this.onTipoPersonaExportadorChange(state.datosExportador.persona_tipo);
+        }
       })
     )
     .subscribe();
     await this.initActionFormBuild();
-
     this.consultaquery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -139,7 +141,7 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       personales_nombre: [this.datosState.datosExportador.personales_nombre, Validators.required],
       primer_apellido: [this.datosState.datosExportador.primer_apellido, Validators.required],
       segundo_apellido: [this.datosState.datosExportador.segundo_apellido, Validators.required],
-      denominación_razón_social: [this.datosState.datosExportador.denominación_razón_social_exportador, [Validators.required, Validators.maxLength(250)]],
+      denominacion_razon_social: [this.datosState.datosExportador.denominacion_razon_social_exportador, [Validators.required, Validators.maxLength(250)]],
       domicilio: [this.datosState.datosExportador.domicilio, [Validators.required, Validators.maxLength(200)]],
       observaciones: [this.datosState.datosExportador.observaciones, [Validators.required, Validators.maxLength(4000)]],
     })
@@ -167,8 +169,8 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
     GRUPO.get('primer_apellido')?.setValue('');
     GRUPO.get('segundo_apellido')?.clearValidators();
     GRUPO.get('segundo_apellido')?.setValue('');
-    GRUPO.get('denominación_razón_social')?.clearValidators();
-    GRUPO.get('denominación_razón_social')?.setValue('');
+    GRUPO.get('denominacion_razon_social')?.clearValidators();
+    GRUPO.get('denominacion_razon_social')?.setValue('');
     GRUPO.get('domicilio')?.clearValidators();
     GRUPO.get('domicilio')?.setValue('');
     GRUPO.get('observaciones')?.clearValidators();
@@ -180,12 +182,12 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       GRUPO.get('segundo_apellido')?.setValidators([Validators.required, Validators.maxLength(200)]);
       GRUPO.get('domicilio')?.setValidators([Validators.required, Validators.maxLength(200)]);
       GRUPO.get('observaciones')?.setValidators([Validators.maxLength(4000)]);
-      // "denominación_razón_social" no visible, limpiar valor y validadores
-      GRUPO.get('denominación_razón_social')?.setValue('');
-      GRUPO.get('denominación_razón_social')?.clearValidators();
-      this.store.setExportadorDenominación_razón_social('');
+      // "denominacion_razon_social" no visible, limpiar valor y validadores
+      GRUPO.get('denominacion_razon_social')?.setValue('');
+      GRUPO.get('denominacion_razon_social')?.clearValidators();
+      this.store.setExportadorDenominacion_razon_social('');
     } else if (this.tipoPersonaExportador === 'Moral') {
-      GRUPO.get('denominación_razón_social')?.setValidators([Validators.required, Validators.maxLength(250)]);
+      GRUPO.get('denominacion_razon_social')?.setValidators([Validators.required, Validators.maxLength(250)]);
       GRUPO.get('domicilio')?.setValidators([Validators.required, Validators.maxLength(200)]);
       GRUPO.get('observaciones')?.setValidators([Validators.maxLength(4000)]);
       // Los personales y apellidos no visibles, limpiar valor y validadores

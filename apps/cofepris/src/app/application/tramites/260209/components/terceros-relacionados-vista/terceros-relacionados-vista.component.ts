@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -8,10 +8,11 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import {ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
 import { Tramite260209Store } from '../../estados/tramite260209Store.store';
-import {ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
+
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -60,6 +61,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @default []
    */
   proveedorTablaDatos: Proveedor[] = [];
+
+  
+    @ViewChild('TercerosRelacionadosComponent')
+    tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+       
  /**
     * @property {string[]} elementosRequeridos
     * @description
@@ -89,15 +95,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
-   * @property {boolean} esFormularioSoloLectura
-   * @description Indica si el formulario y sus componentes están en modo de solo lectura.
-   * Cuando es `true`, todos los campos del formulario se deshabilitan y no se pueden editar.
-   * Esta propiedad se actualiza automáticamente basándose en el estado de consulta.
-   * @public
-   * @type {boolean}
-   * @default false
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado. Por defecto es `false`.
    */
-  public esFormularioSoloLectura: boolean = false; 
+  @Input()
+  formularioDeshabilitado: boolean = false;
 
   /**
    * @constructor
@@ -121,14 +123,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite260209Query,
     private consultaQuery: ConsultaioQuery
   ) {
-     this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();
+    // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
   }
 
   /**
@@ -225,6 +220,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
+  validarContenedor(): boolean {
+    return (
+      this.tercerosRelacionadosComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
   /**
    * @method addProveedores
    * @description Método público que permite agregar nuevos proveedores a la tabla de datos del trámite.

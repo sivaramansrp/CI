@@ -414,6 +414,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
         this.filasSeleccionadas.splice(IDX, 1);
       }
     }
+    console.log(this.datos);
     this.listaDeFilaSeleccionada.emit(
       this.datos.filter((_, indice) => this.filasSeleccionadas.includes(indice))
     );
@@ -482,6 +483,8 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   obtenerTextoBoton(fila: any): string {
     if (fila?.desEstatus && fila?.desEstatus === TEXTO_FILA_REGISTRO.BAJA) {
       this.batonValor = ESTADO_REGISTRO.ACTIVAR;
+    }else{
+      this.batonValor = ESTADO_REGISTRO.BAJA;
     }
     return this.batonValor;
   }

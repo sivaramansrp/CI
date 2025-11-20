@@ -4,6 +4,7 @@ import {
   Servicio,
   ServicioInmex,
 } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDescripcion } from '../../../shared/models/empresas.model';
 /**
@@ -391,3 +392,79 @@ export const CONFIGURACION_DOS_DATOS: ConfiguracionColumna<FraccionArancelariaDe
       "idSolicitud": 202775426,
       "referenciaSolicitud": ""
     }
+/**
+ * Datos de ejemplo para el arreglo de federatarios.
+ * 
+ * Este arreglo contiene información prellenada de notarios o fedatarios públicos,
+ * utilizada principalmente cuando el estado de la consulta es "update".
+ * 
+ * Campos incluidos:
+ * - nombre, primerApellido, segundoApellido
+ * - número y fecha del acta
+ * - número de notaría, entidad federativa y municipio
+ * - estados y opciones relacionadas
+ */
+  export const FEDERATARIOS_DATOS: FederatariosEncabezado[] = [
+  {
+    nombre: 'Juan',
+    primerApellido: 'Pérez',
+    segundoApellido: 'García',
+    numeroDeActa: '123',
+    fechaDelActa: '2025-01-15',
+    numeroDeNotaria: '45',
+    entidadFederativa: 'Ciudad de México',
+    municipioODelegacion: 'Benito Juárez',
+    estado: 'Activo',
+    estadoOptions: 'Option1',
+    estadoUno: 'Value1',
+    estadoDos: 'Value2',
+    estadoTres: 'Value3'
+  }
+];
+/**
+ * Datos de ejemplo para el arreglo de plantas disponibles.
+ * 
+ * Este arreglo contiene información prellenada sobre las plantas o instalaciones
+ * del solicitante, incluyendo dirección, RFC y razón social.
+ * 
+ * Usado cuando se requiere mostrar información de plantas en modo "update".
+ */
+export const PLANTAS_DATOS: PlantasDisponibles[] = [
+  {
+    calle: 'Av. Insurgentes Sur',
+    numeroExterior: '1234',
+    numeroInterior: '5B',
+    codigoPostal: '03100',
+    localidad: 'Ciudad de México',
+    colonia: 'Del Valle',
+    municipioODelegacion: 'Benito Juárez',
+    entidadFederativa: 'Ciudad de México',
+    pais: 'México',
+    registroFederalDeContribuyentes: 'ABC123456XYZ',
+    domicilioFiscalDelSolicitante: 'Av. Reforma 250, Col. Juárez, CDMX',
+    razonSocial: 'Plantas Industriales de México S.A. de C.V.'
+  }];
+  /**
+ * Datos de ejemplo para el arreglo de plantas IMMEX.
+ * 
+ * Este arreglo contiene información predefinida sobre las plantas IMMEX registradas,
+ * incluyendo ubicación, RFC y razón social de la empresa.
+ * 
+ * Se utiliza como datos de muestra o prellenado cuando se edita información existente.
+ */
+  export const PLANTAS_IMMEX: PlantasImmex[] = [
+  {
+    planta: 'Planta Norte',
+    calle: 'Carretera a Reynosa',
+    numeroExterior: '2500',
+    numeroInterior: 'N/A',
+    codigoPostal: '88700',
+    localidad: 'Reynosa',
+    colonia: 'Industrial',
+    delegacionMunicipio: 'Reynosa',
+    entidadFederativa: 'Tamaulipas',
+    pais: 'México',
+    registroFederalDeContribuyentes: 'IMM123456XYZ',
+    domicilioDelSolicitante: 'Carretera a Reynosa 2500, Tamaulipas',
+    razonSocial: 'IMMEX del Norte S.A. de C.V.'
+  }]

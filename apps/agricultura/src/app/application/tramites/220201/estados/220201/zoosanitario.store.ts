@@ -14,6 +14,12 @@ import {
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
 
+export interface TramiteFolioState {
+  idTramite: string | null;
+  firma: string | null;
+  idSolicitud: number | null; 
+  procedure: number | null;
+}
 
 /**
  * @fileoverview Store Akita para la gestión del estado de la solicitud zoosanitaria.
@@ -198,9 +204,18 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
       datos: datos.datos,
       datosForma: datos.datosForma,
       seletedTerceros: datos.seletedTerceros,
-      seletedExdora: datos.seletedExdora
+      seletedExdora: datos.seletedExdora,
+      idSolicitud: datos.idSolicitud
     }));
   }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
   /**
    * Restaura el estado inicial del store, limpiando toda la información almacenada.
    * @method limpiarFormulario

@@ -20,6 +20,7 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
 export interface Tramite260208State {
+    idSolicitud: number;
   
   /**
    * Array of final recipient data for the recipients table
@@ -121,6 +122,7 @@ export interface Tramite260208State {
  */
 export function createInitialState(): Tramite260208State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -142,7 +144,7 @@ export function createInitialState(): Tramite260208State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -243,7 +245,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
+        // ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -333,6 +335,18 @@ export class Tramite260208Store extends Store<Tramite260208State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

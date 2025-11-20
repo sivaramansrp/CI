@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
@@ -6,7 +6,6 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import {
@@ -20,11 +19,13 @@ import {
   NotificacionesComponent,
   Pedimento,
 } from '@libs/shared/data-access-user/src';
+import { OnChanges, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
+import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
@@ -41,18 +42,45 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
     NotificacionesComponent,
     RepresentanteLegalRfcComponent,
-    TooltipModule
+    TooltipModule,
+    DatosDelEstablecimientoRFCComponent
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
-export class DatosDeLaComponent implements OnInit, OnDestroy {
+export class DatosDeLaComponent implements OnInit, OnDestroy, OnChanges {
+  @Output() establecimientoFormValidity = new EventEmitter<boolean>();
+  @Output() domicilioFormValidity = new EventEmitter<boolean>();
+  @Output() manifiestosFormValidity = new EventEmitter<boolean>();
+  @Output() representanteLegalFormValidity = new EventEmitter<boolean>();
+
+  @ViewChild(DatosDelEstablecimientoRFCComponent) datosDelEstablecimientoRfcComp!: DatosDelEstablecimientoRFCComponent;
+  @ViewChild(DomicilioComponent) domicilioComp!: DomicilioComponent;
+  @ViewChild(ManifiestosComponent) manifiestosComp!: ManifiestosComponent;
+  @ViewChild(RepresentanteLegalRfcComponent) representanteLegalRfcComp!: RepresentanteLegalRfcComponent;
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   * Este valor se utiliza para cargar datos específicos relacionados con el procedimiento,
+   * como catálogos o listas asociadas.
+   */
+  @Input() idProcedimiento!: number;
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
+  /** Bandera que indica si el RFC ingresado es válido. Se utiliza para controlar la validación del campo en el formulario. */
+  rfcValido = false;
+
+  /**
+ * Bandera que indica si se debe mostrar u operar con datos de identificación en el formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
+  @Input() identificacion: boolean = false;
   /**
    * Indica si el campo GarantiasOfrecidasVisible es visible.
    */
@@ -72,6 +100,12 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Este input controla el estado habilitado/deshabilitado de la sección de domicilio en el componente.
    */
   @Input() tieneDomicilioHabilitar: boolean = false;
+
+  /**
+ * Bandera que indica si se debe validar el estado dentro del formulario.
+ * Se recibe como entrada desde el componente padre y su valor por defecto es falso.
+ */
+  @Input() estadoValidte: boolean = false;
 
   /**
    * Estado de la solicitud.
@@ -215,32 +249,41 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se inicializa el componente
    * */
   ngOnInit(): void {
-    this.datosDomicilioLegalQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
-      denominacion: [
-        { value: this.solicitudState?.denominacion, disabled: true },
-        Validators.required,
-      ],
-      correo: [
-        { value: this.solicitudState?.correo, disabled: true },
-        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
-      ],
-    });
-    this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'datosSolicitudForm') {
-        this.forma.markAllAsTouched();
-      }
-    })
-    this.inicializarEstadoFormulario();
+  this.datosDomicilioLegalQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+  this.forma = this.fb.group({
+    rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
+    denominacion: [{ value: this.solicitudState?.denominacion, disabled: true }, [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.,\-&]+$/)]],
+    correo: [
+      { value: this.solicitudState?.correo, disabled: true },
+      [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
+    ],
+  });
+  this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
+  this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+    if (formName === 'datosSolicitudForm') {
+      this.forma.markAllAsTouched();
+    }
+  })
+  this.inicializarEstadoFormulario();
+  }
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.validarClickDeBoton();
+      });
+    }
   }
 
   /**
@@ -313,7 +356,46 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     )(VALOR);
     this.servicioDeFormularioService.setFormValue('datosSolicitudForm', { [campo]: VALOR });
   }
+  onRfcValidoChange(valor: boolean):void {
+    this.rfcValido = valor;
+  }
 
+  /** Emite la validez del formulario de establecimiento al componente padre. */
+  establecimientoFormValidityChange(event: boolean):void {
+    this.establecimientoFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de domicilio al componente padre. */
+  domicilioFormValidityChange(event: boolean):void {
+    this.domicilioFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de manifiestos al componente padre. */
+  manifiestosFormValidityChange(event: boolean):void {
+    this.manifiestosFormValidity.emit(event);
+  }
+
+  /** Emite la validez del formulario de representanteLegal al componente padre. */
+  representanteLegalFormValidityChange(event: boolean):void {
+    this.representanteLegalFormValidity.emit(event);
+  }
+
+  validarClickDeBoton(): boolean {
+    let ISVALID = true;
+    if(!this.datosDelEstablecimientoRfcComp.validatorButtonClick() ){
+      ISVALID = false;
+    }
+    if(!this.domicilioComp.validatorButtonClick()){
+      ISVALID = false;
+    }
+    if(!this.manifiestosComp.validarClickDeBoton()){
+      ISVALID = false;
+    }
+    if(!this.representanteLegalRfcComp.validarClickDeBoton()){
+      ISVALID = false;
+    }
+    return ISVALID;
+  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
@@ -322,4 +404,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Obtiene el valor del checkbox de aviso desde el componente de domicilio.      
+   */
+  obtenerValorCheckboxAviso(): boolean {
+  return this.domicilioComp?.domicilio?.get('avisoCheckbox')?.value ?? false;
+}
 }

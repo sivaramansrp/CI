@@ -1,5 +1,5 @@
+import { AcusePageComponent, AcuseResolucionComponent } from '@libs/shared/data-access-user/src';
 import { RouterModule, Routes } from '@angular/router';
-import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
@@ -58,8 +58,8 @@ const ROUTES: Routes = [
   {
     path: 'empresa-frontera',
     loadChildren: () =>
-      import('./tramites/120602/empresa-frontera-solicitud.module').then(
-        (m) => m.EmpresaFronteraSolicitudModule
+      import('./tramites/120602/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
       ),
   },
   {
@@ -144,8 +144,8 @@ const ROUTES: Routes = [
     path: 'cancelacion-de-certificados-de-cupo',
     loadChildren: () =>
       import(
-        './tramites/140104/cancelacion-de-certificados-de-cupo.module'
-      ).then((m) => m.CancelacionDeCertificadosDeCupoModule),
+        './tramites/140104/desistimiento-de-permiso.module'
+      ).then((m) => m.DesistimientoDePermisoModule),
   },
   {
     path: 'desistimiento-de-permiso',
@@ -506,7 +506,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-modificacion',
+    path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/80301/registro-modificacion.module').then(
         (m) => m.RegistroModificacionModule
@@ -565,7 +565,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modificacion-programa-immex-baja-submanufacturera',
+    path: 'registro-solicitude',
     loadChildren: () =>
       import(
         './tramites/80303/modificacion-programa-immex-baja-submanufacturera.module'
@@ -722,6 +722,10 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent,
+  },
+    {
+    path: 'acuse-resolucion',
+    component: AcuseResolucionComponent,
   },
 ];
 

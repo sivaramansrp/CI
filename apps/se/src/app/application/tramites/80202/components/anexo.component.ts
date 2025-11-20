@@ -367,7 +367,7 @@ const FRACCION = String(this.importacionForm.get('fraccionArancelaria')?.value ?
         this.cerrarModalImportacion();
         
         setTimeout(() => {
-          this.pagemostrarNotificacion('La operación se realizó exitosamente.');
+          this.pagemostrarNotificacion('Debe proporcionar por lo menos un nico.');
         }, 200);
         
  }
@@ -587,7 +587,7 @@ private resetImportacionForm(): void {
           this.pagemostrarNotificacion('La fracción que intenta ingresar ya se encuentra registrada.');
         }
       } else {
-        this.pagemostrarNotificacion('La fracción arancelaria no es válida o no esta vigente..');
+        this.pagemostrarNotificacion('Debe seleccionar una fracción de importación..');
       }
     } else {
       this.pagemostrarNotificacion('Debe seleccionar una fracción de importación.');
@@ -697,7 +697,7 @@ private resetImportacionForm(): void {
       }
     } else {
       this.mostrarNotificacion(
-        'Tiene que introducir el NICO y su descripción.'
+        'Debe seleccionar un valor NICO.'
       );
     }
   }
@@ -861,7 +861,7 @@ private resetImportacionForm(): void {
   /** Elimina el permiso IMMEX y fracciones asociadas. */
   eliminarPedimentoDatoss(berr: boolean): void {
     if (
-      berr &&
+      !berr &&
       this.selectFraccionArancelaria &&
       this.selectFraccionArancelaria.id
     ) {
@@ -911,8 +911,9 @@ private resetImportacionForm(): void {
           'Al eliminar el registro de fracción arancelaria, se eliminarán las fracciones de exportación asociadas. ¿Está seguro que desea eliminar la Fracción seleccionada?',
         cerrar: false,
         tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnAceptar: 'Cancelar',
+        txtBtnCancelar: 'Aceptar',
+       
       };
       this.deleteMessageExportacion = true;
     } else {

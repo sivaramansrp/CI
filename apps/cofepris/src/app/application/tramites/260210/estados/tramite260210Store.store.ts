@@ -35,6 +35,17 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @property {number} [tabSeleccionado] - Pestaña seleccionada actualmente.
  */
 export interface Tramite260210State {
+  /**
+   * @property {number | null} idSolicitud
+   * @description
+   * Identificador único de la solicitud del trámite 80207 en el sistema VUCEM.
+   * Puede ser nulo si aún no se ha generado o asignado un ID oficial al trámite.
+   *
+   * @unique_identifier ID único del trámite en sistema
+   * @nullable Puede ser null antes de envío oficial
+   * @system_reference Referencia para tracking y consultas
+   */
+  idSolicitud: number | null;
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -59,6 +70,7 @@ export interface Tramite260210State {
  */
 export function createInitialState(): Tramite260210State {
   return {
+    idSolicitud: 0,
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
@@ -80,7 +92,7 @@ export function createInitialState(): Tramite260210State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -107,17 +119,17 @@ export function createInitialState(): Tramite260210State {
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
     },
-    opcionConfigDatos: TABLA_OPCION_DATA,
+    opcionConfigDatos: [],
     scianConfigDatos: [],
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
-    opcionesColapsableState: false,
+    opcionesColapsableState: true,
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
-      estado: '',
+      banco: '',
       llavePago: '',
       fechaPago: '',
       importePago: '',
@@ -133,7 +145,7 @@ export function createInitialState(): Tramite260210State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260210', resettable: true })
-export class Tramite260214Store extends Store<Tramite260210State> {
+export class Tramite260210Store extends Store<Tramite260210State> {
   constructor() {
     super(createInitialState());
   }
@@ -153,15 +165,39 @@ export class Tramite260214Store extends Store<Tramite260210State> {
   }
 
   /**
-   * Agrega nuevos fabricantes a la lista existente.
+   * @method updateFabricanteTablaDatos
+   * @description
+   * Agrega nuevos fabricantes a la tabla de datos de fabricantes.
    *
-   * @param newFabricantes - Arreglo de objetos `Fabricante` a añadir.
+   * @param {Fabricante[]} newFabricantes
+   * Lista de nuevos fabricantes a agregar.
    */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
-    this.update((state) => ({
-      ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
+    this.update((state) => {
+      const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+      newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        fabricanteTablaDatos: ACTUALIZADA,
+      };
+    });
   }
 
   /**
@@ -175,7 +211,6 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -189,7 +224,7 @@ export class Tramite260214Store extends Store<Tramite260210State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -201,7 +236,7 @@ export class Tramite260214Store extends Store<Tramite260210State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 
@@ -264,6 +299,34 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+
+    /**
+   * @método
+   * @nombre establecerDatos
+   * @descripción
+   * Actualiza el estado con los valores proporcionados.
+   *
+   * @param {Partial<Tramite260210State>} values - Valores parciales para actualizar el estado.
+   */
+  public establecerDatos(values: Partial<Tramite260210State>): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
     }));
   }
 }

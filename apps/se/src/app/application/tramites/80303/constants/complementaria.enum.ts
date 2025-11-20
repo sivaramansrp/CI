@@ -1,4 +1,5 @@
-import { AnexoExportacion, AnexoImportacion, DatosContribuyente, DatosEmpresaSubmanufacturera, DatosPlantaManufacturera, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServicioImmex } from "../models/complementaria.model";
+import { AnexoExportacion, AnexoImportacion, DatosContribuyente, Federatario, FederatarioRealizaranLasOperaciones, Sensible, ServiciosImmex } from "../models/complementaria.model";
+import { Empresas, Plantas } from "../../../shared/models/complementaria.model";
 
 /**
  * CONFIGURACION_CONTRIBUYENTES
@@ -52,42 +53,42 @@ export const CONFIGURACION_CONTRIBUYENTES_ACCIONISTAS = [
 export const CONFIGURACION_FEDERATARIOS = [
   {
     encabezado: 'Nombre',
-    clave: (ele: Federatario): string | undefined => ele.Nombre,
+    clave: (ele: Federatario): string | undefined => ele.nombreNotario,
     orden: 1,
   },
   {
     encabezado: 'Primer apellido',
-    clave: (ele: Federatario): string | undefined => ele.PrimerApellido,
+    clave: (ele: Federatario): string | undefined => ele.apellidoMaterno,
     orden: 2,
   },
   {
     encabezado: 'Segundo apellido',
-    clave: (ele: Federatario): string | undefined => ele.SegundoApellido,
+    clave: (ele: Federatario): string | undefined => ele.apellidoPaterno,
     orden: 3,
   },
   {
     encabezado: 'Número acta',
-    clave: (ele: Federatario): string | undefined => ele.NumeroActa,
+    clave: (ele: Federatario): string | undefined => ele.numeroActa,
     orden: 4,
   },
   {
     encabezado: 'Fecha acta',
-    clave: (ele: Federatario): string | undefined => ele.FechaActa,
+    clave: (ele: Federatario): string | undefined => ele.fechaActa,
     orden: 5,
   },
   {
     encabezado: 'Número notaría',
-    clave: (ele: Federatario): string | undefined => ele.NumeroNotaria,
+    clave: (ele: Federatario): string | undefined => ele.numeroNotaria,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Federatario): string | undefined => ele.MunicipioDelegacion,
+    clave: (ele: Federatario): string | undefined => ele.delegacionMunicipio,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Federatario): string | undefined => ele.EstadoDistrito,
+    clave: (ele: Federatario): string | undefined => ele.entidadFederativa,
     orden: 8,
   },
 ];
@@ -203,62 +204,62 @@ export const CONFIGURACION_FEDERATARIOS_DOMICILIO = [
 export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.rfc,
+    clave: (ele: Empresas): string | undefined => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.razonSocial,
+    clave: (ele: Empresas): string | undefined => ele.razonSocial,
     orden: 2,
   },
   {
     encabezado: 'Calle',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.calle,
+    clave: (ele: Empresas): string | undefined => ele.calle,
     orden: 3,
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.numeroInterior,
+    clave: (ele: Empresas): string | undefined => ele.numeroInterior,
     orden: 4,
   },
   {
     encabezado: 'Número exterior',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.numeroExterior,
+    clave: (ele: Empresas): string | undefined => ele.numeroExterior,
     orden: 5,
   },
   {
     encabezado: 'Código postal',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.codigoPostal,
+    clave: (ele: Empresas): string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.colonia,
+    clave: (ele: Empresas): string | undefined => ele.colonia,
     orden: 7,
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.municipioDelegacion,
+    clave: (ele: Empresas): string | undefined => ele.municipioDelegacion,
     orden: 8,
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.entidadFederativa,
+    clave: (ele: Empresas): string | undefined => ele.estado,
     orden: 9,
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.pais,
+    clave: (ele: Empresas): string | undefined => ele.pais,
     orden: 10,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.telefono,
+    clave: (ele: Empresas): string | undefined => ele.telefono,
     orden: 11,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosEmpresaSubmanufacturera): string | undefined => ele.estatus,
+    clave: (ele: Empresas): string | undefined => ele.estatus,
     orden: 12,
   },
 ];
@@ -283,57 +284,57 @@ export const CONFIGURACION_EMPRESAS_SUBMANUFACTURERAS = [
 export const CONFIGURACION_PLANTAS_MANUFACTURERAS = [
   {
     encabezado: 'Calle',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Calle,
+    clave: (ele: Plantas): string | undefined => ele.calle,
     orden: 1,
   },
   {
     encabezado: 'Número exterior',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.NumeroExterior,
+    clave: (ele: Plantas): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.NumeroInterior,
+    clave: (ele: Plantas): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
     encabezado: 'Código postal',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.CodigoPostal,
+    clave: (ele: Plantas): string | undefined => ele.codigoPostal,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Colonia,
+    clave: (ele: Plantas): string | undefined => ele.colonia,
     orden: 5,
   },
   {
     encabezado: 'Municipio o delegación',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.MunicipioDelegacion,
+    clave: (ele: Plantas): string | undefined => ele.municipioDelegacion,
     orden: 6,
   },
   {
     encabezado: 'Entidad Federativa',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.EntidadFederativa,
+    clave: (ele: Plantas): string | undefined => ele.estado,
     orden: 7,
   },
   {
     encabezado: 'País',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Pais,
+    clave: (ele: Plantas): string | undefined => ele.pais,
     orden: 8,
   },
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.RFC,
+    clave: (ele: Plantas): string | undefined => ele.rfc,
     orden: 9,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.DomicilioFiscal,
+    clave: (ele: Plantas): string | undefined => ele.fiscalSolicitante,
     orden: 10,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: DatosPlantaManufacturera): string | undefined => ele.Estatus,
+    clave: (ele: Plantas): boolean | undefined => ele.estatus,
     orden: 11,
   },
 ];
@@ -355,22 +356,22 @@ export const CONFIGURACION_PLANTAS_MANUFACTURERAS = [
 export const CONFIGURACION_SERVICIOS_IMMEX = [
   {
     encabezado: 'Descripción del servicio',
-    clave: (ele: ServicioImmex): string | undefined => ele.descripcionServicio,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcion,
     orden: 1,
   },
   {
     encabezado: 'Tipo de servicio',
-    clave: (ele: ServicioImmex): string | undefined => ele.tipoServicio,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcionTipo,
     orden: 2,
   },
   {
     encabezado: 'Testado',
-    clave: (ele: ServicioImmex): string | undefined => ele.testado,
+    clave: (ele: ServiciosImmex): string | undefined => ele.descripcionTestado,
     orden: 3,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: ServicioImmex): string | undefined => ele.estatus,
+    clave: (ele: ServiciosImmex): string | undefined => ele.desEstatus,
     orden: 4,
   },
 ];
@@ -384,7 +385,7 @@ export const CONFIGURACION_SERVICIOS_IMMEX = [
 export const CONFIGURACION_ANEXO_EXPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: AnexoExportacion): string | undefined => ele.fraccionArancelaria,
+    clave: (ele: AnexoExportacion): string | undefined => ele.fraccionArancelaria?.descripcion,
     orden: 1,
   },
   {
@@ -471,5 +472,43 @@ export const CONFIGURACION_SENSIBLES = [
     encabezado: 'Unidad de medida tarifaria',
     clave: (ele: Sensible): string | undefined => ele.unidadMedida,
     orden: 4,
+  },
+];
+
+/**
+ * Constante que define los pasos para el proceso de exportación.
+ * Cada paso incluye un índice, título, y estados de activo y completado.
+ * @constant {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>} PASOS_EXPORTACION
+ */
+export const PASOS_EXPORTACION = [
+  {
+    /** Índice del paso. */
+    indice: 1,
+    /** Título del paso. */
+    titulo: 'Capturar solicitud',
+    /** Indica si el paso está activo. */
+    activo: true,
+    /** Indica si el paso está completado. */
+    completado: true,
+  },
+  {
+    /** Índice del paso. */
+    indice: 2,
+    /** Título del paso. */
+    titulo: 'Anexar requisitos',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
+  },
+  {
+    /** Índice del paso. */
+    indice: 3,
+    /** Título del paso. */
+    titulo: 'Firmar solicitud',
+    /** Indica si el paso está activo. */
+    activo: false,
+    /** Indica si el paso está completado. */
+    completado: false,
   },
 ];

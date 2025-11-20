@@ -6,6 +6,8 @@ import {
   CatalogosService,
   FirmaElectronicaComponent,
   InicioSesionService,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   SolicitanteComponent,
   SubirDocumentoService,
   TituloComponent,
@@ -15,7 +17,7 @@ import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-pri
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
-import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
+import {PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -25,10 +27,12 @@ import { TercerosRelacionadosFabricanteComponent } from './components/terceros-r
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 @NgModule({
-  declarations: [PasoUnoComponent,
+  declarations: [
+    PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    PlaguicidasComponent],
+    PlaguicidasComponent
+  ], 
   imports: [
     PermitDeSubstancesRoutingModule,
     CommonModule,
@@ -42,8 +46,10 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent,
     DatosSolicitudComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDerechosComponent,
-    AvisoDePrivacidadComponent
+    PasoFirmaComponent,
+    PasoCargaDocumentoComponent,
+    AvisoDePrivacidadComponent,
+    PagoDeDerechosContenedoraComponent
   ],
   providers: [ToastrService,
     CatalogosService,

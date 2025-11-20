@@ -217,13 +217,10 @@ getAllState(): Observable<Solicitud110201State> {
       })
     );
   }
-buscarMercanciasCert(body: any): Observable<any> {
-  // return this.httpService.post<any>(
-  //   'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
-  //   { body: body }
-  // );
-   return this.httpService.post<any>(PROC_110201.BUSCAR, { body: body });
-}
+
+  buscarMercanciasCert(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110201.BUSCAR, { body: body });
+  }
 
 /**
  * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
@@ -231,8 +228,7 @@ buscarMercanciasCert(body: any): Observable<any> {
  * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
  * @returns Observable con la respuesta de la solicitud POST.
  */
-guardarDatosPost(body: any) {
-  return this.httpService.post<any>(PROC_110201.GUARDAR, { body: body });
-  // return this.httpService.post<any>('http://localhost:8080/api/sat-t110201/solicitud/guardar', { body: body });
-}
+ guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_110201.GUARDAR, { body: body });
+  }
 }

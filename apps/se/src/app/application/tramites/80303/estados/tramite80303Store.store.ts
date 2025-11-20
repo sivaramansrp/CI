@@ -1,22 +1,24 @@
 import {
   AnexoExportacion,
   AnexoImportacion,
-  DatosContribuyente,
-  DatosEmpresaSubmanufacturera,
-  DatosPlantaManufacturera,
   Federatario,
   FederatarioRealizaranLasOperaciones,
-  Sensible,
-  ServicioImmex,
+  ServiciosImmex,
 } from '../models/complementaria.model';
 import {
   Bitacora,
+  DatosModificacion,
   EmpresaSubmanufacturera,
   ModificacionDatos,
+  
 } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Complimentaria, Empresas, Plantas } from '../../../shared/models/complementaria.model';
+import { Anexo } from '../../../shared/models/anexos.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+
+import{ProgramaLista} from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 
 
 /**
@@ -50,15 +52,15 @@ export interface Tramite80303State {
 
   /**
    * Datos de la tabla de productos sensibles.
-   * @type {Sensible[]}
+   * @type {Anexo[]}
    */
-  sensiblesTablaDatos: Sensible[];
+  sensiblesTablaDatos: Anexo[];
 
   /**
    * Datos de la tabla de accionistas.
-   * @type {DatosContribuyente[]}
+   * @type {Complimentaria[]}
    */
-  accionistasTablaDatos: DatosContribuyente[];
+  accionistasTablaDatos: Complimentaria[];
 
   /**
    * Datos de la tabla de federatarios.
@@ -74,21 +76,21 @@ export interface Tramite80303State {
 
   /**
    * Datos de la tabla de empresas submanufactureras.
-   * @type {DatosEmpresaSubmanufacturera[]}
+   * @type {Empresas[]}
    */
-  empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[];
+  empresasSubmanufacturerasTablaDatos: Empresas[];
 
   /**
    * Datos de la tabla de plantas manufactureras.
-   * @type {DatosPlantaManufacturera[]}
+   * @type {Plantas[]}
    */
-  plantasManufacturerasTablaDatos: DatosPlantaManufacturera[];
+  plantasManufacturerasTablaDatos: Plantas[];
 
   /**
    * Datos de la tabla de servicios IMMEX.
    * @type {ServicioImmex[]}
    */
-  serviciosImmexTablaDatos: ServicioImmex[];
+  serviciosImmexTablaDatos: ServiciosImmex[];
 
   /**
    * Datos de la tabla de bitácora.
@@ -107,6 +109,41 @@ export interface Tramite80303State {
    * @type {ModificacionDatos}
    */
   modificacionDatos: ModificacionDatos;
+  
+  /**
+   * Folio del programa seleccionado.
+   */
+  selectedFolioPrograma: string;
+
+  /**
+   * Información relacionada con la modificación.
+   */
+  datosModificacion: DatosModificacion | undefined;
+  /**
+   * Tipo de programa seleccionado.
+   */
+  selectedTipoPrograma: string;
+
+  /**
+   * ID del programa seleccionado.
+   */
+  selectedIdPrograma: string;
+
+  /**
+   * Certificación SAT
+   * @type {string}
+   */
+  certificacionSAT: string;
+   /**
+   * ID de la solicitud.
+   * @type {number}
+   */
+  idSolicitud: number;
+  /**
+   * RFC de inicio de sesión.
+   * @type {string}
+   */
+  loginRfc: string;
 }
 
 /**
@@ -130,13 +167,26 @@ export function createInitialState(): Tramite80303State {
     serviciosImmexTablaDatos: [],
     bitacoraTablaDatos: [],
     submanufacturerasTablaDatos: [],
+    selectedFolioPrograma: '',
+    selectedTipoPrograma: '',
+    selectedIdPrograma: '',
+    certificacionSAT: '',
+    datosModificacion: {
+      rfc: '',
+      representacionFederal: '',
+      tipo: '',
+      programa: ''
+    },
     modificacionDatos: {
       rfc: '',
       representacionFederal: '',
       tipoModificacion: '',
       modificacionPrograma: '',
     },
+     idSolicitud: 0,
+    loginRfc: 'AAL0409235E6',
   };
+  
 }
 
 /**
@@ -216,10 +266,10 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos sensibles.
    *
    * @method updateSensiblesTablaDatos
-   * @param {Sensible[]} sensiblesTablaDatos - Nueva lista de datos sensibles.
+   * @param {Anexo[]} sensiblesTablaDatos - Nueva lista de datos sensibles.
    * @returns {void}
    */
-  public updateSensiblesTablaDatos(sensiblesTablaDatos: Sensible[]): void {
+  public updateSensiblesTablaDatos(sensiblesTablaDatos: Anexo[]): void {
     this.update((state) => ({
       ...state,
       sensiblesTablaDatos,
@@ -230,11 +280,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de accionistas.
    *
    * @method updateAccionistasTablaDatos
-   * @param {DatosContribuyente[]} accionistasTablaDatos - Nueva lista de datos de accionistas.
+   * @param {Complimentaria[]} accionistasTablaDatos - Nueva lista de datos de accionistas.
    * @returns {void}
    */
   public updateAccionistasTablaDatos(
-    accionistasTablaDatos: DatosContribuyente[]
+    accionistasTablaDatos: Complimentaria[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -278,11 +328,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de empresas submanufactureras.
    *
    * @method updateEmpresasSubmanufacturerasTablaDatos
-   * @param {DatosEmpresaSubmanufacturera[]} empresasSubmanufacturerasTablaDatos - Nueva lista de datos de empresas submanufactureras.
+   * @param {Empresas[]} empresasSubmanufacturerasTablaDatos - Nueva lista de datos de empresas submanufactureras.
    * @returns {void}
    */
   public updateEmpresasSubmanufacturerasTablaDatos(
-    empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[]
+    empresasSubmanufacturerasTablaDatos: Empresas[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -294,11 +344,11 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * Actualiza la lista de datos de plantas manufactureras.
    *
    * @method updatePlantasManufacturerasTablaDatos
-   * @param {DatosPlantaManufacturera[]} plantasManufacturerasTablaDatos - Nueva lista de datos de plantas manufactureras.
+   * @param {Plantas[]} plantasManufacturerasTablaDatos - Nueva lista de datos de plantas manufactureras.
    * @returns {void}
    */
   public updatePlantasManufacturerasTablaDatos(
-    plantasManufacturerasTablaDatos: DatosPlantaManufacturera[]
+    plantasManufacturerasTablaDatos: Plantas[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -314,7 +364,7 @@ export class Tramite80303Store extends Store<Tramite80303State> {
    * @returns {void}
    */
   public updateServiciosImmexTablaDatos(
-    serviciosImmexTablaDatos: ServicioImmex[]
+    serviciosImmexTablaDatos: ServiciosImmex[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -351,4 +401,87 @@ export class Tramite80303Store extends Store<Tramite80303State> {
       submanufacturerasTablaDatos,
     }));
   }
+  /**
+   * Establece el RFC de inicio de sesión en el estado.
+   *
+   * @param loginRfc - RFC del usuario que ha iniciado sesión.
+   */
+  public setLoginRfc(loginRfc: string): void {
+    this.update((state) => ({
+      ...state,
+      loginRfc,
+    }));
+  }
+/**
+   * Establece el tipo de programa seleccionado en el estado.
+   * 
+   * @param selectedTipoPrograma - El tipo de programa seleccionado.
+   */
+  public setSelectedTipoPrograma(selectedTipoPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedTipoPrograma,
+    }));
+  }
+
+  /**
+   * Establece la lista de datos del programa en el estado.
+   * 
+   * @param programaListaDatos - Arreglo de objetos ProgramaLista que representan la lista de datos del programa.
+   */
+  public setProgramaListaDatos(programaListaDatos: ProgramaLista[]): void {
+    this.update((state) => ({
+      ...state,
+      programaListaDatos,
+    }));
+  }
+
+  /**
+   * Establece el folio del programa seleccionado en el estado.
+   *
+   * @param selectedFolioPrograma - El folio del programa seleccionado.
+   */
+  public setSelectedFolioPrograma(selectedFolioPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedFolioPrograma,
+    }));
+  }
+  /**
+   * Establece el ID del programa seleccionado en el estado.
+   *
+   * @param selectedIdPrograma - El ID del programa seleccionado.
+   */
+  public setSelectedIdPrograma(selectedIdPrograma: string): void {
+    this.update((state) => ({
+      ...state,
+      selectedIdPrograma,
+    }));
+  }
+ 
+  /**
+   * Establece el ID de la solicitud a establecer en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud a establecer en el estado.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  
+  
+  /**
+   * Establece el valor de la certificación SAT en el estado.
+   *
+   * @param certificacionSAT - El nuevo valor de la certificación SAT que se asignará al estado.
+   */
+  public setCertificacionSAT(certificacionSAT: string): void {
+    this.update((state) => ({
+      ...state,
+      certificacionSAT,
+    }));
+  }
+
 }

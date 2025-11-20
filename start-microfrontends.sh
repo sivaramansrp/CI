@@ -20,12 +20,14 @@ show_help() {
   echo "  dashboard - Inicia solo el dashboard (shell)"
   echo "  login     - Inicia dashboard y login"
   echo "  aga       - Inicia dashboard, login y AGA"
+  echo "  privados  - Inicia dashboard, login y Privados"
   echo "  clean     - Detiene y elimina todos los contenedores"
   echo "  status    - Muestra el estado de los contenedores"
   echo "  logs [nombre] - Muestra logs (ej: logs login para ver logs del login)"
   echo
   echo -e "${YELLOW}Ejemplos:${NC}"
   echo "  ./start-microfrontends.sh login    # Inicia dashboard y login"
+  echo "  ./start-microfrontends.sh privados # Inicia dashboard, login y privados"
   echo "  ./start-microfrontends.sh logs aga # Muestra logs de AGA"
 }
 
@@ -63,6 +65,7 @@ start_all() {
   echo "SE: http://localhost:4205"
   echo "SEMARNAT: http://localhost:4206"
   echo "AGACE: http://localhost:4209"
+  echo "Privados: http://localhost:4225"
 }
 
 # Función para iniciar solo el dashboard
@@ -95,6 +98,19 @@ start_aga() {
   echo "Dashboard: http://localhost:4200"
   echo "Login: http://localhost:4201"
   echo "AGA: http://localhost:4202"
+}
+
+# Función para iniciar dashboard, login y Privados
+start_privados() {
+  echo -e "${GREEN}Iniciando dashboard, login y Privados...${NC}"
+  create_network
+  docker-compose -f docker/modulefederation-dashboard.yml up -d
+  docker-compose -f docker/modulefederation-login-microfront.yml up -d
+  docker-compose -f docker/modulefederation-privados-microfront.yml up -d
+  echo -e "${GREEN}¡Listo! Aplicaciones disponibles en:${NC}"
+  echo "Dashboard: http://localhost:4200"
+  echo "Login: http://localhost:4201"
+  echo "Privados: http://localhost:4225"
 }
 
 # Función para limpiar todos los contenedores
@@ -153,6 +169,9 @@ case "$1" in
     ;;
   aga)
     start_aga
+    ;;
+  privados)
+    start_privados
     ;;
   clean)
     clean

@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
@@ -234,12 +234,11 @@ const ROUTES: Routes = [
   {
     path: 'equipo-e-instrumentos-musicales',
     loadChildren: () =>
-      import('./tramites/630104/equipo-e-instrumentos-musicales.module').then((m)=>
-        m.EquipoEInstrumentosMusicalesModule)
-  
+      import('./tramites/630104/equipo-e-instrumentos-musicales.module').then(
+        (m) => m.EquipoEInstrumentosMusicalesModule
+      ),
   },
   {
-  
     path: 'cancelacion-donaciones',
     loadChildren: () =>
       import('./tramites/11106/cancelacion-donaciones.module').then(
@@ -290,7 +289,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'desistir-solicitud-informacion-historica',
+    path: 'subsecuente/319/desistir',
     loadChildren: () =>
       import(
         './tramites/31910/desistir-solicitud-informacion-historica.module'
@@ -453,17 +452,51 @@ const ROUTES: Routes = [
   {
     path: 'verificar-dictamen',
     loadComponent: () =>
-      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+      import('./verificar-dictamen/verificar-dictamen.component').then(
+        (m) => m.VerificarDictamenComponent
+      ),
   },
   {
     path: 'detalle-v-dictamen',
     loadComponent: () =>
-      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then(
+        (m) => m.DetalleVDictamenComponent
+      ),
+  },
+  {
+    path: 'autorizar-dictamen',
+    loadComponent: () =>
+      import('./autorizar-dictamen/autorizar-dictamen.component').then(
+        (m) => m.AutorizarDictamenComponent
+      ),
+  },
+  {
+    path: 'confirmar-notificacion',
+    loadComponent: () =>
+      import('./confirmar-notificacion/confirmar-notificacion.component').then(
+        (m) => m.ConfirmarNotificacionComponent
+      ),
   },
   {
     path: 'datos-generales-tramite',
     loadComponent: () =>
-      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+      import(
+        './datos-generales-tramite/datos-generales-tramite.component'
+      ).then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+    path: 'subsecuente/319/cancelar',
+    loadChildren: () =>
+      import('./tramites/31907/cancelar-solicitud-reporte-mensual.module').then(
+        (m) => m.CancelarSolicitudReporteMensualModule
+      ),
+  },
+  {
+    path: 'subsecuente/319/reactivar',
+    loadChildren: () =>
+      import('./tramites/31908/reactivar-reporte-mensual.module').then(
+        (m) => m.ReactivarReporteMensualModule
+      ),
   },
 ];
 

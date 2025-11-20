@@ -290,7 +290,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   createForm(): void {
     this.formDatosCertificado = this.fb.group({
-      observacionesDates: [''],
+      observacionesDates: ['', [Validators.maxLength(500)]],
       presenta: [''],
       idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
@@ -373,6 +373,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * Método para cargar la lista de idiomas desde el servicio global.
    */
   cargarIdioma(tramite: string): void {
+    if(this.idioma === true){
     this.catalogoServices
       .catalogoIdioma(tramite)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -381,6 +382,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
           this.idiomaDatos = data.datos as Catalogo[];
         }
       );
+    }
   }
 
     /**

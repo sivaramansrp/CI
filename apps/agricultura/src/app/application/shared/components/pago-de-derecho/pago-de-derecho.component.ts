@@ -1,12 +1,15 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosService, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { PagoDeDerecho } from '../../models/tercerosrelacionados.model';
 import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
-import { Subject } from 'rxjs';
+
+import { Subject, takeUntil } from 'rxjs';
+
+import { SharedFormService } from '../../../tramites/220201/services/220201/SharedForm.service';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -23,11 +26,12 @@ import { Subject } from 'rxjs';
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,OnChanges {
+export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit, OnChanges {
   /**
     * Configuración predeterminada para el campo de fecha de pago.
     */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
 
   /**
    * Lista de opciones para el selector de justificación.
@@ -126,7 +130,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    */
   constructor(
     private readonly fb: FormBuilder,
-
+    private sharedService: SharedFormService
   ) {
   }
   /**
@@ -152,23 +156,38 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
       Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
       Validators.maxLength(30)]);
     }
-  }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-  if (changes['pagoDeDerechos'] && changes['pagoDeDerechos'].currentValue) {
-    this.pagoForm.patchValue({
-      exentoPago: this.pagoDeDerechos.exentoPago || 'no',
-      justificacion: this.pagoDeDerechos.justificacion || '',
-      claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
-      cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
-      banco: this.pagoDeDerechos.banco || '',
-      llavePago: this.pagoDeDerechos.llavePago || '',
-      importePago: this.pagoDeDerechos.importePago || '2562',
-      fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
+    this.sharedService.dataPagoDerechos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      if (data) {
+        console.warn('Prellenado de Pago de Derechos recibido en PagoDeDerechoComponent:', data);
+        this.pagoForm.patchValue({
+          exentoPago: data.exento_pago || '',
+          justificacion: '',
+          claveReferencia: data.cve_referencia_bancaria,
+          cadenaDependencia: data.cadena_pago_dependencia,
+          banco: data.cve_banco,
+          llavePago: data.llave_pago || '',
+          importePago: data.imp_pago,
+          fechaPago: data.fec_pago
+        });
+      }
     });
-    this.radioChange();
   }
-}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['pagoDeDerechos'] && changes['pagoDeDerechos'].currentValue) {
+      this.pagoForm.patchValue({
+        exentoPago: this.pagoDeDerechos.exentoPago || 'no',
+        justificacion: this.pagoDeDerechos.justificacion || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
+        banco: this.pagoDeDerechos.banco || '',
+        llavePago: this.pagoDeDerechos.llavePago || '',
+        importePago: this.pagoDeDerechos.importePago || '2562',
+        fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
+      });
+      this.radioChange();
+    }
+  }
   /**
    * @inheritdoc
    * @description
@@ -312,8 +331,27 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   actualizarPago(): void {
-    this.pagoChanged.emit(this.pagoForm?.value);
+    this.actualizarTodoelForm();
   }
+
+  /**
+ * @desc Actualiza los datos al cambiar algun campo.
+ * @memberof PagoDeDerechoComponent
+ */
+  actualizarTodoelForm() {
+    const DATOS_PAGOS = {
+      exentoPago: this.pagoForm.value.exentoPago,
+      justificacion: this.pagoForm.get('justificacion')?.value,
+      claveReferencia: this.pagoForm.get('claveReferencia')?.value,
+      cadenaDependencia: this.pagoForm.get('cadenaDependencia')?.value,
+      banco: this.pagoForm.get('banco')?.value,
+      llavePago: this.pagoForm.get('llavePago')?.value,
+      importePago: this.pagoForm.get('importePago')?.value,
+      fechaPago: this.pagoForm.get('fechaPago')?.value
+    }
+    this.pagoChanged.emit(DATOS_PAGOS);
+  }
+
 
   /**
    * @description Método que se ejecuta al hacer clic en el botón "Borrar".
@@ -324,7 +362,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
   onBorrar(): void {
     this.setFecha = false;
     const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
-    // this.pagoForm.reset();
     this.pagoForm.patchValue({
       exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
       fechaPago: '',

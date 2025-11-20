@@ -1,20 +1,19 @@
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
-import { CommonModule } from '@angular/common';
-
 import { Component, ViewChild } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PermisoImportacionService } from "../../services/permiso-importacion.service";
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
+import { of, switchMap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosExportadorComponent } from "../../components/datos-exportador/datos-exportador.component";
 import { DatosMercanciaComponent } from "../../components/datos-mercancia/datos-mercancia.component";
 import { DatosProductorComponent } from "../../components/datos-productor/datos-productor.component";
+import { DetalleEvaluaconSolicitudService } from "../../services/detalleEvaluaconSolicitud.service";
 import { DocumentoExportacionComponent } from "../../components/documento-exportacion/documento-exportacion.component";
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PermisoImportacionService } from "../../services/permiso-importacion.service";
 import { RepresentacionFederalComponent } from "../../components/representacion-federal/representacion-federal.component";
+import { Subject } from 'rxjs';
 import { TramiteRealizerComponent } from "../../components/tramite_realizer/tramite_realizer.component";
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para el paso uno del trámite 130120.
@@ -30,7 +29,7 @@ import { TramiteRealizerComponent } from "../../components/tramite_realizer/tram
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent, SolicitanteComponent, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
+  imports: [CommonModule, SolicitanteComponent, TramiteRealizerComponent, DatosMercanciaComponent, DocumentoExportacionComponent, DatosProductorComponent, DatosExportadorComponent, RepresentacionFederalComponent],
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
@@ -68,6 +67,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   indice: number = 1;
 
   /**
+   * Número de folio del trámite.
+   */
+  numeroFolio: string = '';
+
+  /**
+   * Flag para controlar si ya se ejecutó el servicio de detalle.
+   */
+  private yaEjecutoServicio: boolean = false;
+
+  /**
    * Constructor del componente.
    * Suscribe al estado de consulta y actualiza la propiedad consultaState.
    * @param consultaQuery Servicio para consultar el estado de la consulta.
@@ -76,13 +85,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private permisoImportacionService: PermisoImportacionService,
+    private servicioDetalle: DetalleEvaluaconSolicitudService
   ) {
-    this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
+
   }
 
   /**
@@ -90,28 +95,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Si hay datos para actualizar, llama a guardarDatosFormulario; si no, activa el modo de respuesta.
    */
   ngOnInit(): void {
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
-
-  /**
-   * Guarda los datos del formulario obtenidos del servicio.
-   * Actualiza el estado del formulario con la respuesta del servidor.
-   */
-  guardarDatosFormulario(): void {
-    this.permisoImportacionService
-      .obtenerRegistroTomarMuestrasDatos().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if (resp) {
-          this.esDatosRespuesta = true;
-          this.permisoImportacionService.actualizarEstadoFormulario(resp);
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      switchMap((seccionState) => {
+        this.consultaState = seccionState;
+        this.numeroFolio = this.consultaState.folioTramite;
+        
+        // Solo ejecutar el servicio si es necesario y no se ha ejecutado antes
+        if (this.consultaState.update && !this.yaEjecutoServicio && this.numeroFolio) {
+          this.yaEjecutoServicio = true;
+          return this.servicioDetalle.getDetalleEvaluacionSolicitud(this.numeroFolio);
         }
-      });
+        
+        if (!this.consultaState.update && !this.esDatosRespuesta) {
+          this.esDatosRespuesta = true;
+        }
+        return of(null);
+      })
+    ).subscribe((resp) => {
+      if (resp && resp.datos) {
+        this.esDatosRespuesta = true;
+        this.permisoImportacionService.actualizarEstadoFormulario(resp.datos);
+      }
+    });
   }
 
   /**

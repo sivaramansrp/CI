@@ -24,13 +24,19 @@ describe('DatosAnexosComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(DatosAnexosComponent);
     component = fixture.debugElement.componentInstance;
-    component.modificionService = component.modificionService || {};
-    component.modificionService.obtenerAnexo = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService = component.solicitudService || {};
+    component.solicitudService.obtenerFraccionesExportacion = jest.fn().mockReturnValue(observableOf({}));
+    component.solicitudService.obtenerFraccionesImportacion = jest.fn().mockReturnValue(observableOf({}));
   });
 
-  it('debe ejecutar #obteneComplimentaria()', () => {
-    component.obteneComplimentaria();
-    expect(component.modificionService.obtenerAnexo).toHaveBeenCalled();
+  it('debe ejecutar #obtenerFraccionesExportacion()', () => {
+    component.obtenerFraccionesExportacion();
+    expect(component.solicitudService.obtenerFraccionesExportacion).toHaveBeenCalled();
+  });
+
+  it('debe ejecutar #obtenerFraccionesImportacion()', () => {
+    component.obtenerFraccionesImportacion();
+    expect(component.solicitudService.obtenerFraccionesImportacion).toHaveBeenCalled();
   });
 
   it('debería ejecutar #ngOnDestroy()', () => {

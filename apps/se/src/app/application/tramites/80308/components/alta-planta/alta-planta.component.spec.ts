@@ -15,6 +15,7 @@ import { ModificacionSolicitudeService } from '../../services/modificacion-solic
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80308Store } from '../../estados/tramite80308.store';
 import { Tramite80308Query } from '../../estados/tramite80308.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockTramite80308Store {
@@ -26,9 +27,14 @@ class MockTramite80308Query {
   selectEstado$ = observableOf({
     id: {}
   });
-  selectBuscarDomicilios$ = {};
-  selectAltaPlanta$ = {};
-  selectDomicilios$ = {};
+  selectBuscarDomicilios$ = observableOf([]);
+  selectAltaPlanta$ = observableOf([]);
+  selectDomicilios$ = observableOf([]);
+}
+
+@Injectable()
+class MockConsultaioQuery {
+  selectConsultaioState$ = observableOf({ readonly: false });
 }
 
 
@@ -38,7 +44,7 @@ describe('AltaPlantaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
+      imports: [ AltaPlantaComponent, FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -48,11 +54,9 @@ describe('AltaPlantaComponent', () => {
           positionClass: 'toast-top-right',
         }),
         { provide: Tramite80308Store, useClass: MockTramite80308Store },
-        { provide: Tramite80308Query, useClass: MockTramite80308Query }
+        { provide: Tramite80308Query, useClass: MockTramite80308Query },
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery }
       ]
-    }).overrideComponent(AltaPlantaComponent, {
-
-      set: { }    
     }).compileComponents();
     fixture = TestBed.createComponent(AltaPlantaComponent);
     component = fixture.debugElement.componentInstance;
@@ -105,21 +109,69 @@ describe('AltaPlantaComponent', () => {
   });
 
   it('should run #aplicarAccion()', async () => {
+    component.domiciliosSeleccionados = [{ id: 1, calle: 'Test Street' }];
+    
+    component.aplicarAccion();
+    
+    expect(component.nuevaNotificacion).toBeTruthy();
+    expect(component.nuevaNotificacion.categoria).toBe('info');
+    expect(component.nuevaNotificacion.modo).toBe('confirmacion');
+  });
+
+  it('should run #aplicarAccion() with no selection', async () => {
+    component.domiciliosSeleccionados = [];
+    
+    component.aplicarAccion();
+    
+    expect(component.nuevaNotificacion).toBeTruthy();
+    expect(component.nuevaNotificacion.categoria).toBe('warning');
+  });
+
+  it('should run #confirmacionModal() and call store.aggregarDomicilios', async () => {
     component.store = component.store || {};
     component.store.aggregarDomicilios = jest.fn();
-    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados[0] = '0';
-    component.aplicarAccion();
-    expect(component.store.aggregarDomicilios).toHaveBeenCalled();
+    component.toastr = component.toastr || {};
+    component.toastr.success = jest.fn();
+    component.domiciliosSeleccionados = [{ id: 1, calle: 'Test Street' }];
+    component.nuevaNotificacion = { txtBtnAceptar: 'Aceptar' };
+    
+    component.confirmacionModal(true);
+    
+    expect(component.store.aggregarDomicilios).toHaveBeenCalledWith(component.domiciliosSeleccionados[0]);
+    expect(component.toastr.success).toHaveBeenCalledWith('Planta agregada exitosamente');
   });
 
   it('should run #eliminarPlantas()', async () => {
+    component.domiciliosSeleccionados = [{ id: 1, calle: 'Test Street' }];
+    
+    component.eliminarPlantas();
+    
+    expect(component.nuevaNotificacion).toBeTruthy();
+    expect(component.nuevaNotificacion.categoria).toBe('warning');
+    expect(component.nuevaNotificacion.txtBtnAceptar).toBe('Eliminar');
+  });
+
+  it('should run #eliminarPlantas() with no selection', async () => {
+    component.domiciliosSeleccionados = [];
+    
+    component.eliminarPlantas();
+    
+    expect(component.nuevaNotificacion).toBeTruthy();
+    expect(component.nuevaNotificacion.categoria).toBe('warning');
+  });
+
+  it('should run #confirmacionModal() for elimination and call store.eliminarDomicilios', async () => {
     component.store = component.store || {};
     component.store.eliminarDomicilios = jest.fn();
-    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados[0] = '0';
-    component.eliminarPlantas();
-    expect(component.store.eliminarDomicilios).toHaveBeenCalled();
+    component.toastr = component.toastr || {};
+    component.toastr.success = jest.fn();
+    component.domiciliosSeleccionados = [{ id: 1, calle: 'Test Street' }];
+    component.nuevaNotificacion = { txtBtnAceptar: 'Eliminar' };
+    
+    component.confirmacionModal(true);
+    
+    expect(component.store.eliminarDomicilios).toHaveBeenCalledWith(component.domiciliosSeleccionados[0]);
+    expect(component.toastr.success).toHaveBeenCalledWith('Planta eliminada exitosamente');
   });
 
   it('should run #tipoEstadoSeleccion()', async () => {

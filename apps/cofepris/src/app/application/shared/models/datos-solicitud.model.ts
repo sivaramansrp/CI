@@ -15,6 +15,7 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string;
+  scianDescription?: string;
 }
 /**
  * Interfaz que representa la respuesta de un catálogo.
@@ -66,7 +67,96 @@ export interface TablaOpcionConfig {
   mercancia: string;
   cantidad: string;
   proveedor: string;
-}
+   /** RFC Sanitario - Registro Federal de Contribuyentes */
+   rfcSanitario: string;
+  
+   /** Denominación o Razón Social */
+   denominacionRazon: string;
+   
+   /** Correo Electrónico */
+   correoElectronico: string;
+   
+   /** Código Postal */
+   codigoPostal: string;
+   
+   /** Estado */
+   estado: string;
+   
+   /** Municipio o Alcaldía */
+   municipioAlcaldia: string;
+   
+   /** Localidad */
+   localidad: string;
+   
+   /** Colonia */
+   colonia: string;
+   
+   /** Calle y Número */
+   calleYNumero: string;
+   
+   /** Calle */
+   calle: string;
+   
+   /** Código de área telefónica (LADA) */
+   lada: string;
+   
+   /** Número de teléfono */
+   telefono: string;
+   
+   /** Aviso */
+   aviso: string;
+   
+   /** Licencia Sanitaria */
+   licenciaSanitaria: string;
+   
+   /** Régimen */
+   regimen: string;
+   
+   /** Aduanas de Entrada */
+   adunasDeEntradas: string;
+   
+   /** Aeropuerto */
+   aeropuerto: boolean;
+   
+   /** Aeropuerto Dos */
+   aeropuertoDos: boolean;
+   
+   /** Público */
+   publico: string;
+   
+   /** RFC del Representante */
+   representanteRfc: string;
+   
+   /** Nombre del Representante */
+   representanteNombre: string;
+   
+   /** Apellido Paterno */
+   apellidoPaterno: string;
+   
+   /** Apellido Materno */
+   apellidoMaterno: string;
+   
+   /** Régimen de la Mercancía */
+   regimenLaMercancia: string;
+   
+   /** Aduana */
+   aduana: string;
+   
+   /** Mercancías */
+   mercancias: TablaMercanciasDatos[];
+
+   scian: TablaScianConfig[];
+   
+   /** Manifiesto */
+   manifesto: string;
+   
+   /** Manifestos Casilla de Verificación */
+   manifiestosCasillaDeVerificacion: boolean;
+
+   id_solicitud?: number,
+  fecha_creacion?: string,
+ }
+
 
 /**
  * Interfaz genérica para la configuración de una tabla de opciones.
@@ -163,6 +253,12 @@ export enum TablaSeleccion {
  */
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
+  claveClasificacionProductoObj ?: Catalogo | undefined;
+  especificarClasificacionObj ?: Catalogo | undefined;
+  tipoProductoObj ?: Catalogo | undefined;
+  formaFarmaceuticaObj ?: Catalogo | undefined;
+  estadoFisicoObj ?: Catalogo | undefined;
+  cantidadUMCObj ?: Catalogo | undefined;
   especificarClasificacionProducto: string;
   denominacionEspecificaProducto?: string;
   denominacionDistintiva?: string;
@@ -175,6 +271,7 @@ export interface TablaMercanciasDatos {
   cantidadUMC: string;
   unidadMedidaTarifa: string;
   cantidadUMT: string;
+  cantidadUmtValor?:string;
   presentacion: string;
   numeroRegistroSanitario: string;
   paisOrigen: string;
@@ -192,10 +289,13 @@ export interface TablaMercanciasDatos {
   caducidad?:string;
   marcaComercialDenominacion?:string;
   especifique?: string;
+  especifiqueForma?: string;
+  especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
-    paisDeOriginDatos?: string[];
+  paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
+  id?: number
 }
 
 /**
@@ -282,6 +382,7 @@ export interface DatosSolicitudFormState {
   aduana?:string
   manifesto?: boolean;
   manifiestosCasillaDeVerificacion?: boolean;
+  rfcRepresentante?:string;
 }
 
 /**
@@ -330,10 +431,12 @@ export interface MercanciaForm {
   usoEspecifico?: string[]
   marca?: string;
   especifique?: string;
+  especifiqueForma?: string;
   claveDeLos?: string;
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
   especifiqueObligatorio?:string;
+  especifiqueEstado?:string;
 }
 
 /**

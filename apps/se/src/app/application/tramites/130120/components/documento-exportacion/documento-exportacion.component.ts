@@ -44,7 +44,7 @@ import { FormValidationService } from '../../services/formValidation.service';
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule, TituloComponent, InputFechaComponent],
   templateUrl: './documento-exportacion.component.html',
-  styleUrl: './documento-exportacion.component.css',
+  styleUrl: './documento-exportacion.component.scss',
 })
 export class DocumentoExportacionComponent implements OnInit, OnDestroy {
 
@@ -131,7 +131,7 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.datosExporta = this.fb.group({
-      numero_documento: [this.datosState.datosExporta.número_documento, Validators.required],
+      numero_documento: [this.datosState.datosExporta.numero_documento, Validators.required],
       fecha_documento: [this.datosState.datosExporta.fecha_documento, Validators.required],
       descripcionExportacion: [this.datosState.datosExporta.descripcionExportacion, [Validators.required, Validators.maxLength(4000)]],
       codigo_arancelario: [this.datosState.datosExporta.codigo_arancelario, Validators.required],

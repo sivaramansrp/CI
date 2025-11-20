@@ -436,5 +436,14 @@ export const REPRESENTATE_LEGAL_EXPORTADOR_CONFIG: {
     storeStateName: 'setGrupoRepresentativoCorreoElectronico',
   },
   ],
+  '110211': DEFAULT_REPRESENTATE_LEGAL_EXPORTADOR_CONFIG,
 
 };
+
+/**
+ * @description
+ * Lista de procedimientos que utilizan un catálogo para el campo "país destino"
+ * en el formulario del representante legal del exportador.
+ * @constant {string[]}
+ */
+export const PAIS_CATALOGO = ['110221'];

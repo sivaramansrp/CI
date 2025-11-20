@@ -1,7 +1,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  RespuestaCatalogos,
   SharedModule,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
@@ -13,8 +12,9 @@ import { CatalogosService } from '../../services/220201/catalogos/catalogos.serv
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
+import { SharedFormService } from '../../services/220201/SharedForm.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -96,11 +96,11 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private consultaQuery: ConsultaioQuery,
-    private catalogoService: CatalogosService
+    private catalogoService: CatalogosService,
+    private sharedService: SharedFormService
   ) {
     this.movilizacionForm = this.fb.group({
       coordenadas: [''],
@@ -125,6 +125,19 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       });
 
     this.obtenerListasDesplegables();
+
+    // Suscribirse a los datos de prellenado de movilización desde el servicio compartido
+      this.sharedService.data$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      if (data) {
+        this.movilizacionForm.patchValue({
+          coordenadas: data.coordenadas,
+          medio: data.ide_medio_transporte,
+          transporte: data.id_transporte,
+          punto: data.id_punto_verificacion,
+          nombre: data.razon_social
+        }); 
+      }
+    });
   }
 
   /**
