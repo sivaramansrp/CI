@@ -1,6 +1,7 @@
 {
     "code": 200,
     "data": [
+        { "id": 0, "descripcion": "000000" },
         { "id": 1, "descripcion": "384125" },
         { "id": 2, "descripcion": "611005" },
         { "id": 3, "descripcion": "612001" },
