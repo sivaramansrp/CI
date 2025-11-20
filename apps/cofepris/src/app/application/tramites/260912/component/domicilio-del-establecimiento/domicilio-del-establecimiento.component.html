@@ -5,7 +5,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="codigoPostal">Código postal*:</label>
+            <label class="form-label" for="codigoPostal">Código postal<span 
+  [ngClass]="{'text-danger': form.get('codigoPostal')?.touched && form.get('codigoPostal')?.invalid}"
+>*</span>:</label>
             <input
               class="form-control"
               type="text"
@@ -16,6 +18,11 @@
               maxlength="12"
               (input)="onCodigoPostalInput($event)"
               (change)="setValorStore(form, 'codigoPostal')"
+               [ngClass]="
+              isValid(form, 'codigoPostal')
+                ? 'required'
+                : ''
+            "
             />
             <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.invalid" class="text-danger">
               <div *ngIf="form.get('codigoPostal')?.errors?.['required']">
@@ -54,7 +61,9 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="municipioOAlcaldia"
-            >Municipio o alcaldía*:</label
+            >Municipio o alcaldía<span 
+  [ngClass]="{'text-danger': form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.invalid}"
+>*</span>:</label
             >
           <input
               class="form-control"
@@ -66,6 +75,11 @@
                   maxlength="120"
                   (input)="onMunicipioOAlcaldiaInput($event)"
                   (change)="setValorStore(form, 'municipioOAlcaldia')"
+                   [ngClass]="
+              isValid(form, 'municipioOAlcaldia')
+                ? 'required'
+                : ''
+            "
             />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.invalid" class="text-danger">
               <div *ngIf="form.get('municipioOAlcaldia')?.hasError('required')">
@@ -99,6 +113,11 @@
               maxlength="120"
           (input)="onLocalidadInput($event)"
           (change)="setValorStore(form, 'localidad')"
+          [ngClass]="
+              isValid(form, 'localidad')
+                ? 'required'
+                : ''
+            "
         />
         <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
           <div *ngIf="form.get('localidad')?.hasError('required')">
@@ -185,6 +204,11 @@
               maxlength="5"
               (input)="onLadaInput($event)"
               (change)="setValorStore(form, 'lada')"
+               [ngClass]="
+              isValid(form, 'lada')
+                ? 'required'
+                : ''
+            "
             />
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.invalid" class="text-danger">
               <div *ngIf="form.get('lada')?.hasError('required')">
@@ -209,6 +233,11 @@
               maxlength="30"
               (input)="onTelefonoInput($event)"
               (change)="setValorStore(form, 'telefono')"
+               [ngClass]="
+              isValid(form, 'telefono')
+                ? 'required'
+                : ''
+            "
             />
 
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">

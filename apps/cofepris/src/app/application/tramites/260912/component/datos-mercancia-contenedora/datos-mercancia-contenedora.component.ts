@@ -1145,9 +1145,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Auto-populates tariff-related fields based on fraccionArancelaria
    * @param fraccionArancelaria - The 8-digit tariff fraction code
    */
-  autoPopularCamposArancelarios(fraccionArancelaria: string) {
+  autoPopularCamposArancelarios(fraccionArancelaria: string): void {
    
-    const TARIFDATA = this.obtenerDatosMockPorFraccion(fraccionArancelaria);
+    const TARIFDATA = DatosMercanciaContenedoraComponent.obtenerDatosMockPorFraccion(fraccionArancelaria);
     
     if (TARIFDATA) {
      
@@ -1169,7 +1169,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Returns mock tariff data based on fraccionArancelaria
    * Replace this with your actual data mapping logic
    */
-  obtenerDatosMockPorFraccion(fraccionArancelaria: string): {descripcion: string, umt: string} | null {
+  static obtenerDatosMockPorFraccion(fraccionArancelaria: string): {descripcion: string, umt: string} | null {
     
     const MOCKTARIFDATA: {[key: string]: {descripcion: string, umt: string}} = {
       '12345678': {

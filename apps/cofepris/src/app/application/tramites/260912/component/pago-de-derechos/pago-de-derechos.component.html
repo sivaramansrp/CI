@@ -51,8 +51,8 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             [ngClass]="{'is-invalid': mostrarErroresDeCampoPago && pagoDeDerechosForm.get('clave')?.invalid}"
           >
-            <option value="">Seleccione un valor</option>
-            <option *ngFor="let banco of bancoList" [value]="banco.name">{{ banco.name }}</option>
+            <option value="">Seleccione una opción</option>
+            <option *ngFor="let banco of bancoList" [value]="banco.descripcion">{{ banco.descripcion }}</option>
           </select>
          <span class="text-danger">
           <small *ngIf="mostrarErroresDeCampoPago && pagoDeDerechosForm.get('clave')?.errors?.['custom']">

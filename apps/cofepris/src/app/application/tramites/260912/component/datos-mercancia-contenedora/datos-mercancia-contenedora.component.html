@@ -112,6 +112,11 @@
               type="text"
               maxlength="120"
               formControlName="denominacionComun"
+              [ngClass]="
+              isValid(mercanciaForm, 'denominacionComun')
+                ? 'required'
+                : ''
+            "
             />
             <div
               class="mensaje-error"
@@ -387,13 +392,13 @@
             *ngIf="mercanciaForm.get('cantidadUmcValor')?.touched && mercanciaForm.get('cantidadUmcValor')?.errors?.['notNumber']"
             class="mensaje-error"
           >
-            Por favor, escribe un número entero válido.
+            Por favor, escribe un número válido.
           </div>
           <div
             *ngIf="mercanciaForm.get('cantidadUmcValor')?.touched && mercanciaForm.get('cantidadUmcValor')?.errors?.['maxDigits']"
             class="mensaje-error"
           >
-           Este campo permite doce números enteros y hasta cinco decimales.
+            Este campo permite doce números enteros y hasta cinco decimales.
           </div>
         </div>
       </div>

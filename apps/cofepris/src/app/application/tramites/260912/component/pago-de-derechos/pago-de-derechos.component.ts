@@ -23,10 +23,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
  * Basada en la estructura real que retorna el servicio.
  */
 interface Banco {
-  /** Nombre del banco utilizado en el template */
-  name: string;
-  /** Propiedades adicionales que pueda tener el objeto banco */
-  [key: string]: unknown;
+  id: number;
+  descripcion: string;
 }
 
 /**
@@ -264,10 +262,8 @@ public static camposDependientesValidator(): ValidatorFn {
     this.servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe(data => {
-       this.bancoList = ((data as unknown) as Banco[]).map(item => ({
-         ...item
-       })) as Banco[];
-      });
+     this.bancoList = data as Banco[];
+    });
   }
 
   /**
