@@ -27,20 +27,20 @@ export class GenerarDictamenClasificacionService {
    *  - Conservar el último valor emitido.
    *  - Permitir que los nuevos suscriptores reciban el valor actual al instante.
    */
-  private noAceptadaSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private noAceptadaSubject: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
 
   /**
    * Observable expuesto para que otros componentes puedan suscribirse
    * sin poder modificar el valor directamente.
    */
-  public readonly noAceptada$: Observable<boolean> = this.noAceptadaSubject.asObservable();
+  public readonly noAceptada$: Observable<boolean | null> = this.noAceptadaSubject.asObservable();
 
   /**
    * Actualiza el estado de la bandera "No aceptada".
    * 
    * @param valor - true si el dictamen fue no aceptado, false si fue aceptado.
    */
-  setNoAceptada(valor: boolean): void {
+  setNoAceptada(valor: boolean | null): void {
     this.noAceptadaSubject.next(valor);
   }
 
@@ -49,7 +49,7 @@ export class GenerarDictamenClasificacionService {
    * 
    * @returns boolean - valor actual de la bandera.
    */
-  getNoAceptadaActual(): boolean {
+  getNoAceptadaActual(): boolean | null {
     return this.noAceptadaSubject.getValue();
   }
 }

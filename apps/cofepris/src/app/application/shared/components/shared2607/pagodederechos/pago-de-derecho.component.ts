@@ -1,6 +1,6 @@
 
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_CURP, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
@@ -27,7 +27,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
   templateUrl: './pago-de-derecho.component.html',
   styleUrls: ['./pago-de-derecho.component.scss'],
 })
-export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+export class PagoDeDerechoComponent implements OnInit, OnDestroy,OnChanges {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
   pagoDeDerechosForm!: FormGroup;
 
@@ -54,6 +54,14 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  
+    /**
+     * Indica si se ha activado el evento de continuar.
+     * Este valor se utiliza para controlar el flujo de la solicitud
+     * dependiendo de si el usuario ha decidido continuar con el proceso.
+     */
+     @Input() isContinuarTriggered: boolean = false;
   /**
    * Constructor del componente.
    * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
@@ -94,6 +102,17 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+  }
+
+  
+ /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+     this.pagoDeDerechosForm.get('pagoDeDerechos')?.markAllAsTouched();
+    }
   }
 
   /**
