@@ -1,6 +1,7 @@
 import {
   Catalogo,
   ConsultaioQuery,
+  REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY,
   REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -16,6 +17,9 @@ import { CommonModule } from '@angular/common';
 import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Tramite130203Query } from '../../estados/queries/tramite130203.query';
+import {
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 
 /**
  * @description
@@ -140,7 +144,8 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     private tramite130203Store: Tramite130203Store,
     private tramite130203Query: Tramite130203Query,
     private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -308,22 +313,22 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.datosDelImportador = this.fb.group({
       nombreImportador: [
         this.seccionState?.nombreImportador,
-        [Validators.required,Validators.maxLength(120)],
+        [Validators.required, Validators.maxLength(120), Validators.pattern(REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY)],
       ],
       direccionImportador: [
         this.seccionState?.direccionImportador,
-        [Validators.required,Validators.maxLength(120)],
+        [Validators.required,Validators.maxLength(200), Validators.pattern(REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY)],
       ],
     });
 
     this.datosDeLaRemesa = this.fb.group({
       numeroEnLetraDeLosLotes: [
         this.seccionState?.numeroEnLetraDeLosLotes,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),Validators.maxLength(200)],
+        [Validators.required, Validators.pattern(REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY),Validators.maxLength(200)],
       ],
       numeroEnLetraDeLosLotesEnIngles: [
         this.seccionState?.numeroEnLetraDeLosLotesEnIngles,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.pattern(REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY),Validators.maxLength(250)],
       ],
       numeroDeFactura: [
         this.seccionState?.numeroDeFactura,
@@ -530,5 +535,13 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   const CHECKED = (event.target as HTMLInputElement).checked;
   this.disabledCatalogoPaisOrigen = CHECKED;
  }
+
+   /**
+   * @method isValid
+   * @description Valida un campo del formulario.
+   */
+  isValid(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.isValid(form, field);
+  }
    
 }

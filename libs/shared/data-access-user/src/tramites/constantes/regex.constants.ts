@@ -13,6 +13,13 @@ export const REG_X = {
  */
 export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>/\\]+$/;
 
+/**
+ * Expresión regular que valida que la cadena no contenga los caracteres especiales:
+ * ~, `, {, }, \, |, ^
+ * Utilizada para campos que deben rechazar estos caracteres específicos.
+ */
+export const REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY = /^[^~`{}\\|^]*$/;
+
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
 
