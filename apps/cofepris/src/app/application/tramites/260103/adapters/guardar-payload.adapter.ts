@@ -20,17 +20,28 @@ export class GuardarAdapter_260103 {
    */
   static toFormPayload(state: Tramite260103State): unknown {
     return {
-
-      solicitud: {
-        discriminatorValue: 260103,
-        declaracionesSeleccionadas: state.datosSolicitudFormState.manifesto,
-        regimen: state.datosSolicitudFormState.regimen,
-        aduanaAIFA: "",
-        informacionConfidencial: state.datosSolicitudFormState.publico === 'si'
+  "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividadEconomica": "Fabricación de productos de hierro y acero",
+        "correoElectronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+            "pais": "México",
+            "codigoPostal": "06700",
+            "estado": "Ciudad de México",
+            "municipioAlcaldia": "Cuauhtémoc",
+            "localidad": "Centro",
+            "colonia": "Roma Norte",
+            "calle": "Av. Insurgentes Sur",
+            "numeroExterior": "123",
+            "numeroInterior": "Piso 5, Oficina A",
+            "lada": "",
+            "telefono": "123456"
+        },
       },
 
       establecimiento: {
-        RFCResponsableSanitario: state.datosSolicitudFormState.rfcSanitario,
+        rfcResponsableSanitario: state.datosSolicitudFormState.rfcSanitario,
         razonSocial: state.datosSolicitudFormState.denominacionRazon,
         correoElectronico: state.datosSolicitudFormState.correoElectronico,
 
@@ -98,8 +109,7 @@ export class GuardarAdapter_260103 {
         nombreCortoUsoEspecifico: merc.usoEspecifico?.toString(),
 
         fechaCaducidadStr: merc.fechaCaducidad,
-
-        // Nuevo campo: NumeroLotes
+        
         // NumeroLotes: merc?.c?.map(l => ({
         //   numeroLote: l.numeroLote,
         //   fechaElaboracionStr: l.fechaElaboracion,
@@ -246,6 +256,12 @@ export class GuardarAdapter_260103 {
         llaveDePago: state.pagoDerechos.llavePago,
         fecPago: state.pagoDerechos.fechaPago,
         impPago: state.pagoDerechos.importePago
+      },
+        solicitud: {
+          discriminatorValue: 260103,
+          declaracionesSeleccionadas: true,
+          aduanaAIFA: "",
+          informacionConfidencial:true
       }
 
     };

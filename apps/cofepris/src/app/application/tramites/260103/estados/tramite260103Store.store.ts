@@ -1,12 +1,9 @@
-import {
-  DatosSolicitudFormState,
-  MercanciaForm,
-  TablaOpcionConfig,
-  TablaScianConfig,
-} from '../../../shared/models/datos-solicitud.model';
-import { Destinatario, Fabricante, PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
+
+import { DatosSolicitudFormState, MercanciaForm, TablaOpcionConfig, TablaScianConfig } from '../../../shared/components/shared26010/models/datos-solicitud.model';
+import { Destinatario, Fabricante } from '../../../shared/components/shared26010/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
 import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
 
@@ -73,6 +70,8 @@ export function createInitialState(): Tramite260103State {
     fabricanteTablaDatos: [],
     destinatarioTableDatos: [],
     datosSolicitudFormState: {
+      cumplimiento:'',
+      mensaje:'',
       rfcSanitario: '',
       denominacionRazon: '',
       correoElectronico: '',
@@ -291,6 +290,16 @@ export class Tramite260103Store extends Store<Tramite260103State> {
     this.update((state) => ({
         ...state,
         idSolicitud,
+    }));
+  }
+    /**
+   * Establece el estado de cumplimiento.
+   * @param cumplimiento - El valor de cumplimiento.
+   */
+  public setCumplimiento(cumplimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      cumplimiento,
     }));
   }
 }

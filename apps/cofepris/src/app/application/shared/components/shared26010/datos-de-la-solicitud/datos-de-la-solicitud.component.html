@@ -345,7 +345,7 @@
     </div>
 
     <div class="row mt-2">
-      <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
+      <div class="col-md-6  " *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" (selectionChange)="actualizarStore()" [label]="'Régimen'"
               [placeholder]="'Selecciona una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
@@ -366,7 +366,7 @@
 
       <div class="col-md-8" *ngIf="mostrarCamposDelProcedimiento('regimenLaMercancia')">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="regimenLaMercanciaDatos" formControlName="regimenLaMercancia"
+          <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimenLaMercancia"
             [label]="'Régimen al que se destinará la mercancía'" (selectionChange)="actualizarStore()" [placeholder]="'Seleccione una opción'"
             [required]="true" name="regimenLaMercancia" [tooltipQuestionCircle]="true"
             [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
@@ -376,7 +376,7 @@
 
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('domicilio-aduana')">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="aduanaDatos" formControlName="aduana" [label]="'Aduana'"
+          <app-catalogo-select [catalogo]="adunasDeEntradasDatos" formControlName="aduana" [label]="'Aduana'"
             [placeholder]="'Seleccione una opción'" (selectionChange)="actualizarStore()" [required]="true" name="aduanaDatos"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>

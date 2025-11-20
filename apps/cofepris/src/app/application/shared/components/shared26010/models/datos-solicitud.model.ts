@@ -350,6 +350,8 @@ export interface CrossListLable {
  * @property {string} apellidoMaterno - Apellido materno del representante.
  */
 export interface DatosSolicitudFormState {
+       cumplimiento?:string,
+      mensaje?:string,
   rfcSanitario: string;
   denominacionRazon: string;
   correoElectronico: string;
