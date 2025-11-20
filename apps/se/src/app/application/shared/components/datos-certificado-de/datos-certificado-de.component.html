@@ -7,10 +7,15 @@
         <label for="justificacionDictamen" class="form-label">Observaciones:</label>
         <textarea id="justificacionDictamen" formControlName="observacionesDates"
           (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"
-          class="form-control mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
-        <span class="mensaje-error"
-          *ngIf="formDatosCertificado.get('observacionesDates')?.errors?.['maxlength']">Observaciones NO debe tener más
-          de 500 caracteres de longitud</span>
+          class="form-control mb-4 h-20 w-100" 
+          [ngClass]="{'is-invalid': formDatosCertificado.get('observacionesDates')?.invalid && (formDatosCertificado.get('observacionesDates')?.touched || formDatosCertificado.get('observacionesDates')?.dirty)}"
+          placeholder="" rows="6"></textarea>
+            <div class="d-grid">
+              @if(formDatosCertificado.get('observacionesDates')?.errors?.['maxlength']) {
+                <span class="mensaje-error">Observaciones NO debe tener más de 500 caracteres de longitud</span>
+              }
+            </div>
+          <!-- } -->
       </div>
       @if(presenta){
       <div class="col-md-8">

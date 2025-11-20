@@ -61,12 +61,14 @@ import {
   CLASIFICACION_REGIMEN,
   CLASSIFICACIONES_REGIMEN,
   COMUN_URL,
+  FRACCIONES_ARANCELARIAS,
   FRACCION_HTS,
   PAISES_POR_BLOQUE,
   OFICIO_ASIGNACION,
   PAIS_DESTINO,
   REPRESENTACION_FEDERAL_CATALOGO,
   TIPO_EMPRESA,
+  REGIMEN_CLASSIFICACIONES,
   UNIDADES_MEDIDA_COMERCIAL,
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_CATALOGOS_PAISES_TODOS,
@@ -538,7 +540,10 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
-
+  getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${REGIMEN_CLASSIFICACIONES(tramite).replace(CLASIFICACION, cveClasificacion)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
   /*
    * Obtiene el catálogo de países (bloques).
@@ -1050,6 +1055,17 @@ export class CatalogoServices {
    */
   getFraccionesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de fracciones arancelarias.
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de fracciones arancelarias
+   * @see API_FRACCIONES_ARANCELARIAS
+   */
+  getFracciones(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${FRACCIONES_ARANCELARIAS(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
