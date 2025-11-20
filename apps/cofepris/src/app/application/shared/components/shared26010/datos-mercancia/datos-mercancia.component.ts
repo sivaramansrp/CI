@@ -89,15 +89,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   @Input() public datoSeleccionado!: TablaMercanciasDatos | undefined;
 
-  @Input() public claveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
+  public claveConfig!: TablaMercanciasConfig<TablaMercanciaClaveConfig>;
 
   /**
    * @event mercanciaSeleccionado
    * Evento emitido cuando el usuario selecciona o guarda una mercancía.
    */
   @Output() mercanciaSeleccionado = new EventEmitter<TablaMercanciasDatos>();
-
-  @Output() claveSeleccionada = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event agregarMercanciaDatos
@@ -749,6 +747,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
 
+  public claveData: TablaMercanciaClaveConfig[] = []
+
   /**
    * @property {InputFecha} fechaDeFabricacioInput
    * Objeto con la configuración de la fecha inicial del componente.
@@ -1005,7 +1005,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       this.mercanciaForm.get('fechaDeFabricacio')?.reset();
       this.mercanciaForm.get('fechaDeCaducidad')?.reset();
     }
-    this.claveSeleccionada.emit(this.claveConfig.datos);
+    this.mercanciaForm.get('clavesLote')?.setValue(this.claveConfig.datos);
   }
 
   /**
@@ -1158,7 +1158,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       this.obtenerValor('especifiqueForma')
     ],
     especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
-    id: [this.obtenerValor('id')]
+    id: [this.obtenerValor('id')],
+    clavesLote: [
+      {
+        value: this.claveConfig.datos,
+        disabled: false,
+      },
+    ],
   });
    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
   setTimeout(()=>{
@@ -1494,6 +1500,7 @@ public convertToStringArray(value: unknown): string[] {
     
     // Reset form for next use
     this.mercanciaForm.reset();
+    this.claveConfig.datos = [];
     
     // Close the modal
     this.cerrarModal.emit();
@@ -1528,8 +1535,15 @@ actualizarValidadoresClave(): void {
    * @param {string} id - Identificador para filtrar los objetos del catálogo.
    * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
    */
-  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
-    return catalogo.filter(item => item.clave === id);
+  /**
+   * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
+   *
+   * @param {Catalogo[] | undefined} catalogo - Arreglo de objetos de catálogo (puede ser undefined).
+   * @param {string} id - Identificador para filtrar los objetos del catálogo.
+   * @returns {Catalogo[]} - Arreglo de objetos de catálogo que coinciden con el identificador.
+   */
+  static generarCatalogoObjeto(catalogo: Catalogo[] | undefined, id: string): Catalogo[] {
+    return (catalogo ?? []).filter(item => item.clave === id);
   }
 
   /**

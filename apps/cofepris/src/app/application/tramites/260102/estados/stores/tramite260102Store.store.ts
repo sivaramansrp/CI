@@ -93,8 +93,6 @@ export interface Tramite260102State {
    */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
 
-  tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
-
   /**
    * @property seleccionadoopcionDatos
    * @description Opciones seleccionadas actualmente en la tabla de opciones.
@@ -230,7 +228,6 @@ export function createInitialState(): Tramite260102State {
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
     tablaMercanciasConfigDatos: [],
-    tablaMercanciaClaveConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -460,15 +457,6 @@ export class Tramite260102Store extends Store<Tramite260102State> {
       ...state,
       tablaMercanciasConfigDatos,
       seleccionadoTablaMercanciasDatos: []
-    }));
-  }
-
-  public updateTablaMercanciaClaveConfigDatos(
-    tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      tablaMercanciaClaveConfigDatos,
     }));
   }
 

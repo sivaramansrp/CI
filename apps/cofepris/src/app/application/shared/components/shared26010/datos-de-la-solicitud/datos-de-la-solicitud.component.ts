@@ -142,7 +142,6 @@ export class DatosDeLaSolicitudComponent
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> =
     new EventEmitter<TablaMercanciasDatos[]>();
   
-  @Output() claveSeleccionada: EventEmitter<TablaMercanciaClaveConfig[]> = new EventEmitter<TablaMercanciaClaveConfig[]>();
 
   /**
    * @event datosDeTablaSeleccionados
@@ -606,10 +605,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
-   
+  this.tablaMercanciaClaveConfigDatos =
+    (this.tablaMercanciasConfig.datos[0]?.clavesLote ?? []).map(clave => ({ clave }));
+
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
-    this.tablaMercanciaClaveConfigDatos = this.tablaMercanciaClaveConfig.datos.map(item => ({ ...item }));
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
         this.idProcedimiento
@@ -2055,6 +2055,23 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
       mercanciaData
     ];
   }
+
+  this.tablaMercanciaClaveConfigDatos =
+  (mercanciaData?.clavesLote ?? []).map(lote => {
+    if (typeof lote === 'string') {
+      return { clave: lote };
+    }
+    if (typeof lote === 'object' && lote !== null && 'clave' in lote) {
+      return {
+        clave: (lote as { clave: string }).clave,
+        fabricacion: (lote as { fabricacion?: string }).fabricacion,
+        caducidad: (lote as { caducidad?: string }).caducidad
+      };
+    }
+    return {};
+  });
+
+
   
   // Update the form control value
   this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
@@ -2071,16 +2088,6 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   this.cdr.markForCheck();
 }
 
-
-
-/**
- * Maneja la selección de claves de mercancía desde el modal.
- * @param claveData Array de objetos TablaMercanciaClaveConfig seleccionados.
- * @emits claveSeleccionada - Emite el array de claves seleccionadas al componente padre.
- */
-onClaveSeleccionado(claveData: TablaMercanciaClaveConfig[]): void {
-  this.claveSeleccionada.emit(claveData);
-}
   /**
  * Updates the table after merchandise changes
  */
