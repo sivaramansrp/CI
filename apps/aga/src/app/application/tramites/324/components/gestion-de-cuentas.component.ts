@@ -1,10 +1,11 @@
 import { ADUANA_CATALOGO, HEADERS_ACCESOS_TABLA, MOVIMIENTO_CATALOGO, ROL_CATALOGO, SISTEMA_CATALOGO } from '../constantes/tecnologicos.enum';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud324State, Tramite324Store } from '../state/Tramite324.store';
 import { AccesosTabla } from '../models/tecnologicos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CategoriaMensaje } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
