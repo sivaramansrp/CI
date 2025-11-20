@@ -144,7 +144,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
-              sanitario<span  *ngIf="idProcedimiento !== 260917"
+              sanitario<span  *ngIf="idProcedimiento !== 260917 && idProcedimiento !== 260918"
               [ngClass]="
             {
               'text-danger': (domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['pattern'] || domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.errors?.['required'])&& domicilioEstablecimiento.get('establecimientoRFCResponsableSanitario')?.touched
@@ -242,9 +242,10 @@
               Este campo es obligatorio
             </div>
             <div
-              *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email']"
-              class="mensaje-error"
-            >
+    *ngIf="domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['email'] &&
+           !domicilioEstablecimiento.get('establecimientoCorreoElectronico')?.errors?.['required']"
+    class="mensaje-error"
+  >
               El valor Ingresado no es una dirección válida de correo
               electrónico.
             </div>
@@ -530,7 +531,7 @@
           <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:<span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top">
                 <i class="bi bi-question-circle-fill"></i>
               </span></label>
-          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="50"
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"  [maxlength]="[260918].includes(idProcedimiento) ? 20 : 50"
             formControlName="noLicenciaSanitaria" (change)="
               enCambioDeControl(
                 'solicitudEstablecimientoForm',
@@ -633,11 +634,18 @@
       <form [formGroup]="scianForm">
         <div class="modal-body">
           <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
+          @if(mensajeDeError){
+            <ng-alert
+              [CONTENIDO]="mensajeDeError"
+              [CUSTOMECLASS]="'alert-danger text-center'"
+            ></ng-alert>
+          }
           <div class="row">
             <div class="col-md-8">
-              <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una opción'" formControlName="scian"
-                (change)="enCambioDeControl('scianForm', 'scian')"  [placeholder]="'Selecciona una opción'"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.'"
+                [placeholder]="'Seleccione una opción'" formControlName="scian" [required]="true"
+                (change)="enCambioDeControl('scianForm', 'scian')"  [placeholder]="'Selecciona una opción'"
+                [markTouched]="scianForm.get('scian')?.touched ?? false"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
@@ -798,12 +806,16 @@
             ></app-catalogo-select>
            
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="estadoFormaFarmaceutica"
-              [label]="'Forma farmacéutica'" [required]="true" name="estadoFormaFarmaceutica"
-                [placeholder]="'Selecciona una opción'"   
-                 [markTouched]="formMercancias.get('estadoFormaFarmaceutica')?.touched ?? false"></app-catalogo-select>
-           
+          <div class="form-group" *ngIf="idProcedimiento !== 260918">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="estadoFormaFarmaceutica"
+              [label]="'Forma farmacéutica'"
+              [required]="true"
+              name="estadoFormaFarmaceutica"
+              [placeholder]="'Selecciona una opción'"
+              [markTouched]="formMercancias.get('estadoFormaFarmaceutica')?.touched ?? false">
+            </app-catalogo-select>
           </div>
           <div class="form-group mt-4">
             <app-catalogo-select
@@ -1102,7 +1114,7 @@
         <button type="button" class="btn btn-default" (click)="limpiarMercancia()">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" (click)="cerrarModalMercancia()">
           Cancelar
         </button>
         <button type="button" class="btn btn-primary" (click)="guardarMarcancia()">
