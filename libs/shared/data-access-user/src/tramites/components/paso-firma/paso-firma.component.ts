@@ -328,6 +328,12 @@ export class PasoFirmaComponent implements OnInit, OnDestroy, OnChanges {
             this.idSolicitud ?? 0,
             this.procedure
           );
+           // Emitir la solicitud al acuse entre MFE.
+          localStorage.setItem('solicitud', JSON.stringify({
+            idsolicitud: this.idSolicitud ?? 0,
+            folio: this.folio,
+            procedure: this.procedure
+          }));
           this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
         catchError((error) => {

@@ -4346,5 +4346,12 @@
     "linkDashboard": "/aga/despacho-mercancias/registro/registro",
     "linkDepartment": "/pago/despacho-mercancias/registro/registro",
     "department": "aga"
+  },
+   {
+    "id": 617,
+    "tramite": 31908,
+    "linkDashboard": "/aga/subsecuente/319/reactivar",
+    "linkDepartment": "/pago/subsecuente/319/reactivar",
+    "department": "aga"
   }
 ]

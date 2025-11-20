@@ -373,7 +373,6 @@ export class SubProductosContenedoraComponent implements OnDestroy {
         })
       )
       .subscribe();
-      console.warn('cantidadRegistros', this.cantidadRegistros);
   }
 
   /**

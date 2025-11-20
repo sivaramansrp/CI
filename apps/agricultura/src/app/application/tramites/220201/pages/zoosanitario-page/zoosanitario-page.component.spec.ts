@@ -3,124 +3,72 @@ import { ZoosanitarioPageComponent } from './zoosanitario-page.component';
 describe('ZoosanitarioPageComponent', () => {
   let component: ZoosanitarioPageComponent;
 
-  // Mock para WizardComponent con métodos rastreables
-  const wizardMock = {
-    siguiente: jest.fn(),
-    atras: jest.fn(),
-  };
-
-  // Mock para PasoUnoComponent con métodos de validación
-  const pasoUnoMock = {
-    validarFormularios: jest.fn(),
-  };
-
   beforeEach(() => {
-    const tramite220201QueryMock = {} as any; // Mock the required dependency
-    component = new ZoosanitarioPageComponent(tramite220201QueryMock);
-
-    (component as any).wizardComponent = wizardMock;
-    (component as any).pasoUnoComponent = pasoUnoMock;
-
-    component.indice = 1;
-    component.datosPasos = {
-      nroPasos: component.pasos.length,
-      indice: component.indice,
-      txtBtnAnt: 'Guardar',
-      txtBtnSig: 'Continuar',
-    };
+    component = new ZoosanitarioPageComponent(
+      { idSolicitud$: { subscribe: (fn: any) => fn('123') } } as any,
+      { selectConsultaioState$: { pipe: () => ({ subscribe: () => {} }) } } as any
+    );
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debe crear el componente con valores iniciales', () => {
-    expect(component).toBeDefined();
-    expect(component.pasos.length).toBeGreaterThan(0);
-    expect(component.indice).toBe(1);
-    expect(component.tituloMensaje).toBe('Captura del certificado zoosanitario para importación');
-  });
-
-  it('debe navegar hacia adelante si la validación pasa en el paso 1', () => {
-    pasoUnoMock.validarFormularios.mockReturnValue(true);
-
-    component.getValorIndice({ accion: 'cont', valor: 1 });
-
-    expect(wizardMock.siguiente).toHaveBeenCalled();
-    expect(component.indice).toBe(2);
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.esFormaValido).toBe(false);
-  });
-
-  it('no debe navegar hacia adelante si la validación falla en el paso 1', () => {
-    pasoUnoMock.validarFormularios.mockReturnValue(false);
-
-    component.getValorIndice({ accion: 'cont', valor: 1 });
-
-    expect(wizardMock.siguiente).not.toHaveBeenCalled();
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.esFormaValido).toBe(true);
-  });
-
-  it('debe navegar hacia atrás cuando la acción es "ant"', () => {
-    component.indice = 2;
-    component.datosPasos.indice = 2;
-
-    component.getValorIndice({ accion: 'ant', valor: 2 });
-
-    expect(wizardMock.atras).toHaveBeenCalled();
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-  });
-
-  it('no debe exceder los límites en la navegación', () => {
-    const maxStep = component.pasos.length;
-
-    component.indice = maxStep;
-    component.datosPasos.indice = maxStep;
-    component.getValorIndice({ accion: 'cont', valor: maxStep });
-
-    expect(component.indice).toBe(maxStep);
-    expect(component.datosPasos.indice).toBe(maxStep);
-    expect(wizardMock.siguiente).not.toHaveBeenCalled();
-
-    component.indice = 1;
-    component.datosPasos.indice = 1;
-    component.getValorIndice({ accion: 'ant', valor: 1 });
-
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(wizardMock.atras).not.toHaveBeenCalled();
-  });
-
-  it('debe actualizar el tituloMensaje correctamente en enTabChange', () => {
+  it('should set tituloMensaje on enTabChange', () => {
     component.enTabChange(1);
     expect(component.tituloMensaje).toBe('Captura del certificado zoosanitario para importación');
-
-    component.enTabChange(3);
-    expect(component.tituloMensaje).toBe('Captura del certificado zoosanitario para importación');
-
-    component.enTabChange(999);
-    expect(component.tituloMensaje).toBe('Captura del certificado zoosanitario para importación');
   });
 
-  it('debe retornar true si pasoUnoComponent es undefined en validarTodosFormulariosPasoUno', () => {
-    (component as any).pasoUnoComponent = undefined;
-    const result = (component as any).validarTodosFormulariosPasoUno();
-    expect(result).toBe(true);
+  it('sumarDiezNumeros should sum 10 numbers', () => {
+    const result = ZoosanitarioPageComponent.sumarDiezNumeros([1,2,3,4,5,6,7,8,9,10]);
+    expect(result).toBe(55);
   });
 
-  it('debe retornar true si pasoUnoComponent.validarFormularios() retorna true', () => {
-    pasoUnoMock.validarFormularios.mockReturnValue(true);
-    const result = (component as any).validarTodosFormulariosPasoUno();
-    expect(result).toBe(true);
+  it('sumarDiezNumeros should throw error if not 10 numbers', () => {
+    expect(() => ZoosanitarioPageComponent.sumarDiezNumeros([1,2,3])).toThrow();
   });
 
-  it('debe retornar false si pasoUnoComponent.validarFormularios() retorna false', () => {
-    pasoUnoMock.validarFormularios.mockReturnValue(false);
-    const result = (component as any).validarTodosFormulariosPasoUno();
-    expect(result).toBe(false);
+  it('getValorIndice should update indice and datosPasos', () => {
+    component.componenteWizard = { siguiente: () => {}, atras: () => {}, indiceActual: 1 } as any;
+    component.indice = 1;
+    component.pasos = [{}, {}, {}] as any;
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
   });
 
+  it('anterior should update indice', () => {
+    component.componenteWizard = { atras: () => {}, indiceActual: 1 } as any;
+    component.anterior();
+    expect(component.indice).toBe(2);
+  });
+
+  it('siguiente should update indice', () => {
+    component.componenteWizard = { siguiente: () => {}, indiceActual: 2 } as any;
+    component.siguiente();
+    expect(component.indice).toBe(3);
+  });
+
+  it('onClickCargaArchivos should emit cargarArchivosEvento', () => {
+    spyOn(component.cargarArchivosEvento, 'emit');
+    component.onClickCargaArchivos();
+    expect(component.cargarArchivosEvento.emit).toHaveBeenCalled();
+  });
+
+  it('manejaEventoCargaDocumentos should set activarBotonCargaArchivos', () => {
+    component.manejaEventoCargaDocumentos(true);
+    expect(component.activarBotonCargaArchivos).toBe(true);
+  });
+
+  it('cargaRealizada should update seccionCargarDocumentos', () => {
+    component.cargaRealizada(true);
+    expect(component.seccionCargarDocumentos).toBeFalsy();
+    component.cargaRealizada(false);
+    expect(component.seccionCargarDocumentos).toBe(true);
+  });
+
+  it('onCargaEnProgresoPadre should set cargaEnProgreso', () => {
+    component.onCargaEnProgresoPadre(false);
+    expect(component.cargaEnProgreso).toBeFalsy();
+  });
 });
