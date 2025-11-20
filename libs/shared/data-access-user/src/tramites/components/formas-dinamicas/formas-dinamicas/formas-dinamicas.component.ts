@@ -169,6 +169,21 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   public anchoDePantalla!: number;
 
+  /**
+   * Obtiene el grupo de formulario 'fechaInicial' del formulario principal.
+   * @returns {FormGroup}
+   */
+  get fechaInicial(): FormGroup {
+    return this.forma.get('fechaInicial') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'fechaFinal' del formulario principal.
+   * @returns {FormGroup}
+  */
+  get fechaFinal(): FormGroup {
+    return this.forma.get('fechaFinal') as FormGroup;
+  }
   
   /**
    * compo doc

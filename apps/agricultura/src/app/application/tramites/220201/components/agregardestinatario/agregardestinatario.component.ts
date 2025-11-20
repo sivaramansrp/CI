@@ -5,9 +5,15 @@
  * Cobertura compodoc 100%: cada clase, método, propiedad y evento está documentada.
  * @module AgregardestinatarioComponent
  */
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -100,7 +106,32 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   destinatarioForm!: FormGroup;
 
+  /**
+   * Formulario reactivo para capturar los datos de la planta TIF.
+   * @type {FormGroup}
+   */
   plantaTifForm!: FormGroup;
+
+  /**
+   * Identificador del trámite actual.
+   * @type {number}
+   * @default 220201
+   */
+  tramite: number = 220201;
+
+  /**
+   * Validador personalizado para el campo tipoMercancia.
+   * @param tipoMercancia Valor esperado para la validación.
+   * @returns ValidatorFn
+   */
+  static tipoMercanciaValidator(tipoMercancia: string) {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== tipoMercancia || control.value === tipoMercancia) {
+        return { tipoMercanciaInvalid: true };
+      }
+      return null;
+    };
+  }
 
   /**
    * Constructor del componente.
@@ -117,7 +148,9 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private catalogoService: CatalogosService
-  ) { }
+  ) {
+
+  }
 
   /**
    * Inicializa el formulario y carga datos si existe un destinatario seleccionado.
@@ -126,11 +159,11 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.destinatarioForm = this.fb.group({
       tipoMercancia: ['yes', Validators.required],
-      nombre: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      nombre: [''],
+      razonSocial: [''],
+      primerApellido: [''],
       segundoApellido: [''],
-      razonSocial: ['', Validators.required],
-      pais: ['1', Validators.required],
+      pais: ['MEX', Validators.required],
       codigoPostal: ['', Validators.required],
       estado: ['', Validators.required],
       municipio: [''],
@@ -141,7 +174,11 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       lada: [''],
       telefono: [''],
       correo: [''],
-      planta:['']
+      planta: ['']
+    });
+
+    this.destinatarioForm.get('tipoMercancia')?.valueChanges.subscribe(() => {
+      this.updateValidatorsBasedOnTipoMercancia();
     });
     this.certificadoZoosanitarioQuery.seleccionarTerceros$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -154,7 +191,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
-            pais: DESTINATARIO.pais || '1',
+            pais: DESTINATARIO.pais || 'MEX',
             codigoPostal: DESTINATARIO.codigoPostal || '',
             estado: DESTINATARIO.estado || '',
             municipio: DESTINATARIO.municipio || '',
@@ -175,6 +212,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       numeroEstablecimiento: ['']
     });
 
+    this.pairsCatalogChange();
+
   }
 
   /**
@@ -182,7 +221,6 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method ngAfterViewInit
    */
   ngAfterViewInit(): void {
-    this.pairsCatalogChange();
     this.estadoCatalogChange();
     this.municipioCatalogChange();
     this.coloniaCatalogChange();
@@ -193,7 +231,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method pairsCatalogChange
    */
   pairsCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoConsultaPaises(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoConsultaPaises(this.tramite).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.pairsCatalog = data.datos ?? [];
     });
   }
@@ -203,7 +241,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method estadoCatalogChange
    */
   estadoCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoEntidadesFederativasGeneral(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadesFederativas(this.tramite, 'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.estadoCatalog = data.datos ?? [];
     });
   }
@@ -213,7 +251,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method municipioCatalogChange
    */
   municipioCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(220201,'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoEntidadFederativaMunicipios(this.tramite, 'MEX').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.municipioCatalog = data.datos ?? [];
     });
   }
@@ -223,7 +261,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method coloniaCatalogChange
    */
   coloniaCatalogChange(): void {
-    this.catalogoService.obtieneCatalogoColonias(220201,'15058').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.catalogoService.obtieneCatalogoColonias(this.tramite, '15058').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.coloniaCatalog = data.datos ?? [];
     });
   }
@@ -254,7 +292,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     this.destinatarioForm.markAsUntouched();
     this.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
-      pais: '1',
+      pais: 'MEX',
     });
   }
 
@@ -264,6 +302,27 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   onCancelarDestinatario(): void {
     this.cerrar.emit();
+  }
+
+  /**
+   * Actualiza las validaciones de los campos del formulario según el valor de tipoMercancia.
+   * @method updateValidatorsBasedOnTipoMercancia
+   */
+  updateValidatorsBasedOnTipoMercancia(): void {
+    const TIPO_MERCANCIA = this.destinatarioForm.get('tipoMercancia')?.value;
+    const NOMBRE_CTRL = this.destinatarioForm.get('nombre');
+    const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
+
+    if (TIPO_MERCANCIA === 'yes') {
+      NOMBRE_CTRL?.setValidators([Validators.required]);
+      RAZON_SOCIAL_CTRL?.clearValidators();
+    } else {
+      RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
+      NOMBRE_CTRL?.clearValidators();
+    }
+
+    NOMBRE_CTRL?.updateValueAndValidity();
+    RAZON_SOCIAL_CTRL?.updateValueAndValidity();
   }
 
   /**
@@ -287,7 +346,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   }
 
   onBuscar(): void {
-    if (this.plantaTifForm.valid) {      
+    if (this.plantaTifForm.valid) {
       // Implementar lógica de búsqueda
     }
   }

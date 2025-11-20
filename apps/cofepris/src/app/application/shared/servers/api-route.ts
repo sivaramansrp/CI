@@ -58,4 +58,14 @@ export const FRACCION_DESCRIPCION = (clave: string, idTipoTramite: string): stri
  */
 export const UNIDAD_MEDIDA = (cveFraccion: string, idTipoTramite: string): string => `${BASE_URL}${API}/sat-t${idTipoTramite}${SOLICITUD}/unidad-medida?cveFraccion=${cveFraccion}`;
 
+/*
+ * API para guardar la solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/guardar
+ */
 export const GUARDAR_SOLICITUD = (TRAMITE: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/guardar`;
+
+/*
+ * API para obtener la CURP
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t260501/solicitud/buscar/curp?curp=XXXX010101HDFRRN09
+ */
+export const OBTENER_CURP = (TRAMITE: string,curp: string): string => `${BASE_URL}${API}/sat-t${TRAMITE}${SOLICITUD}/buscar/curp?curp=${curp}`;

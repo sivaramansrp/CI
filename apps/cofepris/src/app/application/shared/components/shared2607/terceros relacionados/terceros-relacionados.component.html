@@ -1,0 +1,287 @@
+<div class="container">
+  <div class="row mt-5">
+      <div class="col-md-12">
+        <ng-titulo titulo="Terceros relacionados" /> 
+        <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_TERCEROS"></ng-alert>
+        <div class="col-md-12">
+          <label class="form-label" for="">Fabricante*:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="fabricanteDatos"
+            (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'fabricante')"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+          </app-tabla-dinamica>
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <div class="btn-group">
+           <div>
+            <button
+            *ngIf="filasSeleccionadasFabricante.size > 0"
+            class="btn btn-default"
+              class="btn btn-default 3"
+              type="button"
+              data-bs-toggle="modal"
+              (click)="enEliminado('fabricante')"
+            >
+              Eliminar
+            </button>
+            <button
+              *ngIf="tablaActual && filasSeleccionadasFabricante.size === 1 && tablaActual === 'fabricante'"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+              class="btn btn-default btn-space ms-3"
+              (click)="openModificarMercancias()"
+            >
+              Modificar
+            </button>
+           </div>
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+             (click)="agregarMercancias('fabricante', 'Agregar Fabricante')"
+             [disabled]="esFormularioSoloLectura"
+            >
+              Agregar
+            </button>
+          </div>  
+      </div>
+        <div class="col-md-12 mt-5">
+          <label class="form-label" for="">Destinatario(destino final)*:</label>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+            [configuracionTabla]="destinatarioConfiguracionTabla"
+            [datos]="destinatarioDatos"
+            (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'destinatario')"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          >
+          </app-tabla-dinamica>
+        </div>
+      </div>
+      <div class="col-md-12 d-flex justify-content-end">
+        <div class="btn-group">
+         
+        <button
+            *ngIf="filasSeleccionadasDestinatario.size > 0"
+            class="btn btn-default"
+              class="btn btn-default 3"
+              type="button"
+              data-bs-toggle="modal"
+              (click)="enEliminado('destinatario')"
+            >
+              Eliminar
+            </button>
+            <button
+              *ngIf="tablaActual && filasSeleccionadasDestinatario.size === 1 && tablaActual === 'destinatario'"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+              class="btn btn-default btn-space ms-3"
+              (click)="openModificarMercancias()"    
+            >
+              Modificar
+            </button>
+             <button
+          type="button"
+          class="btn btn-primary ms-3"
+          data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
+                (click)="agregarMercancias('destinatario', 'Agregar Destinatario')"
+               >
+          Agregar
+        </button>
+        </div>
+      </div>
+  </div>
+  </div>
+  @if (nuevaNotificacion) {
+    <section >
+    <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacion" 
+    (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+    </section>
+    }
+  <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarMercanciasLabel">Agregar Fabricante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
+          <ng-titulo titulo="Agregar fabricante"></ng-titulo>
+          <ng-container formGroupName="agregarDestinatario">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+              </div>
+              <app-input-radio 
+                [radioOptions]="tipoPersonaRadioOptions" 
+                [selectedValue]="tipoDePublicos" 
+                [isRequired]="true" 
+                (valueChange)="setTipoPersona($event)" 
+                formControlName="tipoPersona" 
+                (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')">
+              </app-input-radio>
+            </div>
+          </ng-container>
+          <ng-titulo titulo="Datos personales"></ng-titulo>
+          <ng-container formGroupName="datosPersonales">
+            @if (selectedTipoPersona === 'fisica') {
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="nombre">Nombre(s)*:</label>
+                <input class="form-control" id="nombre" type="number" formControlName="nombre"
+                  (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" />
+                   @if (destinatarioForm.get(['datosPersonales', 'nombre'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'nombre'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+                  (change)="setValoresStore(agregarDestinatario,'primerApellido', 'setPrimerApellido')" />
+                @if (destinatarioForm.get(['datosPersonales', 'primerApellido'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'primerApellido'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
+                  @if (destinatarioForm.get(['datosPersonales', 'primerApellido'])?.errors?.['pattern'] && destinatarioForm.get(['datosPersonales', 'primerApellido'])?.touched) {
+              <div class="text-danger">
+                <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+              </div>
+              }
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+                  (change)="setValoresStore(agregarDestinatario,'segundoApellido', 'setSegundoApellido')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'segundoApellido'])?.errors?.['pattern'] && destinatarioForm.get(['datosPersonales', 'segundoApellido'])?.touched) {
+              <div class="text-danger">
+                <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+              </div>
+              }
+              </div>
+            </div>
+            } @if (selectedTipoPersona === 'moral') {
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="nombre">Denominación/razón social*:</label>
+                <input class="form-control" id="nombre" type="text" formControlName="nombre"
+                  (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'nombre'])?.hasError('required') &&
+                destinatarioForm.get(['datosPersonales', 'nombre'])?.touched) {
+                <div class="text-danger">
+                  <small>Este campo es obligatorio</small>
+                </div>
+                }
+              </div>
+            </div>
+            }
+            <ng-titulo titulo="Domicilio"></ng-titulo>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <app-catalogo-select 
+                  id="paisData"
+                  formControlName="pais"
+                  [catalogo]="paisData.catalogos" 
+                  [label]="'Pais'"
+                  [required]="true"
+                  [isDisabled]="esFormularioSoloLectura"
+                  (change)="setValoresStore(agregarDestinatario,'pais', 'setPais')">
+                </app-catalogo-select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="estado">Estado*:</label>
+                <input class="form-control" id="estado" type="text" formControlName="estado"
+                  (change)="setValoresStore(agregarDestinatario,'estado', 'setEstado')" />
+                  @if (destinatarioForm.get(['datosPersonales', 'estado'])?.hasError('required') &&
+                  destinatarioForm.get(['datosPersonales', 'estado'])?.touched) {
+                  <div class="text-danger">
+                    <small>Este campo es obligatorio</small>
+                  </div>
+                  }
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                  (change)="setValoresStore(agregarDestinatario,'codigopostal', 'setCodigoPostal')" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <label class="form-label" for="calle">Calle*:</label>
+                <input class="form-control" id="calle" type="text" formControlName="calle"
+                  (change)="setValoresStore(agregarDestinatario,'calle', 'setCalle')" />
+                      @if (destinatarioForm.get(['datosPersonales', 'calle'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'calle'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="numeroexterior">Numero exterior*:</label>
+                <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
+                  (change)="setValoresStore(agregarDestinatario,'numeroExterior', 'setNumeroExterior')" />
+                        @if (destinatarioForm.get(['datosPersonales', 'numeroExterior'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'numeroExterior'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="numerointerior">Numero interior*:</label>
+                <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior"
+                  (change)="setValoresStore(agregarDestinatario,'numeroInterior', 'setNumeroInterior')" />
+                       @if (destinatarioForm.get(['datosPersonales', 'numeroInterior'])?.hasError('required') &&
+                      destinatarioForm.get(['datosPersonales', 'numeroInterior'])?.touched) {
+                      <div class="text-danger">
+                        <small>Este campo es obligatorio</small>
+                      </div>
+                      }
+              </div>
+              <div class="col-md-1 mb-3">
+                <label class="form-label" for="lada">Lada:</label>
+                <input class="form-control" id="lada" type="number" formControlName="lada"
+                  (change)="setValoresStore(agregarDestinatario,'lada', 'setLada')" />
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="form-label" for="telefono">Teléfono:</label>
+                <input class="form-control" id="telefono" type="number" formControlName="telefono"
+                  (change)="setValoresStore(agregarDestinatario,'telefono', 'setTelefono')" />
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+                <div class="input-group">
+                  <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
+                    (change)="setValoresStore(agregarDestinatario,'correoElectronico', 'setCorreoElectronico')" />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div class="col-md-12 d-flex justify-content-end">
+            <div class="btn-group">
+              <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" data-bs-dismiss="modal">Cancelar</button>
+              <button class="btn btn-danger" type="button" (click)="limpiarFormulario()">Limpiar</button>
+              <button class="btn btn-primary me-2" type="submit" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

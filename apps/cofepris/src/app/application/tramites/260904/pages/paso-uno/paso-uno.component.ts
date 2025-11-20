@@ -13,11 +13,10 @@ import {
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { DatosDeLaSolicitud260904Component } from '../../components/datos-de-la-solicitud-260904/datos-de-la-solicitud-260904.component';
-import { DomicilioDelEstablecimiento260904Component } from '../../components/domicilio-del-establecimiento-260904/domicilio-del-establecimiento-260904.component';
-import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
-import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados/terceros-relacionados-vista.component';
-import { TramitesAsociadoComponent } from '../../components/tramites-asociado/tramites-asociado.component';
+
+import { PagoDeDerechosContenedoraComponent} from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component'
+import { TercerosRelacionadosVistaComponent} from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+import { TramitesAsociadosSeccionComponent  } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { ModificacionDelPermisoSanitarioService } from '../../services/modificacion-del-permiso-sanitario.service';
 
@@ -48,25 +47,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @Output() tabChanged = new EventEmitter<number>();
 
-  /** Referencia al componente de datos de la solicitud del trámite 260904 */
-  @ViewChild(DatosDeLaSolicitud260904Component)
-  datosDeLaSolicitudComponent!: DatosDeLaSolicitud260904Component;
-
-  /** Referencia al componente de domicilio del establecimiento para el trámite 260904 */
-  @ViewChild(DomicilioDelEstablecimiento260904Component)
-  domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimiento260904Component;
-
+ 
   /** Referencia al componente de vista de terceros relacionados */
   @ViewChild(TercerosRelacionadosVistaComponent)
   tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
   /** Referencia al componente de pago de derechos */
-  @ViewChild(PagoDeDerechosComponent)
-  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  @ViewChild('PagoDeDerechosComponent')
+  pagoDeDerechosComponent!: PagoDeDerechosContenedoraComponent;
 
   /** Referencia al componente de trámites asociados */
-  @ViewChild(TramitesAsociadoComponent)
-  tramitesAsociadoComponent!: TramitesAsociadoComponent;
+  @ViewChild('TramitesAsociadoComponent')
+  tramitesAsociadoComponent!: TramitesAsociadosSeccionComponent;
 
   /** Tipo de trámite seleccionado por el usuario */
   selectedTipoTramite: string = '';
@@ -75,7 +67,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   isRadioButtonSelectedGlobal: boolean = false;
 
   /** Índice privado de la pestaña actual */
-  private _indice: number = 1;
+   indice: number = 1;
+
+   /**
+     * showPreFillingOptions
+     * Indica si se deben mostrar las opciones de prellenado.
+     */
+ showPreFillingOptions: boolean = true; 
 
   /**
    * Setter para el índice de la subpestaña activa.
@@ -84,9 +82,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @Input()
   set subTabIndex(value: number) {
-    if (value && value !== this._indice) {
-      this._indice = value;
-      this.tabChanged.emit(this._indice);
+    if (value && value !== this.indice) {
+      this.indice = value;
+      this.tabChanged.emit(this.indice);
     }
   }
 
@@ -95,16 +93,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @returns El índice de la pestaña activa
    */
   get subTabIndex(): number {
-    return this._indice;
+    return this.indice;
   }
-  /**
-   * Obtiene la instancia del componente `DomicilioDelEstablecimiento260904Component`.
-   *
-   * @returns La instancia del componente `DomicilioDelEstablecimiento260904Component` si existe, de lo contrario `undefined`.
-   */
-  public getDomicilioDelEstablecimientoComponent(): DomicilioDelEstablecimiento260904Component | undefined {
-  return this.domicilioDelEstablecimientoComponent;
-}
+ 
 
   /** Bandera que indica si los datos de respuesta están disponibles */
   esDatosRespuesta: boolean = false;
@@ -183,7 +174,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param i - Índice de la pestaña a seleccionar
    */
   seleccionaTab(i: number): void {
-    this._indice = i;
+    this.indice = i;
     this.tabChanged.emit(i);
   }
 
@@ -192,7 +183,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Retorna false si algún campo requerido está faltando.
    * @returns true si todos los campos requeridos son válidos, false en caso contrario
    */
-  public validateRequiredFields(): boolean {
+  /*public validateRequiredFields(): boolean {
     let isValid = true;
 
     if (this.datosDeLaSolicitudComponent?.validateRequiredFields) {
@@ -213,11 +204,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
     return isValid;
   }
+    
+  */
 
   /**
    * Marca todos los campos como tocados en todos los subcomponentes de paso-uno.
    * Esto ayuda a mostrar errores de validación en la interfaz de usuario.
    */
+  /*
   public markAllFieldsTouched(): void {
     if (this.datosDeLaSolicitudComponent?.markAllFieldsTouched) {
       this.datosDeLaSolicitudComponent.markAllFieldsTouched();
@@ -232,15 +226,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.tramitesAsociadoComponent.markAllFieldsTouched();
     }
   }
+  */
 
-  /**
-   * Devuelve la instancia actual del componente `PagoDeDerechosComponent`.
-   * 
-   * @returns {PagoDeDerechosComponent | undefined} La instancia del componente si está disponible, de lo contrario `undefined`.
-   */
-  public getPagoDeDerechosComponent(): PagoDeDerechosComponent | undefined {
-  return this.pagoDeDerechosComponent;
-}
+
+  public validateRequiredFields(): boolean {
+    let isValid = true;
+    return isValid;
+  }
+ 
   /**
    * Hook de destrucción del componente.
    * Completa el subject para cancelar todas las suscripciones activas.

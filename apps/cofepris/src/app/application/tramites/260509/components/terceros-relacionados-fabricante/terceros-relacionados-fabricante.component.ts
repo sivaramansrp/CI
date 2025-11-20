@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TABLA_ORDEN } from '../../constantes/permiso-vegetales-nutrientes.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
@@ -34,6 +34,9 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public idProcedimiento: number = 260509;
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
   /** Constructor que inicializa el store del trámite 260504. */
     constructor(
       public store: Tramite260509Store,
@@ -52,6 +55,7 @@ export class TercerosRelacionadosFabricanteComponent {
     if (event === 'proveedor') {
       this.store.setFormValidity('proveedorTablaValid', true);
     }
+    this.validarFormulario();
   }
 
   /** Ejecuta la validación marcando los campos de terceros relacionados como tocados. */

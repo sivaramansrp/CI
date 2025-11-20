@@ -12,7 +12,6 @@ import { CatalogosService } from '../../services/220201/catalogos/catalogos.serv
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 import { SharedFormService } from '../../services/220201/SharedForm.service';
@@ -97,7 +96,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private consultaQuery: ConsultaioQuery,
@@ -134,7 +132,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         this.movilizacionForm.patchValue({
           coordenadas: data.coordenadas,
           medio: data.ide_medio_transporte,
-          transporte: data.identificacion_transporte,
+          transporte: data.id_transporte,
           punto: data.id_punto_verificacion,
           nombre: data.razon_social
         }); 

@@ -168,11 +168,10 @@
             <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched || (mostrarErrores.avisoCheckbox && domicilio.get('avisoCheckbox')?.value === false)}">*</span></span>
             </label>
          </div>
-         @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox) {
-         <div class="mensaje-error mt-2">
+         <div *ngIf="domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox"
+               class="mensaje-error">
             Este campo es obligatorio.
          </div>
-         }
       </div>
       <div class="col-md-4">
          <div class="form-group">
@@ -204,7 +203,7 @@
          </crosslist>
       </div>
         <div
-               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanas"
+               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanasEntradas"
                class="mensaje-error">
                Este campo es obligatorio.
             </div>
@@ -230,14 +229,17 @@
          </app-table-pagination>
       </div>
       <div class="container text-end mt-5">
-         @if(seleccionarlistaMercancias.length !== 0) {
+          @if(mercanciasTablaDatos.length === 0) {
+         <button class="btn btn-primary me-2"  
+         [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
+           }
+         @else {
          <button class="btn btn-default me-2" 
          [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
+
          <button class="btn btn-danger me-2" data-bs-toggle="modal"
          [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
          }
-         <button class="btn btn-primary me-2"  
-         [disabled]="esFormularioSoloLectura" (click)="agregarMercanciaModal()">Agregar</button>
       </div>
    </div>
    <div class="row" *ngIf="isGarantiasOfrecidasVisible">
@@ -426,13 +428,13 @@
                }
                @if(estadoValidte){
                <div class="form-group">
-                  <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
+                    <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
                   name="estadoFisico" [placeholder]="'Seleccione un valor'" 
                   (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
                   [isDisabled]="esFormularioSoloLectura ||  (formMercancias.get('estadoFisico')?.disabled ?? false)"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
                </div>
                }
-               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">
+               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === 'ESFIMG.OTR'">
                   <label for="estadoFisicoOtro">
                   Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('estadoFisicoOtro')?.invalid && formMercancias.get('estadoFisicoOtro')?.touched}">*</span>:
                   </label>
@@ -840,7 +842,7 @@
                      <div class="form-group">
                         <app-catalogo-select [catalogo]="idProcedimiento ? clasificacionToxicologicaLista : estado" formControlName="clasificacionToxicologica"
                         [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                        setValoresStore(formMercancias, 'especificar', 'setEspecificar'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
+                        setValoresStore(formMercancias, 'clasificacionToxicologica', 'setClasificacionToxicologica'); formMercancias.get('clasificacionToxicologica')?.markAsTouched();"
                         [isDisabled]="esFormularioSoloLectura"
                         [markTouched]="!!(formMercancias.get('clasificacionToxicologica')?.invalid && formMercancias.get('clasificacionToxicologica')?.touched)"></app-catalogo-select>
                      </div>

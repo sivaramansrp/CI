@@ -9,8 +9,15 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
+
 
 export interface Tramite130109State {
+    /**
+   * ID de la solicitud asociada al trámite.
+   */
+  idSolicitud: number;
+  /**
   /**
    * Producto seleccionado en el formulario.
    */
@@ -75,7 +82,17 @@ export interface Tramite130109State {
    * Cantidad de partidas de la mercancía ingresada en el formulario.
    */
   cantidadPartidasDeLaMercancia: string;
-
+/**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
@@ -137,7 +154,17 @@ export interface Tramite130109State {
     Valor total en USD de las partidas de la mercancía.
     */
     valorTotalUSD: string;
+    
+      /**
+       * Lista de partidas a mostrar.
+       */
+      mostrarPartidas: MostrarPartidas[];
+       /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
 }
+
 
 /**
  * createInitialState
@@ -149,18 +176,24 @@ export interface Tramite130109State {
  */
 export function createInitialState(): Tramite130109State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: true,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
-    producto: '',
+     defaultSelect: 'TISOL.I',
+    producto: 'CONDMER.U',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.U',
     regimen: '',
+     modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
     valorPartidaUSDPartidasDeLaMercancia: '',
@@ -174,7 +207,12 @@ export function createInitialState(): Tramite130109State {
     representacion: '',
     tableBodyData: [],
     cantidadTotal: '',
-    valorTotalUSD: ''
+    valorTotalUSD: '',
+    mostrarPartidas: [],
+    fechasSeleccionadas: [],
+    
+    
+
   };
 }
 
@@ -194,6 +232,17 @@ export class Tramite130109Store extends Store<Tramite130109State> {
     super(createInitialState());
   }
   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+  /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.
    */
@@ -203,4 +252,10 @@ export class Tramite130109Store extends Store<Tramite130109State> {
       ...valores,
     }));
   } 
+    /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
+  }
 }

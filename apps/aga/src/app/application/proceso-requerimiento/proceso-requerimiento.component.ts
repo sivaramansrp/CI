@@ -22,9 +22,11 @@ import {
   Notificacion,
   NotificacionesComponent,
   PASOS_REQUERIMIENTOS,
+  PASOS_REQUERIMIENTOS_DATOS,
   RequerimientoInformacionComponent,
   RequerimientosStates,
   TITULO_ACUSE,
+  TRAMITES_PASO_DATOS,
   TXT_ALERTA_ACUSE_RECIBO,
   TramiteFolioQueries,
   WizardComponent,
@@ -36,7 +38,7 @@ import {
   ListaComponentes,
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { AtenderRequerimientoService } from '../core/services/atender-requerimiento/atender-requerimiento.service';
 import { CommonModule } from '@angular/common';
@@ -64,6 +66,9 @@ import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/mod
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model';
 import { formatFecha } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../tramites/5701/pages/paso-uno/paso-uno.component';
+import { PasoDatosComponent } from '../tramites/5701/components/paso-datos/paso-datos.component';
+
 /**
  * Componente principal para el proceso de requerimiento.
  *
@@ -88,6 +93,7 @@ import { formatFecha } from '@ng-mf/data-access-user';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     AcuseComponent,
+    PasoDatosComponent,
     forwardRef(() => EncabezadoRequerimientoComponent),
     forwardRef(() => RequerimientoInformacionComponent),
     NotificacionesComponent
@@ -100,7 +106,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   /**
   * Lista de pasos del wizard de requerimientos.
   */
-  pasos: ListaPasosWizard[] = PASOS_REQUERIMIENTOS;
+  pasos!: ListaPasosWizard[];
 
   /**
    * Índice actual del paso en el wizard.
@@ -302,6 +308,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   esAcuse: boolean = false;
 
   /**
+   * 
+   */
+  esTramiteDatos: boolean = false;
+
+  /**
    * Catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
@@ -319,15 +330,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /*
+  * Referencia al componente PasoDatos.
+  */
+  @ViewChild(PasoDatosComponent) pasoDatosComponent!: PasoDatosComponent;
+
   /**
    * Datos de los pasos del wizard.
    */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
+  datosPasos!: DatosPasos;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -348,7 +359,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private atenderRequerimientoService: AtenderRequerimientoService,
     private location: Location,
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
-    private consultaReq: RequerimientosStates
+    private consultaReq: RequerimientosStates,
+    private cdRef: ChangeDetectorRef
   ) {
 
     /**
@@ -383,7 +395,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Inicializa el componente y obtiene datos necesarios.
    */
   ngOnInit(): void {
-
+    this.esTramiteDatos = TRAMITES_PASO_DATOS.includes(this.guardarDatos?.procedureId);
+    this.pasos = TRAMITES_PASO_DATOS.includes(this.guardarDatos?.procedureId) ? PASOS_REQUERIMIENTOS_DATOS : PASOS_REQUERIMIENTOS;
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
     /**
      * Verifica si existe un trámite previamente seleccionado.
      * Si existe, se selecciona automáticamente.
@@ -470,8 +489,13 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e?.valor && e.valor > 0 && e.valor < 4) {
+    if (e?.valor && e.valor > 0 && e.valor <= 4) {
+      if ( this.indice === 2 && this.esTramiteDatos ) {
+        this.ejecutaActualizarSolicitud();
+      }
       this.indice = e.valor;
+      this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
+
       if (this.indice === 2) {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
@@ -499,7 +523,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos.id_solicitud
         );
       }
-      if (this.indice === 3) {
+      if (this.indice === 4) {
         this.mostrarFirmarAtenderRequerimiento();
       }
       if (e.accion === 'cont') {
@@ -510,6 +534,13 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
 
       this.desplazarseHaciaArribaService.desplazarArriba();
     }
+  }
+
+  /**
+   * Invoca el método `actualizarSolicitud` del componente hijo `PasoDatosComponent`.
+   */
+  ejecutaActualizarSolicitud() {
+    this.pasoDatosComponent.actualizarSolicitud();
   }
 
   /**
@@ -1227,6 +1258,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       this.yaCargoAcuses = true;
       this.getAcusesResolucion();
     }
+  }
+
+  onFormularioPadreValido(isValid: boolean): void {
+  
   }
 
   /**

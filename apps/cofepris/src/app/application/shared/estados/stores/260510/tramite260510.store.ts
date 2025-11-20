@@ -19,9 +19,12 @@ export interface Solicitud260510State {
     domicilioEstablecimiento?: boolean;
     manifiestos?: boolean;
     representanteLegal?: boolean;
-    terceros?: boolean;
-    pagoDeDerechos?: boolean;
+    fabricanteTablaValid?: boolean;
+    formuladorTablaValid?: boolean;
+    proveedorTablaValid?: boolean;
+    pagoDeDerechos?: boolean;    
   };
+   continuarTriggered?: boolean;
 }
 
 /**
@@ -32,6 +35,7 @@ export function createInitialState(): Solicitud260510State {
     return {
         idSolicitud: 0,
         formValidity: {},
+         continuarTriggered: false,
     };
 }
 
@@ -105,4 +109,11 @@ export class Tramite260510Store extends Store<Solicitud260510State> {
   public setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({ ...state, idSolicitud }));
   }
+    /**
+   * Establece el estado del botón continuar para activar o desactivar las validaciones del formulario.
+   * @param continuarTriggered Indica si el botón continuar ha sido activado.
+   */
+     public setContinuarTriggered(continuarTriggered: boolean): void {
+      this.update((state) => ({ ...state, continuarTriggered }));
+    }
 }

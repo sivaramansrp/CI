@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
-import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
@@ -35,12 +34,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Proporciona acceso a sus métodos y propiedades.
    */
   @ViewChild('TercerosRelacionadosFabricanteComponent', { static: false }) tercerosRelacionadosFabricanteComponent!: TercerosRelacionadosFabricanteComponent;
-
-  /** Referencia al componente 'PagoDerechosComponent' en la plantilla.
-   * Proporciona acceso a sus métodos y propiedades.
-   */
-  @ViewChild('PagoDerechosComponent', { static: false }) PagoDerechosComponent!: PagoDerechosComponent;
   
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
@@ -76,9 +72,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
   
+  /** Indicadores booleanos que validan el estado de los componentdatos de la solicitud */
   private isDatosDeLaSolicitudComponentValid: boolean = false;
+
+   /** Indicadores booleanos que validan el estado de los component terceros */
   private isTercerosComponentValid: boolean = false;
-  private isPagoDeDerechosComponentValid: boolean = false;
 
   /**
    * Constructor del componente Datos260502Component.
@@ -158,16 +156,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       this.query.getValue().formValidity?.formuladorTablaValid &&
       this.query.getValue().formValidity?.proveedorTablaValid) ?? false;
 
-    if (!this.isDatosDeLaSolicitudComponentValid) {
-      this.datosSolicitudComponent?.validarFormulario(); 
-    }
-
-    if (!this.isTercerosComponentValid) {
-      this.tercerosRelacionadosFabricanteComponent?.validarFormulario();
-    }
-
-    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid
-
+    return this.isDatosDeLaSolicitudComponentValid && this.isTercerosComponentValid;
   }
 
   /**

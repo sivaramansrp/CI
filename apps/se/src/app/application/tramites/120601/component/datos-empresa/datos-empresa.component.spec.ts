@@ -9,6 +9,7 @@ import { DatosGeneralesSociosComponent } from '../datos-generales-socios/datos-g
 import { DomicilioComponent } from '../domicilio/domicilio.component';
 import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
 import { DatosEmpresaService } from './../../services/datos-empresa.service';
+import { of } from 'rxjs';
 
 describe('DatosEmpresaComponent', () => {
   let component: DatosEmpresaComponent;

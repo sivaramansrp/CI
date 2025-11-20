@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DesistirSolicitudInformacionHistoricaComponent } from './desistir-solicitud-informacion-historica.component';
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoTresComponent } from '../paso-dos/paso-tres.component';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('DesistirSolicitudInformacionHistoricaComponent', () => {

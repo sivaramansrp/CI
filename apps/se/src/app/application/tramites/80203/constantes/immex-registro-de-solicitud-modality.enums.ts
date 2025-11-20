@@ -689,3 +689,43 @@ export const ERROR_DETALLE_ALERT =
   </div>
 </div>
 `
+
+export const ERROR_NICO = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Debe contener al menos un nico.
+  </div>
+</div>
+`;
+
+export const ERROR_REQ_MERCANCIA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Los campos marcados con (*) son requeridos.
+  </div>
+</div>
+`;
+
+export const ERROR_CANTIDAD = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    Las cantidades deben tener un valor mayor a cero.
+  </div>
+</div>
+`;
+
+export const ERROR_CAPACIDAD = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    La capacidad instalada por periodo debe ser menor o igual a la cantidad anual.
+  </div>
+</div>
+`;
+
+export const ERROR_CANDIDAD_POR_PERIODO = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12">
+    La cantidad por periodo no puede ser mayor a la cantida anual dividida entre 3.
+  </div>
+</div>
+`;
