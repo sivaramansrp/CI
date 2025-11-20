@@ -199,6 +199,11 @@ export class DatosMercanciaEvaluacionComponent implements OnInit {
     if (!this.formEvaluarMercancia) {
       return false;
     }
+    const TIENE_FRACCION = this.formEvaluarMercancia.get('tiene_fraccion_aladi')?.value;
+
+    if (TIENE_FRACCION === false) {
+      return false;
+    }
     const KEYS = [
       'valorTransaccionalFOBEvaluar',
       'calificacion_fraccion_aladi',
