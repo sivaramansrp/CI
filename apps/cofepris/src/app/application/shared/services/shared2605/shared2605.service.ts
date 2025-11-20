@@ -232,7 +232,7 @@ export class Shared2605Service {
       "original": "",
       "avisoFuncionamiento": true,
       "numeroLicencia": "123456",
-      "aduanas": Array.isArray(data['aduanasDeEntrada']) ? data['aduanasDeEntrada'].join(', ') : '',
+      "aduanas": data['aduanasDeEntrada'] || [],
     }
   }
 
@@ -304,8 +304,10 @@ export class Shared2605Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": Array.isArray(item['paisOrigen']) ? item['paisOrigen'].join(', ') : String(item['paisOrigen'] ?? ''),
-      "nombreCortoPaisProcedencia": Array.isArray(item['paisProcedenciaUltimoPuerto']) ? item['paisProcedenciaUltimoPuerto'].join(', ') : String(item['paisProcedenciaUltimoPuerto'] ?? ''),
+      "nombreCortoPaisOrigen": item['paisOrigen'] || [],
+      "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] || [],
+      "paisesFormulaProducto": item['paisElaboracionProducto'] || [],
+      "paisesFabricaIngredienteActivo": item['paisProduccionIngredienteActivo'] || [],
       "tipoProductoDescripcionOtros": "Analgésico",
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
