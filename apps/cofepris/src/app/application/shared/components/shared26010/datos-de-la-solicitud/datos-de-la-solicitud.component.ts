@@ -1901,6 +1901,13 @@ marcarTodosLosCamposComoTocados(): void {
     'licenciaSanitaria',
      'rfcSanitario'
   ];
+    switch (this.idProcedimiento) {
+    case 260103:
+      EXCLUDED_FIELDS.push("adunasDeEntradas","regimen")
+      break;
+    default:
+      break;
+  }
   if (!this.datosSolicitudForm) {
    
     return;
@@ -1946,7 +1953,6 @@ verificarCamposValidosODeshabilitados(): boolean {
     return false;
   }
 
-  // Fields to exclude from validation check
   const EXCLUDED_FIELDS = [
     'aduana',
     'aeropuertoDos',
@@ -1957,40 +1963,39 @@ verificarCamposValidosODeshabilitados(): boolean {
     'licenciaSanitaria',
     'rfcSanitario'
   ];
+  switch (this.idProcedimiento) {
+    case 260103:
+      EXCLUDED_FIELDS.push("adunasDeEntradas","regimen")
+      break;
+    default:
+      break;
+  }
 
   const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
-  
+
   let allFieldsValidOrDisabled = true;
 
 
-  // Loop through each control to check validation status
   CONTROL_NAMES.forEach((controlName: string) => {
     const CONTROL = this.datosSolicitudForm.get(controlName);
-    
+
     if (CONTROL) {
       // Skip excluded fields
       if (EXCLUDED_FIELDS.includes(controlName)) {
-       
-      
-        // Continue to next field
+        return;
       }
-
-
-      // Check if field is valid or disabled
-     else if (CONTROL.disabled) {
-        // Field is disabled, validation not required
-      } else if (!CONTROL.valid) {
+      if (CONTROL.disabled) {
+        return;
+      }
+      if (!CONTROL.valid) {
         allFieldsValidOrDisabled = false;
-
-      } 
+      }
     }
   });
 
- 
-  
-
   return allFieldsValidOrDisabled;
 }
+
 
   /**
    * Emite el evento de acción seleccionada en la solicitud.
