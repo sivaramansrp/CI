@@ -262,6 +262,16 @@ export interface DatosDomicilioLegalState {
    * El valor de numeroRegistroSanitario.
    */
   numeroRegistroSanitario: string,
+
+  aduanaId: string[];
+
+  paisOrigenId: string[];
+
+  paisProcedenciaId: string [];
+
+  paisElaboraId: string [];
+
+  paisIngredienteActivoId: string [];
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -519,6 +529,16 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de numeroRegistroSanitario.
      */
     numeroRegistroSanitario: '',
+
+    aduanaId: [],
+
+    paisOrigenId: [],
+
+    paisProcedenciaId: [],
+
+    paisElaboraId: [],
+
+    paisIngredienteActivoId: [],
   };
 }
 
@@ -1181,6 +1201,41 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
             ...state,
             numeroRegistroSanitario,
         }));
+    }
+
+    setAduanaId(aduanaId: string[]): void {
+      this.update((state) => ({
+          ...state,
+          aduanaId,
+      }));
+    }
+
+    setPaisOrigenId(paisOrigenId: string[]): void {
+      this.update((state) => ({
+          ...state,
+          paisOrigenId,
+      }));
+    }
+
+    setPaisProcedenciaId(paisProcedenciaId: string[]): void {
+      this.update((state) => ({
+          ...state,
+          paisProcedenciaId,
+      }));
+    }
+
+    setPaisElaboraId(paisElaboraId: string[]): void {
+      this.update((state) => ({
+          ...state,
+          paisElaboraId,
+      }));
+    }
+
+    setPaisIngredienteActivoId(paisIngredienteActivoId: string[]): void {
+      this.update((state) => ({
+          ...state,
+          paisIngredienteActivoId: paisIngredienteActivoId,
+      }));
     }
     
 }

@@ -232,7 +232,7 @@ export class Shared2605Service {
       "original": "",
       "avisoFuncionamiento": true,
       "numeroLicencia": "123456",
-      "aduanas": data['aduanasDeEntrada'] || [],
+      "aduanas": data['aduanaId'] || [],
     }
   }
 
@@ -304,11 +304,11 @@ export class Shared2605Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": item['paisOrigen'] || [],
-      "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto'] || [],
-      "paisesFormulaProducto": item['paisElaboracionProducto'] || [],
-      "paisesFabricaIngredienteActivo": item['paisProduccionIngredienteActivo'] || [],
-      "tipoProductoDescripcionOtros": "Analgésico",
+      "nombreCortoPaisOrigen": data['paisOrigenId'] || [],
+      "nombreCortoPaisProcedencia": data['paisProcedenciaId'] || [],
+      "paisesFormulaProducto": data['paisElaboraId'] || [],
+      "paisesFabricaIngredienteActivo": data['paisIngredienteActivoId'] || [],
+      "tipoProductoDescripcionOtros": "Analgésico", 
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
     }));
