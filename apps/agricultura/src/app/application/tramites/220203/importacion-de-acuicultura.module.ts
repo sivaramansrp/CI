@@ -19,17 +19,10 @@ import {
   TableComponent,
   TercerosComponent,
   TituloComponent,
-  WizardComponent
+  WizardComponent,
 } from '@ng-mf/data-access-user';
 
-
 import { ImportacionDeAcuiculturaRoutingModule } from './importacion-de-acuicultura-routing.module';
-
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-
-import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
 
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
@@ -40,14 +33,8 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
-
-
 @NgModule({
-  declarations: [
-    PasoDosComponent,
-    PasoTresComponent,
-    SanidadCertificadoComponent
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ImportacionDeAcuiculturaRoutingModule,
@@ -75,8 +62,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     TercerosComponent,
     ToastrModule.forRoot(),
   ],
-  providers: [
-    ToastrService
-  ]
+  providers: [ToastrService],
 })
-export class ImportacionDeAcuiculturaModule { }
+export class ImportacionDeAcuiculturaModule {}

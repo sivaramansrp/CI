@@ -1,21 +1,38 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { Observable, Subject, catchError, firstValueFrom, map, switchMap, take, takeUntil, tap } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  catchError,
+  firstValueFrom,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  ConsultaioStore,
+  formatFecha,
+} from '@ng-mf/data-access-user';
+import {
+  Acuicultura,
+  DestinatarioForm,
+  FilaSolicitud,
+} from '../../models/220203/importacion-de-acuicultura.module';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
+import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import{SolicitanteComponent} from '@libs/shared/data-access-user/src'
-import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
-import { Acuicultura, DestinatarioForm, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
-import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
-
-
-
 
 /**
  * @fileoverview
@@ -29,7 +46,7 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
  * Componente standalone que gestiona el primer paso del proceso de importación de acuicultura.
  * Coordina la validación y gestión de datos de múltiples secciones del formulario.
  * Implementa las interfaces OnInit y OnDestroy para el manejo adecuado del ciclo de vida.
- * 
+ *
  * @class PasoUnoComponent
  * @implements {OnInit}
  * @implements {OnDestroy}
@@ -41,11 +58,16 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
   styleUrl: './paso-uno.component.scss',
   standalone: true,
   imports: [
-    SolicitanteComponent, TercerospageComponent, ReactiveFormsModule, DatosDeLaSolicitudComponent, DatosParaMovilizacionComponent, PagoDeDerechosComponent, CommonModule
-  ]
+    SolicitanteComponent,
+    TercerospageComponent,
+    ReactiveFormsModule,
+    DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionComponent,
+    PagoDeDerechosComponent,
+    CommonModule,
+  ],
 })
 export class PasoUnoComponent implements OnDestroy {
-
   /**
    * Índice de la pestaña actualmente seleccionada en el formulario.
    * @public
@@ -56,9 +78,9 @@ export class PasoUnoComponent implements OnDestroy {
   indice: number = 1;
 
   /**
- * Estado de la consulta actual, contiene la información relevante del solicitante.
- * @type {ConsultaioState}
- */
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
   public consultaState!: ConsultaioState;
 
   /**
@@ -69,10 +91,22 @@ export class PasoUnoComponent implements OnDestroy {
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
-    { index: 2, title: 'Datos de la solicitud', component: 'datos-de-la-solicitud' },
-    { index: 3, title: 'Datos para movilización nacional', component: 'datos-para-movilizacion-nacional' },
-    { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
-    { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
+    {
+      index: 2,
+      title: 'Datos de la solicitud',
+      component: 'datos-de-la-solicitud',
+    },
+    {
+      index: 3,
+      title: 'Datos para movilización nacional',
+      component: 'datos-para-movilizacion-nacional',
+    },
+    {
+      index: 4,
+      title: 'Terceros relacionados',
+      component: 'terceror-relacionados',
+    },
+    { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' },
   ];
 
   /**
@@ -82,7 +116,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
-  
+
   /**
    * Referencia al componente hijo DatosDeLaSolicitudComponent para manejar los datos de la solicitud.
    * @public
@@ -90,15 +124,16 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
-  
+
   /**
    * Referencia al componente hijo DatosParaMovilizacionComponent para manejar los datos de movilización.
    * @public
    * @type {DatosParaMovilizacionComponent}
    * @memberof PasoUnoComponent
    */
-  @ViewChild('datosParaMovilizacionRef') datosParaMovilizacion!: DatosParaMovilizacionComponent;
-  
+  @ViewChild('datosParaMovilizacionRef')
+  datosParaMovilizacion!: DatosParaMovilizacionComponent;
+
   /**
    * Referencia al componente hijo PagoDeDerechosComponent para manejar los pagos de derechos.
    * @public
@@ -106,7 +141,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechosComponent;
-  
+
   /**
    * Referencia al componente hijo TercerospageComponent para manejar los terceros relacionados.
    * @public
@@ -125,8 +160,7 @@ export class PasoUnoComponent implements OnDestroy {
    */
   private readonly DESTROY_NOTIFIER$ = new Subject<void>();
 
-  public RENDERDOM:boolean = false;
-
+  public RENDERDOM: boolean = false;
 
   /**
    * Constructor que inyecta los servicios requeridos para el funcionamiento del componente.
@@ -135,23 +169,22 @@ export class PasoUnoComponent implements OnDestroy {
    * @param {ConsultaioQuery} consultaQuery - Query para manejar el estado de las consultas
    * @memberof PasoUnoComponent
    */
-  constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService,
+  constructor(
+    private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
     private consultaioStore: ConsultaioStore,
     private registroSolicitudService: RegistroSolicitudService
   ) {
     this.consultaQuery.selectConsultaioState$
-    .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-    .subscribe((seccionState) => {
-      this.consultaState = seccionState;
-      if(seccionState.update){
-              this.guardarDatosFormulario();
-      }
-      else{
-           this.RENDERDOM=true;
-      }
-    });
- 
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((seccionState) => {
+        this.consultaState = seccionState;
+        if (seccionState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.RENDERDOM = true;
+        }
+      });
   }
 
   /**
@@ -164,47 +197,40 @@ export class PasoUnoComponent implements OnDestroy {
     this.indice = i;
   }
 
-  
   /**
    * Método que valida todos los formularios del paso uno del trámite de acuicultura.
    * Verifica la validez de cada sección: solicitante, datos de solicitud, movilización, terceros y pagos.
    * @public
    * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario
    * @memberof PasoUnoComponent
-   */ 
+   */
   public async validarFormularios(): Promise<boolean> {
-  const tabsValidadas = [
-    { index: 2, ref: this.datosSolicitud },
-    { index: 3, ref: this.datosParaMovilizacion },
-    { index: 4, ref: this.tercerospage },
-    { index: 5, ref: this.pagoDerechos }
-  ];
+    const TABSVALIDADAS = [
+      { index: 2, ref: this.datosSolicitud },
+      { index: 3, ref: this.datosParaMovilizacion },
+      { index: 4, ref: this.tercerospage },
+      { index: 5, ref: this.pagoDerechos },
+    ];
 
     // Validación síncrona de pestañas
-  for (const tab of tabsValidadas) {
-    const validaPestañas = tab.ref.validarFormulario();
+    for (const TAB of TABSVALIDADAS) {
+      const VALIDAPESTANAS = TAB.ref.validarFormulario();
 
-    if (!validaPestañas) {
-      this.indice = tab.index;
-      return false;
+      if (!VALIDAPESTANAS) {
+        this.indice = TAB.index;
+        return false;
+      }
     }
-  }
 
     // Ahora sí, espera a guardarSolicitud()
     try {
-      const codigo = await firstValueFrom(this.guardarSolicitud());
-
-      if (codigo === "00") {
-        return true;
-      } else {
-        return false;
-      }
-
+      const CODIGO = await firstValueFrom(this.guardarSolicitud());
+      return CODIGO === '00';
     } catch (err) {
-      console.error("Error en guardarSolicitud:", err);
+      console.error('Error en guardarSolicitud:', err);
       return false;
     }
-}
+  }
 
   /**
    * Obtiene los datos de acuicultura y actualiza el estado del formulario.
@@ -213,59 +239,63 @@ export class PasoUnoComponent implements OnDestroy {
    * @public
    * @memberof PasoUnoComponent
    */
-async guardarDatosFormulario(): Promise<void> {
-  try {
-    const RESP = await firstValueFrom(
-      this.importacionDeAcuiculturaService.getAcuiculturaData().pipe(
-        takeUntil(this.DESTROY_NOTIFIER$)
-      )
-    );
-    if (RESP) {
-      await this.importacionDeAcuiculturaService.actualizarEstadoFormulario(RESP);
+  async guardarDatosFormulario(): Promise<void> {
+    try {
+      const RESP = await firstValueFrom(
+        this.importacionDeAcuiculturaService
+          .getAcuiculturaData()
+          .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      );
+      if (RESP) {
+        await this.importacionDeAcuiculturaService.actualizarEstadoFormulario(
+          RESP
+        );
+      }
+      this.RENDERDOM = true;
+    } catch (error) {
+      this.RENDERDOM = true;
     }
-    this.RENDERDOM = true;
-
-  } catch (error) {
-    this.RENDERDOM = true;
   }
-}
 
   /**
    * Guarda la solicitud.
    * @method guardarSolicitud
    */
   guardarSolicitud(): Observable<string> {
-
-    return this.importacionDeAcuiculturaService.getAllDatosForma()
-      .pipe(
-        take(1), // solo la primera emisión
-        map(datos => this.crearPayload(datos)), // crear payload
-        switchMap(payload =>
-          this.registroSolicitudService.guardarSolicitud(220203, payload).pipe(take(1))
-        ),
-        tap(data => {
-          this.consultaioStore.update(state => ({
-            ...state,
-            id_solicitud: data.datos?.id_solicitud?.toString() ?? ''
-          }));
-        }),
-        map(data => data.codigo),
-        catchError(err => {
-          console.error('Error guardando solicitud:', err);
-          return 'error';
-
-        })
-      );
+    return this.importacionDeAcuiculturaService.getAllDatosForma().pipe(
+      take(1), // solo la primera emisión
+      map((datos) => this.crearPayload(datos)), // crear payload
+      switchMap((payload) =>
+        this.registroSolicitudService
+          .guardarSolicitud(220203, payload)
+          .pipe(take(1))
+      ),
+      tap((data) => {
+        this.consultaioStore.update((state) => ({
+          ...state,
+          id_solicitud: data.datos?.id_solicitud?.toString() ?? '',
+        }));
+      }),
+      map((data) => data.codigo),
+      catchError((err) => {
+        console.error('Error guardando solicitud:', err);
+        return 'error';
+      })
+    );
   }
 
   private crearPayload(datos: Acuicultura): GuardarSolicitud {
-    console.log("crearPayload datos", JSON.stringify(datos));
     return {
-      id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
-        && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,
+      id_solicitud:
+        this.consultaState?.id_solicitud !== null &&
+        this.consultaState?.id_solicitud !== '' &&
+        !isNaN(Number(this.consultaState?.id_solicitud))
+          ? Number(this.consultaState?.id_solicitud)
+          : null,
       datos_solicitud: {
         cve_aduana: datos.realizarGroup.aduanaIngreso!,
-        oficina_inspeccion_sanidad_agropecuaria: datos.realizarGroup.oficinaInspeccion,
+        oficina_inspeccion_sanidad_agropecuaria:
+          datos.realizarGroup.oficinaInspeccion,
         punto_inspeccion: datos.realizarGroup.puntoInspeccion,
         numero_autorizacion: datos.realizarGroup.numeroGuia!,
         clave_regimen: datos.realizarGroup.regimen,
@@ -289,56 +319,64 @@ async guardarDatosFormulario(): Promise<void> {
           clave_paises_procedencia: t.paisDeProcedencia ?? '',
           idNombreCientifico: '',
           descripción_especie: t.especie ?? '',
-          lista_detalle_mercancia: (t.lista_detalle_mercancia ?? []).map(x => ({
-            id_vida_silvestre: String(x.nombreCientifico)
-          }))
-        }))
+          lista_detalle_mercancia: (t.lista_detalle_mercancia ?? []).map(
+            (x) => ({
+              id_vida_silvestre: String(x.nombreCientifico),
+            })
+          ),
+        })),
       },
 
       transporte: {
         ide_medio_transporte: datos.formularioMovilizacion.medioDeTransporte,
-        identificacion_transporte: datos.formularioMovilizacion.identificacionTransporte,
-        ide_punto_verificacion: Number(datos.formularioMovilizacion.puntoVerificacion),
-        razon_social: datos.formularioMovilizacion.nombreEmpresaTransportista
+        identificacion_transporte:
+          datos.formularioMovilizacion.identificacionTransporte,
+        ide_punto_verificacion: Number(
+          datos.formularioMovilizacion.puntoVerificacion
+        ),
+        razon_social: datos.formularioMovilizacion.nombreEmpresaTransportista,
       },
 
       terceros: {
-        terceros_exportador: (datos.datosForma ?? []).map((t: DestinatarioForm) => ({
-          tipo_persona_sol: "TIPERS.EXP",
-          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
-          nombre: t.nombre,
-          apellido_paterno: t.primerApellido,
-          apellido_materno: t.segundoApellido ?? '',
-          razon_social: t.razonSocial,
-          pais: t.pais,
-          descripcion_ubicacion: t.domicilio ?? '',
-          lada: t.lada ?? '',
-          telefonos: t.telefono ?? '',
-          correo: t.correo ?? ''
-
-        })),
+        terceros_exportador: (datos.datosForma ?? []).map(
+          (t: DestinatarioForm) => ({
+            tipo_persona_sol: 'TIPERS.EXP',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            descripcion_ubicacion: t.domicilio ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
         // hay que ver que TercerosrelacionadosdestinoTable se quede asi o lo agreuemos al tramite
-        terceros_destinatario: (datos.tercerosRelacionados ?? []).map((t: TercerosrelacionadosdestinoTable) => ({
-          tipo_persona_sol: "TIPERS.DES",
-          persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
-          num_establ_tif: "",
-          nom_establ_tif: "",
-          nombre: t.nombre,
-          apellido_paterno: t.primerApellido,
-          apellido_materno: t.segundoApellido ?? '',
-          razon_social: t.razonSocial,
-          pais: t.pais,
-          codigo_postal: t.codigoPostal,
-          cve_entidad: t.estado,
-          cve_deleg_mun: t.municipio ?? '',
-          cve_colonia: t.colonia ?? '',
-          calle: t.calle,
-          num_exterior: t.numeroExterior,
-          num_interior: t.numeroInterior ?? '',
-          lada: t.lada ?? '',
-          telefonos: t.telefono ?? '',
-          correo: t.correo ?? ''
-        })),
+        terceros_destinatario: (datos.tercerosRelacionados ?? []).map(
+          (t: TercerosrelacionadosdestinoTable) => ({
+            tipo_persona_sol: 'TIPERS.DES',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            num_establ_tif: '',
+            nom_establ_tif: '',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            codigo_postal: t.codigoPostal,
+            cve_entidad: t.estado,
+            cve_deleg_mun: t.municipio ?? '',
+            cve_colonia: t.colonia ?? '',
+            calle: t.calle,
+            num_exterior: t.numeroExterior,
+            num_interior: t.numeroInterior ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
       },
 
       pago: {
@@ -349,32 +387,39 @@ async guardarDatosFormulario(): Promise<void> {
         cve_banco: datos.pagoDeDerechos.banco,
         llave_pago: datos.pagoDeDerechos.llavePago,
         fec_pago: formatFecha(datos.pagoDeDerechos.fechaPago) ?? '',
-        imp_pago: Number(datos.pagoDeDerechos.importePago)
+        imp_pago: Number(datos.pagoDeDerechos.importePago),
       },
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
         rfc: this.solicitante.datosGenerales?.datos.rfc_original ?? '',
-        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login
-        nombre: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitante.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitante.datosGenerales?.datos.identificacion.nombre ?? ''),
-        es_persona_moral: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
-        certificado_serial_number: 0 // no sabemos de donde se obtiene
+        rol_capturista: 'Solicitante', // suponemos se saca de la sesion pero aun no funciona login
+        nombre:
+          this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() ===
+          'm'
+            ? this.solicitante.datosGenerales?.datos.identificacion
+                .razon_social ?? ''
+            : this.solicitante.datosGenerales?.datos.identificacion.nombre ??
+              '',
+        es_persona_moral:
+          this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() ===
+          'm',
+        certificado_serial_number: 0, // no sabemos de donde se obtiene
       },
 
       representacion_federal: {
-        cve_entidad_federativa: "DGO", // aun no estan los datos login
-        cve_unidad_administrativa: "1016" // aun no hay datos login
-      }
+        cve_entidad_federativa: 'DGO', // aun no estan los datos login
+        cve_unidad_administrativa: '1016', // aun no hay datos login
+      },
     };
   }
-/**
- * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
- * Limpia los recursos suscritos y detiene las emisiones de datos para prevenir memory leaks.
- * @public
- * @memberof PasoUnoComponent
- */
-ngOnDestroy(): void {
-  this.DESTROY_NOTIFIER$.next();
-  this.DESTROY_NOTIFIER$.complete();
-}
-
+  /**
+   * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
+   * Limpia los recursos suscritos y detiene las emisiones de datos para prevenir memory leaks.
+   * @public
+   * @memberof PasoUnoComponent
+   */
+  ngOnDestroy(): void {
+    this.DESTROY_NOTIFIER$.next();
+    this.DESTROY_NOTIFIER$.complete();
+  }
 }

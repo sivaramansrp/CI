@@ -19,6 +19,7 @@ import { Subject } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrls: ['./paso-dos.component.scss'],
+  standalone: true,
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
 

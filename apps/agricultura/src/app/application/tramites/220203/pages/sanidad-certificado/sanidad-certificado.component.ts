@@ -1,9 +1,24 @@
-import { Component, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOSACUICULTURA, PRIVACY_NOTICE_CONTENT } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import {
+  ERROR_FORMA_ALERT,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOSACUICULTURA,
+  PRIVACY_NOTICE_CONTENT,
+} from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.module';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @fileoverview
@@ -17,16 +32,24 @@ import { map, Subject, takeUntil } from 'rxjs';
  * Componente principal para la gestión del certificado de sanidad en el trámite de importación de acuicultura.
  * Permite navegar entre los pasos del wizard, controla la validación de formularios y gestiona el estado del trámite.
  * Coordina la navegación entre diferentes secciones del proceso de importación.
- * 
+ *
  * @class SanidadCertificadoComponent
  * @memberof SanidadCertificadoComponent
  */
 @Component({
   selector: 'app-sanidad-certificado',
   templateUrl: './sanidad-certificado.component.html',
+  standalone: true,
+  imports: [
+    AlertComponent,
+    WizardComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent,
+  ],
 })
-export class SanidadCertificadoComponent {
-
+export class SanidadCertificadoComponent implements OnInit {
   /**
    * Indicador de validez del formulario para mostrar mensajes de error.
    * @public
@@ -37,15 +60,15 @@ export class SanidadCertificadoComponent {
   esFormaInValido: boolean = false;
 
   /**
- * Indica si ya se llenaron todos los formularios del paso 1.
- *
- * Se utiliza para mostrar/ocultar el alert azul.
- */
+   * Indica si ya se llenaron todos los formularios del paso 1.
+   *
+   * Se utiliza para mostrar/ocultar el alert azul.
+   */
   esPasoUnoCompleto: boolean = false;
 
   /**
- * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
- */
+   * @description mnsaje al terminar de llenar el paso uno correctamente y generar folio
+   */
   mensajePasos: string = '';
 
   /**
@@ -88,21 +111,21 @@ export class SanidadCertificadoComponent {
   public btnGuardarVisible: string = 'visible';
 
   /**
- * Notificador para destruir las suscripciones y evitar fugas de memoria.
- * @type {Subject<void>}
- * @private
- */
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
- * Estado de la consulta actual, contiene la información relevante del solicitante.
- * @type {ConsultaioState}
- */
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
   public consultaState!: ConsultaioState;
   /**
- * Variable para almacenar el id de la solicitud.
- * @private
- */
+   * Variable para almacenar el id de la solicitud.
+   * @private
+   */
   public idSolicitud: string = '';
 
   /**
@@ -135,13 +158,13 @@ export class SanidadCertificadoComponent {
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
- * Constructor del componente.
- * Este constructor inicializa el componente y establece el estado inicial de la validación
- * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
- * @constructor
- * @param consultaQuery
- */
-  constructor(private consultaQuery: ConsultaioQuery) { }
+   * Constructor del componente.
+   * Este constructor inicializa el componente y establece el estado inicial de la validación
+   * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
+   * @constructor
+   * @param consultaQuery
+   */
+  constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
     this.obtenerDatosDelStore();
   }
@@ -160,13 +183,11 @@ export class SanidadCertificadoComponent {
     if (this.indice === 1 && e.accion === 'cont') {
       const ES_VALIDO = await this.validarTodosFormulariosPasoUno();
       if (!ES_VALIDO) {
-        console.log("no es valido");
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
     }
-    console.log("es valido");
 
     this.esFormaInValido = false;
     this.esPasoUnoCompleto = true;
@@ -191,19 +212,17 @@ export class SanidadCertificadoComponent {
    */
   private async validarTodosFormulariosPasoUno(): Promise<boolean> {
     if (!this.pasoUnoComponent) {
-      console.log("!this.pasoUnoComponent");
-
       return true;
     }
-    const ES_FORMULARIO_VALIDO = await this.pasoUnoComponent.validarFormularios();
-    console.log("ES_FORMULARIO_VALIDO", ES_FORMULARIO_VALIDO);
+    const ES_FORMULARIO_VALIDO =
+      await this.pasoUnoComponent.validarFormularios();
 
     return ES_FORMULARIO_VALIDO;
   }
 
   /**
- * Obtiene los datos del store y los guarda utilizando el servicio.
- */
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
   obtenerDatosDelStore(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -220,5 +239,4 @@ export class SanidadCertificadoComponent {
       )
       .subscribe();
   }
-
 }
