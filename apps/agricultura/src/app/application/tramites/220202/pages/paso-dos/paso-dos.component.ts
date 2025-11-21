@@ -1,4 +1,10 @@
 import {
+  AlertComponent,
+  CargaDocumentoComponent,
+  TituloComponent,
+  Usuario,
+} from '@ng-mf/data-access-user';
+import {
   Component,
   EventEmitter,
   Input,
@@ -9,12 +15,6 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 import { TEXTOS_REQUISITOS } from '../../constantes/220202/fitosanitario.enums';
-import {
-  AlertComponent,
-  CargaDocumentoComponent,
-  TituloComponent,
-  Usuario,
-} from '@ng-mf/data-access-user';
 
 /**
  * Componente para mostrar el subtítulo del asistente.

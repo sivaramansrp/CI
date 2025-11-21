@@ -1,17 +1,17 @@
+import { Acuicultura, DestinatarioForm, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha } from '@ng-mf/data-access-user';
 import { Observable, Subject, catchError, firstValueFrom, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
+import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
 import{SolicitanteComponent} from '@libs/shared/data-access-user/src'
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
-import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
-import { Acuicultura, DestinatarioForm, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
-import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 
@@ -173,7 +173,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */ 
   public async validarFormularios(): Promise<boolean> {
-  const tabsValidadas = [
+  const TABS_VALIDADAS = [
     { index: 2, ref: this.datosSolicitud },
     { index: 3, ref: this.datosParaMovilizacion },
     { index: 4, ref: this.tercerospage },
@@ -181,30 +181,71 @@ export class PasoUnoComponent implements OnDestroy {
   ];
 
     // Validación síncrona de pestañas
-  for (const tab of tabsValidadas) {
-    const validaPestañas = tab.ref.validarFormulario();
+  for (const TAB of TABS_VALIDADAS) {
+    const VALIDA_PESTAÑAS = TAB.ref.validarFormulario();
 
-    if (!validaPestañas) {
-      this.indice = tab.index;
+    if (!VALIDA_PESTAÑAS) {
+      this.indice = TAB.index;
       return false;
     }
   }
 
     // Ahora sí, espera a guardarSolicitud()
     try {
-      const codigo = await firstValueFrom(this.guardarSolicitud());
+      const CODIGO = await firstValueFrom(this.guardarSolicitud());
 
-      if (codigo === "00") {
+      if (CODIGO === "00") {
         return true;
-      } else {
-        return false;
       }
+      // else {
+        return false;
+      // }
 
     } catch (err) {
       console.error("Error en guardarSolicitud:", err);
       return false;
     }
 }
+
+  /**
+   * @description Valida todos los formularios del paso uno
+   * @method validarFormularios
+   * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
+   */
+  public validarFormulariosDos(): { valido: boolean; mensaje?: string } {
+    const TABS_VALIDADAS = [
+      { index: 2, ref: this.datosSolicitud },
+      { index: 3, ref: this.datosParaMovilizacion },
+      { index: 4, ref: this.tercerospage },
+      { index: 5, ref: this.pagoDerechos }
+    ];
+
+    let esValido = true;
+
+    for (const TAB of TABS_VALIDADAS) {
+      const VALIDA_PESTAÑAS = TAB.ref.validarFormulario();
+      if (TAB.ref && !VALIDA_PESTAÑAS) {
+        this.indice = TAB.index; // mover a la pestaña con error
+        esValido = false;
+        return { valido: esValido, mensaje: '' };
+      }
+    }
+    if (esValido) {
+      this.guardarSolicitud().subscribe({
+        next: (codigo) => {
+          if (codigo === '00') {
+            return {
+              valido: esValido,
+              mensaje: this.consultaState.id_solicitud,
+            };
+          }
+          esValido = false;
+          return { valido: esValido };
+        },
+      });
+    }
+    return { valido: esValido };
+  }
 
   /**
    * Obtiene los datos de acuicultura y actualiza el estado del formulario.
@@ -259,7 +300,6 @@ async guardarDatosFormulario(): Promise<void> {
   }
 
   private crearPayload(datos: Acuicultura): GuardarSolicitud {
-    console.log("crearPayload datos", JSON.stringify(datos));
     return {
       id_solicitud: this.consultaState?.id_solicitud !== null && this.consultaState?.id_solicitud !== ''
         && !isNaN(Number(this.consultaState?.id_solicitud)) ? Number(this.consultaState?.id_solicitud) : null,

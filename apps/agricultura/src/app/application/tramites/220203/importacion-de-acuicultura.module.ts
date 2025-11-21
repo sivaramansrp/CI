@@ -7,13 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
-  BtnContinuarComponent,
+  BtnContinuarComponent, CargaDocumentoComponent,
   CatalogoSelectComponent,
   CrosslistComponent,
   FirmaElectronicaComponent,
   InputCheckComponent,
   InputFechaComponent,
-  InputRadioComponent,
+  InputRadioComponent, PasoFirmaComponent,
   SolicitanteComponent,
   TablaDinamicaComponent,
   TableComponent,
@@ -22,12 +22,13 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { ImportacionDeAcuiculturaRoutingModule } from './importacion-de-acuicultura-routing.module';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
 
@@ -37,8 +38,6 @@ import { DatosParaMovilizacionComponent } from './components/datos-para-moviliza
 
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 
 
@@ -46,7 +45,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
   declarations: [
     PasoDosComponent,
     PasoTresComponent,
-    SanidadCertificadoComponent
+    SanidadCertificadoComponent,
   ],
   imports: [
     CommonModule,
@@ -74,9 +73,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     CatalogoSelectComponent,
     TercerosComponent,
     ToastrModule.forRoot(),
+    CargaDocumentoComponent,
+    PasoFirmaComponent,
   ],
-  providers: [
-    ToastrService
-  ]
+  providers: [ToastrService],
 })
-export class ImportacionDeAcuiculturaModule { }
+export class ImportacionDeAcuiculturaModule {}
