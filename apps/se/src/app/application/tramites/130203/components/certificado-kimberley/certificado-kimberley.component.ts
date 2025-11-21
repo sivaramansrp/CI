@@ -3,7 +3,9 @@ import {
   Catalogo,
   ConsultaioQuery,
   REGEX_NUMERO_DECIMAL_3_DIGITOS,
+  REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL,
   REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY,
+  REGEX_SIN_DIGITOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -545,7 +547,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         VALUE_STRING.split('.')[0] : VALUE_STRING;
       
       // Contar solo los dígitos de la parte entera
-      const INTEGER_DIGITS = INTEGER_PART.replace(/\D/g, '');
+      const INTEGER_DIGITS = INTEGER_PART.replace(REGEX_SIN_DIGITOS, '');
       
       if (INTEGER_DIGITS.length > maxDigits) {
         return { maxDigits: { actualLength: INTEGER_DIGITS.length, maxLength: maxDigits } };
@@ -567,7 +569,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     const FIELD_ID = INPUT.id; // Obtener el ID del campo (valorDeLosDiamantes o cantidadEnQuilates)
     
     // Filtrar solo números y puntos decimales
-    const FILTERED_VALUE = String(VALUE).replace(/[^0-9.]/g, '');
+    const FILTERED_VALUE = String(VALUE).replace(REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL, '');
     
     // Solo actualizar si el valor cambió después del filtro
     if (VALUE !== FILTERED_VALUE) {

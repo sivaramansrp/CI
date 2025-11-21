@@ -1341,6 +1341,15 @@ export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
 export const REGEX_REMOVE_COMA = /,/g;
 
 /**
+ * Expresión regular para eliminar todos los caracteres que no sean números o punto decimal.
+ * @ejemplo
+ * // Uso de la expresión regular para eliminar caracteres no numéricos
+ * const cadena = "abc123.45def";
+ * const soloNumerosYPunto = cadena.replace(REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL, ''); // Resultado: "123.45"
+ */
+export const REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL = /[^0-9.]/g;
+
+/**
  * Expresión regular para validar números decimales con hasta 3 dígitos decimales opcionales.
  * Ejemplos no válidos:
  * - "123.4567" (más de 3 decimales)
