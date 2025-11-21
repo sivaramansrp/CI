@@ -17,43 +17,48 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   indice: number = 1;
 
   /** Estado actual de la consulta obtenido desde el store. */
-  public consultaState!:ConsultaioState;
+  public consultaState!: ConsultaioState;
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-   /**
-   * Constructor del componente DatosComponent.
-   * Inyecta los servicios necesarios para la gestión de pantallas, obtención y actualización de datos,
-   * así como la consulta del estado desde el store.
-   *
-   * @param {service260702Service} Service260702Service - Servicio para obtener y actualizar los datos del formulario del trámite 260702.
-   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual desde el store.
+  /**
+   * ID del procedimiento asociado al trámite.
+   * Este campo almacena el identificador único del procedimiento.
    */
+  public idProcedimiento: number = 260702;
+  /**
+  * Constructor del componente DatosComponent.
+  * Inyecta los servicios necesarios para la gestión de pantallas, obtención y actualización de datos,
+  * así como la consulta del estado desde el store.
+  *
+  * @param {service260702Service} Service260702Service - Servicio para obtener y actualizar los datos del formulario del trámite 260702.
+  * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual desde el store.
+  */
   constructor(
     private service260702Service: Service260702Service,
     private consultaQuery: ConsultaioQuery
   ) {
-// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
-/**
-   * Método del ciclo de vida `ngOnInit`.
-   * Inicializa el componente y sus dependencias.
-   * Suscribe al observable del estado de consulta para obtener el estado actual desde el store.
-   * Si el estado indica que hay una actualización pendiente (`update`), llama al método para guardar los datos del formulario.
-   * En caso contrario, activa la bandera para mostrar los datos de respuesta.
-   */
+  /**
+     * Método del ciclo de vida `ngOnInit`.
+     * Inicializa el componente y sus dependencias.
+     * Suscribe al observable del estado de consulta para obtener el estado actual desde el store.
+     * Si el estado indica que hay una actualización pendiente (`update`), llama al método para guardar los datos del formulario.
+     * En caso contrario, activa la bandera para mostrar los datos de respuesta.
+     */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.consultaState = seccionState;
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
     })).subscribe();
-      if(this.consultaState.update) {
-          this.guardarDatosFormulario();
-        } else {
-          this.esDatosRespuesta = true;
-        }
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -65,9 +70,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.service260702Service.actualizarEstadoFormulario(resp);
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.service260702Service.actualizarEstadoFormulario(resp);
         }
       });
   }
@@ -79,14 +84,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-   /**
-   * Método del ciclo de vida `ngOnDestroy`.
-   * Se ejecuta cuando el componente es destruido.
-   * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
-   *
-   * @example
-   * // Angular llama automáticamente a este método al destruir el componente.
-   */
+  /**
+  * Método del ciclo de vida `ngOnDestroy`.
+  * Se ejecuta cuando el componente es destruido.
+  * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
+  *
+  * @example
+  * // Angular llama automáticamente a este método al destruir el componente.
+  */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
