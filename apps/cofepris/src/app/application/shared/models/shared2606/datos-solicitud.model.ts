@@ -253,6 +253,8 @@ export enum TablaSeleccion {
  */
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
+  paisDestino?: string;
+  paisDeOrigen?: string;
   claveClasificacionProductoObj ?: Catalogo | undefined;
   especificarClasificacionObj ?: Catalogo | undefined;
   tipoProductoObj ?: Catalogo | undefined;
@@ -260,7 +262,10 @@ export interface TablaMercanciasDatos {
   estadoFisicoObj ?: Catalogo | undefined;
   cantidadUMCObj ?: Catalogo | undefined;
   especificarClasificacionProducto: string;
-  denominacionEspecificaProducto?: string;
+  denominacionComunInternacional?: string;
+  PorcentajeDeConcentracion?: string;
+  valorComercial?: string;
+  marcaComercialODenominacionDistintiva?: string;
   denominacionDistintiva?: string;
   denominacionComun?: string;
   formaFarmaceutica: string;
@@ -292,7 +297,7 @@ export interface TablaMercanciasDatos {
   especifiqueForma?: string;
   especifiqueEstado?:string;
   especifiqueObligatorio?:string;
-  fechaCaducidad?: string;
+  fechaDeMovimiento?: string;
   paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
   id?: number
@@ -404,7 +409,7 @@ export interface DatosSolicitudFormState {
  * @property {string} cantidadUmc - Unidad de medida de comercialización.
  * @property {string} presentacion - Presentación del producto.
  * @property {string} numeroRegistroSanitario - Registro sanitario.
- * @property {string} fechaCaducidad - Fecha de caducidad.
+ * @property {string} fechaDeMovimiento - Fecha de caducidad.
  * @property {string[]} paisDeOriginDatos - Países de origen.
  * @property {string[]} paisDeProcedenciaDatos - Países de procedencia.
  */
@@ -425,7 +430,7 @@ export interface MercanciaForm {
   cantidadUmc: string;
   presentacion: string;
   numeroRegistroSanitario: string;
-  fechaCaducidad: string;
+  fechaDeMovimiento: string;
   paisDeOriginDatos: string[];
   paisDeProcedenciaDatos: string[];
   usoEspecifico?: string[]
@@ -458,7 +463,7 @@ export interface MercanciaForm {
  * @property {string} cantidadUmc - Unidad de medida de comercialización.
  * @property {string} presentacion - Presentación del producto.
  * @property {string} numeroRegistroSanitario - Registro sanitario.
- * @property {string} fechaCaducidad - Fecha de caducidad.
+ * @property {string} fechaDeMovimiento - Fecha de caducidad.
  * @property {string[]} paisDeOriginDatos - Países de origen.
  * @property {string[]} paisDeProcedenciaDatos - Países de procedencia.
  */

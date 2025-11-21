@@ -10,6 +10,7 @@ import {
   CatalogoSelectComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -80,6 +81,7 @@ export class DetalleMercanciaComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService,
     public datosSolicitudService: DatosSolicitudService
   ) {
     this.formaDetalleMercancia = this.fb.group({
@@ -107,11 +109,8 @@ export class DetalleMercanciaComponent implements OnInit {
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
    */
   // eslint-disable-next-line class-methods-use-this
-  public isValid(control: AbstractControl, campo?: string): boolean | null {
-    if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
-    }
-    return control.errors && control.touched;
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
   /**

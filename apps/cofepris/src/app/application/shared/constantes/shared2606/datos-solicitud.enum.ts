@@ -169,7 +169,7 @@ export const PRODUCTO_TABLA = [
   {
     encabezado: 'Denominación específica del producto',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+      ele.denominacionComunInternacional, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
@@ -272,7 +272,7 @@ export const PRODUCTO_TABLA_218 = [
   {
     encabezado: 'Denominación específica del producto',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.denominacionEspecificaProducto,
+      ele.denominacionComunInternacional,
     orden: 3,
   },
   {
@@ -377,7 +377,7 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
   {
     clasificacionProducto: '1',
     especificarClasificacionProducto: '',
-    denominacionEspecificaProducto: 'QA',
+    denominacionComunInternacional: 'QA',
     denominacionDistintiva: 'QA',
     denominacionComun: 'QA',
     formaFarmaceutica: '',
@@ -492,7 +492,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
       {
         clasificacionProducto: 'Dispositivo Médico',
         especificarClasificacionProducto: 'Instrumental Médico',
-        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        denominacionComunInternacional: 'Estetoscopio Digital',
         formaFarmaceutica: 'N/A',
         estadoFisico: 'Sólido',
         fraccionArancelaria: '9018.11.01',
@@ -550,7 +550,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
     mercancias: [ {
       clasificacionProducto: 'Dispositivo Médico',
       especificarClasificacionProducto: 'Instrumental Médico',
-      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      denominacionComunInternacional: 'Estetoscopio Digital',
       formaFarmaceutica: 'N/A',
       estadoFisico: 'Sólido',
       fraccionArancelaria: '9018.11.01',
@@ -568,7 +568,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
     {
       clasificacionProducto: 'Dispositivo Médico',
       especificarClasificacionProducto: 'Instrumental Médico',
-      denominacionEspecificaProducto: 'Estetoscopio Digital',
+      denominacionComunInternacional: 'Estetoscopio Digital',
       formaFarmaceutica: 'N/A',
       estadoFisico: 'Sólido',
       fraccionArancelaria: '9018.11.01',
@@ -627,7 +627,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
       {
         clasificacionProducto: 'Dispositivo Médico',
         especificarClasificacionProducto: 'Instrumental Médico',
-        denominacionEspecificaProducto: 'Estetoscopio Digital',
+        denominacionComunInternacional: 'Estetoscopio Digital',
         formaFarmaceutica: 'N/A',
         estadoFisico: 'Sólido',
         fraccionArancelaria: '9018.11.01',
@@ -1107,6 +1107,11 @@ export const CAMPOS_CLAVE = [
   'fechaDeCaducidad',
 ];
 
+export const FECHA_DE_MOVIMIENTO = {
+    labelNombre: 'Fecha de movimiento en caso de importación o exportación:',
+  required: false,
+  habilitado: true,
+}
 /**
  * Lista de identificadores de procedimientos en los que
  * el campo de **Representante Legal** debe inicializarse.

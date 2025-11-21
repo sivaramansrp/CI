@@ -35,6 +35,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
 import {
   CAMPOS_CLAVE,
@@ -43,6 +44,7 @@ import {
   DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
   ES_VALIDO_REGISTRO_O_VENCIMIENTO,
   FEACCION_AFRACCION_ARANCELARIA_CATALOG,
+  FECHA_DE_MOVIMIENTO,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
 } from '../../../constantes/shared2606/datos-solicitud.enum';
@@ -94,15 +96,15 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
-   /**
-   * Event emitter to notify parent component to close the modal
-   */
+  /**
+  * Event emitter to notify parent component to close the modal
+  */
   @Output() cerrarModal = new EventEmitter<void>();
 
-  requiedField:boolean = false;
+  requiedField: boolean = false;
 
 
-  fraccionArancelariaCatalog:boolean = true;
+  fraccionArancelariaCatalog: boolean = true;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -159,14 +161,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Referencias a los componentes de listas cruzadas.
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
-
-  /**
-   * @event eliminarMercanciaDatos
-   * @description EventEmitter that emits an array of merchandise items to be deleted.
-   * This is used to notify the parent component about the deletion of selected merchandise items.
-   */
-  @Output() eliminarMercanciaDatos: EventEmitter<DetalleMercancia[]> =
-    new EventEmitter<DetalleMercancia[]>(true);
 
   /**
    * @description
@@ -247,12 +241,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   public elementosRequirdos: string[] = [];
 
-  /** Etiquetas personalizadas para los crosslists */
-  public paisDeOriginLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionado(s)',
-  };
-
   /**
    * @description
    * Objeto que representa una nueva notificación.
@@ -267,15 +255,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   pedimentos: Array<Pedimento> = [];
 
-  /**
-   * @property {CrossListLable} paisDeProcedenciaLabel
-   * Etiqueta personalizada para el componente de lista cruzada de país de procedencia.
-   * Define los títulos mostrados en la parte izquierda y derecha del componente.
-   */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionados',
-  };
 
   /**
    * @property {CrossListLable} usoEspesificoLabel
@@ -290,7 +269,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
-  paisDeProcedenciaBotonsUno = [
+  paisDeProcedenciaBotonsTres = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
@@ -313,57 +292,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     },
   ];
 
-  /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
-   */
-  paisDeProcedenciaBotonsDos = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[1].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[1].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
-    },
-  ];
-
-  /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
-   */
-  paisDeProcedenciaBotonsTres = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
-    },
-  ];
 
   /**
    * @property {string[]} seleccionadasPaisDeOriginDatos
@@ -372,22 +300,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   public seleccionadasPaisDeOriginDatos: string[] = [];
 
   /**
-   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
-   * Lista de países seleccionados como procedencia.
-   */
-  public seleccionadasPaisDeProcedenciaDatos: string[] = [];
-
-  /**
    * @property {string[]} seleccionadasUsoEspesificoDatos
    * Lista de usos específicos seleccionados.
    */
   public seleccionadasUsoEspesificoDatos: string[] = [];
-
-  /**
-   * @property {Catalogo[]} paisDeProcedenciaDatos
-   * Datos de países para la lista cruzada de procedencia.
-   */
-  public paisDeProcedenciaDatos: string[] = [];
 
   /**
    * @property {Catalogo[]} usoEspesificoDatos
@@ -425,7 +341,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
-  tipoFOFA='FOFA.OTR';
+  tipoFOFA = 'FOFA.OTR';
 
   /**
    * @property {Subscription} subscription
@@ -471,6 +387,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
+    private validacionesService: ValidacionesFormularioService,
     private catalogoService: CatalogoServices
   ) {
     this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
@@ -496,8 +413,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * `agregar()` o `quitar()` según corresponda.
    */
   ngAfterViewInit(): void {
-    //this.fraccionArancelariaCatalog = !FEACCION_AFRACCION_ARANCELARIA_CATALOG.includes(this.idProcedimiento);
-    this.paisDeProcedenciaBotonsUno = [
+    this.paisDeProcedenciaBotonsTres = [
       {
         btnNombre: 'Agregar todos',
         class: 'btn-default',
@@ -519,52 +435,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         funcion: (): void => this.crossList.toArray()[0].quitar('t'),
       },
     ];
-    this.paisDeProcedenciaBotonsDos = [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[1].agregar('t'),
-      },
-      {
-        btnNombre: 'Agregar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[1].agregar(''),
-      },
-      {
-        btnNombre: 'Restar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[1].quitar(''),
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[1].quitar('t'),
-      },
-    ];
-    this.paisDeProcedenciaBotonsTres = [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[2].agregar('t'),
-      },
-      {
-        btnNombre: 'Agregar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[2].agregar(''),
-      },
-      {
-        btnNombre: 'Restar selección',
-        class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[2].quitar(''),
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[2].quitar('t'),
-      },
-    ];
 
-    if( this.mercanciaForm.get('clasificacionProducto')?.value){
+    if (this.mercanciaForm.get('clasificacionProducto')?.value) {
       this.onCambioClasificacionProducto(this.datoSeleccionado?.claveClasificacionProductoObj);
     }
   }
@@ -575,6 +447,26 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     }
   }
 
+  onSeleccionarPaisDeOrigen(event: any): void {
+    const SELECCIONADOS = event.seleccionados;
+    this.mercanciaForm
+      .get('paisDeOrigen')
+      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+  }
+
+  onSeleccionarPaisDeProcedencia(event: any): void {
+    const SELECCIONADOS = event.seleccionados;
+    this.mercanciaForm
+      .get('paisProcedencia')
+      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+  }
+
+  onSeleccionarPaisDeDestino(event: any): void {
+    const SELECCIONADOS = event.seleccionados;
+    this.mercanciaForm
+      .get('paisDestino')
+      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+  }
   /**
    * @method ngOnInit
    * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
@@ -595,20 +487,17 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Realiza llamadas básicas a la API para obtener los catálogos y asignarlos a las propiedades correspondientes.
    */
   inicializarCrosslist(): void {
+
+    //pais de procedencia
     this.subscription.add(
       this.catalogoService
         .paisesCatalogo(String(this.idProcedimiento))
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
-          if (response && Array.isArray(response.datos)) {
-            this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
-            const SELECTED = this.mercanciaForm.getRawValue();
-            this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
-              ? SELECTED.paisDeOriginDatos
-              : SELECTED.paisDeOriginDatos
-              ? [SELECTED.paisDeOriginDatos]
-              : [];
-              this.seleccionadasPaisDeOriginDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeOriginDatos));
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.paisDeProcedenciaDatos = DATOS;
           }
         })
     );
@@ -619,18 +508,28 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .paisesCatalogo(String(this.idProcedimiento))
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
-          if (response && Array.isArray(response.datos)) {
-            this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
-            const SELECTED = this.mercanciaForm.getRawValue();
-            this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
-              ? SELECTED.paisDeProcedenciaDatos
-              : SELECTED.paisDeProcedenciaDatos
-              ? [SELECTED.paisDeProcedenciaDatos]
-              : [];
-              this.seleccionadasPaisDeProcedenciaDatos = JSON.parse(JSON.stringify(this.seleccionadasPaisDeProcedenciaDatos));
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.paisDestinoDatos = DATOS;
           }
         })
     );
+
+    // País de origen
+     this.subscription.add(
+      this.catalogoService
+        .paisesCatalogo(String(this.idProcedimiento))
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const DATOS = response.datos as Catalogo[];
+
+          if (response) {
+            this.paisDeOrigenDatos = DATOS;
+          }
+        })
+    );
+
 
     // Uso específico
     this.subscription.add(
@@ -644,9 +543,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
             this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
               ? SELECTED.usoEspecifico
               : SELECTED.usoEspecifico
-              ? [SELECTED.usoEspecifico]
-              : [];
-              this.seleccionadasUsoEspesificoDatos = JSON.parse(JSON.stringify(this.seleccionadasUsoEspesificoDatos));
+                ? [SELECTED.usoEspecifico]
+                : [];
+            this.seleccionadasUsoEspesificoDatos = JSON.parse(JSON.stringify(this.seleccionadasUsoEspesificoDatos));
           }
         })
     );
@@ -714,18 +613,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         })
     );
 
-    this.subscription.add(
-      this.catalogoService
-        .formaFarmaceuticaCatalogo(tramite)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((response) => {
-          const DATOS = response.datos as Catalogo[];
+    // this.subscription.add(
+    //   this.catalogoService
+    //     .formaFarmaceuticaCatalogo(tramite)
+    //     .pipe(takeUntil(this.destroyNotifier$))
+    //     .subscribe((response) => {
+    //       const DATOS = response.datos as Catalogo[];
 
-          if (response) {
-            this.formaFarmaceuticaDatos = DATOS;
-          }
-        })
-    );
+    //       if (response) {
+    //         this.formaFarmaceuticaDatos = DATOS;
+    //       }
+    //     })
+    // );
 
     this.subscription.add(
       this.catalogoService
@@ -739,7 +638,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           }
         })
     );
-   
+
     this.subscription.add(
       this.catalogoService
         .unidadesMedidaComercialCatalogo(tramite)
@@ -811,6 +710,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
 
   fechaDeCaducidadInputMercanica: InputFecha = FECHA_DE_CADUCIDAD_MERCANICA;
 
+  fechaDeMovimientoInput: InputFecha = FECHA_DE_MOVIMIENTO;
+
+  paisDestinoDatos: Catalogo[] = [];
+
+  paisDeProcedenciaDatos: Catalogo[] = [];
+
+  paisDeOrigenDatos: Catalogo[] = [];
   /**
    * @property {InputFecha} fechaDeCaducidadInput
    * Objeto con la configuración de la fecha inicial del componente.
@@ -823,16 +729,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
    */
   crossListRequirdos(): void {
-    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes(
-      'paisDeOrigen'
-    )
-      ? 'País(es) seleccionado(s)*:'
-      : 'País(es) seleccionado(s)*:';
-    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes(
-      'paisDeProcedencia'
-    )
-      ? 'País(es) seleccionado(s)*:'
-      : 'País(es) seleccionado(s)*:';
     this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes(
       'usoEspecífico'
     )
@@ -854,143 +750,35 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosNoValidos = [
           'denominacionDistintiva',
           'denominacionComun',
-          'formaFarmaceutica',
-          'estadoFisico',
-          'presentacion',
           'numeroRegistroSanitario',
-          'fechaCaducidad',
+          'formaFarmaceutica',
         ];
         this.elementosAnadidos = [
+          'estadoFisico',
           'especifique',
           'fechaDeFabricacio',
-          'fechaDeCaducidad',
-        ];
-        break;
-        this.elementosNoValidos = [
-          'denominacionDistintiva',
-          'denominacionComun',
-          'formaFarmaceutica',
-          'estadoFisico',
           'presentacion',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosAnadidos = [
-          'marca',
-          'claveDeLos',
-          'fechaDeFabricacio',
-          'fechaDeCaducidad',
         ];
         break;
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [
             'denominacionDistintiva',
+            'denominacionComun',
+            'numeroRegistroSanitario',
             'formaFarmaceutica',
+          ];
+          this.elementosAnadidos = [
+            'estadoFisico',
+            'especifique',
+            'fechaDeFabricacio',
+            'presentacion',
           ];
         }
         break;
     }
   }
 
-  /**
-   * Restablece los valores de los campos clave en el formulario.
-   */
-  modificarClave(): void {
-    
-    if (!this.claveLista.length) {
-      return;
-    }
-    const CLAVES_A_ELIMINAR = new Set(
-      this.claveLista.map((item) => item.clave)
-    );
-    const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
-    const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
-    const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
-    for (let i = 0; i < this.claveConfig.datos.length; i++) {
-      const ITEM = this.claveConfig.datos[i];
-      if (CLAVES_A_ELIMINAR.has(ITEM.clave)) {
-        this.claveConfig.datos[i] = {
-          clave: CLAVE,
-          fabricacion: FABRICACION,
-          caducidad: CADUCIDAD,
-        };
-        break;
-      }
-    }
-  }
-
-  /**
-   * Actualiza la lista de claves y ajusta los valores del formulario de mercancía
-   * según la fila seleccionada en la configuración de claves.
-   *
-   * @param event - Arreglo de configuraciones de claves de mercancía (`TablaMercanciaClaveConfig[]`).
-   *                Contiene las claves que se utilizarán para actualizar la lista.
-   *
-   * - Si la lista de claves está vacía, la función no realiza ninguna acción.
-   * - Busca en los datos de configuración de claves una fila que coincida con las claves proporcionadas.
-   * - Si se encuentra una fila coincidente, actualiza los valores del formulario de mercancía
-   *   con los datos de la fila seleccionada, incluyendo la clave, la fecha de fabricación
-   *   y la fecha de caducidad.
-   */
-  claveListaFn(event: TablaMercanciaClaveConfig[]): void {
-    this.claveLista = event;
-    if (!this.claveLista.length) {
-      return;
-    }
-    const CLAVES_A_ELIMINAR = new Set(
-      this.claveLista.map((item) => item.clave)
-    );
-    const FILA_SELECCIONADA = this.claveConfig.datos.find((item) =>
-      CLAVES_A_ELIMINAR.has(item.clave)
-    );
-    if (FILA_SELECCIONADA) {
-      this.mercanciaForm.patchValue({
-        claveDeLos: FILA_SELECCIONADA.clave,
-        fechaDeFabricacio: FILA_SELECCIONADA.fabricacion,
-        fechaDeCaducidad: FILA_SELECCIONADA.caducidad,
-      });
-    }
-  }
-  /**
-   * Agrega una nueva clave a la lista `claveConfig.datos`
-   * solo si los valores de los campos no están vacíos.
-   */
-  agregarClave(): void {
-    const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
-    const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
-    const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
-    if (CLAVE && FABRICACION && CADUCIDAD) {
-      this.claveConfig.datos = [
-        ...this.claveConfig.datos,
-        {
-          id: (this.claveConfig.datos.length || 0) + 1,
-          clave: CLAVE,
-          fabricacion: FABRICACION,
-          caducidad: CADUCIDAD,
-        },
-      ];
-      this.mercanciaForm.get('claveDeLos')?.reset();
-      this.mercanciaForm.get('fechaDeFabricacio')?.reset();
-      this.mercanciaForm.get('fechaDeCaducidad')?.reset();
-    }
-  }
-
-  /**
-   * Elimina las claves seleccionadas en `claveLista` de `claveConfig.datos`.
-   * Si la lista de claves a eliminar está vacía, no hace nada.
-   */
-  eliminarClave(): void {
-    if (!this.claveLista.length) {
-      return;
-    }
-    const CLAVES_A_ELIMINAR = new Set(
-      this.claveLista.map((item) => item.clave)
-    );
-    this.claveConfig.datos = this.claveConfig.datos.filter(
-      (item) => !CLAVES_A_ELIMINAR.has(item.clave)
-    );
-  }
 
   /**
    * Crea y configura el formulario reactivo para la gestión de datos de mercancía.
@@ -1015,260 +803,249 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * - `cantidadUmc`: Unidad de medida comercial (requerido).
    * - `presentacion`: Presentación del producto (requerido).
    * - `numeroRegistroSanitario`: Número de registro sanitario (requerido).
-   * - `fechaCaducidad`: Fecha de caducidad del producto (opcional).
+   * - `fechaDeMovimiento`: Fecha de caducidad del producto (opcional).
    * - `paisDeOriginDatos`: País de origen del producto (requerido).
    * - `paisDeProcedenciaDatos`: País de procedencia del producto (requerido).
    *
    * @returns void
    */
   crearMercanciaForm(): void {
-  const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
-  const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
-  const PAIS_DE_PROCEDENCIA = this.obtenerValor('paisDeProcedenciaDatos') || [];
+    const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
+    this.seleccionadasUsoEspesificoDatos = this.convertToStringArray(USO_ESPECIFICOS);
+    this.usoEspesificoColapsable = this.seleccionadasUsoEspesificoDatos.length > 0;
 
-  // Convert arrays properly
-  this.seleccionadasPaisDeOriginDatos = this.convertToStringArray(PAIS_DE_ORIGEN);
-  this.paisDeOriginColapsable = this.seleccionadasPaisDeOriginDatos.length > 0;
 
-  this.seleccionadasUsoEspesificoDatos = this.convertToStringArray(USO_ESPECIFICOS);
-  this.usoEspesificoColapsable = this.seleccionadasUsoEspesificoDatos.length > 0;
-
-  this.seleccionadasPaisDeProcedenciaDatos = this.convertToStringArray(PAIS_DE_PROCEDENCIA);
-  this.paisDeProcedenciaColapsable = this.seleccionadasPaisDeProcedenciaDatos.length > 0;
-
-  this.mercanciaForm = this.fb.group({
-    clasificacionProducto: [
-      this.obtenerValor('clasificacionProducto'),
-      [Validators.required],
-    ],
-    especificarClasificacionProducto: [
-      this.obtenerValor('especificarClasificacionProducto'),
-      [Validators.required],
-    ],
-    denominacionEspecificaProducto: [
-      this.obtenerValor('denominacionEspecificaProducto'),
-      [Validators.required],
-    ],
-    denominacionDistintiva: [
-      this.obtenerValor('denominacionDistintiva'),
-      [Validators.required],
-    ],
-    denominacionComun: [
-      this.obtenerValor('denominacionComun'),
-      [Validators.required],
-    ],
-    tipoProducto: [this.obtenerValor('tipoProducto'), [Validators.required]],
-    formaFarmaceutica: [
-      this.obtenerValor('formaFarmaceutica'),
-      [Validators.required],
-    ],
-    estadoFisico: [this.obtenerValor('estadoFisico'), [Validators.required]],
-    fraccionArancelaria: [
-      this.obtenerValor('fraccionArancelaria'),
-      [
-        Validators.required,
-        Validators.maxLength(8),
-        Validators.pattern(SOLO_REGEX_NUMEROS),
+    this.mercanciaForm = this.fb.group({
+      clasificacionProducto: [
+        this.obtenerValor('clasificacionProducto'),
+        [Validators.required],
       ],
-    ],
-    descripcionFraccion: [
-      {
-        value: this.obtenerValor('descripcionFraccion'),
-        disabled: this.elementosDeshabilitados.includes('descripcionFraccion'),
-      },
-      [Validators.required],
-    ],
-    cantidadUmtValor: [
-      this.obtenerValor('cantidadUmtValor'),
-      [
-        Validators.required,
-        Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroConDecimalesValidator()
+      especificarClasificacionProducto: [
+        this.obtenerValor('especificarClasificacionProducto'),
+        [Validators.required],
       ],
-    ],
-    cantidadUmt: [
-      {
-        value: this.obtenerValor('cantidadUmt'),
-        disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
-      },
-      [Validators.required],
-    ],
-    cantidadUmcValor: [
-      this.obtenerValor('cantidadUmcValor'),
-      [
-        Validators.required,
-        Validators.pattern(REGEX_DECIMAL),
-        DatosMercanciaComponent.numeroUMCDecimalesValidator(),
+      marcaComercialODenominacionDistintiva: [
+        this.obtenerValor('marcaComercialODenominacionDistintiva'),
+        [Validators.required],
+      ],
+      denominacionComunInternacional: [
+        this.obtenerValor('denominacionComunInternacional'),
+        [Validators.required],
+      ],
+      denominacionDistintiva: [
+        this.obtenerValor('denominacionDistintiva'),
+        [Validators.required],
+      ],
+      denominacionComun: [
+        this.obtenerValor('denominacionComun'),
+        [Validators.required],
+      ],
+      PorcentajeDeConcentracion: [
+        this.obtenerValor('PorcentajeDeConcentracion'),
+        [Validators.required],
+      ],
+      valorComercial: [
+        this.obtenerValor('valorComercial'),
+        [Validators.required],
+      ],
+      formaFarmaceutica: [this.obtenerValor('formaFarmaceutica'), [Validators.required]],
+      tipoProducto: [this.obtenerValor('tipoProducto'), [Validators.required]],
+      estadoFisico: [this.obtenerValor('estadoFisico'), [Validators.required]],
+      fraccionArancelaria: [
+        this.obtenerValor('fraccionArancelaria'),
+        [
+          Validators.required,
+          Validators.maxLength(8),
+          Validators.pattern(SOLO_REGEX_NUMEROS),
+        ],
+      ],
+      descripcionFraccion: [
+        {
+          value: this.obtenerValor('descripcionFraccion'),
+          disabled: this.elementosDeshabilitados.includes('descripcionFraccion'),
+        },
+        [Validators.required],
+      ],
+      cantidadUmcValor: [
+        this.obtenerValor('cantidadUmcValor'),
+        [
+          Validators.required,
+          Validators.pattern(REGEX_DECIMAL),
+          DatosMercanciaComponent.numeroUMCDecimalesValidator(),
 
+        ],
       ],
-    ],
-    cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
-    presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
-    numeroRegistroSanitario: [
-      this.obtenerValor('numeroRegistroSanitario')
-    ],
-    fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
-    paisDeOriginDatos: [
-      this.seleccionadasPaisDeOriginDatos,
-      [Validators.required, matrizRequerida],
-    ],
-    paisDeProcedenciaDatos: [
-      this.seleccionadasPaisDeProcedenciaDatos,
-      [Validators.required, matrizRequerida],
-    ],
-    usoEspecifico: [
-      this.seleccionadasUsoEspesificoDatos,
-      [Validators.required, matrizRequerida]
-    ],
-    especifique: [
-      this.obtenerValor('especifique')
-    ],
-    especifiqueForma: [
-      this.obtenerValor('especifiqueForma')
-    ],
-    especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
-    id: [this.obtenerValor('id')]
-  });
-   const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
-  setTimeout(()=>{
- 
-      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
-    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
-      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
-  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
-    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
-MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
-MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
-this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
-},500);
-    
-  const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
-  if (this.detalleMercancia) {
-    CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
-  }
-  
-  for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
-    if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-      this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
-        emitEvent: false,
-      });
+      cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
+      presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
+      numeroRegistroSanitario: [
+        this.obtenerValor('numeroRegistroSanitario')
+      ],
+      fechaDeMovimiento: [this.obtenerValor('fechaDeMovimiento')],
+      paisDestino: [
+        this.obtenerValor('paisDestino'),
+        [Validators.required],
+      ],
+      paisProcedencia: [
+        this.obtenerValor('paisProcedencia'),
+        [Validators.required],
+      ],
+      paisDeOrigen: [
+        this.obtenerValor('paisDeOrigen'),
+        [Validators.required],
+      ],
+      usoEspecifico: [
+        this.seleccionadasUsoEspesificoDatos,
+        [Validators.required, matrizRequerida]
+      ],
+      especifique: [
+        this.obtenerValor('especifique')
+      ],
+      especifiqueForma: [
+        this.obtenerValor('especifiqueForma')
+      ],
+      especifiqueEstado: [this.obtenerValor('especifiqueEstado')],
+      id: [this.obtenerValor('id')]
+    });
+    const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+    setTimeout(() => {
+
+      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos, MERCANCIA_FORM_DETALLE.clasificacionProducto);
+      MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos, MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos, MERCANCIA_FORM_DETALLE.tipoProducto);
+      MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos, MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+      MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos, MERCANCIA_FORM_DETALLE.estadoFisico);
+      MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos, MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+      MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos, MERCANCIA_FORM_DETALLE.cantidadUmc);
+      this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
+    }, 500);
+
+    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
+    if (this.detalleMercancia) {
+      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
+    }
+
+    for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
+      if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+        this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
+          emitEvent: false,
+        });
+      }
+    }
+
+    // Add dynamic controls
+    for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
+      if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+        // Determine if this field is mandatory
+        const IS_MANDATORY = this.elementosMandatorios.includes(NOMBRE_DEL_CONTROL);
+        const VALIDATORS = IS_MANDATORY ? [Validators.required] : [];
+
+        this.mercanciaForm.addControl(
+          NOMBRE_DEL_CONTROL,
+          new FormControl(
+            this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
+            { validators: VALIDATORS }
+          )
+        );
+      }
     }
   }
-
-  // Add dynamic controls
-  for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
-    if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-      // Determine if this field is mandatory
-      const IS_MANDATORY = this.elementosMandatorios.includes(NOMBRE_DEL_CONTROL);
-      const VALIDATORS = IS_MANDATORY ? [Validators.required] : [];
-      
-      this.mercanciaForm.addControl(
-        NOMBRE_DEL_CONTROL,
-        new FormControl(
-          this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
-          { validators: VALIDATORS }
-        )
-      );
+  updateValidation(): void {
+    const TIPO_PRODUCTO = this.mercanciaForm.get('tipoProducto')?.value;
+    if (this.elementosAnadidos.includes('especifique') && TIPO_PRODUCTO === this.tipoProductoEspecial) {
+      this.mercanciaForm.get('especifique')?.setValidators([Validators.required]);
     }
+    const FORMA_FARMACEUTICA = this.mercanciaForm.get('formaFarmaceutica')?.value;
+    if (this.elementosAnadidos.includes('especifiqueForma') && FORMA_FARMACEUTICA === this.tipoProductoEspecial) {
+      this.mercanciaForm.get('especifiqueForma')?.setValidators([Validators.required]);
+    }
+    this.mercanciaForm.get('especifique')?.updateValueAndValidity();
+    this.mercanciaForm.get('especifiqueForma')?.updateValueAndValidity();
   }
-}
-updateValidation(): void {
-  const TIPO_PRODUCTO = this.mercanciaForm.get('tipoProducto')?.value;
-  if (this.elementosAnadidos.includes('especifique') && TIPO_PRODUCTO === this.tipoProductoEspecial) {
-    this.mercanciaForm.get('especifique')?.setValidators([Validators.required]);
-  }
-  const FORMA_FARMACEUTICA = this.mercanciaForm.get('formaFarmaceutica')?.value;
-  if (this.elementosAnadidos.includes('especifiqueForma') && FORMA_FARMACEUTICA === this.tipoProductoEspecial) {
-    this.mercanciaForm.get('especifiqueForma')?.setValidators([Validators.required]);
-  }
-  this.mercanciaForm.get('especifique')?.updateValueAndValidity();
-  this.mercanciaForm.get('especifiqueForma')?.updateValueAndValidity();
-}
 
 
   static numeroConDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const VALUE = control.value;
-      
+
       // Skip validation if empty
       if (!VALUE) {
         return null;
       }
-      
+
       // Regex pattern: up to 12 digits before decimal, up to 10 after
       const PATTERN = /^\d{1,12}(\.\d{1,5})?$/;
-      
+
       if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
-      
+
       return null;
     };
   }
-public getIdFromDescripcion(
-  array: Catalogo[],
-  descripcion: string | number
-): number | string | undefined {
-  // If descripcion is a string, find by descripcion (case-insensitive)
-  if (typeof descripcion === 'string') {
-    const ITEM = array.find(el => el.descripcion.toLowerCase() === descripcion.toLowerCase());
-    return ITEM ? ITEM.id : descripcion; // Return ID if found, else return original descripcion
-  }
+  public getIdFromDescripcion(
+    array: Catalogo[],
+    descripcion: string | number
+  ): number | string | undefined {
+    // If descripcion is a string, find by descripcion (case-insensitive)
+    if (typeof descripcion === 'string') {
+      const ITEM = array.find(el => el.descripcion.toLowerCase() === descripcion.toLowerCase());
+      return ITEM ? ITEM.id : descripcion; // Return ID if found, else return original descripcion
+    }
 
-  // If descripcion is already a number (ID), just return it
-  return descripcion;
-}
+    // If descripcion is already a number (ID), just return it
+    return descripcion;
+  }
 
   static numeroUMCDecimalesValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const VALUE = control.value;
-      
+
       // Skip validation if empty
       if (!VALUE) {
         return null;
       }
-      
+
       // Regex pattern: up to 12 digits before decimal, up to 10 after
       const PATTERN = /^\d{1,12}(\.\d{1,10})?$/;
-      
+
       if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
       }
-      
+
       return null;
     };
   }
-  
- /**
- * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
- * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
- * @returns {string | number | undefined | string[]} - Valor del campo especificado.
- */
-public obtenerValor(
-  field: keyof TablaMercanciasDatos | keyof MercanciaForm
-): string | number | undefined | string[] | Catalogo | undefined {
-  return (
-    (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
-    (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
-  );
-}
+
+  /**
+  * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+  * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
+  * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+  */
+  public obtenerValor(
+    field: keyof TablaMercanciasDatos | keyof MercanciaForm
+  ): string | number | undefined | string[] | Catalogo | undefined {
+    return (
+      (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
+      (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
+    );
+  }
 
 
-public convertToStringArray(value: unknown): string[] {
-  if (!value){
+  public convertToStringArray(value: unknown): string[] {
+    if (!value) {
+      return [];
+    }
+    if (Array.isArray(value)) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      return [value];
+    }
+    if (typeof value === 'number') {
+      return [value.toString()];
+    }
     return [];
   }
-  if (Array.isArray(value)){
-   return value;
-  } 
-  if (typeof value === 'string'){
-     return [value];
-  }
-  if (typeof value === 'number'){
-    return [value.toString()];
-  } 
-  return [];
-}
 
   /**
    * Valida si el campo de un formulario no contiene errores
@@ -1276,12 +1053,8 @@ public convertToStringArray(value: unknown): string[] {
    * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
    */
-  // eslint-disable-next-line class-methods-use-this
-  public isValid(control: AbstractControl, campo?: string): boolean | null {
-    if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
-    }
-    return control.errors && control.touched;
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
   /**
@@ -1298,20 +1071,6 @@ public convertToStringArray(value: unknown): string[] {
     });
   }
 
-  /**
-   * Maneja el evento de cambio para las selecciones de país de procedencia.
-   *
-   * @param events - Un arreglo de cadenas que representa los países seleccionados.
-   *
-   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
-   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
-   */
-  paisDeProcedenciaSeleccionadasChange(events: string[]): void {
-    this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.mercanciaForm.patchValue({
-      paisDeProcedenciaDatos: events,
-    });
-  }
 
   /**
    * Maneja el evento de cambio para las selecciones de uso específico.
@@ -1353,27 +1112,26 @@ public convertToStringArray(value: unknown): string[] {
    */
   agregarMercancia(): void {
 
-    this.actualizarValidadoresClave()
-   
+    Object.keys(this.mercanciaForm.controls).forEach(c => {
+      console.log(c, this.mercanciaForm.get(c)?.errors);
+    });
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
       this.mensajeDeError = 'Faltan campos por capturar.';
       return;
     }
-     this.mensajeDeError = '';  
-     const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
+    this.mensajeDeError = '';
+    const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
 
-     /**
-     * @description
-     * Genera un identificador aleatorio compuesto únicamente por números.
-     * El resultado siempre será un número entero de 6 dígitos (entre 100000 y 999999).
-     * @returns {number} Un número aleatorio de 6 dígitos.
-     */
-     const ID = Math.floor(100000 + Math.random() * 900000);
-     VALORTABLAMERCANCIA.id = this.mercanciaForm.get('id')?.value ? this.mercanciaForm.get('id')?.value : ID
-      // Set additional values
-    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
-    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
+    /**
+    * @description
+    * Genera un identificador aleatorio compuesto únicamente por números.
+    * El resultado siempre será un número entero de 6 dígitos (entre 100000 y 999999).
+    * @returns {number} Un número aleatorio de 6 dígitos.
+    */
+    const ID = Math.floor(100000 + Math.random() * 900000);
+    VALORTABLAMERCANCIA.id = this.mercanciaForm.get('id')?.value ? this.mercanciaForm.get('id')?.value : ID
+    // Set additional values
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
     VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
@@ -1383,7 +1141,7 @@ public convertToStringArray(value: unknown): string[] {
     const CLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.clasificacionProductoDatos, CLASIFICACIONID);
     VALORTABLAMERCANCIA.clasificacionProducto = CLASIFICACIONOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.claveClasificacionProductoObj = CLASIFICACIONOBJ?.[0] ?? undefined;
- 
+
     /**
      * @description
      * Obtiene y asigna los valores correspondientes al campo **"Especificar Clasificación del Producto"**
@@ -1397,7 +1155,7 @@ public convertToStringArray(value: unknown): string[] {
     const ESPECIFICARCLASIFICACIONOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.especificarClasificacionProductoDatos, ESPECIFICARCLASIFICACIONID);
     VALORTABLAMERCANCIA.especificarClasificacionProducto = ESPECIFICARCLASIFICACIONOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.especificarClasificacionObj = ESPECIFICARCLASIFICACIONOBJ?.[0] ?? undefined;
- 
+
     /**
      * @description
      * Obtiene y asigna los valores correspondientes al campo **"Tipo de Producto"**
@@ -1412,7 +1170,7 @@ public convertToStringArray(value: unknown): string[] {
     const TIPOPRODUCTOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.tipoProductoDatos, TIPOPRODUCTOID);
     VALORTABLAMERCANCIA.tipoProducto = TIPOPRODUCTOOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.tipoProductoObj = TIPOPRODUCTOOBJ?.[0] ?? undefined;
- 
+
     /**
      * @description
      * Obtiene y asigna los valores correspondientes al campo **"Forma Farmacéutica"**
@@ -1427,7 +1185,7 @@ public convertToStringArray(value: unknown): string[] {
     const FORMAFARMACEUTICAOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.formaFarmaceuticaDatos, FORMAFARMACEUTICAID);
     VALORTABLAMERCANCIA.formaFarmaceutica = FORMAFARMACEUTICAOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.formaFarmaceuticaObj = FORMAFARMACEUTICAOBJ?.[0] ?? undefined;
- 
+
     /**
      * @description
      * Obtiene y asigna los valores correspondientes al campo **"Estado Físico"**
@@ -1442,7 +1200,7 @@ public convertToStringArray(value: unknown): string[] {
     const ESTADOFISICOOBJ = DatosMercanciaComponent.generarCatalogoObjeto(this.estadoFisicoDatos, ESTADOFISICOID);
     VALORTABLAMERCANCIA.estadoFisico = ESTADOFISICOOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.estadoFisicoObj = ESTADOFISICOOBJ?.[0] ?? undefined;
- 
+
     /**
      * @description
      * Obtiene y asigna los valores correspondientes al campo **"Unidad de Medida Comercialización (UMC)"**
@@ -1460,36 +1218,14 @@ public convertToStringArray(value: unknown): string[] {
 
     // Emit the merchandise data
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
-    
+
     // Reset form for next use
     this.mercanciaForm.reset();
-    
+
     // Close the modal
     this.cerrarModal.emit();
-}
+  }
 
-actualizarValidadoresClave(): void {
-   if (
-      this.elementosAnadidos.includes('claveDeLos') &&
-      this.idProcedimiento === 260101 &&
-      this.claveConfig.datos.length > 0
-    ) {
-      CAMPOS_CLAVE.forEach(
-        (controlName) =>
-          this.mercanciaForm.get(controlName)?.clearValidators() ||
-          this.mercanciaForm.get(controlName)?.updateValueAndValidity()
-      );
-    } else if (
-      this.elementosAnadidos.includes('claveDeLos') &&
-      this.idProcedimiento === 260101 &&
-      this.claveConfig.datos.length === 0
-    ) {
-      CAMPOS_CLAVE.forEach((controlName) => {
-        this.mercanciaForm.get(controlName)?.setValidators(Validators.required);
-        this.mercanciaForm.get(controlName)?.updateValueAndValidity();
-      });
-    }
-}
   /**
    * Genera un arreglo de objetos de catálogo que coinciden con el identificador proporcionado.
    *
@@ -1497,7 +1233,10 @@ actualizarValidadoresClave(): void {
    * @param {string} id - Identificador para filtrar los objetos del catálogo.
    * @returns {Catalogo[] | undefined} - Arreglo de objetos de catálogo que coinciden con el identificador, o undefined si no hay coincidencias.
    */
-  static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | undefined {
+  static generarCatalogoObjeto(catalogo: Catalogo[] | undefined | null, id: string): Catalogo[] | undefined {
+    if (!catalogo || catalogo.length === 0) {
+      return undefined;
+    }
     return catalogo.filter(item => item.clave === id);
   }
 
@@ -1509,7 +1248,6 @@ actualizarValidadoresClave(): void {
   limpiarMercancia(): void {
     this.seleccionadasUsoEspesificoDatos = [];
     this.seleccionadasPaisDeOriginDatos = [];
-    this.seleccionadasPaisDeProcedenciaDatos = [];
     this.mercanciaForm.reset();
   }
 
@@ -1520,31 +1258,6 @@ actualizarValidadoresClave(): void {
   cancelar(): void {
     this.cerrarModal.emit();
   }
-  /**
-   * @method agregarMercancia
-   * @description Emits an event to add a new merchandise item.
-   * This method is used to notify the parent component about the addition of a new merchandise item.
-   *
-   * @param {DetalleMercancia} datos - The details of the merchandise to be added.
-   * @returns {void} This method does not return any value.
-   */
-
-  agregarMercanciaSellecion(datos: DetalleMercancia): void {
-    this.agregarMercanciaDatos.emit(datos);
-  }
-
-  /**
-   * @method eliminarMercancia
-   * @description Emits an event to delete one or more merchandise items.
-   * This method is used to notify the parent component about the deletion of selected merchandise items.
-   *
-   * @param {DetalleMercancia[]} datos - An array of merchandise details to be deleted.
-   * @returns {void} This method does not return any value.
-   */
-  eliminarMercancia(datos: DetalleMercancia[]): void {
-    this.eliminarMercanciaDatos.emit(datos);
-  }
-
   /**
    * @method cambiarFraccionArancelaria
    * @description Actualiza los valores de los campos `descripcionFraccion` y `cantidadUmt` en el formulario reactivo `mercanciaForm`
@@ -1567,34 +1280,34 @@ actualizarValidadoresClave(): void {
         this.abrirModal();
       } else {
         this.datosSolicitudService.obtenerFraccionesArancelarias(this.idProcedimiento, FRACCION)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (response) => {
-            if (response.codigo === "00") {
-              const DATOS_FRACCION = response.datos as { descripcionAlternativa: string };
-              this.mercanciaForm.get('descripcionFraccion')?.setValue(DATOS_FRACCION.descripcionAlternativa);
-            } else {
-              this.abrirModal();
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(
+            (response) => {
+              if (response.codigo === "00") {
+                const DATOS_FRACCION = response.datos as { descripcionAlternativa: string };
+                this.mercanciaForm.get('descripcionFraccion')?.setValue(DATOS_FRACCION.descripcionAlternativa);
+              } else {
+                this.abrirModal();
+              }
             }
-          }
-        );
+          );
         this.datosSolicitudService.obtenerUMT(this.idProcedimiento, FRACCION)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(
-          (response) => {
-            if (response.codigo === "00") {
-              const DATOS_UMT = response.datos as { descripcion: string };
-              this.mercanciaForm.get('cantidadUmt')?.setValue(DATOS_UMT.descripcion);
-            } else {
-              this.abrirModal();
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(
+            (response) => {
+              if (response.codigo === "00") {
+                const DATOS_UMT = response.datos as { descripcion: string };
+                this.mercanciaForm.get('cantidadUmt')?.setValue(DATOS_UMT.descripcion);
+              } else {
+                this.abrirModal();
+              }
             }
-          }
-        );
+          );
       }
     }
   }
 
- 
+
   /**
    * Valida la longitud de la fracción arancelaria ingresada en el formulario.
    * Si la longitud es menor a 8 caracteres, establece `showLimitError` en true,
@@ -1642,11 +1355,11 @@ actualizarValidadoresClave(): void {
    * @param valor - Cadena que representa la fecha de caducidad seleccionada.
    *
    * @example
-   * this.fechaDeCaducidadValor('01/01/2026');
+   * this.fechaDeMovimientoValor('01/01/2026');
    */
-  fechaDeCaducidadValor(valor: string): void {
+  fechaDeMovimientoValor(valor: string): void {
     this.mercanciaForm.patchValue({
-      fechaCaducidad: valor,
+      fechaDeMovimiento: valor,
     });
   }
 

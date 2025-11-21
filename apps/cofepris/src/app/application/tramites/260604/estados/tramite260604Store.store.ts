@@ -175,7 +175,7 @@ export function createInitialState(): Tramite260604State {
       cantidadUmc: '',
       presentacion: '',
       numeroRegistroSanitario: '',
-      fechaCaducidad: '',
+      fechaDeMovimiento: '',
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
       especifique: '',
