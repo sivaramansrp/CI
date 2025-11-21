@@ -3,9 +3,9 @@
  * Estos incluyen datos relacionados con el asistente de pasos (wizard) y las enumeraciones específicas de la aplicación. 
  */
 import { Component, EventEmitter, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { AccionBoton, FORM_ERROR_ALERT } from '../../enums/accion-botton.enum';
-import { PASOS_EXPORTACION } from '../../constants/control-permisos-previos-exportacion.enum';
+import { PASOS_EXPORTACION, MSG_REGISTRO_EXITOSO, CALCULATE_ALERT_ERROR } from '../../constants/control-permisos-previos-exportacion.enum';
 import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
@@ -103,15 +103,25 @@ export class ControlPermisosPreviosExportacionComponent {
   /**
    * @property {Tramite130217State} solicitudState
    * @description
-   * Estado actual de la solicitud del trámite 130105.
+   * Estado actual de la solicitud del trámite 130217.
    */
   solicitudState!: Tramite130217State;
-
   /**
    * Referencia al componente `PasoUnoComponent`.
    * Se utiliza para acceder a las funcionalidades del primer paso del asistente.
    */
   @ViewChild(PasoUnoComponent, { static: false }) pasoUnoComponent!: PasoUnoComponent;
+  
+  /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public folioTemporal: string | number = '';
+
+  /**
+   * Función para calcular alertas de error personalizadas.
+   */
+  public CALCULATE_ALERT_ERROR = CALCULATE_ALERT_ERROR;
   
   /**
    * @description
@@ -171,7 +181,6 @@ export class ControlPermisosPreviosExportacionComponent {
       }
     }
   }
-
   /**
     * Obtiene los datos del store y los guarda utilizando el servicio.
     */
@@ -179,8 +188,95 @@ export class ControlPermisosPreviosExportacionComponent {
     this.controlPermisosPreviosExportacionService.getAllState()
       .pipe(take(1))
       .subscribe((data) => {
-        // this.guardar(data, e);
+        this.guardar(data, e);
       });
+  }
+  /**
+   * Guarda los datos del formulario en el backend.
+   * @param item - Objeto que contiene todos los datos necesarios para el payload
+   * @param e - Acción del botón para determinar el flujo de navegación
+   * @returns Promise con la respuesta del servicio
+   */
+  guardar(item: Tramite130217State, e: AccionBoton): Promise<JSONResponse> {
+    const MERCANCIA = this.controlPermisosPreviosExportacionService.getPayloadMercancia(item);
+    const PRODUCTOR = this.controlPermisosPreviosExportacionService.getPayloadProductor();
+    const SOLICITANTE = this.controlPermisosPreviosExportacionService.getPayloadSolicitante();
+    const REPRESENTACION_FEDERAL = this.controlPermisosPreviosExportacionService.getPayloadRepresentacionFederal(item);
+    const ENTIDAD_FEDERATIVA = this.controlPermisosPreviosExportacionService.getPayloadEntidadFederativa(item);
+    
+    const PAYLOAD = {
+      "tipoDeSolicitud": "guardar",
+      "tipo_solicitud_pexim": item.defaultSelect,
+      "mercancia": MERCANCIA,
+      "id_solcitud": this.solicitudState.idSolicitud || 0,
+      "cve_regimen": item.regimen,
+      "cve_clasificacion_regimen": item.clasificacion,
+      "productor": PRODUCTOR,
+      "solicitante": SOLICITANTE,
+      "representacion_federal": REPRESENTACION_FEDERAL,
+      "entidades_federativas": ENTIDAD_FEDERATIVA,
+      "lista_paises": item.fechasSeleccionadas
+    };
+
+    return new Promise((resolve, reject) => {
+      let shouldNavigate = false;
+      this.controlPermisosPreviosExportacionService.guardarDatosPost(PAYLOAD).subscribe(
+        (response) => {
+          this.esFormaValido = false;
+          if(response.codigo === '3'){
+            this.esFormaValido = true;
+            this.formErrorAlert = this.CALCULATE_ALERT_ERROR((response as unknown as { error: string })['error'] || '');
+          }
+          shouldNavigate = response.codigo === '00';
+          if (shouldNavigate) {
+            const API_RESPONSE = doDeepCopy(response);
+            if (
+              esValidObject(API_RESPONSE) &&
+              esValidObject(API_RESPONSE.datos)
+            ) {
+              if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
+                this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+                this.tramite130217Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
+              } else {
+                this.tramite130217Store.setIdSolicitud(0);
+              }
+              if (e.valor > 0 && e.valor < 5) {
+                this.indice = e.valor;
+
+                if (e.valor > 0 && e.valor < 5) {
+                  this.indice = e.valor;
+                  if (e.accion === 'cont') {
+                    this.wizardComponent.siguiente();
+                    if (e.valor > 0 && e.valor < 5) {
+                      this.alertaNotificacion = {
+                        tipoNotificacion: 'banner',
+                        categoria: 'success',
+                        modo: 'action',
+                        titulo: '',
+                        mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                        cerrar: true,
+                        txtBtnAceptar: '',
+                        txtBtnCancelar: '',
+                      };
+
+                    }
+                  } else {
+                    this.wizardComponent.atras();
+                  }
+                }
+              }
+            }
+            this.toastrService.success(response.mensaje);
+            resolve(response);
+          } else {
+            this.toastrService.error(response.mensaje);
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   /**
@@ -213,7 +309,7 @@ export class ControlPermisosPreviosExportacionComponent {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia los recursos y restablece el estado del store asociado al trámite 130105.
+   * Limpia los recursos y restablece el estado del store asociado al trámite 130217.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

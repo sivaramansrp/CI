@@ -9,7 +9,7 @@ const ROUTES: Routes = [
     canActivate: [IniciarTramiteResolver],
     data: {
       iniciarConfig: {
-        procedureId: '130105',
+        procedureId: '130217',
       },
     },
     path: 'control-permisos-previos-exportacion',
