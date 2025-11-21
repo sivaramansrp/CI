@@ -1,6 +1,6 @@
 import { Acuicultura, DestinatarioForm, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, formatFecha, SolicitanteQuery } from '@ng-mf/data-access-user';
 import { Observable, Subject, catchError, firstValueFrom, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -127,6 +127,26 @@ export class PasoUnoComponent implements OnDestroy {
 
   public RENDERDOM:boolean = false;
 
+  /**
+ * Rfc de la pantalla solicitante
+ */
+  rfcOriginal: string = '';
+
+  /**
+ * Tipo de persona de la pantalla solicitante
+ */
+  tipoPersonaSolicitante: string = '';
+
+  /**
+ * Razon social de la pantalla solicitante
+ */
+  razonSocialSolicitante: string = '';
+
+  /**
+ * Nombre de la pantalla solicitante
+ */
+  nombreSolicitante: string = '';
+
 
   /**
    * Constructor que inyecta los servicios requeridos para el funcionamiento del componente.
@@ -138,7 +158,8 @@ export class PasoUnoComponent implements OnDestroy {
   constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
     private consultaioStore: ConsultaioStore,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    public solicitanteQuery: SolicitanteQuery
   ) {
     this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.DESTROY_NOTIFIER$))
@@ -152,6 +173,27 @@ export class PasoUnoComponent implements OnDestroy {
       }
     });
  
+  }
+
+  ngOnInit(): void {
+    this.obtieneDatosTabSolicitud();
+
+  }
+
+  /**
+ * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+ */
+  obtieneDatosTabSolicitud() {
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((seccionState) => {
+        this.rfcOriginal = seccionState.rfc_original;
+        this.tipoPersonaSolicitante = seccionState.tipo_persona;
+        this.razonSocialSolicitante = seccionState.razon_social
+          ? seccionState.razon_social
+          : '';
+        this.nombreSolicitante = seccionState.nombre;
+      });
   }
 
   /**
@@ -197,9 +239,7 @@ export class PasoUnoComponent implements OnDestroy {
       if (CODIGO === "00") {
         return true;
       }
-      // else {
         return false;
-      // }
 
     } catch (err) {
       console.error("Error en guardarSolicitud:", err);
@@ -393,11 +433,14 @@ async guardarDatosFormulario(): Promise<void> {
       },
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
-        rfc: this.solicitante.datosGenerales?.datos.rfc_original ?? '',
-        rol_capturista: "Solicitante", // suponemos se saca de la sesion pero aun no funciona login
-        nombre: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm' ? (this.solicitante.datosGenerales?.datos.identificacion.razon_social ?? '') : (this.solicitante.datosGenerales?.datos.identificacion.nombre ?? ''),
-        es_persona_moral: this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() === 'm',
-        certificado_serial_number: 0 // no sabemos de donde se obtiene
+        rfc: this.rfcOriginal ?? '',
+        rol_capturista: 'Solicitante', // suponemos se saca de la sesion pero aun no funciona login
+        nombre:
+          this.tipoPersonaSolicitante?.toLowerCase() === 'm'
+            ? this.razonSocialSolicitante ?? ''
+            : this.nombreSolicitante ?? '',
+        es_persona_moral: this.tipoPersonaSolicitante?.toLowerCase() === 'm',
+        certificado_serial_number: 0, // no sabemos de donde se obtiene
       },
 
       representacion_federal: {
