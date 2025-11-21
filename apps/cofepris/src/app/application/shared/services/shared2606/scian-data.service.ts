@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { TablaScianConfig } from '../models/datos-solicitud.model';
+import { TablaScianConfig } from '../../models/shared2606/datos-solicitud.model';
 /**
  * Servicio para manejar y compartir datos relacionados con la tabla SCIAN.
  */

@@ -850,7 +850,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     this.elementosAnadidos = [];
     this.elementosMandatorios = [];
     switch (this.idProcedimiento) {
-      case 260102:
+      case 260604:
         this.elementosNoValidos = [
           'denominacionDistintiva',
           'denominacionComun',
@@ -861,109 +861,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'fechaCaducidad',
         ];
         this.elementosAnadidos = [
-          'marca',
           'especifique',
-          'claveDeLos',
           'fechaDeFabricacio',
           'fechaDeCaducidad',
         ];
         break;
-        case 260103:
-        this.elementosNoValidos = [
-          'denominacionDistintiva',
-          'denominacionComun',
-          'formaFarmaceutica',
-          'estadoFisico',
-          'presentacion',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosAnadidos = [
-          'marca',
-          'especifique',
-          'claveDeLos',
-          'fechaDeFabricacio',
-          'fechaDeCaducidad',
-        ];
-        break;
-      case 260202:
-        this.elementosAnadidos = ['especifique','especifiqueForma'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260203:
-        this.elementosAnadidos = ['especifique','especifiqueEstado'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260204:
-        this.elementosAnadidos = ['especifique','especifiqueForma'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260208:
-        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260209:
-       // this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
-        this.elementosAnadidos = ['especifique'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260207:
-        this.elementosAnadidos = ['especifique'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260217:
-        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
-        this.elementosNoValidos = [
-          'formaFarmaceutica',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        break;
-      case 260218:
-        this.elementosAnadidos = ['especifique','especifiqueForma', 'especifiqueEstado'];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260219:
-        this.elementosAnadidos = [
-          'especifique',
-          'especifiqueForma',
-          'especifiqueEstado',
-        ];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260201:
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        this.elementosRequirdos = [
-          'paisDeOrigen',
-          'paisDeProcedencia',
-          'usoEspecífico',
-        ];
-        this.elementosAnadidos = [
-          'especifique',
-          'especifiqueForma',
-          'especifiqueEstado',
-        ];
-        this.elementosMandatorios = ['especifiqueEstado'];
-        this.elementosBelow = true;
-        break;
-      case 260213:
-        this.elementosNoValidos = [
-          'formaFarmaceutica',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260214:
-        this.elementosAnadidos = ['especifique', 'especifiqueEstado'];
-        this.elementosNoValidos = [
-          'formaFarmaceutica',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
-        break;
-      case 260101:
         this.elementosNoValidos = [
           'denominacionDistintiva',
           'denominacionComun',

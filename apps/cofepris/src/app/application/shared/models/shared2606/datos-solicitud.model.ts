@@ -365,7 +365,7 @@ export interface DatosSolicitudFormState {
   aviso: string;
   licenciaSanitaria: string;
   regimen: string | number;
-  adunasDeEntradas: string | number;
+  adunasDeEntradas?: string | number;
   aeropuerto: boolean;
   aeropuertoDos?: boolean;
   publico: string;

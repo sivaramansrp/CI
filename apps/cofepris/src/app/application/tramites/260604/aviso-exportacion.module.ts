@@ -34,16 +34,18 @@ import { DomicilioDelEstablecimientoComponent } from '../../shared/components/do
 import { DatosDelEstablecimientoComponent } from '../../shared/components/datos-del-establecimiento/datos-del-establecimiento.component';
 
 import { DatosService } from '../../shared/services/datos.service';
+import { DatosDeLaSolicitudComponent } from '../../shared/components/shared2606/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ContenedorDeDatosSolicitudComponent } from './components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 
 @NgModule({
   declarations: [
     PantallasComponent,
     DatosComponent,
-    
-    
   ],
   imports: [
-  CommonModule,
+    ContenedorDeDatosSolicitudComponent,
+    CommonModule,
+    DatosDeLaSolicitudComponent,
   HttpClientModule,  
   AvisoExportacionRoutingModule,
   AlertComponent,

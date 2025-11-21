@@ -1,11 +1,11 @@
 import { API_OBTENER_FRACCIONES_ARANCELARIAS, API_OBTENER_UMT, Catalogo } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
-import { API_BUSCAR_REPRESENTANTE } from '../../core/server/api-router';
+import { API_BUSCAR_REPRESENTANTE } from '../../../core/server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '../models/datos-solicitud.model';
+import { RespuestaCatalogos } from '../../models/shared2606/datos-solicitud.model';
 
 
 /**
