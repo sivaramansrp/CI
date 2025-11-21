@@ -1,5 +1,5 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, Notificacion, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constants/pasos.enum';
 import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -13,6 +13,8 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { Tramite130109Query } from '../../../../estados/queries/tramite130109.query';
+
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 
 
 /**
@@ -189,6 +191,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {MostrarPartidas[]}
    */
   mostrarPartidas: MostrarPartidas[] = [];
+
+  
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+  mostrarErroresMercancia = false;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+  mostrarErroresPartidas = false;
+/*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+
+   /**
+     * @descripcion Notificación para mostrar mensajes al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
+    
+      /**
+         * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+         * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+         */
+        @ViewChild(PartidasDeLaMercanciaComponent)
+        partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
 
   /**
    * Constructor del componente.
@@ -702,7 +730,63 @@ const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + (parseInt(
   fechasSeleccionadas(evento: string[]): void {
     this.tramite130109Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
+ partidasEliminadas(evento: string[]): void{
+    this.tableBodyData = this.tableBodyData.filter(
+      item => !evento.includes(String(item.id))
+    );
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+     const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+     this.formForTotalCount.patchValue({
+          cantidadTotal: CANTIDAD_TOTAL,
+          valorTotalUSD: TOTAL_USD,
+        });
+          this.tramite130109Store.actualizarEstado({
+          tableBodyData: this.tableBodyData
+        })
+  }
+  
+   /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+    ['cantidad', 'valorFacturaUSD', 'fraccion'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
 
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid || 
+      this.mercanciaForm.get('fraccion')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    if (!this.mercanciaForm.get('fraccion')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+
+    this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+  }
 /**
  *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
  * @param cantidadPartidas 
