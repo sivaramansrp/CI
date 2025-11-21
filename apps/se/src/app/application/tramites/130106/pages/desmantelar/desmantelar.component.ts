@@ -198,7 +198,7 @@ export class DesmantelarComponent {
           "clave": item.unidadMedida
         },
         "fraccionArancelaria": {
-          "cveFraccion": item.fraccion
+          "cveFraccion": 87012002
         },
         "partidasMercancia": MERCANCIA,
       },
