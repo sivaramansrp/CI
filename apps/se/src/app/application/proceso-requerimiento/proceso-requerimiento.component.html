@@ -8,12 +8,13 @@
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
+    @if(!esAcuse && indice !== 3) {
     <div class="mb-5">
-        <lib-encabezado-requerimiento
-        [numFolioTramite]="guardarDatos.folioTramite"
-        [tipoTramite]="guardarDatos.tipoDeTramite"
-        ></lib-encabezado-requerimiento>
+      <lib-encabezado-requerimiento [numFolioTramite]="guardarDatos.folioTramite"
+        [tipoTramite]="guardarDatos.tipoDeTramite">
+      </lib-encabezado-requerimiento>
     </div>
+    }
 
     @if(esAcuse) {
         <lib-component-acuse
@@ -59,11 +60,11 @@
     <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     }
 
-    <div class="row mt-5 mb-5" *ngIf="esAcuse === false">
+     @if(!esAcuse && indice !== 3) {
+       <div class="row mt-5 mb-5">
       <app-reviewers-tabs
         [viewChild]="viewChild"
         [tramite]="tramite"
-
         [tabs]="tabs"
         [documentos]="documentosSolicitud"
         [dictamenes]="dictamenesSolicitud"
@@ -76,6 +77,7 @@
         (tabSeleccionado)="onTabSeleccionado($event)"
       ></app-reviewers-tabs>
     </div>
+     }
   </div>
 </div>
 }
