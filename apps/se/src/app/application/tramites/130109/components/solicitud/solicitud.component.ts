@@ -207,6 +207,9 @@ private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService,
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+           if(this.esFormularioSoloLectura){
+            this.getMostrarPartidas();
+          }
         })
       )
       .subscribe();
@@ -215,7 +218,6 @@ private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService,
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.getMostrarPartidas();
     this.configuracionFormularioSuscripciones();
     this.getRegimenCatalogo();
     this.getFraccionCatalogo();
@@ -665,14 +667,33 @@ const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + (parseInt(
    *
    * @returns {void}
    */
-  getMostrarPartidas(): void {
-    this.vehiculosUsadosAdaptadosService.getMostrarPartidasService(202859165).subscribe((data) => {
-      if(data.codigo === '00'){
-          this.mostrarPartidas = data.datos as MostrarPartidas[];
-          this.tramite130109Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
-      }
-    });
-  }
+ getMostrarPartidas(): void {
+     let idSolicitud = 0;
+     if(this.seccionState?.idSolicitud){
+       idSolicitud = this.seccionState?.idSolicitud;
+     }
+     this.vehiculosUsadosAdaptadosService.getMostrarPartidasService(idSolicitud).subscribe((data) => {
+       if(data.codigo === '00'){
+           this.mostrarPartidas = data.datos as MostrarPartidas[];
+           if(this.mostrarPartidas.length > 0){
+            const TABLE_BODY = this.mostrarPartidas.map((item, i) => ({
+                 id: i?.toString(),
+                 cantidad: item.candidatoEliminar?.toString() || '',
+                 unidadDeMedida: item.unidadMedidaDescripcion?.toString() || '',
+                 fraccionFrancelaria: item.fraccionClave?.toString() || '',
+                 descripcion: item.descripcionOriginal?.toString() || '',
+                 precioUnitarioUSD: item.importeUnitarioUSD?.toString() || '',
+                 totalUSD: item.importeTotalUSD?.toString() || '',
+                 fraccionTigiePartidasDeLaMercancia: "",
+                 fraccionDescripcionPartidasDeLaMercancia: "",
+               }));
+               this.tramite130109Store.actualizarEstado({tableBodyData: TABLE_BODY })
+           }
+           this.tramite130109Store.actualizarEstado({ mostrarPartidas: this.mostrarPartidas });
+       }
+     });
+   }
+ 
 
   /**
    *  Maneja la selección de fechas y actualiza el estado global.
