@@ -89,7 +89,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
   /**
    * Devuelve true si exactamente una fila está seleccionada
    */
-  get isSingleRowSelected(): any {
+  public get isSingleRowSelected(): boolean {
     return this.establecimientoBodyData.filter(r => r.selected).length === 1;
   }
   /**
@@ -99,7 +99,12 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Se usa `TableBodyData[]` hasta definir su estructura específica.
    */
   public establecimientoBodyData: TableBodyData[] = [];
-  // Track selected row index for edit/delete
+  /**
+   * Índice de la fila seleccionada en la tabla de establecimientos.
+   *
+   * Se utiliza para identificar qué establecimiento está seleccionado para editar o eliminar.
+   * Si es null, no hay ninguna fila seleccionada.
+   */
   public selectedEstablecimientoIndex: number | null = null;
   /**
    * Selecciona un establecimiento de la tabla
@@ -113,9 +118,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       this.formularioDireccion.patchValue(selected);
     }
   }
-  /**
-   * Agrega un nuevo establecimiento usando los datos del formulario
-   */
+ 
   /**
    * Edita el establecimiento seleccionado con los datos del formulario
    */
