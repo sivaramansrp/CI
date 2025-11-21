@@ -4,7 +4,7 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   DatosPasos,
-  ListaPasosWizard,
+  ListaPasosWizard, PasoFirmaComponent,
   SolicitanteQuery,
   WizardComponent,
 } from '@ng-mf/data-access-user';
@@ -55,6 +55,7 @@ import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuar
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    PasoFirmaComponent,
   ],
 })
 export class SanidadCertificadoComponent implements OnInit {

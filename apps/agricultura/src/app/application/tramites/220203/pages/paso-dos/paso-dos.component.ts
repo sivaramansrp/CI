@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 
 import {
+  AlertComponent, CargaDocumentoComponent,
   Catalogo,
   CatalogosService,
-  TEXTOS,
+  TEXTOS, TituloComponent,
   Usuario,
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -24,6 +25,12 @@ import { Subject, map, takeUntil } from 'rxjs';
   templateUrl: './paso-dos.component.html',
   styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
+  imports: [
+    TituloComponent,
+    AlertComponent,
+    CargaDocumentoComponent,
+    TituloComponent,
+  ],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**

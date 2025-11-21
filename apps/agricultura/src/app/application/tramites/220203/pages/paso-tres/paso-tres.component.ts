@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * @fileoverview
@@ -20,6 +21,9 @@ import { Component } from '@angular/core';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
   standalone: true,
+  imports: [
+    FirmaElectronicaComponent
+  ]
 })
 export class PasoTresComponent {
 }
