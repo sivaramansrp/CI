@@ -414,6 +414,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.FormSolicitud.get('pagodederechos.linea')?.setValue(INPUT.value.toUpperCase(), { emitEvent: false });
     }
   }
+  /**
+   * Valida el estado del formulario y la tabla antes de permitir una acción (por ejemplo, envío).
+   *
+   * Reglas:
+   * - Si el formulario reactivo no ha sido inicializado, retorna false.
+   * - Si no hay filas en `datosTabla`, marca todo el formulario como tocado (para mostrar errores)
+   *   y retorna false.
+   * - En cualquier otro caso, retorna true indicando que la validación es satisfactoria.
+   *
+   * @returns {boolean} true si el formulario y la tabla son válidos; false en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (!this.FormSolicitud) {
+      // El formulario aún no está inicializado
+      return false;
+    }
+
+    // Requiere al menos una línea de captura en la tabla
+    if (this.datosTabla.length === 0) {
+      // Marca todo el formulario como tocado para mostrar mensajes de validación
+      this.FormSolicitud.markAllAsTouched();
+      return false;
+    }
+
+    return true;
+  }
 
   /**
    * Método `ngOnDestroy()`.

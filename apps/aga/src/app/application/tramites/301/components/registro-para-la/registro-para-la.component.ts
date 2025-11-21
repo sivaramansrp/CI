@@ -257,6 +257,19 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     this.pantallas301Service.actualizarRegistroCampo();
     this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
   }
+  /**
+   * Valida el formulario y marca todos los controles como "touched" para
+   * activar la validación visual. Devuelve true si el formulario existe y es válido.
+   *
+   * @returns {boolean} Estado de validez del formulario
+   */
+  validarFormulario(): boolean {
+    if (!this.registroParaLaForm) {
+      return false;
+    }
+    this.registroParaLaForm.markAllAsTouched();
+    return this.registroParaLaForm.valid;
+  }
 
   /**
    * Método que se ejecuta cuando el componente es destruido.

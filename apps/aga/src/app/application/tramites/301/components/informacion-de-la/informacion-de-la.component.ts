@@ -264,6 +264,24 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida el formulario actual.
+   *
+   * - Si el formulario no está inicializado retorna false.
+   * - Marca todos los controles como "touched" para forzar la visualización
+   *   de mensajes de validación en la UI.
+   * - Devuelve true si el formulario es válido, false en caso contrario.
+   *
+   * @returns {boolean} Estado de validez del formulario.
+   */
+  validarFormulario(): boolean {
+    if (!this.informacionDeLaform) {
+      return false;
+    }
+    this.informacionDeLaform.markAllAsTouched();
+    return this.informacionDeLaform.valid;
+  }
+
+  /**
    * Maneja el evento de continuar al siguiente paso.
    * @method continuar
    * @memberof InformacionDeLaComponent

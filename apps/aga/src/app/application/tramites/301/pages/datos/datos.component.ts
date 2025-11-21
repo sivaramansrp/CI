@@ -7,6 +7,14 @@ import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/
 import { Solocitud301Service } from '../../services/service301.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
+import { DeLaMuestraComponent } from '../../components/de-la-muestra/de-la-muestra.component';
+import { InformacionDeLaComponent } from '../../components/informacion-de-la/informacion-de-la.component';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { RegistroParaLaComponent } from '../../components/registro-para-la/registro-para-la.component';
+
+import { Tramite301Query } from '../../../../core/queries/tramite301.query';
+import { Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
+
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 220401
  * Establecer el índice del subtítulo
@@ -21,10 +29,19 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  // Referencia al componente que gestiona el registro y la navegación entre secciones.
+  @ViewChild(RegistroParaLaComponent) registroParaLa!: RegistroParaLaComponent;
 
+  // Referencia al componente "De la muestra" para validar y acceder a sus datos.
+  @ViewChild(DeLaMuestraComponent) delamuestra!: DeLaMuestraComponent;
+
+  // Referencia al componente que contiene la información adicional de la muestra.
+  @ViewChild(InformacionDeLaComponent) informaciondela!: InformacionDeLaComponent;
+
+  // Referencia al componente encargado del pago de derechos; usada para validaciones y control de UI.
+  @ViewChild(PagoDeDerechosComponent) pagodederechos!: PagoDeDerechosComponent;
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-
  /** Identificador de la sección seleccionada para mostrar el componente correspondiente. */
   public seccionSeleccionada!: string;
 
@@ -56,7 +73,9 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   constructor(
     public pantallasSvc: Pantallas301Service,
     private solocitud301Service: Solocitud301Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     private tramite301Query: Tramite301Query,
+     private tramite301Store: Tramite301Store
   ) {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -77,6 +96,15 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
           this.esDatosRespuesta = true;
         }
     })).subscribe();
+
+        this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionSeleccionada = seccionState.registro;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -106,7 +134,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   actualizarPagina(event: string): void {
     this.seccionSeleccionada = event;
   }
-
   /**
    * Se ejecuta después de que la vista ha sido inicializada.
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
@@ -116,15 +143,64 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     setTimeout(() => {
       this.solicitante.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
   });
+}
+/**
+ * Valida los formularios de los componentes hijos en el orden requerido.
+ * Si algún formulario es inválido, mueve el asistente al paso correspondiente,
+ * marca los errores en el store y retorna false. Si todo es válido, limpia los
+ * errores en el store y retorna true.
+ *
+ * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
+ */
+public validarFormularios(): boolean {
+  if (this.solicitante?.form?.invalid) {
+    this.solicitante.form.markAllAsTouched();
+    return this.fail(2, false);
   }
+
+  if (this.registroParaLa && !this.registroParaLa.validarFormulario()) {
+    return this.fail(2, false);
+  }
+
+  if (this.seccionSeleccionada === '1' && this.delamuestra && !this.delamuestra.validarFormulario()) {
+    return this.fail(2, false);
+  }
+
+  if (this.informaciondela && !this.informaciondela.validarFormulario()) {
+    return this.fail(2, false);
+  }
+
+  if (this.pagodederechos && !this.pagodederechos.validarFormulario()) {
+    return this.fail(3, true);
+  }
+
+  this.tramite301Store.setPagoError(false);
+  this.tramite301Store.setRegistroError(false);
+  return true;
+}
+
+/**
+ * Helper para manejar un fallo de validación:
+ * - Establece el índice (paso) del asistente.
+ * - Actualiza los indicadores de error en el store.
+ * - Retorna false para indicar fallo.
+ *
+ * @param {number} step - Paso al que debe moverse el asistente.
+ * @param {boolean} [pagoError=false] - Si true indica que el error es de pago; si false, error de registro.
+ * @returns {boolean} siempre retorna false.
+ */
+private fail(step: number, pagoError?: boolean): boolean {
+  this.indice = step;
+  this.tramite301Store.setPagoError(pagoError ?? false);
+  this.tramite301Store.setRegistroError(!(pagoError ?? false));
+  return false;
+}
+
 
   /**
    * Método del ciclo de vida `ngOnDestroy`.
    * Se ejecuta cuando el componente es destruido.
    * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
-   *
-   * @example
-   * // Angular llama automáticamente a este método al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
