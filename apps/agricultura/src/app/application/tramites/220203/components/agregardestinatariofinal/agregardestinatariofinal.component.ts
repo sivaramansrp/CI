@@ -19,7 +19,6 @@ import { OPCION_DE_BOTON_DE_RADIO } from "../../../../shared/constantes/terceros
 import { RadioOpcion } from "../../../220201/models/220201/certificado-zoosanitario.model";
 import { TercerosrelacionadosService } from "../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
-import {CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 
 /**
  * Componente para agregar destinatarios finales en el trámite de importación de acuicultura.
@@ -144,8 +143,7 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
     private router: Router,
     private readonly certificadoZoosanitarioServices: ImportacionDeAcuiculturaService,
     private readonly zoosanitarioStore: AcuiculturaStore,
-    private route: ActivatedRoute,
-    public catalogosService: CatalogosService
+    private route: ActivatedRoute
   ) { }
 
   /**
@@ -218,15 +216,11 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    * @returns {void}
    */
   pairsCatalogChange(): void {
-    this.catalogosService.obtieneCatalogoPaises(220203)
-      .pipe(
-        takeUntil(this.DESTROY_NOTIFIER$)
-      ).subscribe(
-      (data): void => {
-        this.pairsCatalog = data.datos ?? [];
-      }
-    );
-
+    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe(data => {
+        this.pairsCatalog = data;
+      });
   }
 
 
@@ -302,7 +296,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    * @returns {void}
    */
   enCambioValorRadio(): void {
-
     const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
     if (this.destinatarioForm.value.tipoMercancia === 'no') {
       RAZON_SOCIAL_CTRL?.clearValidators();

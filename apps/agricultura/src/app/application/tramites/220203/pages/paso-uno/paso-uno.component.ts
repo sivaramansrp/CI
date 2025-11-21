@@ -1,4 +1,16 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Acuicultura,
+  DestinatarioForm,
+  FilaSolicitud,
+} from '../../models/220203/importacion-de-acuicultura.module';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  ConsultaioStore,
+  SolicitanteQuery,
+  formatFecha,
+} from '@ng-mf/data-access-user';
 import {
   Observable,
   Subject,
@@ -10,18 +22,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  ConsultaioStore,
-  formatFecha,
-} from '@ng-mf/data-access-user';
-import {
-  Acuicultura,
-  DestinatarioForm,
-  FilaSolicitud,
-} from '../../models/220203/importacion-de-acuicultura.module';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
@@ -67,7 +67,7 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
     CommonModule,
   ],
 })
-export class PasoUnoComponent implements OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Índice de la pestaña actualmente seleccionada en el formulario.
    * @public
@@ -163,17 +163,41 @@ export class PasoUnoComponent implements OnDestroy {
   public RENDERDOM: boolean = false;
 
   /**
+   * Rfc de la pantalla solicitante
+   */
+  rfcOriginal: string = '';
+
+  /**
+   * Tipo de persona de la pantalla solicitante
+   */
+  tipoPersonaSolicitante: string = '';
+
+  /**
+   * Razon social de la pantalla solicitante
+   */
+  razonSocialSolicitante: string = '';
+
+  /**
+   * Nombre de la pantalla solicitante
+   */
+  nombreSolicitante: string = '';
+
+  /**
    * Constructor que inyecta los servicios requeridos para el funcionamiento del componente.
    * @constructor
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaService - Servicio para gestionar operaciones relacionadas con la importación de acuicultura
    * @param {ConsultaioQuery} consultaQuery - Query para manejar el estado de las consultas
+   * @param consultaioStore
+   * @param registroSolicitudService
+   * @param solicitanteQuery
    * @memberof PasoUnoComponent
    */
   constructor(
     private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
     private consultaioStore: ConsultaioStore,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
+    public solicitanteQuery: SolicitanteQuery
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
@@ -184,6 +208,26 @@ export class PasoUnoComponent implements OnDestroy {
         } else {
           this.RENDERDOM = true;
         }
+      });
+  }
+
+  ngOnInit(): void {
+    this.obtieneDatosTabSolicitud();
+  }
+
+  /**
+   * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+   */
+  obtieneDatosTabSolicitud() {
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((seccionState) => {
+        this.rfcOriginal = seccionState.rfc_original;
+        this.tipoPersonaSolicitante = seccionState.tipo_persona;
+        this.razonSocialSolicitante = seccionState.razon_social
+          ? seccionState.razon_social
+          : '';
+        this.nombreSolicitante = seccionState.nombre;
       });
   }
 
@@ -205,7 +249,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   public async validarFormularios(): Promise<boolean> {
-    const TABSVALIDADAS = [
+    const TABS_VALIDADAS = [
       { index: 2, ref: this.datosSolicitud },
       { index: 3, ref: this.datosParaMovilizacion },
       { index: 4, ref: this.tercerospage },
@@ -213,10 +257,10 @@ export class PasoUnoComponent implements OnDestroy {
     ];
 
     // Validación síncrona de pestañas
-    for (const TAB of TABSVALIDADAS) {
-      const VALIDAPESTANAS = TAB.ref.validarFormulario();
+    for (const TAB of TABS_VALIDADAS) {
+      const VALIDA_PESTAÑAS = TAB.ref.validarFormulario();
 
-      if (!VALIDAPESTANAS) {
+      if (!VALIDA_PESTAÑAS) {
         this.indice = TAB.index;
         return false;
       }
@@ -225,11 +269,55 @@ export class PasoUnoComponent implements OnDestroy {
     // Ahora sí, espera a guardarSolicitud()
     try {
       const CODIGO = await firstValueFrom(this.guardarSolicitud());
-      return CODIGO === '00';
+
+      if (CODIGO === '00') {
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error('Error en guardarSolicitud:', err);
       return false;
     }
+  }
+
+  /**
+   * @description Valida todos los formularios del paso uno
+   * @method validarFormularios
+   * @returns { valido: boolean; mensaje?: string } true si todos los formularios son válidos, false en caso contrario
+   */
+  public validarFormulariosDos(): { valido: boolean; mensaje?: string } {
+    const TABS_VALIDADAS = [
+      { index: 2, ref: this.datosSolicitud },
+      { index: 3, ref: this.datosParaMovilizacion },
+      { index: 4, ref: this.tercerospage },
+      { index: 5, ref: this.pagoDerechos },
+    ];
+
+    let esValido = true;
+
+    for (const TAB of TABS_VALIDADAS) {
+      const VALIDA_PESTAÑAS = TAB.ref.validarFormulario();
+      if (TAB.ref && !VALIDA_PESTAÑAS) {
+        this.indice = TAB.index; // mover a la pestaña con error
+        esValido = false;
+        return { valido: esValido, mensaje: '' };
+      }
+    }
+    if (esValido) {
+      this.guardarSolicitud().subscribe({
+        next: (codigo) => {
+          if (codigo === '00') {
+            return {
+              valido: esValido,
+              mensaje: this.consultaState.id_solicitud,
+            };
+          }
+          esValido = false;
+          return { valido: esValido };
+        },
+      });
+    }
+    return { valido: esValido };
   }
 
   /**
@@ -391,18 +479,13 @@ export class PasoUnoComponent implements OnDestroy {
       },
       // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
       solicitante: {
-        rfc: this.solicitante.datosGenerales?.datos.rfc_original ?? '',
+        rfc: this.rfcOriginal ?? '',
         rol_capturista: 'Solicitante', // suponemos se saca de la sesion pero aun no funciona login
         nombre:
-          this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() ===
-          'm'
-            ? this.solicitante.datosGenerales?.datos.identificacion
-                .razon_social ?? ''
-            : this.solicitante.datosGenerales?.datos.identificacion.nombre ??
-              '',
-        es_persona_moral:
-          this.solicitante.datosGenerales?.datos.identificacion.tipo_persona?.toLowerCase() ===
-          'm',
+          this.tipoPersonaSolicitante?.toLowerCase() === 'm'
+            ? this.razonSocialSolicitante ?? ''
+            : this.nombreSolicitante ?? '',
+        es_persona_moral: this.tipoPersonaSolicitante?.toLowerCase() === 'm',
         certificado_serial_number: 0, // no sabemos de donde se obtiene
       },
 

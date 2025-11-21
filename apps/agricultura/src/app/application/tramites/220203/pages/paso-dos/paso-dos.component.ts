@@ -1,15 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 import {
-  CATALOGOS_ID,
   Catalogo,
   CatalogosService,
   TEXTOS,
-
+  Usuario,
 } from '@ng-mf/data-access-user';
-import { DOCUMENTOSSELECCIONADOS } from '../../constantes/220203/importacion-de-acuicultura.enum';
-import { Subject } from 'rxjs';
-
+import { Subject, map, takeUntil } from 'rxjs';
 
 /**
  * Componente para manejar el paso dos en el proceso de importación de acuicultura.
@@ -22,7 +26,6 @@ import { Subject } from 'rxjs';
   standalone: true,
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-
   /**
    * Texto utilizado en el componente.
    * @type {typeof TEXTOS}
@@ -50,6 +53,49 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   private destroyNotifier$ = new Subject<void>();
 
   /**
+   * Id del tipo de trámite actual.
+   */
+  @Input() idTipoTRamite!: string;
+  /**
+   * Id de la solicitud actual.
+   */
+  @Input() idSolicitud!: string;
+  /**
+   * Servicio para gestionar los catálogos.
+   */
+  @Input() datosUsuario!: Usuario;
+  /**
+   * Evento que se emite para reenviar la solicitud de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de carga de documentos.
+   */
+  reenviarEvento = new EventEmitter<void>();
+  /**
+   * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
+   * @type {EventEmitter<void>}
+   */
+  @Input() cargaArchivosEvento!: EventEmitter<void>;
+  /**
+   * Indica si la carga de documentos se realizó correctamente.
+   * @type {boolean}
+   */
+  cargaRealizada = false;
+  /**
+   * Evento que se emite para indicar si la carga de documentos se ha realizado.
+   * Este evento se utiliza para notificar a otros componentes que la carga de documentos ha finalizado.
+   */
+  @Output() reenviarCargaRealizada = new EventEmitter<boolean>();
+
+  /**
+   * Evento que se emite para indicar si existen documentos para cargar, y así activar el botón de "Cargar Archivos en <solicitud-page>".
+   * Este evento se utiliza para habilitar o deshabilitar el botón de carga de archivos en <solicitud-page>.
+   */
+  @Output() reenviarEventoCarga = new EventEmitter<boolean>();
+  /** Carga del progreso del archivo */
+  cargaEnProgreso: boolean = true;
+  /** Emite un boleano sobre la carga del archivo */
+  @Output() cargaEnProgresoChange = new EventEmitter<boolean>();
+
+  /**
    * Constructor que inyecta el servicio de catalogos.
    * @param {CatalogosService} catalogosServices Servicio para obtener los catalogos.
    */
@@ -62,28 +108,43 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Carga los tipos de documentos disponibles para el trámite.
    */
   ngOnInit(): void {
-    this.getTiposDocumentos();
-    this.documentosSeleccionados = DOCUMENTOSSELECCIONADOS;
+    this.cargaArchivosEvento
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map(() => {
+          this.reenviarEvento.emit();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
-   * Este método hace una solicitud al servicio de catálogos para cargar los tipos de documentos.
+   * Actualiza el estado de carga de documentos y emite un evento con el nuevo valor.
+   * @param cargaRealizada Indica si la carga de documentos se realizó correctamente.
+   * @returns void
    */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        },
-        error: (error): void => {
-          // Maneja el error apropiadamente
-          console.error('Error al cargar los documentos del catálogo:', error);
-        },
-      });
+  documentosCargados(cargaRealizada: boolean): void {
+    this.cargaRealizada = cargaRealizada;
+    this.reenviarCargaRealizada.emit(this.cargaRealizada);
+  }
+
+  /**
+   * Maneja el evento de carga de documentos y emite un evento con el estado.
+   * @param existenDocumentosParaCargar - Indica si hay documentos para cargar.
+   * @returns void
+   */
+  manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {
+    this.reenviarEventoCarga.emit(existenDocumentosParaCargar);
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param carga Valor booleano que indica si la carga está en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+    this.cargaEnProgresoChange.emit(this.cargaEnProgreso);
   }
 
   /**

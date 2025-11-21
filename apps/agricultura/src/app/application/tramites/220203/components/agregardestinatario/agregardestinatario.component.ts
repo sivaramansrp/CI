@@ -11,6 +11,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Subject, takeUntil } from "rxjs";
+import { Acuicultura } from '../../models/220203/importacion-de-acuicultura.module';
 import { AcuiculturaQuery } from "../../estados/sanidad-certificado.query";
 import { CommonModule } from "@angular/common";
 import { ImportacionDeAcuiculturaService } from "../../services/220203/importacion-de-acuicultura.service";
@@ -154,7 +155,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular
    * @param {TercerosrelacionadosService} tercerosrelacionadosService - Servicio para obtener catálogos de terceros relacionados
    * @param {Router} router - Servicio de navegación de Angular para redirecciones
-   * @param {ImportacionDeAcuiculturaService} certificadoZoosanitarioServices - Servicio para operaciones de importación de acuicultura
+   * @param {ImportacionDeAcuiculturaService} importacionAcuiculturaService - Servicio para operaciones de importación de acuicultura
    * @param {AcuiculturaQuery} certificadoZoosanitarioQuery - Query para consultas del estado de acuicultura
    * @param {ActivatedRoute} route - Ruta activa para obtener parámetros de navegación
    * @memberof AgregardestinatarioComponent
@@ -163,7 +164,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     public fb: FormBuilder,
     public tercerosrelacionadosService: TercerosrelacionadosService,
     private router: Router,
-    private readonly certificadoZoosanitarioServices: ImportacionDeAcuiculturaService,
+    private readonly importacionAcuiculturaService: ImportacionDeAcuiculturaService,
     private readonly certificadoZoosanitarioQuery: AcuiculturaQuery,
     private route: ActivatedRoute
   ) {
@@ -199,48 +200,32 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       telefono: [''],
       correo: ['']
     });
-    this.certificadoZoosanitarioQuery.seleccionarTerceros$
+    this.importacionAcuiculturaService
+      .getAllDatosForma()
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe(async (data: TercerosrelacionadosdestinoTable) => {
-        const DESTINATARIO = data;
-        console.log(DESTINATARIO);
+      .subscribe((data: Acuicultura) => {
+        const DESTINATARIO = data.selectedTerceros;
         if (DESTINATARIO) {
-
-          let VALOR_EDO:string = "";
-          let VALOR_MUNI:string = "";
-
-          if(DESTINATARIO.estado !== undefined){
-            VALOR_EDO = DESTINATARIO.estado;
-            await this.municipioCatalogChange(VALOR_EDO);
-
-          }
-
-          if(DESTINATARIO.municipio !== undefined){
-            VALOR_MUNI = DESTINATARIO.municipio;
-            await this.coloniaCatalogChange(VALOR_MUNI);
-
-          }
-
           this.destinatarioForm.patchValue({
             tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
-            nombre: DESTINATARIO.nombre || '',
-            primerApellido: DESTINATARIO.primerApellido || '',
-            segundoApellido: DESTINATARIO.segundoApellido || '',
-            razonSocial: DESTINATARIO.razonSocial || '',
-            pais: 'MEX',
-            codigoPostal: DESTINATARIO.codigoPostal || '',
-            estado: DESTINATARIO.estado || '',
-            municipio: DESTINATARIO.municipio || '',
-            colonia: DESTINATARIO.colonia || '',
-            calle: DESTINATARIO.calle || '',
-            numeroExterior: DESTINATARIO.numeroExterior || '',
-            numeroInterior: DESTINATARIO.numeroInterior || '',
-            lada: DESTINATARIO.lada || '',
-            telefono: DESTINATARIO.telefono || '',
-            correo: DESTINATARIO.correo || ''
-          });
+              nombre: DESTINATARIO.nombre || '',
+              primerApellido: DESTINATARIO.primerApellido || '',
+              segundoApellido: DESTINATARIO.segundoApellido || '',
+              razonSocial: DESTINATARIO.razonSocial || '',
+              pais: 'MEX',
+              codigoPostal: DESTINATARIO.codigoPostal || '',
+              estado: DESTINATARIO.estado || '',
+              municipio: DESTINATARIO.municipio || '',
+              colonia: DESTINATARIO.colonia || '',
+              calle: DESTINATARIO.calle || '',
+              numeroExterior: DESTINATARIO.numeroExterior || '',
+              numeroInterior: DESTINATARIO.numeroInterior || '',
+              lada: DESTINATARIO.lada || '',
+              telefono: DESTINATARIO.telefono || '',
+              correo: DESTINATARIO.correo || ''
+          })
         }
-      });
+      })
 
   }
 
@@ -272,14 +257,64 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @returns {void}
    */
   onGuardarDestinatario(): void {
-    if (this.destinatarioForm.valid) {
+    if (this.isFormularioValido()) {
+      const FORM_VALUE = this.destinatarioForm.value;
+      // Obtener las descripciones de los catalogos para complementar los datos
+      const MUNICIPIO_DESCRIPCION = this.obtenerDescripcionMunicipio(FORM_VALUE.municipio);
+      const ESTADO_DESCRIPCION = this.obtenerDescripcionEstado(FORM_VALUE.estado);
+      const PAIS_DESCRIPCION = this.obtenerDescripcionPais(FORM_VALUE.pais);
+      const COLONIA_DESCRIPCION = this.obtenerDescripcionColonia(FORM_VALUE.colonia);
+
+      // Cear el objeto con los valores del formulario y las descripciones
+      const DESTINATARIO_DATA: TercerosrelacionadosdestinoTable = {
+        ...FORM_VALUE,
+        // Agregamos las descripciones como propiedades adicionales
+        // para que puedan ser utilizadas por el componente padre
+        municipioDescripcion: MUNICIPIO_DESCRIPCION,
+        estadoDescripcion: ESTADO_DESCRIPCION,
+        paisDescripcion: PAIS_DESCRIPCION,
+        coloniaDescripcion: COLONIA_DESCRIPCION,
+      };
+
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
-      LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
-      this.certificadoZoosanitarioServices.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
+      LISTA_DINAMICA.push(DESTINATARIO_DATA);
+      this.importacionAcuiculturaService.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
       this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
     }
+  }
+
+  /**
+   * Verifica si el formulario es válido según el tipo de persona seleccionado.
+   * @method isFormularioValido
+   * @returns {boolean} True si el formulario es válido, false en caso contrario.
+   */
+  isFormularioValido(): boolean {
+    const TIPO_PERSONA = this.destinatarioForm.get('tipoMercancia')?.value;
+
+    // Campos comunes siempre requeridos
+    const CAMPOS_COMUNES = ['pais', 'estado', 'calle', 'numeroExterior'];
+    const CAMPOS_COMUNES_VALIDOS = CAMPOS_COMUNES.every((campo) => {
+      const CONTROL = this.destinatarioForm.get(campo);
+      return CONTROL?.valid;
+    });
+
+    if (!CAMPOS_COMUNES_VALIDOS) {
+      return false;
+    }
+
+    // Validación específica según tipo de persona
+    if (TIPO_PERSONA === 'no') {
+      // Moral: Solo razón social es requerida
+      const RAZON_SOCIAL = this.destinatarioForm.get('razonSocial');
+      return RAZON_SOCIAL?.valid === true;
+    }
+
+    // Física: Nombre y primer apellido son requeridos
+    const NOMBRE = this.destinatarioForm.get('nombre');
+    const PRIMER_APELLIDO = this.destinatarioForm.get('primerApellido');
+    return NOMBRE?.valid === true && PRIMER_APELLIDO?.valid === true;
   }
 
   /**
@@ -402,6 +437,68 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       .subscribe((data) => {
         this.municipioCatalog = data.datos ?? [];
       });
+  }
+
+  /**
+   * Obtiene la descripción del municipio a partir de su ID.
+   * @param municipioId ID del municipio a buscar
+   * @returns Descripción del municipio o el ID si no se encuentra
+   * @method obtenerDescripcionMunicipio
+   */
+  obtenerDescripcionMunicipio(municipioId: string | undefined): string {
+    return (
+      this.municipioCatalog?.find(
+        (m) => m.id?.toString() === municipioId?.toString()
+      )?.descripcion ||
+      municipioId ||
+      ''
+    );
+  }
+
+  /**
+   * Obtiene la descripción del estado a partir de su ID.
+   * @param estadoId ID del estado a buscar
+   * @returns Descripción del estado o el ID si no se encuentra
+   * @method obtenerDescripcionEstado
+   */
+  obtenerDescripcionEstado(estadoId: string): string {
+    return (
+      this.estadoCatalog?.find((e) => e.id?.toString() === estadoId?.toString())
+        ?.descripcion ||
+      estadoId ||
+      ''
+    );
+  }
+
+  /**
+   * Obtiene la descripción del país a partir de su ID.
+   * @param paisId ID del país a buscar
+   * @returns Descripción del país o el ID si no se encuentra
+   * @method obtenerDescripcionPais
+   */
+  obtenerDescripcionPais(paisId: string): string {
+    return (
+      this.paisCatalog?.find((p) => p.id?.toString() === paisId?.toString())
+        ?.descripcion ||
+      paisId ||
+      ''
+    );
+  }
+
+  /**
+   * Obtiene la descripción de la colonia a partir de su ID.
+   * @param coloniaId ID de la colonia a buscar
+   * @returns Descripción de la colonia o el ID si no se encuentra
+   * @method obtenerDescripcionColonia
+   */
+  obtenerDescripcionColonia(coloniaId: string | undefined): string {
+    return (
+      this.coloniaCatalog?.find(
+        (c) => c.id?.toString() === coloniaId?.toString()
+      )?.descripcion ||
+      coloniaId ||
+      ''
+    );
   }
 
   /**

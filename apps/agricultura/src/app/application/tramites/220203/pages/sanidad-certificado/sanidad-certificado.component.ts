@@ -1,4 +1,3 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   BtnContinuarComponent,
@@ -6,8 +5,16 @@ import {
   ConsultaioState,
   DatosPasos,
   ListaPasosWizard,
+  SolicitanteQuery,
   WizardComponent,
 } from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {
   ERROR_FORMA_ALERT,
   MENSAJE_DE_EXITO_ETAPA_UNO,
@@ -19,6 +26,7 @@ import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.modu
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
 
 /**
  * @fileoverview
@@ -107,27 +115,6 @@ export class SanidadCertificadoComponent implements OnInit {
    */
   indice: number = 1;
 
-  /** Indica la visibilidad del botón Guardar. */
-  public btnGuardarVisible: string = 'visible';
-
-  /**
-   * Notificador para destruir las suscripciones y evitar fugas de memoria.
-   * @type {Subject<void>}
-   * @private
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Estado de la consulta actual, contiene la información relevante del solicitante.
-   * @type {ConsultaioState}
-   */
-  public consultaState!: ConsultaioState;
-  /**
-   * Variable para almacenar el id de la solicitud.
-   * @private
-   */
-  public idSolicitud: string = '';
-
   /**
    * Objeto con la configuración de los textos y número de pasos del wizard.
    * @public
@@ -137,9 +124,67 @@ export class SanidadCertificadoComponent implements OnInit {
   datosPasos: DatosPasos = {
     nroPasos: this.PASOS.length,
     indice: this.indice,
-    txtBtnAnt: 'Anterior',
+    txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Objeto que almacena los valores complementarios del formulario.
+   */
+  valoresComplemento: {
+    rfc: string;
+    tipoPersona: string;
+    razon_social: string;
+    nombre: string;
+  } = {
+    rfc: '',
+    tipoPersona: '',
+    razon_social: '',
+    nombre: '',
+  };
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Variable para almacenar el id de la solicitud.
+   * @private
+   */
+  public idSolicitud: string = '';
+
+  /**
+   * Consulta datos del solicitante dentro de akita
+   */
+  public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
+  /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
+  public btnGuardar: boolean = true;
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+  /**
+   * Indica si el botón para cargar archivos está hñabilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true;
 
   /**
    * Referencia al componente Wizard para controlar la navegación entre pasos.
@@ -155,7 +200,7 @@ export class SanidadCertificadoComponent implements OnInit {
    * @type {PasoUnoComponent}
    * @memberof SanidadCertificadoComponent
    */
-  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  @ViewChild(PasoUnoComponent) pasoUnoRef!: PasoUnoComponent;
 
   /**
    * Constructor del componente.
@@ -167,57 +212,45 @@ export class SanidadCertificadoComponent implements OnInit {
   constructor(private consultaQuery: ConsultaioQuery) {}
   ngOnInit(): void {
     this.obtenerDatosDelStore();
+    this.obtieneDatosTabSolicitud();
   }
 
   /**
-   * Método que maneja la acción del botón y navega entre los pasos del wizard.
-   * Valida formularios antes de continuar desde el primer paso y controla la navegación.
-   * @public
-   * @param {AccionBoton} e - Objeto que contiene la acción (cont/ant) y el valor del índice del botón
-   * @memberof SanidadCertificadoComponent
+   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
+   * del formulario.
+   *
+   * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
+   * y el valor del índice del paso al que se debe navegar.
+   *
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
+   *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
+   *   (valor `cont`) o retroceder (valor `atras`).
+   *
+   * @returns {void}
    */
-  async getValorIndice(e: AccionBoton): Promise<void> {
-    this.esFormaInValido = false;
-
-    // Validar formularios antes de continuar desde el paso uno
-    if (this.indice === 1 && e.accion === 'cont') {
-      const ES_VALIDO = await this.validarTodosFormulariosPasoUno();
-      if (!ES_VALIDO) {
+  getValorIndice(e: AccionBoton): void {
+    // Si estamos en el paso 1, validar antes de continuar
+    if (this.indice === 1) {
+      const VALIDA_PESTANAS = this.pasoUnoRef?.validarFormulariosDos();
+      if (!VALIDA_PESTANAS.valido) {
+        // Detener la navegación si no es válido
         this.datosPasos.indice = this.indice;
         this.esFormaInValido = true;
-        return; // Detener ejecución si los formularios son inválidos
+        return;
       }
     }
 
     this.esFormaInValido = false;
     this.esPasoUnoCompleto = true;
-    // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (e.valor > 0 && e.valor <= this.PASOS.length) {
+    if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-
-      // Actualizar el índice y datosPasos
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
-  }
-  /**
-   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
-   * Verifica que el componente del primer paso esté disponible y ejecuta su método de validación.
-   * @private
-   * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario
-   * @memberof SanidadCertificadoComponent
-   */
-  private async validarTodosFormulariosPasoUno(): Promise<boolean> {
-    if (!this.pasoUnoComponent) {
-      return true;
-    }
-    const ES_FORMULARIO_VALIDO =
-      await this.pasoUnoComponent.validarFormularios();
-
-    return ES_FORMULARIO_VALIDO;
   }
 
   /**
@@ -239,4 +272,81 @@ export class SanidadCertificadoComponent implements OnInit {
       )
       .subscribe();
   }
+
+  /**
+   * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
+   */
+  obtieneDatosTabSolicitud(): void {
+    this.solicitanteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.valoresComplemento.rfc = seccionState.rfc_original;
+        this.valoresComplemento.tipoPersona = seccionState.tipo_persona;
+        this.valoresComplemento.razon_social = seccionState.razon_social ?? '';
+        this.valoresComplemento.nombre = seccionState.nombre;
+      });
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Maneja el evento de carga en progreso emitido por un componente hijo.
+   * Actualiza el estado de cargaEnProgreso según el valor recibido.
+   * @param cargando Valor booleano que indica si la carga está en progreso.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
+
+  protected readonly datosUsuario = USUARIO_INFO;
 }

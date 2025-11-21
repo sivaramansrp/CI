@@ -7,13 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
-  BtnContinuarComponent,
+  BtnContinuarComponent, CargaDocumentoComponent,
   CatalogoSelectComponent,
   CrosslistComponent,
   FirmaElectronicaComponent,
   InputCheckComponent,
   InputFechaComponent,
-  InputRadioComponent,
+  InputRadioComponent, PasoFirmaComponent,
   SolicitanteComponent,
   TablaDinamicaComponent,
   TableComponent,
@@ -21,6 +21,8 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
+
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { ImportacionDeAcuiculturaRoutingModule } from './importacion-de-acuicultura-routing.module';
 
@@ -30,8 +32,6 @@ import { DatosParaMovilizacionComponent } from './components/datos-para-moviliza
 
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 @NgModule({
   declarations: [],
@@ -42,8 +42,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionComponent,
     PagoDeDerechosComponent,
-    PasoUnoComponent,
-
     // UI Components from data-access-user
     TablaDinamicaComponent,
     WizardComponent,
@@ -61,6 +59,8 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     CatalogoSelectComponent,
     TercerosComponent,
     ToastrModule.forRoot(),
+    CargaDocumentoComponent,
+    PasoFirmaComponent,
   ],
   providers: [ToastrService],
 })
