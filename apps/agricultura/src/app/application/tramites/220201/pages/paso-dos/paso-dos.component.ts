@@ -145,6 +145,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogoDocumentosService,
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
+    console.warn('idSolicitud ' + this.idSolicitud);
   }
 
   /**

@@ -549,3 +549,26 @@ export function formatMonthYear(date: Date): string {
   return `${MONTH}/${YEAR}`;
 }
 
+/**
+ * Formatea una fecha 'DD/MM/YYYY' a 'YYYY-MM-DD HH:mm:ss' (hora de objeto Date).
+ * @param fechaStr Fecha en formato 'DD/MM/YYYY'.
+ * @returns Fecha formateada como 'YYYY-MM-DD HH:mm:ss'.
+ */
+export function formatearFechaSolicitudSinHora(fechaStr: string): string {
+  if (!fechaStr) { return '' }
+
+  const PARTES = fechaStr.split('/');
+  if (PARTES.length !== 3) { return '' }
+
+  const [DIA, MES, ANIO] = PARTES;
+  const FECHA = new Date(Number(ANIO), Number(MES) - 1, Number(DIA));
+
+  const YYYY = FECHA.getFullYear();
+  const MM = String(FECHA.getMonth() + 1).padStart(2, '0');
+  const DD = String(FECHA.getDate()).padStart(2, '0');
+  const HH = String(FECHA.getHours()).padStart(2, '0');
+  const MI = String(FECHA.getMinutes()).padStart(2, '0');
+  const SS = String(FECHA.getSeconds()).padStart(2, '0');
+
+  return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}`;
+}

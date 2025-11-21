@@ -13,7 +13,11 @@ import {
   TablaDinamicaExpandidaComponent, 
   TablaSeleccion, 
   TituloComponent, 
-  convertDate, } from '@libs/shared/data-access-user/src';
+  convertDate,
+  formatFechaCreacion,
+  formatFechaCustom,
+  formatearFechaSolicitud,
+  formatearFechaSolicitudSinHora, } from '@libs/shared/data-access-user/src';
   import { 
   CapturarSolicitud,
   DatosParaMovilizacionNacional,
@@ -1293,7 +1297,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
         cve_banco: this.pagoDeDerechos?.banco || '',
         llave_pago: this.pagoDeDerechos?.llavePago || '',
-        fec_pago: this.pagoDeDerechos?.fechaPago || '',
+        fec_pago: formatearFechaSolicitudSinHora(this.pagoDeDerechos?.fechaPago) || '',
         imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
       },
       solicitante: {
@@ -1429,7 +1433,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
         cve_banco: this.pagoDeDerechos?.banco || '',
         llave_pago: this.pagoDeDerechos?.llavePago || '',
-        fec_pago: this.pagoDeDerechos?.fechaPago || '',
+        fec_pago: formatearFechaSolicitudSinHora(this.pagoDeDerechos?.fechaPago) || '',
         imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
       },
       solicitante: {
