@@ -180,8 +180,8 @@ export class RegistrarSolicitudMcpService {
      * Obtiene la lista de clasificaciones de productos.
      * @returns Observable con la lista de clasificaciones de productos.
      */
-     obtenerClasificacionProductos(): Observable<BaseResponse<Catalogo[]>> {
-      const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_PRODUCTO}`;
+     obtenerClasificacionProductos(procedimiento: string,tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_PRODUCTO(procedimiento, tramite)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 
@@ -190,8 +190,8 @@ export class RegistrarSolicitudMcpService {
      * @
      * returns Observable con la lista de bancos.
      */
-    obtenerEspecificarClasificacionProducto(): Observable<BaseResponse<Catalogo[]>> {
-      const ENDPOINT = `${this.host}${CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO}`;
+    obtenerEspecificarClasificacionProducto(procedimiento: string, idClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO(procedimiento, idClasificacion)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
     
@@ -199,8 +199,8 @@ export class RegistrarSolicitudMcpService {
      * Obtiene los datos de los tipos de productos.
      * @returns Observable con la lista de tipos de productos.
      */
-    obtenerTipoProducto(): Observable<BaseResponse<Catalogo[]>> {
-      const ENDPOINT = `${this.host}${CATALOGO_TIPOS_PRODUCTO}`;
+    obtenerTipoProducto(procedimiento: string, tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_TIPOS_PRODUCTO(procedimiento, tramite)}`;
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 

@@ -1,12 +1,12 @@
 
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702State, Solicitud260702Store, } from '../../../estados/stores/shared2607/tramites260702.store';
 import { BANCO_DATA } from '../../../constantes/catalogs.enum';
 import { CommonModule } from '@angular/common';
-import{ConsultaioQuery} from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 
@@ -30,6 +30,12 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
   pagoDeDerechosForm!: FormGroup;
 
+  /**
+   * ID del procedimiento.
+   * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
+   */
+  @Input() idProcedimiento!: number;
+
   /** Observable para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -39,6 +45,10 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Datos del catálogo de bancos disponibles */
   public bancoData = BANCO_DATA;
   /**
+   * Datos del catálogo de bancos disponibles. 
+   */
+   bancoDatos: Catalogo[] = [];
+  /**
    * Configuración para el campo de selección de la fecha de pago.
    */
   fechaPago: InputFecha = {
@@ -47,7 +57,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     habilitado: true,
   };
 
- 
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -147,12 +157,21 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * Obtiene los datos del catálogo de bancos.
    */
   getBancoData(): void {
-    this.registrarsolicitudmcp
-      .getBancoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.bancoData.catalogos = data as Catalogo[];
-      });
+    if (this.idProcedimiento) {
+      this.registrarsolicitudmcp
+        .obtenerBancos(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.bancoDatos = data.datos ?? [];
+        });
+    } else {
+      this.registrarsolicitudmcp
+        .getBancoData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.bancoDatos = data;
+        });
+    }
   }
 
   /**

@@ -208,6 +208,17 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
  * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
  */
    @Input() idProcedimiento!: number;
+
+   /**
+    * idTramite
+    * Este campo almacena el identificador único del trámite asociado a la solicitud.
+    */
+   public idTramite : string ='260201'
+/** 
+ * ID de clasificación.
+ * Este campo almacena el identificador de la clasificación del producto.
+*/
+   public idClasificacion: string ='1';
   /**
    * Constructor del componente.
    *
@@ -783,31 +794,60 @@ if (this.idProcedimiento) {
   }
   /** Obtiene los datos de clasificación del producto */
   getClasificacionDelProductoData(): void {
-    this.registrarsolicitudmcp
-      .getClasificacionDelProductoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.delProducto.catalogos = data as Catalogo[];
-      });
+     if (this.idProcedimiento) {
+      this.service
+        .obtenerClasificacionProductos(this.idProcedimiento?.toString(),this.idTramite)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+           this.delProducto.catalogos = data.datos as Catalogo[];
+        });
+    } else {
+      this.service
+        .getClasificacionDelProductoData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.delProducto.catalogos = data as Catalogo[];
+        });
+    }
+
   }
   /** Obtiene los datos para especificar clasificación del producto */
   getEspificarData(): void {
-    this.registrarsolicitudmcp
-      .getEspificarData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.especificarData.catalogos = data as Catalogo[];
-      });
+ if (this.idProcedimiento) {
+      this.service
+        .obtenerEspecificarClasificacionProducto(this.idProcedimiento?.toString(),this.idClasificacion)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+           this.especificarData.catalogos = data.datos as Catalogo[];
+        });
+    } else {
+      this.service
+        .getEspificarData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.especificarData.catalogos = data as Catalogo[];
+        });
+    }
   }
 
   /** Obtiene los datos del tipo de producto */
   getTipoProductoData(): void {
-    this.registrarsolicitudmcp
-      .getTipoProductoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.tipoProductoData.catalogos = data as Catalogo[];
-      });
+
+ if (this.idProcedimiento) {
+      this.service
+        .obtenerTipoProducto(this.idProcedimiento?.toString(),this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+           this.tipoProductoData.catalogos = data.datos as Catalogo[];
+        });
+    } else {
+      this.service
+        .getTipoProductoData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.tipoProductoData.catalogos = data as Catalogo[];
+        });
+    }
   }
 
   /** Obtiene los datos de la lista de claves */
