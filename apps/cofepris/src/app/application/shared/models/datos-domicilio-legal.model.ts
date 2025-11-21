@@ -41,6 +41,8 @@ export interface MercanciasInfo {
   umc: string;
   estadoFisicoOtro?: string;
   objetoImportacionOtro?: string;
+  paisDeOriginDatosObj?: Array<{ clave: string; descripcion: string }>;
+  paisDeProcedenciaDatosObj?: Array<{ clave: string; descripcion: string }>;
 }
 
 export interface PermisoModel {
