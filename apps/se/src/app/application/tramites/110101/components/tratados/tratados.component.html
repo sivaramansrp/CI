@@ -93,7 +93,7 @@
                   value="true"
                   formControlName="opcionSeleccionada"
                 />
-                <label class="form-check-label" for="radioSi">Sí</label>
+                <label class="form-check-label" for="radioSi">Aprobada</label>
             </div>
             <div class="form-check">
               <input  class="form-check-input"
@@ -103,7 +103,7 @@
                   value="false"
                   formControlName="opcionSeleccionada">
               <label class="form-check-label" for="radioNo" >
-                No
+                No aprobada
               </label>
             </div>
           </div>
@@ -181,6 +181,7 @@
 
 @for (pais of paisesInstancias; track pais) {
   <app-otras-instancias
+    #otrasInstancias
     [pais]="pais"
     [titulo]="instanciasConfig[pais].titulo"
     [mensajeAlerta]="instanciasConfig[pais].alerta"

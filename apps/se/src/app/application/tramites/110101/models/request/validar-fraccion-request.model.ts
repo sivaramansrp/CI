@@ -69,23 +69,23 @@ export interface MercanciaRequest {
  */
 export interface TratadoSeleccionado {
     /** Clave del grupo de criterio */
-    cve_grupo_criterio: string;
+    cve_grupo_criterio: string | null;
     
     /** ID del bloque comercial */
-    id_bloque: number;
+    id_bloque: number | null;
     
     /** Clave del tratado o acuerdo */
-    cve_tratado_acuerdo: string;
+    cve_tratado_acuerdo: string | null;
     
     /** ID del tratado o acuerdo */
-    id_tratado_acuerdo: number;
+    id_tratado_acuerdo: number | null;
     
     /** Clave del país */
-    cve_pais: string;
+    cve_pais: string | null;
     
     /** ID descripción alterna fracción */
-    id_desc_alterna_fraccion: number;
+    id_desc_alterna_fraccion: number | null;
     
     /** ID tipo proceso mercancía */
-    ide_tipo_proceso_mercancia: string;
+    ide_tipo_proceso_mercancia: string | null;
 }

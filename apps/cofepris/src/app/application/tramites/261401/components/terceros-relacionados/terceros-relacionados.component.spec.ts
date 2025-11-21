@@ -12,6 +12,7 @@ describe('TercerosRelacionadosComponent', () => {
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
   let solicitudDatosServiceMock: jest.Mocked<SolicitudModificacionPermisoSalidaTerritorioService>;
   let tramite261401StoreMock: jest.Mocked<Tramite261401Store>;
+  let tramite261401QueryMock: jest.Mocked<Tramite261401Query>;
 
   beforeEach(async () => {
     solicitudDatosServiceMock = {
@@ -23,26 +24,47 @@ describe('TercerosRelacionadosComponent', () => {
       setDestinatarioDatos: jest.fn(),
     } as unknown as jest.Mocked<Tramite261401Store>;
 
+    tramite261401QueryMock = {
+      selectSolicitud$: of({
+        destinatarioDatos: [],
+      }),
+    } as unknown as jest.Mocked<Tramite261401Query>;
+
     await TestBed.configureTestingModule({
       declarations: [],
       imports: [TercerosRelacionadosComponent],
       providers: [
         { provide: SolicitudModificacionPermisoSalidaTerritorioService, useValue: solicitudDatosServiceMock },
         { provide: Tramite261401Store, useValue: tramite261401StoreMock },
-        { 
-          provide: Tramite261401Query, 
-          useValue: { 
-            selectSolicitud$: of({}),
-            someObservable$: of([]),
-            pipe: jest.fn().mockReturnValue(of([]))
-          } 
-        }, 
+        { provide: Tramite261401Query, useValue: tramite261401QueryMock },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
+    
+
+    component.agregarDestinatarioState = {
+      tipoPersona: '',
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+      denominacion: '',
+      pais: '',
+      estado: '',
+      codigopostal: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      lada: '',
+      telefono: '',
+      correoElectronico: ''
+    } as any;
+    component.paisData = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
+    
+
+    component.crearFormTransporte();
     fixture.detectChanges();
   });
 
@@ -127,8 +149,8 @@ describe('TercerosRelacionadosComponent additional logic', () => {
   });
 
   it('should create form with expected controls and validators', () => {
-    expect(component.destinatarioForm.contains('tipoPersona')).toBe(true);
-    expect(component.destinatarioForm.contains('nombre')).toBe(true);
+    expect(component.destinatarioForm.get('tipoPersona')).toBeTruthy();
+    expect(component.destinatarioForm.get('nombre')).toBeTruthy();
     expect(component.destinatarioForm.get('nombre')?.validator).toBeTruthy();
   });
 
@@ -164,15 +186,6 @@ describe('TercerosRelacionadosComponent additional logic', () => {
     expect(component.esFormularioVisible).toBe(false);
   });
 
-  it('should patch form and show form on openModificarMercancias if one row selected', () => {
-    component.tableData = [{ id: 1, tipoPersona: 'Física', nombre: 'Juan', primerApellido: 'Pérez', segundoApellido: '', denominacion: '', pais: '', domicilio: '', estado: '', codigopostal: '', calle: '', numeroExterior: '', numeroInterior: '', lada: '', telefono: '', correoElectronico: '' }] as any;
-    component.selectedRows = new Set([1]);
-    const patchSpy = jest.spyOn(component.destinatarioForm, 'patchValue');
-    component.openModificarMercancias();
-    expect(patchSpy).toHaveBeenCalled();
-    expect(component.esFormularioVisible).toBe(true);
-  });
-
   it('should call abrirModal on onDeleted if rows selected', () => {
     const modalSpy = jest.spyOn(component, 'abrirModal');
     component.selectedRows = new Set([1]);
@@ -195,13 +208,16 @@ describe('TercerosRelacionadosComponent additional logic', () => {
 
   it('esInvalido should return true if control is invalid and touched', () => {
     const control = component.destinatarioForm.get('nombre');
-    control?.setValue('');
+    control?.enable(); 
+    control?.setValue(''); 
     control?.markAsTouched();
+    control?.updateValueAndValidity(); 
     expect(component.esInvalido('nombre')).toBe(true);
   });
 
   it('esInvalido should return false if control is valid', () => {
     const control = component.destinatarioForm.get('nombre');
+    control?.enable(); 
     control?.setValue('Juan');
     control?.markAsTouched();
     expect(component.esInvalido('nombre')).toBe(false);

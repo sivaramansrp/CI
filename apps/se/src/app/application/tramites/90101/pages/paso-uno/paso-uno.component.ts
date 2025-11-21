@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -51,6 +51,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$ = new Subject<void>();
 
+  @Input() tramiteId!: string;
 
   /**
    * @property {Array<{index: number, title: string, component: string}>} seccionesDeLaSolicitud

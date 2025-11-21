@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, PasoFirmaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { CommonModule } from '@angular/common';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
-
+import { PasoFirmaComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [

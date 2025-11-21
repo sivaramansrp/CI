@@ -5,9 +5,9 @@ import { DeclaracionDatosResponse } from '../../models/response/declaracion-dato
 import { FraccionValidarResponse, ProcesoSolicitado } from '../../models/response/validar-fraccion-response.model';
 
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
+import { Mercancia, TratadoAgregado } from '../../models/response/validar-solicitud-response.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { TratadoAgregado } from '../../models/response/validar-solicitud-response.model';
 
 
 /**
@@ -166,7 +166,20 @@ export interface Solicitante110101State {
     validacion_tab_mercancia: boolean | null;
     validacion_tab_datos_adicionales: boolean | null;
   };
-
+  /** Descripción AELC */
+  descripcionAELC: number | null;
+  /** Descripción UE */
+  descripcionUE: number | null;
+  /** Descripción ACE */
+  descripcionACE: number | null;
+  /** Descripción SGP */
+  descripcionSGP : number | null;
+  /** Mercancia de servicio eveluar*/
+  descripcion_evaluar: Mercancia | null;
+  /** Indica si la descripción alterna fue modificada */
+  descripcion_alterna_modificada: boolean | null;
+  /** Respuesta de descripción alterna modificada */
+  descripcion_alterna_modificada_response: boolean | null;
 }
 
 
@@ -239,7 +252,12 @@ export function createSolicitanteInitialState(): Solicitante110101State {
       validacion_tab_mercancia: null,
       validacion_tab_datos_adicionales: null
     },
+    descripcionAELC: null,
+    descripcionUE: null,
+    descripcionACE: null,
     valorFobDolares: null,
+    descripcionSGP:  null,
+    descripcion_evaluar: null,
     respuestaServiceConfiguracion: {
       mostrar_datos_mercancia: false,
       mostrar_insumos: false,
@@ -296,7 +314,9 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     tab_procesos: false,
     id_solcitud: 0,
     proceso_seleccionado: [],
-    juegos_surtidos_tab_procesos: null
+    juegos_surtidos_tab_procesos: null,
+    descripcion_alterna_modificada: null,
+    descripcion_alterna_modificada_response: null
   };
 }
 
@@ -634,6 +654,17 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
   }
 
   /**
+ * Actualiza la información de descripcion alterna.
+ * @param descripcion_alterna_modificada_response - Información del response de validación.
+ */
+  public setDescripcionAlternaModificadaResponse(descripcion_alterna_modificada_response: boolean | null): void {
+    this.update((state) => ({
+      ...state,
+      descripcion_alterna_modificada_response,
+    }));
+  }
+
+  /**
  * Actualiza la información adicional para los radios de Japón.
  * @param informacionRadiosJPN - Información adicional para los radios de Japón.
  */
@@ -748,6 +779,17 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       tratados_servicio_evaluar: tratado_servicio,
+    }));
+  }
+
+  /**
+   * Agregar respuesta de descripciones 'Mercancia'
+   * @param descripcion_evaluar 
+   */
+  public addDescripcionServicioEvaluar(descripcion_evaluar: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      descripcion_evaluar: descripcion_evaluar,
     }));
   }
 

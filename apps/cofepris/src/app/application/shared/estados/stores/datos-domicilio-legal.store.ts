@@ -1,3 +1,4 @@
+import { MercanciasInfo, NicoInfo } from '../../models/datos-domicilio-legal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -124,6 +125,12 @@ export interface DatosDomicilioLegalState {
    * El valor de especificar.
    */
   especificar: string;
+
+   /**
+   * El valor de clasificacionToxicologica.
+   */
+  clasificacionToxicologica: string;
+  
   /**
    * El valor de denominacionEspecifica.
    */
@@ -206,6 +213,16 @@ export interface DatosDomicilioLegalState {
  */
   aduanasDeEntrada: string[]
 
+  paisDeOriginDatos: string[]
+
+  paisFabrica: string[]
+
+  paisElaboracion: string[]
+
+  paisProveedor: string[]
+
+  paisDeProcedenciaDatos: string[]
+
   /**
    * El valor de garantiasOfrecidas.
    */
@@ -215,6 +232,36 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   mensaje: boolean;
+
+  /**
+   * El valor de nicoTabla.
+   */
+  nicoTabla: NicoInfo[],
+
+  /**
+   * El valor de mercanciaTabla.
+   */
+  mercanciaTabla: MercanciasInfo[],
+  /**
+   * El valor de nombreComercial.
+   */
+  nombreComercial: string,
+  /**
+   * El valor de nombreComun.
+   */
+  nombreComun: string,
+  /**
+   * El valor de nombreCientifico.
+   */
+  nombreCientifico: string,
+  /**
+   * El valor de acondicionamiento.
+   */
+  acondicionamiento: string,
+  /**
+   * El valor de numeroRegistroSanitario.
+   */
+  numeroRegistroSanitario: string,
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -337,6 +384,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de especificar.
      */
     especificar: '',
+
+    /**
+     * El valor de clasificacionToxicologica.
+     */
+    clasificacionToxicologica: '',
     /**
      * El valor de denominacionEspecifica.
      */
@@ -419,6 +471,16 @@ export function createInitialState(): DatosDomicilioLegalState {
      */
     aduanasDeEntrada: [],
 
+    paisDeOriginDatos: [],
+
+    paisFabrica: [],
+
+    paisElaboracion: [],
+
+    paisProveedor: [],
+
+    paisDeProcedenciaDatos: [],
+
     /**
      * El valor de garantiasOfrecidas.
      */
@@ -426,7 +488,37 @@ export function createInitialState(): DatosDomicilioLegalState {
  /**
      * El valor de mensaje.
      */
-    mensaje: false
+    mensaje: false,
+
+    /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
+    /**
+     * El valor de nombreComercial.
+     */
+    nombreComercial: '',
+    /**
+     * El valor de nombreComun.
+     */
+    nombreComun: '',
+    /**
+     * El valor de nombreCientifico.
+     */
+    nombreCientifico: '',
+    /**
+     * El valor de acondicionamiento.
+     */
+    acondicionamiento: '',
+    /**
+     * El valor de numeroRegistroSanitario.
+     */
+    numeroRegistroSanitario: '',
   };
 }
 
@@ -729,6 +821,18 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
     }));
   }
 
+   /**
+   * Establece el estado de clasificacionToxicologica.
+   * @param clasificacionToxicologica - El valor de clasificacionToxicologica.
+   */
+  public setClasificacionToxicologica(clasificacionToxicologica: string): void {
+    this.update((state) => ({
+      ...state,
+      clasificacionToxicologica,
+    }));
+  }
+
+
   /**
    * Establece el estado de denominacionEspecifica.
    * @param denominacionEspecifica - El valor de denominacionEspecifica.
@@ -948,12 +1052,48 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
    *
    * @param aduanasDeEntrada - Un arreglo de cadenas que representa los datos de país de origen.
    */
-  public setPaisDeOriginDatos(aduanasDeEntrada: string[]): void {
+  public setAduanasDeEntrada(aduanasDeEntrada: string[]): void {
     this.update((state) => ({
       ...state,
       aduanasDeEntrada,
     }));
   }
+
+  public setPaisDeOriginDatos(paisDeOriginDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDeOriginDatos,
+    }));
+  }
+
+  public setPaisFabrica(paisFabrica: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisFabrica,
+    }));
+  }
+
+  public setPaisElaboracion(paisElaboracion: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisElaboracion,
+    }));
+  }
+
+  public setPaisProveedor(paisProveedor: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisProveedor,
+    }));
+  }
+
+  public setPaisDeProcedenciaDatos(paisDeProcedenciaDatos: string[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDeProcedenciaDatos,
+    }));
+  }
+
   /**
   * Establece el estado de garantiasOfrecidas.
   * @param garantiasOfrecidas - El valor de garantiasOfrecidas.
@@ -990,6 +1130,56 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
         this.update((state) => ({
             ...state,
             estadoFisicoOtro,
+        }));
+    }
+
+    /** Actualiza el estado con la nueva tabla de información Nico. */
+    setNicoTabla(nicoTabla: NicoInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            nicoTabla,
+        }));
+    }
+
+    setMercanciasTabla(mercanciaTabla: MercanciasInfo[]): void {
+      this.update((state) => ({
+            ...state,
+            mercanciaTabla,
+        }));
+    }
+
+    setNombreComercial(nombreComercial: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComercial,
+        }));
+    }
+
+    setNombreComun(nombreComun: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreComun,
+        }));
+    }
+
+    setNombreCientifico(nombreCientifico: string): void {
+      this.update((state) => ({
+            ...state,
+            nombreCientifico,
+        }));
+    }
+
+    setAcondicionamiento(acondicionamiento: string): void {
+      this.update((state) => ({
+            ...state,
+            acondicionamiento,
+        }));
+    }
+
+    setNumeroRegistroSanitario(numeroRegistroSanitario: string): void {
+      this.update((state) => ({
+            ...state,
+            numeroRegistroSanitario,
         }));
     }
     

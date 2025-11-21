@@ -59,3 +59,15 @@ export enum ProcesoSolicitud {
   /** Generar opinión */
   GENERAR_OPINION = 24
 }
+
+/**
+ * Enum que representa los tipos de requerimiento.
+ */
+export enum TipoRequerimiento  {
+  /** Requerimiento de datos */
+  DATOS= 'INFREQ.D',
+  /** Requerimiento tipo documentos y datos */
+  DATOS_DOCUMENTOS= 'INFREQ.DR',
+  /** Requerimiento tipo documentos */
+  DOCUMENTOS= 'INFREQ.R',
+}

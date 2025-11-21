@@ -327,6 +327,10 @@ export interface FilaSolicitud {
    * Descripción de la fracción arancelaria del producto.
    */
   descripcionFraccion: string;
+    /**
+   * Descripción de la fracción arancelaria del producto.
+   */
+  idDescripcionFraccion: number;
   /**
    * Código NICO.
    */
@@ -343,6 +347,11 @@ export interface FilaSolicitud {
    * Unidad de medida de trámite (UMT).
    */
   umt: string;
+
+  /**
+   * Clave de la unidad de medida de trámite (UMT).
+   */
+  clave_umt?: string;
   /**
    * Cantidad en UMT.
    */

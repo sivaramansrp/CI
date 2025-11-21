@@ -478,15 +478,15 @@
             @if(paisDeOriginColapsable){
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
-                <crosslist
-                  [fechas]="seleccionarOrigenDelPais"
-                  [botones]="paisDeProcedenciaBotonsUno"
-                  [label]="paisDeOriginLabel"
-                  [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
-                  (fechasSeleccionadasChange)="
-                    paisDeOriginSeleccionadasChange($event)
-                  "
-                ></crosslist>
+               <crosslist
+                        [fechas]="seleccionarOrigenDelPais"
+                        [label]="paisDeOriginLabel"
+                        [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
+                        [botones]="paisDeOriginBotons"
+                        (fechasSeleccionadasChange)="
+                          paisDeOriginSeleccionadasChange($event)
+                        "
+                      ></crosslist>
               </div>
             </div>
             }
@@ -514,9 +514,9 @@
               <div class="panel-body">
                 <crosslist
                   [fechas]="paisDeProcedenciaDatos"
-                  [botones]="paisDeProcedenciaBotonsDos"
                   [label]="paisDeProcedenciaLabel"
                   [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
+                  [botones]="paisDeProcedenciaBotons"
                   (fechasSeleccionadasChange)="
                     paisDeProcedenciaSeleccionadasChange($event)
                   "
@@ -611,8 +611,8 @@
                 <crosslist
                   [fechas]="usoEspesificoDatos"
                   [label]="usoEspesificoLabel"
-                  [botones]="paisDeProcedenciaBotonsTres"
                   [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
+                  [botones]="usoEspecificoBotons"
                   (fechasSeleccionadasChange)="
                     usoEspesificoSeleccionadasChange($event)
                   "

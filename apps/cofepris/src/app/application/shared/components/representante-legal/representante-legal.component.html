@@ -4,8 +4,27 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="rfc">RFC*:</label>
-                    <input class="form-control" id="rfc" formControlName="rfc" type="text" (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')"/>
+                    <label class="form-label" for="rfc">RFC<span
+                        [ngClass]="
+                      {
+                        'text-danger':  representanteLegalForm.get('rfc')?.errors?.['required']&& representanteLegalForm.get('rfc')?.touched
+                      }"
+                        >*</span
+                      >:</label>
+                    <input class="form-control" id="rfc" maxlength="13" formControlName="rfc" type="text" (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')"
+                    [ngClass]="{
+                        'is-invalid':
+                        representanteLegalForm.get('rfc')?.invalid &&
+                        representanteLegalForm.get('rfc')?.touched
+                      }"/>
+                </div>
+                <div
+                  *ngIf="
+                    representanteLegalForm.get('rfc')?.errors?.['required'] &&
+                    representanteLegalForm.get('rfc')?.touched
+                  "
+                  class="mensaje-error"
+                >Este campo es obligatorio
                 </div>
             </div>
             <div class="col-md-4">

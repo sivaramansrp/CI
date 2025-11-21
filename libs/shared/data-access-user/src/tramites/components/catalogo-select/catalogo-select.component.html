@@ -31,8 +31,8 @@
     >
       {{ placeholder ? placeholder : 'Seleccione una opción' }}
     </option>
-    <option *ngFor="let option of catalogo; trackBy: trackByOption" [value]="option.id || option.clave">
-      {{ option.descripcion }}
+    <option *ngFor="let option of catalogo; trackBy: trackByOption" [value]="option.id || option.clave" [title]="option.descripcion || option.clave">
+      {{ showClave ? option.clave : (option.descripcion | truncateText: maxCharacters) }}
     </option>
   </select>
   <div *ngIf="mostrarErrores && isInvalid()" class="mensaje-error">

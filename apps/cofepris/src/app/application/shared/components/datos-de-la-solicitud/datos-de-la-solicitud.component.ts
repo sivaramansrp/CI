@@ -62,6 +62,7 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  RegistroSolicitudService,
   TablaAcciones,
   TablaDinamicaComponent,
   TablePaginationComponent,
@@ -108,6 +109,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     ScianTablaComponent,
     DatosMercanciaComponent
   ],
+  providers: [RegistroSolicitudService],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
@@ -590,6 +592,7 @@ export class DatosDeLaSolicitudComponent
 
 public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
+ @Output() idSolicitudPrellenado: EventEmitter<number> = new EventEmitter<number>();
   /**
    * Constructor del componente.
    *
@@ -614,7 +617,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     private scianDataService: ScianDataService,
     private cdr: ChangeDetectorRef,
     private catalogoService: CatalogoServices,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService
 
 
   ) {
@@ -808,13 +812,14 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param datos1 Los datos de la mercancia seleccionada.
    */
   patchOpcionesValue(datos1: TablaOpcionConfig): void {
-    this.patchDatosPrincipales(datos1);
-    this.patchDatosRepresentante(datos1);
-    this.patchDatosMercancia(datos1);
-    this.patchDatosOpcionales(datos1);
+    this.idSolicitudPrellenado.emit(datos1.id_solicitud);
+    // this.patchDatosPrincipales(datos1);
+    // this.patchDatosRepresentante(datos1);
+    // this.patchDatosMercancia(datos1);
+    // this.patchDatosOpcionales(datos1);
 
-    this.scianConfig.datos = datos1.scian;
-    this.tablaMercanciasConfig.datos = datos1.mercancias;
+    // this.scianConfig.datos = datos1.scian;
+    // this.tablaMercanciasConfig.datos = datos1.mercancias;
   }
 
   private patchDatosPrincipales(datos1: TablaOpcionConfig): void {
@@ -1126,7 +1131,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     }
     else {
       this.crearDatosSolicitudForm()
-      if(this.idProcedimiento===260209||this.idProcedimiento===260205){
+      if(this.idProcedimiento===260209){
       Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
         const CONTROL = this.datosSolicitudForm.get(controlName);
         if(controlName!=='apellidoPaterno' && controlName!=='representanteNombre'&& controlName!=='apellidoMaterno'){
@@ -1160,6 +1165,10 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
       this.datosSolicitudForm.patchValue(
         changes['datosSolicitudFormState'].currentValue
       );
+      this.cambioAviso();
+      this.cambioLicenciaSanitaria();
+      this.updateMercanciaTable();
+      
     }
   }
 
@@ -1258,11 +1267,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
   /**
    * Datos predeterminados para el representante legal
    */
-  private readonly DATOS_PREDETERMINADOS = {
-    representanteNombre: 'EUROFOODS DE MEXICO',
-    apellidoPaterno: 'GONZALEZ',
-    apellidoMaterno: 'PINAL',
-  };
+  // private readonly DATOS_PREDETERMINADOS = {
+  //   representanteNombre: 'EUROFOODS DE MEXICO',
+  //   apellidoPaterno: 'GONZALEZ',
+  //   apellidoMaterno: 'PINAL',
+  // };
 
   /**
    * Procesa los datos del representante obtenidos de la API
@@ -1279,23 +1288,34 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
     };
 
-    this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
-    this.actualizarStore();
+  this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
+  this.actualizarStore();
 
-    // Mostrar notificación de éxito
-    this.toastr.success('Datos del representante cargados exitosamente', 'Búsqueda de RFC');
-    this.mostrarNotificacionExito('Datos del representante cargados exitosamente.');
+  // Disable the representative fields after patching
+  const NOMBRE_CONTROL = this.datosSolicitudForm.get('representanteNombre');
+  const PATERNO_CONTROL = this.datosSolicitudForm.get('apellidoPaterno');
+  const MATERNO_CONTROL = this.datosSolicitudForm.get('apellidoMaterno');
+  if (NOMBRE_CONTROL && NOMBRE_CONTROL.enabled) { NOMBRE_CONTROL.disable(); }
+  if (PATERNO_CONTROL && PATERNO_CONTROL.enabled) { PATERNO_CONTROL.disable(); }
+  if (MATERNO_CONTROL && MATERNO_CONTROL.enabled) { MATERNO_CONTROL.disable(); }
+
+  // Mostrar solo el toast de éxito, no el modal
+  this.toastr.success('Datos del representante cargados exitosamente', 'Búsqueda de RFC');
+  // No llamar a mostrarNotificacionExito, así no aparece el modal
   }
 
   /**
    * Muestra datos predeterminados cuando no se encuentran en la API
    */
   private mostrarDatosPredeterminados(): void {
-    this.datosSolicitudForm.patchValue(this.DATOS_PREDETERMINADOS);
-
-    // Mostrar notificación informativa
-    this.toastr.info('Se cargaron datos predeterminados del representante', 'Información');
-    this.mostrarNotificacionInfo('Se cargaron datos predeterminados del representante.');
+  // Enable the representative fields if they are disabled
+  const NOMBRE_CONTROL = this.datosSolicitudForm.get('representanteNombre');
+  const PATERNO_CONTROL = this.datosSolicitudForm.get('apellidoPaterno');
+  const MATERNO_CONTROL = this.datosSolicitudForm.get('apellidoMaterno');
+  if (NOMBRE_CONTROL?.disabled) { NOMBRE_CONTROL.enable(); }
+  if (PATERNO_CONTROL?.disabled) { PATERNO_CONTROL.enable(); }
+  if (MATERNO_CONTROL?.disabled) { MATERNO_CONTROL.enable(); }
+  // Do not show any toast or modal message
   }
 
   /**
@@ -1475,9 +1495,6 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    */
   agregarScian(): void {
     if (this.scianLista && this.scianLista.length > 0) {
-    if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
-      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
-    }
     this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
@@ -1679,10 +1696,11 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param {Event} event - Evento que se dispara al cambiar el estado del checkbox.
    * @returns {void} Este método no retorna ningún valor.
    **/
-  cambioAviso(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
+  cambioAviso(): void {
+    const CHECKED = this.datosSolicitudForm.get('aviso')?.value;
     const LICENCIA_SANITARIA_CONTROL =
       this.datosSolicitudForm.get('licenciaSanitaria');
+    
     if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
       LICENCIA_SANITARIA_CONTROL?.clearValidators();
       LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
@@ -1699,8 +1717,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    *
    * @param {Event} event - Evento de entrada proveniente de un elemento HTML.
    */
-  cambioLicenciaSanitaria(event: Event): void {
-    const VAL = (event.target as HTMLInputElement).value;
+  cambioLicenciaSanitaria(): void {
+    const VAL = this.datosSolicitudForm.get('licenciaSanitaria')?.value;
     if (VAL) {
       this.datosSolicitudForm.get('aviso')?.disable();
     } else {
@@ -1793,14 +1811,8 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
    * @param {boolean} buscar - Indica si se debe buscar el RFC del representante.
    */
   obtenerModalDeBuscar(buscar: boolean): void {
-    if (buscar) {
-      this.datosSolicitudForm.patchValue({
-        representanteRfc: 'REP123456789',
-        representanteNombre: 'EUROFOODS DE MEXICO',
-        apellidoPaterno: 'GONZALEZ',
-      });
-      this.mostrarAlerta = false;
-    }
+    // Only close the RFC modal, do not patch any values manually
+    this.mostrarRfcAlerta = false;
   }
   /**
    * Método que verifica si un campo debe ser habilitado o deshabilitado
@@ -1914,7 +1926,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
-      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210||this.idProcedimiento===260205) {
+      if (controlName === 'estado'||this.idProcedimiento===260209 || this.idProcedimiento===260210) {
         return;
       }
 
@@ -2001,6 +2013,10 @@ marcarTodosLosCamposComoTocados(): void {
   
     }
   });
+  if (this.idProcedimiento === 260203 && this.datosSolicitudForm.get('rfcSanitario')) {
+    this.datosSolicitudForm.get('rfcSanitario')?.markAsTouched();
+    this.datosSolicitudForm.get('rfcSanitario')?.updateValueAndValidity();
+  }
 
   // Update the form's validation status
   this.datosSolicitudForm.updateValueAndValidity();
@@ -2112,12 +2128,9 @@ verificarCamposValidosODeshabilitados(): boolean {
 onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
   if (this.mercanciaSeleccionada) {
     // Busque el índice del objeto existente que coincida con TODAS las propiedades
-    const INDEX = this.tablaMercanciasConfig.datos.findIndex(item =>
-      Object.keys(item).every(
-        key => item[key as keyof TablaMercanciasDatos] ===
-               this.mercanciaSeleccionada![key as keyof TablaMercanciasDatos]
-      )
-    );
+    const INDEX = this.tablaMercanciasConfig.datos.findIndex(
+    item => item.id === this.mercanciaSeleccionada!.id
+  );
 
     if (INDEX !== -1) {
       // Reemplace ese objeto específico con los nuevos datos
@@ -2151,13 +2164,6 @@ onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
  * Updates the table after merchandise changes
  */
 private updateMercanciaTable(): void {
-  // Force the table to refresh by reassigning the data
-  this.tablaMercanciasConfig = {
-    ...this.tablaMercanciasConfig,
-    datos: [...this.tablaMercanciasConfig.datos]
-  };
-  
-  // Update the form control
   this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
   this.datosSolicitudForm.get('mercancias')?.updateValueAndValidity();
 }

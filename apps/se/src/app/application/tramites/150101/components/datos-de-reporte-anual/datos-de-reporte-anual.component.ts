@@ -137,7 +137,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       ],
       totalImportaciones: [
         {
-          value: this.solicitud150101State.totalImportaciones,
+          value: this.solicitud150101State.totalImportaciones || 0,
           disabled: true,
         },
         [Validators.required, Validators.maxLength(16)],
@@ -400,7 +400,7 @@ if (VENTAS_TOTALES < TOTAL_EXPORTACIONES && !this.nuevaNotificacion) {
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: `El campo ${fieldName} debe contener solo números enteros positivos.`,
+        mensaje: `${fieldName} deben ser mayores o iguales a cero`,
         cerrar: false,
         tiempoDeEspera: 7000,
         txtBtnAceptar: 'Aceptar',

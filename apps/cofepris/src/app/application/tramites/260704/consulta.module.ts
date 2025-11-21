@@ -3,16 +3,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConsultaRoutingModule } from './consulta-routing.module';
 import { ConsultaService } from './service/consulta.service';
-import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosdelasolicitudComponent } from '../../shared/components/shared2607/datos-del/datos-de-la-solicitud.component';
 import { NgModule } from '@angular/core';
-import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { PagoDeDerechoComponent } from '../../shared/components/shared2607/pagodederechos/pago-de-derecho.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TercerosRelacinadosComponent } from './components/terceros-relacinados/terceros-relacinados.component';
+import { TercerosrelacionadosComponent } from '../../shared/components/shared2607/terceros relacionados/terceros-relacionados.component';
 import { ToastrService } from 'ngx-toastr';
-import { TramitesAsociadosComponent } from './components/tramites-asociados/tramites-asociados.component';
+import { TramitesAsociadosComponent } from '../../shared/components/shared2607/tramitesasociados/tramites-asociados.component';
 /**
  * Módulo para el feature de Consulta.
  *
@@ -20,16 +20,16 @@ import { TramitesAsociadosComponent } from './components/tramites-asociados/tram
  * feature de consulta. Además, provee los servicios requeridos en este feature.
  */
 @NgModule({
-  declarations: [PasoUnoComponent, SolicitudPageComponent, PasoDosComponent, PasoTresComponent,],
+  declarations: [PasoUnoComponent, SolicitudPageComponent, PasoDosComponent, PasoTresComponent],
   imports: [
     CommonModule,
     ConsultaRoutingModule,
     ReactiveFormsModule,
     SharedModule,
     SolicitanteComponent,
-    DatosDeLaSolicitudComponent,
-    PagoDeDerechosComponent,
-    TercerosRelacinadosComponent,
+    DatosdelasolicitudComponent,
+    PagoDeDerechoComponent,
+    TercerosrelacionadosComponent,
     TramitesAsociadosComponent,
     TituloComponent,
     WizardComponent,

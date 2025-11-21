@@ -69,6 +69,25 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
 }
 
 /**
+ * Convierte una cadena hexadecimal a su representación en ISO-8859-1 (Latin-1).
+ * Los bytes fuera del rango ISO-8859-1 (mayores a 255) son reemplazados por '?'.
+ * 
+ * @param hex - La cadena hexadecimal a decodificar
+ * @returns Una cadena de texto que representa los caracteres decodificados en ISO-8859-1
+*/
+export function hexToISO88591(hex: string): string {
+  const BYTES: number[] = [];
+
+  for (let i = 0; i < hex.length; i += 2) {
+    BYTES.push(parseInt(hex.substr(i, 2), 16));
+  }
+
+  // ISO-8859-1 usa un mapeo directo de byte a carácter (0x00–0xFF)
+  return String.fromCharCode(...BYTES);
+}
+
+
+/**
  * Convierte una cadena codificada en Base64 a su representación hexadecimal.
  * 
  * @param base64 - La cadena codificada en Base64 a convertir
@@ -488,3 +507,45 @@ export function formatFechaCreacion(fecha_creacion: string): string {
     const PAD = (n: number): string => n.toString().padStart(2, '0');
     return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
 }
+
+/**
+ * Formatea una fecha en formato 'DD/MM/YYYY' a 'YYYY-MM-DD HH:mm:ss' con hora fija.
+ * @param fechaStr Fecha en formato 'DD/MM/YYYY' como string.
+ * @returns Fecha formateada como string 'YYYY-MM-DD HH:mm:ss'.
+ */
+export function formatearFechaSolicitud(fechaStr: string): string {
+  if (!fechaStr) { return '' }
+
+  const PARTES = fechaStr.split('/');
+  if (PARTES.length !== 3) { return '' }
+
+  const [DIA, MES, ANIO] = PARTES;
+  const FECHA = new Date(Number(ANIO), Number(MES) - 1, Number(DIA));
+
+  // Puedes usar hora fija o actual. Aquí dejo fija 18:44:00
+  const HORAS = 18;
+  const MINUTOS = 44;
+  const SEGUNDOS = 0;
+  FECHA.setHours(HORAS, MINUTOS, SEGUNDOS);
+
+  const YYYY = FECHA.getFullYear();
+  const MM = String(FECHA.getMonth() + 1).padStart(2, '0');
+  const DD = String(FECHA.getDate()).padStart(2, '0');
+  const HH = String(FECHA.getHours()).padStart(2, '0');
+  const MI = String(FECHA.getMinutes()).padStart(2, '0');
+  const SS = String(FECHA.getSeconds()).padStart(2, '0');
+
+  return `${YYYY}-${MM}-${DD} ${HH}:${MI}:${SS}`;
+}
+
+/**
+ * Formatea la fecha en formato 'MM/YYYY'.
+ * @param date Objeto Date a formatear.
+ * @returns Fecha formateada como string 'MM/YYYY'.
+ */
+export function formatMonthYear(date: Date): string {
+  const MONTH = String(date.getMonth() + 1).padStart(2, '0');
+  const YEAR = date.getFullYear();
+  return `${MONTH}/${YEAR}`;
+}
+

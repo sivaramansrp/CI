@@ -106,7 +106,7 @@ export class AcuseResolucionComponent implements OnChanges, OnDestroy {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ];
 

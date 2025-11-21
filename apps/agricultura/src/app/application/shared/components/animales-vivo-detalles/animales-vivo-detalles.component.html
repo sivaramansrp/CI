@@ -40,6 +40,7 @@
                 <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList"
                     formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
                     name="fraccionArancelaria" [isDisabled]="mercanciaForm.disabled"  (change)="setValoresStoreFraccion()"></app-catalogo-select>
+                    <input type="hidden" formControlName="clave_fraccion" />
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*</label>
@@ -101,6 +102,7 @@
                     <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
                         [title]="'Unidad de medida de la tarifa'"></i>
                     <input type="text" class="form-control" formControlName="umt" [maxlength]="16" />
+                    <input type="hidden" formControlName="clave_umt" />
                     <div *ngIf="mercanciaForm.get('umt')?.invalid && mercanciaForm.get('umt')?.touched"
                         class="text-danger">
                         <small class="text-danger"> Este campo es obligatorio</small>

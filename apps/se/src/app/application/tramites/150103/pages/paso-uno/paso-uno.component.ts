@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-
-import { Subject,map, takeUntil } from 'rxjs';
-
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { DatosDeReporteAnualComponent } from '../../components/datos-de-reporte-anual/datos-de-reporte-anual.component';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
+import { ProgramasReporteAnualComponent } from '../../components/programas-reporte-anual/programas-reporte-anual.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 
-import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 /**
  * Componente que representa el primer paso del trámite.
  *
@@ -89,6 +89,20 @@ public esDatosRespuesta: boolean = false;
 
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!:ConsultaioState;
+
+  /** Estado de la solicitud 150103 que se obtiene del store. */
+  @Input() solicitudState!: Solicitud150103State;
+
+  /**
+   * Referencia al componente `CertificadoOrigenComponent`.
+   */
+  @ViewChild('datosDeComp', { static: false }) datosDeComp: DatosDeReporteAnualComponent | undefined;
+
+  /**
+   * Referencia al componente `CertificadoOrigenComponent`.
+   */
+  @ViewChild('programasDeComp', { static: false }) programasDeComp: ProgramasReporteAnualComponent | undefined;
+    
   /**
    * Método del ciclo de vida que se ejecuta después de la inicialización de la vista.
    *
@@ -142,10 +156,66 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
   if (evento) {
     this.estaHabilitado = evento;
   }
-}
+}  
 
-ngOnDestroy(): void {
-  this.destroyNotifier$.next(); 
-  this.destroyNotifier$.complete(); 
-}
+  /**
+   * Valida todos los formularios del componente.
+   * @returns true si todos los formularios son válidos, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    if (!this.solicitante) {
+      return false;
+    }
+    
+    // Por ahora retornamos true ya que el componente SolicitanteComponent
+    // maneja su propia validación internamente
+    return true;
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */  
+  public validarTodosLosFormularios(): number {
+    if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
+      this.datosDeComp.formReporteAnnual.markAllAsTouched();
+      if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 1;
+      }
+      else if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value>=0){
+        this.datosDeComp.diferenciaTotal();
+        return 2;
+
+      }
+      else if(Number(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value) < Number(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value)){
+       this.datosDeComp.diferenciaTotal();
+        return 3;
+      }
+      else if(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value>=0 && (this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 4;
+      }
+     
+    } else if(this.indice===2&& this.programasDeComp?.formProgrmasReporte.get('estatus')?.value!==''){
+      this.programasDeComp?.showAlert();
+      return 5;
+    } else if (this.indice===1 && this.solicitudState.folioPrograma ==='' && this.solicitudState.totalExportaciones === '') {
+      return 5;
+    }
+     return 0;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next(); 
+    this.destroyNotifier$.complete(); 
+  }
 }

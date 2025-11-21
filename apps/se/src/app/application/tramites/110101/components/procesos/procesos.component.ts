@@ -38,6 +38,9 @@ export class ProcesosComponent implements OnInit {
   /** Un array de objetos `procesosSolicitado` que representa los datos para la tabla de solicitudes.*/
   public procesosTablaDatos: ProcesoSolicitado[] = [];
 
+
+   /** Un array de objetos `procesosSolicitado` que representa los datos actualizados que seleccionaste.*/
+  public procesosTablaDatosActualizados: ProcesoSolicitado[] = [];
   /**
   * **Subject utilizado para manejar la destrucción de suscripciones**
   * 
@@ -55,6 +58,9 @@ export class ProcesosComponent implements OnInit {
 
   /** Almacena las filas seleccionadas de la tabla */
   public procesoSeleccionado: ProcesoSolicitado[] = [];
+
+  /** Almacena id para seleccion de tablas en inicio */
+  public idsProcesosSeleccionados: number[] = [];
   
 
   /**
@@ -75,9 +81,16 @@ export class ProcesosComponent implements OnInit {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
       this.solicitudeState = seccionState;
     })).subscribe();
-    if (this.solicitudeState.validacionFraccionArancelaria.mercancia.procesos_solicitados?.length){
-      this.procesosTablaDatos = this.solicitudeState.validacionFraccionArancelaria.mercancia.procesos_solicitados
+    if (this.solicitudeState.proceso_seleccionado.length) {
+      this.procesosTablaDatos = this.solicitudeState.proceso_seleccionado;
+      this.procesoSeleccionado = this.solicitudeState.proceso_seleccionado.filter(p => p.cumple_proceso === true);
+      
+    }else{
+      this.procesosTablaDatos = this.solicitudeState.validacionFraccionArancelaria.mercancia.procesos_solicitados || [];
+      this.tramite110101Store.clearProcesoSolicitado(); 
+      this.tramite110101Store.addProcesoSolicitado(this.procesosTablaDatos);
     }
+     this.tramite110101Store.setValor('descripcion_alterna_modificada', this.solicitudeState.descripcion_alterna_modificada_response);
   }
 
   /**
@@ -85,8 +98,18 @@ export class ProcesosComponent implements OnInit {
    * @param procesoSeleccionado - Array de registros seleccionados en la tabla.
    */
   onSeleccionChange(procesoSeleccionado: ProcesoSolicitado[]) :void{
-      this.procesoSeleccionado = [...procesoSeleccionado]; 
-      this.tramite110101Store.clearProcesoSolicitado();
-      this.tramite110101Store.addProcesoSolicitado(this.procesoSeleccionado);
+    const IDSELECCIONADOS = new Set(
+      procesoSeleccionado
+        .filter(p => p.id_proceso_ceror !== null)
+        .map(p => p.id_proceso_ceror)
+    );
+
+    this.procesosTablaDatosActualizados = this.procesosTablaDatos.map(p => ({
+      ...p,
+      cumple_proceso: IDSELECCIONADOS.has(p.id_proceso_ceror) ? true : false
+    }));
+
+    this.tramite110101Store.clearProcesoSolicitado();
+    this.tramite110101Store.addProcesoSolicitado(this.procesosTablaDatosActualizados); 
   }
 }

@@ -74,6 +74,16 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   @Output() public emitirFilaClicControlador =
     new EventEmitter<InstrumentoCupoTPLForm>();
 
+    /**
+     * Evento de salida que emite un valor booleano para indicar la visibilidad de un componente.
+     * 
+     * @event
+     * @type {EventEmitter<boolean>}
+     * @description Emite `true` para mostrar el componente y `false` para ocultarlo.
+     */
+    @Output() public obtenerVisible =
+    new EventEmitter<boolean>();
+
   /**
    * Evento de salida que emite un objeto con posibles mensajes de error relacionados con las fracciones.
    * 
@@ -170,6 +180,12 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
    */
   fraccionError: boolean = false;
 
+  /**
+   * Indica si los campos obligatorios son visibles en la interfaz de usuario.
+   * Cuando es `true`, los campos obligatorios se muestran al usuario.
+   */
+  obligatoriosVisible:boolean= true;
+
 
   /**
  * @constructor
@@ -265,7 +281,6 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     }
 
     if (this.ninoFormGroup.valid) {
-      this.mostrarCampoDeDescripcion();
       this.obtenerTablaDatos();
     }
   }
@@ -362,11 +377,11 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   obtenerTablaDatos(): void {
     const NANO_FORM = this.forma.get('ninoFormGroup') as FormGroup;
     const NANO_FORM_VALUE = NANO_FORM.value;
-    this.cuerpoTabla=[];
-      this.fraccionError = false;
-        this.fraccionErrorUno = undefined;
-        const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
-        this.fraccionErrorEvent.emit(FRACCION_ERROR);
+    this.cuerpoTabla = [];
+    this.fraccionError = false;
+    this.fraccionErrorUno = undefined;
+    const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
+    this.fraccionErrorEvent.emit(FRACCION_ERROR);
     const PAYLOAD = {
       instrumentoCupoTPL: {
         idTratadoAcuerdo: NANO_FORM_VALUE.tratado === 118 ? NANO_FORM_VALUE.tratado : 118,
@@ -379,15 +394,17 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     }
     this.solicitudDeRegistroTplService.getBuscarDatos(PAYLOAD).subscribe((resp) => {
       if (resp.codigo !== "00") {
-        this.fraccionErrorUno = resp.codigo?.length > 1? resp.codigo:resp.causa;
+        this.fraccionErrorUno = resp.codigo?.length > 1 ? resp.codigo : resp.causa;
         this.fraccionError = true;
         const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
         this.fraccionErrorEvent.emit(FRACCION_ERROR);
       } else if (resp.codigo === "00") {
+        
         this.fraccionError = false;
         this.fraccionErrorUno = undefined;
         const FRACCION_ERROR = { fraccionErrorUno: this.fraccionErrorUno, fraccionError: this.fraccionError };
         this.fraccionErrorEvent.emit(FRACCION_ERROR);
+        this.mostrarCampoDeDescripcion();
         const TABLA_DATOS = this.ampliacionServiciosAdapter.mapBuscarTablaDatosList(resp.datos);
         this.tramite120101Store.setDynamicFieldValue('idMecanismo', TABLA_DATOS[0].idMecanismo);
         this.cuerpoTabla = TABLA_DATOS;
@@ -439,6 +456,8 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
  */
   public controladorDeClicsArchivo(event: InstrumentoCupoTPLForm): void {
     if (event) {
+      this.obligatoriosVisible=false;
+      this.obtenerVisible.emit(this.obligatoriosVisible);
       this.emitirFilaClicControlador.emit(event);
     }
   }

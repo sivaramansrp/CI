@@ -1,7 +1,11 @@
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
 
-  <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+  @if (this.idSolicitud) {
+    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+  }@else {
+    <ng-alert [CONTENIDO]="TEXTOSINTRUCCIONES.INSTRUCCIONES"></ng-alert>
+  }
 
   <carga-documento
       [idTipoTRamite]="idTipoTRamite"
@@ -10,5 +14,7 @@
       (cargaRealizada)="documentosCargados($event)"
       (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
       (cargaEnProgreso)="onCargaEnProgreso($event)"
+      [documentosAdicionales]="documentosAdicionales"
+      (enBlancoObligatoria)="blancoObligatoria($event)"
     ></carga-documento>
 </div>

@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { DiamanteBrutoService } from '../../services/diamante-bruto.service';
+import { SolicitudComponent } from '../../component/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -15,7 +16,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado actual de la consulta cargado desde el store.
@@ -26,6 +27,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * El índice de la pestaña actualmente seleccionada.
    */
   indice: number = 1;
+
+   /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
 
   /**
    * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.

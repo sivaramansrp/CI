@@ -1,5 +1,5 @@
 <div class="container">
-  <app-datos-del-establecimiento-rfc [idProcedimiento]="idProcedimiento"  (rfcValidoChange)="onRfcValidoChange($event)"></app-datos-del-establecimiento-rfc>
+  <app-datos-del-establecimiento-rfc [idProcedimiento]="idProcedimiento"  (rfcValidoChange)="onRfcValidoChange($event)" (formValidityChange)="establecimientoFormValidityChange($event)"></app-datos-del-establecimiento-rfc>
   <app-domicillo 
     [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
     [isAduanasEntradaVisible]="isAduanasEntradaVisible" 
@@ -13,10 +13,11 @@
     [identificacion]="identificacion"
     [rfcValido]="rfcValido"
     [estadoValidte]="estadoValidte"
+    (formValidityChange)="domicilioFormValidityChange($event)"
     >
   </app-domicillo>
-  <app-manifiestos  [idProcedimiento]="idProcedimiento"></app-manifiestos>
-  <app-representante-legal-rfc  [idProcedimiento]="idProcedimiento"></app-representante-legal-rfc>
+  <app-manifiestos  [idProcedimiento]="idProcedimiento" (formValidityChange)="manifiestosFormValidityChange($event)"></app-manifiestos>
+  <app-representante-legal-rfc  [idProcedimiento]="idProcedimiento" (formValidityChange)="representanteLegalFormValidityChange($event)"></app-representante-legal-rfc>
 </div>
 @if (nuevaNotificacion) {
   <section>

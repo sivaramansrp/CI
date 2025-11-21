@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content p-5">
             <div class="border-0">
-                <ng-titulo titulo="Agregar información de procedencia" />
+                <ng-titulo titulo="Agregar destinatario (destino final)" />
             </div>
             <div class="">
                 <form [formGroup]="datosGeneralesForm">
@@ -96,11 +96,11 @@
                 </form>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger p-3" (click)="closeDatosGenerales()">
+                    <button type="button" class="btn btn-danger " (click)="closeDatosGenerales()">
                         Cancelar
                     </button>
-                    <button type="button" class="btn btn-secondary p-3">Limpiar</button>
-                    <button type="button" class="btn btn-primary p-3" (click)="enviarFormulario()">
+                    <button type="button" class="btn btn-default" (click)="onLimpiarClick()">Limpiar</button>
+                    <button type="button" class="btn btn-primary" (click)="enviarFormulario()">
                         Guardar
                     </button>
                 </div>

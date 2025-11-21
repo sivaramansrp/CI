@@ -13,10 +13,14 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  REGEX_SOLO_NUMEROS,
+  REGEX_SOLO_NUMEROS,  
   TituloComponent,
+  ValidacionesFormularioService,
+  doDeepCopy,
+  esValidArray,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
   TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
@@ -37,6 +41,7 @@ import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { Shared2605Service } from '../../services/shared2605/shared2605.service';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
@@ -71,7 +76,18 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+
+  /** Evento emitido cuando la tabla es válida. */
+  @Output() tableValidEvent = new EventEmitter<string>();
+
+  /** Identificador numérico del procedimiento recibido como entrada desde el componente padre.
+   * Se utiliza para cargar datos específicos relacionados con dicho procedimiento, como catálogos o listas dinámicas. */
+  @Input() idProcedimiento!: number;
+
   /**
    * Expresión regular para validar el RFC de personas físicas.
    * @description Utiliza una expresión regular para verificar el formato del RFC.
@@ -90,6 +106,41 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .filter((tabla) => tabla.esVisible) // Only include visible tables
       .sort((a, b) => a.orden - b.orden);
   }
+/**
+ * Indica si se está editando un fabricante.
+ * Se utiliza para controlar la lógica de modificación en el formulario.
+ */
+isEditingFabricante = false;
+
+/**
+ * Indica si se está editando un formulador.
+ * Permite diferenciar entre agregar un nuevo registro o actualizar uno existente.
+ */
+isEditingFormulador = false;
+
+/**
+ * Indica si se está editando un proveedor.
+ * Se usa para gestionar la actualización de datos existentes en la tabla.
+ */
+isEditingProveedor = false;
+
+/**
+ * Índice de la fila de fabricante que se está editando.
+ * Se utiliza para actualizar el elemento correcto en el arreglo de datos.
+ */
+editFabricanteIndex: number = -1;
+
+/**
+ * Índice de la fila de formulador que se está editando.
+ * Permite reemplazar correctamente los datos en la tabla al guardar cambios.
+ */
+editFormuladorIndex: number = -1;
+
+/**
+ * Índice de la fila de proveedor que se está editando.
+ * Se emplea para identificar y actualizar la fila correspondiente en la tabla.
+ */
+editProveedorIndex: number = -1;
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -130,7 +181,87 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de fabricante.
    */
   showFabricanteButtons = false;
-  
+  /**
+ * Fila actualmente seleccionada en la tabla de formuladores.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedFormuladorRow: TablaDatos | null = null;
+  /**
+ * Fila actualmente seleccionada en la tabla de proveedores.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedProveedorRow: TablaDatos | null = null;
+  /**
+ * Fila actualmente seleccionada en la tabla de fabricantes.
+ * Se utiliza para cargar los datos en el formulario al modificar.
+ * Puede ser null si no se ha seleccionado ninguna fila.
+ */
+  selectedFabricanteRow: TablaDatos | null = null;
+/**
+ * Maneja la selección de una fila en la tabla de fabricantes.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onFabricanteRowSelected(row: TablaDatos): void {
+  this.selectedFabricanteRow = row;
+}
+
+/**
+ * Maneja la selección de una fila en la tabla de formuladores.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onFormuladorRowSelected(row: TablaDatos): void {
+  this.selectedFormuladorRow = row;
+}
+
+/**
+ * Maneja la selección de una fila en la tabla de proveedores.
+ * Guarda la fila seleccionada para poder modificarla o eliminarla.
+ */
+onProveedorRowSelected(row: TablaDatos): void {
+  this.selectedProveedorRow = row;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de fabricantes
+ * y actualiza el store correspondiente.
+ */
+ eliminarFabricante(): void {
+  if (!this.selectedFabricanteRow) {return;}
+
+  this.fabricanteRowData = this.fabricanteRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedFabricanteRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setFabricante([...this.fabricanteRowData]);
+  this.selectedFabricanteRow = null;
+  this.showFabricanteButtons = false;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de formuladores
+ * y actualiza el store correspondiente.
+ */
+eliminarFormulador(): void {
+  if (!this.selectedFormuladorRow) {return}
+  this.formuladorRowData = this.formuladorRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedFormuladorRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setFormulador([...this.formuladorRowData]);
+  this.selectedFormuladorRow = null;
+  this.showFormuladorButtons = false;
+}
+/**
+ * Elimina la fila seleccionada de la tabla de proveedores
+ * y actualiza el store correspondiente.
+ */
+eliminarProveedor(): void {
+  if (!this.selectedProveedorRow) {return}
+  this.proveedorRowData = this.proveedorRowData.filter(
+    row => JSON.stringify(row.tbodyData) !== JSON.stringify(this.selectedProveedorRow?.tbodyData)
+  );
+  this.tercerosFabricanteStore.setProveedor([...this.proveedorRowData]);
+  this.selectedProveedorRow = null;
+  this.showProveedorButtons = false;
+}
   onFabricanteSeleccionCambio(isChecked: boolean): void {
     this.showFabricanteButtons = isChecked;
   }
@@ -173,7 +304,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las opciones para el selector de países.
    */
-  paisDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.paisSelectData;
+  paisDropdownData: Catalogo[] = [];
 
   /**
    * Datos para el dropdown de localidades.
@@ -277,6 +408,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public tercerosForm: FormGroup = new FormGroup({});
 
+    /** Indica si el campo de fabricante es inválido. */
+    public isfabricanteInvalida: boolean = false;
+
+    /** Indica si el campo de Proveedor es inválido. */
+    public isProveedorInvalida: boolean = false;
+
+    /** Indica si el campo de Formulador es inválido. */
+    public isFormuladorInvalida: boolean = false;
+
+
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -292,7 +434,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     @Inject(TercerosFabricanteService)
     private service: TercerosFabricanteService,
     private consultaioQuery: ConsultaioQuery,
-    private servicioDeFormularioService: ServicioDeFormularioService
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private _sharedSvc: Shared2605Service,
+    private validacionesService: ValidacionesFormularioService,
   ) {
     // Inicializa el store del trámite.
     this.consultaioQuery.selectConsultaioState$
@@ -342,6 +486,49 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+
+            const PROVEEDOR_DATA = seccionState.Proveedor ?? [];
+            PROVEEDOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.proveedorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.proveedorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FABRICANTE_DATA = seccionState.Fabricante ?? [];
+            FABRICANTE_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.fabricanteRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.fabricanteRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
+            const FORMULADOR_DATA = seccionState.Formulador ?? [];
+            FORMULADOR_DATA.forEach((item: {tbodyData: string[]}) => {
+              if (Array.isArray(item.tbodyData)) {
+                const NEW_DATA = item.tbodyData.map((val: unknown) => String(val ?? ''));
+                const EXISTS = this.formuladorRowData.some(existing =>
+                  JSON.stringify(existing.tbodyData) === JSON.stringify(NEW_DATA)
+                );
+
+                if (!EXISTS) {
+                  this.formuladorRowData.push({ tbodyData: NEW_DATA });
+                }
+              }
+            });
+
           })
         )
         .subscribe();
@@ -360,10 +547,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ * @param formGroup Grupo de formulario que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  public markPaisTouched!: ((formGroup: FormGroup) => boolean);
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.markPaisTouched = (formGroup: FormGroup): boolean => {
+      return Boolean(formGroup?.get('pais')?.touched);
+    };
+    
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -374,6 +573,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.dropdownData = data;
       });
+    
+    this.obtenerPaisList();
 
     /**
      * Inicializa los formularios reactivos para agregar terceros.
@@ -389,6 +590,36 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.tercerosForm.markAllAsTouched();
       }
     })
+  }
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.markTouched();
+      });
+    }
+  }
+
+  /**
+   * Obtiene la lista de países para el desplegable según el procedimiento actual.
+   * Si existe un id de procedimiento, se realiza una petición al servicio para obtener los datos.
+   * En caso contrario, se asigna una lista de países por defecto.
+   */
+  obtenerPaisList(): void {
+    if (this.idProcedimiento) {
+      this.service
+      .getPaisList(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.paisDropdownData = data.datos ?? [];
+      });
+    } else {
+      this.paisDropdownData = SELECT_OPTIONS_DATA.paisSelectData;
+    }
   }
 
   /**
@@ -415,6 +646,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -423,6 +655,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
@@ -445,6 +678,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -452,20 +686,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+         Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -473,7 +708,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -481,19 +716,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -504,11 +739,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+         Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */
@@ -548,6 +784,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+         Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -556,13 +793,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl({value:'',disabled:true}, [Validators.required]),
+      nombre: new FormControl({value:'',disabled:true}, [Validators.required,Validators.maxLength(200)]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
@@ -578,6 +816,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -585,20 +824,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -606,7 +846,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -614,19 +854,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -637,11 +877,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+        Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */
@@ -667,7 +908,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   onTipoPersonaChange(formGroup: FormGroup): void {
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
-    if (TIPO_PERSONA_CONTROL?.value) {
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
+    if (TIPO_PERSONA_CONTROL?.value && this.nacional && !this.extranjero) {
       if(this.fisica || this.moral) {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.disable();
@@ -678,7 +920,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           formGroup.get('rfc')?.enable();
           formGroup.get('curp')?.enable();
       }
-    }
+    } else {
+      formGroup.enable();
+    }  
   }
 
   /**
@@ -705,6 +949,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(15),
         TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
@@ -713,6 +958,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(18),
         TercerosRelacionadosComponent.curpValidator,
       ]),
       /**
@@ -735,6 +981,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(254)
       ]),
       /**
        * País del tercero.
@@ -742,20 +989,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
+        Validators.maxLength(120),
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(255)]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(120)]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({ value: '', disabled: true }),
+      localidad: new FormControl({ value: '', disabled: true },[Validators.maxLength(120)]),
       /**
        * Entidad federativa del tercero.
        */
@@ -763,7 +1011,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(12)]),
       /**
        * Colonia del tercero.
        */
@@ -771,19 +1019,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true },[Validators.maxLength(100)]),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(100)]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required,Validators.maxLength(55)]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({ value: '', disabled: true }),
+      numeroInterior: new FormControl({ value: '', disabled: true },[Validators.maxLength(55)]),
       /**
        * Lada del tercero.
        */
@@ -794,11 +1042,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
+        Validators.maxLength(30)
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({ value: '', disabled: true }),
+      correoElectronico: new FormControl({ value: '', disabled: true },[Validators.maxLength(320)]),
       /**
        * Código del extranjero.
        */
@@ -890,7 +1139,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string): void {
+  public inputChecked(checkBoxName: string, formGroup?: FormGroup): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -925,6 +1174,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.noContribuyente = true;
       this.fisica = false;
       this.moral = false;
+    }
+
+    // Condition for updating the validitity on tipo persona change
+    if (this.extranjero && (this.fisica || this.moral) && formGroup) {
+      if (this.fisica) {
+        ['rfc', 'curp', 'denominacionRazonSocial', 'codigoPostaloEquivalente', 'entidadFederativa','municipioAlcaldia', 'extranjeroCodigo', 'extranjeroColonia', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['nombre', 'primerApellido', 'segundoApellido'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      } else if (this.moral) {
+        ['rfc', 'curp', 'entidadFederativa', 'codigoPostaloEquivalente', 'municipioAlcaldia','extranjeroCodigo', 'extranjeroColonia', 'nombre', 'primerApellido', 'segundoApellido', 'estadoLocalidad'].forEach(key => formGroup.get(key)?.clearValidators());
+        ['denominacionRazonSocial'].forEach(key => formGroup.get(key)?.setValidators([Validators.required]));
+      }
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && (this.fisica || this.moral) && formGroup) {
+      ['rfc'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(15), TercerosRelacionadosComponent.rfcValidator,]));
+      ['curp'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
+    }
+    if (this.nacional && this.noContribuyente && formGroup) {
+      ['curp'].forEach(key => formGroup.get(key)?.setValidators([Validators.required, Validators.maxLength(18), TercerosRelacionadosComponent.curpValidator,]));
+      ['rfc'].forEach(key => formGroup.get(key)?.clearValidators());
+      formGroup.updateValueAndValidity();
     }
   }
 
@@ -973,161 +1244,187 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
   }
+/**
+ * Permite modificar un Formulador existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+  modificarFormulador(): void {
+  if (!this.selectedFormuladorRow) { return; }
 
-  /**
-   * Envía el formulario de Fabricante y actualiza los datos en el store.
-   * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
-   *
-   * @description Este método es llamado al enviar el formulario de agregar un fabricante.
-   */
-  submitFabricanteForm(): void {
-    /**
-     * Obtiene el valor de la localidad seleccionada en el formulario.
-     */
-    const LOCALIDAD_VALOR = this.localidadDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.localidad
-    )?.descripcion || this.agregarFabricanteFormGroup.get('localidad')?.value;
+  // Find the index of the selected row
+  this.editFormuladorIndex = this.formuladorRowData.findIndex(
+    row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedFormuladorRow?.tbodyData)
+  );
 
-    /**
-     * Obtiene el valor del municipio seleccionado en el formulario.
-     */
-    const MUNICIPIO_VALOR = this.municipioDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
-    )?.descripcion || this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value;
+  if (this.editFormuladorIndex === -1) { return; }
 
-    /**
-     * Obtiene el valor del código postal seleccionado en el formulario.
-     */
-    const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
-      (item: Catalogo) =>
-        item.id ===
-        this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
-    )?.descripcion || this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value;
+  const SELECTED_ROW = this.selectedFormuladorRow.tbodyData;
 
-    /**
-     * Obtiene el valor de la colonia seleccionada en el formulario.
-     */
-    const COLONIA_VALOR = this.coloniaDropdownData.find(
-      (item: Catalogo) =>
-        item.id === this.agregarFabricanteFormGroup.value.colonia
-    )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
+  this.agregarFormuladorFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
 
-    /**
-     * Crea una nueva fila para la tabla de fabricantes.
-     * Esta fila contiene los datos del formulario de agregar un fabricante.
-     *
-     * @description Esta fila se agrega a la lista de filas del fabricante.
-     */
-    const FABRICANTE_FILA = {
-      /**
-       * Datos de la fila que se mostrarán en la tabla.
-       * Cada elemento del arreglo corresponde a una columna de la tabla.
-       */
-      tbodyData: [
-        /**
-         * Denominación o razón social del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
-
-        /**
-         * RFC del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('rfc')?.value,
-
-        /**
-         * CURP del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('curp')?.value,
-
-        /**
-         * Teléfono del fabricante, incluyendo lada.
-         */
-        this.agregarFabricanteFormGroup.get('telefono')?.value,
-
-        /**
-         * Correo electrónico del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
-
-        /**
-         * Calle del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('calle')?.value,
-
-        /**
-         * Número exterior del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
-
-        /**
-         * Número interior del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
-
-        /**
-         * País del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('pais')?.value,
-
-        /**
-         * Colonia del fabricante.
-         */
-        COLONIA_VALOR,
-
-        /**
-         * Municipio del fabricante.
-         */
-        MUNICIPIO_VALOR,
-
-        /**
-         * Localidad del fabricante.
-         */
-        LOCALIDAD_VALOR,
-
-        /**
-         * Entidad federativa del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
-
-        /**
-         * Estado o localidad del fabricante.
-         */
-        this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
-
-        /**
-         * Código postal del fabricante.
-         */
-        CODIGO_POSTAL_VALOR,
-      ],
-    };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del fabricante.
-     */
-    this.fabricanteRowData.push(FABRICANTE_FILA);
-
-    /**
-     * Actualiza el estado del store con los nuevos datos del fabricante.
-     */
-    this.tercerosFabricanteStore.setFabricante(this.fabricanteRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
-    this.showTableDiv = !this.showTableDiv;
-    this.showFabricante = !this.showFabricante;
-  }
-
+  this.showFormulador = true;
+  this.showTableDiv = false;
+  this.isEditingFormulador = true;
+}
+/**
+ * Permite modificar un Proveedor existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+  modificarProveedor(): void {
+  if (!this.selectedProveedorRow) { return; }  
+  this.editProveedorIndex = this.proveedorRowData.findIndex(
+    row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedProveedorRow?.tbodyData)
+  );
+  if (this.editProveedorIndex === -1) { return; }
+  const SELECTED_ROW = this.selectedProveedorRow.tbodyData;
+  this.agregarProveedorFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
+  this.showProveedor = true;
+  this.showTableDiv = false;
+  this.isEditingProveedor = true;
+}
+/**
+ * Permite modificar un Fabricante existente.
+ * Rellena el formulario con los datos seleccionados.
+ * Activa el modo edición y oculta la tabla.
+ */
+modificarFabricante(): void {
+  if (!this.selectedFabricanteRow) {return}    
+this.editFabricanteIndex = this.fabricanteRowData.findIndex(
+  row => JSON.stringify(row.tbodyData) === JSON.stringify(this.selectedFabricanteRow?.tbodyData)
+);
+  if (this.editFabricanteIndex === -1) {return}
+  const SELECTED_ROW = this.selectedFabricanteRow.tbodyData; 
+  this.agregarFabricanteFormGroup.patchValue({
+    denominacionRazonSocial: SELECTED_ROW[0],
+    rfc: SELECTED_ROW[1],
+    curp: SELECTED_ROW[2],
+    telefono: SELECTED_ROW[3],
+    correoElectronico: SELECTED_ROW[4],
+    calle: SELECTED_ROW[5],
+    numeroExterior: SELECTED_ROW[6],
+    numeroInterior: SELECTED_ROW[7],
+    pais: SELECTED_ROW[8],
+    colonia: SELECTED_ROW[9],
+    municipioAlcaldia: SELECTED_ROW[10],
+    localidad: SELECTED_ROW[11],
+    entidadFederativa: SELECTED_ROW[12],
+    estadoLocalidad: SELECTED_ROW[13],
+    codigoPostaloEquivalente: SELECTED_ROW[14],
+  });
+  this.showFabricante = true;
+  this.showTableDiv = false;
+  this.isEditingFabricante = true;
+}
   /**
    * Envía el formulario de Formulador y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitFormuladorForm(): void {
-    /**
+  submitFabricanteForm(forma: FormGroup): void {
+    if (this.agregarFabricanteFormGroup.valid) {
+      /**
+     * Obtiene el valor de la localidad seleccionada en el formulario.
+     */
+  const LOCALIDAD_VALOR = this.localidadDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.localidad
+  )?.descripcion || this.agregarFabricanteFormGroup.get('localidad')?.value;
+
+  const MUNICIPIO_VALOR = this.municipioDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
+  )?.descripcion || this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value;
+
+  const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
+  )?.descripcion || this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value;
+
+  const COLONIA_VALOR = this.coloniaDropdownData.find(
+    item => item.id === this.agregarFabricanteFormGroup.value.colonia
+  )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
+
+ 
+  const FABRICANTE_FILA = {
+    tbodyData: [
+      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
+      this.agregarFabricanteFormGroup.get('rfc')?.value,
+      this.agregarFabricanteFormGroup.get('curp')?.value,
+      this.agregarFabricanteFormGroup.get('telefono')?.value,
+      this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
+      this.agregarFabricanteFormGroup.get('calle')?.value,
+      this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
+      this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
+      this.agregarFabricanteFormGroup.get('pais')?.value,
+      COLONIA_VALOR,
+      MUNICIPIO_VALOR,
+      LOCALIDAD_VALOR,
+      this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
+      this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
+      CODIGO_POSTAL_VALOR,
+    ],
+  };
+
+   if (this.isEditingFabricante && this.editFabricanteIndex > -1) {    
+    this.fabricanteRowData[this.editFabricanteIndex] = FABRICANTE_FILA;
+     this.tercerosFabricanteStore.setFabricante([...this.fabricanteRowData]);
+    this.isEditingFabricante = false;   
+  } else {    
+    this.tercerosFabricanteStore.setFabricante([FABRICANTE_FILA]);
+  }  
+  this.tableValidEvent.emit('fabricante');
+  this.selectedFabricanteRow = null;
+  this.showFabricanteButtons = false;
+  this.showTableDiv = !this.showTableDiv;
+  this.showFabricante = !this.showFabricante;  
+    this.limpiar(forma);
+    } else {
+      this.agregarFabricanteFormGroup.markAllAsTouched();
+    }
+    
+}  
+
+/**
+   * Envía el formulario de Formulador y actualiza los datos en el store.
+   * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
+   *
+   * @description Este método es llamado al enviar el formulario de agregar un formulador.
+   */
+  submitFormuladorForm(forma: FormGroup): void {
+    if (this.agregarFormuladorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1249,21 +1546,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       ],
     };
 
-    /**
-     * Agrega la nueva fila a la lista de filas del formulador.
-     */
-    this.formuladorRowData.push(FORMULADOR_FILA);
 
+     if (this.isEditingFormulador && this.editFormuladorIndex > -1) {    
+    this.formuladorRowData[this.editFormuladorIndex] = FORMULADOR_FILA;
+     this.tercerosFabricanteStore.setFormulador([...this.formuladorRowData]);
+    this.isEditingFormulador = false;   
+  } else {    
+    this.tercerosFabricanteStore.setFormulador([FORMULADOR_FILA]);
+  } 
     /**
-     * Actualiza el estado del store con los nuevos datos del formulador.
+     * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setFormulador(this.formuladorRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
+    this.selectedFormuladorRow = null;
+   this.showFormuladorButtons = false;   
+    this.tableValidEvent.emit('formulador');
     this.showTableDiv = !this.showTableDiv;
     this.showFormulador = !this.showFormulador;
+    this.limpiar(forma);
+    } else {
+      this.agregarFormuladorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1272,8 +1575,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm(): void {
-    /**
+  submitProveedorForm(forma: FormGroup): void {
+    if (this.agregarProveedorFormGroup.valid) {
+      /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1394,22 +1698,30 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         CODIGO_POSTAL_VALOR,
       ],
     };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del proveedor.
-     */
-    this.proveedorRowData.push(PROVEEDOR_FILA);
-
+    if (this.isEditingProveedor && this.editProveedorIndex > -1) {    
+    this.proveedorRowData[this.editProveedorIndex] = PROVEEDOR_FILA;
+     this.tercerosFabricanteStore.setProveedor([...this.proveedorRowData]);
+    this.isEditingProveedor = false;   
+  } else {    
+     this.tercerosFabricanteStore.setProveedor([PROVEEDOR_FILA]);
+  }     
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.tercerosFabricanteStore.setProveedor(this.proveedorRowData);
-
+  
+    this.tableValidEvent.emit('proveedor');
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
+    this.selectedProveedorRow = null;
+    this.showProveedorButtons = false; 
+    this.limpiar(forma);
+    } else {
+      this.agregarProveedorFormGroup.markAllAsTouched();
+    }
+    
   }
 
   /**
@@ -1468,23 +1780,62 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number): void {
+  cambiarRadio(value: string | number, formGroup: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    const TIPO_PERSONA_CONTROL = this.agregarFabricanteFormGroup.get('tipoPersona');
-    if (TIPO_PERSONA_CONTROL) {
-      TIPO_PERSONA_CONTROL.reset();
-    }
+    this.resetAllExcept(formGroup, ['tercerosNacionalidad']);
+    this.disableAllExcept(formGroup, ['tercerosNacionalidad', 'tipoPersona']);
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
+
+  /**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  disableAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.disableAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.disable();
+      }
+    });
+  }
+
+/**
+ * Reinicia todos los controles del formulario excepto los especificados en el arreglo de exclusiones.
+ * Maneja de forma recursiva los FormGroup anidados para garantizar un reinicio completo.
+ * @param formGroup El grupo de formulario a reiniciar.
+ * @param except Arreglo de nombres de controles que deben ser excluidos del reinicio.
+ */
+  resetAllExcept(formGroup: FormGroup, except: string[]): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (except.includes(key)) {
+        return;
+      }
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.resetAllExcept(CONTROL, except);
+      } else {
+        CONTROL?.reset();
+      }
+    });
+  }
+
 
   /**
    * Cambia el valor del radio button seleccionado.
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number): void {
+  cambiarRadioFisica(value: string | number, formGroup?: FormGroup): void {
     const VALOR_SELECCIONADO = value as string;
-    this.inputChecked(VALOR_SELECCIONADO);
+    this.inputChecked(VALOR_SELECCIONADO, formGroup);
   }
 
   /**
@@ -1497,34 +1848,154 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     forma.reset();
   }
 
+  /**
+  * @method mapApiResponseToForm
+  * @description
+  * Método estático que mapea la respuesta de una API a un objeto compatible con el formulario.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @returns Objeto con los campos mapeados para el formulario.
+  */
+ static mapApiResponseToForm(apiResponse: Record<string, unknown>): Record<string, unknown> {
+   const CONTRIBUYENTE: unknown = apiResponse?.['contribuyente'] || {};
+   const DOMICILIO =
+     typeof CONTRIBUYENTE === 'object' && CONTRIBUYENTE !== null && 'domicilio' in CONTRIBUYENTE
+       ? (CONTRIBUYENTE as { domicilio?: unknown }).domicilio || {}
+       : {};
+
+   return {
+     ...TercerosRelacionadosComponent.mapPersonFields(apiResponse, CONTRIBUYENTE as {
+       curp?: string;
+       nombre?: string;
+       apellido_paterno?: string;
+       apellido_materno?: string;
+       razon_social?: string;
+       telefono?: string;
+       correo_electronico?: string;
+     }),
+     ...TercerosRelacionadosComponent.mapAddressFields(DOMICILIO),
+     lada: '',
+     extranjeroCodigo: '',
+     extranjeroEstado: '',
+     extranjeroColonia: '',
+   };
+ }
+
+ /**
+  *  @method mapPersonFields
+  * @description
+  * Método estático que mapea los campos personales de la respuesta de la API y del contribuyente.
+  * @param apiResponse Respuesta de la API que contiene los datos del tercero.
+  * @param CONTRIBUYENTE Objeto que contiene los datos del contribuyente.
+  * @returns Objeto con los campos personales mapeados.
+  */
+  private static mapPersonFields(
+    apiResponse: { curp?: string; nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string } = {},
+    CONTRIBUYENTE: { curp?: string; nombre?: string; apellido_paterno?: string; apellido_materno?: string; razon_social?: string; telefono?: string; correo_electronico?: string } = {}
+  ): Record<string, unknown> {
+    return {
+      curp: apiResponse.curp ?? CONTRIBUYENTE.curp ?? '',
+      nombre: apiResponse.nombre ?? CONTRIBUYENTE.nombre ?? '',
+      primerApellido: apiResponse.apellidoPaterno ?? CONTRIBUYENTE.apellido_paterno ?? '',
+      segundoApellido: apiResponse.apellidoMaterno ?? CONTRIBUYENTE.apellido_materno ?? '',
+      denominacionRazonSocial: CONTRIBUYENTE.razon_social ?? '',
+      telefono: CONTRIBUYENTE.telefono ?? '',
+      correoElectronico: CONTRIBUYENTE.correo_electronico ?? '',
+    };
+  }
+
+  /**
+   * @method mapAddressFields
+   * @description Método estático que mapea los campos de dirección de la respuesta de la API.
+   * @param DOMICILIO Objeto que contiene los datos de la dirección.
+   * @returns Objeto con los campos de dirección mapeados.
+   */
+  private static mapAddressFields(DOMICILIO: {
+    pais?: { nombre?: string };
+    entidad_federativa?: { nombre?: string };
+    delegacion_municipio?: { nombre?: string };
+    localidad?: { nombre?: string };
+    cp?: string;
+    colonia?: { nombre?: string };
+    calle?: string;
+    num_exterior?: string;
+    num_interior?: string;
+  } = {}): Record<string, unknown> {
+    return {
+      pais: DOMICILIO?.pais?.nombre ?? '',
+      estadoLocalidad: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      municipioAlcaldia: DOMICILIO?.delegacion_municipio?.nombre ?? '',
+      localidad: DOMICILIO?.localidad?.nombre ?? '',
+      entidadFederativa: DOMICILIO?.entidad_federativa?.nombre ?? '',
+      codigoPostaloEquivalente: DOMICILIO?.cp ?? '',
+      colonia: DOMICILIO?.colonia?.nombre ?? '',
+      coloniaoEquivalente: '',
+      calle: DOMICILIO?.calle ?? '',
+      numeroExterior: DOMICILIO?.num_exterior ?? '',
+      numeroInterior: DOMICILIO?.num_interior ?? '',
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   buscar(form: FormGroup): void {
-    if (form.get('rfc')?.valid) {
-      form.patchValue({
-        curp: 'MAVL621207HDGRLS06',
-        nombre: 'Juan Pérez',
-        primerApellido: 'Gómez',
-        segundoApellido: 'López',
-        denominacionRazonSocial: 'Razón Social Ejemplo',
-        pais: 'México',
-        estadoLocalidad: 'Estado Ejemplo',
-        municipioAlcaldia: 'Municipio Ejemplo',
-        localidad: 'Localidad Ejemplo',
-        entidadFederativa: 'Entidad Federativa Ejemplo',
-        codigoPostaloEquivalente: 'Código Postal Ejemplo',
-        colonia: 'Colonia Ejemplo',
-        coloniaoEquivalente: 'Colonia Equivalente Ejemplo',
-        calle: 'Calle Ejemplo',
-        numeroExterior: 'Número Exterior Ejemplo',
-        numeroInterior: '',
-        lada: '',
-        telefono: '618-256-2532',
-        correoElectronico: '',
-        extranjeroCodigo: 'Código del Extranjero Ejemplo',
-        extranjeroEstado: 'Estado del Extranjero Ejemplo',
-        extranjeroColonia: 'Colonia del Extranjero Ejemplo',
-      })
+    const PROCEDIMIENTO = String(this.idProcedimiento);
+    let DATOS: Record<string, unknown> = {};
+    if (form.get('rfc')?.valid && getValidDatos(form.get('rfc')?.value)) {
+      const PAYLOAD = {
+        "rfcRepresentanteLegal": form.get('rfc')?.value
+      }
+      this._sharedSvc.getRepresentanteLegala(PAYLOAD, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        const API_RESPONSE = doDeepCopy(response);
+        if(esValidArray(API_RESPONSE.datos)) {
+          DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+          form.patchValue(DATOS);
+        }
+      });
+    } else if (form.get('curp')?.valid && getValidDatos(form.get('curp')?.value)) {
+       const CURP = form.get('curp')?.value;
+       this._sharedSvc.getCURP(CURP, PROCEDIMIENTO).pipe(takeUntil(this.destroyNotifier$))
+       .subscribe((response) => {
+          const API_RESPONSE = doDeepCopy(response);
+          if(esValidArray(API_RESPONSE.datos)) {
+            DATOS = TercerosRelacionadosComponent.mapApiResponseToForm(API_RESPONSE.datos[0]);
+            form.patchValue(DATOS);
+          }
+       });
+    } else {
+      form.get('rfc')?.markAsTouched();
+      form.get('curp')?.markAsTouched();
     }
+  }
+
+  /** Marca como inválidos los campos si no contienen datos. */
+  markTouched(): void {
+    if (this.fabricanteRowData.length===0) {
+      this.isfabricanteInvalida=true;
+    } else {
+      this.isfabricanteInvalida=false;
+    }
+    if (this.formuladorRowData.length===0) {
+      this.isFormuladorInvalida=true; 
+    } else {
+      this.isFormuladorInvalida=false;
+    }
+    if (this.proveedorRowData.length===0) {
+      this.isProveedorInvalida=true;
+    } else {
+      this.isProveedorInvalida=false;
+    }
+  }
+
+  /**
+   * compo doc
+   * @method esValido
+   * @description
+   * Verifica si un campo específico del formulario es válido.
+   * @param campo El nombre del campo que se desea validar.
+   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+   */
+  public esValido(campo: string, form: FormGroup): boolean | null {
+    return this.validacionesService.isValid(form, campo);
   }
 
   /**

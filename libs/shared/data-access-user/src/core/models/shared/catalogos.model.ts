@@ -22,6 +22,8 @@ export interface JSONResponse {
   codigo: string;
   /** Datos adicionales en formato string. */
   data: string;
+  /** Datos adicionales en formato JSON. */
+  datos?: Array<unknown>;
   /** Mensaje en formato string. */
   mensaje?: string;
 }
@@ -72,6 +74,8 @@ export interface Catalogo {
   bloque?: string;
   /** Descripción del NICO, cuando se requiera. */
   nicoDescription?: string;
+  /** Clave de la unidad de medida, cuando se requiera. */
+  cve_unidad_medida?: string;
 }
 
 

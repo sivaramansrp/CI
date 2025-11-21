@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {ConfiguracionVisibilidad,DEFAULT_CONFIGURACION_VISIBILIDAD} from '../../constantes/datos.enum';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
-import {ConfiguracionVisibilidad,DEFAULT_CONFIGURACION_VISIBILIDAD} from '../../constantes/datos.enum';
+import { ViewChild } from '@angular/core';
 
 
 /**
@@ -69,10 +71,13 @@ export class DatosComponent implements OnInit, OnDestroy {
 
   idProcedimiento:number = 260514;
 
+  @ViewChild(DatosDeLaComponent)
+    datosDeLaComponent!: DatosDeLaComponent;
+
    /**
      * Indica si se debe mostrar la sección de Aviso de Licencia
      */
-    isAvisoLicenciaVisible: boolean = true;
+    isAvisoLicenciaVisible: boolean = false;
   
     /**
      * Indica si se debe mostrar la sección de Aduanas de Entrada
@@ -149,6 +154,21 @@ export class DatosComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  validarClickDeBoton(): boolean {
+    return this.datosDeLaComponent.validarClickDeBoton();
+  }
+
+  validOnButtonClick():boolean{
+    let isValid = false;
+    if(this.validarClickDeBoton()){
+          isValid = true;
+        }
+        else{
+          isValid = false;
+        }
+        return isValid;
+      }
 
   /**
    * @method ngOnDestroy

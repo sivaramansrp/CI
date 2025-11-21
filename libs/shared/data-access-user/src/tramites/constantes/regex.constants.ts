@@ -345,6 +345,13 @@ export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 export const REGEX_IMPORTE_PAGO = /^[a-zA-Z0-9 ]*$/;
 
 /**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas y los siguientes caracteres especiales: ( ) - . / # & ,
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z), dígitos (0-9), espacios y los caracteres especiales permitidos.
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO_FACTURADO = /^[a-zA-Z0-9 ()\-\.\/#&,]*$/;
+
+/**
  * Expresión regular para validar una llave de pago.
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
@@ -381,6 +388,10 @@ export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
  * Expresión regular para validar números enteros y decimales.
  */
 export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
+/**
+ * Expresión regular para validar números con hasta 14 dígitos enteros y 3 decimales.
+ */
+export const REGEX_NUMERO_ENTERO_14_3 = /^\d{1,14}(\.\d{1,3})?$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -404,6 +415,8 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
 export const REGEX_TEXTO_CON_SIMBOLOS = /^[a-zA-Z0-9\s\-.,()&]*$/;
 
 export const REGEX_TEXTO_ALFANUMERICO_EXTENDIDO = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.,()\-]+$/;
+
+export const REGEX_TEXTO_CON_SYMBOLOS = /^[a-zA-Z0-9\s&()\-\/.,]*$/;
 
 
 
@@ -615,6 +628,15 @@ export const REGEX_VALID_UMC = /^\d{1,12}(\.\d{1,10})?$/
  * - "abc" (contiene caracteres no numéricos)
  */
 export const REGEX_DECIMAL = /^\d+(\.\d+)?$/;
+
+/**
+ * Expresión regular para validar números enteros positivos con al menos 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123.4567"
+ * - "0.1234"
+ */
+export const REGEX_NUMERO_ENTERO_POSITIVO = /^\d+\.\d{4,}$/;
 
 /* Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales.
  * 
@@ -1296,3 +1318,17 @@ export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
  * Ejemplo: "123.45" => ".45"
  */
 export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
+
+/**
+ * Expresión regular utilizada para eliminar todas las comas presentes en una cadena.
+ *
+ * @constant
+ * @type {RegExp}
+ * @example
+ * // Ejemplo de uso:
+ * const texto = "1,234,567";
+ * const resultado = texto.replace(REGEX_REMOVE_COMA, "");
+ * // resultado: "1234567"
+ */
+
+export const REGEX_REMOVE_COMA = /,/g;

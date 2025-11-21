@@ -92,7 +92,7 @@ export function createInitialState(): Tramite260210State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -119,7 +119,7 @@ export function createInitialState(): Tramite260210State {
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
     },
-    opcionConfigDatos: TABLA_OPCION_DATA,
+    opcionConfigDatos: [],
     scianConfigDatos: [],
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
@@ -129,7 +129,7 @@ export function createInitialState(): Tramite260210State {
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
-      estado: '',
+      banco: '',
       llavePago: '',
       fechaPago: '',
       importePago: '',
@@ -211,7 +211,6 @@ export class Tramite260210Store extends Store<Tramite260210State> {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
@@ -225,7 +224,7 @@ export class Tramite260210Store extends Store<Tramite260210State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -237,7 +236,7 @@ export class Tramite260210Store extends Store<Tramite260210State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 
@@ -312,6 +311,22 @@ export class Tramite260210Store extends Store<Tramite260210State> {
     this.update((state) => ({
       ...state,
       idSolicitud,
+    }));
+  }
+
+
+    /**
+   * @método
+   * @nombre establecerDatos
+   * @descripción
+   * Actualiza el estado con los valores proporcionados.
+   *
+   * @param {Partial<Tramite260210State>} values - Valores parciales para actualizar el estado.
+   */
+  public establecerDatos(values: Partial<Tramite260210State>): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
     }));
   }
 }

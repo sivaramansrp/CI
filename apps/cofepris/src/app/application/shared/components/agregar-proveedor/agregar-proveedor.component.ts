@@ -260,7 +260,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       curp: [this.obtenerValor('curp')],
       denominacionRazon: [
         this.obtenerValor('nombreRazonSocial'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [ Validators.pattern(REGEX_NOMBRE)],
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -272,7 +272,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       ],
       segundoApellido: [
         this.obtenerValor('segundoApellido'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
@@ -654,7 +654,54 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         this.estaDeshabilitadoDesplegable = false;
       });
     }
+     this.updateDenominacionRazonValidation();
   }
+
+  /**
+   * Actualiza las validaciones del campo denominacionRazon basado en el valor de tipoPersona
+   */
+private updateDenominacionRazonValidation(): void {
+   const DENOMINACIONRAZONCONTROL = this.agregarProveedorForm?.get('denominacionRazon');
+  const NOMBRESCONTROL = this.agregarProveedorForm?.get('nombres');
+  const PRIMERAPELLIDOCONTROL = this.agregarProveedorForm?.get('primerApellido');
+
+  if (!DENOMINACIONRAZONCONTROL || !NOMBRESCONTROL || !PRIMERAPELLIDOCONTROL) {
+    return;
+  }
+  
+   const TIPOPERSONAVALUE = this.agregarProveedorForm?.get('tipoPersona')?.value;
+  
+  if (TIPOPERSONAVALUE === this.tipoPersona.MORAL) {
+    DENOMINACIONRAZONCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+
+  } else if (TIPOPERSONAVALUE === this.tipoPersona.FISICA || TIPOPERSONAVALUE === this.tipoPersona.NO_CONTRIBUYENTE) {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    
+    NOMBRESCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    PRIMERAPELLIDOCONTROL.setValidators([
+      Validators.required,
+      Validators.pattern(REGEX_NOMBRE)
+    ]);
+    
+  } else {
+    DENOMINACIONRAZONCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    NOMBRESCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+    PRIMERAPELLIDOCONTROL.setValidators([Validators.pattern(REGEX_NOMBRE)]);
+  }
+  
+  DENOMINACIONRAZONCONTROL.updateValueAndValidity();
+  NOMBRESCONTROL.updateValueAndValidity();
+  PRIMERAPELLIDOCONTROL.updateValueAndValidity();
+}
 
   /**
    * @method ngOnDestroy

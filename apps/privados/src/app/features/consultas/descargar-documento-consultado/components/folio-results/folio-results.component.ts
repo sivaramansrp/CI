@@ -11,6 +11,7 @@ import { AuthInformationService } from '@/features/auth/services/auth-informatio
 import { catchError, of, take, tap } from 'rxjs';
 import { DescargarDocumentoConsultadoService } from '../../services/descargar-documento-consultado.service';
 import { FullReportsResponse } from '../../interfaces/descargar-documento-consultado.interface';
+import { SessionStorageService } from '@/shared/services/session-storage.service';
 
 @Component({
   selector: 'app-folio-results',
@@ -21,6 +22,7 @@ import { FullReportsResponse } from '../../interfaces/descargar-documento-consul
 export class FolioResultsComponent implements OnInit, OnDestroy {
   private routing = inject(RoutingService);
   private descargarDocumentoService = inject(DescargarDocumentoConsultadoService);
+  private sessionStorage = inject(SessionStorageService);
   authInformation = inject(AuthInformationService);
   isLoadingDataReportsTable = signal<boolean>(true);
   errorDataReports = false;
@@ -65,7 +67,6 @@ export class FolioResultsComponent implements OnInit, OnDestroy {
 
   onRowClicked(event: TableBodyData) {
     this.routing.navigate([
-      APP_ROUTES.VUCEM,
       STORE_FRONT_ROUTES.CONSULTAS,
       DESCARGAR_DOCUMENTO_CONSULTADO_ROUTES.DOCUMENTO,
       event.hiddenData.idFolio,
@@ -73,6 +74,6 @@ export class FolioResultsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    //TODO: CLEAN THE STORAGE (FOLIO KEY)
+    this.sessionStorage.remove('folioFullReport');
   }
 }

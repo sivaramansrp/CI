@@ -16,7 +16,7 @@
        [datos]="fabricanteRowData" (listaDeFilaSeleccionada)="onFabricanteSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
-  
+        @if(!hideAgregarBtn){
         <div class="d-flex justify-content-end mt-3">
           @if(selectedFabricanteRows.length > 0) {
             <div>
@@ -28,6 +28,8 @@
             Agregar
           </button>
         </div>
+        }
+  
       </div>
   
       <!-- La mesa del destinatario en exhibición -->
@@ -39,7 +41,8 @@
        [datos]="destinatarioRowData" (listaDeFilaSeleccionada)="onDestinatarioSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
-  
+
+        @if(!hideAgregarBtn){
         <div class="d-flex justify-content-end mt-3">
           @if(selectedDestinatarioRows.length > 0) {
             <div>
@@ -51,6 +54,7 @@
             Agregar
           </button>
         </div>
+        }
       </div>
   
       <!-- La mesa del proveedor en exhibición -->
@@ -62,7 +66,8 @@
        [datos]="proveedorRowData" (listaDeFilaSeleccionada)="onProveedorSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
-  
+
+        @if(!hideAgregarBtn){
         <div class="d-flex justify-content-end mt-3">
           @if(selectedProveedorRows.length > 0) {
             <div>
@@ -74,6 +79,7 @@
             Agregar
           </button>
         </div>
+        }
       </div>
   
       <!-- La mesa del facturador en exhibición -->
@@ -85,7 +91,8 @@
        [datos]="facturadorRowData" (listaDeFilaSeleccionada)="onFacturadorSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
-  
+
+        @if(!hideAgregarBtn){
         <div class="d-flex justify-content-end mt-3">
           @if(selectedFacturadorRows.length > 0) {
             <div>
@@ -97,6 +104,7 @@
             Agregar
           </button>
         </div>
+        }
       </div>
     </div>
   </div>
