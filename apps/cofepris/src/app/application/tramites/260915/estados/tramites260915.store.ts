@@ -1,12 +1,29 @@
+import {Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Destinatario } from '../models/destinatario.model';
+
 import { Injectable } from '@angular/core';
 /**
  * Interfaz que define el estado de la solicitud 260915.
  * Contiene todas las propiedades necesarias para gestionar los datos del trámite.
  */
 export interface Solicitud260915State {
+  /**
+         * Lista de fabricantes en la tabla de datos.
+         */
+        fabricanteTablaDatos: Fabricante[];
+        /**
+         * Lista de proveedores en la tabla de datos.
+         */
+        proveedorTablaDatos: Proveedor[];
+         /**
+         * Lista de destinatarios finales en la tabla de datos.
+         */
+        destinatarioFinalTablaDatos: Destinatario[];
+       /**
+         * Lista de facturadores en la tabla de datos.
+         */
+        facturadorTablaDatos: Facturador[];
   /** Clave de referencia del trámite */
   clavedereferencia: string;
   /** Cadena de la dependencia asociada al trámite */
@@ -124,13 +141,6 @@ export interface Solicitud260915State {
 
   tableData: FilaData[];
 
-  proveedorDatos: Destinatario[];
-  
-  fabricanteDatos: Destinatario[];
-  
-  destinatarioDatos: Destinatario[];
-  
-  facturadorDatos: Destinatario[];
 
   }
 
@@ -259,13 +269,11 @@ export function createInitialSolicitudState(): Solicitud260915State {
     
     tableData: [],
     
-    proveedorDatos: [],
-    
-    fabricanteDatos: [],
-    
-    destinatarioDatos: [],
-    
-    facturadorDatos: [],
+   
+    fabricanteTablaDatos: [],
+    proveedorTablaDatos: [],
+    destinatarioFinalTablaDatos: [],
+    facturadorTablaDatos: [],
   };
 }
 
@@ -319,4 +327,71 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
       ...valores,
     })));
   }
+
+       /**
+     * Actualiza la tabla de fabricantes.
+     * @param {Fabricante[]} newFabricantes - Nuevos fabricantes a agregar
+     */
+    public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+      this.update((state) => ({
+        ...state,
+        fabricanteTablaDatos: [ ...newFabricantes],
+      }));
+    }
+  
+     /**
+     * @method fabricanteTablaModificaDatos
+     * @description
+     * Actualiza los datos seleccionados en la tabla de fabricantes en el estado del trámite.
+     * Sustituye el arreglo actual por el nuevo conjunto de fabricantes.
+     *
+     * @param {Fabricante[]} tabSeleccionado - Lista de fabricantes seleccionados que se asignarán al estado.
+     * @returns {void} Este método no retorna ningún valor.
+     */
+    public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+      this.update((state) => ({
+        ...state,
+        fabricanteTablaModificaDatos: tabSeleccionado,
+      }));
+    }
+  
+  
+      /**
+     * Actualiza la tabla de proveedores.
+     * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar
+     */
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+      this.update((state) => ({
+        ...state,
+        proveedorTablaDatos: [...newProveedores],
+      }));
+    }
+    /**
+     * Actualiza la tabla de destinatarios finales.
+     * @param {Destinatario[]} newDestinatarios - Nuevos destinatarios a agregar
+     */
+    public updateDestinatarioFinalTablaDatos(
+      newDestinatarios: Destinatario[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        destinatarioFinalTablaDatos: [
+          
+          ...newDestinatarios,
+        ],
+      }));
+    }
+  
+     /**
+     * Actualiza la tabla de facturadores.
+     * @param {Facturador[]} newFacturadores - Nuevos facturadores a agregar
+     */
+    public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
+      this.update((state) => ({
+        ...state,
+        facturadorTablaDatos: [...newFacturadores],
+      }));
+    }
+  
+  
 }

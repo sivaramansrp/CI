@@ -216,9 +216,18 @@ noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
+    txtBtnCancelar: '',
   };
     this.elementoParaEliminar = i;
+  }
+
+  cerrarModalMercancia(): void {
+    this.modalAddAgentMercanciasInstance.hide();
+    this.formMercancias.reset();
+    this.seleccionadasPaisDeOriginDatos= [];
+  this.seleccionadasPaisDeProcedenciaDatos= [];
+  this.seleccionadasEspecificoDatos= [];
+  this.mensajeDeError= '';
   }
 
   /**
@@ -512,6 +521,9 @@ noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
    * Muestra el modal para la clave SCIAN.
    */
   public mostrarModeloClave(): void {
+    this.scianForm.reset();
+    this.scianForm.markAsUntouched();
+    this.mensajeDeError = '';
     this.modalInstance.show();
   }
 
@@ -833,17 +845,17 @@ modificarMercancias(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', this.idProcedimiento !== 260917
+      establecimientoRFCResponsableSanitario: ['', (this.idProcedimiento !== 260917 && this.idProcedimiento !== 260918)
         ? [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
         : [Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
     ],
-      establecimientoRazonSocial:['', Validators.required],
-      establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
+      establecimientoRazonSocial:['',[Validators.required,this.noOnlySpacesValidator]],
+      establecimientoCorreoElectronico :['', [Validators.required, Validators.email,this.noOnlySpacesValidator]],
       establecimientoEstados :['', Validators.required],
-      descripcionMunicipio: ['', Validators.required],
+      descripcionMunicipio: ['', [Validators.required,this.noOnlySpacesValidator]],
       localidad: ['',[Validators.pattern(REGEX_IMPORTE_PAGO)]],
       establishomentoColonias: [''],
-      calle: ['', Validators.required],
+      calle: ['', [Validators.required,this.noOnlySpacesValidator]],
       lada: ['', [ Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30),  this.noOnlySpacesValidator]],
       establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS), this.noOnlySpacesValidator]],
@@ -854,7 +866,7 @@ modificarMercancias(): void {
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
-      noLicenciaSanitaria:['',[Validators.maxLength(20)]],
+      noLicenciaSanitaria:[''],
       avisoCheckbox: [false],
       licenciaSanitaria: [{ value: '', disabled: true }],
       regimen: ['', Validators.required],
@@ -967,6 +979,7 @@ modificarMercancias(): void {
   cerrarModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
+      this.mensajeDeError = '';
     }
   }
   
@@ -1034,8 +1047,10 @@ modificarMercancias(): void {
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
+    this.mensajeDeError = '';
      if (this.scianForm.invalid) {
     this.scianForm.markAllAsTouched();
+    this.mensajeDeError = 'Faltan campos por capturar.';
     return;
   }
     if (this.scianForm.valid) {
@@ -1048,6 +1063,7 @@ modificarMercancias(): void {
       this.datosData = [...this.datosData];
 
       this.scianForm.reset();
+      this.mensajeDeError = '';
 
       this.closeScianModal();
     }
@@ -1082,6 +1098,7 @@ modificarMercancias(): void {
    */
 
   guardarMarcancia(): void {
+    this.mensajeDeError = '';
     if (this.formMercancias.valid) {
       const MERCANCIA: MercanciasInfo = {
         clasificacion: this.formMercancias.get('clasificacion')?.value,
@@ -1144,7 +1161,7 @@ modificarMercancias(): void {
     this.mensajeDeError = 'Faltan campos por capturar.';
      return;
   }
-    this.mensajeDeError = '';
+   
 }
 
   limpiarMercancia(): void { 

@@ -87,12 +87,12 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
     },
     { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
     {
-      encabezado: 'Entidad federativa',
+      encabezado: 'Estado',
       clave: (fila) => fila.entidadFederativa,
       orden: 13,
     },
     {
-      encabezado: 'Estado/localidad',
+      encabezado: 'Estado',
       clave: (fila) => fila.estadoLocalidad,
       orden: 14,
     },
@@ -179,12 +179,12 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
     },
     { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
     {
-      encabezado: 'Entidad federativa',
+      encabezado: 'Estado',
       clave: (fila) => fila.entidadFederativa,
       orden: 13,
     },
     {
-      encabezado: 'Estado/localidad',
+      encabezado: 'Estado',
       clave: (fila) => fila.estadoLocalidad,
       orden: 14,
     },
@@ -192,12 +192,7 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
       encabezado: 'Código postal',
       clave: (fila) => fila.codigoPostal,
       orden: 15,
-    },
-    {
-      encabezado: 'Colonia o equivalente',
-      clave: (fila) => fila.coloniaEquivalente,
-      orden: 16,
-    },
+    }
   ];
 
 /**

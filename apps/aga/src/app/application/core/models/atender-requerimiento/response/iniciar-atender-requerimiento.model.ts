@@ -10,6 +10,11 @@ export interface IniciarAtenderRequerimientoResponse {
     
     /** Listado de documentos asociados al requerimiento */
     documentos: DocumentoRequerimiento[];
+
+    /**
+     * Alcance del requerimiento Datos/Documentos/Datos y Documentos
+     */
+    alcance_requerimiento?: string;
 }
 
 /**

@@ -5,7 +5,6 @@ import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../co
 import { MostrarPartidas, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130104State, Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
-import Decimal from 'decimal.js';
 import { HttpClient } from '@angular/common/http';
 import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
@@ -491,7 +490,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
 
     const MAXIMO_DECIMALES = 3;
-    const IMPORTE_UNITARIO_USD = new Decimal(TOTAL_USD).dividedBy(TOTAL_PARTIDAS);
+    const IMPORTE_UNITARIO_USD = TOTAL_USD / TOTAL_PARTIDAS;
 
     return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
   }
