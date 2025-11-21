@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 
@@ -9,6 +10,10 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  * Este estado almacena toda la información relacionada con el trámite 130113.
  */
 export interface Tramite130113State {
+  /**
+   * Identificador numérico de la solicitud actual.
+   */
+  idSolicitud: number;
   /** Producto seleccionado en el trámite. */
   producto: string;
 
@@ -22,7 +27,7 @@ export interface Tramite130113State {
   cantidad: string;
 
   /** Valor de la partida en USD. */
-  valorPartidaUSD: number;
+  valorPartidaUSD: number | string;
 
   /** Unidad de medida del producto o mercancía. */
   unidadMedida: string;
@@ -55,7 +60,7 @@ export interface Tramite130113State {
   fraccionDescripcionPartidasDeLaMercancia: string;
 
   /** Valor de la partida en USD para las partidas de la mercancía. */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /** Descripción de las partidas de la mercancía. */
   descripcionPartidasDeLaMercancia: string;
@@ -83,6 +88,47 @@ export interface Tramite130113State {
 
   /** Indica si se debe mostrar la tabla de partidas de mercancía. */
   mostrarTabla: boolean;
+
+  /** Arreglo de partidas a mostrar en la tabla. */
+  mostrarPartidas: MostrarPartidas[];
+  /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+    /**
+     * Clave de la fracción arancelaria TIGIE correspondiente a la partida
+     * de la mercancía. Este valor representa la fracción seleccionada dentro
+     * del catálogo TIGIE.
+     */
+    fraccionTigiePartidasDeLaMercancia: string;
+    /**
+     * Descripción asociada a la fracción arancelaria TIGIE dentro de
+     * *Partidas de la mercancía*. Se utiliza para mostrar el detalle
+     * descriptivo de la fracción seleccionada.
+     */
+    fraccionDescripcionPartidasDeLaMercancia: string;
+  };
+  /**   
+   * Cantidad total de las partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /**   
+   * Valor total en USD de las partidas de la mercancía.
+   */
+  valorTotalUSD: string;
+  /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
+
+  /** Lista de partidas de la mercancía asociadas al trámite. */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
 }
 
 /**
@@ -92,23 +138,24 @@ export interface Tramite130113State {
  */
 export function createInitialState(): Tramite130113State {
   return {
+    idSolicitud:0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
-    producto: '',
+    defaultSelect: 'TISOL.I',
+    producto: 'CONDMER.N',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.N',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
     fraccionTigiePartidasDeLaMercancia: '',
     fraccionDescripcionPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -117,6 +164,18 @@ export function createInitialState(): Tramite130113State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    mostrarPartidas: [],
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+      fraccionTigiePartidasDeLaMercancia: '',
+      fraccionDescripcionPartidasDeLaMercancia: '',
+    },
+    cantidadTotal: '',
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
+    tableBodyData: [],
   };
 }
 

@@ -4,11 +4,16 @@
       <h1>Solicitud de modificación y/o prórroga del permiso previo por retorno de productos </h1>
     </div>
   </div>
+    @if (!isPeligro) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+    }
     <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     <div>
       @switch (indice) {
       @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-paso-uno>
       }
       @case (2) {
         <app-paso-dos></app-paso-dos>

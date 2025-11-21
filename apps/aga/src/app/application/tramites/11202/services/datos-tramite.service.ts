@@ -4,12 +4,14 @@ import { Catalogo } from '../../../../../../../../libs/shared/data-access-user/s
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class DatosTramiteService {
-  private readonly url = './assets/json/11202/contenedor-mockdata.json';
+  private readonly url = ENVIRONMENT.API_HOST;
   public uploadArchivo = DatosTramiteService.uploadArchivo;
   public submitSolicitud = DatosTramiteService.submitSolicitud;
 
@@ -23,14 +25,14 @@ export class DatosTramiteService {
    * 
 Obtenga una lista ficticia de Contenedores
    */
-  getContenedores(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(this.url);
+  getContenedores(): Observable<any> {
+    return this.http.get(`${this.url}/api/sat-t11202/catalogo/tipo-contenedor`);
   }
   /**
    * Obtenga una lista ficticia de Aduanas
    */
-  getAduanas(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(this.url);
+  getAduanas(): Observable<any> {
+    return this.http.get(`${this.url}/api/sat-t11202/catalogo/aduanas`);
   }
 
   /**
@@ -76,8 +78,20 @@ Obtenga una lista ficticia de Contenedores
    * Agrega una solicitud.
    * @returns Un observable con la respuesta del contenedor.
    */
-  agregarSolicitud(): Observable<RespuestaContenedor> {
-    return this.http.get<RespuestaContenedor>(`assets/json/11202/contenedorLista.json`);
+   agregarSolicitud(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.url}/api/sat-t11202/solicitud/constancia-rc/validar`
+    return this.http.post(ENDPOINT, PAYLOAD);
   }
+  
+  solicitudGuardar(PAYLOAD:any): Observable<any> {
+    const ENDPOINT = `${this.url}/api/sat-t11202/solicitud/guardar`
+    return this.http.post(ENDPOINT, PAYLOAD);
+  }
+
+  validarArchivoCsv(PAYLOAD:any): Observable<any> {
+      const ENDPOINT = `${this.url}/api/sat-t11202/solicitud/constancia-rc/validar-csv` ;
+      return this.http.post(ENDPOINT,PAYLOAD);
+  }
+
   
 }

@@ -3,8 +3,8 @@
   [inputFields]="datosInputFields"
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
+  [mostrarErrorClasificacion]="true"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
-  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
@@ -15,27 +15,26 @@
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
-  [mostrarErrores]="mostrarErroresMercancia"
 ></app-datos-de-la-mercancia>
 
 
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
-  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
+  [mostrarErrores]="true"
+  (modificarPartidaSeleccionada)="modificarPartidaSeleccionada($event)"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
+  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
+  (partidaModificada)="partidaModificada($event)"
+  [isInvalidaPartidas]="isInvalidaPartidas"
   (setValoresStoreEvent)="setValoresStore($event)"
-  [mostrarErrores]="mostrarErroresPartidas"
-  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
-  (partidasEliminadas)="onPartidasEliminadas($event)"
-  (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
-  (partidaModificada)="onPartidaModificada($event)" 
 ></app-partidas-de-la-mercancia>
 
 
@@ -45,7 +44,10 @@
 [paisesPorBloque]="paisesPorBloque"
 [selectRangoDias]="selectRangoDias"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
+(todosPaisesSeleccionadosEvent)="todosPaisesSeleccionados($event)"
+(fechasSeleccionadas)="fechasSeleccionadas($event)"
 (bloqueCambiar)="enCambioDeBloque($event)"
+[idProcedimiento]="idProcedimiento"
 (setValoresStoreEvent)="setValoresStore($event)"
 ></app-pais-procendencia>
 
@@ -54,12 +56,8 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
+[idProcedimiento]="idProcedimiento"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
 
-<lib-notificaciones
-  *ngIf="mostrarNotificacion"
-  [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacion = false">
-</lib-notificaciones>

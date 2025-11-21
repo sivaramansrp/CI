@@ -1,5 +1,5 @@
-import { AccionBoton, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, formatFecha } from "@ng-mf/data-access-user";
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AccionBoton, AcuseComponent, BtnContinuarComponent, Notificacion, SolicitanteQuery, SolicitanteState, TITULO_ACUSE, Usuario, formatearFechaSolicitud } from "@ng-mf/data-access-user";
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, ERROR_FORMA_FALTAN } from "../../constants/permiso-importacion-modification.enum";
 import { Subject, map, takeUntil } from "rxjs";
 import { ALERTA } from "@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios";
@@ -14,6 +14,7 @@ import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
 import { Tramite130120Query } from "../../estados/permiso-importacion.query";
+import { USUARIO_INFO } from "@libs/shared/data-access-user/src/core/enums/usuario-info.enum";
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -36,7 +37,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   selector: 'app-intro-permiso',
   templateUrl: './intro-permiso.component.html',
   styleUrl: './intro-permiso.component.scss',
-  imports: [CommonModule, WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoCuatroComponent],
+  imports: [CommonModule, WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoDosComponent, PasoCuatroComponent, AcuseComponent],
   standalone: true,
 })
 export class IntroPermisoComponent implements OnInit {
@@ -130,6 +131,47 @@ export class IntroPermisoComponent implements OnInit {
   };
 
   /**
+    * @description Mensaje de alerta que se muestra al usuario en la página de acuse.
+    */
+  txtAlerta!: string;
+
+  /**
+   * @description Subtítulo que se muestra en la página de acuse.
+   */
+  subtitulo = TITULO_ACUSE;
+
+  /**
+   * @description Indica si el componente de acuse debe ser visible o no.
+   * Inicialmente es falso y se establece en verdadero después de generar el acuse.
+   */
+  isAcuseVisible: boolean = false;
+
+  /**
+   * @description Información del usuario que realiza el trámite.
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+* Indica si el botón para cargar archivos está habilitado.
+*/
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true;
+
+  /**
    * Constructor del componente.
    * @param tramiteQuery Servicio para consultar el estado del trámite.
    * @param solicitanteQuery Servicio para consultar el estado del solicitante.
@@ -184,15 +226,15 @@ export class IntroPermisoComponent implements OnInit {
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
         }
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        this.wizardComponent.siguiente();
-        return;
       }
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      this.wizardComponent.atras();
+      this.wizardComponent.siguiente();
+      return;
     }
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
 
   /**
@@ -233,8 +275,8 @@ export class IntroPermisoComponent implements OnInit {
    */
   buildPayload(): GuardarSolicitudRequest {
     const DATOS_GENERALES = this.realizarState;
-    const FECHA_FACTURA = formatFecha(DATOS_GENERALES.datosMercanica.factura_fecha);
-    const FECHA_DOCUMENTO = formatFecha(DATOS_GENERALES.datosExporta.fecha_documento);
+    const FECHA_FACTURA = formatearFechaSolicitud(DATOS_GENERALES.datosMercanica.factura_fecha);
+    const FECHA_DOCUMENTO = formatearFechaSolicitud(DATOS_GENERALES.datosExporta.fecha_documento);
     return {
       //TODOcve_entidad_federativa se debe obtener del estado del solicitante ejemplo "SIN" representa SINALOA o cualquier otro estado
       cve_entidad_federativa: DATOS_GENERALES.datosFederal.descripcion_representacion_federal,
@@ -258,7 +300,7 @@ export class IntroPermisoComponent implements OnInit {
         valor_total_factura: Number(DATOS_GENERALES.datosMercanica.valor_total_factura),
         pais_destino_clave: DATOS_GENERALES.datosMercanica.pais_exportador,
         pais_origen_clave: DATOS_GENERALES.datosMercanica.pais_origen,
-        observaciones: DATOS_GENERALES.datosMercanica.otro_umc,
+        observaciones: DATOS_GENERALES.datosExportador.observaciones,
         numero_factura: (DATOS_GENERALES.datosMercanica.factura_numero).toString(),
         fecha_factura: FECHA_FACTURA,
         capacidad: Number(DATOS_GENERALES.datosMercanica.factor_conversion),
@@ -280,7 +322,7 @@ export class IntroPermisoComponent implements OnInit {
         nombre: DATOS_GENERALES.datosExportador.personales_nombre,
         apellido_paterno: DATOS_GENERALES.datosExportador.primer_apellido,
         apellido_materno: DATOS_GENERALES.datosExportador.segundo_apellido,
-        razon_social: DATOS_GENERALES.datosExportador.razon_social,
+        razon_social: DATOS_GENERALES.datosExportador.denominacion_razon_social_exportador,
         descripcion_ubicacion: DATOS_GENERALES.datosExportador.domicilio,
       },
       datos_genericos_solicitud:
@@ -296,5 +338,79 @@ export class IntroPermisoComponent implements OnInit {
       cve_unidad_administrativa: DATOS_GENERALES.datosFederal.representacion_federal,
       rfc: this.solicitante.rfc_original,
     }
+  }
+
+  /**
+  * Maneja el evento cuando se genera un acuse.
+  * Actualiza el texto de alerta y el estado de visibilidad del acuse en el componente.
+  *
+  * @param event - Objeto que contiene los datos del acuse generado.
+  * @param event.txtAlerta - Texto del mensaje de alerta a mostrar.
+  * @param event.isVisible - Indica si el acuse debe mostrarse o no.
+  */
+  onAcuseGenerado(event: { txtAlerta: string; isVisible: boolean }): void {
+    this.txtAlerta = event.txtAlerta;
+    this.isAcuseVisible = event.isVisible;
+  }
+
+  /**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado de la sección de carga de documentos.
+ *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+ * {void} No retorna ningún valor.
+ */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+    * Maneja el evento de carga en progreso emitido por un componente hijo.
+    * Actualiza el estado de cargaEnProgreso según el valor recibido.
+    * @param cargando Valor booleano que indica si la carga está en progreso.
+    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+ * Método para navegar a la sección anterior del wizard.
+ * Actualiza el índice y el estado de los pasos.
+ * {void} No retorna ningún valor.
+ */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
   }
 }

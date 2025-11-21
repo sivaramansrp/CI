@@ -68,12 +68,15 @@ export interface Fraccion {
  * @property {string} cupo.cveUnidadMedidaOficialCupo - Clave de la unidad de medida oficial del cupo.
  */
 export interface ObtenerCertificadosDisponiblesPayload {
-    idMecanismoAsignacion: number;
-    ideTipoMecAsignacion: string;
-    cupo: {
-        regimen: string;
-        ideTipoCupo: string;
-        cveUnidadMedidaOficialCupo: string;
+    rfc: string;
+    mecanismo_asignacion: {
+        idMecanismoAsignacion: number;
+        ideTipoMecAsignacion: string;
+        cupo: {
+            regimen: string;
+            ideTipoCupo: string;
+            cveUnidadMedidaOficialCupo: string;
+        };
     };
 }
 
@@ -130,4 +133,123 @@ export interface ObtenerCertificadosDisponiblesResponse {
     montoEjercidoCBP: number;
     fabricante: string;
     importador: string;
+}
+
+/**
+ * Payload interface for searching a request detail.
+ *
+ * @property {string} rfc - The RFC (Registro Federal de Contribuyentes) identifier.
+ * @property {number} id_mecanismo_asignacion - The assignment mechanism ID.
+ *
+ * @compodoc
+ */
+export interface DetalleSolicitudBuscarPayload {
+    rfc: string;
+    id_mecanismo_asignacion: number;
+}
+
+export interface DetalleSolicitudBuscarResponse {
+  denominacion_exposicion: string | null;
+  cadena_fracciones_cupo_tpl: string | null;
+
+  mecanismo_asignacion: MecanismoAsignacion | null;
+
+  asignaciones: Asignacion[]; // aunque viene vacío, es un array
+}
+
+export interface MecanismoAsignacion {
+  criterioMecanismo: string | null;
+  repFedMecanismosAsignacion: string | null;
+  nombreMecanismoAsignacion: string;
+  documentosMecanismo: string | null;
+  idMecanismoAsignacion: number;
+  observaciones: string | null;
+  numeroPeriodoVigencia: string | null;
+  ideTipoMecAsignacion: string | null;
+  idePeriodoVigencia: string | null;
+  ideOpinionMecanismo: string | null;
+  descentralizar: boolean;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  requiereBeneficiarios: boolean;
+  descripcionFundamento: string | null;
+  porcentaje: number | null;
+  fechaEspecifica: string | null;
+  requiereOpinion: boolean;
+  numCantidadConstanteAcuerdo: number | null;
+  numCertificadosPermitidos: number | null;
+  fechaInicioRecepSolicitudes: string | null;
+  fechaFinRecepSolicitudes: string | null;
+  fechaProrrata: string | null;
+  ideTipoComprobacionCert: string | null;
+  activo: boolean;
+  cveUnidadAdministrativa: string | null;
+  fraccionesPorExpedir: boolean;
+  fechaInicioVigenciaCertificados: string | null;
+  fechaFinVigenciaCertificados: string | null;
+  blnRequiereImportador: boolean;
+  blnRequiereProductor: boolean;
+  emitePEXIM: boolean;
+  emiteCEROR: boolean;
+  observacionesEmision: string | null;
+  inactivoAutomatico: string | null;
+
+  cupo: Cupo | null;
+
+  solicitarMercancia: boolean;
+  licitacionPublica: string | null;
+}
+
+export interface Cupo {
+  idCupo: number;
+  descClasificacionProducto: string | null;
+  cveProducto: string | null;
+  descSubproductoOtro: string | null;
+  ideClasifSubproducto: string | null;
+  cveUmOficialCupo: string | null;
+  idTratadoAcuerdo: string | null;
+  ideRegimen: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  unidadMedidaComercializacion: string | null;
+
+  paisesCupo: string[];
+  fraccionesCupo: string[];
+
+  fundamentos: string | null;
+  instrumento: string | null;
+  regimen: string | null;
+  clasificacionProducto: string | null;
+  ideTipoCupo: string | null;
+  cveUsuario: string | null;
+
+  producto: Producto | null;
+
+  tratadoAcuerdo: string | null;
+  cveUnidadMedidaOficialCupo: string | null;
+
+  cupoPrincipal: string | null;
+  subcupos: string | null;
+  categoriaTextilCupo: string | null;
+  mecanismosAsignacion: string | null;
+  categoriaTextilHelpers: string | null;
+
+  montoTotal: number | null;
+  saldoDisponible: number | null;
+  montoAsignado: number | null;
+}
+
+export interface Producto {
+  clave: string | null;
+  sigla: string | null;
+  nombre: string | null;
+  descripcion: string | null;
+  fechaCaptura: string | null;
+  fechaInicioVigencia: string | null;
+  fechaFinVigencia: string | null;
+  blnActivo: boolean;
+}
+
+export interface Asignacion {
+   clave: string | null;
 }

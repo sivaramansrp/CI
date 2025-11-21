@@ -93,10 +93,9 @@
           >
             Este campo es obligatorio
           </small>
-          <small
-            *ngIf="(agregarFabricanteForm.controls['rfc'].errors?.['INVALID_RFC_FISICA'] || agregarFabricanteForm.controls['rfc'].errors?.['INVALID_RFC_MORAL']) 
-            && agregarFabricanteForm.controls['rfc']?.touched"
-          >
+         <small
+  *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['INVALID_RFC'] && agregarFabricanteForm.controls['rfc']?.touched"
+>
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
@@ -249,7 +248,12 @@
         </div>
       </div>
     </div>
-    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL)
+    } @if((agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||agregarFabricanteForm.get('nacionalidad')?.value==='Nacional'||agregarFabricanteForm.get('nacionalidad')?.value==='Extranjero')
+     ||
+    (
+      !agregarFabricanteForm.get('nacionalidad')?.value &&
+      !agregarFabricanteForm.get('tipoPersona')?.value
+    ))
     {
     <div class="row mt-3">
       <div class="col-md-8">
@@ -357,10 +361,10 @@
     <div class="row mt-3">
        @if(
             chequeoValidacionAlGuardar &&
+            ((agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL) ||
             (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
-            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA))
           ) {
   
           <div class="col-md-4">
@@ -623,7 +627,7 @@
     }
     } 
     @if(( mostarColoniaOEquivalente &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'
+    (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'||agregarFabricanteForm.get('nacionalidad')?.value==='Nacional')
   ) ||
   (
     !agregarFabricanteForm.get('nacionalidad')?.value &&

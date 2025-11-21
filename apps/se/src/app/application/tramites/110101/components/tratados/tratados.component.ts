@@ -225,6 +225,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   */
   @ViewChild('modalResumenValores', { static: false }) modalElementResumenValores!: ElementRef;
 
+   /**
+   * Referencia al elemento modal para mostrar el Requisito de proceso.
+  */
+  @ViewChild('modalRequisitoProceso', { static: false }) modalRequisitoProceso!: ElementRef;
+
 
   /** Almacena las filas seleccionadas de la tabla */
   public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
@@ -233,7 +238,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   /** Suscripción para manejo de observables */
   private subscription!: Subscription;
   /** Bandera de aladi */
-  public noAceptada = false;
+  public noAceptada!: boolean | null;
     /**
      * Inicializa el TratadosComponent.
      * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
@@ -285,10 +290,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
     })).subscribe();
      this.subscription = this.generarDictamenClasificacionService.noAceptada$.subscribe(valor => {
       this.noAceptada = valor;
-
-      if (valor) {
-        this.modificarRegistrosAladi();
-      } 
+     if (valor !== null) {
+      this.modificarRegistrosAladi();
+     }
     });
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
@@ -989,8 +993,12 @@ modificarTratado(): void {
   public guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.formularioTratados.disable();
-       this.evaluacionTablaTratados();
+     this.formularioTratados.disable();
+
+    this.evaluacionTablaTratados(() => {
+      this.noAceptada = this.generarDictamenClasificacionService.getNoAceptadaActual();
+      this.modificarRegistrosAladi();
+    });
     } else if (!this.esFormularioSoloLectura) {
       this.formularioTratados.enable();
     }
@@ -1274,7 +1282,24 @@ eliminarTratado(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'No es posible modificar la calificación  ya que la calificación  del sistema es "NO APROBADA"',
+    mensaje: 'No es posible modificar la calificación  ya que la calificación  del sistema es "NO APROBADA".',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  }
+
+   /**
+   * Abre el modal de error dictaminador aladi.
+   */
+  abrirModalErrorDictaminadorAladi(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'No es posible modificar la calificación ya que la descripción es "No Aceptada".',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -1375,7 +1400,7 @@ eliminarTratado(): void {
    * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
    * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
    */
-  evaluacionTablaTratados(): void {
+  evaluacionTablaTratados(callback?: () => void): void {
     this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1383,6 +1408,7 @@ eliminarTratado(): void {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.tratadosEvaluacionTablaDatos = response.datos ?? [];
             this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+             callback?.();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1485,7 +1511,7 @@ eliminarTratado(): void {
       this.abrirModalGlobalAccion();
     }else{
       this.textoRequisitoProceso = this.tratadoSeleccionado[0].descripcion_proceso;
-      this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+      this.modalInstance = new Modal(this.modalRequisitoProceso.nativeElement);
       this.modalInstance?.show();        
     }
   }
@@ -1542,14 +1568,23 @@ eliminarTratado(): void {
  * @returns void
  */
   modificarRegistrosAladi():void{
-   const IDS_RESTRINGIDOS = [102, 103, 104, 105, 106];
+     if (this.noAceptada === null) {  
+      return;
+    }
 
+   const IDS_RESTRINGIDOS = [102, 103, 104, 105, 106];
   this.tratadosEvaluacionTablaDatos.forEach(item => {
     if (IDS_RESTRINGIDOS.includes(item.id_tratado_acuerdo)) {
+      if (this.noAceptada === false) {
       item.cal_aprobada_dictaminador = false;
       item.calificacion_dictaminador = 'NO APROBADO';
+      }else{
+        item.cal_aprobada_dictaminador = true;
+        item.calificacion_dictaminador = 'APROBADA';
+      }
     }
   });
+  this.noAceptada = null;
   this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
    this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
   }
@@ -1573,7 +1608,11 @@ eliminarTratado(): void {
       return;
     }
       
-    if(this.tratadoSeleccionado[0].cal_aprobada_sistema === false){
+    if(this.tratadoSeleccionado[0].calificacion_dictaminador === 'NO APROBADA'){
+      this.abrirModalErrorDictaminadorAladi();
+      return;
+    }
+     if(this.tratadoSeleccionado[0].cal_aprobada_dictaminador === false){
       this.abrirModalErrorDictaminador();
       return;
     }

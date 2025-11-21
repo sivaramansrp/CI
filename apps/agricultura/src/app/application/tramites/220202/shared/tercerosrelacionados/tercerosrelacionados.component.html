@@ -102,6 +102,8 @@
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="onSeleccionDestinatarioFinal($event)"
       ></app-tabla-dinamica>
+      <div *ngIf="mensajeErrorTablaExportador && cuerpoTablaExportador.length === 0 ">
+        <small class="mensaje-error">Este campo es obligatorio.</small>
     </div>
 
      <div class="col-md-12 d-flex justify-content-end mt-4" *ngIf="cuerpoTablaExportador.length === 0">
@@ -131,6 +133,8 @@
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"
         ></app-tabla-dinamica>
+        <div *ngIf="mensajeErrorTablaDestinatario && cuerpoTablaDestino.length === 0 ">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
       </div>
       @if (cuerpoTablaDestino.length === 0) {
       <div class="col-md-12 d-flex justify-content-end mt-4">

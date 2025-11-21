@@ -3,6 +3,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -113,7 +114,7 @@ export class AcuseComponent implements OnChanges, OnDestroy {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ];
 

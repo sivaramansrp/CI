@@ -107,7 +107,6 @@ describe('SolicitudComponent', () => {
     } as any;
 
     mockService = {
-   
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
@@ -173,19 +172,12 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'opcionesDeBusqueda');
-      jest.spyOn(component, 'formularioTotalCount');
-      jest.spyOn(component, 'fetchEntidadFederativa');
-      jest.spyOn(component, 'fetchRepresentacionFederal');
-      jest.spyOn(component, 'listaDePaisesDisponibles');
 
       component.ngOnInit();
 
-      expect(component.opcionesDeBusqueda).toHaveBeenCalled();
-      expect(component.formularioTotalCount).toHaveBeenCalled();
-      expect(component.fetchEntidadFederativa).toHaveBeenCalled();
-      expect(component.fetchRepresentacionFederal).toHaveBeenCalled();
-      expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
+      expect(component.formForTotalCount).toHaveBeenCalled();
+      expect(component.entidadFederativa).toHaveBeenCalled();
+      expect(component.representacionFederal).toHaveBeenCalled();
     });
 
     it('Debería actualizar mostrarTabla según la consulta', () => {
@@ -220,7 +212,6 @@ describe('SolicitudComponent', () => {
 
   describe('opcionesDeBusqueda', () => {
     it('Debería obtener las opciones de solicitud y producto', () => {
-      component.opcionesDeBusqueda();
 
       expect(mockVehiculosUsadosAdaptadosService.getSolicitudeOptions).toHaveBeenCalled();
       expect(mockVehiculosUsadosAdaptadosService.getProductoOptions).toHaveBeenCalled();
@@ -231,93 +222,86 @@ describe('SolicitudComponent', () => {
     });
   });
 
+  describe('validarYEnviarFormulario', () => {
+    it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
+      component.unidadCatalogo = [{ id: 1, descripcion: 'Pieza' }];
+      component.fraccionCatalogo = [{ id: 1234, descripcion: 'Fracción Test' }];
 
-describe('validarYEnviarFormulario', () => {
-  it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
-    component.unidadCatalogo = [{ id: 1, descripcion: 'Pieza' }];
-    component.fraccionCatalogo = [{ id: 1234, descripcion: 'Fracción Test' }];
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidad: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        valorFacturaUSD: ['100', Validators.required],
+        fraccion: ['1234', Validators.required],
+        unidadMedida: ['1', Validators.required], 
+        descripcion: ['desc', Validators.required],
+      });
 
-    component.mercanciaForm = TestBed.inject(FormBuilder).group({
-      cantidad: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      valorFacturaUSD: ['100', Validators.required],
-      fraccion: ['1234', Validators.required],
-      unidadMedida: ['1', Validators.required], 
-      descripcion: ['desc', Validators.required],
+      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        descripcionPartidasDeLaMercancia: ['Test', Validators.required],
+        valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
+      });
+
+      component.mercanciaForm.get('fraccion')?.setValue('1234');
+
+      component.validarYEnviarFormulario();
+
+      expect(component.mostrarTabla).toBe(true);
     });
 
-    component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
-      cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      descripcionPartidasDeLaMercancia: ['Test', Validators.required],
-      valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
-    });
-
-    component.mercanciaForm.get('fraccion')?.setValue('1234');
-
-    component.validarYEnviarFormulario();
-
-    expect(component.mostrarTabla).toBe(true);
-  });
-});
-
-  describe('navegarParaModificarPartida', () => {
-    it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
-      component.filaSeleccionada = [{ id:'1', cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
-
-      component.navegarParaModificarPartida();
-
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({mostrarTabla:true});
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada:component.filaSeleccionada});
-    });
-  });
-
-  describe('fetchEntidadFederativa', () => {
-    it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa(); 
-    
-      expect(mockVehiculosUsadosAdaptadosService.getEntidadFederativa).toHaveBeenCalled(); 
-      expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
+    it('No debe establecer mostrarTabla si el formulario es inválido', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidad: ['', [Validators.required]],
+        valorFacturaUSD: ['', Validators.required],
+        fraccion: ['', Validators.required],
+        unidadMedida: ['', Validators.required],
+        descripcion: ['', Validators.required],
+      });
+      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidadPartidasDeLaMercancia: ['', [Validators.required]],
+        descripcionPartidasDeLaMercancia: ['', Validators.required],
+        valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
+      });
+      component.validarYEnviarFormulario();
+      expect(component.mostrarTabla).toBeFalsy();
     });
   });
 
-  describe('fetchRepresentacionFederal', () => {
-    it('Debería obtener la lista de representaciones federales', () => {
-      component.fetchRepresentacionFederal();
+  describe('Formulario de mercancia', () => {
+    it('Debe marcar el formulario como inválido si falta un campo requerido', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidad: ['', [Validators.required]],
+        valorFacturaUSD: ['100', Validators.required],
+        fraccion: ['1234', Validators.required],
+        unidadMedida: ['1', Validators.required],
+        descripcion: ['desc', Validators.required],
+      });
+      expect(component.mercanciaForm.valid).toBe(false);
+    });
 
-      expect(mockVehiculosUsadosAdaptadosService.getRepresentacionFederal).toHaveBeenCalled();
-      expect(component.representacionFederal).toEqual(MOCK_CATALOGO);
+    it('Debe marcar el formulario como válido si todos los campos están completos', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidad: ['10', [Validators.required]],
+        valorFacturaUSD: ['100', Validators.required],
+        fraccion: ['1234', Validators.required],
+        unidadMedida: ['1', Validators.required],
+        descripcion: ['desc', Validators.required],
+      });
+      expect(component.mercanciaForm.valid).toBe(true);
     });
   });
 
-  describe('listaDePaisesDisponibles', () => {
-    it('Debería obtener la lista de países disponibles', () => {
-      component.listaDePaisesDisponibles();
-
-      expect(mockVehiculosUsadosAdaptadosService.getListaDePaisesDisponibles).toHaveBeenCalled();
-      expect(component.elementosDeBloque).toEqual(MOCK_CATALOGO);
+  describe('partidasDelaMercanciaForm', () => {
+    it('Debe marcar el formulario como inválido si valorPartidaUSDPartidasDeLaMercancia es vacío', () => {
+      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidadPartidasDeLaMercancia: ['10', [Validators.required]],
+        descripcionPartidasDeLaMercancia: ['Test', Validators.required],
+        valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
+      });
+      expect(component.partidasDelaMercanciaForm.valid).toBe(false);
     });
   });
 
-  describe('fetchPaisesPorBloque', () => {
-    it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
-      component.fetchPaisesPorBloque(1);
-
-      expect(mockVehiculosUsadosAdaptadosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
-      expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
-      expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
-    });
-  });
-
-  describe('enCambioDeBloque', () => {
-    it('Debería llamar a fetchPaisesPorBloque con el bloqueId', () => {
-      jest.spyOn(component, 'fetchPaisesPorBloque');
-
-      component.enCambioDeBloque(2);
-
-      expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(2);
-    });
-  });
- 
-describe('setValoresStore', () => {
+  describe('setValoresStore', () => {
     it('Debería actualizar el store según el método especificado', () => {
       component.mercanciaForm = TestBed.inject(FormBuilder).group({
         producto: ['Nuevo'], 
@@ -326,10 +310,81 @@ describe('setValoresStore', () => {
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
-        
       });
   
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ producto: 'Nuevo' });
+    });
+
+    it('No debe actualizar el store si el campo no existe en el formulario', () => {
+      const spy = jest.spyOn(mockStore, 'actualizarEstado');
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        producto: ['Nuevo'],
+      });
+      component.setValoresStore({
+        form: component.mercanciaForm,
+        campo: 'noExiste',
+      });
+      expect(spy).not.toHaveBeenCalledWith({ noExiste: undefined });
+    });
+  });
+
+  describe('fetchEntidadFederativa', () => {
+    it('Debería obtener la lista de entidades federativas', () => {
+    
+      expect(mockVehiculosUsadosAdaptadosService.getEntidadFederativa).toHaveBeenCalled(); 
+      expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
+    });
+  });
+
+  describe('fetchRepresentacionFederal', () => {
+    it('Debería obtener la lista de representaciones federales', () => {
+
+      expect(mockVehiculosUsadosAdaptadosService.getRepresentacionFederal).toHaveBeenCalled();
+      expect(component.representacionFederal).toEqual(MOCK_CATALOGO);
+    });
+  });
+
+  describe('listaDePaisesDisponibles', () => {
+    it('Debería obtener la lista de países disponibles', () => {
+
+      expect(mockVehiculosUsadosAdaptadosService.getListaDePaisesDisponibles).toHaveBeenCalled();
+      expect(component.elementosDeBloque).toEqual(MOCK_CATALOGO);
+    });
+  });
+
+  describe('fetchPaisesPorBloque', () => {
+    it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
+
+      expect(mockVehiculosUsadosAdaptadosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+      expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
+      expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
+    });
+
+    it('Debe manejar el caso cuando el servicio retorna un array vacío', () => {
+      (mockVehiculosUsadosAdaptadosService.getPaisesPorBloque as jest.Mock).mockReturnValueOnce(of([]));
+    
+      expect(component.paisesPorBloque).toEqual([]);
+      expect(component.selectRangoDias).toEqual([]);
+    });
+  });
+
+  describe('enCambioDeBloque', () => {
+    it('Debería llamar a fetchPaisesPorBloque con el bloqueId', () => {
+
+      component.enCambioDeBloque(2);
+
+      expect(component.getPaisesPorBloque).toHaveBeenCalledWith(2);
+    });
+  });
+ 
+  describe('navegarParaModificarPartida', () => {
+    it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
+      component.filaSeleccionada = [{ id:'1', cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
+
+      component.navegarParaModificarPartida();
+
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({mostrarTabla:true});
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada:component.filaSeleccionada});
     });
   });
 
