@@ -43,6 +43,7 @@ export class PasoUnoComponent implements OnInit {
      */
     public consultaState!:ConsultaioState;
 
+    public idProcedimiento: number = 260701;
     /**
      * Inicializa una nueva instancia de la clase PasoUnoComponent.
      * 
