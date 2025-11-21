@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * @component PasoUnoComponent
@@ -9,7 +10,7 @@ import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud.
  * Componente encargado de gestionar el primer paso del trámite 130107.
  * Este paso incluye la lógica para manejar la navegación entre subtítulos o secciones
  * dentro del primer paso del trámite.
- * 
+ *
  * @selector app-paso-uno
  * @templateUrl ./paso-uno.component.html
  */
@@ -29,21 +30,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @property indice
    * @description
    * Variable utilizada para almacenar el índice del subtítulo o sección activa.
-   * 
+   *
    * @type {number}
    */
   public indice: number = 1;
 
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** 
+   * Datos de respuesta del servidor utilizados para actualizar el formulario.
+   * @property esDatosRespuesta
+   * @type {boolean} 
+   */
   public esDatosRespuesta: boolean = false;
 
-  /** Subject para notificar la destrucción del componente. */
+  /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   * @type {SolicitudComponent}
+   */
+  @ViewChild(SolicitudComponent, { static: false })
+  solicitudComponent!: SolicitudComponent;
+
+  /** 
+   * Subject para notificar la destrucción del componente.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @constructor
+   * @description
+   * Constructor del componente `PasoUnoComponent`.
+   * @param datosDeLaSolicitudService Servicio para gestionar los datos de la solicitud.
+   * @param consultaQuery Servicio para gestionar el estado de la consulta.
+   */
   constructor(
     private datosDeLaSolicitudService: DatosDeLaSolicitudService,
     private consultaQuery: ConsultaioQuery
-
   ) {
     // Lógica de inicialización si es necesario
   }
@@ -52,14 +74,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    * @description
    * Método de inicialización del componente `DatosComponent`.
-   * 
+   *
    * Detalles:
    * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
    * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
    * - Actualiza la propiedad `consultaState` con el estado recibido.
    * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
    * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
-   * 
+   *
    * @example
    * this.ngOnInit();
    * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
@@ -76,8 +98,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
             this.esDatosRespuesta = true;
           }
         })
-      ).subscribe();
-
+      )
+      .subscribe();
   }
 
   /**
@@ -86,14 +108,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.datosDeLaSolicitudService
-      .getImportacionDefinitivaData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getImportacionDefinitivaData()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
           Object.entries(resp).forEach(([key, value]) => {
-            this.datosDeLaSolicitudService.actualizarEstadoFormulario(key, value);
+            this.datosDeLaSolicitudService.actualizarEstadoFormulario(
+              key,
+              value
+            );
           });
         }
       });
@@ -104,23 +128,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description
    * Método utilizado para establecer el índice del subtítulo o sección activa.
    * Cambia el valor de la propiedad `indice` según el número proporcionado.
-   * 
+   *
    * @param i Índice del subtítulo o sección a activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  
   /**
-* @method ngOnDestroy
-* @description
-* Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-* 
-* Detalles:
-* - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
-* - Completa el observable para liberar recursos y evitar fugas de memoria.
-* 
-* @returns {void} No retorna ningún valor.
-*/
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Detalles:
+   * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
+   * - Completa el observable para liberar recursos y evitar fugas de memoria.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
