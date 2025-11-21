@@ -18,7 +18,6 @@ export class GuardarMappingAdapter {
    */
   
   static toFormPayload(state: ProsecState): unknown {
-    console.log('Estado recibido para mapping:', state);
     return {
 
     "tipoDeSolicitud": "guardar",

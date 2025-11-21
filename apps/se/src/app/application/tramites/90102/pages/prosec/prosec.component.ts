@@ -150,7 +150,6 @@ idSolicitud: number = 0;
 
     if (this.indice === 1 && this.pasoUnoComponent) {
       isValid = this.pasoUnoComponent.validarFormularios();
-      console.log('PasoUnoComponent valid:', isValid);
     }
 
     if (!isValid) {
@@ -162,12 +161,10 @@ idSolicitud: number = 0;
     }
 
     const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);
-    console.log('PAYLOAD', PAYLOAD);
 
     this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).subscribe(response => {
-      console.log('GuardarDatos response:', response);
-      const shouldNavigate = response.codigo === '00';
-      if (!shouldNavigate) {
+      const SHOULD_NAVIGATE = response.codigo === '00';
+      if (!SHOULD_NAVIGATE) {
         this.esFormaValido = true;
         this.indice = 1;
         this.datosPasos.indice = 1;
@@ -175,7 +172,6 @@ idSolicitud: number = 0;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-      // Success: move to paso 2
       this.esFormaValido = false;
       if (esValidObject(response) && esValidObject(response.datos)) {
         const DATOS = response.datos as { id_solicitud?: number };
@@ -185,7 +181,6 @@ idSolicitud: number = 0;
       }
       this.toastrService.success(response.mensaje);
 
-      // Always go to paso 2 after success
       this.indice = 2;
       this.datosPasos.indice = 2;
       this.wizardComponent.siguiente();
@@ -196,46 +191,7 @@ idSolicitud: number = 0;
     this.wizardComponent.atras();
   }
 }
-//  getValorIndice(e: AccionBoton): void {
-//   if (e.accion === 'cont') {
-//     const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);
-//     console.log('PAYLOAD', PAYLOAD);
-//     let shouldNavigate = false;
-//     this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).subscribe(response => {
-//       shouldNavigate = response.codigo === '00';
-//       if (!shouldNavigate) {
-//         const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
-//         this.formErrorAlert = ProsecComponent.generarAlertaDeError(ERROR_MESSAGE);
-//         this.esFormaValido = true;
-//         this.indice = 1;
-//         this.datosPasos.indice = 1;
-//         this.wizardComponent.indiceActual = 1;
-//         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-//         return;
-//       }
-//       if (shouldNavigate) {
-//         if (esValidObject(response) && esValidObject(response.datos)) {
-//           this.esFormaValido = false;
-//           const DATOS = response.datos as { id_solicitud?: number };
-//           const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
-//           this.solicitudState.idSolicitud = ID_SOLICITUD;
-//           this.store.setIdSolicitud(ID_SOLICITUD);
-//         }
-//         // Always go to paso 2 after success
-//         this.indice = 2;
-//         this.datosPasos.indice = 2;
-//         this.wizardComponent.siguiente();
-//         this.toastrService.success(response.mensaje);
-//       } else {
-//         this.toastrService.error(response.mensaje);
-//       }
-//     });
-//   } else {
-//     this.indice = e.valor;
-//     this.datosPasos.indice = this.indice;
-//     this.wizardComponent.atras();
-//   }
-// }
+
   /**
    * Genera una alerta de error con los mensajes proporcionados.
    * @param mensajes Mensajes de error a mostrar en la alerta.

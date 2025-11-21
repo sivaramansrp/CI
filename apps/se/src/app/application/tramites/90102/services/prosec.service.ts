@@ -25,10 +25,6 @@ export class ProsecService {
     );
   }
 
-  // obtenerTablaDatos(fileName: string): Observable<Record<string, unknown>[]> {
-  //   const JSON_URL = this.url2 + fileName;
-  //   return this.http.get<Record<string, unknown>[]>(JSON_URL);
-  // }
   obtenerEstadoTablaDatos(body: { rfc_solicitante: string; enitdad_federativa: string; planta_idc: string }): Observable<JSONResponse> {
     return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarDomicilios, body).pipe(
       map((response) => response),
