@@ -81,6 +81,11 @@ export interface Tramite130217State {
    * Valor total en USD de las partidas de la mercancía.
    */
   valorTotalUSD: string;
+
+  /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
   
 }
 
@@ -123,6 +128,7 @@ export function createInitialState(): Tramite130217State {
     },
     cantidadTotal: '',
     valorTotalUSD: '',
+    fechasSeleccionadas: [],
   };
 }
 

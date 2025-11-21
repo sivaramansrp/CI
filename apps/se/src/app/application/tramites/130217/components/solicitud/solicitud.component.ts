@@ -16,7 +16,7 @@ import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enu
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
 import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
-import { OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
 
 /**
  * Componente para gestionar la solicitud de mercancías.
@@ -185,6 +185,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para modificar las partidas de la mercancía.
    */
   modificarPartidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * jest.spyOnIdentificador del procedimiento actual.
+   * @type {number}
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * Constructor del componente.
@@ -549,7 +555,7 @@ disabledModificar() : boolean {
   * @returns {void}
   */
   getRegimenCatalogo(): void {
-    this.ControlPermisosPreviosExportacionService.getRegimenCatalogo('130217').subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getRegimenCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
       this.catalogosArray[0] = data as Catalogo[];
     });
   }
@@ -571,11 +577,12 @@ disabledModificar() : boolean {
    * @returns {void}
    */
   getFraccionCatalogo(): void {
-    this.ControlPermisosPreviosExportacionService.getFraccionCatalogoService('130217').subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getFraccionCatalogoService(this.idProcedimiento.toString()).subscribe((data) => {
       this.fraccionCatalogo = data?.map(item => ({
         ...item,
         descripcion: `${item.clave} - ${item.descripcion}`
       }));
+      
     });
   }
 
@@ -584,7 +591,7 @@ disabledModificar() : boolean {
    * @param FRACCION_ID 
    */
   getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
-    this.ControlPermisosPreviosExportacionService.getUMTService('130217', FRACCION_ID).subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getUMTService(this.idProcedimiento.toString(), FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data as Catalogo[];
       if (this.unidadCatalogo.length > 0) {
         this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
@@ -599,7 +606,7 @@ disabledModificar() : boolean {
    * @returns {void}
    */
   getBloque(): void {
-    this.ControlPermisosPreviosExportacionService.getBloqueService('130217').subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getBloqueService(this.idProcedimiento.toString()).subscribe((data) => {
       this.elementosDeBloque = data as Catalogo[];
     });
   }
@@ -609,7 +616,7 @@ disabledModificar() : boolean {
    * @param ID 
    */
   getPaisesPorBloque(ID: string): void {
-    this.ControlPermisosPreviosExportacionService.getPaisesPorBloqueService('130217', ID).subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getPaisesPorBloqueService(this.idProcedimiento.toString(), ID).subscribe((data) => {
       this.paisesPorBloque = data as Catalogo[];
     });
   }
@@ -620,7 +627,7 @@ disabledModificar() : boolean {
    * @returns {void}
    */
   getEntidadesFederativasCatalogo(): void {
-    this.ControlPermisosPreviosExportacionService.getEntidadesFederativasCatalogo('130217').subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getEntidadesFederativasCatalogo(this.idProcedimiento.toString()).subscribe((data) => {
       this.entidadFederativa = data as Catalogo[];
     })
   }
@@ -630,9 +637,29 @@ disabledModificar() : boolean {
    * @param cveEntidad 
    */
   getRepresentacionFederalCatalogo(cveEntidad: string): void {
-    this.ControlPermisosPreviosExportacionService.getRepresentacionFederalCatalogo('130217', cveEntidad).subscribe((data) => {
+    this.ControlPermisosPreviosExportacionService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
     });
+  }
+
+  /**
+   *  Maneja la selección de todos los países.
+   * @param evento 
+   */
+  todosPaisesSeleccionados(evento: boolean): void {
+    if (evento) {
+      this.ControlPermisosPreviosExportacionService.getTodosPaisesSeleccionados(this.idProcedimiento.toString()).subscribe((data) => {
+        this.paisesPorBloque = data as Catalogo[];
+      });
+    }
+  }
+
+  /**
+   *  Maneja la selección de fechas y actualiza el estado global.
+   * @param evento 
+   */
+  fechasSeleccionadas(evento: string[]): void {
+    this.tramite130217Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
 
   /**

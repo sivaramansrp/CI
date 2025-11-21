@@ -69,8 +69,7 @@ export class ControlPermisosPreviosExportacionService {
    * @returns Observable con un arreglo de fracciones arancelarias (o vacío si no hay datos)
    */
   getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
-    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130217')
-      .pipe(
+    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130217').pipe(
         map(res => res?.datos ?? [])
       );
   }
