@@ -42,7 +42,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label class="form-label" for="Fraccion_arancelaria">Fracción arancelaria*:</label>
+                <label class="form-label" for="Fraccion_arancelaria">Fracción arancelaria<span [ngClass]="{'tiene-error': sectoresYMercancias.get('Fraccion_arancelaria')?.invalid && sectoresYMercancias.get('Fraccion_arancelaria')?.touched}">*</span>:</label>
                 <input type="text" 
                 value=""
                 class="form-control" 
@@ -55,6 +55,7 @@
                   'Fraccion_arancelaria',
                   'setFraccionArancelaria'
                 )"
+                [ngClass]="{'is-invalid': sectoresYMercancias.get('Fraccion_arancelaria')?.invalid && sectoresYMercancias.get('Fraccion_arancelaria')?.touched}"
                 maxlength="8"
                 libSoloNumeros
                 >

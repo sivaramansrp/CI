@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MODALIDAD,PLANTAS_DATOS,TEXTO} from '../../constantes/prosec.module';
+import { MODALIDAD,TEXTO} from '../../constantes/prosec.module';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -216,6 +216,12 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     private catalogoServices: CatalogoServices
   ) {
       // Inicializa el formulario.
+      this.forma = this.fb.group({
+      modalidad: [{ value: MODALIDAD, disabled: true }],
+      Estado: ['', Validators.required],
+      RepresentacionFederal: ['', Validators.required],
+      ActividadProductiva: ['', Validators.required],
+    });
    
   }
 
@@ -239,11 +245,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           this.RepresentacionFederalLista = state.RepresentacionFederalLista;
           }
          
-          this.initActionFormBuild();
+           this.forma.patchValue({
+            modalidad: state.modalidad ? state.modalidad : MODALIDAD,
+            Estado: state.Estado,
+            RepresentacionFederal: state.RepresentacionFederal,
+            ActividadProductiva: state.ActividadProductiva,
+          });
         })
       )
       .subscribe();
-    //this.initActionFormBuild();
     this.obtenerLista();
 
     this.forma.statusChanges

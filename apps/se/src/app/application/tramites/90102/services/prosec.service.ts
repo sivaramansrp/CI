@@ -1,9 +1,9 @@
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
 import { Catalogo, JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { API_ROUTES } from '../../../shared/servers/api-route';
 
 @Injectable({
   providedIn: 'root'
@@ -39,15 +39,15 @@ export class ProsecService {
     );
   }
   obtenerSectoresTablaDatos(cveSector: string): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarSectores(cveSector)).pipe(
+    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90102', '90102').sectoresDatos(cveSector)).pipe(
       map((response) => response),
     );
   }
   obtenerFraccionesTablaDatos(body: { fraccion: string; id_conf_programa_se: string; cve_sector: string; id_programa_autorizado: string | null }): Observable<JSONResponse> {
-    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarProducirFraccionArancelaria, body).pipe(
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria, body).pipe(
       map((response) => response),
       catchError(() => {
-        const ERROR = new Error(`Error al obtener información de las fracciones en ${API_ROUTES('/sat-t90102', '90102').buscarProducirFraccionArancelaria}`);
+        const ERROR = new Error(`Error al obtener información de las fracciones en ${API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria}`);
         return throwError(() => ERROR);
       })
     );

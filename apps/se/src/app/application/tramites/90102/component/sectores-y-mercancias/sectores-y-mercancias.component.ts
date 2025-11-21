@@ -12,7 +12,7 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoServices, doDeepCopy, esValidObject, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoServices, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent, doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { FilaProducir, FilaSectors } from '../../models/prosec.module';
@@ -227,7 +227,12 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private consultaQuery: ConsultaioQuery,
     private catalogoServices: CatalogoServices
-  ) {}
+  ) {
+     this.sectoresYMercancias = this.fb.group({
+      sector: [''],
+      Fraccion_arancelaria: ['', Validators.required],
+    });
+  }
 
   /**
    * @method ngOnInit
@@ -261,11 +266,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           this.sectoresState = state as ProsecState;
           this.sectors = state.sectorDatos as FilaSectors[];
           this.producir = state.producirDatos as FilaProducir[];
-          this.initActionFormBuild();
+           this.sectoresYMercancias.patchValue({
+            sector: state.sector,
+            Fraccion_arancelaria: state.Fraccion_arancelaria
+          });
         })
       )
       .subscribe();
-    this.initActionFormBuild();
     this.obtenserListaEstado();
 
     this.sectoresYMercancias.statusChanges
@@ -414,8 +421,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           this.sectors = [...this.sectors, NUEVO_SECTOR];
           this.AutorizacionProsecStore.setSectorDatos(this.sectors);
 
-          // Limpiar selección en el formulario
-          this.sectoresYMercancias.get('sector')?.setValue('');
+          // // Limpiar selección en el formulario
+          // this.sectoresYMercancias.get('sector')?.setValue('');
 
         }
       }
@@ -460,7 +467,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
             this.AutorizacionProsecStore.setProducirDatos(this.producir);
 
             // Limpiar selección en el formulario
-            this.sectoresYMercancias.get('Fraccion_arancelaria')?.setValue('');
+            //this.sectoresYMercancias.get('Fraccion_arancelaria')?.setValue('');
 
           }
         }
@@ -479,9 +486,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarSector(): void {
-    const cveSectores = this.sectoresYMercancias.get('sector')?.value; 
-    if (cveSectores && cveSectores.length > 0) {
-      this.recuperarDatos(cveSectores); 
+    const CVE_SECTORES = this.sectoresYMercancias.get('sector')?.value; 
+    if (CVE_SECTORES && CVE_SECTORES.length > 0) {
+      this.recuperarDatos(CVE_SECTORES); 
     }
   }
 
