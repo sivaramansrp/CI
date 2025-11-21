@@ -4,6 +4,7 @@ import {
   CatalogoServices,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
+  REGEX_IMPORTE_PAGO_FACTURADO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
   TipoPersona,
@@ -203,7 +204,7 @@ export class AgregarFacturadorModificacionComponent
       pais: [this.obtenerValor('pais'), [Validators.required]],
       estado: [
         this.obtenerValor('estadoLocalidad'),
-        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+        [Validators.required, Validators.pattern( REGEX_IMPORTE_PAGO_FACTURADO)],
       ],
      codigoPostal: [
       this.obtenerValor('codigoPostal'),

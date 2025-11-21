@@ -1,6 +1,6 @@
-import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CURP, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
 import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../../constantes/constantes.enum';
@@ -36,7 +36,7 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosrelacionadosComponent implements OnInit, OnDestroy, OnChanges {
   /** Constantes de texto utilizadas en el componente */
   TEXTOS = TEXTOS;
 
@@ -135,6 +135,15 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
    * Identificador del procedimiento que se recibe como entrada desde el componente padre.
    */
    @Input() idProcedimiento!: number;
+
+    /**
+   * Indica si se ha activado el evento de continuar.
+   * Este valor se utiliza para controlar el flujo de la solicitud
+   * dependiendo de si el usuario ha decidido continuar con el proceso.
+   */
+   @Input() isContinuarTriggered: boolean = false;
+  
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -167,7 +176,7 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
       )
       .subscribe();
     this.crearFormTransporte();
-    console.log(`idProcedimientoConstructor: ${this.idProcedimiento}`);
+   
     
   }
 
@@ -186,11 +195,11 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
         nombre: [this.agregarDestinatarioState?.nombre, Validators.required],
         primerApellido: [
           this.agregarDestinatarioState?.primerApellido,
-          Validators.required,
+         [Validators.required, Validators.maxLength(18),Validators.pattern('^[a-zA-Z0-9\\s,]*$')],
         ],
         segundoApellido: [
           this.agregarDestinatarioState?.segundoApellido,
-          Validators.required,
+          [Validators.required, Validators.maxLength(18),Validators.pattern('^[a-zA-Z0-9\\s,]*$')]
         ],
         denominacion: [
           this.agregarDestinatarioState?.denominacion,
@@ -229,6 +238,16 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     this.inicializarEstadoFormulario();
   }
 
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+     this.destinatarioForm.markAllAsTouched();
+    }
+  }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -239,8 +258,6 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     } else {
       this.inicializarFormulario();
     }
-     console.log(`idProcedimientoInit: ${this.idProcedimiento}`);
-   
   }
 
   /**

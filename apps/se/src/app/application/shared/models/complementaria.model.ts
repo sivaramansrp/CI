@@ -406,7 +406,7 @@ export interface Empresas {
    * Entidad federativa donde se encuentra ubicada la empresa.
    * Este campo es opcional y puede contener el nombre del estado o entidad federativa.
    */
-  entidadFederativa?: string;
+  estado?: string;
 
   /**
    * País donde se encuentra ubicada la empresa.

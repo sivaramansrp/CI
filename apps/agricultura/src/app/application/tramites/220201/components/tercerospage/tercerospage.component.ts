@@ -88,14 +88,18 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {DatosDeLaSolicitud}
    */
   catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
-  /**
-   * Datos de la forma relacionados con terceros.
-   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
-   * @type {TercerosrelacionadosTable[]}
-   */
 
+  /**
+   * Arreglo que contiene los datos del formulario de destinatarios.
+   * Cada elemento representa un destinatario con la información correspondiente.
+   */
   datosForma: DestinatarioForm[] = [];
 
+  /**
+   * Arreglo que contiene los destinatarios finales.
+   * Cada elemento representa un destinatario con su información correspondiente.
+   * @type {DestinatarioForm[]}
+   */
   destinatario: DestinatarioForm[] = [];
 
   /**
@@ -111,7 +115,6 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     public tercerosrelacionadosService: TercerosrelacionadosService,
     public certificadoZoosanitarioStore: ZoosanitarioStore,
     private catalogoService: CatalogosService,
-    private sharedService: SharedFormService
 
   ) { }
 
@@ -183,7 +186,6 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.certificadoZoosanitarioStore.updatedatosForma([] as DestinatarioForm[]);
   }
 
-
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y cancela las suscripciones.
@@ -194,12 +196,30 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Abre el modal para agregar o editar un destinatario.
+   * 
+   * Si se proporciona el parámetro `data`, actualiza el destinatario seleccionado en el store
+   * antes de abrir el modal. Luego, muestra el componente `AgregardestinatarioComponent` en el modal.
+   * 
+   * @param data Opcional. Datos del destinatario relacionado que se desea editar.
+   */
   abrirModalDestinatario(data?: TercerosrelacionadosdestinoTable): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
+
+  /**
+   * Abre el modal para agregar o editar un exportador.
+   * 
+   * Si se proporciona el objeto `data`, actualiza el exportador seleccionado en el store
+   * `certificadoZoosanitarioStore` mediante el método `actualizarSelectedExdora`.
+   * Luego, abre el modal utilizando el componente `AgregardestinatariofinalComponent`.
+   * 
+   * @param data - Información del exportador a agregar o editar.
+   */
   abrirModalExportador(data: DestinatarioForm): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);

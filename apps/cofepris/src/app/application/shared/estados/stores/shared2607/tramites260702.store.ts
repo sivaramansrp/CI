@@ -173,6 +173,10 @@ export interface Solicitud260702State {
  */
 descripcionDelScian: string;
     
+  formValidity?: {
+    datosDelSolicitude?: boolean;
+  }
+continuarTriggered?: boolean;
 }
 
 /**
@@ -348,6 +352,8 @@ export function createInitialSolicitudState(): Solicitud260702State {
      */
     descripcionDelScian: '',
     
+    formValidity: {},
+    continuarTriggered:false
   };
 }
 /**
@@ -958,5 +964,29 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
       ...state,
       descripcionDelScian,
     }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
+    }));
+  }
+
+
+   /**
+ * Establece el estado del botón continuar para activar o desactivar las validaciones del formulario.
+ * @param continuarTriggered Indica si el botón continuar ha sido activado.
+ */
+  public setContinuarTriggered(continuarTriggered: boolean): void {
+    this.update((state) => ({ ...state, continuarTriggered }));
   }
 }

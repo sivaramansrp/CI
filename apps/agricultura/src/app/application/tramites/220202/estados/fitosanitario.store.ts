@@ -105,6 +105,18 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   }
 
   /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateFilaSolicitud(tercerosRelacionados: FilaSolicitud[]): void {
+    this.update(state => ({
+      ...state,
+      tablaDatos: tercerosRelacionados,
+    }));
+  }
+
+  /**
    * Actualiza el estado con los datos finales de la tabla.
    * @param tablaDatos Arreglo de filas con los datos de la solicitud.
    */
@@ -158,7 +170,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
     this.update(state => ({
       ...state,
-      pagoDeDerechos: pagoDeDerechos,
+      pago: pagoDeDerechos,
     }));
   }
 
@@ -172,7 +184,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   ): void {
     this.update((state) => ({
       ...state,
-      datosForma: tercerosRelacionados,
+      datosForma: [...tercerosRelacionados],
     }));
   }
   
@@ -181,7 +193,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   * @method actualizarDatosParaMovilizacionNacional
   * @param {TercerosrelacionadosdestinoTable} datosParaMovilizacionNacional Datos de movilización nacional.
   */
-  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosExportadorTable): void {
     this.update(state => ({
       ...state,
       seletedExdora: datosParaMovilizacionNacional

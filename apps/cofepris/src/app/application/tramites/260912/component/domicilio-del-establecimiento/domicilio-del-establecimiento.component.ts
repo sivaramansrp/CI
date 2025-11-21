@@ -1,7 +1,8 @@
 import { AfterViewInit,Input,OnInit } from '@angular/core';
 import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+
+import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
@@ -1759,5 +1760,5 @@ public markMercanciasTableTouched(): void {
   // O podrías marcar un campo de error en el formulario principal si lo deseas
   this.mercanciasTableTouched = true;
 }
-
-  }
+  
+}

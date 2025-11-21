@@ -28,12 +28,14 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 @Component({
   selector: 'app-manifiestos-representante-seccion',
   standalone: true,
@@ -43,6 +45,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     InputRadioComponent,
     FormsModule,
+    NotificacionesComponent, 
   ],
   templateUrl: './manifiestos-representante-seccion.component.html',
   styleUrl: './manifiestos-representante-seccion.component.scss',
@@ -81,6 +84,27 @@ export class ManifiestosRepresentanteSeccionComponent
   * Estado de la solicitud de la sección .
   */
       public solicitudState!: DatosDelSolicituteSeccionState;
+
+  /**
+   * Controla la visibilidad del modal de alerta para RFC.
+   */
+  public mostrarAlertaRfc: boolean = false;
+
+  /**
+   * Notificación para mostrar cuando el RFC está vacío.
+   */
+  public notificacionRfc: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Debe ingresar el RFC',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -161,30 +185,40 @@ export class ManifiestosRepresentanteSeccionComponent
   }
   /**
    * Busca los datos del representante por RFC y los actualiza en el formulario.
+   * Valida que el RFC no esté vacío antes de proceder con la búsqueda.
    */
   buscarRepresentanteRfc(): void {
     const RFC = this.manifiestosRepresentanteForm.get('representanteRfc')?.value;
-    if (RFC) {
-      this.establecimientoService
-        .getManifiestosByRfc(RFC)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((representante: Manifiestistos | null) => {
-          if (representante) {
-            this.manifiestosRepresentanteForm.patchValue({
-              representanteNombre: representante.representanteNombre,
-              apellidoPaterno: representante.apellidoPaterno,
-              apellidoMaterno: representante.apellidoMaterno,
-            });
-
-     
-            this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
-            this.representanteStore.setRepresentanteApellidos(
-              representante.apellidoPaterno,
-              representante.apellidoMaterno
-            );
-          }
-        });
+     if (!RFC || RFC.trim() === '') {
+      this.mostrarAlertaRfc = true;
+      return;
     }
+
+    this.establecimientoService
+      .getManifiestosByRfc(RFC)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((representante: Manifiestistos | null) => {
+        if (representante) {
+          this.manifiestosRepresentanteForm.patchValue({
+            representanteNombre: representante.representanteNombre,
+            apellidoPaterno: representante.apellidoPaterno,
+            apellidoMaterno: representante.apellidoMaterno,
+          });
+
+          this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
+          this.representanteStore.setRepresentanteApellidos(
+            representante.apellidoPaterno,
+            representante.apellidoMaterno
+          );
+        }
+      });
+  }
+
+  /**
+   * Cierra el modal de alerta de RFC.
+   */
+  cerrarAlertaRfc(): void {
+    this.mostrarAlertaRfc = false;
   }
 
   /**
@@ -197,9 +231,9 @@ export class ManifiestosRepresentanteSeccionComponent
       representanteRfc: ['', Validators.required],
       manifests: [true, Validators.required],
       informacionConfidencialRadio: ['', Validators.required],
-      representanteNombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      representanteNombre: [{ value: '', disabled: false }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: false }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: false }],
     });
 
     // Carga el estado inicial en el formulario desde el store

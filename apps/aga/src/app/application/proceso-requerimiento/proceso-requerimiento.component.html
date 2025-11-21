@@ -8,7 +8,11 @@
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
-    <div class="mb-5"  *ngIf="indice !== 2 &&   esTramiteDatos">
+    <div class="mb-5"
+  *ngIf="(tipoRequerimiento === tipoRequerimientoEnum.DATOS && (indice !== 2 && indice !== 3))
+      || (!esTramiteEspecial && indice !== 3)
+      || (tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS && indice !== 3)
+      || (tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS && (indice !== 2 && indice !== 3))">
         <lib-encabezado-requerimiento
         [numFolioTramite]="guardarDatos.folioTramite"
         [tipoTramite]="guardarDatos.tipoDeTramite"
@@ -35,14 +39,24 @@
     }
 
 
+    @if(esTramiteEspecial) {
+      @if((indice === 2 && tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS) || (indice === 3 && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
+        <anexar-documentos
+        [catalogoDocumentos]="catalogoDocumentos"
+        ></anexar-documentos>
+      }
 
-    @if(indice === 3) {
-    <anexar-documentos
-    [catalogoDocumentos]="catalogoDocumentos"
-    ></anexar-documentos>
+    } @else {
+      @if(indice === 2) {
+        <anexar-documentos
+        [catalogoDocumentos]="catalogoDocumentos"
+        ></anexar-documentos>
+      }
     }
 
-    @if(indice === 4 && esAcuse === false) {
+    
+
+    @if((indice === 3 && esAcuse === false && tipoRequerimiento !== tipoRequerimientoEnum.DATOS_DOCUMENTOS) || (indice === 4 && esAcuse === false && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
       <div class="row">
                 <div class="col-md-12">
                     <h2 class="titulo mt-5 mb-5">Firmar solicitud</h2>
@@ -56,18 +70,32 @@
       </div>
     }
 
-    @if(indice !== 3 && esAcuse === false) {
+    @if(esTramiteEspecial){
+      @if((indice !== 2 && tipoRequerimiento !== tipoRequerimientoEnum.DOCUMENTOS) ||  (indice !==3 && tipoRequerimiento !== tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
         <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
+      }
+    } @else {
+        @if(indice !== 2 && esAcuse === false) {
+            <btn-continuar
+            [datos]="datosPasos"
+            (continuarEvento)="getValorIndice($event)"
+          ></btn-continuar>
+        }
     }
 
-    @if(indice === 2) {
+    
+
+
+
+    <div *ngIf="indice === 2 && (tipoRequerimiento === tipoRequerimientoEnum.DATOS || tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS) ">
       <paso-datos>  </paso-datos>
-    }
+    </div>
+    
 
-    <div class="row mt-5 mb-5" *ngIf="esAcuse === false && indice !== 2 &&   esTramiteDatos">
+    <div class="row mt-5 mb-5" *ngIf="esAcuse === false && indice !== 2 &&   tipoRequerimiento === tipoRequerimientoEnum.DATOS">
       <app-reviewers-tabs
         [viewChild]="viewChild"
         [tramite]="tramite"
@@ -85,11 +113,10 @@
       ></app-reviewers-tabs>
     </div>
 
-    @if(indice === 3) {
+    @if((indice === 2 && tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS) ||  ( indice ===3 && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS )) {
     <btn-continuar
     [datos]="datosPasos"
-    (continuarEvento)="getValorIndice($event)"
-  ></btn-continuar>
+    (continuarEvento)="getValorIndice($event)"></btn-continuar>
     }
 
   </div>

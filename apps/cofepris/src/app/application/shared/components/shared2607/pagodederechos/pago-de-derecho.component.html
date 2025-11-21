@@ -31,6 +31,11 @@
                 <label class="form-label" for="llavedepago">Llave de pago:</label>
                 <input class="form-control" id="llavedepago" type="text" formControlName="llavedepago"
                 (change)="setValoresStore(pagoDeDerechos,'llavedepago', 'setLlavedoPago')"/>
+                  @if (pagoDeDerechosForm.get('pagoDeDerechos.llavedepago')?.errors?.['pattern'] && (pagoDeDerechosForm.get('pagoDeDerechos.llavedepago')?.touched)) {
+              <div class="text-danger">
+                <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+              </div>
+              }
               </div>
               <div class="col-md-4 mb-3">
                 <input-fecha
@@ -40,11 +45,20 @@
                 (valorCambiado)="cambioFechaPago($event)"
                 [isDisabled]="esFormularioSoloLectura"
               ></input-fecha>
+                 <div *ngIf="pagoDeDerechos.get('fechadepago')?.errors?.['futureDate'] && pagoDeDerechos.get('fechadepago')?.touched" class="text-danger">
+                   La fecha de pago debe ser menor o igual a la fecha actual.
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="importedepago">Importe de pago:</label>
                 <input class="form-control" id="importedepago" type="text" formControlName="importedepago"
                 (change)="setValoresStore(pagoDeDerechos,'importedepago', 'setImportedePago')"/>
+                 @if (pagoDeDerechosForm.get('pagoDeDerechos.importedepago')?.hasError('pattern') &&
+                      pagoDeDerechosForm.get('pagoDeDerechos.importedepago')?.touched) {
+                      <div class="text-danger">
+                        <small>Por favor, escribe un número entero válido</small>
+                      </div>
+                      }
               </div>
             </div>
               <div class="col-md-12 d-flex justify-content-end">

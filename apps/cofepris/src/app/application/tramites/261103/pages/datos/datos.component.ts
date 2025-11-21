@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
@@ -30,6 +31,11 @@ export class DatosComponent {
    * Lista de pasos en el asistente.
    */
   pasos: ListaPasosWizard[] = PASOS_REGISTRO;
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
 
   /**
    * Referencia al componente WizardComponent.

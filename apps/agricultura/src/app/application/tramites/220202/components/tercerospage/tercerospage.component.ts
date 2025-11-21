@@ -9,13 +9,13 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { TercerosRelacionados,TercerosrelacionadosExportadorTable, TercerosrelacionadosdestinoTable } from '../../models/220202/fitosanitario.model';
 import { AgregarExportadorComponent } from '../agregar-exportador/agregar-exportador.component';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -85,6 +85,22 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {modalRef}
    */
   @ViewChild('modalRef') modalRef!: ModalComponent;
+
+  /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+* Indica si debe mostrar error de campo obligatorio en la tabla.
+*/
+  mensajeErrorTablaExportador: boolean = false;
+
+  /**
+* Indica si debe mostrar error de campo obligatorio en la tabla.
+*/
+  mensajeErrorTablaDestinatario: boolean = false;
 
   /**
    * Constructor del componente.
@@ -177,7 +193,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   handleEliminarExportador(): void {
     this.datosForma = [];
-    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
+    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosExportadorTable[]);
   }
 
   /**
@@ -198,6 +214,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalExportador(data: any): void { 
     if (data) {
       this.fitosanitarioStore.actualizarSelectedExdora(data);
+    }else {
+      this.fitosanitarioStore.actualizarSelectedExdora({} as any);
     }
     this.modalRef.abrir(AgregarExportadorComponent);
   }
@@ -212,6 +230,35 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.fitosanitarioStore.actualizarSelectedTerceros(data);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+
+  /**
+  * @description Valida todos los campos del formulario y marca los campos como touched
+  * para mostrar los errores de validación en los componentes app-catalogo-select
+  * @method validarFormulario
+  * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
+  */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    let valido = true;
+    // Verificar si hay datos en la tabla
+    const TABLE_DESTINATARIO = this.fitosanitarioStore.getValue().tercerosRelacionados;
+    const TABLE_EXPORTADOR = this.fitosanitarioStore.getValue().datosForma;
+
+    if (!TABLE_EXPORTADOR || TABLE_EXPORTADOR.length === 0) {
+      this.mensajeErrorTablaExportador = true
+      valido = false;
+    }
+    else {
+      this.mensajeErrorTablaExportador = false;
+    }
+    if (!TABLE_DESTINATARIO || TABLE_DESTINATARIO.length === 0) {
+      this.mensajeErrorTablaDestinatario = true
+      valido = false;
+    }
+    else {
+      this.mensajeErrorTablaDestinatario = false;
+    }
+    return { valido: valido };
   }
 
 }

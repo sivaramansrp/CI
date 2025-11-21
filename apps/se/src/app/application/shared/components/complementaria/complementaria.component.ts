@@ -14,6 +14,7 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
 import { Component, Input, OnChanges } from '@angular/core';
 import {
   FormBuilder,
@@ -40,7 +41,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './complementaria.component.html',
   styleUrl: './complementaria.component.scss',
 })
-export class ComplementariaComponent<T> implements OnChanges{
+export class ComplementariaComponent<T> implements OnChanges {
   /**
    * Número de procedimiento del trámite.
    * @property {number} procedimiento
@@ -127,13 +128,10 @@ export class ComplementariaComponent<T> implements OnChanges{
    * @type {FormGroup}
    */
   certificacionForm!: FormGroup;
-
-  /**
-   * Certificación SAT.
-   * @type {string}
-   */
+/**
+ * Certificación SAT proporcionada como entrada al componente.
+ */
   @Input() certificacionSAT: string = '';
-
   /**
    * Constructor de la clase.
    * Inicializa el formulario reactivo `certificacionForm` con el valor "Si" y deshabilitado.
@@ -141,20 +139,19 @@ export class ComplementariaComponent<T> implements OnChanges{
    */
   constructor(private fb: FormBuilder) {
     this.certificacionForm = this.fb.group({
-      certificacion: [{ value: '', disabled: true }],
+      certificacion: [{ value: '', disabled: true }], // El campo de certificación con valor "Si" y deshabilitado.
     });
   }
-
   /**
-   * Método que se ejecuta cuando cambian las propiedades de entrada del componente.
-   * Actualiza el valor del formulario `certificacionForm` con la certificación SAT proporcionada.
-   * @return {void}
+   * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * Actualiza el valor del campo `certificacion` en el formulario reactivo `certificionForm`
+   * con el valor de la propiedad de entrada `certificacionSAT`.
    */
-  ngOnChanges(): void {
+  ngOnChanges(): void{
     if (this.certificacionSAT) {
       this.certificacionForm.patchValue({
         certificacion: this.certificacionSAT,
       });
     }
-  }
+}
 }

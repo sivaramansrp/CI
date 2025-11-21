@@ -12,7 +12,6 @@ describe('CertificadosLicenciasPermisosService', () => {
       get: jest.fn(),
     } as any;
 
-    // Mock all store methods used in actualizarEstadoFormulario
     storeMock = {};
     [
       'setDenominacionRazon',
@@ -345,5 +344,100 @@ describe('CertificadosLicenciasPermisosService', () => {
         done();
       },
     });
+  });
+
+  it('debe manejar actualizarEstadoFormulario con todos los campos null/undefined', () => {
+    const mockData: any = {
+      denominacionRazon: null,
+      codigoPostal: undefined,
+      estado: '',
+      municipio: null,
+      localidad: undefined,
+      colonia: '',
+      calleYNumero: null,
+      correoElecronico: undefined,
+      lada: '',
+      telefono: null,
+      claveScianModal: undefined,
+      avisoDeFuncionamiento: '',
+      clave: null,
+      descripcion: undefined,
+      avisoCheckbox: false,
+      licenciaSanitaria: '',
+      regimen: null,
+      regimenDestinara: undefined,
+      aduana: '',
+      numeroPermiso: null,
+      manifiestos: undefined,
+      losDatosNo: '',
+      nombreORazon: null,
+      clasificacion: undefined,
+      especificarClasificacionProducto: '',
+      denominacionEspecifica: null,
+      denominacionDistintiva: undefined,
+      denominacionComun: '',
+      tipoDeProducto: null,
+      estadoFisico: undefined,
+      fraccionArancelaria: '',
+      descripcionFraccion: null,
+      cantidadUMT: undefined,
+      UMT: '',
+      cantidadUMC: null,
+      UMC: undefined,
+      presentacion: '',
+      numeroRegistro: null,
+      fechaCaducidad: undefined,
+      cumplimiento: '',
+      rfc: null,
+      nombre: undefined,
+      apellidoPaterno: '',
+      apellidoMaterno: null,
+      dci: undefined,
+      marcaComercialODenominacionDistintiva: '',
+      descripcionDeLaFraccion: null,
+      numeroCas: undefined,
+      cantidadDeLotes: '',
+      kgOrPorLote: null,
+      pais: undefined,
+      paisDeProcedencia: '',
+      detallarUso: null,
+      numeroDePiezas: undefined,
+      descripcionDelNumeroDePiezas: '',
+      numeroDeRegistro: null,
+      claveDeReferencia: undefined,
+      cadenaDaLaDependencia: '',
+      banco: null,
+      laveDePago: undefined,
+      fechaDePago: '',
+      importeDePago: null,
+      tipoDocumento: undefined,
+      tercerosRelacionadosDenominacionSocial: '',
+      tercerosRelacionadosTerceroNombre: null,
+      tercerosNacionalidad: undefined,
+      tipoPersona: '',
+      tercerosRelacionadosRfc: null,
+      tercerosRelacionadosCurp: undefined,
+      tercerosRelacionadosRazonSocial: '',
+      tercerosRelacionadosPais: null,
+      tercerosRelacionadosEstado: undefined,
+      tercerosRelacionadosCodigoPostal: '',
+      tercerosRelacionadosCalle: null,
+      tercerosRelacionadosNumeroExterior: undefined,
+      tercerosRelacionadosNumeroInterior: '',
+      tercerosRelacionadosLada: null,
+      tercerosRelacionadosTelefono: undefined,
+      tercerosRelacionadosCorreoElectronico: '',
+    };
+
+    expect(() => service.actualizarEstadoFormulario(mockData)).not.toThrow();
+    expect(storeMock.setDenominacionRazon).toHaveBeenCalledWith(null);
+    expect(storeMock.setCodigoPostal).toHaveBeenCalledWith(undefined);
+    expect(storeMock.setAvisoCheckbox).toHaveBeenCalledWith(false);
+  });
+
+  it('debe crear el servicio sin errores con dependencias válidas', () => {
+    expect(service).toBeDefined();
+    expect(service.getEstadoDatos).toBeDefined();
+    expect(service.actualizarEstadoFormulario).toBeDefined();
   });
 });

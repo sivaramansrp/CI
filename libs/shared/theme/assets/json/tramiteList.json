@@ -499,8 +499,8 @@
   {
     "id": 72,
     "tramite": 220202,
-    "linkDashboard": "/agricultura/certificado-fitosanitario/agricultura",
-    "linkDepartment": "/pago/certificado-fitosanitario/agricultura",
+    "linkDashboard": "/agricultura/certificado-fitosanitario/registrofitosanitario",
+    "linkDepartment": "/pago/certificado-fitosanitario/registrofitosanitario",
     "department": "agricultura"
   },
   {
@@ -1955,8 +1955,8 @@
   {
     "id": 281,
     "tramite": 31910,
-    "linkDashboard": "/aga/desistir-solicitud-informacion-historica/desistir-informacion-historica",
-    "linkDepartment": "/pago/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+    "linkDashboard": "/aga/subsecuente/319/desistir",
+    "linkDepartment": "/pago/subsecuente/319/desistir",
     "department": "aga"
   },
   {
@@ -2177,6 +2177,13 @@
     "department": "aga"
   },
   {
+    "id": 600,
+    "tramite": 31907,
+    "linkDashboard": "/aga/subsecuente/319/cancelar",
+    "linkDepartment": "/pago/subsecuente/319/cancelar",
+    "department": "aga"
+  },
+  {
     "id": 313,
     "tramite": 420102,
     "linkDashboard": "/aga/concluir-relacion-de/solicitud",
@@ -2186,8 +2193,8 @@
   {
     "id": 314,
     "tramite": 80303,
-    "linkDashboard": "/se/modificacion-programa-immex-baja-submanufacturera",
-    "linkDepartment": "/pago/modificacion-programa-immex-baja-submanufacturera",
+    "linkDashboard": "/se/registro-solicitude/registro-solicitude",
+    "linkDepartment": "/pago/registro-solicitude/registro-solicitude",
     "department": "se"
   },
   {
@@ -4338,6 +4345,13 @@
     "tramite": 303,
     "linkDashboard": "/aga/despacho-mercancias/registro/registro",
     "linkDepartment": "/pago/despacho-mercancias/registro/registro",
+    "department": "aga"
+  },
+   {
+    "id": 617,
+    "tramite": 31908,
+    "linkDashboard": "/aga/subsecuente/319/reactivar",
+    "linkDepartment": "/pago/subsecuente/319/reactivar",
     "department": "aga"
   }
 ]

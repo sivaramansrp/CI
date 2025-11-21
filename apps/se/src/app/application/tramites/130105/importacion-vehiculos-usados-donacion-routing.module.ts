@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
-
+import { AcusePageComponent, IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { RouterModule, Routes } from '@angular/router';
 import { ImportacionVehiculosUsadosDonacionComponent } from './pages/importacion-vehiculos-usados-donacion/importacion-vehiculos-usados-donacion.component';
-import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
+import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {

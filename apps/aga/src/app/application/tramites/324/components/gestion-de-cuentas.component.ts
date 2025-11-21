@@ -1,10 +1,11 @@
 import { ADUANA_CATALOGO, HEADERS_ACCESOS_TABLA, MOVIMIENTO_CATALOGO, ROL_CATALOGO, SISTEMA_CATALOGO } from '../constantes/tecnologicos.enum';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud324State, Tramite324Store } from '../state/Tramite324.store';
 import { AccesosTabla } from '../models/tecnologicos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CategoriaMensaje } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -27,6 +28,8 @@ import { Tramite324Query } from '../state/Tramite324.query';
 export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
+  // Notificación para confirmación de eliminación
+  public nuevaNotificacionEliminar!: Notificacion;
   /**
    * ReplaySubject utilizado para gestionar la destrucción de observables.
    * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
@@ -249,16 +252,24 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
     }
     if (this.accesosForm.valid) {
       const NUEVO_ACCESO = this.accesosForm.value;
-      this.accesosTablaDatos = [...this.accesosTablaDatos, NUEVO_ACCESO];
+      
+      this.store.addAccesosDatos(NUEVO_ACCESO);
+      
       this.accesosForm.reset();
       this.cerrarModal();
-  setTimeout(() => {
-  
-    this.abrirModal();
-  }, 300);
-    
+      
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.EXITO,
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El acceso se agregó correctamente.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
-  
   }
   /**
  * Cierra el modal de accesos.
@@ -314,8 +325,6 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
  * Verifica que haya al menos una fila seleccionada antes de eliminar
  */
 eliminarAccesos(): void {
-  const DATOS_SELECCIONADOS = this.accesosTablaDatosSeleccionados?.length || 0;
-
   if (!this.accesosTablaDatos || this.accesosTablaDatos.length === 0) {
      this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -345,6 +354,29 @@ eliminarAccesos(): void {
     };
     return;
   }
+  
+  // Mostrar confirmación antes de eliminar
+  this.nuevaNotificacionEliminar = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: CategoriaMensaje.ALERTA,
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Desea eliminar el acceso seleccionado?.',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnCancelar: 'Cancelar',
+    txtBtnAceptar: 'Aceptar',
+  };
+}
+
+/**
+ * Confirma y ejecuta la eliminación de registros seleccionados
+ */
+confirmarEliminacion(confirmar: boolean): void {
+  if (!confirmar) {
+    return;
+  }
+  
   const DATOS_ACTUALIZADOS = this.accesosTablaDatos.filter(
     item => !this.accesosTablaDatosSeleccionados.includes(item)
   );
@@ -352,6 +384,18 @@ eliminarAccesos(): void {
   this.accesosTablaDatos = DATOS_ACTUALIZADOS;
  
   this.accesosTablaDatosSeleccionados = [];
+  
+  this.nuevaNotificacion = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: CategoriaMensaje.EXITO,
+    modo: 'action',
+    titulo: '',
+    mensaje: 'El acceso se eliminó correctamente.',
+    cerrar: true,
+    tiempoDeEspera: 3000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
 }
 
   /**

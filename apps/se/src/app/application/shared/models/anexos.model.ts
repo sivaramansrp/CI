@@ -72,4 +72,9 @@ export interface Anexo {
      */
     descripcion: string;
   }
+
+  /**
+   * Unidad de medida correspondiente a la cantidad especificada.
+   */
+  unidadMedidaTarifaria?: string;
 }

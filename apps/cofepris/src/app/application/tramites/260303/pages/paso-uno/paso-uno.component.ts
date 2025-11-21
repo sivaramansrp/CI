@@ -1,13 +1,30 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import {Subject,map,takeUntil } from 'rxjs';
+import { DatosDeLaSolicitudContenedoraComponent } from '../../components/datos-de-la-solicitud-contenedora/datos-de-la-solicitud.contenedora';
+
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados.contenedora';
+
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+
+import { Subject, map, takeUntil } from 'rxjs';
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: true,
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    DatosDeLaSolicitudContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosContenedoraComponent
+  ],
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit {
@@ -55,15 +72,16 @@ export class PasoUnoComponent implements OnInit {
         map((seccionState) => {
         // Actualiza el estado local con el valor obtenido del store
         this.consultaState = seccionState;
+        
+        // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
+        if (this.consultaState && this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
         })
       )
       .subscribe();
-      // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
-      if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-      } else {
-      this.esDatosRespuesta = true;
-      }
     }
 
 
