@@ -135,7 +135,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = [];
+  catalogosArray: Catalogo[][] = [[], []];
 
   /**
    * @description Opciones de solicitud configurables.
@@ -219,6 +219,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     * Formulario reactivo para modificar las partidas.
     */
   modificarPartidasDelaMercanciaForm!: FormGroup;
+   /**
+     * jest.spyOnIdentificador del procedimiento actual.
+     * @type {number}
+     */
+    idProcedimiento: number = 130106;
+  
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -248,15 +254,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite130106Store.actualizarEstado({
-      solicitud: 'Inicial',
-      producto: 'Nuevo',
-      defaultSelect: 'Inicial',
-      defaultProducto: 'Nuevo'
+      solicitud: 'TISOL.I',
+      producto: 'CONDMER.N',
+      defaultSelect: 'TISOL.I',
+      defaultProducto: 'CONDMER.N'
     });
     this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
     this.tramite130106Query.select(state => state.tableBodyData)
@@ -266,7 +271,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.getRegimenes();
     this.getFraccionArancelaria();
-    this.enCambioDeBloque(105);
   }
 
   /**
@@ -583,13 +587,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
   * Método para obtener la lista de representaciones federales.
   */
-  fetchRepresentacionFederal(): void {
-    this.solocitud130106Service
-      .getRepresentacionFederal('130106', "SIN")
+  fetchRepresentacionFederal(cveEntidad: string): void {
+    this.solocitud130106Service.getRepresentacionFederal(this.idProcedimiento.toString(), cveEntidad)
       .subscribe((data) => {
-        this.representacionFederal = data;
+        this.representacionFederal = data as Catalogo[];
       });
   }
+
   /**
   * Método para obtener la lista de países disponibles.
   */
@@ -604,22 +608,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   * Método para obtener la lista de países por bloque.
   * @param {number} _bloqueId - Identificador del bloque.
   */
-  fetchPaisesPorBloque(_bloqueId: number): void {
-    this.solocitud130106Service
-      .getPaisesPorBloque('130106', _bloqueId)
+  fetchPaisesPorBloque(ID: string): void {
+    this.solocitud130106Service.getPaisesPorBloque(this.idProcedimiento.toString(), ID)
       .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
+       this.paisesPorBloque = data as Catalogo[];
       });
   }
+
   /**
   * Maneja el cambio de bloque seleccionado.
   * @param {number} bloqueId - Identificador del bloque seleccionado.
   */
   enCambioDeBloque(bloqueId: number): void {
-    this.fetchPaisesPorBloque(bloqueId);
+    this.fetchPaisesPorBloque(bloqueId.toString());
+  }
+ 
+   /**
+   *  Maneja la selección de fechas y actualiza el estado global.
+   * @param evento 
+   */
+  fechasSeleccionadas(evento: string[]): void {
+    this.tramite130106Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
   /**
    * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
@@ -627,24 +636,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
-
+    this.tramite130106Store.actualizarEstado({ [$event.campo]: VALOR });
+   
     if ($event.campo === 'regimen') {
-      this.formDelTramite.get('clasificacion')?.setValue('');
-      this.mostrarErrorClasificacion = false;
-      this.tramite130106Store.actualizarEstado({
-        [$event.campo]: VALOR,
-        clasificacion: ''
-      });
-    } else {
-      this.tramite130106Store.actualizarEstado({ [$event.campo]: VALOR });
-      if ($event.campo === 'clasificacion' && VALOR) {
-        this.mostrarErrorClasificacion = true;
-      }
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimen(VALOR);
     }
 
-    if ($event.campo === 'fraccion') {
-      this.mercanciaForm.get('unidadMedida')?.setValue('1');
-      this.tramite130106Store.actualizarEstado({ 'unidadMedida': '1' });
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.fetchRepresentacionFederal(VALOR);
     }
 
      if ($event.campo === 'fraccion') {
@@ -652,6 +653,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.getUMTCatalogo(VALOR);
     }
   }
+
   /**
   * Determina si el botón "Modificar" debe estar deshabilitado.
   * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
@@ -799,22 +801,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.solocitud130106Service.getRegimenes('130106').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.solocitud130106Service.getRegimenes(this.idProcedimiento.toString()).subscribe((data) => {
+      this.catalogosArray[0] = data as Catalogo[];
     });
   }
-
   /**
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.solocitud130106Service.getClasificacionRegimen('130106').subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(VALOR: string): void {
+    this.solocitud130106Service.getClasificacionRegimen(VALOR).subscribe((data) => {
+     this.catalogosArray[1] = data as Catalogo[];
     });
   }
 

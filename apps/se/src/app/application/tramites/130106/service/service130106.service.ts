@@ -67,20 +67,24 @@ export class Solocitud130106Service {
    *  @param {string} tramite - El identificador del trámite.
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de regímenes.
    */
-  getRegimenes(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.regimenesCatalogo(tramite).pipe(
+  getRegimenes(tramitesID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.regimenesCatalogo(tramitesID).pipe(
       map(res => res?.datos ?? [])
     );
   }
+
   /** Obtiene el catálogo de clasificaciones de régimen para el trámite especificado.  
    *  @param {string} tramite - El identificador del trámite.
-   *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de clasificaciones de régimen.
+   *  @returns {Observable<Catalogo[]>} - An observable that emits a list of classification catalogs for the regime.
    */
-  getClasificacionRegimen(tramite: string): Observable<Catalogo[]> {
-    return this.catalogoServices.getClasificacionRegimen(this.tramiteId, "01").pipe(
-      map(res => res?.datos ?? [])
-    );
+  getClasificacionRegimen(tramitesID: string): Observable<Catalogo[]> {
+    const PAYLOAD_DATOS = { tramite: 'TITPEX.130106', id: tramitesID };
+   return this.catalogoServices.clasificacionRegimenCatalogo('130106', PAYLOAD_DATOS)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
   }
+
   /** Obtiene el catálogo de fracciones arancelarias para el trámite especificado.  
    *  @param {string} tramite - El identificador del trámite.
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de fracciones arancelarias.
@@ -100,12 +104,6 @@ export class Solocitud130106Service {
     );
   }
 
-  //   getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
-  //   return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
-  //     .pipe(
-  //       map(res => res?.datos ?? [])
-  //     );
-  // }
   /** Obtiene el catálogo de bloques para el trámite especificado.  
    *  @param {string} tramite - El identificador del trámite.
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de bloques.
@@ -122,10 +120,9 @@ export class Solocitud130106Service {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/solicitude-options.json'
+      'assets/json/130106/solicitude-options.json'
     );
   }
-
 
   /**
    * Obtiene las opciones de producto desde un archivo JSON.
@@ -133,7 +130,7 @@ export class Solocitud130106Service {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-options.json'
+      'assets/json/130106/producto-otions.json'
     );
   }
 
@@ -150,21 +147,22 @@ export class Solocitud130106Service {
    * Obtiene la lista de representaciones federales desde un archivo JSON.
    * @returns {Observable<Catalogo[]>}
    */
-  getRepresentacionFederal(tramite: string, cveEntidad: string): Observable<Catalogo[]> {
-    return this.catalogoServices.representacionFederalCatalogo(tramite, "SIN").pipe(
+  getRepresentacionFederal(ID: string, cveEntidad: string): Observable<Catalogo[]> {
+    return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
       map(res => res?.datos ?? [])
     );
   }
-  /**
+   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
    * @param {number} _bloqueId - El ID del bloque.
    * @returns {Observable<Catalogo[]>}
    */
-  getPaisesPorBloque(tramite: string, _bloqueId: number): Observable<Catalogo[]> {
-    return this.catalogoServices.getpaisesBloqueCatalogo(tramite, _bloqueId.toString()).pipe(
+  getPaisesPorBloque(tramite: string, ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.getpaisesBloqueCatalogo(tramite, ID).pipe(
       map(res => res?.datos ?? [])
     );
   }
+
   /**
      * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
      *
