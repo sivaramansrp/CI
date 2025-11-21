@@ -94,6 +94,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
   esFormularioSoloLectura: boolean = false;
 
+  public idProcedimiento: number = 260703;
  /**
   * Constructor del componente PasoUnoComponent.
   * Inyecta los servicios necesarios para la gestión del formulario, estado y consultas.
