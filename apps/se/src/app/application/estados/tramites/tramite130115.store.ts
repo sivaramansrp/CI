@@ -10,6 +10,8 @@ import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 export interface Tramite130115State {
+
+  idSolicitud: number | null;
   /**
    * Producto seleccionado en el formulario.
    */
@@ -136,6 +138,11 @@ export interface Tramite130115State {
   Valor total en USD de las partidas de la mercancía.
   */
   valorTotalUSD: string;
+
+  /**   
+   * Fechas seleccionadas en el formulario.
+   */
+ fechasSeleccionadas: string[];
 }
 
 
@@ -149,6 +156,7 @@ export interface Tramite130115State {
  */
 export function createInitialState(): Tramite130115State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: true,
     solicitud: '',
@@ -174,7 +182,8 @@ export function createInitialState(): Tramite130115State {
     representacion: '',
     tableBodyData: [],
     cantidadTotal: '',
-    valorTotalUSD: ''
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
   };
 }
 
@@ -202,6 +211,18 @@ export class Tramite130115Store extends Store<Tramite130115State> {
     this.update((state) => ({
       ...state,
       ...valores,
+    }));
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

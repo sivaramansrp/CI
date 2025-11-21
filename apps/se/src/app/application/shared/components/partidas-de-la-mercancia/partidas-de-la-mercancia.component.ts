@@ -1,5 +1,5 @@
 
-import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { ALERTARCHIVOMSG, MENSAJES, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
@@ -249,6 +249,15 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
      * @type {boolean}
      */
     @Input() isFraccionTIGIE: boolean = false;
+
+  /**
+   * Constante que contiene los mensajes de texto utilizados en el componente.
+   */
+  MENSAJES_TEXTOS = MENSAJES;
+
+  @Input() mostrarMensajeMercanciaRequerida: boolean = false;
+
+  @Input() mostrarMensajeFraccionArancelariaRequerida: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
