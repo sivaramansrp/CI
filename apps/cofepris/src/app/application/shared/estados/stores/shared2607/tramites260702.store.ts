@@ -959,6 +959,10 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     }));
   }
 
+  /**
+   *  Método para actualizar la descripción del SCIAN en el estado.
+   * @param descripcionDelScian Descripción del SCIAN a establecer.
+   */
   setDescripcionDelScian(descripcionDelScian: string): void {
     this.update((state) => ({
       ...state,

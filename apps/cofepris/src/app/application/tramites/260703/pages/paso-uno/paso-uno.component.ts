@@ -99,6 +99,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Identificador del procedimiento asociado a este componente.
+   */
   public idProcedimiento: number = 260703;
   
 /**

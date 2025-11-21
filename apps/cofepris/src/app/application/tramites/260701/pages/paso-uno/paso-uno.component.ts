@@ -42,7 +42,9 @@ export class PasoUnoComponent implements OnInit {
      * @type {ConsultaioState}
      */
     public consultaState!:ConsultaioState;
-
+/**
+ * Identificador del procedimiento asociado a este componente.
+ */
     public idProcedimiento: number = 260701;
     /**
      * Inicializa una nueva instancia de la clase PasoUnoComponent.
