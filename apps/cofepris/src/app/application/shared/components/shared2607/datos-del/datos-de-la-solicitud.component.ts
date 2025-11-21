@@ -772,6 +772,10 @@ if (this.idProcedimiento) {
     }
   }
 
+  /**
+   * Maneja el cambio en la selección de la clave SCIAN. 
+   * @param event Evento de cambio del elemento select. 
+   */
    onClaveScianChange(event: Event): void {
     const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
     let SELECTED_OPTION;
@@ -1247,7 +1251,10 @@ onModificarMercancias(): void {
       'datosDelTramiteRealizar'
     ) as FormGroup;
   }
-
+/**
+ * Obtiene el grupo de formulario para la clave SCIAN.
+ * @return El grupo de formulario `claveScianG`.
+ */
   get claveScianG(): FormGroup {
     return this.clavaScianForm.get('claveScianG') as FormGroup;
   }

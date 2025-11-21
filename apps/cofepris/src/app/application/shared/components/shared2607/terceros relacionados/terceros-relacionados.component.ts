@@ -65,14 +65,12 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy, OnChang
   esFormularioVisible = false;
 
   /** Datos del catálogo de países */
-  // public paisData: CatalogosSelect = {
-  //   labelNombre: 'Pais',
-  //   required: true,
-  //   primerOpcion: 'Selecciona un medio de transporte',
-  //   catalogos: [],
-  // };
-
-  paisData: Catalogo[] = [];
+  public paisData: CatalogosSelect = {
+    labelNombre: 'Pais',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
 
   /**
    * Variable para almacenar el tipo de persona seleccionada (por ejemplo, 'fisica' o 'moral').
@@ -354,14 +352,14 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
       .obtenerPaises(this.idProcedimiento?.toString())
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
-        this.paisData = data.datos ?? [];
+        this.paisData.catalogos = data.datos as Catalogo[];
       });
     } else {
       this.service
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
-        this.paisData = data;
+        this.paisData.catalogos = data as Catalogo[];
       });
     }
   }
@@ -441,18 +439,6 @@ onGuardar(): void {
   this.esFormularioVisible = false;
   this.selectedRow = null;
 }
-  /**
-   * Obtiene el nombre del país a partir de su ID.
-   * @param paisId ID del país.
-   * @returns Nombre del país o 'N/A' si no se encuentra.
-   */
-  // private getPaisName(paisId: string): string {
-  //   const PAIS_ENCONTRADO = this.paisData.catalogos.find(
-  //     (catalogo) => catalogo.id === Number(paisId)
-  //   );
-  //   return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
-  // }
-
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
    * @param filasSeleccionadas Filas seleccionadas.
