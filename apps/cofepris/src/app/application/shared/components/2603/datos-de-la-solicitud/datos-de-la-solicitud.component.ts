@@ -313,18 +313,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public scianTablaDatos: ScianDatos[] = [];
 
-    /** Producto Terminado: tabla y formulario */
+
+    /**
+     * Almacena los datos de la tabla de Producto Terminado.
+     * Cada elemento representa un producto terminado agregado por el usuario.
+     * Se utiliza para mostrar y gestionar los registros en la tabla correspondiente.
+     * @type {ProductoTerminado[]}
+     */
     public productoTerminadoTablaDatos: ProductoTerminado[] = [];
-  /**
-   * Evento de selección en la tabla Producto Terminado
-   */
 
+    /**
+     * Almacena las filas seleccionadas actualmente en la tabla de Producto Terminado.
+     * Se actualiza cada vez que el usuario selecciona o deselecciona productos en la tabla.
+     * @type {ProductoTerminado[]}
+     */
+    selectedRowsProductoTerminado: ProductoTerminado[] = [];
 
-  selectedRowsProductoTerminado: ProductoTerminado[] = [];
-
-  onSeleccionChangeProductoTerminado(selected: ProductoTerminado[]): void {
-    this.selectedRowsProductoTerminado = selected;
-  }
+    /**
+     * Maneja el evento de cambio de selección en la tabla de Producto Terminado.
+     * Actualiza la propiedad `selectedRowsProductoTerminado` con las filas seleccionadas.
+     * @param {ProductoTerminado[]} selected - Las filas seleccionadas en la tabla.
+     */
+    onSeleccionChangeProductoTerminado(selected: ProductoTerminado[]): void {
+      this.selectedRowsProductoTerminado = selected;
+    }
 
 /**
  * Maneja el evento de agregado o selección de registros en la tabla de producto terminado.
@@ -436,17 +448,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionarOrigenDelPais = this.crosListaDePaises;
 
-  /** Configuración de la tabla de sectores */
-  public configuracionMercancias = CONFIGURACION_MERCANCIAS_DATOS;
-  public configuracionTablaScian = CONFIGURACION_TABLA_SCIAN;
-  public configuracionTablaProductoTerminado = CONFIGURACION_TABLA_PRODUCTO_TERMINADO;
+
   /**
- * Etiqueta para el crosslist de Forma farmacéutica.
- */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Forma farmacéutica',
-    derecha: 'País(es) seleccionados',
-  };
+   * Configuración de la tabla de sectores para mercancías.
+   * Define las columnas, formato y opciones de la tabla de mercancías en el formulario.
+   * @type {any}
+   */
+  public configuracionMercancias = CONFIGURACION_MERCANCIAS_DATOS;
+
+  /**
+   * Configuración de la tabla SCIAN.
+   * Especifica la estructura y opciones de la tabla para datos SCIAN.
+   * @type {any}
+   */
+  public configuracionTablaScian = CONFIGURACION_TABLA_SCIAN;
+
+  /**
+   * Configuración de la tabla de Producto Terminado.
+   * Define las columnas y opciones para la tabla de productos terminados.
+   * @type {any}
+   */
+  public configuracionTablaProductoTerminado = CONFIGURACION_TABLA_PRODUCTO_TERMINADO;
+
+  /**
+   * Etiqueta para el crosslist de Forma farmacéutica.
+   */
+    public paisDeProcedenciaLabel: CrossListLable = {
+      tituluDeLaIzquierda: 'Forma farmacéutica',
+      derecha: 'País(es) seleccionados',
+    };
 
   /**
    * Representa las etiquetas utilizadas para mostrar información sobre el país de origen.

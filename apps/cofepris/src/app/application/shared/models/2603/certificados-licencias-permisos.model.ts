@@ -1,8 +1,15 @@
 import { Catalogo} from "@libs/shared/data-access-user/src";
 
+/**
+ * Interfaz que representa la respuesta del catálogo de estados.
+ * Incluye el código de estado, los datos del catálogo y un mensaje descriptivo.
+ */
 export interface EstadoCatalogResponse {
+  /** Código de estado de la respuesta. */
   code: number;
+  /** Lista de elementos del catálogo de estados. */
   data: Catalogo[];
+  /** Mensaje descriptivo de la respuesta. */
   message: string;
 }
 

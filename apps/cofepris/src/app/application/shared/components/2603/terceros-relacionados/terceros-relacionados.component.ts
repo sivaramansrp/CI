@@ -31,8 +31,9 @@ import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../constantes
 type AllowedValue = string | number | boolean | undefined;
 
 /**
- * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
- * para actualizar el componente actual que se está mostrando.
+ * Componente responsable de gestionar la sección de terceros relacionados en el formulario.
+ * Permite agregar, modificar y eliminar registros de fabricantes, facturadores, proveedores, certificados analíticos y otros.
+ * Incluye gestión de tablas dinámicas, modales y sincronización con el estado global de la consulta.
  */
 @Component({
   selector: 'app-terceros-relacionados',
@@ -43,37 +44,35 @@ type AllowedValue = string | number | boolean | undefined;
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnDestroy {
+
   /**
-   * Indica si el título del programa debe mostrarse.
+   * Indica si el título del programa debe mostrarse en la vista.
+   * @type {boolean}
    */
   @Input() public programTitle: boolean = false;
 
   /**
-   * Referencias a todos los componentes de tabla dinámica para poder limpiar sus selecciones
+   * Referencias a todos los componentes de tabla dinámica para poder limpiar sus selecciones.
+   * @type {QueryList<TablaDinamicaComponent<unknown>>}
    */
   @ViewChildren(TablaDinamicaComponent) tablaComponents!: QueryList<TablaDinamicaComponent<unknown>>;
 
   /**
-   * FormGroup que gestiona los controles y las validaciones
-   * para la sección de la tabla "Terceros Relacionados".
-   * 
-   * Este FormGroup contiene la información relacionada con
-   * terceros (por ejemplo, fabricante, facturador, proveedor)
-   * y se utiliza para enlazar los campos del formulario en
-   * la plantilla, permitiendo crear, editar y validar los
-   * registros de la tabla "Terceros Relacionados".
+   * Formulario reactivo para la sección de terceros relacionados.
+   * @type {FormGroup}
    */
   public tercerosRelacionadosTabla!: FormGroup;
 
+
   /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   * @type {ConsultaioState}
+   */
   @Input() consultaState!: ConsultaioState;
 
   /**
    * Indica si el formulario debe estar deshabilitado (solo lectura).
+   * @type {boolean}
    */
   @Input() formularioDeshabilitado: boolean = false;
 
@@ -94,77 +93,101 @@ export class TercerosRelacionadosComponent implements OnDestroy {
   @Input() idProcedimiento : number[] = ID_PROCEDIMIENTO;
 
   /**
-   * Una referencia a la instancia del modal de Bootstrap.
-   * Esto se utiliza para controlar e interactuar con el cuadro de diálogo modal.
+   * Referencia al modal de Bootstrap para gestionar cuadros de diálogo.
+   * @type {BsModalRef | undefined}
    */
   bsModalRef?: BsModalRef;
 
   /**
-   * Una propiedad pública que contiene los datos o la configuración para el componente.
-   * Se le asigna el valor de `LASTABLA`, que probablemente sea una constante o variable
-   * definida en otra parte de la aplicación.
+   * Textos y configuraciones para la sección de terceros relacionados.
+   * @type {any}
    */
   public TEXTOS = LASTABLA;
+
   /**
-   * Un arreglo que contiene los datos de los fabricantes (Fabricante).
-   * Esto se utiliza para gestionar y mostrar información relacionada con los fabricantes
-   * en el contexto de la aplicación.
+   * Datos de la tabla de fabricantes.
+   * @type {Fabricante[]}
    */
   public fabricanteTablaDatos: Fabricante[] = [];
+
   /**
-   * Un arreglo de objetos `Fabricante` que representa los datos para la tabla "facturador".
-   * Esta propiedad se utiliza para almacenar y gestionar la lista de fabricantes o entidades relacionadas
-   * que se muestran en la tabla dentro del componente.
+   * Datos de la tabla de facturadores.
+   * @type {Fabricante[]}
    */
   public facturadorTablaDatos: Fabricante[] = [];
+
   /**
-   * Un arreglo de objetos `Fabricante` que representa los datos para la tabla de proveedores.
-   * Esto se utiliza para almacenar y gestionar la lista de fabricantes o proveedores relacionados.
+   * Datos de la tabla de proveedores.
+   * @type {Fabricante[]}
    */
   public proveedorTablaDatos: Fabricante[] = [];
+
   /**
-   * Contiene un arreglo de objetos `Fabricante` que representa los datos del certificado analítico.
-   * Esta propiedad se utiliza para gestionar y mostrar información relacionada con los fabricantes
-   * en el contexto de la aplicación.
+   * Datos de la tabla de certificados analíticos.
+   * @type {Fabricante[]}
    */
   public certificadoAnaliticoTablaDatos: Fabricante[] = [];
+
   /**
-   * Representa una colección de objetos "Otros" utilizada para almacenar datos para el componente.
-   * Este arreglo se inicializa como vacío y puede ser llenado con instancias del tipo `Otros`.
+   * Datos de la tabla de otros terceros relacionados.
+   * @type {Otros260303[]}
    */
   public otrosTablaDatos: Otros260303[] = [];
+
   /**
-   * Representa el tipo de selección de casilla de verificación utilizado en la tabla.
-   * Esto se asigna desde la enumeración `TablaSeleccion.CHECKBOX`.
+   * Tipo de selección de casilla de verificación utilizado en las tablas.
+   * @type {TablaSeleccion}
    */
   public checkbox = TablaSeleccion.CHECKBOX;
   
   /**
-   * Objeto de configuración para la tabla "Fabricante".
-   * Esto se utiliza para definir las configuraciones y propiedades de la tabla
-   * en el componente "Terceros Relacionados".
+   * Configuración de columnas para la tabla de fabricantes.
+   * @type {any}
    */
   public configuracionFabricante = FABRICANTE_TABLA;
+
   /**
-   * Objeto de configuración para la tabla "Otros".
-   * Esta propiedad se inicializa con la constante `OTROS_TABLA`,
-   * que define la estructura y configuraciones para la tabla.
+   * Configuración de columnas para la tabla de otros terceros.
+   * @type {any}
    */
   public configuracionOtros = OTROS_TABLA;
 
-  /** Configuración de la tabla de sectores */
+  /**
+   * Configuración de columnas para la tabla principal de fabricantes.
+   * @type {ConfiguracionColumna<Fabricante>[]}
+   */
   public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+
+  /**
+   * Configuración de columnas para la tabla de facturadores.
+   * @type {ConfiguracionColumna<Fabricante>[]}
+   */
   public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+
+  /**
+   * Configuración de columnas para la tabla de proveedores.
+   * @type {ConfiguracionColumna<Fabricante>[]}
+   */
   public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+
+  /**
+   * Configuración de columnas para la tabla de certificados analíticos.
+   * @type {ConfiguracionColumna<Fabricante>[]}
+   */
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+
+  /**
+   * Configuración de columnas para la tabla de otros terceros.
+   * @type {ConfiguracionColumna<Otros260303>[]}
+   */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros260303>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
 
   /**
-   * Notificador para destruir observables activos.
+   * Notificador para destruir observables activos y evitar fugas de memoria.
+   * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
   
-
   /**
    * Constructor del componente TercerosRelacionadosComponent.
    *
@@ -547,21 +570,56 @@ private static generateConfiguracionTabla<T>(
     });
   }
 
+  /**
+   * Filas seleccionadas en la tabla de facturadores.
+   * @type {Fabricante[]}
+   */
   public selectedFacturadorRows: Fabricante[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de fabricantes.
+   * @type {Fabricante[]}
+   */
   public selectedFabricanteRows: Fabricante[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de certificados analíticos.
+   * @type {Fabricante[]}
+   */
   public selectedCertificadoAnaliticoRows: Fabricante[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de otros terceros relacionados.
+   * @type {Otros260303[]}
+   */
   public selectedOtrosRows: Otros260303[] = [];
+
+  /**
+   * Filas seleccionadas en la tabla de proveedores.
+   * @type {Fabricante[]}
+   */
   public selectedProveedorRows: Fabricante[] = [];
 
+  /**
+   * Actualiza las filas seleccionadas en la tabla de facturadores.
+   * @param selected - Array de facturadores seleccionados.
+   */
   onSeleccionChangeFacturador(selected: Fabricante[]): void {
     this.selectedFacturadorRows = selected;
   }
+  /**
+   * Abre el modal para modificar el facturador seleccionado.
+   * Solo permite modificar si hay exactamente una fila seleccionada.
+   */
   modificarFacturador(): void {
     if (this.selectedFacturadorRows.length === 1) {
       const FACTURADOR_SELECCIONADO = this.selectedFacturadorRows[0];
       this.abrirModalParaModificar('Modificar facturador', FACTURADOR_SELECCIONADO, 'facturador');
     }
   }
+  /**
+   * Elimina los facturadores seleccionados de la tabla y limpia la selección.
+   */
   eliminarFacturador(): void {
     if (this.selectedFacturadorRows.length) {
       // Filtrar los elementos no seleccionados para mantenerlos en la tabla
@@ -573,15 +631,26 @@ private static generateConfiguracionTabla<T>(
     }
   }
 
+    /**
+     * Actualiza las filas seleccionadas en la tabla de fabricantes.
+     * @param selected - Array de fabricantes seleccionados.
+     */
   onSeleccionChangeFabricante(selected: Fabricante[]): void {
     this.selectedFabricanteRows = selected;
   }
+    /**
+     * Abre el modal para modificar el fabricante seleccionado.
+     * Solo permite modificar si hay exactamente una fila seleccionada.
+     */
   modificarFabricante(): void {
     if (this.selectedFabricanteRows.length === 1) {
       const FABRICANTE_SELECCIONADO = this.selectedFabricanteRows[0];
       this.abrirModalParaModificar('Modificar fabricante', FABRICANTE_SELECCIONADO, 'fabricante');
     }
   }
+    /**
+     * Elimina los fabricantes seleccionados de la tabla y limpia la selección.
+     */
   eliminarFabricante(): void {
     if (this.selectedFabricanteRows.length) {
       // Filtrar los elementos no seleccionados para mantenerlos en la tabla
@@ -593,15 +662,26 @@ private static generateConfiguracionTabla<T>(
     }
   }
 
+    /**
+     * Actualiza las filas seleccionadas en la tabla de certificados analíticos.
+     * @param selected - Array de certificados analíticos seleccionados.
+     */
   onSeleccionChangeCertificadoAnalitico(selected: Fabricante[]): void {
     this.selectedCertificadoAnaliticoRows = selected;
   }
+    /**
+     * Abre el modal para modificar el certificado analítico seleccionado.
+     * Solo permite modificar si hay exactamente una fila seleccionada.
+     */
   modificarCertificadoAnalitico(): void {
     if (this.selectedCertificadoAnaliticoRows.length === 1) {
       const CERTIFICADO_SELECCIONADO = this.selectedCertificadoAnaliticoRows[0];
       this.abrirModalParaModificar('Modificar certificado analítico', CERTIFICADO_SELECCIONADO, 'certificadoAnalitico');
     }
   }
+    /**
+     * Elimina los certificados analíticos seleccionados de la tabla y limpia la selección.
+     */
   eliminarCertificadoAnalitico(): void {
     if (this.selectedCertificadoAnaliticoRows.length) {
       // Filtrar los elementos no seleccionados para mantenerlos en la tabla
@@ -613,15 +693,26 @@ private static generateConfiguracionTabla<T>(
     }
   }
 
+    /**
+     * Actualiza las filas seleccionadas en la tabla de otros terceros relacionados.
+     * @param selected - Array de otros terceros seleccionados.
+     */
   onSeleccionChangeOtros(selected: Otros260303[]): void {
     this.selectedOtrosRows = selected;
   }
+    /**
+     * Abre el modal para modificar el registro de otros terceros seleccionado.
+     * Solo permite modificar si hay exactamente una fila seleccionada.
+     */
   modificarOtros(): void {
     if (this.selectedOtrosRows.length === 1) {
       const OTROS_SELECCIONADO = this.selectedOtrosRows[0];
       this.abrirModalParaModificar('Modificar otros', OTROS_SELECCIONADO, 'otros');
     }
   }
+    /**
+     * Elimina los registros de otros terceros seleccionados de la tabla y limpia la selección.
+     */
   eliminarOtros(): void {
     if (this.selectedOtrosRows.length) {
       // Filtrar los elementos no seleccionados para mantenerlos en la tabla
@@ -633,15 +724,26 @@ private static generateConfiguracionTabla<T>(
     }
   }
 
+    /**
+     * Actualiza las filas seleccionadas en la tabla de proveedores.
+     * @param selected - Array de proveedores seleccionados.
+     */
   onSeleccionChangeProveedor(selected: Fabricante[]): void {
     this.selectedProveedorRows = selected;
   }
+    /**
+     * Abre el modal para modificar el proveedor/distribuidor seleccionado.
+     * Solo permite modificar si hay exactamente una fila seleccionada.
+     */
   modificarProveedor(): void {
     if (this.selectedProveedorRows.length === 1) {
       const PROVEEDOR_SELECCIONADO = this.selectedProveedorRows[0];
       this.abrirModalParaModificar('Modificar proveedor/distribuidor', PROVEEDOR_SELECCIONADO, 'proveedor');
     }
   }
+    /**
+     * Elimina los proveedores seleccionados de la tabla y limpia la selección.
+     */
   eliminarProveedor(): void {
     if (this.selectedProveedorRows.length) {
       // Filtrar los elementos no seleccionados para mantenerlos en la tabla

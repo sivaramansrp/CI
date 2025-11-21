@@ -415,9 +415,6 @@ export const FECHA_DE_FABRICACIO_PAGO = {
   habilitado: true,
 };
 
-export const FECHA_DE_IMPORTACION_PAGO = [260512]
-
-
 /**
  * @const FECHA_DE_CADUCIDAD_PAGO
  * @description Configuración del campo “Fecha de pago” en el formulario.
@@ -428,6 +425,11 @@ export const FECHA_DE_CADUCIDAD_PAGO = {
   habilitado: true,
 };
 
+/**
+ * @const FECHA_DE_CADUCIDAD_MERCANICA
+ * @description Configuración del campo “Fecha de caducidad” para mercancía en el formulario.
+ * Incluye la etiqueta, si es requerido y si está habilitado.
+ */
 export const FECHA_DE_CADUCIDAD_MERCANICA = {
   labelNombre: 'Fecha de caducidad:',
   required: false,

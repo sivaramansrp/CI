@@ -2,6 +2,10 @@ import { ConfiguracionColumna, Fabricante, MercanciasDatos, Otros260303 } from "
 
 import { ProductoTerminado, ScianDatos } from "@libs/shared/data-access-user/src/core/models/shared2603/certificados-licencias-permisos.model";
 
+/**
+ * Pasos principales del proceso de solicitud.
+ * Cada objeto representa un paso con su estado de activación y finalización.
+ */
 export const PANTA_PASOS = [
     {
       indice: 1,
@@ -24,6 +28,10 @@ export const PANTA_PASOS = [
 ];
 
 
+/**
+ * Configuración de columnas para la tabla de fabricantes.
+ * Define los encabezados y claves para mostrar los datos de fabricantes en la tabla.
+ */
 export const FABRICANTE_TABLA: Array<{ encabezado: string; clave: keyof Fabricante }> = [
   { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
   { encabezado: 'R.F.C', clave: 'rfc' },
@@ -43,6 +51,10 @@ export const FABRICANTE_TABLA: Array<{ encabezado: string; clave: keyof Fabrican
 ];
 
 
+/**
+ * Configuración de columnas para la tabla de otros terceros relacionados.
+ * Define los encabezados y claves para mostrar los datos de otros terceros en la tabla.
+ */
 export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }> = [
   { encabezado: 'Tercero nombre descripción', clave: 'tercero' },
   { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
@@ -62,10 +74,23 @@ export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }>
   { encabezado: 'Código postal.', clave: 'cp' },
 ];
 
+/**
+ * Texto descriptivo para el primer paso del proceso de solicitud.
+ */
 export const PASO_UNO = 'Solicitud de Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
+/**
+ * Texto descriptivo para el segundo paso del proceso de solicitud.
+ */
 export const PASO_DOS = 'Cargar archivos';
+/**
+ * Texto descriptivo para el tercer paso del proceso de solicitud.
+ */
 export const PASO_TRES = 'Firmar';
 
+/**
+ * Configuración para el campo de fecha de pago.
+ * Incluye etiqueta, si es requerido y si está habilitado.
+ */
 export const FECHA_PAGO = {
   labelNombre: 'Fecha de pago',
   required: false,
@@ -73,6 +98,10 @@ export const FECHA_PAGO = {
 };
 
 /** Configuración de la tabla de sectores */
+/**
+ * Configuración de la tabla de sectores para datos de mercancías.
+ * Define los encabezados, claves y orden para mostrar los datos en la tabla.
+ */
 export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDatos>[] = [
     { encabezado: 'Clasificación del producto', clave: (item: MercanciasDatos) => item.clasificacion, orden: 1 },
     { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciasDatos) => item.especificar, orden: 2 },
@@ -103,6 +132,10 @@ export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDat
   /**
  * Opciones para los campos de selección tipo radio: "No" y "Sí".
  */
+  /**
+   * Opciones para los campos de selección tipo radio: "No" y "Sí".
+   * Cada opción tiene una etiqueta y un valor asociado.
+   */
   export const RADIO_OPCIONES = [
     {
       "label": "No",
@@ -117,6 +150,10 @@ export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDat
   /**
    * Constante para configurar el input de fecha.
    * Define las propiedades del campo de entrada de fecha.
+   */
+  /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha, incluyendo etiqueta, obligatoriedad y habilitación.
    */
    export const INPUT_FECHA_CONFIG = {
         /**
@@ -142,11 +179,19 @@ export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDat
  * Configuración de columnas para la tabla SCIAN.
  * Define los encabezados y claves para mostrar los datos de SCIAN en la tabla.
  */
+/**
+ * Configuración de columnas para la tabla SCIAN.
+ * Define los encabezados y claves para mostrar los datos de SCIAN en la tabla.
+ */
 export const CONFIGURACION_TABLA_SCIAN: ConfiguracionColumna<ScianDatos>[] = [
   { encabezado: 'Clave S.C.I.A.N.', clave: (item: ScianDatos) => item.clave, orden: 1 },
   { encabezado: 'Descripción del S.C.I.A.N.', clave: (item: ScianDatos) => item.descripcion, orden: 2 }
 ];
 
+/**
+ * Configuración de columnas para la tabla Producto Terminado.
+ * Define los encabezados y claves para mostrar los datos de productos terminados en la tabla.
+ */
 /**
  * Configuración de columnas para la tabla Producto Terminado.
  * Define los encabezados y claves para mostrar los datos de productos terminados en la tabla.
