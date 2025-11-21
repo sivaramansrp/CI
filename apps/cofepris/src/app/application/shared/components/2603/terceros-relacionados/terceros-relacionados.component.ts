@@ -28,6 +28,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO, SECCION_PERMISOS } from '../../../constantes/shared2603/medicos-sin-registrar.enum';
+/**
+ * Tipo permitido para los valores en las tablas dinámicas de terceros relacionados.
+ * @typedef {string | number | boolean | undefined} AllowedValue
+ */
 type AllowedValue = string | number | boolean | undefined;
 
 /**
