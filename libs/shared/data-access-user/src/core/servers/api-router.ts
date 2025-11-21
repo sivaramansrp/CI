@@ -1161,8 +1161,10 @@ export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalo
 /*API para obtener el catálogo de fracciones arancelarias*/
 export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
 
+export const FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130106/pexim/fracciones-arancelarias`;
+
 /*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
-export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
+export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medidas-tarifarias`;
 
 /** API para prellenadasDatos la solicitud del tramite generico.
  */
@@ -1188,6 +1190,8 @@ export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): stri
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+export const REGIMEN_CLASSIFICACIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130108/regimenes/${CLASIFICACION}/clasificacion`;
 
 /**
  * API para guardar la solicitud
