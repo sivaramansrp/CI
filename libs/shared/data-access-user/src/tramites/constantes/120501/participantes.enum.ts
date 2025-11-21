@@ -8,6 +8,5 @@ export const CONFIGURACION_ACCIONISTAS_TABLA1 = [
     clave: (ele: Complementaria1):string => ele.registrofederaldecontribuyentes,
     orden: 1
   },
-  
 ]
  

@@ -216,7 +216,7 @@ export class PantallasComponent implements OnInit {
       }
 
       if (!this.requiresPaymentData) {
-        if (!this.pagoDerechosRef?.formValidityChange) {
+        if (!this.pagoDerechosRef?.validarFormulariosBanco()) {
           this.mostrarAlerta = true;
           this.seleccionarFilaNotificacion = {
             tipoNotificacion: 'alert',
@@ -231,30 +231,21 @@ export class PantallasComponent implements OnInit {
             alineacionBtonoCerrar: 'flex-row-reverse'
           }
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-           return;
-        } else if (this.pagoDerechosRef.formValidityChange && !this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton()) {
-          this.confirmarSinPagoDeDerechos = 2;
-        } else if (this.pagoDerechosRef.formValidityChange && this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton()) {
+        } else if (this.pagoDerechosRef.validarFormulariosBanco() && this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton()) {
           this.confirmarSinPagoDeDerechos = 3;
         }
       }
 
       if (!ISVALID) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
         this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+
         return; // Detener ejecución si los formularios son inválidos
       }
       this.esFormaValido = false;
     }
-  
-      // if (this.indice === 1 && e.accion === 'cont') {
-      //   const ES_VALIDO = this.validarFormulariosPasoActual();
-      //   if (!ES_VALIDO) {
-      //     this.isPeligro = true;
-      //     return;
-      //   }
-      //   this.isPeligro = false;
-      // }
-      if (e.valor > 0 && e.valor < this.pasos.length) {
+        if (e.valor > 0 && e.valor < this.pasos.length) {
         if (e.accion === 'cont') {
           this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
@@ -399,7 +390,7 @@ export class PantallasComponent implements OnInit {
       }
     } else {
       const IS_DATOS_VALID = this.pasoUnoComponent?.datosDeLaComponent?.validarClickDeBoton?.() ?? false;
-      const IS_PAGO_VALID = this.pagoDerechosRef?.formValidityChange ?? false;
+      const IS_PAGO_VALID = this.pagoDerechosRef?.validarFormulariosBanco() ?? false;
       if (IS_DATOS_VALID && IS_PAGO_VALID) {
         this.confirmarSinPagoDeDerechos = 4;
         this.indice = 2;
