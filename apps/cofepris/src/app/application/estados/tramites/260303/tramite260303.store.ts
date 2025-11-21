@@ -6,7 +6,9 @@ import { ScianDatos } from '@libs/shared/data-access-user/src';
  * Interfaz que representa el estado de Solicitud260303.
  */
 export interface Solicitud260303State {
-
+    /**
+     * El valor de idSolicitud.
+     */
     idSolicitud: number | null;
     /**
      * El valor de rfcResponsableSanitario.

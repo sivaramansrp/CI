@@ -17,6 +17,8 @@ import { ImportacionDefinitiva130103State } from '../../../../estados/tramites/t
   templateUrl: './pantallas.component.html'
 })
 export class PantallasComponent implements OnInit, OnDestroy {
+  /**  * Estado del trámite de importación definitiva.
+  */
   solicitudState!: ImportacionDefinitiva130103State;
    /**
   * compo doc

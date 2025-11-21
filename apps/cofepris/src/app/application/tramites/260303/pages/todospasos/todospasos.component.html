@@ -16,7 +16,10 @@
             }
             @case (2) {
             <ng-alert [CONTENIDO]="TEXTOS2.Importante"></ng-alert>
-            <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+             <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'260303'"
+        [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+        (reenviarCargaRealizada)="cargaRealizada($event)"
+        (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
             }
             @case (3) {
             <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260303"
