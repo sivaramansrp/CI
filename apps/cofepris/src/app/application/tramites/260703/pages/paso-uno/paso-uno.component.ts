@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -6,6 +6,8 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Service260702Service } from '../../../../shared/services/shared2607/service260702.service';
+import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
+import { Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
 
 
 /**
@@ -39,6 +41,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+
+  /** Indicadores booleanos que validan el estado de los componentdatos de la solicitud */
+  private isDatosDeLaSolicitudComponentValid: boolean = false;
   /**
    * Formulario reactivo para capturar los datos del pago de derechos.
    * Se inicializa dinámicamente con los valores del estado de la solicitud.
@@ -94,6 +99,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
   esFormularioSoloLectura: boolean = false;
 
+  
+/**
+ * Evento que emite el estado de validez del formulario de domicilio.
+ * 
+ * @event
+ * @type {boolean}
+ * @description Emite `true` si el formulario de domicilio es válido, `false` en caso contrario.
+ */
+@Output() domicilioFormValidity = new EventEmitter<boolean>();
+
+
+   /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+@Input() isContinuarTriggered: boolean = false;
+  
+
+
+
  /**
   * Constructor del componente PasoUnoComponent.
   * Inyecta los servicios necesarios para la gestión del formulario, estado y consultas.
@@ -101,7 +123,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private service260702Service: Service260702Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public solicitud260703Store:Solicitud260702Store,
+    private solicitud260703Query:Solicitud260702Query
   ) {
      this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -135,6 +159,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+   
   }
 
    /**
@@ -161,6 +186,32 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+
+  /**
+   * Maneja el cambio de validez del formulario.
+   * 
+   * @param event - Valor booleano que indica si el formulario es válido o no.
+   * Establece el estado de validez del formulario 'datosDelSolicitude' en el store de solicitud260703.
+   */
+  onFormValidityChange(event:boolean):void {
+   this.solicitud260703Store.setFormValidity('datosDelSolicitude', event);
+  }
+
+  /**
+   * Valida los formularios relacionados con la solicitud actual.
+   * 
+   * Esta función verifica la validez del componente de datos de la solicitud
+   * accediendo al estado actual de `solicitud260703Query` y consultando la propiedad
+   * `formValidity.datosDelSolicitude`. Si la propiedad no está definida, retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario de datos de la solicitud es válido, `false` en caso contrario.
+   */
+   validarFormularios(): boolean {
+    this.isDatosDeLaSolicitudComponentValid = (
+      this.solicitud260703Query.getValue().formValidity?.datosDelSolicitude ) ?? false;
+    return this.isDatosDeLaSolicitudComponentValid;
   }
 
   /**

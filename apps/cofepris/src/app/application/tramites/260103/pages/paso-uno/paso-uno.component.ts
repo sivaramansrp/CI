@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
@@ -24,7 +24,8 @@ import { Tramite260103Store } from '../../estados/tramite260103Store.store';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit,OnChanges {
+   @Input() confirmarSinPagoDeDerechos: number = 0;
     /**
        * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
        * @description
@@ -108,6 +109,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
           this.indice = tab;
         });
   }
+  
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['confirmarSinPagoDeDerechos'] && !changes['confirmarSinPagoDeDerechos'].firstChange) {
+        const CONFIRMAR_VALOR = changes['confirmarSinPagoDeDerechos'].currentValue;
+        if (CONFIRMAR_VALOR) {
+          this.seleccionaTab(CONFIRMAR_VALOR);
+        }
+      }
+    }
 
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
