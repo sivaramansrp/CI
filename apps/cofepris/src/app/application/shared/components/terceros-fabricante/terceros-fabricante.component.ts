@@ -547,10 +547,21 @@ eliminarProveedor(): void {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ * @param formGroup Grupo de formulario que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  public markPaisTouched!: ((formGroup: FormGroup) => boolean);
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.markPaisTouched = (formGroup: FormGroup): boolean => {
+      return Boolean(formGroup?.get('pais')?.touched);
+    };
     
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.

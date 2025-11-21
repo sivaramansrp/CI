@@ -1,12 +1,12 @@
 
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_CURP, REGEX_REEMPLAZAR, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import {Solicitud260702State, Solicitud260702Store,} from '../../../estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702State, Solicitud260702Store, } from '../../../estados/stores/shared2607/tramites260702.store';
 import { BANCO_DATA } from '../../../constantes/catalogs.enum';
 import { CommonModule } from '@angular/common';
-import{ConsultaioQuery} from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
@@ -27,9 +27,15 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
   templateUrl: './pago-de-derecho.component.html',
   styleUrls: ['./pago-de-derecho.component.scss'],
 })
-export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+export class PagoDeDerechoComponent implements OnInit, OnDestroy,OnChanges {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
   pagoDeDerechosForm!: FormGroup;
+
+  /**
+   * ID del procedimiento.
+   * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
+   */
+  @Input() idProcedimiento!: number;
 
   /** Observable para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -40,6 +46,10 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Datos del catálogo de bancos disponibles */
   public bancoData = BANCO_DATA;
   /**
+   * Datos del catálogo de bancos disponibles. 
+   */
+   bancoDatos: Catalogo[] = [];
+  /**
    * Configuración para el campo de selección de la fecha de pago.
    */
   fechaPago: InputFecha = {
@@ -48,12 +58,20 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     habilitado: true,
   };
 
- 
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  
+    /**
+     * Indica si se ha activado el evento de continuar.
+     * Este valor se utiliza para controlar el flujo de la solicitud
+     * dependiendo de si el usuario ha decidido continuar con el proceso.
+     */
+     @Input() isContinuarTriggered: boolean = false;
   /**
    * Constructor del componente.
    * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
@@ -94,6 +112,17 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+  }
+
+  
+ /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+     this.pagoDeDerechosForm.get('pagoDeDerechos')?.markAllAsTouched();
+    }
   }
 
   /**
@@ -170,12 +199,21 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * Obtiene los datos del catálogo de bancos.
    */
   getBancoData(): void {
-    this.registrarsolicitudmcp
-      .getBancoData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.bancoData.catalogos = data as Catalogo[];
-      });
+    if (this.idProcedimiento) {
+      this.registrarsolicitudmcp
+        .obtenerBancos(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.bancoDatos = data.datos ?? [];
+        });
+    } else {
+      this.registrarsolicitudmcp
+        .getBancoData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.bancoDatos = data;
+        });
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -40,6 +40,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
  * @readonly
  */
   public readonly idProcedimiento: number = 260102;
+
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
   /**
    * @constructor
    * @param {Tramite260102Store} tramiteStore
@@ -97,6 +99,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+   validarContenedor(): boolean {
+    return (
+      this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

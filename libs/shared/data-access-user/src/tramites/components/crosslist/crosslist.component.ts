@@ -126,7 +126,7 @@ export class CrosslistComponent implements OnInit, OnChanges {
   /**
    * Indica si el control debe marcarse como tocado para mostrar errores de validación.
    * Útil para controlar la visualización de errores desde el componente padre.
-   * 
+   *
    * @type {boolean}
    * @default false
    */
@@ -324,7 +324,7 @@ export class CrosslistComponent implements OnInit, OnChanges {
             txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           });
-          return;
+        return;
       }
 
       const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);

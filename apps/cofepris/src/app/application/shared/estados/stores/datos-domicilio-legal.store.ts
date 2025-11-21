@@ -213,7 +213,12 @@ export interface DatosDomicilioLegalState {
  */
   aduanasDeEntrada: string[]
 
+  aduanasDeEntradaObj: Array<{ clave: string; descripcion: string }>;
+
   paisDeOriginDatos: string[]
+
+  paisDeOriginDatosObj: Array<{ clave: string; descripcion: string }>;
+
 
   paisFabrica: string[]
 
@@ -222,6 +227,8 @@ export interface DatosDomicilioLegalState {
   paisProveedor: string[]
 
   paisDeProcedenciaDatos: string[]
+
+  paisDeProcedenciaDatosObj: Array<{ clave: string; descripcion: string }>;
 
   /**
    * El valor de garantiasOfrecidas.
@@ -481,7 +488,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      */
     aduanasDeEntrada: [],
 
+    aduanasDeEntradaObj: [],
+
     paisDeOriginDatos: [],
+
+    paisDeOriginDatosObj: [],
 
     paisFabrica: [],
 
@@ -491,6 +502,7 @@ export function createInitialState(): DatosDomicilioLegalState {
 
     paisDeProcedenciaDatos: [],
 
+    paisDeProcedenciaDatosObj: [],
     /**
      * El valor de garantiasOfrecidas.
      */
@@ -1078,11 +1090,25 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       aduanasDeEntrada,
     }));
   }
+public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string }>): void {
+    this.update((state) => ({
+      ...state,
+      aduanasDeEntradaObj: value,
+    }));
+  }
+
 
   public setPaisDeOriginDatos(paisDeOriginDatos: string[]): void {
     this.update((state) => ({
       ...state,
       paisDeOriginDatos,
+    }));
+  }
+
+  public setPaisDeOriginDatosObj(value: Array<{ clave: string; descripcion: string }>): void {
+    this.update((state) => ({
+      ...state,
+      paisDeOriginDatosObj: value,
     }));
   }
 
@@ -1111,6 +1137,13 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
     this.update((state) => ({
       ...state,
       paisDeProcedenciaDatos,
+    }));
+  }
+
+  public setPaisDeProcedenciaDatosObj(value: Array<{ clave: string; descripcion: string }>): void {
+    this.update((state) => ({
+      ...state,
+      paisDeProcedenciaDatosObj: value,
     }));
   }
 

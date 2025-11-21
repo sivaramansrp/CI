@@ -13,6 +13,13 @@ export const REG_X = {
  */
 export const REGEX_CARACTERES_NO_PERMITIDOS = /^[^<>/\\]+$/;
 
+/**
+ * Expresión regular que valida que la cadena no contenga los caracteres especiales:
+ * ~, `, {, }, \, |, ^
+ * Utilizada para campos que deben rechazar estos caracteres específicos.
+ */
+export const REGEX_SIN_CARACTERES_ESPECIALES_KIMBERLEY = /^[^~`{}\\|^]*$/;
+
 // Expresión regular para verificar si la entrada comienza con espacios
 export const REGEX_LEADING_SPACES = /^[ ]+/;
 
@@ -1318,3 +1325,35 @@ export const REGEX_NUMERO_PUNTO_CARACTER = /^[0-9.]$/;
  * Ejemplo: "123.45" => ".45"
  */
 export const REGEX_REEMPLAZAR_VACIO = /\.\d+$/;
+
+/**
+ * Expresión regular utilizada para eliminar todas las comas presentes en una cadena.
+ *
+ * @constant
+ * @type {RegExp}
+ * @example
+ * // Ejemplo de uso:
+ * const texto = "1,234,567";
+ * const resultado = texto.replace(REGEX_REMOVE_COMA, "");
+ * // resultado: "1234567"
+ */
+
+export const REGEX_REMOVE_COMA = /,/g;
+
+/**
+ * Expresión regular para eliminar todos los caracteres que no sean números o punto decimal.
+ * @ejemplo
+ * // Uso de la expresión regular para eliminar caracteres no numéricos
+ * const cadena = "abc123.45def";
+ * const soloNumerosYPunto = cadena.replace(REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL, ''); // Resultado: "123.45"
+ */
+export const REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL = /[^0-9.]/g;
+
+/**
+ * Expresión regular para validar números decimales con hasta 3 dígitos decimales opcionales.
+ * Ejemplos no válidos:
+ * - "123.4567" (más de 3 decimales)
+ * - ".123" (falta de dígitos enteros)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_DECIMAL_3_DIGITOS = /^\d+(\.\d{0,3})?$/;

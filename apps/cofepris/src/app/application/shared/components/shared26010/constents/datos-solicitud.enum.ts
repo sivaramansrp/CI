@@ -1138,3 +1138,21 @@ export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE:number[] = [];
  * @type {number[]}
  */
 export const ES_VALIDO_REGISTRO_O_VENCIMIENTO:number[] = [];
+
+export const CLAVE_TABLA = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: 'clave',
+    width: '5%',
+  },
+  {
+    encabezado: 'Fecha de fabricacio',
+    clave: 'fabricacion',
+    width: '5%',
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: 'caducidad',
+    width: '5%',
+  },
+];
