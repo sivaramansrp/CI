@@ -372,6 +372,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Crea un objeto de tipo GuardarSolicitud a partir de los datos de acuicultura.
+   * @private
+   * @param {Acuicultura} datos - Los datos de acuicultura a utilizar para crear el payload.
+   * @returns {GuardarSolicitud} El objeto GuardarSolicitud creado.
+   * @memberof PasoUnoComponent
+   */
   private crearPayload(datos: Acuicultura): GuardarSolicitud {
     return {
       id_solicitud:

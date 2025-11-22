@@ -1,4 +1,10 @@
 import {
+  AccionBoton,
+  Acuicultura,
+  DestinatarioForm,
+  FilaSolicitud,
+} from '../../models/220203/importacion-de-acuicultura.module';
+import {
   AlertComponent,
   BtnContinuarComponent,
   ConsultaioQuery,
@@ -25,12 +31,6 @@ import {
   PRIVACY_NOTICE_CONTENT,
 } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
-import {
-  AccionBoton,
-  Acuicultura,
-  DestinatarioForm,
-  FilaSolicitud,
-} from '../../models/220203/importacion-de-acuicultura.module';
 import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -65,7 +65,6 @@ import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuar
     WizardComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    PasoTresComponent,
     BtnContinuarComponent,
     PasoFirmaComponent,
   ],
@@ -369,6 +368,9 @@ export class SanidadCertificadoComponent implements OnInit {
 
   protected readonly datosUsuario = USUARIO_INFO;
 
+  /**
+   * Metodo que hace guardado parcial del formulario
+   */
   guardarDatosFormulario(): void {
     this.importacionDeAcuiculturaService
       .getAllDatosForma()

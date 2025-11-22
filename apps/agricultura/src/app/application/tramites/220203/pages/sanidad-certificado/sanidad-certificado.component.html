@@ -22,7 +22,7 @@
         }
         @case (2) {
           <app-paso-dos
-            [idTipoTRamite]="'220202'"
+            [idTipoTRamite]="'220203'"
             [datosUsuario]="datosUsuario"
             [idSolicitud]="idSolicitud"
             [cargaArchivosEvento]="cargarArchivosEvento"
@@ -31,7 +31,6 @@
             (cargaEnProgresoChange)="onCargaEnProgresoPadre($event)"></app-paso-dos>
         }
         @case (3) {
-          <!--      <app-paso-tres></app-paso-tres>-->
           <paso-firma [idSolicitud]="+idSolicitud" [procedure]="220203" [procedureUrl]="'sanidad'"></paso-firma>
         }
       }
@@ -44,7 +43,6 @@
               [btnGuardarVisible]="btnGuardarVisible"
               (continuarEvento)="getValorIndice($event)"
               [btnHabilitarContinuar]="true"
-              (btnGuardarClicked)="guardarDatosFormulario()"
             ></btn-continuar>
           } @else {
             <div class="mt-5 mb-3 d-flex justify-content-end">

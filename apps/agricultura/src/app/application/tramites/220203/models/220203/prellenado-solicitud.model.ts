@@ -1,3 +1,6 @@
+/**
+ * Interface que representa el modelo de datos para el prellenado de la solicitud.
+ */
 export interface PrellenadoSolicitud {
   id_solicitud: number | null;
   cve_aduana: string;
@@ -69,6 +72,9 @@ export interface PrellenadoSolicitud {
   ]
 }
 
+/**
+ * Interface que representa el prellenado de la solicitud de movilizacion nacional
+ */
 export interface PrellenadoSolicitudMovilizacionNacional {
   id_solicitud: number,
   id_transporte: string,
@@ -78,6 +84,9 @@ export interface PrellenadoSolicitudMovilizacionNacional {
   razon_social: string
 }
 
+/**
+ * Interface que representa el prellenado de la solicitud de terceros relacionados
+ */
 export interface PrellenadoSolicitudTercerosRelacionados {
   terceros_exportador: [
     {
@@ -126,6 +135,9 @@ export interface PrellenadoSolicitudTercerosRelacionados {
   ]
 }
 
+/**
+ * Interface que representa el prellenado de la solicitud de pago de derechos
+ */
 export interface PrellenadoSolicitudPagoDerechos {
   id_solicitud: number | null,
   id_pago: number | null,

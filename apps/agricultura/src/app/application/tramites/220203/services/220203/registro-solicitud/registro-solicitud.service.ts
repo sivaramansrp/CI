@@ -1,21 +1,25 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {
-  API_POST_SOLICITUD_GUARDAR,
-  API_POST_SOLICITUD_GUARDAR_PARCIAL,
-  Catalogo,
-  ENVIRONMENT,
-} from '@libs/shared/data-access-user/src';
 import {
   API_GET_SOLICITUDES_FRACCION_ARANCELARIA_DESCRIPCION,
   API_GET_SOLICITUDES_NICO_DESCRIPCION,
   API_GET_SOLICITUDES_RECENTES,
   API_GET_SOLICITUDES_UNIDAD_MEDIDA,
-} from 'apps/agricultura/src/app/application/core/server/api-router';
+} from '../../../../../core/server/api-router';
+import {
+  API_POST_SOLICITUD_GUARDAR,
+  API_POST_SOLICITUD_GUARDAR_PARCIAL,
+  Catalogo,
+  ENVIRONMENT,
+  formatFechaCreacion,
+} from '@libs/shared/data-access-user/src';
+import {
+  GuardarSolicitud,
+  RespuestaGuardarSolicitud,
+} from '../../../models/220203/guardar-solicitud.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FraccionArancelariaDecripcionModel } from '../../../../220201/models/220201/capturar-solicitud.model';
-import { GuardarSolicitud } from '../../../models/220203/guardar-solicitud.model';
+import { Injectable } from '@angular/core';
 import { ResponseParcial } from '../../../models/220203/response-guardado-parcial.model';
 import { SolicitudData } from '../../../models/220203/importacion-de-acuicultura.module';
 
@@ -149,10 +153,10 @@ export class RegistroSolicitudService {
   guardarSolicitud(
     tramite: number,
     solicitud: GuardarSolicitud
-  ): Observable<BaseResponse<any>> {
+  ): Observable<BaseResponse<RespuestaGuardarSolicitud>> {
     const ENDPOINT =
       `${this.host}` + API_POST_SOLICITUD_GUARDAR(tramite.toString());
-    return this.http.post<BaseResponse<any>>(ENDPOINT, solicitud).pipe(
+    return this.http.post<BaseResponse<RespuestaGuardarSolicitud>>(ENDPOINT, solicitud).pipe(
       map((response) => {
         return response;
       }),
@@ -196,22 +200,4 @@ export class RegistroSolicitudService {
         })
       );
   }
-}
-/**
-
- Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
- @param fecha_creacion Fecha en formato ISO (string)
- @returns Fecha formateada como string*/
-function formatFechaCreacion(fecha_creacion: string): string {
-  const DATE = new Date(fecha_creacion);
-  if (isNaN(DATE.getTime())) {
-    return fecha_creacion;
-  }
-  const PAD = (n: number): string => n.toString().padStart(2, '0');
-  let fecha = `${PAD(DATE.getDate())}/${PAD(
-    DATE.getMonth() + 1
-  )}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(
-    DATE.getMinutes()
-  )}:${PAD(DATE.getSeconds())}`;
-  return fecha;
 }
