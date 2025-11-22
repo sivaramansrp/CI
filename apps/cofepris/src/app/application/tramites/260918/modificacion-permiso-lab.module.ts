@@ -7,18 +7,20 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import { ManifiestosComponent } from "../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component";
 import { ModificacionPermisoLabComponent } from './pages/modificacion-permiso-lab/modificacion-permiso-lab.component';
 import { ModificacionPermisoLabRoutingModule } from './modificacion-permiso-lab-routing.module';
 import { NgModule } from '@angular/core';
-import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+import { PagoDeDerechosContenedoraComponent} from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
-import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
+import {TercerosRelacionadosVistaComponent} from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 @NgModule({
@@ -35,15 +37,16 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     BtnContinuarComponent,
     SolicitanteComponent,
     DatosDelSolicitudModificacionComponent,
-    TercerosRelacionadosFabSeccionComponent,
-    PagoDeDerechosEntradaComponent,
+    TercerosRelacionadosVistaComponent,
+    PagoDeDerechosContenedoraComponent,
     TramitesAsociadosSeccionComponent,
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     RepresentanteLegalComponent,
-    ManifiestosComponent
+    ManifiestosComponent,
+    AvisoDePrivacidadComponent
 ],
 })
 export class ModificacionPermisoLabModule {}

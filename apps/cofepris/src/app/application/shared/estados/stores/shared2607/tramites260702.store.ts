@@ -168,6 +168,11 @@ export interface Solicitud260702State {
 
   /** Datos de la tabla de destinatarios */
     tableData2: Destinatario[];
+/**
+ * Método para actualizar la descripción del SCIAN en el estado.
+ */
+descripcionDelScian: string;
+    
   formValidity?: {
     datosDelSolicitude?: boolean;
   }
@@ -342,6 +347,11 @@ export function createInitialSolicitudState(): Solicitud260702State {
     tableData: [],
     /** Datos de la tabla de destinatarios */
     tableData2: [],
+    /**
+     * Método para actualizar la descripción del SCIAN en el estado.
+     */
+    descripcionDelScian: '',
+    
     formValidity: {},
     continuarTriggered:false
   };
@@ -949,6 +959,16 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     }));
   }
 
+  /**
+   *  Método para actualizar la descripción del SCIAN en el estado.
+   * @param descripcionDelScian Descripción del SCIAN a establecer.
+   */
+  setDescripcionDelScian(descripcionDelScian: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionDelScian,
+    }));
+  }
 
   /**
  * Actualiza el estado de validez de un formulario específico dentro del trámite.

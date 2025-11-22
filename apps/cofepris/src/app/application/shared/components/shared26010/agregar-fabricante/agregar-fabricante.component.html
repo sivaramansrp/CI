@@ -14,30 +14,12 @@
     ></ng-alert>
   }
   <form [formGroup]="agregarFabricanteForm" *ngIf="agregarFabricanteForm">
-    <!-- Datos Generales -->
     <h4>Datos generales</h4>
   <div class="row">
       <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad<span [ngClass]="agregarFabricanteForm.controls['nacionalidad'].errors?.['required'] && agregarFabricanteForm.controls['nacionalidad'].touched ? 'text-danger' : ''">*</span>:</label>
-        <div class="d-flex flex-column">
-          <div class="form-check" *ngFor="let opcion of losDatos">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              [value]="opcion.value" 
-              [id]="'nacionalidad_' + opcion.value"
-              formControlName="nacionalidad"
-              (change)="changeNacionalidad()"
-            />
-              {{ opcion.label }}
-          </div>
-        </div>
-        <div *ngIf="chequeoValidacionAlGuardar && esInvalido('nacionalidad')" class="text-danger">
-          <small>Este campo es obligatorio</small>
-        </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona<span [ngClass]="agregarFabricanteForm.controls['tipoPersona'].errors?.['required'] && agregarFabricanteForm.controls['tipoPersona'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Tipo persona<span [ngClass]="agregarFabricanteForm.controls['tipoPersona'].errors?.['required'] && agregarFabricanteForm.controls['tipoPersona'].touched || (errorMessageValidator.tipoPersona && !agregarFabricanteForm.get('tipoPersona')?.value)? 'text-danger' : ''">*</span>:</label>
         <div class="d-flex flex-column">
           <div class="form-check" *ngFor="let opcion of losDatosTipoPersona">
             <input 
@@ -54,7 +36,7 @@
               class="bi bi-question-circle-fill"></i></span>
           </div>
         </div>
-        <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+        <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona') || (errorMessageValidator.tipoPersona && !agregarFabricanteForm.get('tipoPersona')?.value)" class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
       </div>
@@ -75,7 +57,7 @@
     @if(mostrarRFC){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">R.F.C.<span [ngClass]="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc'].touched || (errorMessageValidator.rfc && !agregarFabricanteForm.get('rfc')?.value) ? 'text-danger' : ''">*</span>:</label>
         <span tooltip="Registro Federal de Contribuyente"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -85,11 +67,11 @@
           [maxlength]="15"
           formControlName="rfc"
           (input)="onChangeRfc($event)"
-          [ngClass]="esInvalido('rfc') ? 'required' : ''"
+          [ngClass]="esInvalido('rfc') || (errorMessageValidator.rfc && !agregarFabricanteForm.get('rfc')?.value) ? 'required' : ''"
         />
-        <div *ngIf="esInvalido('rfc')" class="text-danger">
+        <div *ngIf="esInvalido('rfc') || (errorMessageValidator.rfc && !agregarFabricanteForm.get('rfc')?.value)  " class="text-danger">
           <small
-            *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc']?.touched"
+            *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc']?.touched || (errorMessageValidator.rfc && !agregarFabricanteForm.get('rfc')?.value)"
           >
             Este campo es obligatorio
           </small>
@@ -102,23 +84,19 @@
         </div>
       </div>
       @if(
-    !(
-      agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
-      (
         agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-        agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL
-      )
+        agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL    
     )
-) {
+ {
   <div class="col-md-4">
-    <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
+    <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value) ? 'text-danger' : ''">*</span>:</label>
     <input
       type="text"
       class="form-control"
       formControlName="curp"
-      [ngClass]="esInvalido('curp') ? 'required' : ''"
+      [ngClass]="esInvalido('curp') || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value) ? 'required' : ''"
     />
-    <div *ngIf="esInvalido('curp')" class="text-danger">
+    <div *ngIf="esInvalido('curp') || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value)" class="text-danger">
       <small
         *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']"
       >
@@ -132,16 +110,16 @@
 }
       @else if (!estaOculto) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">C.U.R.P.<span [ngClass]="agregarFabricanteForm.controls['curp'].errors?.['required'] && agregarFabricanteForm.controls['curp'].touched || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value) ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="curp"
-          [ngClass]="esInvalido('curp') ? 'required' : ''"
+          [ngClass]="esInvalido('curp') || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value) ? 'required' : ''"
         />
-        <div *ngIf="esInvalido('curp')" class="text-danger">
+        <div *ngIf="esInvalido('curp') || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value)" class="text-danger">
           <small
-            *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']"
+            *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required'] || (errorMessageValidator.curp && !agregarFabricanteForm.get('curp')?.value)"
           >
             Este campo es obligatorio
           </small>
@@ -152,7 +130,7 @@
       </div>
       }
     </div>
-    @if (habilitarContribuyente === true &&
+    @if (
     this.agregarFabricanteForm.get('tipoPersona')?.value) {
     <div class="row mt-3">
       <div
@@ -164,42 +142,38 @@
         "
       >
         <div class="d-flex justify-content-end mt-2">
-          <button type="button" class="btn btn-primary w-15">Buscar</button>
+          <button type="button" class="btn btn-primary w-15" (click)="buscar(agregarFabricanteForm)">Buscar</button>
         </div>
       </div>
     </div>
-    } }
+    } 
+  }
 
     <!-- Datos Personales -->
 @if( (
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-    (
       !agregarFabricanteForm.get('tipoPersona')?.value ||
       agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
     )
-  ) ||
+   ||
   (
-    agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
-    (
       !agregarFabricanteForm.get('tipoPersona')?.value ||
       agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
-    )
   )
 ) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)<span [ngClass]="agregarFabricanteForm.controls['nombres'].errors?.['required'] && agregarFabricanteForm.controls['nombres'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Nombre(s)<span [ngClass]="agregarFabricanteForm.controls['nombres'].errors?.['required'] && agregarFabricanteForm.controls['nombres'].touched || (errorMessageValidator.nombres && !agregarFabricanteForm.get('nombres')?.value) ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           [maxlength]="200"
           class="form-control"
           formControlName="nombres"
-          [ngClass]="esInvalido('nombres') ? 'required' : ''"
+          [ngClass]="esInvalido('nombres') || (errorMessageValidator.nombres && !agregarFabricanteForm.get('nombres')?.value) ? 'required' : ''"
         />
-        <div *ngIf="esInvalido('nombres')" class="text-danger">
+        <div *ngIf="esInvalido('nombres') || (errorMessageValidator.nombres && !agregarFabricanteForm.get('nombres')?.value)" class="text-danger">
           <small
-            *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['required']"
+            *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['required'] || (errorMessageValidator.nombres && !agregarFabricanteForm.get('nombres')?.value)"
           >
             Este campo es obligatorio
           </small>
@@ -211,17 +185,17 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido<span [ngClass]="agregarFabricanteForm.controls['primerApellido'].errors?.['required'] && agregarFabricanteForm.controls['primerApellido'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Primer apellido<span [ngClass]="agregarFabricanteForm.controls['primerApellido'].errors?.['required'] && agregarFabricanteForm.controls['primerApellido'].touched || (errorMessageValidator.primerApellido && !agregarFabricanteForm.get('primerApellido')?.value) ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="primerApellido"
           [maxlength]="200"
-          [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
+          [ngClass]="esInvalido('primerApellido') || (errorMessageValidator.primerApellido && !agregarFabricanteForm.get('primerApellido')?.value) ? 'required' : ''"
         />
-        <div *ngIf="esInvalido('primerApellido')" class="text-danger">
+        <div *ngIf="esInvalido('primerApellido') || (errorMessageValidator.primerApellido && !agregarFabricanteForm.get('primerApellido')?.value)" class="text-danger">
           <small
-            *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['required']"
+            *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['required'] || (errorMessageValidator.primerApellido && !agregarFabricanteForm.get('primerApellido')?.value)"
           >
             Este campo es obligatorio
           </small>
@@ -254,18 +228,18 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Denominación/razón social<span [ngClass]="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] && agregarFabricanteForm.controls['razonSocial'].touched ? 'text-danger' : ''">*</span>:</label>
+          >Denominación/razón social<span [ngClass]="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] && agregarFabricanteForm.controls['razonSocial'].touched || (errorMessageValidator.razonSocial && !agregarFabricanteForm.get('razonSocial')?.value) ? 'text-danger' : ''">*</span>:</label>
         
         <input
           type="text"
           class="form-control"
           [maxlength]="254"
           formControlName="razonSocial"
-          [ngClass]="esInvalido('razonSocial') ? 'required' : ''"
+          [ngClass]="esInvalido('razonSocial') || (errorMessageValidator.razonSocial && !agregarFabricanteForm.get('razonSocial')?.value) ? 'required' : ''"
         />
-        <div *ngIf="esInvalido('razonSocial')" class="text-danger">
+        <div *ngIf="esInvalido('razonSocial') || (errorMessageValidator.razonSocial && !agregarFabricanteForm.get('razonSocial')?.value)" class="text-danger">
           <small
-            *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required']"
+            *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required'] || (errorMessageValidator.razonSocial && !agregarFabricanteForm.get('razonSocial')?.value)"
           >
             Este campo es obligatorio
           </small>
@@ -277,16 +251,22 @@
         </div>
       </div>
     </div>
-    } @if(idProcedimiento === 260102 || ((idProcedimiento === 260214 ||
-    idProcedimiento === 260219 || 260904) &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ) ||
-    ( idProcedimiento === 260214 || 260904 &&
-    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero') ||
-    (idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero')){
+    } @if(
+    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ){
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
+      @if(idProcedimiento === 260103){
+            <div class="col-md-4">
+        <label class="form-label">País<span [ngClass]="agregarFabricanteForm.controls['pais'].errors?.['required'] && agregarFabricanteForm.controls['pais'].touched  ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="pais"
+          [ngClass]="esInvalido('pais') ? 'required' : ''"
+        />
+      </div>
+    }
+    @else{
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisesDatos"
@@ -300,7 +280,7 @@
           [hiddenPrimerOption]="false"
         ></app-catalogo-select>
       </div>
-
+    }
       <div class="col-md-4">
         <label class="form-label" for="estado">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
@@ -331,7 +311,7 @@
 
       <div class="col-md-4">
         <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
-            @if((idProcedimiento === 260911 || idProcedimiento === 260201) && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+            *
           </span>:</label>
         <input
           type="text"
@@ -357,10 +337,7 @@
     <div class="row mt-3">
        @if(
             chequeoValidacionAlGuardar &&
-            (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
-            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)
+           agregarFabricanteForm.get('tipoPersona')?.value
           ) {
   
           <div class="col-md-4">
@@ -395,9 +372,9 @@
     @else{
     <h4 class="mt-5">Domicilio</h4>
     @if(habilitarContribuyente === true ){
-      <div *ngIf="agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr" class="row mt-5">
+      <div  class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label">País<span [ngClass]="agregarFabricanteForm.controls['pais'].errors?.['required'] && agregarFabricanteForm.controls['pais'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">País<span [ngClass]="agregarFabricanteForm.controls['pais'].errors?.['required'] && agregarFabricanteForm.controls['pais'].touched  ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -437,64 +414,10 @@
         />
       </div>
       </div>
-      <div *ngIf="agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'" class="row mt-3">
-          <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="paisesDatos"
-          formControlName="pais"
-          [label]="'País'"
-          [required]="true"
-          [placeholder]="'Seleccione una opción'"
-          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
-          [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
-          [disabledPrimerOption]="false"
-          [hiddenPrimerOption]="false"
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
-        <input
-          type="text"
-          class="form-control"
-          maxlength="255"
-          formControlName="estado"
-          [ngClass]="esInvalido('estado') ? 'required' : ''"
-        />
-        <div *ngIf="esInvalido('estado')" class="text-danger">
-          <small
-            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['required']"
-          >
-            Este campo es obligatorio
-          </small>
-           <small
-            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['pattern']"
-          >
-            Existen datos incorrectos que no cumplen con el formato esperado.
-          </small>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">*</span>:</label>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="codigoPostal"
-          maxlength="12"
-        />
-        <div class="text-danger">
-           <small
-            *ngIf="agregarFabricanteForm.controls['codigoPostal'].errors?.['pattern']"
-          >
-            Existen datos incorrectos que no cumplen con el formato esperado.
-          </small>
-        </div>
-      </div>
-
-      </div>
-      @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
+      @if( idProcedimiento === 260103){
       <div class="row">
         <div class="col-md-4">
-        <label class="form-label">Localidad<span [ngClass]="agregarFabricanteForm.controls['localidad'].errors?.['required'] && agregarFabricanteForm.controls['localidad'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Localidad:</label>
         <input
           type="text"
           class="form-control"
@@ -503,7 +426,7 @@
         />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Código postal o equivalente:</label>
         <input
           type="text"
           class="form-control"
@@ -519,7 +442,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Colonia<span [ngClass]="agregarFabricanteForm.controls['colonia'].errors?.['required'] && agregarFabricanteForm.controls['colonia'].touched ? 'text-danger' : ''">*</span>:</label>
+        <label class="form-label">Colonia:</label>
         <input
           type="text"
           class="form-control"
@@ -622,26 +545,6 @@
     </div>
     }
     } 
-    @if(( mostarColoniaOEquivalente &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'
-  ) ||
-  (
-    !agregarFabricanteForm.get('nacionalidad')?.value &&
-    !agregarFabricanteForm.get('tipoPersona')?.value
-  )
-) {
-  <div class="row mt-3">
-    <div class="col-md-4 pl-2 mt-3">
-      <label class="form-label">Colonia o equivalente:</label>
-      <input
-        type="text"
-        class="form-control"
-        [maxlength]="100"
-        formControlName="coloniaOEquivalente"
-      />
-    </div>
-  </div>  
-    }
 
     <div class="row mt-3">
       <div class="col-md-8">

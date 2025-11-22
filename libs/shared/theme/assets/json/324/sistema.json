@@ -1,9 +1,5 @@
 [
     {
-      "id": 0,
-      "descripcion": "Baja definitiva"
-    },
-    {
       "id": 1,
       "descripcion": "CRP"
     },
@@ -70,6 +66,10 @@
     {
       "id": 17,
       "descripcion": "VPN CPN (SIITVCE)"
+    },
+    {
+      "id": 18,
+      "descripcion": "Baja definitiva"
     }
   ]
   

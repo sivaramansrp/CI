@@ -816,6 +816,24 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'fechaDeCaducidad',
         ];
         break;
+        case 260103:
+        this.elementosNoValidos = [
+          'denominacionDistintiva',
+          'denominacionComun',
+          'formaFarmaceutica',
+          'estadoFisico',
+          'presentacion',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        this.elementosAnadidos = [
+          'marca',
+          'especifique',
+          'claveDeLos',
+          'fechaDeFabricacio',
+          'fechaDeCaducidad',
+        ];
+        break;
       case 260202:
         this.elementosAnadidos = ['especifique','especifiqueForma'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
@@ -1174,13 +1192,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   setTimeout(()=>{
  
       MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
-    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+      MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
       MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
-  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
-    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
-MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
-MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
-this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
+      MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+      MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
+      MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+      MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
+      this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
 },500);
     
   const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
@@ -1247,16 +1265,16 @@ updateValidation(): void {
     };
   }
 public getIdFromDescripcion(
-  array: Catalogo[],
+  array: Catalogo[] | undefined,
   descripcion: string | number
 ): number | string | undefined {
-  // If descripcion is a string, find by descripcion (case-insensitive)
+  if (!array || !Array.isArray(array)) {
+    return descripcion; // If array is undefined, just return the original value
+  }
   if (typeof descripcion === 'string') {
     const ITEM = array.find(el => el.descripcion.toLowerCase() === descripcion.toLowerCase());
-    return ITEM ? ITEM.id : descripcion; // Return ID if found, else return original descripcion
+    return ITEM ? ITEM.clave : descripcion;
   }
-
-  // If descripcion is already a number (ID), just return it
   return descripcion;
 }
 
@@ -1294,6 +1312,11 @@ public obtenerValor(
   fabricacion: string | null;
   caducidad: string | null;
 }] {
+  console.log("values",this.datoSeleccionado)
+  console.log("form state",this.mercanciaFormState);
+  const TIPO_ID = this.getIdFromDescripcion(this.clasificacionProductoDatos,this.datoSeleccionado?.tipoProducto as string);
+  console.log("tipo id",TIPO_ID);
+  
   return (
     (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos]) ??
     (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm])
