@@ -21,21 +21,73 @@
         @switch (indice) { @case (1) {
         <paso-uno (validFrmPadreEsValido)="onFormularioPadreValido($event)"></paso-uno>
         } @case (2) {
-        <paso-dos
+        <!--<paso-dos
           [cargaArchivosEvento]="cargarArchivosEvento"
           [regresarSeccionCargarDocumentoEvento]="
             regresarSeccionCargarDocumentoEvento
           "
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"
-        ></paso-dos>
+        ></paso-dos>-->
+
+        <paso-dos
+          [idTipoTRamite]="'5701'"
+          [datosUsuario]="datosUsuario"
+          [idSolicitud]="solicitudState.idSolicitud!.toString()"
+          [cargaArchivosEvento]="cargarArchivosEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+          (reenviarCargaRealizada)="cargaRealizada($event)"
+          (cargaEnProgresoChange)="onCargaEnProgresoPadre($event)"></paso-dos>
         } @case (3) {
-        <paso-tres [procedure]="5701" [procedureUrl]="'servicios-extraordinarios/solicitud'"></paso-tres>
-        } }
+        <!--<paso-tres [procedure]="5701" [procedureUrl]="'servicios-extraordinarios/solicitud'"></paso-tres>-->
+        <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="5701" [procedureUrl]="'solicitud'"></paso-firma>
+        } 
+      }
       </div>
     </div>
 
     <div class="row">
+      <div class="col-md-12">
+        @if (indice !== 2) {
+        <btn-continuar
+          [datos]="datosPasos"
+          (continuarEvento)="getValorIndice($event)"
+        ></btn-continuar>
+        } @else {
+        <div class="mt-5 mb-3 d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-default"
+            (click)="anterior()"
+            *ngIf="seccionCargarDocumentos"
+          >
+            Anterior
+          </button>
+
+          <!-- <button
+            type="button"
+            class="btn btn-default ms-3"
+            (click)="anteriorSeccionCargarDocumento()"
+            *ngIf="!seccionCargarDocumentos"
+          >
+            Anterior
+          </button> -->
+
+          <button
+            class="btn btn-primary ms-3"
+            (click)="
+              seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+            "
+            [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
+          >
+            {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!--<div class="row">
       <div class="col-md-12">
         @if (indice !== 2) {
         <btn-continuar
@@ -86,7 +138,7 @@
         </div>
         }
       </div>
-    </div>
+    </div>-->
   </div>
 </div>
 

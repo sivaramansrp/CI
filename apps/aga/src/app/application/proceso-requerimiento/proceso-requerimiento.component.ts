@@ -512,7 +512,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         this.ejecutaActualizarSolicitud();
       }
       this.indice = e.valor;
-
+      console.log('Indice despues del cambio:', this.indice);
+      console.log('Tipo de Requerimiento en getValorIndice:', this.tipoRequerimiento);
       this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
 
       if (this.indice === 2) {
@@ -609,8 +610,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
             if (response.codigo === '00') {
               this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
               this.tipoRequerimiento = this.iniciarAtenderRequerimientoData.alcance_requerimiento || '';
+              console.log('Tipo de Requerimiento:', this.tipoRequerimiento);
+              console.log('Indice antes del cambio:', this.indice);
               this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
-              
+
               if(TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId)) {
               switch(this.tipoRequerimiento) {
                 case TipoRequerimiento.DATOS:
@@ -630,12 +633,12 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
                 this.pasos = PASOS_REQUERIMIENTOS;
               }
 
-              this.datosPasos = {
+             /* this.datosPasos = {
                 nroPasos: this.pasos?.length ? this.pasos.length : 3,
                 indice: this.indice,
                 txtBtnAnt: 'Anterior',
                 txtBtnSig: 'Continuar',
-              };
+              };*/
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
