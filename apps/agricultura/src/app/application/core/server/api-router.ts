@@ -329,15 +329,6 @@ export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado:
  */
 export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/generar-cadena-original`;
 
-
-/**
- * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
- *
- * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
- * @returns La ruta de la API como cadena de texto.
- */
-export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
-
 /**
  * Genera la ruta de la API para obtener los documentos opcionales de una solicitud.
  *
@@ -362,7 +353,4 @@ export const API_GET_DOCUMENTOS_OPCIONALES = (TRAMITE: string, idSolicitud: numb
 }
 
 
-/**
- * API para firmar una solicitud de un trámite específico.
- */
-export const API_POST_FIRMA = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/firmar`;
+export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;

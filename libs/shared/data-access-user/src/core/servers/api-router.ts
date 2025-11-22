@@ -1289,3 +1289,13 @@ export const API_ESTADO_UNIDADES_ADMINISTRATIVAS = (TRAMITE: string, ID: string)
  * @description Endpoint de catálogo de representación federal vecina.
  */
 export const CATALOGO_REPRESENTACION_FEDERAL_VECINA = (TRAMITE: string, CLAVEESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/vecina/${CLAVEESTADO}`;
+
+
+/**
+ * Generates the API endpoint URL for pre-filling documents.
+ * @param TRAMITE - The procedure identifier
+ * @param IDSOLICITUD - The request ID
+ * @param especifico - Whether the request is specific
+ * @returns The formatted API endpoint URL
+ */
+export const API_POST_PRE_LLENADO_DOCUMENTOS = (TRAMITE: string, IDSOLICITUD: string, especifico: boolean) : string => `sat-t${TRAMITE}/solicitud/documentos?idSolicitud=${IDSOLICITUD}&especifico=${especifico}`;
