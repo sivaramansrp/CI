@@ -628,13 +628,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
               } else {
                 this.pasos = PASOS_REQUERIMIENTOS;
               }
-
-             /* this.datosPasos = {
-                nroPasos: this.pasos?.length ? this.pasos.length : 3,
-                indice: this.indice,
-                txtBtnAnt: 'Anterior',
-                txtBtnSig: 'Continuar',
-              };*/
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
