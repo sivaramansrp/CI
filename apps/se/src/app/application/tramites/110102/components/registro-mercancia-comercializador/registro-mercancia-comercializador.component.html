@@ -1,7 +1,7 @@
 <form [formGroup]="registroMercanciaComercializadorFrom">
   <div class="form">
     <ng-titulo [titulo]="'Mercancía'"></ng-titulo>
-    <div class="row" *ngIf="mostrarDatosMercanciaProductor">
+    <div class="row">
       <div class="col-md-8 form-group">
         <label for="mercanciaAsociadaNombreComercial" class="form-label">
           Nombre comercial de la mercancía (igual que en la factura):
@@ -10,8 +10,17 @@
           class="form-control" />
       </div>
     </div>
+     <div class="row">
+      <div class="col-md-8 form-group">
+        <label for="nombreIngles" class="form-label">
+          Nombre en inglés:
+        </label>
+        <input type="text" id="nombreIngles" formControlName="nombreIngles"
+          class="form-control" />
+      </div>
+    </div>
 
-    <div class="row mt-4" formGroupName="fraccionArancelaria">
+    <div class="row mt-4">
       <div class="col-md-4 form-group">
         <label for="mercanciaFraccionArancelaria" class="form-label">
           Fracción arancelaria:
@@ -29,7 +38,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-4">
       <div class="col-md-4 form-group">
         <label for="clasificacionNaladi" class="form-label">
           Clasificación NALADI:
@@ -95,7 +104,7 @@
   </div>
   
   <div class="row mt-4 me-auto">
-    <app-datos-tratados-acuerdos></app-datos-tratados-acuerdos> 
+    <app-datos-tratados-acuerdos [tratados]="mercancia"></app-datos-tratados-acuerdos> 
   </div>
 
 </form>
