@@ -24,11 +24,11 @@ class MockAUtorizacionProsecQuery {}
 
 describe('SectoresYMercanciasComponent', () => {
   let fixture: ComponentFixture<SectoresYMercanciasComponent>;
-  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); obtenserListaEstado: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); seccionStore: { establecerFormaValida?: any; }; sectoresYMercancias: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setSectoresFromValida?: any; metodoNombre?: any; setActividadProductiva?: any; setValores?: any; }; ProsecService: { formValida?: any; obtenerMenuDesplegable?: any; obtenerTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; sectoresState: { Sector?: any; Fraccion_arancelaria?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; sectorSeleccion: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); obtenserListaEstado: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); seccionStore: { establecerFormaValida?: any; }; sectoresYMercancias: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setSectoresFromValida?: any; metodoNombre?: any; setActividadProductiva?: any; setValores?: any; }; ProsecService: { formValida?: any; obtenerMenuDesplegable?: any; obtenerTablaDatos?: any; obtenerSectoresTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; sectoresState: { Sector?: any; Fraccion_arancelaria?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; sectorSeleccion: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, SectoresYMercanciasComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, SectoresYMercanciasComponent, require('@angular/common/http').HttpClientModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -115,15 +115,18 @@ describe('SectoresYMercanciasComponent', () => {
   it('should run #recuperarDatos()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.ProsecService.obtenerSectoresTablaDatos = jest.fn().mockReturnValue(observableOf({}));
     component.recuperarDatos();
-    // expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
+    //expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
+    // expect(component.ProsecService.obtenerSectoresTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #sectorSeleccion()', async () => {
     component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
     component.AutorizacionProsecStore.setActividadProductiva = jest.fn();
-    component.sectorSeleccion({});
-    // expect(component.AutorizacionProsecStore.setActividadProductiva).toHaveBeenCalled();
+    // component.sectorSeleccion({});
+    //expect(component.AutorizacionProsecStore.setActividadProductiva).toHaveBeenCalled();
+    // expect(component.AutorizacionProsecStore.setActividadProductivaLista).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

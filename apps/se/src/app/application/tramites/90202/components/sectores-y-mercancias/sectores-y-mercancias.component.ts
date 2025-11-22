@@ -732,7 +732,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+   /**
    * @method validarFormulario
    * @description
    * [ES] Valida el formulario de sectores y mercancías. Si el formulario es válido, retorna `true`.
@@ -741,12 +741,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   validarFormulario(): boolean {
-    if (this.sectoresYMercancias.valid) {
-      return true;
+     if (!this.sectoresYMercancias) {return false;}
+      this.sectoresYMercancias.markAllAsTouched();
+      return this.sectoresYMercancias.valid;
     }
-    this.sectoresYMercancias.markAllAsTouched();
-    return false
-  }
+
 
   /**
    * @method ngOnDestroy

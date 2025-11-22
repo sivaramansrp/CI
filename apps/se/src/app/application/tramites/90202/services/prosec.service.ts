@@ -1,3 +1,11 @@
+/**
+ * @module ProsecService
+ * @description
+ * Servicio para la gestión de catálogos y datos del trámite PROSEC.
+ * @author
+ * @since 2024
+ * @language es
+ */
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
 import { Catalogo, JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, catchError, map, throwError } from 'rxjs';
@@ -10,11 +18,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProsecService {
-  url: string = '../../../../../assets/json/90202/';
-  url2: string = '../../../../../assets/json/90202/';
+  url: string = '../../../../../assets/json/90102/';
+  url2: string = '../../../../../assets/json/90102/';
 
-  constructor(private readonly http: HttpClient, 
-  private autorizacionProsecStore : AutorizacionProsecStore) { }
+  constructor(
+    private readonly http: HttpClient,
+    private autorizacionProsecStore: AutorizacionProsecStore
+  ) {}
+
   /**
    * Obtiene la lista de bancos.
    * @returns Observable de la lista de bancos.
@@ -26,34 +37,33 @@ export class ProsecService {
     );
   }
 
-  // obtenerTablaDatos(fileName: string): Observable<Record<string, unknown>[]> {
-  //   const JSON_URL = this.url2 + fileName;
-  //   return this.http.get<Record<string, unknown>[]>(JSON_URL);
-  // }
   obtenerEstadoTablaDatos(body: { rfc_solicitante: string; enitdad_federativa: string; planta_idc: string }): Observable<JSONResponse> {
-    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90202', '90202').buscarDomicilios, body).pipe(
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarDomicilios, body).pipe(
       map((response) => response),
       catchError(() => {
-        const ERROR = new Error(`Error al obtener información de la tabla de datos en ${API_ROUTES('/sat-t90202', '90202').buscarDomicilios}`);
+        const ERROR = new Error(`Error al obtener información de la tabla de datos en ${API_ROUTES('/sat-t90102', '90102').buscarDomicilios}`);
         return throwError(() => ERROR);
       })
     );
   }
+
   obtenerSectoresTablaDatos(cveSector: string): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90202', '90202').buscarSectores(cveSector)).pipe(
+    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90102', '90102').sectoresDatos(cveSector)).pipe(
       map((response) => response),
     );
   }
+
   obtenerFraccionesTablaDatos(body: { fraccion: string; id_conf_programa_se: string; cve_sector: string; id_programa_autorizado: string | null }): Observable<JSONResponse> {
-    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90202', '90202').buscarProducirFraccionArancelaria, body).pipe(
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria, body).pipe(
       map((response) => response),
       catchError(() => {
-        const ERROR = new Error(`Error al obtener información de las fracciones en ${API_ROUTES('/sat-t90202', '90202').buscarProducirFraccionArancelaria}`);
+        const ERROR = new Error(`Error al obtener información de las fracciones en ${API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria}`);
         return throwError(() => ERROR);
       })
     );
   }
-      /**
+
+  /**
    * Método para actualizar el estado del formulario con los datos proporcionados.
    * @param DATOS - Objeto que contiene el estado del trámite.
    */
@@ -73,6 +83,6 @@ export class ProsecService {
    * @returns Observable que emite el estado del trámite.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<ProsecState> {
-    return this.http.get<ProsecState>('assets/json/90202/registro_toma_muestras_mercancias.json');
+    return this.http.get<ProsecState>('assets/json/90102/registro_toma_muestras_mercancias.json');
   }
 }

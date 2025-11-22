@@ -5,10 +5,13 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
-import DomiciliosTabla from '@libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
+// import DomiciliosTabla from '@libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
+import { ProsecService } from '../../services/prosec.service';
+
 /**
  * Componente que representa la sección de domicilios de plantas en el formulario.
  * Este componente incluye un formulario reactivo y una tabla dinámica para mostrar los domicilios.
@@ -112,7 +115,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Un arreglo de objetos `DomiciliosDePlantasTabla` que representa la tabla de domicilios.
    * Inicializado con los valores de `DomiciliosTabla`.
    */
-  public domiciliosTabla: DomiciliosDePlantasTabla[] = DomiciliosTabla;
+  public domiciliosTabla: DomiciliosDePlantasTabla[] = [];
 
   /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
   public esFormularioSoloLectura: boolean = false;
@@ -139,7 +142,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private prosecService: ProsecService
   ) {
     this.establecerFormDomiciliosDePlantas();
     // Inicializa el formulario.
@@ -153,13 +157,77 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+  /**
+   * Recupera los datos de los domicilios de plantas desde el servicio y los mapea a la tabla y formulario.
+   */
+  recuperarDatos(): void {
+    const PAYLOAD = {
+      rfc_solicitante: '', // Provide the RFC of the applicant here
+      enitdad_federativa: '', // Provide the federative entity here
+      planta_idc: '' // Provide the plant IDC here
+    };
 
+    this.prosecService.obtenerEstadoTablaDatos(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (esValidObject(response)) {
+            const API_DATOS = doDeepCopy(response);
+            if (API_DATOS.codigo !== "00") {
+              this.domiciliosTabla = [];
+              return;
+            }
+            if (esValidObject(API_DATOS.datos) && Array.isArray(API_DATOS.datos.plantas)) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              this.domiciliosTabla = API_DATOS.datos.plantas.map((planta: any) => ({
+                calle: planta.domicilioDto?.calle,
+                numero: planta.domicilioDto?.numExterior,
+                interior: planta.domicilioDto?.numInterior,
+                postal: planta.domicilioDto?.codigoPostal,
+                colonia: planta.domicilioDto?.coloniaEntity?.nombre,
+                municipio: planta.domicilioDto?.delegacionMunicipio?.nombre,
+                estado: planta.domicilioDto?.entidadFederativa?.nombre,
+                pais: planta.domicilioDto?.pais?.nombre,
+                registro: planta.domicilioDto?.entidadFederativa?.nombre,
+                registroFederalDeContribuyentes: planta.empresaDto?.rfc,
+                razonSocial: planta.empresaDto?.razonSocial,
+                domicilioFiscalDelSolicitante: planta.empresaDto?.domicilioCompleto
+              }));
+              // Patch form with first item if available
+              if (this.domiciliosTabla.length > 0) {
+                this.formDomiciliosDePlantas.patchValue({
+                  representacionFederal: this.domiciliosTabla[0].registro,
+                  actividadProductiva: this.domiciliosTabla[0].razonSocial
+                  // Add more fields as needed
+                });
+              }
+            } else {
+              this.domiciliosTabla = [];
+            }
+          }
+        }
+      });
+  }
+
+   /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de domicilios de plantas. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+    validarFormulario(): boolean {
+     if (!this.formDomiciliosDePlantas) {return false;}
+      this.formDomiciliosDePlantas.markAllAsTouched();
+      return this.formDomiciliosDePlantas.valid;
+    }
   /**
    * Método que se ejecuta al inicializar el componente.
    * Llama a `inicializarEstadoFormulario` para establecer el estado del formulario.
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.recuperarDatos();
   }
 
   /**

@@ -19,63 +19,36 @@ export class GuardarMappingAdapter {
 
     static toFormPayload(state: ProsecState): unknown {
         return {
-
-            "id_solicitud": 0,
-            "tipo_solicitud": 4,
-            "folio_programa": "9444",
-            "fecha_fin_vigencia": "2025-09-26",
-            "id_programa_autorizado": "409",
-            "discriminator_value": "90202",
-            "rfc_solicitante": "AAL0409235E6",
-            "anio_programa": "2025-09-26",
-            "id_solicitud_seleccionada": 1001,
-            "inicio": 1,
-            "rep_fed_sol": "DELEGACION FEDERAL CULIACAN",
-            "discriminador": "90202",
-            "puede_capturar_representante_legal_cg": false,
-            "cve_rol_capturista": "PersonaMoral",
-            "cve_usuario_capturista": "AAL0409235E6",
-            "cve_usuario_solicitante": "AAL0409235E6",
-            "representaciones_federales": "AAL0409235E6",
-            "plantas": [],
-            "actividad_productiva": "AGRICULTURA",
-            "fracciones_arancelarias": [],
-            "productores_idirectos": [],
-            "solicitante": {
-                "rfc": "AAL0409235E6",
-                "razon_social": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-                "descripcion_giro": "Siembra, cultivo y cosecha de otros cultivos",
-                "correo_electronico": "vucem3033@gmail.com",
-                "telefono": "55-98764532",
-                "domicilio": {
-                    "pais_clave": "MEX",
-                    "pais_nombre": "ESTADOS UNIDOS MEXICANOS",
-                    "entidad_federativa_clave": "SIN",
-                    "entidad_federativa_nombre": "SINALOA",
-                    "delegacion_municipio_clave": "25001",
-                    "delegacion_municipio_nombre": "AHOME",
-                    "colonia_clave": "00181210001",
-                    "colonia_nombre": "MIGUEL HIDALGO",
-                    "localidad_clave": "00181210008",
-                    "localidad_nombre": "LOS MOCHIS",
-                    "calle": "CAMINO VIEJO",
-                    "numero_exterior": "1353",
-                    "numero_interior": "",
-                    "codigo_postal": "81210"
+            id_solicitud: state.idSolicitud ?? 0,
+            modalidad: state.modalidad ?? '',
+            representacion_federal: state.RepresentacionFederal ?? '',
+            actividad_productiva: state.ActividadProductiva ?? '',
+            sector: state.sector ?? '',
+            fraccion_arancelaria: state.Fraccion_arancelaria ?? '',
+            contribuyentes: state.contribuyentes ?? '',
+            plantas: state.prosecDatos?.map(item => ({
+                razonSocial: item.razonSocial ?? '',
+                registroFederalDeContribuyentes: item.registroFederalDeContribuyentes ?? '',
+                domicilioFiscalDelSolicitante: item.domicilioFiscalDelSolicitante ?? '',
+                calle: item.calle ?? '',
+                numeroExterior: item.numeroExterior ?? '',
+                numeroInterior: item.numeroInterior ?? '',
+                codigoPostal: item.codigoPostal ?? '',
+                colonia: item.colonia ?? '',
+                municipioOAlcaldia: item.municipioOAlcaldia ?? '',
+                pais: item.pais ?? '',
+                registro: item.registro ?? ''
+            })) ?? [],
+            sectores: state.sectorDatos?.map(item => ({
+                sectorLista: item.sectorLista ?? '',
+                sectorClave: item.sectorClave ?? ''
+            })) ?? [],
+            fraccionSeleccionada: [
+                {
+                    fraccionCompuesta: state.Fraccion_arancelaria ?? '',
+                    cveSector: state.sector ?? ''
                 }
-            },
-            "tramite": {
-                "representacion_federal": "DELEGACION FEDERAL CULIACAN",
-                "entidad_federativa": "SINALOA",
-                "actividad_productiva_prosec": 1,
-                "descripcion_actividad_productiva": "AGRICULTURA"
-            },
-            "sectores_prosec_conf": "I",
-            "mensaje_activado": "Continuar",
-            "cveUnidadAdministrativa": null,
-            "costoTotal": 0,
-            "certificadoSerialNumber": "ABC123456789XYZ",
-            "numeroFolioTramiteOriginal": "9444"
-}
+            ]
+        };
     }
-        }
+}

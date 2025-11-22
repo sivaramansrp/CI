@@ -14,11 +14,13 @@ describe('ProsecService', () => {
       setModalidad: jest.fn(),
       setEstadoSeleccionar: jest.fn(),
       setRepresentacionFederalLista: jest.fn(),
+      setRepresentacionFederal: jest.fn(),
       setActividadProductiva: jest.fn(),
       setSector: jest.fn(),
       setFraccionArancelaria: jest.fn(),
       setcontribuyentes: jest.fn(),
       setFormaValida: jest.fn(),
+      setDomiciliosFormaValida: jest.fn(),
     } as unknown as jest.Mocked<AutorizacionProsecStore>;
 
     TestBed.configureTestingModule({
@@ -69,6 +71,10 @@ describe('ProsecService', () => {
         { clave: 'A1', valor: 'Item 1' },
         { clave: 'A2', valor: 'Item 2' }
       ];
+
+      // service.obtenerTablaDatos(fileName).subscribe(data => {
+      //   expect(data).toEqual(mockData);
+      // });
 
       const req = httpMock.expectOne(`../../../../../assets/json/90102/${fileName}`);
       expect(req.request.method).toBe('GET');
