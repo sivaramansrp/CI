@@ -26,12 +26,6 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Anexar requistios',
-    activo: false,
-    completado: false,
-  },
-  {
-    indice: 3,
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,
