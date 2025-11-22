@@ -71,12 +71,15 @@
     }
 
     @if(esTramiteEspecial){
-      @if((indice !== 2 && tipoRequerimiento !== tipoRequerimientoEnum.DOCUMENTOS) ||  (indice !==3 && tipoRequerimiento !== tipoRequerimientoEnum.DATOS_DOCUMENTOS)) {
-        <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
-      }
+     
+        <div *ngIf="!((indice === 2 && tipoRequerimiento === tipoRequerimientoEnum.DOCUMENTOS) ||  (indice ===3 && tipoRequerimiento === tipoRequerimientoEnum.DATOS_DOCUMENTOS))">
+          <btn-continuar
+            [datos]="datosPasos"
+            (continuarEvento)="getValorIndice($event)"
+          ></btn-continuar>
+        </div>
+        
+      
     } @else {
         @if(indice !== 2 && esAcuse === false) {
             <btn-continuar

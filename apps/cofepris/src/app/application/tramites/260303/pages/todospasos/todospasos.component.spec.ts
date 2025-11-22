@@ -17,7 +17,7 @@ describe('TodospasosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TodospasosComponent],
+      imports: [TodospasosComponent, require('@angular/common/http/testing').HttpClientTestingModule],
       providers: [
         {
           provide: CatalogosService,
@@ -89,7 +89,7 @@ describe('TodospasosComponent', () => {
 
     const accion: AccionBoton = { valor: 6, accion: 'cont' };
     component.getValorIndice(accion);
-    expect(component.indice).not.toBe(6); // sigue siendo 1
+    expect(component.indice).not.toBe(6);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 

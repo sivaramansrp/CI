@@ -91,13 +91,9 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Indica si el formulario es de solo lectura.
    */
   esFormularioSoloLectura: boolean = false;
-  
-  /**
-   * Indica si se está ejecutando una búsqueda de datos.
-   * Se establece en true cuando se inicia el proceso de búsqueda
-   * y se puede usar para mostrar indicadores de carga o deshabilitar controles.
-   */
-  buscarDatos: boolean = false;
+
+  /** Identificador único del procedimiento administrativo asociado al trámite de asignación directa. */
+  private idProcedimiento: number = 120404;
 
   /**
    * Constructor del componente.
@@ -120,8 +116,11 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.obtenerEstadoSolicitud();
     this.inicializarEstadoFormulario();
-    this.loadComboUnidadMedida();
+    if (!this.solicitanteList.length) {
+      this.loadComboUnidadMedida();
+    }
   }
 
   /**
@@ -152,7 +151,6 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de asignación.
    */
   initForm(): void {
-    this.obtenerEstadoSolicitud();
     this.asignacionForm = this.fb.group({
       asignacionRadio: [this.solicitudState?.asignacionRadio || ''],
       asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
@@ -183,6 +181,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     this.tramite120404Query.selectTramite120404$?.pipe(takeUntil(this.destroyed$))
       .subscribe((data: Tramite120404State) => {
         this.solicitudState = data;
+        this.solicitanteList = data.anosDatos;
       });
   }
   /**
@@ -233,10 +232,10 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Carga los datos del combo de unidad de medida.
    */
   loadComboUnidadMedida(): void {
-    this.service.getAsigncion().pipe(
+    this.service.getAsigncion(this.idProcedimiento.toString()).pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data) => {
-      this.solicitanteList = data ;
+      this.tramite120404Store.setAnosDatos(data.datos || []);
     });
   }
  /**
@@ -283,11 +282,11 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
           });
 
     if (FORM.valid) {
-      this.buscarDatos = true;
+      this.tramite120404Store.setBuscarSection(true);
         
     } else {
       this.asignacionForm.markAllAsTouched();
-      this.buscarDatos = false;
+      this.tramite120404Store.setBuscarSection(false);
     }
   }
 

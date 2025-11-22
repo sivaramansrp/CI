@@ -32,9 +32,12 @@
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
+   (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
   (partidaModificada)="partidaModificada($event)"
   [isInvalidaPartidas]="isInvalidaPartidas"
   (setValoresStoreEvent)="setValoresStore($event)"
+    (partidasEliminadas)="partidasEliminadas($event)"
+
 ></app-partidas-de-la-mercancia>
 
 
