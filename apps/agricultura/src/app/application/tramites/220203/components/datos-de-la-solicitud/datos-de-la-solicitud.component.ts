@@ -1,6 +1,15 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatoTabla, FilaSolicitud, SolicitudData, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import {
+  DatoTabla,
+  DestinatarioForm,
+  FilaSolicitud,
+  FormularioMovilizacion,
+  PagoDeDerechos,
+  RealizarGroup,
+  SolicitudData,
+  TercerosrelacionadosdestinoTable,
+} from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
@@ -386,8 +395,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 
       if(this.datosMercanciaFormGroup) {
         if (datos.realizarGroup.aduanaIngreso !== '' && datos.realizarGroup.aduanaIngreso !== undefined) {
-          console.log("datos.realizarGroup", datos.realizarGroup);
-
           this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, datos.realizarGroup.aduanaIngreso)
             .pipe(
               takeUntil(this.destroyNotifier$))
@@ -850,6 +857,13 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    */
   seleccionFila(event: SolicitudData): void {
     if (event && event.id_solicitud) {
+      // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+      // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
+      // this.obtenerPrellenadoTercerosRelacionados(event.id_solicitud);
+      // this.obtenerPrellenadoPagoDerechos(event.id_solicitud);
+      this.obtenerPrellenadoMovilizacionNacional('202738175');
+      this.obtenerPrellenadoTercerosRelacionados('202738175');
+      this.obtenerPrellenadoPagoDerechos('202738175');
       this.catalogosService
         .obtenSolicitudPrellenado(220203, true, '202738175' ?? '')
         .pipe(takeUntil(this.destroyNotifier$))
@@ -973,6 +987,156 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
           this.agropecuariaList = data.datos ?? [];
         });
     }
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de movilizacion nacional
+   * @param idSolicitud
+   */
+  obtenerPrellenadoMovilizacionNacional(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220203, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoMovilizacionNacional(
+        220203,
+        true,
+        '202738175' ?? ''
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: FormularioMovilizacion = {
+              medioDeTransporte: datos.datos.ide_medio_transporte,
+              puntoVerificacion: datos.datos.id_punto_verificacion,
+              nombreEmpresaTransportista: datos.datos.razon_social,
+              identificacionTransporte: datos.datos.identificacion_transporte,
+            };
+            (
+              this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (
+                value: FormularioMovilizacion
+              ) => void
+            )(GUARDAR_VALORES);
+          }
+        },
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de terceros relacionados
+   * @param idSolicitud
+   */
+  obtenerPrellenadoTercerosRelacionados(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220203, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoTercerosRelacionados(
+        220203,
+        true,
+        '202738175' ?? ''
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] =
+              [];
+            datos.datos.terceros_destinatario.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable =
+                {
+                  tipoMercancia: item.persona_moral ? 'yes' : 'no',
+                  nombre: item.nombre,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  codigoPostal: item.codigo_postal,
+                  estado: item.cve_entidad,
+                  municipio: item.cve_deleg_mun,
+                  colonia: item.cve_colonia,
+                  calle: item.calle,
+                  numeroExterior: item.num_exterior,
+                  numeroInterior: item.num_interior,
+                  lada: item.lada,
+                  telefono: item.telefonos,
+                  correo: item.correo,
+                  planta: '',
+                  domicilio: '',
+                  municipioDescripcion: '',
+                  estadoDescripcion: '',
+                  paisDescripcion: '',
+                  coloniaDescripcion: '',
+                };
+              ARRAY_TERCEROS_DESTINO.push(GUARDAR_VALORES_TERCEROS_DESTINO);
+              (
+                this.importacionDeAcuiculturaServices.updateTercerosRelacionado as (
+                  value: TercerosrelacionadosdestinoTable[]
+                ) => void
+              )(ARRAY_TERCEROS_DESTINO);
+            });
+            const ARRAY_TERCEROS_EXPORTADOR: DestinatarioForm[] = [];
+            datos.datos.terceros_exportador.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: DestinatarioForm =
+                {
+                  tipoMercancia: item.persona_moral ? 'yes' : 'no',
+                  nombre: item.nombre,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  telefono: item.telefonos,
+                  domicilio: item.descripcion_ubicacion,
+                  correo: item.correo,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  lada: item.lada,
+                };
+              ARRAY_TERCEROS_EXPORTADOR.push(
+                GUARDAR_VALORES_TERCEROS_EXPORTADOR
+              );
+              (
+                this.importacionDeAcuiculturaServices.updateDatosForma as (
+                  value: DestinatarioForm[]
+                ) => void
+              )(ARRAY_TERCEROS_EXPORTADOR);
+            });
+          }
+        },
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de pago de derechos
+   * @param idSolicitud
+   */
+  obtenerPrellenadoPagoDerechos(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoPagoDerechos(220203, true, '202738175' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: PagoDeDerechos = {
+              exentoPago: datos.datos.exento_pago,
+              justificacion: datos.datos.ide_motivo_exento_pago,
+              claveReferencia: datos.datos.cve_referencia_bancaria,
+              cadenaDependencia: datos.datos.cadena_pago_dependencia,
+              banco: datos.datos.cve_banco,
+              llavePago: datos.datos.llave_pago,
+              importePago: datos.datos.imp_pago,
+              fechaPago: datos.datos.fec_pago,
+            };
+            (
+              this.importacionDeAcuiculturaServices.actualizarPagoDeDerechos as (
+                value: PagoDeDerechos
+              ) => void
+            )(GUARDAR_VALORES);
+          }
+        },
+      });
   }
 
 }

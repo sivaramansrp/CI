@@ -131,7 +131,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    */
   ngOnInit(): void {
      this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.formularioMovilizacionStore = datos.formularioMovilizacion
+       this.formularioMovilizacionStore = datos.formularioMovilizacion
       if(this.formularioMovilizacionStore){
          this.formularioMovilizacion.patchValue(this.formularioMovilizacionStore);
       }
