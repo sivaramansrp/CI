@@ -12,7 +12,6 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  LoginQuery,
   Notificacion,
   NotificacionesComponent,
   REGEX_FECHA_MES_ANO,
@@ -32,10 +31,10 @@ import {
   REGISTRO_TEXTO,
   TEXTOS,
 } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import { ConsultaioQuery,LoginQuery } from '@ng-mf/data-access-user';
 import { Personas, Solicitar } from '../../models/personas';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OperacionService } from '../../services/operacion.service';
 import { PeriodoCatalogo } from '../../models/tramite319-state.model';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
@@ -219,11 +218,12 @@ export class OperacionesDeComercioExterioComponent
    */
   mostrarInfo: boolean = false;
 
-  /**
+ /**
    * RFC del usuario logueado.
-   * @property {string} RFCLogueado
+   * @type {string}
    */
-  RFCLogueado: string = '';
+  rfcLogueado: string = '';
+
 
   /**
    * Constructor del componente.
@@ -271,7 +271,7 @@ export class OperacionesDeComercioExterioComponent
     this.obtenerPeriodoHistoricoActual();
   }
 
-  /**
+   /**
    * Obtiene el RFC del usuario logueado.
    * @return void
    */
@@ -279,7 +279,7 @@ export class OperacionesDeComercioExterioComponent
     this.loginQuery.selectLoginState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((loginState) => {
-        this.RFCLogueado = loginState.rfc;
+        this.rfcLogueado = loginState.rfc;
       });
   }
 
@@ -302,7 +302,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getOperacionList(): void {
     this.operacionService
-      .obtenerTipoOperacion<Catalogo[]>(this.RFCLogueado)
+      .obtenerTipoOperacion<Catalogo[]>(this.rfcLogueado)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.optionsPaisList = data.datos || [];
@@ -329,7 +329,7 @@ export class OperacionesDeComercioExterioComponent
    */
   public getPersonasTablaData(): void {
     this.operacionService
-      .obtenerPersonas<Personas[]>(this.RFCLogueado)
+      .obtenerPersonas<Personas[]>(this.rfcLogueado)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.cuerpoPersonasTablaFila = data.datos || [];

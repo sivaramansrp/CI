@@ -1,19 +1,23 @@
+import { RouterModule, Routes } from '@angular/router';
+import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
-import { RouterModule, Routes } from '@angular/router';
-
-import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
-
 const ROUTES: Routes = [
-
   {
-        path: 'soliciante',
-        component: AsignciondirectaPageComponent,
-}
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '120404',
+      },
+    },
+    path: 'soliciante',
+    component: AsignciondirectaPageComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class EntidadLegalRoutingModule { }
+export class EntidadLegalRoutingModule {}

@@ -12,7 +12,7 @@ import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query'
 
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery,Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 
 /**
  * @description
@@ -23,11 +23,13 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, NotificacionesComponent],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit {
+
+  public nuevaNotificacion!: Notificacion;
 
   /**
  * Indica si el formulario está en modo solo lectura.
@@ -44,11 +46,30 @@ export class RepresentanteLegalComponent implements OnInit {
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
   obtenerValor(): void {
+    if(this.representanteLegalForm.get('rfc')?.value===''){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          'Debe ingresar el RFC.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };}
+      else{
+
     this.representanteLegalForm.patchValue({
       nombreRazonSocial: 47875,
       apellidoPaterno: 'Paterno',
       apellidoMaterno: 'Materno',
     });
+  }
+  }
+  eliminarPedimento(): void {
+    this.representanteLegalForm.reset();
   }
 
   /**

@@ -356,6 +356,8 @@ export interface CrossListLable {
  * @property {string} apellidoMaterno - Apellido materno del representante.
  */
 export interface DatosSolicitudFormState {
+       cumplimiento?:string,
+      mensaje?:string,
   rfcSanitario: string;
   denominacionRazon: string;
   correoElectronico: string;
@@ -495,4 +497,44 @@ export interface MercanciaFormEstupefacientes {
   usoEspecifico:string
   paisOrigen:string
 }
+
+export type DestinatarioFinalKey =
+  | 'tipoPersona'
+  | 'rfc'
+  | 'curp'
+  | 'nombres'
+  | 'denominacionRazon'
+  | 'primerApellido'
+  | 'segundoApellido'
+  | 'pais'
+  | 'estado'
+  | 'municipio'
+  | 'localidad'
+  | 'codigoPostal'
+  | 'colonia'
+  | 'calle'
+  | 'numeroExterior'
+  | 'numeroInterior'
+  | 'lada'
+  | 'telefono'
+  | 'correoElectronico';
+
+  export type FabricanteRequiredField =
+  | "tipoPersona"
+  | "rfc"
+  | "curp"
+  | "nombres"
+  | "primerApellido"
+  | "razonSocial"
+  | "pais"
+  | "estado"
+  | "municipio"
+  | "localidad"
+  | "codigoPostal"
+  | "colonia"
+  | "calle"
+  | "numeroExterior"
+  | "correoElectronico";
+
+
 

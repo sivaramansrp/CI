@@ -49,11 +49,11 @@
       </form> }
       @case (2) {
          @if(esDatosRespuesta){
-         <app-datos-de-la-solicitud [tabIndex]="2"></app-datos-de-la-solicitud> }} 
+         <app-datos-de-la-solicitud [tabIndex]="2" [idProcedimiento]="idProcedimiento"></app-datos-de-la-solicitud> }} 
       @case (3) {
-         @if(esDatosRespuesta){ <app-terceros-relacionados [tabIndex]="3"></app-terceros-relacionados> }}
+         @if(esDatosRespuesta){ <app-terceros-relacionados [tabIndex]="3" [idProcedimiento]="idProcedimiento"></app-terceros-relacionados> }}
      @case (4) {
-  @if(esDatosRespuesta){ <app-pago-de-derecho [tabIndex]="4"></app-pago-de-derecho> } }
+  @if(esDatosRespuesta){ <app-pago-de-derecho [tabIndex]="4" [idProcedimiento]="idProcedimiento"></app-pago-de-derecho> } }
      @case (5) { 
        @if(esDatosRespuesta){<app-tramites-asociados [tabIndex]="5"></app-tramites-asociados> } }
     }

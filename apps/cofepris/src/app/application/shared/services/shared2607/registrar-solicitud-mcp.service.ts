@@ -1,11 +1,13 @@
+import { CATALOGO_ADUANAS,CATALOGO_REGIMENES,COMUN_URL,CATALOGO_CLASIFICACION_PRODUCTO,CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO ,CATALOGO_TIPOS_PRODUCTO, CATALOGO_PAISES, CATALOGO_BANCOS,CATALOGO_SCIAN} from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { FilaData2, ListaClave } from '../../models/fila-modal';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model'
+import { CATALOGO_ESTADOS} from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MercanciaCrossList } from '../../models/mercancia.model';
 import { Observable } from 'rxjs';
 import { TramitesAsociados } from '../../models/destinatario.model';
-
 /**
  * Servicio para gestionar las solicitudes MCP.
  * Proporciona métodos para obtener datos de catálogos y otros recursos necesarios para el trámite.
@@ -14,11 +16,17 @@ import { TramitesAsociados } from '../../models/destinatario.model';
   providedIn: 'root'
 })
 export class RegistrarSolicitudMcpService {
+/**
+ * Host base para las solicitudes HTTP.
+ */
+      host!: string;
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a los recursos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.host = `${COMUN_URL.BASE_URL}`;
+  }
 
   /**
    * Obtiene los datos de los estados desde un archivo JSON.
@@ -131,4 +139,89 @@ export class RegistrarSolicitudMcpService {
   getMercanciaCrosslistData(): Observable<MercanciaCrossList[]> {
     return this.http.get<MercanciaCrossList[]>('./assets/json/260702/mercancia-crosslist.json');
   }
+
+  /**
+   * Obtiene el estado de la lista de un trámite específico.
+   * @param tramite 
+   * @returns 
+   */
+   obtenerEstadoList(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_ESTADOS(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene la lista de aduanas.
+     * @returns Observable con la lista de aduanas.
+     */
+     obtenerAduanas(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_ADUANAS(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+    /**
+     * Obtiene la lista de regímenes.
+     * @returns Observable con la lista de regímenes.
+     */
+    obtenerRegimenes(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_REGIMENES(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+    
+    /**
+     * Obtiene la lista de claves SCIAN.
+     * @returns Observable con la lista de claves SCIAN.
+     */
+    obtenerClavesScian(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_SCIAN(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene la lista de clasificaciones de productos.
+     * @returns Observable con la lista de clasificaciones de productos.
+     */
+     obtenerClasificacionProductos(procedimiento: string,tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_CLASIFICACION_PRODUCTO(procedimiento, tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene los datos de los bancos desde un archivo JSON.
+     * @
+     * returns Observable con la lista de bancos.
+     */
+    obtenerEspecificarClasificacionProducto(procedimiento: string, idClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_ESPECIFICAR_CLASIFICACION_PRODUCTO(procedimiento, idClasificacion)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+    
+    /**
+     * Obtiene los datos de los tipos de productos.
+     * @returns Observable con la lista de tipos de productos.
+     */
+    obtenerTipoProducto(procedimiento: string, tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_TIPOS_PRODUCTO(procedimiento, tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene los datos de los países.
+     * @returns Observable con la lista de países.
+     */
+    obtenerPaises(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_PAISES(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    /**
+     * Obtiene los datos de los bancos.
+     * @returns Observable con la lista de bancos.
+     */
+    obtenerBancos(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+      const ENDPOINT = `${this.host}${CATALOGO_BANCOS(tramite)}`;
+      return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    
+  
 }

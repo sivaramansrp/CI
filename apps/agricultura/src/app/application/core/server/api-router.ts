@@ -171,7 +171,7 @@ export const API_GET_CATALOGO_ESPECIES = (TRAMITE: string) : string => `sat-t${T
  * Servicio que permite consultar las entidades federativas ordenados por el nombre ascendente.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas
  */
-export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/entidades-federativas`;
+export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string, PAIS: string = 'MEX') : string => `sat-t${TRAMITE}/catalogo/pais/${PAIS}/entidades-federativas`;
 
 /**
  * Servicio que permite consultar los datos de las delegaciones o municipios por medio de la clave de la entidad federativa.
