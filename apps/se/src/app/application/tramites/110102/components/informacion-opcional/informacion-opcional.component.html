@@ -1,13 +1,15 @@
 <form [formGroup]="formularioInformacionOpcional">
-    <div class="form">
+
         <ng-titulo [titulo]="'Información opcional para UE y AELC'"></ng-titulo>
         <div class="row">
             <div class="col-md-8">
-                <p><input class="form-check-input me-2" type="checkbox" id="exportadorAutorizado" [disabled]="esFormularioSoloLectura" 
-                    formControlName="separacionContable">
+                <p><input class="form-check-input me-2" type="checkbox" id="metodoSeparacion" [disabled]="esFormularioSoloLectura" 
+                    formControlName="metodoSeparacion"  (change)="setValoresStore(formularioInformacionOpcional, 'metodoSeparacion', 'setMetodoSeparacion')">
                     ¿Desea usar la opción del método de separación contable?
                 </p>
             </div>
+        </div>
+            <div class="row" *ngIf="formularioInformacionOpcional.get('exportadorAutorizado')?.value">
             <div class="col-md-12">
                 <div class="alert alert-info d-flex align-items-start">
                     <div class="form-check text-center">
@@ -17,18 +19,22 @@
                     </div>
                 </div>
             </div>
+            </div>
             <div class="row">
                 <div class="col-md-8">
                     <p><input class="form-check-input me-2" type="checkbox" id="exportadorAutorizado" [disabled]="esFormularioSoloLectura" 
-                        formControlName="exportadorAutorizado">
+                        formControlName="exportadorAutorizado" (change)="setValoresStore(formularioInformacionOpcional, 'exportadorAutorizado', 'setExportadorAutorizado')">
                         ¿Desea usar la opción de exportador autorizado?
                     </p>
                 </div>
             </div>
+            <div class="row p-4" *ngIf="formularioInformacionOpcional.get('exportadorAutorizado')?.value">
             <div class="col-md-12">
                 <div *ngFor="let opcion of radioOpcions"  class="radio-label-wrap">
                     <input type="radio" [id]="opcion.value" [value]="opcion.value"
-                        [disabled]="esFormularioSoloLectura" formControlName="informacionRadios"/>
+                        [disabled]="esFormularioSoloLectura" formControlName="informacionRadios"
+                        (change)="setValoresStore(formularioInformacionOpcional, 'informacionRadios', 'setInformacionRadios')"
+                        />
                     <span class="etiqueta-de-radio radio-label-margin-left" [title]="opcion.label">
                         {{ opcion.label }}
                     </span>
@@ -36,6 +42,5 @@
                     </span>
                 </div>
             </div>
-        </div>
-    </div>
+            </div>
 </form>

@@ -5,7 +5,13 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RADIO_OPCIONS } from '../../constants/constante110102.enums';
+import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { takeUntil } from 'rxjs/operators';
+
+
+import { Tramite110102State, Tramite110102Store } from '../../estados/store/tramite110102.store';
+import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 
 @Component({
   selector: 'app-exportador-autorizado',
@@ -37,11 +43,32 @@ export class ExportadorAutorizadoComponent implements OnInit{
   public esFormularioSoloLectura: boolean = false;
 
   /**
+    * Estado actual del trámite.
+  */
+  estadoTramite!: Tramite110102State;
+
+  /**
+   * @description
+   * Subject que emite un evento cuando el componente es destruido, permitiendo la desuscripción de observables.
+   */
+  private destruido$ = new Subject<void>();
+
+  /**
    * @description Constructor del componente
    * @param fb 
    */
   constructor(private fb: FormBuilder,
-  ){}
+    private tramiteStore: Tramite110102Store,
+    private consultaTramite: Tramite110102Query
+    )
+  {
+    this.consultaTramite.selectTramite110102$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estado) => {
+        this.estadoTramite = estado;
+      });
+  }
+
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -56,8 +83,24 @@ export class ExportadorAutorizadoComponent implements OnInit{
    */
   public inicializarFormulario(): void {
     this.formularioExportadorAutorizado = this.fb.group({
-      informacionRadios: [],
-      exportadorAutorizado: []
+      informacionRadiosJPN: [this.estadoTramite?.informacionRadiosJPN],
+      exportadorAutorizadoJPN: [Boolean(this.estadoTramite?.exportadorAutorizadoJPN)]
     });
+  }
+
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110102Store, campoStore?: string): void {
+    const VALOR = form.get(campo)?.value;
+    if (metodoNombre === 'setValor') {
+      const CAMPO = (campoStore) as keyof Tramite110102State;
+      this.tramiteStore.setValor(CAMPO, VALOR);
+    } else {
+      (this.tramiteStore[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
   }
 }
