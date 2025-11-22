@@ -1,5 +1,4 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
-import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * @fileoverview
@@ -224,7 +223,7 @@ export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     realizarGroup: RealizarGroup;
     mercanciaGroup: FilaSolicitud[];
-  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+    tercerosRelacionados: TercerosrelacionadosdestinoTable[];
     pagoDeDerechos:PagoDeDerechos;
     selectedmercanciaGroupDatos:FilaSolicitud;
     datosForma: DestinatarioForm[];
@@ -476,4 +475,104 @@ export interface DestinatarioForm {
   lada: string;
   telefono: string;
   correo: string;
+}
+
+/**
+ * Modelo de datos para un destinatario relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosdestinoTable {
+  /**
+   * Tipo de persona (Física/Moral).
+   */
+  tipoMercancia: string;
+  /**
+   * Nombre(s) del destinatario.
+   */
+  nombre: string;
+  /**
+   * Primer apellido del destinatario.
+   */
+  primerApellido: string;
+  /**
+   * Segundo apellido del destinatario (opcional).
+   */
+  segundoApellido?: string;
+  /**
+   * Denominación o razón social del destinatario.
+   */
+  razonSocial: string;
+  /**
+   * País del destinatario.
+   */
+  pais: string;
+  /**
+   * Código postal del destinatario.
+   */
+  codigoPostal: string;
+  /**
+   * Estado del destinatario.
+   */
+  estado: string;
+  /**
+   * Municipio del destinatario (opcional).
+   */
+  municipio?: string;
+  /**
+   * Colonia del destinatario (opcional).
+   */
+  colonia?: string;
+  /**
+   * Calle del destinatario.
+   */
+  calle: string;
+  /**
+   * Número exterior del domicilio del destinatario.
+   */
+  numeroExterior: string;
+  /**
+   * Número interior del domicilio del destinatario (opcional).
+   */
+  numeroInterior?: string;
+  /**
+   * Lada telefónica del destinatario (opcional).
+   */
+  lada?: string;
+  /**
+   * Teléfono del destinatario (opcional).
+   */
+  telefono?: string;
+  /**
+   * Correo electrónico del destinatario (opcional).
+   */
+  correo?: string;
+  /**
+   * Planta del destinatario (opcional).
+   */
+  planta?: string;
+
+  /**
+   * Domicilio completo del destinatario (opcional).
+   */
+  domicilio?: string;
+
+  /**
+   * Descripción del municipio (para mostrar en tabla).
+   */
+  municipioDescripcion?: string;
+
+  /**
+   * Descripción del estado (para mostrar en tabla).
+   */
+  estadoDescripcion?: string;
+
+  /**
+   * Descripción del país (para mostrar en tabla).
+   */
+  paisDescripcion?: string;
+
+  /**
+   * Descripción de la colonia (para mostrar en tabla).
+   */
+  coloniaDescripcion?: string;
 }

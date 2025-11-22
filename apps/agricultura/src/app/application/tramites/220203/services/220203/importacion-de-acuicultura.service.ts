@@ -1,5 +1,6 @@
 import {
   Acuicultura,
+  DestinatarioForm,
   FilaSolicitud,
   FormularioMovilizacion,
   MercanciaGroup,
@@ -28,7 +29,7 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
  * @providedIn root
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImportacionDeAcuiculturaService {
   /**
@@ -58,7 +59,9 @@ export class ImportacionDeAcuiculturaService {
    * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
    * @returns {Observable<RespuestaCatalogos>} Observable con la respuesta del catálogo.
    */
-  obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
+  obtenerDetallesDelCatalogo(
+    nombreDelArchivo: string
+  ): Observable<RespuestaCatalogos> {
     const BASEURL: string = this.url + nombreDelArchivo;
     return this.http.get<RespuestaCatalogos>(BASEURL);
   }
@@ -69,11 +72,9 @@ export class ImportacionDeAcuiculturaService {
    * @returns {Observable<Acuicultura>} Observable con el estado completo.
    */
   public obtenerDatos(): Observable<Acuicultura> {
-    return this.acuiculturaStore._select(state => state);
+    return this.acuiculturaStore._select((state) => state);
   }
 
-
-  
   /**
    * Actualizar el formulario de pago en el store.
    * @method actualizarFormularioPago
@@ -84,15 +85,18 @@ export class ImportacionDeAcuiculturaService {
     this.acuiculturaStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
 
-
   /**
    * Actualizar el formulario de movilización en el store.
    * @method actualizarFormularioMovilizacion
    * @param formularioMovilizacion Datos del formulario de movilización.
    * @returns {void}
    */
-  public actualizarFormularioMovilizacion(formularioMovilizacion: FormularioMovilizacion): void {
-    this.acuiculturaStore.actualizarFormularioMovilizacion(formularioMovilizacion);
+  public actualizarFormularioMovilizacion(
+    formularioMovilizacion: FormularioMovilizacion
+  ): void {
+    this.acuiculturaStore.actualizarFormularioMovilizacion(
+      formularioMovilizacion
+    );
   }
 
   /**
@@ -120,7 +124,9 @@ export class ImportacionDeAcuiculturaService {
    * @returns {Observable<Acuicultura>} Observable con los datos de acuicultura.
    */
   public getAcuiculturaData(): Observable<Acuicultura> {
-    return this.http.get<Acuicultura>('assets/json/220203/acuicultura_forma.json');
+    return this.http.get<Acuicultura>(
+      'assets/json/220203/acuicultura_forma.json'
+    );
   }
 
   /**
@@ -130,11 +136,10 @@ export class ImportacionDeAcuiculturaService {
    * @returns {void}
    */
   public async actualizarEstadoFormulario(DATOS: Acuicultura): Promise<void> {
-   await this.acuiculturaStore.actualizarTodoElEstado(DATOS);
+    await this.acuiculturaStore.actualizarTodoElEstado(DATOS);
   }
 
-
-    /**
+  /**
    * Actualiza la lista de terceros relacionados en el store de acuicultura.
    * @method updateTercerosRelacionados
    * @param tercerosRelacionados Arreglo de objetos PersonaTerceros que representan los terceros relacionados.
@@ -143,22 +148,32 @@ export class ImportacionDeAcuiculturaService {
   public actualizarSoloRealizarGroup(realizarGroup: RealizarGroup): void {
     this.acuiculturaStore.actualizarSoloRealizarGroup(realizarGroup);
   }
-   /**
+  /**
    * Actualiza la lista de terceros relacionados con la solicitud.
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
    * @memberof CertificadoZoosanitarioServiceService
    */
-    updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
-      this.acuiculturaStore.updateTercerosRelacionados(tercerosRelacionados);
-    }
-      /**
-      * @description Obtiene todos los datos del formulario como observable.
-      * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
-      */
-      getAllDatosForma(): Observable<Acuicultura> {
-        return this.acuiculturaStore._select(state => state); // Select the entire state
-      }
+  updateTercerosRelacionado(
+    tercerosRelacionados: TercerosrelacionadosdestinoTable[]
+  ): void {
+    this.acuiculturaStore.updateTercerosRelacionados(tercerosRelacionados);
+  }
+  /**
+   * @description Obtiene todos los datos del formulario como observable.
+   * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+   */
+  getAllDatosForma(): Observable<Acuicultura> {
+    return this.acuiculturaStore._select((state) => state); // Select the entire state
+  }
 
-
+  /**
+   * Actualiza la lista de terceros relacionados exportador con la solicitud.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updateDatosForma(tercerosRelacionadosExdora: DestinatarioForm[]): void {
+    this.acuiculturaStore.updatedatosForma(tercerosRelacionadosExdora);
+  }
 }

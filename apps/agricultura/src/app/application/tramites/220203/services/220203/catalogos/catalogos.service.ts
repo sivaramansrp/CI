@@ -1,22 +1,35 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { ENVIRONMENT } from '@ng-mf/data-access-user';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { map, Observable } from 'rxjs';
-import { API_GET_CATALOGO_CONSULTA_PAISES, 
-  API_GET_CATALOGO_FRACCION_ARANCELARIA, 
+import { 
+  API_GET_CATALOGO_ADUANAS,
+  API_GET_CATALOGO_BANCOS,
+  API_GET_CATALOGO_CONSULTA_PAISES, 
   API_GET_CATALOGO_FRACCIONES_ARANCELARIAS, 
+  API_GET_CATALOGO_FRACCION_ARANCELARIA, 
+  API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
+  API_GET_CATALOGO_MEDIO_TRANSPORTE,
+  API_GET_CATALOGO_OFICINAS_INSPECCION,
+  API_GET_CATALOGO_PUNTOS_VERIFICACION,
+  API_GET_CATALOGO_PUNTO_INSPECCION,
+  API_GET_CATALOGO_REGIMENES_VIGENTES,
   API_GET_CATALOGO_RESTRICCIONES, 
   API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES, 
-  API_GET_CATALOGO_USOS_MERCANCIA,API_GET_CATALOGO_ADUANAS,API_GET_CATALOGO_REGIMENES_VIGENTES,API_GET_CATALOGO_PUNTO_INSPECCION,API_GET_CATALOGO_OFICINAS_INSPECCION,
-  API_GET_CATALOGO_PUNTOS_VERIFICACION,
-  API_GET_CATALOGO_MEDIO_TRANSPORTE,
-  API_GET_CATALOGO_BANCOS,
-  API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
-  API_GET_DATOS_SOLICITUD
-} from 'apps/agricultura/src/app/application/core/server/api-router';
-import { PrellenadoSolicitud } from '../../../models/220203/prellenado-solicitud.model';
+  API_GET_CATALOGO_USOS_MERCANCIA,
+  API_GET_DATOS_SOLICITUD,
+  API_GET_SOLICITUDES_MOVILIZACION_NACIONAL,
+  API_GET_SOLICITUDES_PAGO_DERECHOS,
+  API_GET_SOLICITUDES_TERCEROS_RELACIONADOS,
+} from '../../../../../core/server/api-router';
+import { Observable, map } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { ENVIRONMENT } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {
+  PrellenadoSolicitud,
+  PrellenadoSolicitudMovilizacionNacional,
+  PrellenadoSolicitudPagoDerechos,
+  PrellenadoSolicitudTercerosRelacionados,
+} from '../../../models/220203/prellenado-solicitud.model';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +80,7 @@ export class CatalogosService {
           })) ?? []
         }))
       );
-  };
+  }
 
   /**
      * Obtiene el catálogo de nico para un trámite y clave de fracción específicos.
@@ -89,7 +102,7 @@ export class CatalogosService {
           })) ?? []
         }))
       );
-  };
+  }
 
   /**
      * Obtiene el catálogo de unidades de medida comerciales para un trámite específico.
@@ -224,5 +237,44 @@ export class CatalogosService {
   obtenSolicitudPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitud>> {
     const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITUD(tramite.toString(), esPrellenado, idsolicitud)}`;
     return this.http.get<BaseResponse<PrellenadoSolicitud>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitud`).
+   */
+  obtenSolicitudPrellenadoMovilizacionNacional(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudMovilizacionNacional>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_MOVILIZACION_NACIONAL(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudMovilizacionNacional>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada de terceros relaciondos basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitudTercerosRelacionados`).
+   */
+  obtenSolicitudPrellenadoTercerosRelacionados(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudTercerosRelacionados>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_TERCEROS_RELACIONADOS(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudTercerosRelacionados>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene una solicitud prellenada de terceros relaciondos basada en los parámetros proporcionados.
+   *
+   * @param tramite - El identificador del trámite para el cual se obtiene la solicitud prellenada.
+   * @param esPrellenado - Un booleano que indica si la solicitud debe estar prellenada.
+   * @param idsolicitud - La clave única asociada al usuario o contexto.
+   * @returns Un observable que emite un `BaseResponse` que contiene la solicitud prellenada (`PrellenadoSolicitudPagoDerechos`).
+   */
+  obtenSolicitudPrellenadoPagoDerechos(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoSolicitudPagoDerechos>> {
+    const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_PAGO_DERECHOS(tramite.toString(), esPrellenado, idsolicitud)}`;
+    return this.http.get<BaseResponse<PrellenadoSolicitudPagoDerechos>>(ENDPOINT);
   }
 }
