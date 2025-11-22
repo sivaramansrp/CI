@@ -3,16 +3,16 @@
         <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select (change)="alCambiarEntidadFederativa($event)" [catalogo]="entidadesFederativas"
+                <app-catalogo-select (selectionChange)="onRepresentacionFederal($event)" [catalogo]="entidad"
                     [label]="'Entidad federativa'" [required]="true"
                     [isDisabled]="esSoloLectura"
                     formControlName="claveEntidadFederativa"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="opcionesRepresentacionFederal" [label]="'Representación federal'"
+                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'"
                     [required]="true" formControlName="claveUnidadAdministrativa"
                     [isDisabled]="esSoloLectura"
-                    (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'claveUnidadAdministrativa')">
+                    (selectionChange)="onRepresentacionChange($event)">
                 </app-catalogo-select>
             </div>
 
@@ -29,16 +29,18 @@
                             (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'protestoDecirVerdad')" />
                     </div>
                     <div class="text-justify">
-                        <p>El/la solicitante acepta presentar la información y documentación soporte que
-                            requiera la autoridad por medio de la VUCEM relacionada con el presente trámite,
-                            apercibido de que, en caso de no desahogar el requerimiento, se desechará el
-                            trámite. Asimismo, el solicitante declara que conoce las penas y sanciones en que se
-                            incurre al declarar falsamente ante la autoridad administrativa en ejercicio de sus
-                            funciones.</p>
+                        <p> {{ textos }}</p>
                     </div>
 
                 </div>
             </div>
         </div>
+        @if(formularioRepresentacionFederal.get('protestoDecirVerdad')?.invalid && formularioRepresentacionFederal.get('protestoDecirVerdad')?.touched) {
+    <div>
+        @if(formularioRepresentacionFederal.get('protestoDecirVerdad')?.errors?.['required']) {
+        <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+        }
+    </div>
+    }
     </div>
 </form>

@@ -7,15 +7,19 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
-import { ConsultaioQuery, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, Notificacion, PROTESTA, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosTramiteService } from '../../service/catalogo.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+import { REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
-import { Tramite110102Store } from '../../estados/store/tramite110102.store';
+
+import { Tramite110102State, Tramite110102Store } from '../../estados/store/tramite110102.store';
 
 /**
  * @description
@@ -42,22 +46,51 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   formularioRepresentacionFederal!: FormGroup;
 
   /**
-   * @description
-   * Lista de entidades federativas disponibles.
-   */
-  entidadesFederativas: Catalogo[] = [];
-
-  /**
-   * @description
-   * Lista de opciones de representación federal disponibles.
-   */
-  opcionesRepresentacionFederal: Catalogo[] = [];
+    * Estado actual del trámite.
+  */
+  estadoTramite!: Tramite110102State;
 
   /**
    * @description
    * Subject que emite un evento cuando el componente es destruido, permitiendo la desuscripción de observables.
    */
   private destruido$ = new Subject<void>();
+
+  /**
+   * Representa la entidad seleccionada del catálogo.
+   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
+   *
+   * @property {CatalogosSelect} entidad - La entidad seleccionada.
+   */
+  public entidad!: Catalogo[];
+
+  /**
+   * Representa la representación seleccionada del catálogo.
+   * Se espera que esta propiedad sea del tipo 'CatalogosSelect'.
+   *
+   * @property {CatalogosSelect} representacion - La representación seleccionada.
+  */ 
+  public representacion!: Catalogo[];
+
+  /**
+   * Notificación actual que se muestra en el componente.
+   *
+   * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+   * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+  */
+  public nuevaNotificacion!: Notificacion;
+
+ /**  
+  * Una constante que contiene textos adicionales para el componente.
+  * Se utiliza para almacenar datos adicionales relacionados con el componente.
+  */
+  public textos?: string;
+
+  /**
+   * Una constante que contiene la cadena de mensaje requerida.
+   * Este mensaje se utiliza para indicar que un campo es obligatorio.
+   */
+  public MENSAJE_REQUERIDO = REQUERIDO;
 
   /**
    * @description
@@ -70,10 +103,22 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private consultaQuery: ConsultaioQuery,
-    private servicioRepresentacionFederal: RepresentacionfederalService,
-    private estadoTramite: Tramite110102Store,
-    private consultaTramite: Tramite110102Query
-  ) {}
+    private consultaTramite: Tramite110102Query,
+    private catalogoTramiteService: CatalogosTramiteService,
+    private estadoGuardadoAkite: Tramite110102Store
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estadoSeccion) => {
+        this.esSoloLectura = estadoSeccion.readonly;
+      });
+
+      this.consultaTramite.selectTramite110102$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estado) => {
+        this.estadoTramite = estado;
+      });
+  }
 
   /**
    * @description
@@ -82,13 +127,152 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormulario();
-    this.consultaQuery.selectConsultaioState$
+    this.getEntidadFederativa();
+    this.getDeclaracionDatos();
+  }
+
+  /**
+   * @method getEntidadFederativa
+   * @description Obtiene el catálogo de la entidad federativa
+   *
+   * Recupera y establece la información de la entidad federativa.
+   * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
+   * y un catálogo de opciones disponibles.
+   *
+   * @returns {void}
+  */
+  public getEntidadFederativa(): void {
+    this.catalogoTramiteService.getCatEntidadesFederativas()
       .pipe(takeUntil(this.destruido$))
-      .subscribe((estadoSeccion) => {
-        this.esSoloLectura = estadoSeccion.readonly;
-        this.habilitarDeshabilitarFormulario();
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
+
+            // Transformación a tu respuesta a response Catalogo
+            this.entidad = DATOS.map((item, index) => ({
+              id: index + 1,
+              descripcion: item.descripcion,
+              clave: item.clave,
+            }));
+
+            const VALOR_GUARDADO = this.formularioRepresentacionFederal.get('claveEntidadFederativa')?.value;
+            if (VALOR_GUARDADO) {
+              const OPCION = this.entidad.find(
+                (c) => c.clave === VALOR_GUARDADO || c.id === VALOR_GUARDADO);
+
+              this.formularioRepresentacionFederal.patchValue({
+                claveEntidadFederativa: OPCION?.id,
+              }, { emitEvent: false }); // IMPORTANTE: evitar bucles
+              this.getRepresentacionFederal(OPCION?.clave || '');
+
+
+            }
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error catálogo de entidad federativa.',
+              mensaje: response.causa || response.mensaje || 'Error catálogo de entidad federativa',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error al obtener catálogo de entidad federativa.',
+            mensaje: err?.mensaje || 'Error al obtener catálogo de entidad federativa.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
       });
   }
+
+  /**
+   * @method getRepresentacionFederal
+   * @description Obtiene el catálogo de la representación federal.
+   * @param cveEntidad - Clave de la entidad federativa para filtrar la representación federal.
+   * 
+   * Recupera y establece la información de la entidad federativa.
+   * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
+   * y un catálogo de opciones disponibles.
+   *
+   * @returns {void}
+   */
+  public getRepresentacionFederal(cveEntidad: string): void {
+     this.estadoGuardadoAkite.establecerDatos({ ["claveEntidadFederativa"]: cveEntidad });
+    this.catalogoTramiteService.getCatRepresentacionFederal(cveEntidad)
+      .pipe(takeUntil(this.destruido$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
+
+            // Transformación a tu respuesta a response Catalogo
+            this.representacion = DATOS.map((item, index) => ({
+              id: index + 1,
+              descripcion: item.descripcion,
+              clave: item.clave,
+            }));
+            const VALOR_GUARDADO_REPRESENTACION = this.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.value;
+            const OPCION_REPRESENTACION = this.representacion.find(
+              (c) => c.clave === VALOR_GUARDADO_REPRESENTACION || c.id === VALOR_GUARDADO_REPRESENTACION
+            );
+            this.formularioRepresentacionFederal.patchValue({
+              claveUnidadAdministrativa: OPCION_REPRESENTACION?.id
+            }, { emitEvent: false }); // IMPORTANTE: evitar bucles
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error catálogo de representación federal.',
+              mensaje: response.causa || response.mensaje || 'Error catálogo de representación federal',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error al obtener catálogo de representación federal.',
+            mensaje: err?.mensaje || 'Error al obtener catálogo de representación federal.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method onRepresentacionFederal
+   * @description Maneja el evento de selección de una representación federal.
+   * @param {Catalogo} selectedOption - La opción seleccionada de representación federal.
+   * @returns {void} No retorna ningún valor.
+   */
+  onRepresentacionFederal(selectedOption: Catalogo): void {
+    this.getRepresentacionFederal(selectedOption.clave || '');
+  }
+
 
   /**
    * @description
@@ -96,66 +280,12 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.formularioRepresentacionFederal = this.formBuilder.group({
-      claveEntidadFederativa: ['', Validators.required],
-      claveUnidadAdministrativa: ['', Validators.required],
-      protestoDecirVerdad: [false],
+      claveEntidadFederativa: [this.estadoTramite.claveEntidadFederativa, Validators.required],
+      claveUnidadAdministrativa: [this.estadoTramite.claveUnidadAdministrativa, Validators.required],
+      protestoDecirVerdad: [this.estadoTramite.protestoDecirVerdad,Validators.requiredTrue],
     });
-    this.obtenerValoresDelEstado();
-    this.cargarEntidadesFederativas();
   }
 
-  /**
-   * @description
-   * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
-   */
-  habilitarDeshabilitarFormulario(): void {
-    if (this.esSoloLectura) {
-      this.formularioRepresentacionFederal.disable();
-    } else {
-      this.formularioRepresentacionFederal.enable();
-    }
-  }
-
-  /**
-   * @description
-   * Carga las entidades federativas desde el servicio.
-   */
-  cargarEntidadesFederativas(): void {
-    this.servicioRepresentacionFederal.getEntidadFederativa()
-      .pipe(takeUntil(this.destruido$))
-      .subscribe((datos) => {
-        this.entidadesFederativas = datos;
-      });
-  }
-
-  /**
-   * @description
-   * Maneja el cambio de la entidad federativa seleccionada.
-   * @param {any} valor - El valor de la entidad federativa seleccionada.
-   */
-  alCambiarEntidadFederativa(valor: Event): void {
-    const TARGET = valor.target as HTMLSelectElement;
-    const ID = TARGET.value;
-    if (ID !== '-1') {
-      this.obtenerRepresentacionFederal(ID);
-    } else {
-      this.opcionesRepresentacionFederal = [];
-    }
-    this.establecerValoresEnEstado(this.formularioRepresentacionFederal, 'claveEntidadFederativa');
-  }
-
-  /**
-   * @description
-   * Obtiene las opciones de representación federal desde el servicio.
-   * @param {string} claveEntidadFederativa - La clave de la entidad federativa seleccionada.
-   */
-  obtenerRepresentacionFederal(claveEntidadFederativa: string): void {
-    this.servicioRepresentacionFederal.getRepresentacionfederal(claveEntidadFederativa)
-      .pipe(takeUntil(this.destruido$))
-      .subscribe((datos) => {
-        this.opcionesRepresentacionFederal = datos;
-      });
-  }
 
   /**
    * @description
@@ -165,36 +295,41 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
     const VALOR = formulario.get(campo)?.value;
-    this.estadoTramite.establecerDatos({ [campo]: VALOR });
+    this.estadoGuardadoAkite.establecerDatos({ [campo]: VALOR });
   }
 
-  /**
-   * @description
-   * Obtiene los valores del estado global y los asigna al formulario.
+    /**
+   * Maneja el cambio de selección de representación federal y 
+   * actualiza el estado del store con la clave seleccionada.
+   *
+   * @method onRepresentacionChange
+   * @param {Catalogo} event - Objeto del catálogo que representa la opción seleccionada.
+   * @returns {void} No retorna ningún valor.
    */
-  obtenerValoresDelEstado(): void {
-    this.consultaTramite.selectTramite110102$
-      .pipe(
-        takeUntil(this.destruido$),
-        map((estadoSeccion) => {
-          this.formularioRepresentacionFederal.patchValue({
-            claveEntidadFederativa: estadoSeccion.claveEntidadFederativa || '',
-            claveUnidadAdministrativa: estadoSeccion.claveUnidadAdministrativa || '',
-            protestoDecirVerdad: estadoSeccion.protestoDecirVerdad || false,
-          });
-        })
-      )
-      .subscribe();
-
-    const ENTIDAD = this.formularioRepresentacionFederal.get('claveEntidadFederativa')?.value;
-    const UNIDAD_ADMINISTRATIVA = this.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.value;
-    if (ENTIDAD !== '') {
-      this.obtenerRepresentacionFederal(ENTIDAD);
-      this.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.setValue(UNIDAD_ADMINISTRATIVA);
-    } else {
-      this.opcionesRepresentacionFederal = [];
-    }
+  onRepresentacionChange(event: Catalogo): void {
+     this.estadoGuardadoAkite.establecerDatos({ ["claveUnidadAdministrativa"]: event.clave });
   }
+
+   /**
+     * @method getDeclaracionDatos
+     * @description Obtiene el catálogo de la declaración de datos.
+     * Recupera y establece la información de la declaración de datos.
+     * El objeto de declaración de datos incluye el nombre de la etiqueta y la descripción.
+     *
+     * @returns {void}
+     */
+    public getDeclaracionDatos(): void {
+      this.catalogoTramiteService.getCatDeclaracionDatos()
+        .pipe(takeUntil(this.destruido$))
+        .subscribe((response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {          
+           this.textos = response.datos?.[0]?.descripcion ?? undefined;
+          /*  this.tramite110101Store.clearDeclaraciones();
+           this.tramite110101Store.addDeclaraciones(response.datos ?? []); */
+          }else {
+          this.textos = PROTESTA.ADJUNTAR;}
+        });
+    }
 
   /**
    * @description
