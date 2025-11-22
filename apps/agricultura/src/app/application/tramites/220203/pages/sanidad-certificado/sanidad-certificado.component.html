@@ -44,6 +44,7 @@
               [btnGuardarVisible]="btnGuardarVisible"
               (continuarEvento)="getValorIndice($event)"
               [btnHabilitarContinuar]="true"
+              (btnGuardarClicked)="guardarDatosFormulario()"
             ></btn-continuar>
           } @else {
             <div class="mt-5 mb-3 d-flex justify-content-end">

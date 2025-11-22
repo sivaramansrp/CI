@@ -3,10 +3,13 @@ import {
   BtnContinuarComponent,
   ConsultaioQuery,
   ConsultaioState,
+  ConsultaioStore,
   DatosPasos,
-  ListaPasosWizard, PasoFirmaComponent,
+  ListaPasosWizard,
+  PasoFirmaComponent,
   SolicitanteQuery,
   WizardComponent,
+  formatFecha,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -21,11 +24,20 @@ import {
   PASOSACUICULTURA,
   PRIVACY_NOTICE_CONTENT,
 } from '../../constantes/220203/importacion-de-acuicultura.enum';
-import { Subject, map, takeUntil } from 'rxjs';
-import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.module';
+import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
+import {
+  AccionBoton,
+  Acuicultura,
+  DestinatarioForm,
+  FilaSolicitud,
+} from '../../models/220203/importacion-de-acuicultura.module';
+import { GuardarSolicitud } from '../../models/220203/guardar-solicitud.model';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
 
 /**
@@ -166,6 +178,12 @@ export class SanidadCertificadoComponent implements OnInit {
    * Consulta datos del solicitante dentro de akita
    */
   public solicitanteQuery: SolicitanteQuery = inject(SolicitanteQuery);
+  private consultaioStore: ConsultaioStore = inject(ConsultaioStore);
+  public importacionDeAcuiculturaService: ImportacionDeAcuiculturaService =
+    inject(ImportacionDeAcuiculturaService);
+  public registroSolicitudService: RegistroSolicitudService = inject(
+    RegistroSolicitudService
+  );
   /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
   public btnGuardar: boolean = true;
   /** Indica la visibilidad del botón Guardar. */
@@ -350,4 +368,154 @@ export class SanidadCertificadoComponent implements OnInit {
   }
 
   protected readonly datosUsuario = USUARIO_INFO;
+
+  guardarDatosFormulario(): void {
+    this.importacionDeAcuiculturaService
+      .getAllDatosForma()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        take(1),
+        map((datos) => this.crearPayload(datos)),
+        switchMap((payload) => {
+          return this.registroSolicitudService
+            .guardarParcialSolicitud(220203, payload)
+            .pipe(take(1));
+        }),
+        map((data) => {
+          this.consultaioStore.setIdSolicitud(
+            String(data?.datos?.id_solicitud)
+          );
+          this.esPasoUnoCompleto = true;
+        }),
+        catchError((err) => {
+          return 'error';
+        })
+      )
+      .subscribe();
+  }
+
+  private crearPayload(datos: Acuicultura): GuardarSolicitud {
+    return {
+      id_solicitud:
+        this.consultaState?.id_solicitud !== null &&
+        this.consultaState?.id_solicitud !== '' &&
+        !isNaN(Number(this.consultaState?.id_solicitud))
+          ? Number(this.consultaState?.id_solicitud)
+          : null,
+      datos_solicitud: {
+        cve_aduana: datos.realizarGroup.aduanaIngreso!,
+        oficina_inspeccion_sanidad_agropecuaria:
+          datos.realizarGroup.oficinaInspeccion,
+        punto_inspeccion: datos.realizarGroup.puntoInspeccion,
+        numero_autorizacion: datos.realizarGroup.numeroGuia!,
+        clave_regimen: datos.realizarGroup.regimen,
+        numero_carro_ferrocarril: '', // no se encuentra en el formulario
+        mercancia: (datos.mercanciaGroup ?? []).map((t: FilaSolicitud) => ({
+          tipo_requisito: Number(t.tipoRequisito) ?? 0,
+          requisito: t.requisito ?? '',
+          numero_certificado: t.numeroCertificadoInternacional ?? '',
+          cve_fraccion: t.fraccionArancelaria ?? '',
+          id_fraccion_gubernamental: t.idDescripcionFraccion,
+          clave_nico: t.nico ?? '',
+          descripcion_mercancia: t.descripcion ?? '',
+          cantidad_umt: Number(t.cantidadUMT) ?? 0,
+          clave_unidad_medida: t.umt ?? '',
+          cantidad_umc: Number(t.cantidadUMC) ?? 0,
+          clave_unidad_comercial: t.umc ?? '',
+          id_uso_mercancia_tipo_tramite: Number(t.uso) ?? 0,
+          id_tipo_producto_tipo_tramite: Number(t.tipoDeProducto) ?? 0,
+          numero_lote: t.numeroDeLote ?? 0,
+          clave_paises_origen: t.paisDeOrigen ?? '',
+          clave_paises_procedencia: t.paisDeProcedencia ?? '',
+          idNombreCientifico: '',
+          descripción_especie: t.especie ?? '',
+          lista_detalle_mercancia: (t.lista_detalle_mercancia ?? []).map(
+            (x) => ({
+              id_vida_silvestre: String(x.nombreCientifico),
+            })
+          ),
+        })),
+      },
+
+      transporte: {
+        ide_medio_transporte: datos.formularioMovilizacion.medioDeTransporte,
+        identificacion_transporte:
+          datos.formularioMovilizacion.identificacionTransporte,
+        ide_punto_verificacion: Number(
+          datos.formularioMovilizacion.puntoVerificacion
+        ),
+        razon_social: datos.formularioMovilizacion.nombreEmpresaTransportista,
+      },
+
+      terceros: {
+        terceros_exportador: (datos.datosForma ?? []).map(
+          (t: DestinatarioForm) => ({
+            tipo_persona_sol: 'TIPERS.EXP',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            descripcion_ubicacion: t.domicilio ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
+        // hay que ver que TercerosrelacionadosdestinoTable se quede asi o lo agreuemos al tramite
+        terceros_destinatario: (datos.tercerosRelacionados ?? []).map(
+          (t: TercerosrelacionadosdestinoTable) => ({
+            tipo_persona_sol: 'TIPERS.DES',
+            persona_moral: t.tipoMercancia?.toLowerCase() === 'no',
+            num_establ_tif: '',
+            nom_establ_tif: '',
+            nombre: t.nombre,
+            apellido_paterno: t.primerApellido,
+            apellido_materno: t.segundoApellido ?? '',
+            razon_social: t.razonSocial,
+            pais: t.pais,
+            codigo_postal: t.codigoPostal,
+            cve_entidad: t.estado,
+            cve_deleg_mun: t.municipio ?? '',
+            cve_colonia: t.colonia ?? '',
+            calle: t.calle,
+            num_exterior: t.numeroExterior,
+            num_interior: t.numeroInterior ?? '',
+            lada: t.lada ?? '',
+            telefonos: t.telefono ?? '',
+            correo: t.correo ?? '',
+          })
+        ),
+      },
+
+      pago: {
+        exento_pago: datos.pagoDeDerechos.exentoPago?.toLowerCase() === 'si',
+        ide_motivo_exento_pago: datos.pagoDeDerechos.justificacion,
+        cve_referencia_bancaria: datos.pagoDeDerechos.claveReferencia,
+        cadena_pago_dependencia: datos.pagoDeDerechos.cadenaDependencia,
+        cve_banco: datos.pagoDeDerechos.banco,
+        llave_pago: datos.pagoDeDerechos.llavePago,
+        fec_pago: formatFecha(datos.pagoDeDerechos.fechaPago) ?? '',
+        imp_pago: Number(datos.pagoDeDerechos.importePago),
+      },
+      // una vez que funcipone el login hay que revisar que toda la parte siguiente funcione
+      solicitante: {
+        rfc: this.valoresComplemento.rfc ?? '',
+        rol_capturista: 'Solicitante', // suponemos se saca de la sesion pero aun no funciona login
+        nombre:
+          this.valoresComplemento.tipoPersona?.toLowerCase() === 'm'
+            ? this.valoresComplemento.razon_social ?? ''
+            : this.valoresComplemento.nombre ?? '',
+        es_persona_moral:
+          this.valoresComplemento.tipoPersona?.toLowerCase() === 'm',
+        certificado_serial_number: 0, // no sabemos de donde se obtiene
+      },
+
+      representacion_federal: {
+        cve_entidad_federativa: 'DGO', // aun no estan los datos login
+        cve_unidad_administrativa: '1016', // aun no hay datos login
+      },
+    };
+  }
 }
