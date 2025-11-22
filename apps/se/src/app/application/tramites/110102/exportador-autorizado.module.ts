@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from "@ng-mf/data-access-user";
+import { BtnContinuarComponent, NotificacionesComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaMercanciaComponent } from "./components/datos-de-la-mercancia/datos-de-la-mercancia.component";
@@ -44,7 +44,8 @@ import { InformacionOpcionalComponent } from "./components/informacion-opcional/
     TituloComponent,
     AnexarDocumentosComponent,
     ExportadorAutorizadoComponent,
-    InformacionOpcionalComponent
+    InformacionOpcionalComponent,
+    NotificacionesComponent
 ],
 providers: [BsModalService],
 })
