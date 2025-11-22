@@ -1,3 +1,7 @@
+/**
+ * datos para el guardado total de una solicitud
+ * @interface GuardarSolicitud
+ */
 export interface GuardarSolicitud {
   id_solicitud: number | null;
   datos_solicitud: DatosSolicitud;
@@ -8,7 +12,10 @@ export interface GuardarSolicitud {
   representacion_federal: RepresentacionFederal;
 }
 
-// ================= DATOS SOLICITUD ===================
+/**
+ * datos de la pestaña datos solicitud
+ * @interface DatosSolicitud
+ */
 export interface DatosSolicitud {
   cve_aduana: string;
   oficina_inspeccion_sanidad_agropecuaria: string;
@@ -42,6 +49,7 @@ export interface Mercancia {
   clave_paises_procedencia: string;
   idNombreCientifico: string;
   lista_detalle_mercancia: DetalleMercancia[];
+  descripción_especie: string;
 }
 
 /**
