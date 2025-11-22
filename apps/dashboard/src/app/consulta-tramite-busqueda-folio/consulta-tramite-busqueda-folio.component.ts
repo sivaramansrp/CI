@@ -1,23 +1,18 @@
+import { AlertComponent, REG_X, TramiteStore } from "@libs/shared/data-access-user/src";
 import { Component, OnInit } from "@angular/core";
-import { ConsultaioStore, REG_X, TramiteQuery, TramiteStore } from "@libs/shared/data-access-user/src";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ConsultaTramiteService } from "../services/consulta-tramite.service";
+import { NgIf } from "@angular/common";
 import { Router } from "@angular/router";
-import { Subject } from "rxjs";
 
 @Component({
     selector: 'consulta-tramite-busqueda',
     standalone: true,
     styleUrl: "./consulta-tramite-busqueda-folio.component.scss",
     templateUrl: "./consulta-tramite-busqueda-folio.component.html",
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, AlertComponent, NgIf]
 })
 export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
-    /*
-     * Subject utilizado para emitir un valor y completar las suscripciones activas 
-     * cuando el componente se destruye, evitando fugas de memoria.
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
     /** 
      * Formulario de búsqueda 
     */
@@ -26,14 +21,29 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
     public procedureUrl!: string;
     /* Indica si el formulario es válido */
     public hasValidForm: boolean = false;
+    /**
+  * @property {boolean} alertVisible
+  * Maneja la visivilidad de la alerta
+  */
+    public alertVisible: boolean = false;
+    /**
+   * @property {string} classAlert
+   * Clase CSS usada para mostrar alertas de Error.
+   */
+    public classAlert = 'alert-info';
+
+    /**
+     * @property {string} alertMessage
+     * Mensaje de alerta para la notificación
+     */
+
+    public alertMessage: string = ''
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private tramiteStates: TramiteStore,
-        private solicitudtramiteQuery: TramiteQuery,
-        private consultaioStore: ConsultaioStore,
-        public consultaTramiteService: ConsultaTramiteService
+        public consultaTramiteService: ConsultaTramiteService,
     ) {
         /**
          * Constructor de la clase ConsultaTramiteComponent.
@@ -57,9 +67,16 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
     }
 
     buscarTramite(): void {
-        // if(this.FormBuscaTramite.invalid){
-        //     return;
-        // }
+        this.alertVisible = false;
+        this.alertMessage = '';
+        this.classAlert = 'alert-danger';
+
+        if (this.FormBuscaTramite.invalid) {
+            this.alertVisible = true;
+            this.alertMessage = 'Falta un campo por capturar';
+            this.classAlert = 'alert-danger';
+            return;
+        }
         const FOLIO = this.FormBuscaTramite.get('folioDelTramite')?.value.toString();
         this.consultaTramiteService.getDetallesDelTramite({
             roles_usuario: ["AdministradorDependencia", "Dictaminador"],
@@ -67,21 +84,35 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
             folio: FOLIO
         }).subscribe({
             next: (res) => {
-                debugger;
-                const { datos: ROW_OBJETO } = res;
-                const DEPARTMENTO = ROW_OBJETO.acronimo.toLocaleLowerCase()
-                this.consultaioStore.establecerConsultaio(
-                    FOLIO,
-                    "consulta-tramite",
-                    ROW_OBJETO.acronimo.toLocaleLowerCase(),
-                    ROW_OBJETO.num_folio_tramite,
-                    ROW_OBJETO.tipo_solicitud,
-                    "",
-                    true,
-                    false,
-                    true
-                );
-                this.router.navigate([`${DEPARTMENTO}/datos-generales-tramite`])
+                if (res.codigo === "BANDEJA-TRA01") {
+                    this.alertVisible = true;
+                    this.alertMessage = '<div style="text-align: center;"><p>Corrija los siguientes errores:</p><ol style="color: red;"><li>    No existe informacion con el folio proporcionado.</li></ol></div>';
+                    this.classAlert = 'alert-danger';
+                    return;
+                }
+
+                const { datos: DATA } = res;
+
+                const FOLIO = DATA.num_folio_tramite;
+                const TIPO_TRAMITE = String(DATA.id_tipo_tramite);
+                const ID_SOLICITUD = String(DATA.id_solicitud);
+                const ACRONIMO = DATA.acronimo;
+                const DIAS_HABILES = String(DATA.dias_habiles_transcurridos);
+
+                const DEPARTAMENTO = ACRONIMO.toLowerCase();
+
+                const TIPO_SOLICITUD = DATA.tipo_solicitud || '';
+                const TAREAS_ACTIVAS = DATA.tareas_activas || [];
+
+                localStorage.setItem('folioTramite', FOLIO);
+                localStorage.setItem('tipoTramite', TIPO_TRAMITE);
+                localStorage.setItem('idSolicitud', ID_SOLICITUD);
+                localStorage.setItem('acronimo', ACRONIMO);
+                localStorage.setItem('tipoSolicitud', TIPO_SOLICITUD);
+                localStorage.setItem('diaHabilesTranscurridos', DIAS_HABILES);
+                localStorage.setItem('tareasActivas', JSON.stringify(TAREAS_ACTIVAS));
+
+                this.router.navigate([`${DEPARTAMENTO}/datos-generales-tramite`]);
             }
         })
     }

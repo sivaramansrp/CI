@@ -205,6 +205,7 @@ export class SolicitudPageComponent implements OnInit {
    * Si no, se establece que hay datos de respuesta disponibles.
    */
   ngOnInit(): void {
+    debugger;
     this.tramite130118Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
