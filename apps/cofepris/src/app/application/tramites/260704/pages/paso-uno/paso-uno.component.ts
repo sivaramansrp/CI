@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { ConsultaService } from '../../service/consulta.service';
 
@@ -50,6 +50,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Índice de la pestaña actual del asistente.
    */
   indice: number = 1;
+/**
+ * Indica si el formulario es de solo lectura.
+ */
+  public idProcedimiento: number = 260704;
   /**
      * Constructor del componente.
      *

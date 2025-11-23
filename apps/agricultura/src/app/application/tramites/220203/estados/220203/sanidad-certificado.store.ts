@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, DestinatarioForm, Fila, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, DestinatarioForm, FilaSolicitud, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 /**
@@ -137,11 +137,11 @@ export class AcuiculturaStore extends Store<Acuicultura> {
      * 
      * @public
      * @method actualizarMercanciaGroup
-     * @param {Fila[]} mercanciaGroup - Arreglo de filas con información de mercancía
+     * @param {FilaSolicitud[]} mercanciaGroup - Arreglo de filas con información de mercancía
      * @memberof AcuiculturaStore
      * @returns {void}
      */
-    public actualizarMercanciaGroup(mercanciaGroup: Fila[]): void {
+    public actualizarMercanciaGroup(mercanciaGroup: FilaSolicitud[]): void {
         this.update(state => ({
             ...state,
             mercanciaGroup: mercanciaGroup,

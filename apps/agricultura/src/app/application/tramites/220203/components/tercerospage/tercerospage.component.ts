@@ -269,6 +269,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalDestinatario(data?: TercerosrelacionadosdestinoTable): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
+    }else {
+      this.certificadoZoosanitarioStore.actualizarSelectedTerceros({} as TercerosrelacionadosdestinoTable);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
@@ -287,6 +289,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalExportador(data: DestinatarioForm): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
+    }else {
+      this.certificadoZoosanitarioStore.actualizarSelectedExdora({} as DestinatarioForm);
     }
     this.modalRef.abrir(AgregardestinatariofinalComponent);
   }

@@ -1,0 +1,446 @@
+<div class="modal-body">
+        @if (permisoDefinitivoTitulo[0] === 260302 || permisoDefinitivoTitulo[0] === 260304) {
+            <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
+        } @else {
+            <ng-titulo titulo="{{titulo}}"></ng-titulo>
+        }
+    <form [formGroup]="tercerosRelacionadosForm">
+        @if(titulo !== 'Agregar otros') {
+        <h5>Datos generales</h5>
+        <div class="row mb-5">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="denominacion" class="form-label">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('denominacionSocial')?.invalid && (tercerosRelacionadosForm.get('denominacionSocial')?.touched || tercerosRelacionadosForm.get('denominacionSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" class="form-control" id="denominacion" formControlName="denominacionSocial"
+                        maxlength="254" size="19"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'denominacionSocial', 'setTercerosRelacionadosDenominacionSocial')">
+
+                    @if(tercerosRelacionadosForm.controls['denominacionSocial'].invalid &&
+                    tercerosRelacionadosForm.controls['denominacionSocial'].touched) {
+                    <div class="d-block">
+                        @if(tercerosRelacionadosForm.controls['denominacionSocial'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                        @else if(tercerosRelacionadosForm.controls['denominacionSocial'].errors?.['pattern']) {
+                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato
+                            esperado.</span>
+                        }
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+        } @else {
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="nombreDescripcion" class="form-label ">Tercero nombre descripción<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('terceroNombre')?.invalid && (tercerosRelacionadosForm.get('terceroNombre')?.touched || tercerosRelacionadosForm.get('terceroNombre')?.dirty)}">*</span>:</label>
+                    <input type="text" class="form-control" formControlName="terceroNombre" maxlength="254" size="102"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'terceroNombre', 'setTercerosRelacionadosTerceroNombre')"
+                        id="nombreDescripcion"
+                        [ngClass]="esValido(tercerosRelacionadosForm, 'terceroNombre') ? 'required' : ''">
+                    @if(tercerosRelacionadosForm.controls['terceroNombre'].errors?.['required'] &&
+                    tercerosRelacionadosForm.get('terceroNombre')?.touched) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <h5>Datos generales</h5>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label " for="tercerosNacionalidad">Terceros nacionalidad*:</label>
+                    <app-input-radio [radioOptions]="opcionesNacionalidadTerceros" id="tercerosNacionalidad"
+                        formControlName="tercerosNacionalidad" [layout]="'vertical'" [isRequired]="true"
+                        (valueChange)="eventoCambioValor($event, tercerosRelacionadosForm,'tercerosNacionalidad', 'setTercerosNacionalidad')"></app-input-radio>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label " for="tipoPersona">Tipo persona*:</label>
+                <app-input-radio [radioOptions]="opcionesTipoPersonaFiltradas" id="tipoPersona" formControlName="tipoPersona"
+                    [layout]="'vertical'" [isRequired]="true"
+                    (valueChange)="eventoCambioValor($event, tercerosRelacionadosForm,'tipoPersona', 'setTipoPersona')"></app-input-radio>
+            </div>
+        </div>
+        <div class="row mb-2">
+            @if (
+                tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' &&
+                (
+                    tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' ||
+                    tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral' ||
+                    tercerosRelacionadosForm.get('tipoPersona')?.value === 'noContribuyente'
+                )
+            ) {
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="rfc" class="form-label ">R.F.C.<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('rfc')?.invalid && (tercerosRelacionadosForm.get('rfc')?.touched || tercerosRelacionadosForm.get('rfc')?.dirty)}">*</span>:
+                        <span class="p-2" tooltip="Registro Federal de Contribuyente" placement="top">
+                            <i class="bi bi-question-circle-fill"></i>
+                        </span>
+                    </label>
+                    <input type="text" id="rfc" formControlName="rfc" maxlength="15" size="29"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')"
+                        class="form-control" [ngClass]="esValido(tercerosRelacionadosForm, 'rfc') ? 'required' : ''"
+                        [disabled]="tercerosRelacionadosForm.get('tipoPersona')?.value === 'noContribuyente' ? true : false">
+                    @if (tercerosRelacionadosForm.get('rfc')?.hasError('rfcInvalido') &&
+                    tercerosRelacionadosForm.get('rfc')?.touched) {
+                    <div class="mensaje-error">
+                        Existen datos incorrectos que no cumplen con el formato esperado.
+                    </div>
+                    }
+                    @else if(tercerosRelacionadosForm.controls['rfc'].errors?.['required'] &&
+                    tercerosRelacionadosForm.get('rfc')?.touched) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                </div>
+                @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value &&
+                tercerosRelacionadosForm.get('tipoPersona')?.value) {
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary mt-5" (click)="buscar()">Buscar</button>
+                </div>
+                }
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="curp" class="form-label ">C.U.R.P.<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('curp')?.invalid && (tercerosRelacionadosForm.get('curp')?.touched || tercerosRelacionadosForm.get('curp')?.dirty)}">*</span>:</label>
+                    <input type="text" id="curp" formControlName="curp" maxlength="18" size="29"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'curp', 'setTercerosRelacionadosCurp')"
+                        class="form-control" [disabled]="false">
+                        @if(tercerosRelacionadosForm.controls['curp'].invalid &&
+                                tercerosRelacionadosForm.controls['curp'].touched) {
+                            <div class="d-block">
+                                @if(tercerosRelacionadosForm.controls['curp'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @else if(tercerosRelacionadosForm.controls['curp'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                }
+                            </div>
+                            } 
+                </div>
+            </div>
+            }
+        </div>
+        @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value &&
+        tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral') {
+        <div class="row mt-5">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="denominacion" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" id="denominacion" formControlName="razonSocial" maxlength="254" size="75"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
+                        class="form-control">
+                                @if(tercerosRelacionadosForm.controls['razonSocial'].invalid &&
+                                    tercerosRelacionadosForm.controls['razonSocial'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                    @else if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }                        
+                </div>
+            </div>
+        </div>
+        }
+        }
+
+        @if ((
+            (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') ||
+            (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') ||
+            (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'noContribuyente')
+        )) {
+        <div class="row mt-5">
+            <h5>Datos personales</h5>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="datosPersonalesNombre" class="form-label ">Nombre(s)<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('datosPersonalesNombre')?.invalid && (tercerosRelacionadosForm.get('datosPersonalesNombre')?.touched || tercerosRelacionadosForm.get('datosPersonalesNombre')?.dirty)}">*</span>:</label>
+                    <input type="text" id="datosPersonalesNombre" formControlName="datosPersonalesNombre"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesNombre', 'setDatosPersonalesNombre')"
+                        class="form-control">
+                                @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].invalid &&
+                                    tercerosRelacionadosForm.controls['datosPersonalesNombre'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                    @else if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }                          
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="datosPersonalesPrimerApellido" class="form-label ">Primer apellido<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('datosPersonalesPrimerApellido')?.invalid && (tercerosRelacionadosForm.get('datosPersonalesPrimerApellido')?.touched || tercerosRelacionadosForm.get('datosPersonalesPrimerApellido')?.dirty)}">*</span>:</label>
+                    <input type="text" id="datosPersonalesPrimerApellido"
+                        formControlName="datosPersonalesPrimerApellido"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesPrimerApellido', 'setDatosPersonalesPrimerApellido')"
+                        class="form-control">
+                                @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].invalid &&
+                                    tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                    @else if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }                          
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="datosPersonalesSegundoApellido" class="form-label ">Segundo apellido:</label>
+                    <input type="text" id="datosPersonalesSegundoApellido"
+                        formControlName="datosPersonalesSegundoApellido"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesSegundoApellido', 'setDatosPersonalesSegundoApellido')"
+                        class="form-control">
+                                @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].invalid &&
+                                    tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }                        
+                </div>
+            </div>
+        </div>
+        }
+        <div class="mt-5">
+            <h5>Domicilio</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select id="pais" [catalogo]="paisCatalogo || []" formControlName="pais"
+                                                    label="País" [required]="true" [isDisabled]="titulo === 'Agregar otros' ? !(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) : false" name="pais"
+                                                    [markTouched]="tercerosRelacionadosForm.get('pais')?.touched??false"
+                                                    placeholder=""
+                                                    (change)="eventoCambioValor($event, tercerosRelacionadosForm,'pais', 'setTercerosRelacionadosPais')"></app-catalogo-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">
+                            {{ (titulo === 'Agregar otros' && tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') ? 'Estado:' : 'Estado*:' }}
+                        </label>
+                        <input type="text" id="estado" formControlName="estado" class="form-control" maxlength="255" size="29"
+                            
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'estado', 'setTercerosRelacionadosEstado')">
+
+                        @if(tercerosRelacionadosForm.controls['estado'].invalid &&
+                        tercerosRelacionadosForm.controls['estado'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['estado'].errors?.['pattern']) {
+                            <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato
+                                esperado.</span>
+                            }
+
+                        </div>
+                        }
+                    </div>
+
+                </div>
+                @if (titulo === 'Agregar otros') {
+                    @if (!(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica')) {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="municipio" class="form-label ">Municipio/alcaldía*:</label>
+                                <input type="text" id="municipio" formControlName="municipio"
+                                    (change)="establecerValorStore(tercerosRelacionadosForm,'municipio', 'setTercerosRelacionadosMunicipio')"
+                                    class="form-control">
+                            </div>
+                            @if(tercerosRelacionadosForm.controls['municipio'].invalid &&
+                                    tercerosRelacionadosForm.controls['municipio'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['municipio'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                    @else if(tercerosRelacionadosForm.controls['municipio'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="localidad" class="form-label ">Localidad<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('localidad')?.invalid && (tercerosRelacionadosForm.get('localidad')?.touched || tercerosRelacionadosForm.get('localidad')?.dirty)}">*</span>:</label>
+                                <input type="text" id="localidad" formControlName="localidad"
+                                    (change)="establecerValorStore(tercerosRelacionadosForm,'localidad', 'setTercerosRelacionadosLocalidad')"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="estado" class="form-label ">Colonia<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('colonia')?.invalid && (tercerosRelacionadosForm.get('colonia')?.touched || tercerosRelacionadosForm.get('colonia')?.dirty)}">*</span>:</label>
+                                <input type="text" id="estado" formControlName="colonia"
+                                    (change)="establecerValorStore(tercerosRelacionadosForm,'colonia', 'setTercerosRelacionadosColonia')"
+                                    class="form-control">
+                                @if(tercerosRelacionadosForm.controls['colonia'].invalid &&
+                                    tercerosRelacionadosForm.controls['colonia'].touched) {
+                                <div class="d-block">
+                                    @if(tercerosRelacionadosForm.controls['colonia'].errors?.['required']) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
+                                    @else if(tercerosRelacionadosForm.controls['colonia'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                    }
+                                </div>
+                             }
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="codigoPostal" class="form-label">Código postal o equivalente<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('codigoPostal')?.invalid && (tercerosRelacionadosForm.get('codigoPostal')?.touched || tercerosRelacionadosForm.get('codigoPostal')?.dirty)}">*</span>:</label>
+                        <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control"
+                            maxlength="12" size="29"
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'codigoPostal', 'setTercerosRelacionadosCodigoPostal')">
+
+                        @if(tercerosRelacionadosForm.controls['codigoPostal'].invalid &&
+                        tercerosRelacionadosForm.controls['codigoPostal'].touched) {
+                            <div class="d-block">
+                                @if(tercerosRelacionadosForm.controls['codigoPostal'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="calle" class="form-label ">Calle<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('calle')?.invalid && (tercerosRelacionadosForm.get('calle')?.touched || tercerosRelacionadosForm.get('calle')?.dirty)}">*</span>:
+                            <span class="p-2" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </span>
+                        </label>
+                        <input type="text" id="calle" formControlName="calle" maxlength="300"
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'calle', 'setTercerosRelacionadosCalle')"
+                            class="form-control">
+                        @if(tercerosRelacionadosForm.controls['calle'].invalid &&
+                        tercerosRelacionadosForm.controls['calle'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['calle'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroExterior" class="form-label ">Número exterior<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('numeroExterior')?.invalid && (tercerosRelacionadosForm.get('numeroExterior')?.touched || tercerosRelacionadosForm.get('numeroExterior')?.dirty)}">*</span>:</label>
+                        <input type="text" id="numeroExterior" formControlName="numeroExterior" maxlength="55" size="29"
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'numeroExterior', 'setTercerosRelacionadosNumeroExterior')"
+                            class="form-control">
+                        @if(tercerosRelacionadosForm.controls['numeroExterior'].invalid &&
+                            tercerosRelacionadosForm.controls['numeroExterior'].touched) {
+                            <div class="d-block">
+                                @if(tercerosRelacionadosForm.controls['numeroExterior'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroInterior" class="form-label ">Número interior:</label>
+                        <input type="text" id="numeroInterior" formControlName="numeroInterior" maxlength="55" size="29"
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'numeroInterior', 'setTercerosRelacionadosNumeroInterior')"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <label for="lada" class="form-label ">Lada:</label>
+                            <input type="text" id="lada" formControlName="lada" maxlength="5" size="4"
+                                (change)="establecerValorStore(tercerosRelacionadosForm,'lada', 'setTercerosRelacionadosLada')"
+                                class="form-control lada">
+                                @if(tercerosRelacionadosForm.controls['lada'].invalid &&
+                                    tercerosRelacionadosForm.controls['lada'].touched) {
+                                    <div class="d-block">
+                                        @if(tercerosRelacionadosForm.controls['lada'].errors?.['pattern']) {
+                                        <span class="mensaje-error">Por favor, escribe un número entero válido.</span>
+                                        }
+                                        @else if(tercerosRelacionadosForm.controls['lada'].errors?.['maxlength']) {
+                                        <span class="mensaje-error">Máximo 5 dígitos permitidos.</span>
+                                        }
+                                    </div>
+                                }
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="form-label ">Teléfono:</label>
+                            <input type="text" id="telefono" formControlName="telefono" maxlength="30" size="29"
+                                (change)="establecerValorStore(tercerosRelacionadosForm,'telefono', 'setTercerosRelacionadosTelefono')"
+                                class="form-control">
+
+                         @if(tercerosRelacionadosForm.controls['telefono'].invalid &&
+                            tercerosRelacionadosForm.controls['telefono'].touched) {
+                            <div class="d-block">
+                                @if(tercerosRelacionadosForm.controls['telefono'].errors?.['minlength']) {
+                                <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                }
+                                @else if(tercerosRelacionadosForm.controls['telefono'].errors?.['maxlength']) {
+                                <span class="mensaje-error">Máximo 30 caracteres permitidos.</span>
+                                }
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="correoElectronico" class="form-label">
+                            Correo electrónico:
+                            <span class="p-2" tooltip="ejemplo@dominio.com" placement="top">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </span>
+                        </label>
+                        <input type="email" id="correoElectronico" formControlName="correoElectronico"
+                            class="form-control" maxlength="320" size="29"
+                            (change)="establecerValorStore(tercerosRelacionadosForm,'correoElectronico', 'setTercerosRelacionadosCorreoElectronico')">
+
+                        @if(tercerosRelacionadosForm.controls['correoElectronico'].invalid &&
+                        tercerosRelacionadosForm.controls['correoElectronico'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['correoElectronico'].errors?.['email']) {
+                            <span class="mensaje-error">Por favor, escribe una dirección de correo válida</span>
+                            }
+                            @else if(tercerosRelacionadosForm.controls['correoElectronico'].errors?.['maxlength']) {
+                            <span class="mensaje-error">Máximo 254 caracteres permitidos.</span>
+                            }
+                        </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
+    <div>
+        <p class="text-muted m-0">* Campos obligatorios</p>
+    </div>
+    <div class="d-flex">
+        <button type="button" class="btn btn-danger ms-3" (click)="bsModalRef.hide()">Cancelar</button>
+        <button type="button" class="btn btn-default ms-3" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="guardar()">Guardar</button>
+    </div>
+</div>

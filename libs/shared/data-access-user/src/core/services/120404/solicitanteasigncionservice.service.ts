@@ -4,11 +4,11 @@
  * @module SolicitanteasigncionserviceService
  */
 
+import { CATALOGO_ANOS, COMUN_URL } from '../../servers/api-router';
+import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
-import { Injectable } from '@angular/core';
-
 import { HttpCoreService } from '../shared/http/http.service';
-
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 /**
@@ -21,20 +21,32 @@ import { Observable } from 'rxjs';
 export class SolicitanteasigncionserviceService {
 
   /**
+   * URL base del host para todas las consultas de catálogos.
+   *
+   * Esta propiedad almacena la URL base configurada desde las variables de entorno
+   * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+   *
+   * @type {string}
+   * @readonly
+   * @since 1.0.0
+   */
+  host: string;
+
+  /**
    * Constructor del servicio.
    * @param http Servicio HTTP para realizar peticiones.
    */
   constructor(private http: HttpCoreService) {
-    // Lógica de inicialización si es necesario
+    this.host = `${COMUN_URL.BASE_URL}`;
    }
 
   /**
    * Obtiene los datos de asignación.
    * @returns Observable con los datos de asignación.
    */
-  getAsigncion(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/120404/asignacionsolicitante.json').pipe(
-    );
+  getAsigncion(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ANOS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**

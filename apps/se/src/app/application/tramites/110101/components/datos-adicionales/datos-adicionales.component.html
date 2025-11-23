@@ -182,7 +182,7 @@
           [id]="'valorDescripcion' + desc.id"
         [formControlName]="getFormControlName(grupo.tipo)"
           [value]="desc.id"
-        (change)="setValoresStore(formulario, getFormControlName(grupo.tipo), 'setValor', getFormControlName(grupo.tipo))"
+        (change)="setValoresStoreDescripciones(formulario, getFormControlName(grupo.tipo), 'setValor', getFormControlName(grupo.tipo))"
         />
         <span class="etiqueta-de-radio radio-label-margin-left">
           {{ desc.descripcion }}

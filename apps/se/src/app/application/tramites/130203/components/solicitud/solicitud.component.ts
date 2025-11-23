@@ -838,7 +838,7 @@ this.tramite130203Store.actualizarEstado({
      * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
      */
     validarYCargarArchivo(): void {
-      ['cantidad', 'valorFacturaUSD'].forEach((controlName) => {
+      ['cantidad', 'valorFacturaUSD', 'fraccion'].forEach((controlName) => {
         const CONTROL = this.mercanciaForm.get(controlName);
         if (CONTROL) {
           CONTROL.markAsTouched();
@@ -848,7 +848,8 @@ this.tramite130203Store.actualizarEstado({
   
       if (
         this.mercanciaForm.get('cantidad')?.invalid ||
-        this.mercanciaForm.get('valorFacturaUSD')?.invalid
+        this.mercanciaForm.get('valorFacturaUSD')?.invalid ||
+        this.mercanciaForm.get('fraccion')?.invalid
       ) {
         this.mostrarErroresMercancia = true;
         this.mostrarErroresPartidas = false;
@@ -856,30 +857,6 @@ this.tramite130203Store.actualizarEstado({
       }
   
       this.mostrarErroresMercancia = false;
-  
-      [
-        'cantidadPartidasDeLaMercancia',
-        'valorPartidaUSDPartidasDeLaMercancia',
-        'descripcionPartidasDeLaMercancia',
-      ].forEach((controlName) => {
-        const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
-        if (CONTROL) {
-          CONTROL.markAsTouched();
-          CONTROL.updateValueAndValidity();
-        }
-      });
-  
-      if (
-        this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')
-          ?.invalid ||
-        this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')
-          ?.invalid ||
-        this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')
-          ?.invalid
-      ) {
-        this.mostrarErroresPartidas = true;
-        return;
-      }
   
       if (!this.mercanciaForm.get('fraccion')?.value) {
         this.nuevaNotificacion = {

@@ -504,11 +504,14 @@ public validarFormularios(): boolean | undefined{
     }
 
     const ULTIMO_TAB = this.getTotalTabs();
+     if (ULTIMO_TAB === 5) {
+      this.seleccionaTab(5);
+      return true;
+    }
     if (ULTIMO_TAB === 4) {
       const VALIDACION_TODOS_TABS = this.validacionFormularios(true);
      return VALIDACION_TODOS_TABS;
-    }
-    this.seleccionaTab(5);
+    }    
     return true;
   }
 
