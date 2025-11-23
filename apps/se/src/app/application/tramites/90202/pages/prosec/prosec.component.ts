@@ -10,9 +10,11 @@ import { ToastrService } from 'ngx-toastr';
 
 import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
+import { ProsecService } from '../../services/prosec.service';
 import { RegistroSolicitudService } from '@libs/shared/data-access-user/src';
 
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+
 
 /**
  * Interfaz para definir la estructura de los botones de acción.
@@ -32,6 +34,7 @@ interface AccionBoton {
   templateUrl: './prosec.component.html',
 })
 export class ProsecComponent implements OnInit, OnDestroy {
+    private representacionFederalReady = false;
   pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -48,7 +51,7 @@ export class ProsecComponent implements OnInit, OnDestroy {
   idSolicitud: number = 0;
   public solicitudState!: ProsecState;
   cargaEnProgreso: boolean = true;
-  tramiteId: string = '90102';
+  tramiteId: string = '90202';
   destroyNotifier$: Subject<void> = new Subject();
   TEXTOS = AVISO;
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
@@ -60,7 +63,8 @@ export class ProsecComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private registroSolicitudService: RegistroSolicitudService,
     private store: AutorizacionProsecStore,
-    public tramiteQuery: AUtorizacionProsecQuery
+    public tramiteQuery: AUtorizacionProsecQuery,
+    private prosecService: ProsecService // <-- Inject ProsecService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +75,22 @@ export class ProsecComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       ).subscribe();
+
+    // Call API for representacionesFederales and patch into store
+    // Replace with actual values as needed
+    const ID_SOLICITUD = this.solicitudState?.idSolicitud?.toString() || '';
+    const ID_PROGRAMA_AUTORIZADO = '9419';
+    const FECHA_PROSEC = Date.now().toString();
+    this.prosecService.obtenerRepresentacionFederal(ID_SOLICITUD, ID_PROGRAMA_AUTORIZADO, FECHA_PROSEC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: { representacionFederal?: string }) => {
+          if (response && response.representacionFederal) {
+            this.store.setRepresentacionFederal(response.representacionFederal);
+            this.representacionFederalReady = true;
+          }
+        }
+      });
   }
 
   getValorIndice(e: AccionBoton): void {
@@ -84,6 +104,10 @@ export class ProsecComponent implements OnInit, OnDestroy {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+      if (!this.representacionFederalReady) {
+        this.toastrService.error('Esperando datos de Representación Federal del API. Intente nuevamente en unos segundos.');
         return;
       }
       const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);

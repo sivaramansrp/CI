@@ -18,6 +18,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProsecService {
+    /**
+     * Obtiene la representación federal desde el endpoint externo.
+     * @param idSolicitud
+     * @param idProgramaAutorizado
+     * @param fechaProsec
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    obtenerRepresentacionFederal(idSolicitud: string, idProgramaAutorizado: string, fechaProsec: string): Observable<any> {
+      const URL = `https://api-v30.cloud-ultrasist.net/api/sat-t90202/solicitud/consulta/obtener-representacion-federal?idSolicitud=${idSolicitud}&idProgramaAutorizado=${idProgramaAutorizado}&fechaProsec=${fechaProsec}`;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return this.http.get<any>(URL).pipe(
+        map(response => {
+          return response;
+        })
+      );
+    }
   url: string = '../../../../../assets/json/90102/';
   url2: string = '../../../../../assets/json/90102/';
 

@@ -21,8 +21,8 @@ export class GuardarMappingAdapter {
         return {
             id_solicitud: state.idSolicitud ?? 0,
             modalidad: state.modalidad ?? '',
-            representacion_federal: state.RepresentacionFederal ?? '',
-            actividad_productiva: state.ActividadProductiva ?? '',
+            representacionesFederales: state.RepresentacionFederal ?? '',
+            actividadProductivaProsec: state.ActividadProductiva ?? '',
             sector: state.sector ?? '',
             fraccion_arancelaria: state.Fraccion_arancelaria ?? '',
             contribuyentes: state.contribuyentes ?? '',

@@ -6,11 +6,15 @@ import {
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { doDeepCopy, esValidObject } from '@ng-mf/data-access-user';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
+import { AutorizacionProsecStore } from '../../estados/autorizacion-prosec.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
 // import DomiciliosTabla from '@libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
 import { ProsecService } from '../../services/prosec.service';
+
+
 
 /**
  * Componente que representa la sección de domicilios de plantas en el formulario.
@@ -27,6 +31,86 @@ import { ProsecService } from '../../services/prosec.service';
   styleUrl: './domicilios-de-plantas.component.scss',
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
+    ngOnInit(): void {
+      this.inicializarEstadoFormulario();
+      this.loadDomiciliosTabla();
+      this.loadRepresentacionFederal();
+      this.loadActividadProductiva();
+    }
+
+    // Load table data from API
+    loadDomiciliosTabla(): void {
+      const PAYLOAD = {
+        rfc_solicitante: '',
+        enitdad_federativa: '',
+        planta_idc: ''
+      };
+      this.prosecService.obtenerEstadoTablaDatos(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            if (esValidObject(response)) {
+              const API_DATOS = doDeepCopy(response);
+              if (API_DATOS.codigo !== "00") {
+                this.domiciliosTabla = [];
+                return;
+              }
+              if (esValidObject(API_DATOS.datos) && Array.isArray(API_DATOS.datos.plantas)) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                this.domiciliosTabla = API_DATOS.datos.plantas.map((planta: any) => ({
+                  calle: planta.domicilioDto?.calle,
+                  numero: planta.domicilioDto?.numExterior,
+                  interior: planta.domicilioDto?.numInterior,
+                  postal: planta.domicilioDto?.codigoPostal,
+                  colonia: planta.domicilioDto?.coloniaEntity?.nombre,
+                  municipio: planta.domicilioDto?.delegacionMunicipio?.nombre,
+                  estado: planta.domicilioDto?.entidadFederativa?.nombre,
+                  pais: planta.domicilioDto?.pais?.nombre,
+                  registro: planta.domicilioDto?.entidadFederativa?.nombre,
+                  registroFederalDeContribuyentes: planta.empresaDto?.rfc,
+                  razonSocial: planta.empresaDto?.razonSocial,
+                  domicilioFiscalDelSolicitante: planta.empresaDto?.domicilioCompleto
+                }));
+              } else {
+                this.domiciliosTabla = [];
+              }
+            }
+          }
+        });
+    }
+
+    // Load representacionFederal from its own API
+    loadRepresentacionFederal(): void {
+      const ID_SOLICITUD = '';
+      const ID_PROGRAMA_AUTORIZADO = '9419';
+      const FECHA_PROSEC = Date.now().toString();
+      this.prosecService.obtenerRepresentacionFederal(ID_SOLICITUD, ID_PROGRAMA_AUTORIZADO, FECHA_PROSEC)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response: { representacionFederal?: string }) => {
+            if (response && response.representacionFederal) {
+              this.store.setRepresentacionFederal(response.representacionFederal);
+              this.formDomiciliosDePlantas.patchValue({
+                representacionFederal: response.representacionFederal
+              });
+            }
+          }
+        });
+    }
+
+    // Load actividadProductiva from its own API (replace with correct endpoint and patch logic)
+    loadActividadProductiva(): void {
+     // Example:
+      // this.prosecService.obtenerActividadProductiva(...).pipe(takeUntil(this.destroyNotifier$))
+      //   .subscribe({
+      //     next: (response: { actividadProductiva?: string }) => {
+      //       if (response && response.actividadProductiva) {
+      //         this.formDomiciliosDePlantas.patchValue({
+      //           actividadProductiva: response.actividadProductiva
+      //         });
+      //       }
+      //     }
+      //   });
+    }
   /**
    * Un grupo de formularios que representa los domicilios de las plantas.
    * Este formulario se utiliza para capturar y validar la información de los domicilios.
@@ -143,7 +227,9 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
-    private prosecService: ProsecService
+    private prosecService: ProsecService,
+    private tramiteQuery: AUtorizacionProsecQuery,
+    private store: AutorizacionProsecStore
   ) {
     this.establecerFormDomiciliosDePlantas();
     // Inicializa el formulario.
@@ -161,51 +247,24 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Recupera los datos de los domicilios de plantas desde el servicio y los mapea a la tabla y formulario.
    */
   recuperarDatos(): void {
-    const PAYLOAD = {
-      rfc_solicitante: '', // Provide the RFC of the applicant here
-      enitdad_federativa: '', // Provide the federative entity here
-      planta_idc: '' // Provide the plant IDC here
-    };
-
-    this.prosecService.obtenerEstadoTablaDatos(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          if (esValidObject(response)) {
-            const API_DATOS = doDeepCopy(response);
-            if (API_DATOS.codigo !== "00") {
-              this.domiciliosTabla = [];
-              return;
-            }
-            if (esValidObject(API_DATOS.datos) && Array.isArray(API_DATOS.datos.plantas)) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              this.domiciliosTabla = API_DATOS.datos.plantas.map((planta: any) => ({
-                calle: planta.domicilioDto?.calle,
-                numero: planta.domicilioDto?.numExterior,
-                interior: planta.domicilioDto?.numInterior,
-                postal: planta.domicilioDto?.codigoPostal,
-                colonia: planta.domicilioDto?.coloniaEntity?.nombre,
-                municipio: planta.domicilioDto?.delegacionMunicipio?.nombre,
-                estado: planta.domicilioDto?.entidadFederativa?.nombre,
-                pais: planta.domicilioDto?.pais?.nombre,
-                registro: planta.domicilioDto?.entidadFederativa?.nombre,
-                registroFederalDeContribuyentes: planta.empresaDto?.rfc,
-                razonSocial: planta.empresaDto?.razonSocial,
-                domicilioFiscalDelSolicitante: planta.empresaDto?.domicilioCompleto
-              }));
-              // Patch form with first item if available
-              if (this.domiciliosTabla.length > 0) {
+        // Call RepresentacionFederal API and patch value into store and UI
+        const ID_SOLICITUD = '';
+        const ID_PROGRAMA_AUTORIZADO = '9419';
+        const FECHA_PROSEC = Date.now().toString();
+        this.prosecService.obtenerRepresentacionFederal(ID_SOLICITUD, ID_PROGRAMA_AUTORIZADO, FECHA_PROSEC)
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe({
+            next: (response: { representacionFederal?: string }) => {
+              if (response && response.representacionFederal) {
+                this.store.setRepresentacionFederal(response.representacionFederal);
+                const STATE = this.tramiteQuery.getValue();
                 this.formDomiciliosDePlantas.patchValue({
-                  representacionFederal: this.domiciliosTabla[0].registro,
-                  actividadProductiva: this.domiciliosTabla[0].razonSocial
-                  // Add more fields as needed
+                  representacionFederal: STATE.RepresentacionFederal ?? ''
                 });
               }
-            } else {
-              this.domiciliosTabla = [];
             }
-          }
-        }
-      });
+          });
+    // Deprecated: use loadDomiciliosTabla, loadRepresentacionFederal, loadActividadProductiva
   }
 
    /**
@@ -222,12 +281,11 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       return this.formDomiciliosDePlantas.valid;
     }
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Llama a `inicializarEstadoFormulario` para establecer el estado del formulario.
-   */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.recuperarDatos();
+    this.loadDomiciliosTabla();
+    this.loadRepresentacionFederal();
+    this.loadActividadProductiva();
   }
 
   /**
