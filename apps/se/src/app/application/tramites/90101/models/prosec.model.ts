@@ -100,6 +100,20 @@ export interface Plantas {
  */
 export interface FilaPlantas {
   /**
+   * @property {any} domicilioDto
+   * @description
+   * Información del domicilio de la planta.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  domicilioDto: any;
+  /**
+   * @property {any} empresaDto
+   * @description
+   * Información de la empresa asociada a la planta.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  empresaDto: any;
+  /**
    * @property {string} calle
    * @description
    * Calle de la planta.
@@ -150,11 +164,17 @@ export interface FilaPlantas {
  */
 export interface FilaProductos {
   /**
-   * @property {string} contribuyentes
+   * @property {string} rfc
    * @description
-   * Registro federal de contribuyentes.
+   * Registro Federal de Contribuyentes del contribuyente.
    */
-  contribuyentes: string;
+  rfc: string;
+  /**
+   * @property {string} correoElectronico
+   * @description
+   * Correo electrónico del contribuyente.
+   */
+  correoElectronico: string;
 
   /**
    * @property {string} razonSocial
@@ -162,13 +182,6 @@ export interface FilaProductos {
    * Denominación o razón social.
    */
   razonSocial: string;
-
-  /**
-   * @property {string} Correo
-   * @description
-   * Correo electrónico del contribuyente.
-   */
-  Correo: string;
 }
 
 /**
@@ -179,23 +192,51 @@ export interface FilaProductos {
  */
 export interface FilaSectors {
   /**
-   * @property {string} sectorLista
+   * @property {string} sector
    * @description
-   * Nombre del sector listado.
+   * Nombre del sector económico.
    */
-  sectorLista: string;
-
+  sector: string;
   /**
-   * @property {string} sectorClave
+   * @property {string} cvSectorCatalogo
    * @description
-   * Clave del sector económico.
+   * Clave del sector en el catálogo correspondiente.
    */
-  sectorClave: string;
+  cvSectorCatalogo: string;
+  /**
+   * @property {number} idConfProgramaSE
+   * @description
+   * Identificador de la configuración del programa SE.
+   */
+  idConfProgramaSE: number;
 }
 
 export interface FilaProducir{
-  arancelaria: string;
-  sector: string;
+  /**
+   * @property {string} fraccionCompuesta
+   * @description
+   * Fracción arancelaria compuesta.
+   */
+  fraccionCompuesta: string;
+  /**
+   * @property {string} cveSector
+   * @description
+   * Clave del sector asociado a la fracción arancelaria.
+   */
+  cveSector: string;
+  /**
+   * @property {unknown} fraccionArancelaria
+   * @description
+   * Fracción arancelaria detallada.
+   */
+  fraccionArancelaria: {
+    /**
+     * @property {string}
+     * @description
+     * Clave de la fracción arancelaria.
+     */
+    cveFraccion: string;
+  };
 }
 
 /**
