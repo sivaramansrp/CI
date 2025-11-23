@@ -60,7 +60,10 @@ export interface FilaSectors {
   sectorLista: string;
   sectorClave: string;
 }
-
+export interface FilaProducir{
+  arancelaria: string;
+  sector: string;
+}
 /**
  * Interface representing sectors and goods.
  */
