@@ -1,5 +1,4 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
-import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * @fileoverview
@@ -212,10 +211,10 @@ export interface Consulta {
  * @memberof importacionDeAcuiculturaModule
  * @property {FormularioMovilizacion} formularioMovilizacion - Datos del formulario de movilización de mercancías
  * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación de la mercancía
- * @property {Fila[]} mercanciaGroup - Lista de filas de mercancía del trámite
+ * @property {FilaSolicitud[]} mercanciaGroup - Lista de filas de mercancía del trámite
  * @property {TercerosrelacionadosdestinoTable[]} tercerosRelacionados - Lista de terceros relacionados al trámite
  * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos
- * @property {Fila} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
+ * @property {FilaSolicitud} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
  * @property {DestinatarioForm[]} datosForma - Lista de formularios de destinatarios
  * @property {TercerosrelacionadosdestinoTable} selectedTerceros - Tercero relacionado actualmente seleccionado
  * @property {DestinatarioForm} seletedExdora - Destinatario exportador seleccionado
@@ -223,10 +222,10 @@ export interface Consulta {
 export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     realizarGroup: RealizarGroup;
-    mercanciaGroup: Fila[];
-  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+    mercanciaGroup: FilaSolicitud[];
+    tercerosRelacionados: TercerosrelacionadosdestinoTable[];
     pagoDeDerechos:PagoDeDerechos;
-    selectedmercanciaGroupDatos:Fila;
+    selectedmercanciaGroupDatos:FilaSolicitud;
     datosForma: DestinatarioForm[];
   selectedTerceros: TercerosrelacionadosdestinoTable;
   seletedExdora: DestinatarioForm;
@@ -268,7 +267,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             fechaPago: ''
         },
         mercanciaGroup: params?.mercanciaGroup || [],
-        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
+        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as FilaSolicitud,
         tercerosRelacionados: params.tercerosRelacionados || [],
         datosForma: params.datosForma || [] as DestinatarioForm[],
         selectedTerceros: params.selectedTerceros || {} as TercerosrelacionadosdestinoTable,
@@ -342,7 +341,7 @@ export interface DatoTabla {
 
 /**
  * Interfaz para los datos de las filas de mercancía en el trámite de importación de acuicultura.
- * @interface Fila
+ * @interface FilaSolicitud
  * @memberof importacionDeAcuiculturaModule
  * @property {string} noPartida - Número de partida arancelaria.
  * @property {string} tipoRequisito - Tipo de requisito sanitario aplicable.
@@ -369,7 +368,7 @@ export interface DatoTabla {
  * @property {string} [descripcionFraccionArancelaria] - Descripción detallada de la fracción arancelaria (opcional).
  * @property {string} [umt] - Unidad de medida de tarifa (opcional).
  */
-export interface Fila {
+export interface FilaSolicitud {
   noPartida: string;
   tipoRequisito: string;
   requisito: string;
@@ -394,11 +393,25 @@ export interface Fila {
   numeroOficioCasoEspecial?:string;
   descripcionFraccionArancelaria?: string;
   umt?:string;
+  id?:number;
+  descripcionTipoRequisito?:string;
+  descripcionUso?:string;
+  descripcionUMT?:string;
+  descripcionUMC?:string;
+  descripcionPaisDeOrigen?:string;
+  descripcionPaisDeProcedencia?:string;
+  certificadoInternacionalElectronico?:string;
+  tipoDeProducto?:string;
+  idDescripcionFraccion: number;
+  /**
+ * Detalle de mercancia para fitosanitario.
+ */
+  lista_detalle_mercancia?: Detalles[];
 }
 
 /**
  * Interfaz para los datos de la tabla de solicitudes.
- * @interface FilaSolicitud
+ * @interface SolicitudData
  * @memberof importacionDeAcuiculturaModule
  * @property {string} solicitud - Número de solicitud.
  * @property {string} fechaCreacion - Fecha de creación de la solicitud.
@@ -406,11 +419,13 @@ export interface Fila {
  * @property {number} cantidad - Cantidad de mercancía.
  * @property {string} proveedor - Nombre del proveedor.
  */
-export interface FilaSolicitud {
-  fechaCreacion: string;
+export interface SolicitudData {
+  fecha_creacion: string;
   mercancia: string;
   cantidad: number;
   proveedor: string;
+  id?: number;
+  id_solicitud?: string;
 }
 /**
  * Interfaz que define la estructura de datos de catálogos utilizados en el trámite de acuicultura.
@@ -460,4 +475,104 @@ export interface DestinatarioForm {
   lada: string;
   telefono: string;
   correo: string;
+}
+
+/**
+ * Modelo de datos para un destinatario relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosdestinoTable {
+  /**
+   * Tipo de persona (Física/Moral).
+   */
+  tipoMercancia: string;
+  /**
+   * Nombre(s) del destinatario.
+   */
+  nombre: string;
+  /**
+   * Primer apellido del destinatario.
+   */
+  primerApellido: string;
+  /**
+   * Segundo apellido del destinatario (opcional).
+   */
+  segundoApellido?: string;
+  /**
+   * Denominación o razón social del destinatario.
+   */
+  razonSocial: string;
+  /**
+   * País del destinatario.
+   */
+  pais: string;
+  /**
+   * Código postal del destinatario.
+   */
+  codigoPostal: string;
+  /**
+   * Estado del destinatario.
+   */
+  estado: string;
+  /**
+   * Municipio del destinatario (opcional).
+   */
+  municipio?: string;
+  /**
+   * Colonia del destinatario (opcional).
+   */
+  colonia?: string;
+  /**
+   * Calle del destinatario.
+   */
+  calle: string;
+  /**
+   * Número exterior del domicilio del destinatario.
+   */
+  numeroExterior: string;
+  /**
+   * Número interior del domicilio del destinatario (opcional).
+   */
+  numeroInterior?: string;
+  /**
+   * Lada telefónica del destinatario (opcional).
+   */
+  lada?: string;
+  /**
+   * Teléfono del destinatario (opcional).
+   */
+  telefono?: string;
+  /**
+   * Correo electrónico del destinatario (opcional).
+   */
+  correo?: string;
+  /**
+   * Planta del destinatario (opcional).
+   */
+  planta?: string;
+
+  /**
+   * Domicilio completo del destinatario (opcional).
+   */
+  domicilio?: string;
+
+  /**
+   * Descripción del municipio (para mostrar en tabla).
+   */
+  municipioDescripcion?: string;
+
+  /**
+   * Descripción del estado (para mostrar en tabla).
+   */
+  estadoDescripcion?: string;
+
+  /**
+   * Descripción del país (para mostrar en tabla).
+   */
+  paisDescripcion?: string;
+
+  /**
+   * Descripción de la colonia (para mostrar en tabla).
+   */
+  coloniaDescripcion?: string;
 }

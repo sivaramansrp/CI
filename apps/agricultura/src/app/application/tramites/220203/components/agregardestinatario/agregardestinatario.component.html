@@ -20,12 +20,12 @@
                 <div class="col-md-12">
                     <ng-titulo titulo="Datos personales" />
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="nombre">Nombre(s)*:</label>
-                            <input class="form-control" id="nombre" placeholder="" type="text" libUppercase
-                                formControlName="nombre" />
+                            <input class="form-control" id="nombre" placeholder="" type="text" libUppercase formControlName="nombre"
+                                [ngClass]=" destinatarioForm.get('nombre')?.invalid && destinatarioForm.get('nombre')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('nombre')?.hasError('required') && destinatarioForm.get('nombre')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -40,7 +40,8 @@
                         <div class="form-group">
                             <label class="form-label" for="primerApellido">Primer apellido*:</label>
                             <input class="form-control" id="primerApellido" placeholder="" type="text" libUppercase
-                                formControlName="primerApellido" />
+                                formControlName="primerApellido" [ngClass]=" destinatarioForm.get('primerApellido')?.invalid &&
+                                                        destinatarioForm.get('primerApellido')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('primerApellido')?.hasError('required') && destinatarioForm.get('primerApellido')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -63,12 +64,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
+                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'no'">
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
                             <input class="form-control" id="razonSocial" placeholder="" type="text" libUppercase
-                                formControlName="razonSocial" />
+                                formControlName="razonSocial" [ngClass]=" destinatarioForm.get('razonSocial')?.invalid &&
+                                                        destinatarioForm.get('razonSocial')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('razonSocial')?.hasError('required') && destinatarioForm.get('razonSocial')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -82,14 +84,15 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true" name="pais"
-                            [isDisabled]="true" formControlName="pais"></app-catalogo-select>
+                        <app-catalogo-select [catalogo]="paisCatalog" [label]="'País'" [required]="true" name="pais"
+                            [isDisabled]="true" formControlName="pais" [markTouched]="destinatarioForm.get('pais')?.touched ?? false" ></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="codigoPostal">Código postal*: </label>
                             <input class="form-control" id="codigoPostal" placeholder="" type="text" libUppercase
-                                formControlName="codigoPostal" />
+                                formControlName="codigoPostal" [ngClass]=" destinatarioForm.get('codigoPostal')?.invalid &&
+                                                        destinatarioForm.get('codigoPostal')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('codigoPostal')?.hasError('required') && destinatarioForm.get('codigoPostal')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -106,8 +109,8 @@
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="estadoCatalog" [label]="'Estado'" [required]="true"
-                            name="estado" [isDisabled]="esFormularioSoloLectura"
-                            formControlName="estado"></app-catalogo-select>
+                            name="estado" [isDisabled]="esFormularioSoloLectura" (selectionChange)="obtenerMunicipios($event)"
+                            formControlName="estado" [markTouched]="destinatarioForm.get('estado')?.touched ?? false"></app-catalogo-select>
 
                     </div>
                 </div>
@@ -115,7 +118,7 @@
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="municipioCatalog" [label]="'Municipio o Alcaldía'"
                             [required]="false" name="municipio" [isDisabled]="esFormularioSoloLectura"
-                            formControlName="municipio"></app-catalogo-select>
+                            formControlName="municipio" (selectionChange)="obtenerColonia($event)"></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="coloniaCatalog" [label]="'Colonia'" [required]="false"
@@ -126,7 +129,8 @@
                         <div class="form-group">
                             <label class="form-label" for="calle">Calle*: </label>
                             <input class="form-control" id="calle" placeholder="" type="text" libUppercase
-                                formControlName="calle" />
+                                formControlName="calle" [ngClass]=" destinatarioForm.get('calle')?.invalid &&
+                                                        destinatarioForm.get('calle')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('calle')?.hasError('required') && destinatarioForm.get('calle')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -143,7 +147,8 @@
                         <div class="form-group">
                             <label class="form-label" for="numeroExterior">Número exterior*: </label>
                             <input class="form-control" id="numeroExterior" placeholder="" type="text" libUppercase
-                                formControlName="numeroExterior" />
+                                formControlName="numeroExterior" [ngClass]=" destinatarioForm.get('numeroExterior')?.invalid &&
+                                                        destinatarioForm.get('numeroExterior')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('numeroExterior')?.hasError('required') && destinatarioForm.get('numeroExterior')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -216,7 +221,6 @@
                             Cancelar
                         </button>
                         <button type="button" class="btn btn-danger"
-                            [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
                             (click)="onGuardarDestinatario()">
                             Guardar
                         </button>

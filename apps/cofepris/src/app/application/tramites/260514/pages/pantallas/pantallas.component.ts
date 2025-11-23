@@ -1,11 +1,13 @@
 import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
-import { DatosPasos,ERROR_FORMA_ALERT, ListaPasosWizard, PASOS, WizardComponent, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
+import { DatosPasos,ERROR_FORMA_ALERT, ListaPasosWizard, Notificacion, PASOS, WizardComponent, WizardService, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, map, switchMap, take } from 'rxjs';
 import { Solicitud260514State, Tramite260514Store } from '../../../../estados/tramites/260514/tramite260514.store';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { DatosComponent} from '../datos/datos.component';
 import { DatosDomicilioService } from '../../services/permiso-importacion.service';
+import { MENSAJE_DE_VALIDACION } from '../../constantes/datos.enum';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { Shared260514Service } from '../../services/260514-payload.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite260514Query } from '../../../../estados/queries/260514/tramite260514.query';
@@ -27,6 +29,12 @@ import { Tramite260514Query } from '../../../../estados/queries/260514/tramite26
   styleUrl: './pantallas.component.scss',
 })
 export class PantallasComponent implements OnInit {
+
+   isSaltar: boolean = false;
+    MENSAJE_DE_ERROR: string = MENSAJE_DE_VALIDACION;
+    public confirmarSinPagoDeDerechos: number = 0;
+    public requiresPaymentData: boolean = false;
+   
 
   /**
    * @property pantallasPasos
@@ -58,6 +66,12 @@ export class PantallasComponent implements OnInit {
 
   public formErrorAlert = ERROR_FORMA_ALERT;
  
+   /**
+* Controla la visibilidad del modal de alerta.
+* @property {boolean} mostrarAlerta
+*/
+  public mostrarAlerta: boolean = false;
+
   /**
    * @property wizardComponent
    * @type {WizardComponent}
@@ -66,6 +80,8 @@ export class PantallasComponent implements OnInit {
    */
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
+    @ViewChild(PagoDeDerechosContenedoraComponent) pagoDerechosRef!: PagoDeDerechosContenedoraComponent;
+  
  
    /**
      * @property wizardService
@@ -112,6 +128,10 @@ export class PantallasComponent implements OnInit {
    * Indica si la carga de archivos está en progreso.
    */
   cargaEnProgreso: boolean = true;
+
+  /** Nueva notificación relacionada con el RFC. */
+    public seleccionarFilaNotificacion!: Notificacion;
+  
 
   /**
      * Constructor que inyecta los servicios necesarios para el componente.
@@ -184,16 +204,48 @@ export class PantallasComponent implements OnInit {
           e.accion === 'cont' ? e.valor + 1 :
           e.accion === 'ant' ? e.valor - 1 :
           e.valor;
-  
-      // if (this.indice === 1 && e.accion === 'cont') {
-      //   const ES_VALIDO = this.validarFormulariosPasoActual();
-      //   if (!ES_VALIDO) {
-      //     this.isPeligro = true;
-      //     return;
-      //   }
-      //   this.isPeligro = false;
-      // }
-      if (e.valor > 0 && e.valor < this.pasos.length) {
+
+      
+          if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.pasoUnoComponent.validOnButtonClick();
+
+       if (!this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+      } else {
+        this.confirmarSinPagoDeDerechos = 3;
+      }
+
+      if (!this.requiresPaymentData) {
+        if (!this.pagoDerechosRef?.validarFormulariosBanco()) {
+          this.mostrarAlerta = true;
+          this.seleccionarFilaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'Debe capturar los datos de pago de derechos para continuar.',
+            cerrar: true,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'SI',
+            txtBtnCancelar: 'NO',
+            alineacionBtonoCerrar: 'flex-row-reverse'
+          }
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        } else if (this.pagoDerechosRef.validarFormulariosBanco() && this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton()) {
+          this.confirmarSinPagoDeDerechos = 3;
+        }
+      }
+
+      if (!ISVALID) {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+
+        return; // Detener ejecución si los formularios son inválidos
+      }
+      this.esFormaValido = false;
+    }
+        if (e.valor > 0 && e.valor < this.pasos.length) {
         if (e.accion === 'cont') {
           this.shouldNavigate$()
           .subscribe((shouldNavigate) => {
@@ -235,6 +287,8 @@ export class PantallasComponent implements OnInit {
             if (OK) {
               this.toastrService.success(response.mensaje);
             } else {
+                const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+          this.formErrorAlert = PantallasComponent.generarAlertaDeError(ERROR_MESSAGE);
               this.toastrService.error(response.mensaje);
             }
             return OK;
@@ -313,4 +367,60 @@ export class PantallasComponent implements OnInit {
     onCargaEnProgreso(carga: boolean): void {
       this.cargaEnProgreso = carga;
     }
+
+      cerrarModal(value: boolean): void {
+  //  this.mostrarAlerta = false;
+    this.mostrarAlerta = false;
+    if (value) {
+      this.requiresPaymentData = true;
+      if (!this.pasoUnoComponent.datosDeLaComponent?.validarClickDeBoton() && this.requiresPaymentData) {
+        this.confirmarSinPagoDeDerechos = 2;
+        this.indice = 2;
+        this.datosPasos.indice = 2;
+        if (this.wizardComponent) {
+          this.wizardComponent.siguiente();
+        }
+      } else {
+        this.confirmarSinPagoDeDerechos = 3;
+        this.indice = 3;
+        this.datosPasos.indice = 3;
+        if (this.wizardComponent) {
+          this.wizardComponent.indiceActual = 3;
+        }
+      }
+    } else {
+      const IS_DATOS_VALID = this.pasoUnoComponent?.datosDeLaComponent?.validarClickDeBoton?.() ?? false;
+      const IS_PAGO_VALID = this.pagoDerechosRef?.validarFormulariosBanco() ?? false;
+      if (IS_DATOS_VALID && IS_PAGO_VALID) {
+        this.confirmarSinPagoDeDerechos = 4;
+        this.indice = 2;
+        this.datosPasos.indice = 2;
+        if (this.wizardComponent) {
+          this.wizardComponent.siguiente();
+        }
+      } else {
+        this.formErrorAlert = this.MENSAJE_DE_ERROR;
+        this.esFormaValido = true;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      }
+    }
+  }
+
+   static generarAlertaDeError(mensajes: string): string {
+    const ALERTA = `
+      <div class="row">
+        <div class="col-md-12 justify-content-center text-center">
+          <div class="row">
+            <div class="col-md-12">
+              <p>Corrija los siguientes errores:</p>
+              <ol>
+                <li>${mensajes}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    return ALERTA;
+  }
 }

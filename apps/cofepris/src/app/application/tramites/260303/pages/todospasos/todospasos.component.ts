@@ -1,6 +1,13 @@
 import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { PANTA_PASOS, PASO_DOS, PASO_TRES, PASO_UNO } from '../../services/certificados-licencias-permisos.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
+import { PasoCuatroComponent } from '../paso-cuatro/paso-cuatro.component';
+
 import { Subject, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
@@ -15,6 +22,16 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
  */
 @Component({
   selector: 'app-todospasos',
+  standalone: true,
+  imports: [
+    CommonModule, 
+    AlertComponent,
+    AnexarDocumentosComponent,
+    BtnContinuarComponent,
+    PasoUnoComponent, 
+    PasoCuatroComponent,
+    WizardComponent
+  ],
   templateUrl: './todospasos.component.html',
 })
 export class TodospasosComponent implements OnDestroy {

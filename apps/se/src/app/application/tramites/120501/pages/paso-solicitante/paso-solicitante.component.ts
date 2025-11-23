@@ -1,12 +1,8 @@
-/**
- *  PasoSolicitanteComponent
- *  Componente para manejar el paso del solicitante en el proceso de transferencia de cupos.
- */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
+import { LicitacionesVigentesComponent } from '../../component/licitaciones-vigentes/licitaciones-vigentes.component';
 import { Subject } from 'rxjs';
 /**
  * 
@@ -48,6 +44,7 @@ public consultaState!: ConsultaioState;
  */
 update = true;
 
+@ViewChild(LicitacionesVigentesComponent,{ static: false }) LicitacionesVigentesComponent!: LicitacionesVigentesComponent;
 /**
  * Constructor del componente.
  * Inyecta los servicios necesarios para la gestión de licitaciones y la consulta del estado.
