@@ -1,8 +1,7 @@
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
-
 import { Destinatario } from '../../../models/destinatario.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Interfaz que define el estado de la solicitud 260702.
@@ -168,6 +167,16 @@ export interface Solicitud260702State {
 
   /** Datos de la tabla de destinatarios */
     tableData2: Destinatario[];
+
+      /**
+       * El valor de nicoTabla.
+       */
+      nicoTabla: FilaData[],
+    
+      /**
+       * El valor de mercanciaTabla.
+       */
+      mercanciaTabla: FilaData2[],
 /**
  * Método para actualizar la descripción del SCIAN en el estado.
  */
@@ -352,6 +361,16 @@ export function createInitialSolicitudState(): Solicitud260702State {
      */
     descripcionDelScian: '',
     
+      /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
+    
     formValidity: {},
     continuarTriggered:false
   };
@@ -378,6 +397,21 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
       tipoOperacion,
     }));
   }
+
+     /** Actualiza el estado con la nueva tabla de información Nico. */
+      setNicoTabla(nicoTabla: FilaData[]): void {
+        this.update((state) => ({
+              ...state,
+              nicoTabla,
+          }));
+      }
+  
+      setMercanciasTabla(mercanciaTabla: FilaData2[]): void {
+        this.update((state) => ({
+              ...state,
+              mercanciaTabla,
+          }));
+      }
 
   /**
    * Método para actualizar la clave de referencia en el estado.

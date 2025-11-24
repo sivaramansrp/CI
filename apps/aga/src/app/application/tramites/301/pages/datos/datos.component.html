@@ -30,23 +30,28 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante #Solicitante></solicitante>
-      } @case (2) {
-        @if(esDatosRespuesta) {
-          <app-registro-para-la (emitirElValorSeleccionado)="actualizarPagina($event)"></app-registro-para-la>
-          @if (seccionSeleccionada==='1') {
-            <app-de-la-muestra></app-de-la-muestra>
-            <app-informacion-de-la></app-informacion-de-la>
-          } @else if (seccionSeleccionada==='2') {
-            <app-informacion-de-la></app-informacion-de-la>
-          }
-        }
-      } @case (3) {
-       @if(esDatosRespuesta){
-      <app-pago-de-derechos></app-pago-de-derechos>
-         }
-      } }
+      <div [hidden]="indice !== 1">
+        <solicitante #Solicitante></solicitante>
+      </div>
+      
+      <div [hidden]="indice !== 2">
+        <app-registro-para-la (emitirElValorSeleccionado)="actualizarPagina($event)" #registroParaLa
+          [hidden]="!esDatosRespuesta">
+        </app-registro-para-la>
+      
+        <div [hidden]="!(esDatosRespuesta && seccionSeleccionada === '1')">
+          <app-de-la-muestra #delamuestra></app-de-la-muestra>
+        </div>
+      
+        <div [hidden]="!(esDatosRespuesta && seccionSeleccionada === '1' || seccionSeleccionada === '2')">
+          <app-informacion-de-la #informaciondela></app-informacion-de-la>
+        </div>
+      </div>
+      
+      <div [hidden]="indice !== 3">
+        <app-pago-de-derechos #pagodederechos [hidden]="!esDatosRespuesta">
+        </app-pago-de-derechos>
+      </div>
     </ng-container>
   </div>
 </div>

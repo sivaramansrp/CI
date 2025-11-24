@@ -5,11 +5,10 @@
           <h3>Solicitud importación material de investigación científica</h3>
         </div>
       <div class="col-12">
-        @if (!esFormaValido) {
-        <div
-          class="alert alert-info alert-danger"
-          [innerHTML]="formErrorAlert"
-        ></div>
+        @if(esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
         }
       </div>
         <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
@@ -20,9 +19,14 @@
                 @case(1){
                 <app-paso-uno></app-paso-uno>
                 }@case(2){
-                  <app-paso-dos></app-paso-dos>
+                  <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'130112'"
+                    [cargaArchivosEvento]="cargarArchivosEvento"
+                    (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+                    (reenviarCargaRealizada)="cargaRealizada($event)"
+                    (cargaEnProgreso)="onCargaEnProgreso($event)">
+                  </app-paso-carga-documento>
                 }@case(3){
-                  <app-paso-tres></app-paso-tres>
+                  <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="130112" [procedureUrl]="'importacion/material-de-investigacion-cientifica'"></paso-firma>
                 }
         }
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>

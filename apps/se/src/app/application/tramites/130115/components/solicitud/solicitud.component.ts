@@ -110,7 +110,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCatálogo con valores de fracción arancelaria.
    */
 
-  fraccionCatalogo: Catalogo[] = fractionValues;
+  fraccionCatalogo: Catalogo[] = [];
 
   /**
    * jest.spyOnCatálogo con opciones de unidad de medida.
@@ -138,6 +138,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
   catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
+  /**
+   * Arreglo que contiene el catálogo de clasificaciones de régimen.
+   * Cada elemento es de tipo `Catalogo`.
+   * Utilizado para mostrar las opciones disponibles de clasificación de régimen en la solicitud.
+   */
+  catalogoClasificacionRegimen: Catalogo[] = [];
+
+  /**
+   * Arreglo que contiene los diferentes regímenes disponibles en el catálogo.
+   * Cada elemento es de tipo `Catalogo`.
+   */
+  catalogoRegimenes: Catalogo[] = [];
+
+  /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
+  isInvalidaPartidas: boolean = false;
+
   /**
    * jest.spyOnOpciones de solicitud configurables.
    */
@@ -219,12 +238,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       
   
   
-    /**
-     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
-     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
-     */
-    @ViewChild(PartidasDeLaMercanciaComponent)
-    partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  
+  /**
+   * Identificador del pedimento asociado al trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único del pedimento utilizado en el proceso de solicitud.
+   * 
+   * @example
+   * // Acceso al identificador del pedimento
+   * console.log(this.idPedimento); // "130115"
+   */
+  idPedimento: string = "130115";
   
 
   /**
@@ -252,18 +282,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
     ngOnInit(): void {
     this.tramite130115Store.actualizarEstado({
-    solicitud: 'Inicial',
-    producto: 'Nuevo',
-    defaultSelect: 'Inicial',
-    defaultProducto: 'Nuevo'
+      solicitud: 'TISOL.I',
+      producto: 'CONDMER.N',
+      defaultSelect: 'TISOL.I',
+      defaultProducto: 'CONDMER.N'
   });
 
     this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-
+    this.getRegimenes();
+    this.getFraccionCatalogo();
+    this.enCambioDeBloque(105);
     this.tramite130115Query.select(state => state.tableBodyData)
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -280,6 +311,44 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormularios();
     }
+  }
+
+  /**
+   * Obtiene los catálogos de regímenes y clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
+  getRegimenes(): void {
+    this.importacionVehiculosNuevosService.getRegimenes('130115').subscribe((data) => {
+      this.catalogoRegimenes = data;
+      this.getClasificacionRegimen();
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
+  getClasificacionRegimen(): void {
+    this.importacionVehiculosNuevosService.getRegimenClasificacion('130115', "01").subscribe((data) => {
+      this.catalogoClasificacionRegimen = data;
+
+      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
+      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+    });
+  }
+
+  /**
+ * Obtiene el catálogo de fracciones arancelarias desde el servicio y lo asigna a la propiedad `fraccionCatalogo`.
+ *
+ * @returns {void}
+ */
+  getFraccionCatalogo(): void {
+    this.importacionVehiculosNuevosService.getFraccionCatalogoService(this.idPedimento).subscribe((data) => {
+      this.fraccionCatalogo = data?.map(item => ({
+        ...item,
+        descripcion: `${item.clave} - ${item.descripcion}`
+      }));
+    });
   }
 
   /**
@@ -305,6 +374,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
 
+/**
+ * Inicializa y configura los formularios reactivos utilizados en el componente de solicitud.
+ * 
+ * Este método crea y asigna los formularios principales del trámite, mercancia, partidas de la mercancia,
+ * modificación de partidas, país y representación, estableciendo sus controles, valores iniciales y validadores.
+ * Los valores iniciales se obtienen del estado actual de la sección (`seccionState`).
+ * 
+ * Además, suscribe el componente al estado de la solicitud y calcula los totales de cantidad y valor en USD.
+ * 
+ * @remarks
+ * - Cada formulario contiene validaciones específicas según los requisitos del trámite.
+ * - Algunos validadores personalizados son utilizados para reglas de negocio particulares.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
  inicializarFormularios(): void {  
     this.suscribirseAEstadoDeSolicitud(); 
       this.formDelTramite = this.fb.group({
@@ -438,7 +522,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.opcionesSolicitud = data.options;
           this.tramite130115Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
+            defaultSelect: data.defaultSelect || 'TISOL.I',
           });
         },
         error: (error) =>
@@ -452,8 +536,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.productoOpciones = data.options;
           this.tramite130115Store.actualizarEstado({
-            producto: data.options[0]?.value || 'Nuevo',
-            defaultProducto: data.options[0]?.value || 'Nuevo',
+            producto: data.options[0]?.value || 'CONDMER.N',
+            defaultProducto: data.options[0]?.value || 'CONDMER.N',
           });
         },
       });
@@ -511,6 +595,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
     this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
+
+  /**
+   * Maneja el evento de cambio en las fechas seleccionadas.
+   *
+   * Actualiza el estado del store `tramite130115Store` con las nuevas fechas seleccionadas.
+   *
+   * @param evento - Un arreglo de cadenas que representa las fechas seleccionadas.
+   */
+  onFechasSeleccionadasChange(evento: string[]): void {
+    this.tramite130115Store.actualizarEstado({ fechasSeleccionadas: evento });
+   }
+
   /**
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
@@ -641,33 +737,24 @@ this.tramite130115Store.actualizarEstado({
    */
   fetchEntidadFederativa(): void {
     this.importacionVehiculosNuevosService
-      .getEntidadFederativa()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.entidadFederativa = data;
-      });
+    .getEntidadesFederativasCatalogo(this.idPedimento)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.entidadFederativa = data;
+    });
   }
-  /**
-   * Método para obtener la lista de representaciones federales.
-   */
-  fetchRepresentacionFederal(): void {
-    this.importacionVehiculosNuevosService
-      .getRepresentacionFederal()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.representacionFederal = data;
-      });
-  }
+  
+
   /**
    * Método para obtener la lista de países disponibles.
    */
   listaDePaisesDisponibles(): void {
     this.importacionVehiculosNuevosService
-      .getListaDePaisesDisponibles()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.elementosDeBloque = data;
-      });
+    .getBloqueService(this.idPedimento)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.elementosDeBloque = data;
+    });
   }
   /**
    * Método para obtener la lista de países por bloque.
@@ -675,14 +762,14 @@ this.tramite130115Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionVehiculosNuevosService
-      .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
-      });
+    .getPaisesPorBloqueService(this.idPedimento, String(_bloqueId))
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.paisesPorBloque = data;
+      this.selectRangoDias = this.paisesPorBloque.map(
+        (pais: Catalogo) => pais.descripcion
+      );
+    });
   }
   /**
    * Maneja el cambio de bloque seleccionado.
@@ -716,6 +803,40 @@ this.tramite130115Store.actualizarEstado({
        this.mercanciaForm.get('unidadMedida')?.setValue('1'); 
        this.tramite130115Store.actualizarEstado({ 'unidadMedida': '1' });
     }
+
+    if ($event.campo === 'fraccion') {
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUnidadesMedidaTarifaria("06011008");
+    }
+
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.getRepresentacionFederalCatalogo(VALOR);
+    }
+  }
+
+  /**
+   *  Obtiene las unidades de medida tarifaria basadas en la fracción arancelaria seleccionada.
+   * @param FRACCION_ID 
+   */
+  getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
+    this.importacionVehiculosNuevosService.getUMTService(this.idPedimento, FRACCION_ID).subscribe((data) => {
+      this.unidadCatalogo = data as Catalogo[];
+      if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130115Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
+    });
+  }
+
+  /**
+ *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+ * @param cveEntidad 
+ */
+  getRepresentacionFederalCatalogo(cveEntidad: string): void {
+    this.importacionVehiculosNuevosService.getRepresentacionFederalCatalogo(this.idPedimento, cveEntidad).subscribe((data) => {
+      this.representacionFederal = data as Catalogo[];
+    });
   }
 
   /**
@@ -738,26 +859,26 @@ this.tramite130115Store.actualizarEstado({
     this.destroyed$.complete();
   }  
   /**
-     * Valida que un número tenga como máximo tres decimales.
-     */
-    static validarNumeroTresDecimales(
-      control: AbstractControl
-    ): ValidationErrors | null {
-      const VALOR = control.value;
-      if (VALOR === null || VALOR === undefined || VALOR === '') {
-        return null;
-      }
-  
-      if (!/^\d+(\.\d+)?$/.test(VALOR)) {
-        return { noEsNumero: true };
-      }
-  
-      if (/^\d+\.\d{4,}$/.test(VALOR)) {
-        return { maximoTresDecimales: true };
-      }
-  
+ * Valida que un número tenga como máximo tres decimales.
+ */
+  static validarNumeroTresDecimales(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
       return null;
     }
+
+    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+      return { maximoTresDecimales: true };
+    }
+
+    return null;
+  }
   
     /**
      * Valida que un string no contenga el carácter de ángulo derecho (›).
@@ -889,6 +1010,36 @@ this.tramite130115Store.actualizarEstado({
         });
       }
   
+  /**
+   * Valida todos los formularios y la selección de filas.
+   * @returns {boolean} Indica si todos los formularios y la selección son válidos.
+   */
+    validarFormulario(): boolean {
+      let isValid = true;
+      if (this.formDelTramite.invalid) {
+        this.formDelTramite.markAllAsTouched();
+        isValid = false;
+      }
+      if (this.mercanciaForm.invalid) {
+        this.mercanciaForm.markAllAsTouched();
+        isValid = false;
+      }
+      if (this.tableBodyData.length === 0) {
+        this.isInvalidaPartidas = true;
+        isValid = false;
+      } else if (this.tableBodyData.length > 0) {
+        this.isInvalidaPartidas = false;
+      }
+      if (this.paisForm.invalid) {
+        this.paisForm.markAllAsTouched();
+        isValid = false;
+      }
+      if (this.frmRepresentacionForm.invalid) {
+        this.frmRepresentacionForm.markAllAsTouched();
+        isValid = false;
+      }
+      return isValid;
+    }
      
   }
   

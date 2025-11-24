@@ -1,6 +1,7 @@
 import { Catalogo, CatalogoSelectComponent,TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent, Notificacion } from '@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component';
 import { Component, EventEmitter,Input,OnDestroy, OnInit, Output } from '@angular/core';
-import {ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
+import {ConsultaioQuery,ConsultaioState,CategoriaMensaje,TipoNotificacionEnum} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -17,7 +18,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   imports: [CommonModule, TituloComponent,
     TableComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,TablePaginationComponent],
+    ReactiveFormsModule,TablePaginationComponent, NotificacionesComponent],
   templateUrl: './datos-del-inmueble.component.html',
   styleUrl: './datos-del-inmueble.component.scss',
 })
@@ -92,6 +93,11 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
   public get isSingleRowSelected(): boolean {
     return this.establecimientoBodyData.filter(r => r.selected).length === 1;
   }
+     /**
+     * Notificación que se muestra al usuario.
+     */
+  public nuevaNotificacion: Notificacion | undefined;
+
   /**
    * **Datos del cuerpo de la tabla de establecimientos**  
    * 
@@ -188,7 +194,41 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     }
   }
 
+ /**
+   * Elimina la mercancía seleccionada de la tabla
+   */
+  eliminarMercancia() {
+      this.abrirElimninarConfirmationopup();
+  }
 
+    /**
+   * Maneja la respuesta del modal de confirmación de eliminación
+   */
+  onEliminarConfirmacion(confirmado: boolean) {
+    if (confirmado) {
+      this.eliminarEstablecimiento();
+    } else {
+      this.nuevaNotificacion = undefined;
+    }
+  }
+
+  /**
+     * @method abrirElimninarConfirmationopup
+     * Abre un popup de confirmación para eliminar los registros seleccionados.
+     * Si no hay registros seleccionados, no realiza ninguna acción.
+     */
+    abrirElimninarConfirmationopup(): void {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
   /**
    * Elimina el establecimiento seleccionado
    */
@@ -381,14 +421,14 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
   private inicializarFormulario(): void {
     this.formularioDireccion = this.fb.group({
       calle: ['', [Validators.required, Validators.maxLength(100)]],
-      numeroExterior: ['', [Validators.required, Validators.maxLength(10)]],
-      numeroInterior: ['', [Validators.maxLength(10)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', [Validators.maxLength(55)]],
       pais: ['', Validators.required],
       entidadFederativa: ['', Validators.required],
       municipioDelegacion: ['', Validators.required],
       colonia: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
+      codigoPostal: ['', [Validators.required,Validators.maxLength(12), Validators.pattern(/^\d{5}$/)]],
     });
   }
 
@@ -638,5 +678,12 @@ onSeleccionCambio(selected: boolean): void {
  */
 onBodyChange(updatedBody: TableBodyData[]): void {
   this.establecimientoBodyData = updatedBody;
+  this.rowSelected = this.establecimientoBodyData.some(r => r.selected);
+  if (this.rowSelected) {
+    const idx = this.establecimientoBodyData.findIndex(row => row.selected);
+    this.selectedEstablecimientoIndex = idx !== -1 ? idx : null;
+  } else {
+    this.selectedEstablecimientoIndex = null;
+  }
 }
 }
