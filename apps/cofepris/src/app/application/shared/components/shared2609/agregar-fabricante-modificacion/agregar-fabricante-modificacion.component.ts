@@ -812,6 +812,9 @@ private forzarDeshabilitarPais(): void {
         case 260213:
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;
+       case 260904:
+        this.elementosNoRequeridos = ['codigoPostal','colonia'];
+        break;
         default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
@@ -1294,7 +1297,7 @@ guardarFabricante(): void {
       NACIONALIDAD === 'Extranjero' &&
       (TIPO_PERSONA === this.tipoPersona.FISICA || TIPO_PERSONA === this.tipoPersona.MORAL)
     ) {
-      RFC_CONTROL.clearValidators();
+     RFC_CONTROL.clearValidators();
     } else {
       RFC_CONTROL.setValidators([
         Validators.required,

@@ -55,23 +55,25 @@
         </div>
       </div> } 
       @case (2) {
-        @if(esDatosRespuesta) {
-      <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
-      }
+        @if(esDatosRespuesta) { 
+          <app-datos-del-solicitud-modificacion [idProcedimiento]= "260915" [mostrarBotonCopiarDatos]="false" [mostrarNumeroYFecha]="false" [showAifaCheckbox]="false"></app-datos-del-solicitud-modificacion>
+          <app-manifiestos></app-manifiestos>
+          <app-representante-legal></app-representante-legal>
+        }
     }
       @case (3) {
         @if(esDatosRespuesta) {
-      <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
-      }
+          <app-terceros-relacionados-vista ></app-terceros-relacionados-vista>
+        }
     }
       @case (4) {
         @if(esDatosRespuesta) {
-        <app-pago-de-derecho [tabindex]="4"></app-pago-de-derecho>
+          <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
         }
       }
       @case (5) {
         @if(esDatosRespuesta) {
-      <app-tramites-asociados [tabindex]="5"></app-tramites-asociados>
+          <app-tramites-asociados-seccion [tabindex]="5"></app-tramites-asociados-seccion>
         }
       }
       }

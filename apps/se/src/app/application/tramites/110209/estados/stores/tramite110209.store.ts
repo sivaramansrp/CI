@@ -5,6 +5,7 @@
  */
 
 import { Store, StoreConfig } from '@datorama/akita';
+import { CertificadoData } from '../../models/certificado-sgp.model';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../../constantes/certificado-sgp.enum';
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
@@ -83,6 +84,11 @@ export interface Tramite110209State {
   cantidad: string;
   /** **Fecha de emisión o registro de la factura correspondiente** */ 
   fechaFactura: string;
+    /** **Código de país de la mercancía** */
+  cvePais: string;
+  /** Propiedad opcional que contiene el arreglo de datos del certificado.  
+ * Se usa para enviar o recibir el *payload* asociado a la búsqueda. */
+  buscarPayload?: CertificadoData[];
 }
 
 /**
@@ -132,6 +138,8 @@ export function createInitialState(): Tramite110209State {
     fechaVencimiento: '',
     cantidad: '',
     fechaFactura: '',
+    cvePais: '',
+    buscarPayload: []
   };
 }
 
@@ -173,5 +181,11 @@ export class Tramite110209Store extends Store<Tramite110209State> {
       ...state,
       ...estado,
     }));
+  }
+
+  /** Establece el *payload* de búsqueda asignando el arreglo recibido.  
+ * Actualiza el estado interno mediante la función `update()`. */
+    setBuscarPayload(payload: CertificadoData[]): void {
+    this.update({ buscarPayload: payload });
   }
 }

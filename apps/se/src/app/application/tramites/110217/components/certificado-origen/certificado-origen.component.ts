@@ -268,7 +268,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     const PAYLOAD = {
       rfcExportador: "AAL0409235E6", 
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || 105 },
-      pais: { cvePais: this.certificadoState.formCertificado['bloque'] || 'ARG' }
+      pais: { cvePais: this.certificadoState.formCertificado['bloque'] || 'ARG' },
+      numeroRegistroProductos: this.certificadoState.formCertificado['registroProductoForm'] || '',
+      claveFraccionArancelaria: this.certificadoState.formCertificado['fraccionArancelariaForm'] || '',
+      nombreComercial: this.certificadoState.formCertificado['nombreComercialForm'] || '',
+      fechInicio: this.certificadoState.formCertificado['fechaInicioInput'] || '',
+      fechFin: this.certificadoState.formCertificado['fechaFinalInput'] || '',
     };
   
     this.certificadosOrigenService.obtenerMercanciasDisponibles(PAYLOAD)

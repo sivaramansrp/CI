@@ -169,6 +169,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   /** Variable para validar el formulario */
   validarFormulario: boolean = false;
 
+  /** Almacena los valores previos de los campos del formulario */
+  private valoresPrevios: Record<string, number | null> = {};
+
   /**
    * Una constante que contiene la cadena de mensaje requerida.
    * Este mensaje se utiliza para indicar que un campo es obligatorio.
@@ -473,6 +476,41 @@ public descripcionesPorTipo: {
     }
   }
 
+
+   /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  public setValoresStoreDescripciones(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store, campoStore?: string): void {
+    const VALOR = form.get(campo)?.value;
+
+     const VALOR_ANTERIOR = this.valoresPrevios[campo];
+
+    let MODIFICADO = false;
+
+    const AMBOS_VACIOS =
+      (VALOR === null || VALOR === undefined) &&
+      (VALOR_ANTERIOR === null || VALOR_ANTERIOR === undefined);
+
+    if (!AMBOS_VACIOS) {
+      MODIFICADO = VALOR !== VALOR_ANTERIOR;
+    }
+
+    this.tramite110101Store.setValor('descripcion_alterna_modificada', MODIFICADO);
+
+    // Guardar valor para siguiente comparación
+    this.valoresPrevios[campo] = VALOR;
+
+    if (metodoNombre === 'setValor' ) {
+      const CAMPO = (campoStore) as keyof Solicitante110101State;
+      this.tramite110101Store.setValor(CAMPO, VALOR);
+    }else{
+      (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
+  }
+
   /**
    * Busca un país en la tabla de datos del servicio de solicitud.
    * @param country - El código del país a buscar.
@@ -511,8 +549,13 @@ public descripcionesPorTipo: {
     this.descripcionesMostrar = false;
     return;
   }
+  type ClaveDescripcionAlterna =
+  | 'descripciones_alternas_ue'
+  | 'descripciones_alternas_aelc'
+  | 'descripciones_alternas_sgp'
+  | 'descripciones_alternas_ace';
   this.descripcionesPorTipo = [];
-  const TIPOS: { key: keyof Mercancia; label: string }[] = [
+  const TIPOS: { key: ClaveDescripcionAlterna; label: string }[] = [
     { key: 'descripciones_alternas_ue', label: 'la Unión Europea (UE)' },
     { key: 'descripciones_alternas_aelc', label: 'la Asociación Europea de Libre Comercio (AELC)' },
     { key: 'descripciones_alternas_sgp', label: 'el SGP' },

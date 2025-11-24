@@ -62,12 +62,14 @@ import {
   CLASIFICACION_REGIMEN,
   CLASSIFICACIONES_REGIMEN,
   COMUN_URL,
+  FRACCIONES_ARANCELARIAS,
   FRACCION_HTS,
   PAISES_POR_BLOQUE,
   OFICIO_ASIGNACION,
   PAIS_DESTINO,
   REPRESENTACION_FEDERAL_CATALOGO,
   TIPO_EMPRESA,
+  REGIMEN_CLASSIFICACIONES,
   UNIDADES_MEDIDA_COMERCIAL,
   API_UNIDADES_MEDIDA_TARIFARIA,
   API_CATALOGOS_PAISES_TODOS,
@@ -76,6 +78,12 @@ import {
   API_REPRESENTACION_FEDERAL_PARAM,
   API_UNIDADES_MEDIDAS_TARIFARIAS,
   API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE,
+  API_ESTADO_UNIDADES_ADMINISTRATIVAS,
+  CATALOGO_REPRESENTACION_FEDERAL_VECINA,
+  REGIMEN_CLASSIFICACIONES_10,
+  API_PEXIM_FRACCION_ARANCELARIA_10,
+  API_UNIDADES_MEDIDA_TARIFARIA_10,
+  CATALOGO_REPRESENTACION_FEDERAL_10,
   // API_PAISES_POR_BLOQUE
 } from '../../servers/api-router';
 
@@ -457,6 +465,21 @@ export class CatalogoServices {
   }
 
   /**
+   * Obtiene el catálogo de fracciones arancelarias según el trámite e identificador proporcionado.
+   *
+   * Este método realiza una petición HTTP GET al servicio correspondiente para recuperar 
+   * la lista de fracciones arancelarias disponibles.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+   * @param {string} id - Identificador específico utilizado para filtrar las fracciones arancelarias.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de fracciones arancelarias.
+   */
+   fraccionesArancelariasCatalogo10(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+     const ENDPOINT = `${this.host}${API_PEXIM_FRACCION_ARANCELARIA_10(tramite, id)}`;
+     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   }
+
+  /**
     * Obtiene el catálogo de unidades de medida tarifarias según el trámite e identificador proporcionado.
     *
     * Este método realiza una solicitud HTTP GET para recuperar las unidades de medida tarifarias 
@@ -470,6 +493,21 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA(tramite, id)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+  /**
+   * Obtiene el catálogo de unidades de medida tarifarias según el trámite e identificador proporcionado.
+   *
+   * Este método realiza una solicitud HTTP GET para recuperar las unidades de medida tarifarias 
+   * asociadas al trámite indicado.
+   *
+   * @param {string} tramite - Identificador del trámite o tipo de operación asociado a la consulta.
+   * @param {string} id - Identificador específico utilizado para filtrar las unidades de medida tarifarias.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Un observable que emite la respuesta base con el catálogo de unidades de medida tarifarias.
+   */
+ unidadesMedidaTarifariaCatalogo10(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+   const ENDPOINT = `${this.host}${API_UNIDADES_MEDIDA_TARIFARIA_10(tramite, id)}`;
+   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+ }
 
   /**
    *  Obtiene el catálogo de unidades de medidas tarifarias según el trámite e identificador proporcionado.
@@ -539,7 +577,29 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene la lista de clasificaciones de régimen para un trámite y clave de clasificación específicos.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicitan las clasificaciones de régimen.
+   * @param cveClasificacion - La clave de la clasificación que se desea consultar.
+   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo Catalogo.
+   */
+  getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${REGIMEN_CLASSIFICACIONES(tramite).replace(CLASIFICACION, cveClasificacion)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
+  /**
+   * Obtiene la lista de clasificaciones de régimen 10 para un trámite y clave de clasificación específicos.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicita la clasificación.
+   * @param cveClasificacion - La clave de la clasificación a consultar.
+   * @returns Un observable que emite una respuesta base con un arreglo de objetos de tipo Catalogo.
+   */
+  getRegimenClasificacion10(tramite: string, cveClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${REGIMEN_CLASSIFICACIONES_10(tramite).replace(CLASIFICACION, cveClasificacion)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
 
   /*
    * Obtiene el catálogo de países (bloques).
@@ -581,6 +641,17 @@ export class CatalogoServices {
     const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(tramite, cveEntidad)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
+
+  /*
+  * Obtiene el catálogo de representación federal.
+  * @param {string} tramite - El ID del trámite.
+  * @param {string} cveEntidad - La clave de la entidad.
+  * @returns {Observable<BaseResponse<Catalogo[]>>}
+  */
+ representacionFederalCatalogo10(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
+   const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL_10(tramite, cveEntidad)}`;
+   return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+ }
 
   /**
    * Obtiene el catálogo completo de países disponibles para el trámite especificado.
@@ -1055,6 +1126,17 @@ export class CatalogoServices {
   }
 
   /**
+   * Obtiene el catálogo de fracciones arancelarias.
+   * @param tramite - Identificador del trámite
+   * @returns {Observable<BaseResponse<Catalogo[]>>} Observable que emite la respuesta con el listado de fracciones arancelarias
+   * @see API_FRACCIONES_ARANCELARIAS
+   */
+  getFracciones(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${FRACCIONES_ARANCELARIAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
    * Obtiene el catálogo de Unidades de Medida de Transporte de Carga (UMT) según el trámite y régimen especificados.
    * @param tramite - Identificador del trámite
    * @param cveRegimen - Clave del régimen aduanero
@@ -1078,16 +1160,53 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene el catálogo de Actividad Productiva PROSEC asociado al trámite indicado.
+   *
+   * Este método construye dinámicamente el endpoint correspondiente y realiza una
+   * solicitud HTTP GET para obtener un catálogo de opciones relacionado con la
+   * actividad productiva del trámite PROSEC.
+   *
+   * @param {string} tramite - Identificador del trámite utilizado para armar la ruta del servicio.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable que emite la respuesta del servicio con la lista de elementos del catálogo.
+   */
   getActividadProductivaProsecCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_ACTIVIDAD_PRODUCTIVA_PROSEC(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
   
+  /**
+   * Obtiene el catálogo de Representación Federal de México filtrado por trámite y estado.
+   *
+   * Este método construye la URL del servicio utilizando los parámetros recibidos
+   * y realiza una solicitud HTTP GET para recuperar la lista correspondiente.
+   *
+   * @param {string} tramite - Identificador del trámite requerido por el servicio.
+   * @param {string} estado - Clave del estado que se utilizará como parámetro del catálogo.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable que emite la respuesta con el catálogo solicitado.
+   */
   getRepresentacionFederalMexCatalogo(tramite: string, estado:string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_REPRESENTACION_FEDERAL_PARAM(tramite, estado)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene el catálogo de fracciones arancelarias mediante una búsqueda tipo
+   * autocompletado, basada en el trámite e identificador proporcionados.
+   *
+   * La URL se construye usando parámetros dinámicos y se realiza una petición
+   * HTTP GET para obtener un catálogo filtrado de fracciones arancelarias.
+   *
+   * @param {string} tramite - Identificador del trámite usado para generar la ruta.
+   * @param {string} id - Parámetro de búsqueda para autocompletar fracciones arancelarias.
+   *
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
+   *          Observable con la respuesta del servicio que contiene la lista de fracciones.
+   */
    getFraccionesArancelariasAutoCompleteCatalogo(tramite: string, id:string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_FRACCIONES_ARANCELARIAS_AUTO_COMPLETE(tramite, id)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
@@ -1183,6 +1302,28 @@ asignacionCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
    
   }
+
+/**
+ * @description Obtiene el catálogo de estados de unidades administrativas.
+ * @param tramite Trámite a consultar.
+ * @param id Identificador relacionado.
+ * @returns Observable con la lista de catálogo.
+ */
+catalogoEstadoUnidadesAdministrativas(tramite: string, id: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${API_ESTADO_UNIDADES_ADMINISTRATIVAS(tramite, id)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
+
+/**
+ * @description Obtiene el catálogo de representación federal vecina.
+ * @param tramite Trámite a consultar.
+ * @param claveEstado Clave del estado relacionado.
+ * @returns Observable con la lista de catálogo.
+ */
+catalogoRepresentacionFederalVecina(tramite: string, claveEstado: string): Observable<BaseResponse<Catalogo[]>> {
+  const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL_VECINA(tramite, claveEstado)}`;
+  return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+}
 }
 
 

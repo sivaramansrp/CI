@@ -4,6 +4,15 @@
 export interface CadenaOriginalRequest {
     /** Fecha de firma en formato ISO string */
     fecha_firma: string;
+
+    /** ID único de la notificación */
+    id_notificacion?: number;
+    
+    /** Fecha y hora de envío de la notificación */
+    fecha_envio_notificacion?: string;
+    
+    /** Tipo de notificación */
+    tipo_notificacion?: string;
     
     /** Información del usuario que realiza la firma */
     usuario: Usuario;

@@ -141,7 +141,7 @@
         <div class="col-md-12">
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [nestedContent]="tablauno"
                               [configuracionTabla]="configuracionColumnasoli" [datos]="cuerpoTabla" [expandible]="true"
-                              [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event)" #tablaMercancias
+                              [tableId]="'tabla-mercancias'" (listaDeFilaSeleccionada)="seleccionTabla($event,[])" #tablaMercancias
                               (rowExpanded)="onRowExpanded($event)" (listaDeFilaSeleccionada)="onfilasSeleccionadasChange($event)"
                               [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">

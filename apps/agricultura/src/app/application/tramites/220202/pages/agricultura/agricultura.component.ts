@@ -13,25 +13,31 @@ import {
   TercerosrelacionadosdestinoTable,
 } from '../../models/220202/fitosanitario.model';
 import {
+  AcuseComponent,
+  AlertComponent,
+  BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  ConsultaioStore,
+  DatosPasos,
+  PasoFirmaComponent,
+  SolicitanteQuery,
+  Usuario,
+  WizardComponent,
+  convertDate,
+} from '@ng-mf/data-access-user';
+import {
   Component,
   EventEmitter,
   OnInit,
   ViewChild,
   inject,
 } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  DatosPasos,
-  Usuario,
-  WizardComponent,
-  convertDate,
-  SolicitanteQuery,
-  ConsultaioStore,
-} from '@ng-mf/data-access-user';
 import { Subject, catchError, map, switchMap, take, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { CommonModule } from '@angular/common';
 import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
@@ -54,6 +60,16 @@ import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuar
 @Component({
   selector: 'app-agricultura',
   templateUrl: './agricultura.component.html',
+  standalone: true,
+  imports: [
+    WizardComponent,
+    CommonModule,
+    PasoDosComponent,
+    PasoUnoComponent,
+    BtnContinuarComponent,
+    AlertComponent,
+    PasoFirmaComponent,
+  ],
 })
 export class AgriculturaComponent implements OnInit {
   /**
@@ -150,6 +166,9 @@ export class AgriculturaComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Objeto que almacena los valores complementarios del formulario.
+   */
   valoresComplemento: {
     rfc: string;
     tipoPersona: string;
@@ -297,7 +316,9 @@ export class AgriculturaComponent implements OnInit {
             .pipe(take(1));
         }),
         map((data) => {
-          this.consultaioStore.setIdSolicitud(String(data?.datos?.id_solicitud));
+          this.consultaioStore.setIdSolicitud(
+            String(data?.datos?.id_solicitud)
+          );
           this.esPasoUnoCompleto = true;
         }),
         catchError((err) => {

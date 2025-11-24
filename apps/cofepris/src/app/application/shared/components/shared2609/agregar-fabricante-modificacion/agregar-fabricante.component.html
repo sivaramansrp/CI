@@ -248,7 +248,12 @@
         </div>
       </div>
     </div>
-    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL)
+    } @if((agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||agregarFabricanteForm.get('nacionalidad')?.value==='Nacional'||agregarFabricanteForm.get('nacionalidad')?.value==='Extranjero')
+     ||
+    (
+      !agregarFabricanteForm.get('nacionalidad')?.value &&
+      !agregarFabricanteForm.get('tipoPersona')?.value
+    ))
     {
     <div class="row mt-3">
       <div class="col-md-8">
@@ -622,7 +627,7 @@
     }
     } 
     @if(( mostarColoniaOEquivalente &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'
+    (agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'||agregarFabricanteForm.get('nacionalidad')?.value==='Nacional')
   ) ||
   (
     !agregarFabricanteForm.get('nacionalidad')?.value &&

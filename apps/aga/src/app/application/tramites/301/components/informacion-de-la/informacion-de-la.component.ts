@@ -207,11 +207,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
-      this.informacionDeLaform.get('descripcionFraccion')?.enable();
       const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.fraccionArancelariaOptions, this.informacionDeLaform.get('fraccionArancelaria')?.value);
       this.informacionDeLaform.get('descripcionFraccion')?.setValue(VALOR);
     } else {
-      this.informacionDeLaform.get('descripcionFraccion')?.disable();
       this.informacionDeLaform.get('descripcionFraccion')?.setValue('');
     }
   }
@@ -235,11 +233,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
-      this.informacionDeLaform.get('descripcionNico')?.enable();
       const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.nicoOptions, this.informacionDeLaform.get('nico')?.value);
       this.informacionDeLaform.get('descripcionNico')?.setValue(VALOR);
     } else {
-      this.informacionDeLaform.get('descripcionNico')?.disable();
       this.informacionDeLaform.get('descripcionNico')?.setValue('');
     }
   }
@@ -265,6 +261,24 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   esInvalido(campo: string): boolean | null {
     const CAMPO = this.informacionDeLaform.get(campo);
     return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
+  }
+
+  /**
+   * Valida el formulario actual.
+   *
+   * - Si el formulario no está inicializado retorna false.
+   * - Marca todos los controles como "touched" para forzar la visualización
+   *   de mensajes de validación en la UI.
+   * - Devuelve true si el formulario es válido, false en caso contrario.
+   *
+   * @returns {boolean} Estado de validez del formulario.
+   */
+  validarFormulario(): boolean {
+    if (!this.informacionDeLaform) {
+      return false;
+    }
+    this.informacionDeLaform.markAllAsTouched();
+    return this.informacionDeLaform.valid;
   }
 
   /**

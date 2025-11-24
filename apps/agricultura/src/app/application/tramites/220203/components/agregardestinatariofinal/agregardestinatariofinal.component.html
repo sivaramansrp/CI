@@ -24,8 +24,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="nombre">Nombre(s)*:</label>
-                            <input class="form-control" id="nombre" placeholder="" type="text" libUppercase
-                                formControlName="nombre" />
+                            <input class="form-control" id="nombre" placeholder="" type="text" libUppercase formControlName="nombre"
+                                [ngClass]=" destinatarioForm.get('nombre')?.invalid && destinatarioForm.get('nombre')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('nombre')?.hasError('required') && destinatarioForm.get('nombre')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -39,8 +39,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                            <input class="form-control" id="primerApellido" placeholder="" type="text" libUppercase
-                                formControlName="primerApellido" />
+                            <input class="form-control" id="primerApellido" placeholder="" type="text" libUppercase formControlName="primerApellido"
+                                [ngClass]=" destinatarioForm.get('primerApellido')?.invalid && destinatarioForm.get('primerApellido')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('primerApellido')?.hasError('required') && destinatarioForm.get('primerApellido')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -67,8 +67,8 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
-                            <input class="form-control" id="razonSocial" placeholder="" type="text" libUppercase
-                                formControlName="razonSocial" />
+                            <input class="form-control" id="razonSocial" placeholder="" type="text" libUppercase formControlName="razonSocial"
+                                [ngClass]=" destinatarioForm.get('razonSocial')?.invalid && destinatarioForm.get('razonSocial')?.touched ? 'required': ''" />
                             <div *ngIf="destinatarioForm.get('razonSocial')?.hasError('required') && destinatarioForm.get('razonSocial')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -83,7 +83,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true" name="pais"
-                            formControlName="pais"></app-catalogo-select>
+                            formControlName="pais" [markTouched]="destinatarioForm.get('pais')?.touched ?? false"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="row">
@@ -91,8 +91,9 @@
          <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="estado">Domicilio*:</label>
-            <textarea class="form-control" id="domicilio" placeholder="Domicilio" type="text"
-                formControlName="domicilio" rows="8" ></textarea>
+            <textarea class="form-control" id="domicilio" placeholder="" type="text" formControlName="domicilio" rows="8"
+                [ngClass]=" destinatarioForm.get('domicilio')?.invalid && destinatarioForm.get('domicilio')?.touched ? 'required': ''">
+                        </textarea>
                 <div *ngIf="destinatarioForm.get('domicilio')?.hasError('required') && destinatarioForm.get('domicilio')?.touched"
                                 class="text-danger">
                                 <small>Este campo es obligatorio.</small>
@@ -152,7 +153,6 @@
                             Cancelar
                         </button>
                         <button type="button" class="btn btn-danger"
-                            [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
                             (click)="onGuardarDestinatarioFinal()">
                             Guardar
                         </button>
