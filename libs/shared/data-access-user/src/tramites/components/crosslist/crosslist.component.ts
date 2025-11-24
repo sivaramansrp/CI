@@ -85,6 +85,11 @@ export class CrosslistComponent implements OnInit, OnChanges {
   @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
 
   /**
+   * @description Evento que se emite cuando las fechas seleccionadas cambian.
+   */
+  @Output() fechasSeleccionadasIdChange = new EventEmitter<string[]>();
+
+  /**
    * @description Lista de fechas seleccionadas.
    */
   @Input() fechasSeleccionadas: string[] = [];

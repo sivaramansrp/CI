@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
@@ -8,6 +9,14 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  * Este estado almacena toda la información relacionada con el trámite 130112.
  */
 export interface Tramite130112State {
+
+  /**
+   * Representa el estado de la gestión para el trámite 130112.
+   * Contiene todos los campos y datos necesarios para el manejo del formulario,
+   * la tabla dinámica de partidas de la mercancía, y la selección de opciones
+   * relevantes en el proceso de solicitud.
+   */
+  idSolicitud: number | null;
   /**
    * Producto seleccionado en el formulario.
    */
@@ -145,6 +154,13 @@ export interface Tramite130112State {
   */
   valorTotalUSD: string;
 
+  /** Arreglo de partidas a mostrar en la tabla. */
+  mostrarPartidas: MostrarPartidas[];
+
+  /**   
+   * Fechas seleccionadas en el formulario.
+   */
+ fechasSeleccionadas: string[];
 }
 
 /**
@@ -154,6 +170,7 @@ export interface Tramite130112State {
  */
 export function createInitialState(): Tramite130112State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: true,
     solicitud: '',
@@ -182,6 +199,8 @@ export function createInitialState(): Tramite130112State {
     tableBodyData: [],
     cantidadTotal: '',
     valorTotalUSD: '',
+    mostrarPartidas: [],
+    fechasSeleccionadas: [],
   };
 }
 
@@ -213,6 +232,18 @@ export class Tramite130112Store extends Store<Tramite130112State> {
     this.update((state) => ({
       ...state,
       ...valores,
+    }));
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

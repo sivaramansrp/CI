@@ -114,11 +114,11 @@ export class GuardarAdapter_260103 {
 
         fechaCaducidadStr: merc.fechaCaducidad || "31/12/2026",
         
-        // NumeroLotes: merc?.c?.map(l => ({
-        //   numeroLote: l.numeroLote,
-        //   fechaElaboracionStr: l.fechaElaboracion,
-        //   fechaCaducidadStr: l.fechaCaducidad
-        // })) ?? []
+     NumeroLotes: merc.clavesLote?.map(l => ({
+          numeroLote: l.clave,
+          fechaElaboracionStr: l.fabricacion,
+          fechaCaducidadStr: l.caducidad
+        })) ?? []
       })),
 
       representanteLegal: {
