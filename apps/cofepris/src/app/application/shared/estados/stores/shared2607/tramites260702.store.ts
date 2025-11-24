@@ -361,17 +361,22 @@ export function createInitialSolicitudState(): Solicitud260702State {
      */
     descripcionDelScian: '',
     
-      /**
+  /**
    * El valor de nicoTabla.
    */
     nicoTabla: [],
 
-    /**
+  /**
    * El valor de mercanciaTabla.
    */
     mercanciaTabla: [],
-    
+
+    /**
+     * Validez de los formularios dentro del estado.
+    */
     formValidity: {},
+
+    /** Indica si se ha activado la acción de continuar */
     continuarTriggered:false
   };
 }
@@ -406,6 +411,11 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
           }));
       }
   
+      /**
+       * Método para actualizar la tabla de mercancías en el estado.
+       * @param mercanciaTabla 
+       * La nueva tabla de mercancías a establecer.
+       */
       setMercanciasTabla(mercanciaTabla: FilaData2[]): void {
         this.update((state) => ({
               ...state,
