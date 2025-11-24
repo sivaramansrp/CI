@@ -8,6 +8,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.module';
+import {CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 
 
 /**
@@ -110,7 +111,8 @@ export class PagoDeDerechosComponent implements OnInit,OnDestroy {
     private readonly fb: FormBuilder,
     private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    public catalogosService: CatalogosService
   ) {
    
     this.obtenerCatalogosTransporte();
@@ -141,13 +143,15 @@ export class PagoDeDerechosComponent implements OnInit,OnDestroy {
    * @returns {void}
    */
   public obtenerCatalogosTransporte(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.pagoSelect.bancoSelector = data.data as Catalogo[];
-      }, (error) => {
-        console.error(error);
-      });
+    this.catalogosService.obtieneCatalogoBanco(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.pagoSelect.bancoSelector = data.datos ?? [];
+      }
+    );
+
   }
   /**
    * Método para obtener el catálogo de justificaciones disponibles.
@@ -160,13 +164,15 @@ export class PagoDeDerechosComponent implements OnInit,OnDestroy {
    * @returns {void}
    */
   public obtenerCatalogosjustificacionTransporte(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.pagoSelect.justificacionSelector = data.data as Catalogo[];
-      }, (error) => {
-        console.error(error);
-      });
+    this.catalogosService.obtieneCatalogoJustificacionesPago(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.pagoSelect.justificacionSelector = data.datos ?? [];
+      }
+    );
+
   }
   /**
    * Método para manejar los cambios en los datos del pago de derechos.

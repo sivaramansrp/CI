@@ -458,6 +458,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * @description Mensaje de error mostrado cuando el formulario de mercancía no es válido o faltan campos por capturar.
    */
   mensajeDeError: string = '';
+  /** @property {Catalogo[]} crosslistPaisDeOriginDatos
+   * Datos de países para la lista cruzada de país de origen.
+   */
+  crosslistPaisDeOriginDatos: Catalogo[] = [];
+  /** @property {Catalogo[]} crosslistPaisDeProcedenciaDatos
+   * Datos de países para la lista cruzada de país de procedencia.
+   * */
+  crosslistPaisDeProcedenciaDatos: Catalogo[] = [];
+  /** @property {Catalogo[]} crosslistUsoEspecificoDatos
+   * Datos de usos específicos para lista cruzada.
+   * */
+  crosslistUsoEspecificoDatos: Catalogo[] = [];
 
   /**
    * @constructor
@@ -601,6 +613,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistPaisDeOriginDatos = response.datos;
             this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
@@ -620,6 +633,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistPaisDeProcedenciaDatos = response.datos;
             this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
@@ -639,6 +653,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistUsoEspecificoDatos = response.datos;
             this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
@@ -1469,12 +1484,15 @@ public convertToStringArray(value: unknown): string[] {
      */
      const ID = Math.floor(100000 + Math.random() * 900000);
      VALORTABLAMERCANCIA.id = this.mercanciaForm.get('id')?.value ? this.mercanciaForm.get('id')?.value : ID
-      // Set additional values
+    
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
+    VALORTABLAMERCANCIA.paisOrigenDatosClave = this.crosslistPaisDeOriginDatos.filter((pais) => this.seleccionadasPaisDeOriginDatos.includes(pais.descripcion)).map((paise) => paise.clave).filter((clave): clave is string => typeof clave === 'string');
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
+    VALORTABLAMERCANCIA.paisProcedenciaDatosClave = this.crosslistPaisDeProcedenciaDatos.filter((pais) => this.seleccionadasPaisDeProcedenciaDatos.includes(pais.descripcion)).map((paise) => paise.clave).filter((clave): clave is string => typeof clave === 'string');
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.usoEspecificoDatosClave = this.crosslistUsoEspecificoDatos.filter((uso) => this.seleccionadasUsoEspesificoDatos.includes(uso.descripcion)).map((uso) => uso.clave).filter((clave): clave is string => typeof clave === 'string');
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
     const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;

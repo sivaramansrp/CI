@@ -2,8 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { DomiciliosDePlantasComponent } from '../../component/domicilios-de-plantas/domicilios-de-plantas.component';
 import { ProsecService } from '../../services/prosec.service';
 import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
+import { SectoresYMercanciasComponent } from '../../component/sectores-y-mercancias/sectores-y-mercancias.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 /**
@@ -53,6 +55,17 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Se obtiene a través de la consulta ConsultaioQuery.
    */
   public consultaState!: ConsultaioState;
+    /**
+     * @property {DomiciliosDePlantasComponent} domiciliosDePlantas
+     * @description Referencia al componente de la sección "Domicilios de plantas" del formulario.
+     */
+    @ViewChild('domiciliosRef') domiciliosDePlantas!: DomiciliosDePlantasComponent;
+  
+    /**
+     * @property {SectoresYMercanciasComponent} sectoresYMercancias
+     * @description Referencia al componente de la sección "Sectores y mercancías" del formulario.
+     */
+    @ViewChild('sectoresRef') sectoresYMercancias!: SectoresYMercanciasComponent;
 
   /**
    * Constructor del componente Datos260502Component.
@@ -123,4 +136,26 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-}
+
+    /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+    validarFormularios(): boolean {
+      let isSolicitanteValid = true;
+      if (this.solicitante?.form) {
+        if (this.solicitante.form.invalid) {
+          this.solicitante.form.markAllAsTouched();
+          isSolicitanteValid = false;
+        }
+      } else {
+        isSolicitanteValid = false;
+      }
+
+      const IS_DOMICILIOS_VALID = this.domiciliosDePlantas?.validarFormulario() ?? false;
+      const IS_SECTORES_VALID = this.sectoresYMercancias?.validarFormulario() ?? false;
+  
+      return isSolicitanteValid && IS_DOMICILIOS_VALID && IS_SECTORES_VALID;
+    } 
+  }
+

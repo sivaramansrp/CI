@@ -1,9 +1,16 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '130103',
+      },
+    },
     path: 'pantallas',
     component: PantallasComponent
   }

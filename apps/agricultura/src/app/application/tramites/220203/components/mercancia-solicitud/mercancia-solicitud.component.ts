@@ -1,12 +1,15 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoData, Detalles, Fila } from '../../models/220203/importacion-de-acuicultura.module';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, AlertComponent, REGEX_DESCRIPCION, NUMERICO_CON_PUNTO_REGEX } from '@libs/shared/data-access-user/src';
+import { CatalogoData, Detalles, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { CatalogosService } from '../../services/220203/catalogos/catalogos.service';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
+import { ERROR_FORMA_ALERT } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 /**
  * Componente para gestionar la solicitud de mercancías en el trámite de importación de acuicultura 220203.
@@ -25,7 +28,8 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     CommonModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    AlertComponent
 ],
   templateUrl: './mercancia-solicitud.component.html',
   styleUrl: './mercancia-solicitud.component.scss',
@@ -36,7 +40,7 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @type {Detalles}
    * @memberof MercanciaSolicitudComponent
    */
-  detallesSeleccionados: Detalles = {} as Detalles;
+  detallesSeleccionados: Detalles[] = [];
 
   /**
    * Evento emitido al cerrar el formulario de mercancía.
@@ -47,10 +51,10 @@ export class MercanciaSolicitudComponent implements OnInit {
 
   /**
    * Datos de la mercancía almacenados en el store.
-   * @type {Fila}
+   * @type {FilaSolicitud}
    * @memberof MercanciaSolicitudComponent
    */
-  datosMercanciaStore: Fila = {} as Fila;
+  datosMercanciaStore: FilaSolicitud = {} as FilaSolicitud;
 
   /**
    * Grupo de formularios para los datos principales de la mercancía.
@@ -58,6 +62,22 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @memberof MercanciaSolicitudComponent
    */
   mercanciaGroup!: FormGroup;
+
+  /**
+ * Indica si el formulario tiene errores de validación.
+ *
+ * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+ */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error que se muestra cuando la validación de formularios falla.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
+   */
+  public readonly FORM_ERROR_ALERT = ERROR_FORMA_ALERT;
 
   /**
    * Grupo de formularios para los detalles adicionales de la mercancía.
@@ -125,6 +145,14 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @memberof MercanciaSolicitudComponent
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaInValido: boolean = false;
+
   /**
    * Constructor del componente MercanciaSolicitudComponent.
    * Inicializa los servicios necesarios y obtiene los catálogos requeridos.
@@ -139,13 +167,19 @@ export class MercanciaSolicitudComponent implements OnInit {
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, 
     private readonly fb: FormBuilder,
     private readonly acuiculturaStore: AcuiculturaStore,
-    private readonly acuiculturaQuery: AcuiculturaQuery
+    private readonly acuiculturaQuery: AcuiculturaQuery,
+    private catalogosService: CatalogosService,
+    private registroSolicitudService: RegistroSolicitudService
   ) {
-    this.obtenerCatalogosTransporte();
-    this.obtenerNicoCatalogosTransporte();
-    this.obtenerUMCCatalogosTransporte();
+    this.obtenerCatalogoRestricciones();
+    this.getFraccionArancelariaLista();
+    this.getCatalogoUnidadesMedidaComerciales();
+    this.getCatalogoUsosMercancia();
+    this.getcatalogosDatospaisOrigenLista()
+
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as Fila;
+      console.log('datos mercancia obtener datos', JSON.stringify(datos));
+      this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as FilaSolicitud;
     })
   }
   /**
@@ -159,6 +193,151 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.mercanciaGroup = this.createMercanciaGroup();
     this.detallesGroup = this.createDetallesGroup();
   }
+
+  /**
+ * Obtiene el catálogo de restricciones del servicio correspondiente.
+ * Realiza una llamada al servicio de catálogos para obtener las restricciones
+ * asociadas al trámite 220202.
+ * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+ * La suscripción se cancela automáticamente cuando el componente se destruye
+ * mediante el uso de takeUntil.
+ * @returns void
+ */
+  obtenerCatalogoRestricciones(): void {
+    this.catalogosService.obtieneCatalogoRestricciones(220203)
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+      .subscribe((data): void => {
+        this.detallesCatalogo.tipoRequisitoList = data.datos ?? [];
+      });
+  }
+
+  /**
+ * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+ * @method getFraccionArancelariaLista
+ * @returns {void}
+ */
+  getFraccionArancelariaLista(): void {
+    this.catalogosService.obtieneCatalogoFraccionesArancelarias(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.arancelariaList = data.datos ?? [];
+        }
+      );
+
+  }
+
+  /**
+  * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+  * @method getNicoFraccionArancelariaLista
+  * @returns {void}
+  */
+  getNicoFraccionArancelariaLista(fraccionArancelaria: string): void {
+    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220203, fraccionArancelaria)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+
+          this.detallesCatalogo.nicoList = data.datos ?? [];
+        }
+      );
+  };
+
+  /**
+ * Maneja la selección de un elemento del catálogo NICO.
+ * Busca el elemento NICO seleccionado en la lista de catálogos y actualiza
+ */
+  nicoSeleccionado(): void {
+    this.registroSolicitudService.obtieneNicoDescripcion(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value, this.mercanciaGroup.get('nico')?.value)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.mercanciaGroup.patchValue({
+            descripcionNico: data.datos ?? 'Sin descripción'
+          });
+        }
+      );
+  };
+
+  /**
+* @description Obtiene la descripcion de unidad de medida.
+* @method getUnidadMedida
+* @returns {void}
+*/
+  getUnidadMedida(): void {
+    this.registroSolicitudService.obtieneUnidadMedida(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+
+          this.mercanciaGroup.patchValue({
+            umt: data.datos?.clave ?? 'sin clave',
+            descripcionUMT: data.datos?.descripcion ?? 'Sin descripción'
+          });
+        }
+      );
+  };
+
+  /**
+   * @description Obtiene la lista de unidades de medida comerciales.
+   * @method getCatalogoUnidadesMedidaComerciales
+   * @returns {void}
+   */
+  getCatalogoUnidadesMedidaComerciales(): void {
+    this.catalogosService.obtieneCatalogoUnidadesMedidaComerciales(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.umcList = data.datos ?? [];
+        }
+      );
+
+  };
+
+  /**
+ * @description Obtiene la lista de catalogo de usos de mercancia.
+ * @method getCatalogoUsosMercancia
+ * @returns {void}
+ */
+  getCatalogoUsosMercancia(): void {
+    this.catalogosService.obtieneCatalogoUsosMercancia(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.usoList = data.datos ?? [];
+        }
+      );
+
+  };
+
+
+  /**
+ * @description Realiza una petición para obtener el catálogo de pais origen.
+ * @method getcatalogosDatospaisOrigenLista
+ * @returns {void}
+ */
+  getcatalogosDatospaisOrigenLista(): void {
+    this.catalogosService.obtieneCatalogoPaises(220203)
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+        (data): void => {
+          this.detallesCatalogo.paisDeOrigenList = data.datos ?? [];
+          this.detallesCatalogo.paisDeProcedenciaList = data.datos ?? [];
+
+        }
+      );
+
+  }
+
+
+
   /**
    * Obtiene los datos del catálogo de puntos y fracciones arancelarias.
    * Carga los datos necesarios para los selectores de tipo de requisito y fracción arancelaria.
@@ -172,31 +351,14 @@ export class MercanciaSolicitudComponent implements OnInit {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
       .subscribe((data) => {
-        this.detallesCatalogo.tipoRequisitoList = data.data as Catalogo[];
+        // this.detallesCatalogo.tipoRequisitoList = data.data as Catalogo[];
         this.detallesCatalogo.arancelariaList = data.data as Catalogo[];
       }, (_error) => {
-          this.detallesCatalogo.tipoRequisitoList = [];
+        // this.detallesCatalogo.tipoRequisitoList = [];
           this.detallesCatalogo.arancelariaList = [];
       });
   }
-  /**
-   * Obtiene los datos del catálogo NICO (Nomenclatura de Identificación de Comercio Exterior).
-   * Carga los códigos NICO necesarios para la clasificación de mercancías.
-   * 
-   * @public
-   * @method obtenerNicoCatalogosTransporte
-   * @memberof MercanciaSolicitudComponent
-   * @returns {void}
-   */
-  public obtenerNicoCatalogosTransporte(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('nico.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.detallesCatalogo.nicoList = data.data as Catalogo[];
-      }, (_error) => {
-          this.detallesCatalogo.nicoList = [];
-      });
-  }
+
   /**
    * Obtiene los datos del catálogo UMC (Unidad de Medida Comercial) y otros catálogos relacionados.
    * Carga las unidades de medida, usos, países de origen y procedencia necesarios para el formulario.
@@ -237,20 +399,24 @@ export class MercanciaSolicitudComponent implements OnInit {
     campo?: string,
   ): void {
     if (campo === 'fraccionArancelaria') {
-      this.mercanciaGroup.patchValue({
-        descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
-      });
+      this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220203, this.mercanciaGroup.get('fraccionArancelaria')?.value)
+        .pipe(
+          takeUntil(this.DESTROY_NOTIFIER$)
+        ).subscribe(
+          (data): void => {
+            this.mercanciaGroup.patchValue({
+              descripcionFraccionArancelaria: data.datos?.descripcion ?? 'Sin descripción',
+              idDescripcionFraccion: data.datos?.id_fraccion ?? 0
+            });
+            this.getNicoFraccionArancelariaLista(this.mercanciaGroup.get('fraccionArancelaria')?.value);
+            this.getUnidadMedida();
+          }
+        );      
     }
     else if (campo === 'nico') {
-      this.mercanciaGroup.patchValue({
-        descripcionNico: 'Nuevo valor para descripcionNico',
-      });
+      this.nicoSeleccionado();
     }
-    else if (campo === 'cantidadUMT') {
-      this.mercanciaGroup.patchValue({
-        umt: 'Nuevo valor para cantidadUMT',
-      });
-    }
+
   }
   /**
    * Guarda los valores del formulario de detalles en el store de acuicultura.
@@ -277,8 +443,11 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   agregarFilaDetalle(): void {
-    this.cuerpoTablaDetalle.push(this.detallesGroup.getRawValue());
+    const nuevoDetalle = this.detallesGroup.getRawValue() as Detalles;
+    if (nuevoDetalle.nombreCientifico || nuevoDetalle.nombreCientifico.trim() != '') {
+      this.cuerpoTablaDetalle = [...this.cuerpoTablaDetalle, nuevoDetalle];
     this.detallesGroup.reset();
+    }
   }
   /**
    * Crea el grupo de formularios principal para los datos de mercancía.
@@ -300,24 +469,29 @@ export class MercanciaSolicitudComponent implements OnInit {
    * 
    * @private
    * @method buildMercanciaFormGroup
-   * @param {Fila} MERCANCIA_DATA - Los datos de mercancía para inicializar el formulario
+   * @param {FilaSolicitud} MERCANCIA_DATA - Los datos de mercancía para inicializar el formulario
    * @memberof MercanciaSolicitudComponent
    * @returns {FormGroup} El grupo de formularios construido con validaciones
    */
-  private buildMercanciaFormGroup(MERCANCIA_DATA: Fila): FormGroup {
+  private buildMercanciaFormGroup(MERCANCIA_DATA: FilaSolicitud): FormGroup {
+    if (MERCANCIA_DATA.fraccionArancelaria !== undefined && MERCANCIA_DATA.fraccionArancelaria !== '') {
+      this.getNicoFraccionArancelariaLista(MERCANCIA_DATA.fraccionArancelaria);
+    }
     return this.fb.group({
       tipoRequisito: [MERCANCIA_DATA.tipoRequisito || '', Validators.required],
       requisito: [MERCANCIA_DATA.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [MERCANCIA_DATA.numeroCertificadoInternacional || '', Validators.required],
+      numeroCertificadoInternacional: [MERCANCIA_DATA.numeroCertificadoInternacional || '', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       numeroOficioCasoEspecial: [MERCANCIA_DATA.numeroOficioCasoEspecial || ''],
       fraccionArancelaria: [MERCANCIA_DATA.fraccionArancelaria || '', Validators.required],
       descripcionFraccionArancelaria: [{value: MERCANCIA_DATA.descripcionFraccionArancelaria || '', disabled: true}, Validators.required],
+      idDescripcionFraccion: [MERCANCIA_DATA.idDescripcionFraccion || 0],
       nico: [MERCANCIA_DATA.nico || '', Validators.required],
       descripcionNico: [{value: MERCANCIA_DATA.descripcionNico || '', disabled: true}, Validators.required],
-      descripcion: [MERCANCIA_DATA.descripcion || '', Validators.required],
-      cantidadUMT: [MERCANCIA_DATA.cantidadUMT || '', Validators.required],
-      umt: [{value: MERCANCIA_DATA.umt || '', disabled: true}, Validators.required],
-      cantidadUMC: [MERCANCIA_DATA.cantidadUMC || '', Validators.required],
+      descripcion: [MERCANCIA_DATA.descripcion || '', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: [MERCANCIA_DATA.cantidadUMT || '', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umt: [{ value: MERCANCIA_DATA.umt || '', disabled: true }, Validators.required],
+      descripcionUMT: [{ value: MERCANCIA_DATA.descripcionUMT || '', disabled: true }, Validators.required],
+      cantidadUMC: [MERCANCIA_DATA.cantidadUMC || '', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: [MERCANCIA_DATA.umc || '', Validators.required],
       uso: [MERCANCIA_DATA.uso || '', Validators.required],
       numeroDeLote: [MERCANCIA_DATA.numeroDeLote || '', Validators.required],
@@ -337,6 +511,7 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {FormGroup} El grupo de formularios para detalles
    */
   public createDetallesGroup(): FormGroup {
+    this.cuerpoTablaDetalle = this.datosMercanciaStore.lista_detalle_mercancia || []
     return this.fb.group({
       nombreCientifico: [''],
     });
@@ -377,9 +552,16 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   agregarFila(): void {
-    const NUEVO_DETALLE: Fila = this.mercanciaGroup.getRawValue(); 
+    if (this.mercanciaGroup.invalid) {
+      this.mercanciaGroup.markAllAsTouched();
+      this.esFormaInValido = true;
+    }
+
+    else {
+      const NUEVA_MERCANCIA: FilaSolicitud = this.mercanciaGroup.getRawValue();
+      NUEVA_MERCANCIA.lista_detalle_mercancia = this.cuerpoTablaDetalle;
     const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
-    let FILTERED_VALOR: Fila[] = [];
+    let FILTERED_VALOR: FilaSolicitud[] = [];
     
     if (this.datosMercanciaStore) {
       FILTERED_VALOR = ESTADO_ACTUAL.filter(
@@ -389,14 +571,15 @@ export class MercanciaSolicitudComponent implements OnInit {
       FILTERED_VALOR = ESTADO_ACTUAL;
     }
     
-    const NUEVA_DETALLE_LIST = [
+      const NUEVA_MERCANCIA_LIST = [
       ...(FILTERED_VALOR || []),
-      NUEVO_DETALLE
+        NUEVA_MERCANCIA
     ];
     
-    this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_DETALLE_LIST);
+      this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_MERCANCIA_LIST);
     this.detallesGroup.reset();
     this.cerrar.emit();
+  }
   }
   /**
    * Inicia el proceso de eliminación de una fila de detalle.
@@ -413,7 +596,7 @@ export class MercanciaSolicitudComponent implements OnInit {
       categoria: 'danger',
       modo: 'action',
       titulo: 'Eliminar datos de la tabla',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
+      mensaje: '¿Está seguro que desea eliminar estos datos?',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -436,9 +619,8 @@ export class MercanciaSolicitudComponent implements OnInit {
     if (borrar) {
       this.eliminarDatosTabla = false;
       this.cuerpoTablaDetalle = this.cuerpoTablaDetalle.filter(
-        (item) => item !== this.detallesSeleccionados
+        item => !this.detallesSeleccionados.includes(item)
       );
-      this.detallesSeleccionados = {} as Detalles;
     } else {
       this.eliminarDatosTabla = false;
     }
@@ -454,6 +636,48 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @returns {void}
    */
   seleccionTabla(event: Detalles[]): void {
-    this.detallesSeleccionados = event[0] || {} as Detalles;
+    this.detallesSeleccionados = event || {} as Detalles;
+  }
+
+  /**
+ * Validador personalizado para verificar si el número tiene más de 3 decimales
+ * @param control - Control del formulario a validar
+ * @returns ValidationErrors si tiene más de 3 decimales, null si es válido
+ */
+  static maxDecimalsValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const DECIMAL_PART = STRING_VALUE.split('.')[1];
+
+    if (DECIMAL_PART && DECIMAL_PART.length > 3) {
+      return { maxDecimals: true };
+    }
+
+    return null;
+  }
+
+  /**
+   * Validador personalizado para verificar si el número tiene más de 12 números enteros
+   * @param control - Control del formulario a validar
+   * @returns ValidationErrors si tiene más de 12 números enteros, null si es válido
+   */
+  static maxWholeNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const WHOLE_PART = STRING_VALUE.split('.')[0];
+
+    if (WHOLE_PART.length > 12) {
+      return { maxWholeNumbers: true };
+    }
+
+    return null;
   }
 }
