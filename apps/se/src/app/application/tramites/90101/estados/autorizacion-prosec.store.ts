@@ -1,4 +1,4 @@
-import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.module';
+import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';

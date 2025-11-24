@@ -11,13 +11,13 @@
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent, doDeepCopy } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FilaProductos } from '../../models/prosec.module';
+import { FilaProductos } from '../../models/prosec.model';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -44,6 +44,11 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   ]
 })
 export class ProductorIndirectoComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {string} loginRfc - RFC del usuario que ha iniciado sesión.
+   */
+  @Input() loginRfc!: string;
 
   @Input() formularioDeshabilitado: boolean = false;
 
@@ -77,7 +82,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   productorColumnsConfiguracion : ConfiguracionColumna<FilaProductos>[] = [
     { encabezado: 'Registro federal de contribuyentes', 
-      clave: (fila) => fila.contribuyentes, 
+      clave: (fila) => fila.rfc, 
       orden: 1 },
     {
       encabezado: 'Denominación o razón social',
@@ -86,7 +91,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     },
     {
       encabezado: 'Correo',
-      clave: (fila) => fila.Correo,
+      clave: (fila) => fila.correoElectronico,
       orden: 3,
     },
   ];
@@ -273,13 +278,23 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * Si la respuesta es un arreglo, se castea como FilaProductos[].
    */
   recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('productor.json').subscribe(
+    const PAYLOAD = {
+      "rfc_productor_indirecto": this.productorIndirecto.get('contribuyentes')?.value,
+      "rfc_solicitante": null,
+      "id_programa_autorizado": null,
+      "discriminador": "90101"
+    }
+    this.ProsecService.obtenerProductorIndirectoDatos(PAYLOAD).subscribe(
       (response) => {
-        if (response && Array.isArray(response)) {
-          this.productorDato = response as FilaProductos[];
-          this.AutorizacionProsecStore.setProductorDatos(this.productorDato);
+        const API_DATOS = doDeepCopy(response);
+        if(API_DATOS.codigo === '00'){
+          if (API_DATOS && API_DATOS.datos && Array.isArray(API_DATOS.datos.productorIndirecto)) {
+            this.productorDato = [...this.productorDato, ...API_DATOS.datos.productorIndirecto];
+            this.AutorizacionProsecStore.setProductorDatos(this.productorDato);
+          }
         }
-      });
+      }
+    );
   }
 
    /**
@@ -291,7 +306,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarProductor(): void {
-    if( this.productorIndirecto.get('contribuyentes')?.value === '') {
+    const CONTRIBUYENTES = this.productorIndirecto.get('contribuyentes')?.value;
+    if(CONTRIBUYENTES === '') {
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -304,6 +320,10 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+    }
+    else if(this.productorDato.some(productor => productor?.rfc === CONTRIBUYENTES)){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('El RFC del Productor Indirecto que intenta ingresar ya fue capturada.');
     }
     else {
       this.espectaculoAlerta = false
@@ -398,6 +418,29 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  /**
+   * @method obtenerConfiguracionDeNotificacion
+   * @description Obtiene la configuración de notificación para mostrar mensajes al usuario.
+   *
+   * @param {string} mensaje - El mensaje a mostrar en la notificación.
+   * @param {string} [titulo=''] - El título de la notificación.
+   * @param {string} [categoria=''] - La categoría de la notificación (ej. 'success', 'error').
+   * @param {string} [txtBtnCancelar=''] - El texto del botón de cancelar.
+   * @returns {Notificacion} La configuración de la notificación.
+   */
+  obtenerConfiguracionDeNotificacion(mensaje: string, titulo: string = '', categoria: string = '', txtBtnCancelar: string = ''): Notificacion {
+    return {
+        tipoNotificacion: 'alert',
+        categoria: categoria,
+        modo: 'action',
+        titulo: titulo,
+        mensaje: mensaje,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: txtBtnCancelar,
+      };
   }
 
     /**

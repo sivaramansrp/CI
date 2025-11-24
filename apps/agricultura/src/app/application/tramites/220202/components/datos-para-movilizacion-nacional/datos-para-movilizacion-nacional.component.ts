@@ -8,6 +8,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -103,14 +104,31 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     private readonly agriculturaApiService: AgriculturaApiService,
     private consultaioQuery: ConsultaioQuery,
     public catalogosService: CatalogosService,
+    private readonly fb: FormBuilder,
 
   ) {
+    this.forma = this.fb.group({
+      transporte: ['', Validators.required],
+      identificacion: [''],
+      puntoVerificacion: [''],
+      empresaTransportista: ['', Validators.required],
+    })
     this.agriculturaApiService
       .getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.movilizacion;
+        if (this.formulariodataStore) {
+          this.forma.patchValue(this.formulariodataStore, { emitEvent: false });
+          this.forma.patchValue({
+            transporte: this.formulariodataStore.transporte,
+            identificacion: this.formulariodataStore.identificacion,
+            puntoVerificacion: this.formulariodataStore.puntoVerificacion,
+            empresaTransportista: this.formulariodataStore.empresaTransportista,
+          })
+        }
       });
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -153,21 +171,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         Validators.required
       ),
     });
-    // Se suscribe a los cambios de estado del formulario para actualizar su validez
-    this.forma.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((_changes) => {
-        const FORMA_VALIDA_ACTUALIZADA = {
-          movilizacionValidacion: false,
-        };
-        FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid
-          ? true
-          : false;
-        this.agriculturaApiService.actualizarFormaValida(
-          FORMA_VALIDA_ACTUALIZADA
-        );
-      });
-
     // Obtiene las listas de opciones (medio de transporte y puntos de verificación)
     this.obtenerTodosLosDatosDeOpciones();
   }

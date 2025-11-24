@@ -89,7 +89,7 @@ export class TercerosrelacionadosService {
   ): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${
       this.host
-    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS(tramite.toString(), cvePais)}`;
+    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString(), cvePais)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

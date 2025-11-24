@@ -68,13 +68,13 @@ import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firma
 import { AutorizarDictamenService } from '../core/services/autorizar-dictamen/autorizar-dictamen.service';
 import { MostrarFirmaRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-autorizar-dictamen-response.model';
-import { TramiteConfig } from '../../../../../se/src/app/application/shared/models/tramite-config.model';
+import { TramiteConfig } from '../../../../../aga/src/app/application/shared/models/tramite-config.model';
 import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/shared/detalleAcuse.service';
 import { ObservacionRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/observacion-guardar-request.model';
-import { TramiteConfigService } from '../../../../../se/src/app/application/shared/services/tramiteConfig.service';
-import { ModeloConfig, ServiceConfig } from '../../../../../se/src/app/application/shared/models/service-config.model';
+import { TramiteConfigService } from '../../../../../aga/src/app/application/shared/services/tramiteConfig.service';
+import { ModeloConfig, ServiceConfig } from '../../../../../aga/src/app/application/shared/models/service-config.model';
 import { IniciarAutorizacionRequest } from '../core/models/autorizar-requerimiento/request/autorizar-dictamen-request.model';
 import { Firma } from '../../../../../se/src/app/application/core/models/evaluar/request/firmar-dictamen-request.model';
 import { FirmaAutorizarDictamenRequest } from '../../../../../se/src/app/application/core/models/autorizar-requerimiento/request/firma-autorizar-request.model';

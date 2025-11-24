@@ -7,7 +7,7 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import { Notificacion, TEXTOS } from '@ng-mf/data-access-user';
+import { Notificacion, TEXTOS, Usuario } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -26,10 +26,26 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
  */
 export class PasoDosComponent implements OnInit {
   /**
-   * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
-   * @type {EventEmitter<void>}
-   */
+ * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
+ * @type {EventEmitter<void>}
+ */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
+
+  /**
+   * 
+   * ID de la solicitud actual.
+   */
+  @Input() idSolicitud!: string;
+
+  /**
+   * Identificador del trámite.
+   */
+  @Input() idTipoTRamite!: string;
+  
+    /**
+   * Servicio para gestionar los catálogos.
+   */
+  @Input() datosUsuario!: Usuario;
 
   /**
    * Escucha el evento para regresar a la sección de cargar documentos que se emite desde <solicitud-page>.
@@ -95,6 +111,12 @@ export class PasoDosComponent implements OnInit {
 
   };
 
+  /** Carga del progreso del archivo */
+  cargaEnProgreso: boolean = true;
+
+  /** Emite un boleano sobre la carga del archivo */
+  @Output() cargaEnProgresoChange = new EventEmitter<boolean>();
+
   /**
    * Inicializa el componente PasoDosComponent.
    * Se suscribe a los eventos de carga de archivos y regreso a la sección de carga
@@ -127,6 +149,16 @@ export class PasoDosComponent implements OnInit {
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
     this.reenviarCargaRealizada.emit(this.cargaRealizada);
+  }
+
+    /**
+ * Maneja el evento de carga en progreso emitido por un componente hijo.
+ * Actualiza el estado de cargaEnProgreso según el valor recibido.
+ * @param carga Valor booleano que indica si la carga está en progreso.
+ */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+    this.cargaEnProgresoChange.emit(this.cargaEnProgreso);
   }
 
   /**

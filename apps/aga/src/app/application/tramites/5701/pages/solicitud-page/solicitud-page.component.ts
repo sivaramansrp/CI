@@ -21,6 +21,7 @@ import {
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
+  Usuario,
   formatearFechaConMoment,
 } from '@ng-mf/data-access-user';
 import {
@@ -43,6 +44,8 @@ import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/g
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { USUARIO_INFO } from '@libs/shared/data-access-user/src/core/enums/usuario-info.enum';
+
 
 
 /**
@@ -133,6 +136,10 @@ export class SolicitudPageComponent implements OnInit {
 
   @ViewChild(PasoUnoComponent) SolicitudPasoComponent!: PasoUnoComponent;
 
+    /** Carga de progreso del archivo */
+  cargaEnProgreso: boolean = true; 
+
+
   /**
    * Representa los datos de configuración para los pasos de un proceso.
    * @property nroPasos - Número total de pasos.
@@ -177,6 +184,8 @@ export class SolicitudPageComponent implements OnInit {
    * valida si se valido el formulario principal.
    */
   VALIDA_FORM: boolean = false;
+
+  datosUsuario: Usuario = USUARIO_INFO;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -808,5 +817,15 @@ export class SolicitudPageComponent implements OnInit {
 
   onFormularioPadreValido(isValid: boolean): void {
     this.formularioPadreEsValido = isValid;
+  }
+
+   /**
+    * Maneja el evento de carga en progreso emitido por un componente hijo.
+    * Actualiza el estado de cargaEnProgreso según el valor recibido.
+    * @param cargando Valor booleano que indica si la carga está en progreso.
+    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onCargaEnProgresoPadre(cargando: boolean) {
+    this.cargaEnProgreso = cargando;
   }
 }
