@@ -460,11 +460,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   }
 
    /**
-     * @method abrirElimninarConfirmationopup
+     * @method aceptarConfirmationPopup
      * Abre un popup de confirmación para eliminar los registros seleccionados.
      * Si no hay registros seleccionados, no realiza ninguna acción.
      */
-    abrirElimninarConfirmationopup(): void {
+    aceptarConfirmationPopup(): void {
        this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -658,7 +658,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Agrega una mercancía a la tabla de mercancías y reinicia el formulario.
    */
   agregarMercancias(): void {
-    
     if (!this.agregarForm.valid) {
       // Mark all fields as touched to show validation errors
       Object.values(this.agregarForm.controls).forEach(control => {
@@ -668,14 +667,9 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     }
     else{
       this.cerrarModal();
-     this.abrirElimninarConfirmationopup();
+     this.aceptarConfirmationPopup();
     }
-    // this.agregarForm.get('descripcion')?.enable();
-    // const MERCANCIA = this.agregarForm.value;
-    // this.mercanciTablaDatos.push(MERCANCIA);
-    // this.mercanciTablaDatos = [...this.mercanciTablaDatos];
-    // this.agregarForm.reset();
-    // this.cerrarModal();
+
   }
 
   /**
