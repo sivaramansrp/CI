@@ -162,7 +162,7 @@ export class TercerosrelacionadosComponent implements OnInit {
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
   configuracionColumnasExportador: ConfiguracionColumna<DestinatarioForm>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial + ' ' + fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Domicilio', clave: (fila) => fila.domicilio, orden: 4 },
@@ -182,7 +182,7 @@ export class TercerosrelacionadosComponent implements OnInit {
    * @type {ConfiguracionColumna<TercerosrelacionadosdestinoTable>[]}
    */
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial + ' ' + fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominació o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
@@ -338,23 +338,23 @@ export class TercerosrelacionadosComponent implements OnInit {
    * @method emitEliminar
    */
   emitEliminar(): void {
-    if (this.listaDeFilaSeleccionada.length !== 0) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: 'Confirmar eliminación',
-        mensaje: 'Está seguro que desea eliminar estos datos?',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
-      };
-      this.eliminarDatosTabla = true;
-    }
-    else {
-      this.errorMessageExportador();
-    }
+   if (this.listaDeFilaSeleccionada.length !== 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
+  }
+  else {
+    this.errorMessageExportador();
+  }
 
   }
   /**
@@ -363,22 +363,22 @@ export class TercerosrelacionadosComponent implements OnInit {
   */
   emitEliminarFinal(): void {
     if (this.listaDeFilaSeleccionadaFinal.length !== 0) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: 'Confirmar eliminación',
-        mensaje: 'Está seguro que desea eliminar estos datos?',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
-      };
-      this.eliminarDatoExportador = true;
-    }
-    else {
-      this.errorMessageExportador();
-    }
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: '¿Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatoExportador = true;
+  }
+  else {
+    this.errorMessageExportador();
+  }
   }
 
   /**

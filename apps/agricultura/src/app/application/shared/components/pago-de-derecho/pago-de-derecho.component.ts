@@ -276,24 +276,24 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     if (!fecha) {
       return;
     }
-
+    
     const FECHA_PARTES = fecha.split('/');
     if (FECHA_PARTES.length !== 3) {
       return;
     }
-
+    
     const DIA = parseInt(FECHA_PARTES[0], 10);
     // Los meses en JavaScript son 0-indexed
     const MES = parseInt(FECHA_PARTES[1], 10) - 1;
     const ANIO = parseInt(FECHA_PARTES[2], 10);
-
+    
     const FECHA_SELECCIONADA = new Date(ANIO, MES, DIA);
     const FECHA_ACTUAL = new Date();
-
+    
     // Normalizar las fechas para comparar solo días (sin horas)
     FECHA_SELECCIONADA.setHours(0, 0, 0, 0);
     FECHA_ACTUAL.setHours(0, 0, 0, 0);
-
+    
     const CONTROL = this.pagoForm.get('fechaPago');
     if (CONTROL) {
       if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
@@ -368,7 +368,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
       llavePago: '',
       banco: '',
       justificacion: ''
-
     });
     setTimeout(() => {
       this.setFecha = true;

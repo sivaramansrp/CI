@@ -817,6 +817,11 @@ export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string =
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
 export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR_PARCIAL = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar-parcial`;
 /*
  * API para obtener la representación federal por clave de entidad
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}

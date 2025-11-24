@@ -6,10 +6,10 @@ import { of as observableOf } from 'rxjs';
 import { ProductorIndirectoComponent } from './productor-indirecto.component';
 import { ProsecService } from '../../services/prosec.service';
 import { AutorizacionProsecStore } from '../../estados/autorizacion-prosec.store';
-import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ProsecState } from '../../estados/autorizacion-prosec.store';
-import { FilaProductos } from '../../models/prosec.module';
+import { FilaProductos } from '../../models/prosec.model';
 
 const mockProsecState: ProsecState = {
   modalidad: '',

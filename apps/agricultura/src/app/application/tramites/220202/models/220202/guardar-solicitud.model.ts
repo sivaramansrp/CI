@@ -150,3 +150,12 @@ export interface Solicitante {
   cve_entidad_federativa: string;
   cve_unidad_administrativa: string;
 }
+
+/**
+ * Representa la respuesta despues del request de guardado.
+ */
+export interface RespuestaGuardarSolicitud {
+  codigo: string;
+  id_solicitud: number;
+  fecha_actualización: string;
+}

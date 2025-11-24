@@ -99,6 +99,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Identificador del procedimiento asociado a este componente.
+   */
+  public idProcedimiento: number = 260703;
   
 /**
  * Evento que emite el estado de validez del formulario de domicilio.
