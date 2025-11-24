@@ -270,14 +270,29 @@ export interface DatosDomicilioLegalState {
    */
   numeroRegistroSanitario: string,
 
+  /**
+   * El valor de aduanaId.
+   */
   aduanaId: string[];
 
+  /**
+   * El valor de paisOrigenId.
+   */
   paisOrigenId: string[];
 
+  /**
+   * El valor de paisProcedenciaId.
+   */
   paisProcedenciaId: string [];
 
+  /**
+   * El valor de paisElaboraId.
+   */
   paisElaboraId: string [];
 
+  /**
+   * El valor de paisIngredienteActivoId.
+   */
   paisIngredienteActivoId: string [];
 }
 
@@ -542,14 +557,29 @@ export function createInitialState(): DatosDomicilioLegalState {
      */
     numeroRegistroSanitario: '',
 
+    /**
+     * El valor de aduanaId.
+     */
     aduanaId: [],
 
+    /**
+     * El valor de paisOrigenId.
+     */
     paisOrigenId: [],
 
+    /**
+     * El valor de paisProcedenciaId.
+     */
     paisProcedenciaId: [],
 
+    /**
+     * El valor de paisElaboraId.
+     */
     paisElaboraId: [],
 
+    /**
+     * El valor de paisIngredienteActivoId.
+     */
     paisIngredienteActivoId: [],
   };
 }
@@ -1236,6 +1266,10 @@ public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string 
         }));
     }
 
+    /**
+ * Establece el arreglo de identificadores de aduana en el estado.
+ * @param aduanaId Arreglo de strings con los identificadores de aduana a asignar.
+ */
     setAduanaId(aduanaId: string[]): void {
       this.update((state) => ({
           ...state,
@@ -1243,6 +1277,10 @@ public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string 
       }));
     }
 
+    /**
+ * Establece el arreglo de identificadores de país de origen en el estado.
+ * @param paisOrigenId Arreglo de strings con los identificadores de país de origen a asignar.
+ */
     setPaisOrigenId(paisOrigenId: string[]): void {
       this.update((state) => ({
           ...state,
@@ -1250,6 +1288,10 @@ public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string 
       }));
     }
 
+    /**
+ * Establece el arreglo de identificadores de país de procedencia en el estado.
+ * @param paisProcedenciaId Arreglo de strings con los identificadores de país de procedencia a asignar.
+ */
     setPaisProcedenciaId(paisProcedenciaId: string[]): void {
       this.update((state) => ({
           ...state,
@@ -1257,6 +1299,10 @@ public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string 
       }));
     }
 
+    /**
+ * Establece el arreglo de identificadores de país de elaboración en el estado.
+ * @param paisElaboraId Arreglo de strings con los identificadores de país de elaboración a asignar.
+ */
     setPaisElaboraId(paisElaboraId: string[]): void {
       this.update((state) => ({
           ...state,
@@ -1264,6 +1310,10 @@ public setAduanasDeEntradaObj(value: Array<{ clave: string; descripcion: string 
       }));
     }
 
+    /**
+ * Establece el arreglo de identificadores de país de IngredienteActivo en el estado.
+ * @param paisIngredienteActivoId Arreglo de strings con los identificadores de país de elaboración a asignar.
+ */
     setPaisIngredienteActivoId(paisIngredienteActivoId: string[]): void {
       this.update((state) => ({
           ...state,
