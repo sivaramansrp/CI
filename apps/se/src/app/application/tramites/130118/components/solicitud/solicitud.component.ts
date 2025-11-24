@@ -183,7 +183,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Inicializa catálogos, suscripciones y muestra los campos correspondientes a la persona seleccionada.
    */
   ngOnInit(): void {
-    debugger;
     if (this.ocultarForm === true) {
       this.esFormularioSoloLectura = true;
       this.inicializaCatalogos();
