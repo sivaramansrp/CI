@@ -6,7 +6,6 @@ import {
 import { AlertComponent, CargaDocumentoComponent, Catalogo, TableData, TipoDocumentos, TituloComponent, Usuario } from '@libs/shared/data-access-user/src';
 import { Component, DestroyRef, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoDocumentosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogo-documentos.service';
 import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
 
 /**
@@ -142,10 +141,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
      * @param catalogosServices - Servicio para manejar los catálogos.
      */
   constructor(
-    private catalogosServices: CatalogoDocumentosService,
+
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
-    console.warn('idSolicitud ' + this.idSolicitud);
   }
 
   /**
