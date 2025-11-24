@@ -569,6 +569,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
+    const ADUANA_IDS = this.aduanaCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setAduanaId(ADUANA_IDS);
     this.domicilio.patchValue({
       aduanasEntradas: events,
     });
@@ -1436,6 +1440,8 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       });
     }
     
+
+
   }
 
   /**
@@ -1723,8 +1729,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
         cantidadUmc: RAW.cantidadUMC,
         umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
-        paisOrigen:RAW.paisDeOriginDatos,
+        paisOrigen:RAW.paisProveedor,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
+      paisProduccionIngredienteActivo: RAW.paisFabrica,
+      paisElaboracionProducto: RAW.paisElaboracion,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
       porcentajeConcentracion:RAW.porcentajeConcentracion,
       clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
@@ -1873,6 +1881,10 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisProcedenciaId(IDS);
   this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
@@ -1905,6 +1917,10 @@ openModal():void {
    */
    paisProveedorSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisProveedor = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisOrigenId(IDS);
     this.formMercancias.patchValue({
       paisProveedor: events,
     });
@@ -1925,6 +1941,10 @@ openModal():void {
    */
    paisElaboracionSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisElaboracion = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisElaboraId(IDS);
     this.formMercancias.patchValue({
       paisElaboracion: events,
     });
@@ -1945,6 +1965,10 @@ openModal():void {
    */
    paisfabricaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisfabrica = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisIngredienteActivoId(IDS);
     this.formMercancias.patchValue({
       paisFabrica: events,
     });

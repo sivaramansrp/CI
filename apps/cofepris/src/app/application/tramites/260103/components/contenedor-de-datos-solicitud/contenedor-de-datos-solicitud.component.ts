@@ -12,10 +12,8 @@ import {
   ID_PROCEDIMIENTO,
   PRODUCTO_TABLA_IMPORTACION,
 } from '../../constants/importacion-retorno-sanitario.enum';
-import {
-  OPCION_TABLA,
-  SCIAN_TABLA,
-} from '../../../../shared/constantes/datos-solicitud.enum';
+
+import { DATOS_MERCANCIA_CLAVE_TABLA, OPCION_TABLA, SCIAN_TABLA } from '../../../../shared/components/shared26010/constents/datos-solicitud.enum';
 import {
   Tramite260103State,
   Tramite260103Store,
@@ -25,8 +23,11 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/shared26010/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
+import { TablaMercanciaClaveConfig } from '../../../../shared/components/shared26010/models/datos-solicitud.model';
 import {TablaMercanciasImportacion} from '../../models/importicon-retorno.model';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
+
+
 
 /**
  * @component
@@ -49,6 +50,11 @@ import { Tramite260103Query } from '../../estados/tramite260103Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+    public tablaMercanciaClaveConfig = {
+      tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
+      configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
+      datos: [] as TablaMercanciaClaveConfig[],
+    };
     /**
      * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
      * @description
@@ -304,6 +310,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+  claveSeleccionada(event: TablaMercanciaClaveConfig[]): void {
+    this.tramite260103Store.updateTablaMercanciaClaveConfigDatos(event);
+  }
   /**
    * @method ngOnDestroy
    * @description
