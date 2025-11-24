@@ -172,6 +172,8 @@ export class DetalleMercanciaComponent implements OnInit, OnDestroy {
       tipoDeEnvase: this.formaDetalleMercancia.value.tipoDeEnvase,
     };
 
+    this.agregarMercanciaSellecion.emit(NEW_DETALLE);
+
     this.datosTablaDetalleMercancia = new Observable((observer) => {
       const CURRENT_DATA = (this.datosTablaDetalleMercancia as any)?.source?.value || [];
       observer.next([...CURRENT_DATA, NEW_DETALLE]);

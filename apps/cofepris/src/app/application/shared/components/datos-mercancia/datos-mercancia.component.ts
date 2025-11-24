@@ -1214,11 +1214,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
         DatosMercanciaComponent.numeroUMCDecimalesValidator(),
-
       ],
     ],
     cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
-    presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
     numeroRegistroSanitario: [
       this.obtenerValor('numeroRegistroSanitario')
     ],
@@ -1241,27 +1239,27 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     especifiqueForma: [
       this.obtenerValor('especifiqueForma')
     ],
-    especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
+    especifiqueEstado: [this.obtenerValor('especifiqueEstado')],
     id: [this.obtenerValor('id')]
   });
-   const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
-  setTimeout(()=>{
- 
-      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
-    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
-      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
-  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
-    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
-MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
-MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
-this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
-},500);
-    
+
+  const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+  setTimeout(() => {
+    MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos, MERCANCIA_FORM_DETALLE.clasificacionProducto);
+    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos, MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+    MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos, MERCANCIA_FORM_DETALLE.tipoProducto);
+    MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos, MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos, MERCANCIA_FORM_DETALLE.estadoFisico);
+    MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos, MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+    MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos, MERCANCIA_FORM_DETALLE.cantidadUmc);
+    this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
+  }, 500);
+
   const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
   if (this.detalleMercancia) {
     CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
   }
-  
+
   for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
     if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
       this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
@@ -1284,6 +1282,17 @@ this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
           { validators: VALIDATORS }
         )
       );
+    }
+  }
+
+  if (!this.elementosNoValidos.includes('presentacion') && !this.detalleMercancia) {
+    this.mercanciaForm.addControl(
+      'presentacion',
+      new FormControl(this.obtenerValor('presentacion'), [Validators.required])
+    );
+  } else {
+    if (this.mercanciaForm.contains('presentacion')) {
+      this.mercanciaForm.removeControl('presentacion');
     }
   }
 }
@@ -1649,6 +1658,7 @@ actualizarValidadoresClave(): void {
    */
 
   agregarMercanciaSellecion(datos: DetalleMercancia): void {
+    console.log('Received detalle:', datos)
     this.agregarMercanciaDatos.emit(datos);
   }
 
